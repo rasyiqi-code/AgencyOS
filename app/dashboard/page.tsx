@@ -39,23 +39,25 @@ export default async function DashboardPage() {
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {projects.map((project) => (
-                        <div key={project.id} className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 hover:shadow-md transition-shadow">
-                            <div className="flex flex-col space-y-1.5">
-                                <h3 className="font-semibold leading-none tracking-tight">{project.title}</h3>
-                                <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
-                            </div>
-                            <div className="flex items-center justify-between mt-4">
-                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${project.status === 'done' ? 'bg-green-100 text-green-800' :
+                        <Link key={project.id} href={`/dashboard/${project.id}`} className="block h-full">
+                            <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 hover:shadow-md transition-shadow h-full">
+                                <div className="flex flex-col space-y-1.5">
+                                    <h3 className="font-semibold leading-none tracking-tight">{project.title}</h3>
+                                    <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
+                                </div>
+                                <div className="flex items-center justify-between mt-4">
+                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${project.status === 'done' ? 'bg-green-100 text-green-800' :
                                         project.status === 'dev' ? 'bg-blue-100 text-blue-800' :
                                             'bg-slate-100 text-slate-800'
-                                    }`}>
-                                    {project.status}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                    {project.createdAt.toLocaleDateString()}
-                                </span>
+                                        }`}>
+                                        {project.status}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                        {project.createdAt.toLocaleDateString()}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
