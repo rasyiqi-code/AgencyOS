@@ -11,19 +11,139 @@ model Project {
   userId      String   // Links to Stack Auth User ID
   title       String
   description String?
+  spec        String?  @db.Text // AI Generated Blueprint
   status      String   @default("queue") // queue, dev, review, done
+  developerId String?  // Assigned Squad Member ID
   repoUrl     String?
+  repoOwner   String?  // GitHub Owner (e.g., 'vercel')
+  repoName    String?  // GitHub Repo Name (e.g., 'next.js')
+  deployUrl   String?  // Vercel Deploy Hook URL
+  estimateId  String?  @unique
+  estimate    Estimate? @relation(fields: [estimateId], references: [id])
+  
+  serviceId   String?
+  service     Service? @relation(fields: [serviceId], references: [id])
+  
+  files       Json?    // Array of { name, url, type } for deliverables
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   briefs      Brief[]
+  feedback    Feedback[]
+  order       Order?
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  amount          Float
+  status          String   @default("pending") // pending, settled, expire, cancel
+  snapToken       String?
+  transactionId   String?  @unique
+  paymentType     String?
+  paymentMetadata Json?
+  proofUrl        String?
+  userId          String
+  projectId       String?  @unique
+  project         Project? @relation(fields: [projectId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Brief {
   id        String   @id @default(cuid())
   projectId String
-  content   String   @db.Text // JSON string or plain text
+  content   String   @db.Text
+  attachments Json?  // Array of { name, url, type }
   createdAt DateTime @default(now())
 
   project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  projectId String
+  content   String   @db.Text
+  type      String   @default("bug")
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+  
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Ticket {
+  id        String   @id @default(cuid())
+  userId    String?
+  email     String?
+  name      String?
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  messages  SupportMessage[]
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  sender    String
+  content   String   @db.Text
+  attachments Json?  // Array of { name, url, type }
+  createdAt DateTime @default(now())
+  
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+}
+
+model Estimate {
+  id          String   @id @default(cuid())
+  prompt      String   @db.Text
+  title       String
+  summary     String   @db.Text
+  screens     Json
+  apis        Json
+  totalHours  Int
+  totalCost   Float
+  complexity  String
+  status      String   @default("draft")
+  proofUrl    String?
+  createdAt   DateTime @default(now())
+  project     Project?
+  
+  serviceId   String?
+  service     Service? @relation(fields: [serviceId], references: [id])
+}
+
+model SystemKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  provider  String   @default("google")
+  modelId   String?
+  label     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSetting {
+  key         String   @id
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  price       Float
+  interval    String   @default("one_time")
+  features    Json
+  image       String?  // Cover image URL
+  creemProductId String? // Linked Creem Product ID
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projects    Project[]
+  estimates   Estimate[]
 }

@@ -1,0 +1,169 @@
+$ eslint
+
+/home/rasyiqi/Project/AgencyOS/app/actions/admin.ts
+  90:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/actions/estimate.ts
+   5:10  warning  'redirect' is defined but never used          @typescript-eslint/no-unused-vars
+  32:11  warning  'project' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/actions/keys.ts
+  22:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/actions/project.ts
+  21:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/actions/store.ts
+  7:61  warning  'price' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/actions/support.ts
+  14:9  error  'attachments' is never reassigned. Use 'const' instead  prefer-const
+
+/home/rasyiqi/Project/AgencyOS/app/admin/finance/orders/page.tsx
+   5:8   warning  'Link' is defined but never used          @typescript-eslint/no-unused-vars
+   6:10  warning  'Button' is defined but never used        @typescript-eslint/no-unused-vars
+   7:24  warning  'Search' is defined but never used        @typescript-eslint/no-unused-vars
+   7:32  warning  'Filter' is defined but never used        @typescript-eslint/no-unused-vars
+   7:40  warning  'Download' is defined but never used      @typescript-eslint/no-unused-vars
+   7:50  warning  'FileText' is defined but never used      @typescript-eslint/no-unused-vars
+   7:60  warning  'ExternalLink' is defined but never used  @typescript-eslint/no-unused-vars
+   8:10  warning  'Input' is defined but never used         @typescript-eslint/no-unused-vars
+  92:79  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:73  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/admin/finance/page.tsx
+   4:10  warning  'notFound' is defined but never used               @typescript-eslint/no-unused-vars
+  10:11  warning  'isSuperAdmin' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/layout.tsx
+  3:18  warning  'LayoutDashboard' is defined but never used  @typescript-eslint/no-unused-vars
+  3:35  warning  'Database' is defined but never used         @typescript-eslint/no-unused-vars
+  3:45  warning  'CreditCard' is defined but never used       @typescript-eslint/no-unused-vars
+  3:57  warning  'Users' is defined but never used            @typescript-eslint/no-unused-vars
+  3:64  warning  'Settings' is defined but never used         @typescript-eslint/no-unused-vars
+  3:82  warning  'Package' is defined but never used          @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/page.tsx
+  2:10  warning  'stackServerApp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/pm/[id]/page.tsx
+   4:10  warning  'Button' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   5:10  warning  'Badge' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   6:8   warning  'Link' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   7:10  warning  'ChevronLeft' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  71:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  82:87  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/admin/pm/page.tsx
+   4:10  warning  'notFound' is defined but never used               @typescript-eslint/no-unused-vars
+  10:11  warning  'isSuperAdmin' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/pm/services/new/page.tsx
+  2:10  warning  'prisma' is defined but never used    @typescript-eslint/no-unused-vars
+  5:10  warning  'Textarea' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/pm/services/page.tsx
+   6:10  warning  'revalidatePath' is defined but never used                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  53:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/rasyiqi/Project/AgencyOS/app/admin/system/keys/page.tsx
+  4:10  warning  'Card' is defined but never used             @typescript-eslint/no-unused-vars
+  4:16  warning  'CardContent' is defined but never used      @typescript-eslint/no-unused-vars
+  4:29  warning  'CardDescription' is defined but never used  @typescript-eslint/no-unused-vars
+  4:46  warning  'CardHeader' is defined but never used       @typescript-eslint/no-unused-vars
+  4:58  warning  'CardTitle' is defined but never used        @typescript-eslint/no-unused-vars
+  7:18  warning  'Plus' is defined but never used             @typescript-eslint/no-unused-vars
+  7:29  warning  'CheckCircle' is defined but never used      @typescript-eslint/no-unused-vars
+  7:42  warning  'XCircle' is defined but never used          @typescript-eslint/no-unused-vars
+  7:51  warning  'Settings2' is defined but never used        @typescript-eslint/no-unused-vars
+  7:62  warning  'CreditCard' is defined but never used       @typescript-eslint/no-unused-vars
+  7:74  warning  'LayoutGrid' is defined but never used       @typescript-eslint/no-unused-vars
+  9:8   warning  'Link' is defined but never used             @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/admin/system/payment/page.tsx
+  2:8   warning  'Link' is defined but never used        @typescript-eslint/no-unused-vars
+  6:28  warning  'Settings2' is defined but never used   @typescript-eslint/no-unused-vars
+  6:55  warning  'LayoutGrid' is defined but never used  @typescript-eslint/no-unused-vars
+  6:67  warning  'Key' is defined but never used         @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/api/dashboard/tickets/route.ts
+  5:27  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/api/email/schedule/route.ts
+  4:7  warning  'resend' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/api/support/ticket/message/route.ts
+  1:10  warning  'stackServerApp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/dashboard/(client)/missions/[id]/page.tsx
+  110:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/rasyiqi/Project/AgencyOS/app/dashboard/(client)/services/page.tsx
+  4:17  warning  'Package' is defined but never used   @typescript-eslint/no-unused-vars
+  6:10  warning  'redirect' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/app/dashboard/layout.tsx
+  4:10  warning  'canManageProjects' is defined but never used  @typescript-eslint/no-unused-vars
+  4:29  warning  'canManageBilling' is defined but never used   @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/admin/orders/view-proof-button.tsx
+  43:14  warning  'e' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  77:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/rasyiqi/Project/AgencyOS/components/admin/services/image-upload.tsx
+   5:10  warning  'Button' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  48:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/rasyiqi/Project/AgencyOS/components/chat-interface.tsx
+  325:42  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/chat/chat-action.tsx
+  11:54  warning  'onCreateProject' is defined but never used  @typescript-eslint/no-unused-vars
+  61:14  warning  'e' is defined but never used                @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/chat/chat-message.tsx
+  51:35  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+  52:36  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+  53:36  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+  54:36  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+  55:40  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+  56:35  warning  'node' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/checkout/invoice-document.tsx
+  73:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/rasyiqi/Project/AgencyOS/components/checkout/payment-sidebar.tsx
+  19:11  warning  'handleConfirmPayment' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/checkout/upload-proof.tsx
+   4:10  warning  'Button' is defined but never used            @typescript-eslint/no-unused-vars
+  10:54  warning  'variant' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/deploy-button.tsx
+  6:10  warning  'useRouter' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/estimate/estimate-viewer.tsx
+  32:11  warning  The 'initialScreens' conditional could make the dependencies of useMemo Hook (at line 61) change on every render. To fix this, wrap the initialization of 'initialScreens' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  33:11  warning  The 'initialApis' conditional could make the dependencies of useMemo Hook (at line 61) change on every render. To fix this, wrap the initialization of 'initialApis' in its own useMemo() Hook        react-hooks/exhaustive-deps
+
+/home/rasyiqi/Project/AgencyOS/components/landing/bento-grid.tsx
+  1:45  warning  'Globe' is defined but never used     @typescript-eslint/no-unused-vars
+  1:52  warning  'Terminal' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/landing/landing-hero.tsx
+  3:22  warning  'Sparkles' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/landing/site-header.tsx
+  3:10  warning  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/rasyiqi/Project/AgencyOS/components/ui/floating-chat.tsx
+   24:48  warning  'toggleChat' is assigned a value but never used                                                            @typescript-eslint/no-unused-vars
+  100:8   warning  React Hook useEffect has a missing dependency: 'isOpen'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/rasyiqi/Project/AgencyOS/components/ui/rich-text-editor.tsx
+  31:59  warning  'placeholder' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 89 problems (7 errors, 82 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+
+error: script "lint" exited with code 1

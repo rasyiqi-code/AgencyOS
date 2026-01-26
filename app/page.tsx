@@ -1,30 +1,55 @@
+import { SiteHeader } from "@/components/landing/site-header";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { SectionEcosystem } from "@/components/landing/section-ecosystem";
+import { SocialProof } from "@/components/landing/section-social-proof";
+import { Comparison } from "@/components/landing/section-comparison";
+import { ProductCatalog } from "@/components/landing/section-products";
+import { Workflow } from "@/components/landing/section-workflow";
+import { ExpertProfile } from "@/components/landing/section-expert";
+import { FinancialLogic } from "@/components/landing/section-financial";
+import { SectionGuarantee } from "@/components/landing/section-guarantee";
+import { FAQSection } from "@/components/landing/section-faq";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-      <div className="container px-4 md:px-6 flex flex-col items-center text-center space-y-6">
-        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-          Agency OS
-        </h1>
-        <p className="max-w-[700px] text-muted-foreground md:text-xl">
-          The async platform for modern software development.
-          Code more, talk less.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link href="/dashboard">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Get Started
-            </Button>
-          </Link>
-          <Link href="https://stack-auth.com" target="_blank">
-            <Button variant="outline" size="lg">
-              Learn More
-            </Button>
-          </Link>
+    <main className="min-h-screen bg-black selection:bg-blue-500/30">
+      <SiteHeader />
+      <LandingHero />
+      <SectionEcosystem />
+      <SocialProof />
+      <Comparison />
+      <FinancialLogic />
+      <ProductCatalog />
+      <Workflow />
+      <SectionGuarantee />
+      <ExpertProfile />
+      <FAQSection />
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-white/5 bg-black text-center">
+        <div className="container mx-auto px-4 space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-white">Siap Membangun Masa Depan Bisnis Anda?</h2>
+            <Link href="/price-calculator">
+              <Button size="lg" className="rounded-full bg-white text-black hover:bg-zinc-200 cursor-pointer">
+                Start AI Briefing (Free)
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex justify-center gap-6 text-sm text-zinc-500">
+            <Link href="/handler/sign-in" className="hover:text-white">Client Login</Link>
+            <Link href="#" className="hover:text-white">Terms of Service</Link>
+            <Link href="#" className="hover:text-white">Privacy Policy</Link>
+          </div>
+
+          <p className="text-zinc-600 text-xs">
+            © 2024 Crediblemark. Built with Human Intelligence & Artificial Speed.
+          </p>
         </div>
-      </div>
+      </footer>
     </main>
   );
 }

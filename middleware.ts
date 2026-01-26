@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
     const user = await stackServerApp.getUser();
 
+    // 1. Auth Check
     if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
         return NextResponse.redirect(new URL("/handler/sign-in", request.url));
     }
@@ -13,5 +14,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*"],
+    // Matcher excluding api, _next, static files
+    matcher: ['/((?!api|_next|handler|.*\\..*).*)', '/dashboard/:path*']
 };

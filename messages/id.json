@@ -1,0 +1,28 @@
+{
+    "Common": {
+        "loading": "Memuat...",
+        "error": "Terjadi kesalahan",
+        "save": "Simpan",
+        "cancel": "Batal"
+    },
+    "Invoice": {
+        "title": "TAGIHAN",
+        "billTo": "Tagihan Kepada",
+        "date": "Tanggal",
+        "totalAmount": "Total Tagihan",
+        "description": "Deskripsi",
+        "hours": "Jam",
+        "amount": "Jumlah",
+        "subtotal": "Subtotal",
+        "tax": "Pajak",
+        "total": "Total",
+        "status": "Status Tagihan",
+        "paid": "LUNAS",
+        "unpaid": "BELUM LUNAS",
+        "totalDue": "Total Harus Dibayar",
+        "paymentReceived": "Pembayaran Diterima",
+        "thankYou": "Terima kasih atas kepercayaan Anda.",
+        "download": "Unduh / Cetak Tagihan",
+        "pay": "Bayar"
+    }
+}

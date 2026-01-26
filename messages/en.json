@@ -1,0 +1,28 @@
+{
+    "Common": {
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "save": "Save",
+        "cancel": "Cancel"
+    },
+    "Invoice": {
+        "title": "INVOICE",
+        "billTo": "Bill To",
+        "date": "Date",
+        "totalAmount": "Total Amount",
+        "description": "Description",
+        "hours": "Hours",
+        "amount": "Amount",
+        "subtotal": "Subtotal",
+        "tax": "Tax",
+        "total": "Total",
+        "status": "Invoice Status",
+        "paid": "PAID",
+        "unpaid": "UNPAID",
+        "totalDue": "Total Due",
+        "paymentReceived": "Payment Received",
+        "thankYou": "Thank you for your business.",
+        "download": "Download / Print Invoice",
+        "pay": "Pay"
+    }
+}

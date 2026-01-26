@@ -1,94 +1,77 @@
-# Agency OS: SoloDev Async Platform
+# AgencyOS: The Hybrid Agency Platform
 
-> **Motto**: "Code More, Talk Less."  
-> **Core Value**: Transparansi Total & Self-Service.
-
-Platform ini bertujuan untuk menghapus kebutuhan komunikasi sinkron (Zoom, Telepon, Chat intens) antara Developer dan Klien, mengubah jasa pengembangan aplikasi menjadi pengalaman seperti belanja produk SaaS.
+> **Vision**: Menciptakan "Sistem Operasi Bisnis" yang memungkinkan agensi berjalan sebagai Hybrid Agency (AI + Human).
+> **Filosofi**: Async First. AI Augmented. Squad Based. Transparency.
 
 ---
 
-## 1. User Roles
-- **Admin (Saya)**: Mengelola project, approval brief, update progress, deploy hasil.
-- **Client**: Membuat brief (bantuan AI), tracking progress, payment, feedback visual.
-- **AI Agent**: Bertindak sebagai Project Manager & Business Analyst (Phase 2).
+## 🏗️ 1. Arsitektur & Peran (User Roles)
+
+### A. The Client (User)
+*   **Akses**: Dashboard Klien (`/dashboard`)
+*   **Status**: Terimplementasi (Basic). Menggunakan Stack Auth untuk manajemen sesi.
+*   **Fitur**: Project overview, integrasi chatbot, pencatatan feedback.
+
+### B. The Architect (Super Admin)
+*   **Akses**: Admin Panel (`/admin`)
+*   **Status**: Terimplementasi (Advanced).
+*   **Fitur**: Management proyek, manajemen keuangan (invoices/orders), pengaturan sistem (AI keys, payment settings).
+
+### C. The Squad Lead (Developer)
+*   **Akses**: Squad Portal (`/squad`)
+*   **Status**: Tahap Awal (WIP).
+*   **Fitur**: Mission board sederhana, manajemen profil.
+
+### D. The AI Agent (CredibleBot)
+*   **Engine**: Genkit (Google Gemini)
+*   **Status**: Produksi.
+*   **Fitur**: Rotasi API Key otomatis (Load Balancing), PRD generation, konsultasi estimasi harga.
 
 ---
 
-## 2. Fitur Utama & Roadmap
+## 🛠️ 2. Tech Stack (Actual Implementation)
 
-### ✅ Tahap 1: The "Digital Receptionist" (MVP) - *Current Phase*
-Fokus: Menghilangkan administrasi manual.
-- [x] **Auth**: Login/Register via **Stack Auth** (Google/Email).
-- [x] **Dashboard**: Project List & Status Tracker.
-- [x] **Project Creation**: Form brief project sederhana.
-- [x] **Database**: Self-hosted PostgreSQL dengan **Prisma 7** & Docker.
+### Frontend
+- **Framework**: Next.js 16.1.4 (App Router)
+- **Library UI**: React 19, Tailwind CSS 4, Shadcn UI
+- **State Management**: Zustand
+- **Icons**: Lucide React
 
-### 🚧 Tahap 2: The "AI Integration" (Next)
-Fokus: Menghilangkan meeting kick-off.
-- [ ] **AI Consultant**: Chatbot untuk interview kebutuhan klien.
-- [ ] **Auto-PRD**: Generate dokumen requirements otomatis.
-- [ ] **Dynamic Pricing**: Estimasi harga berbasis kompleksitas fitur.
+### Backend & Database
+- **Auth**: Stack Auth (Migration from NextAuth selesai)
+- **Database**: PostgreSQL with Prisma ORM 7.2.0
+- **Storage**: AWS S3 (via `@aws-sdk/client-s3`)
+- **Payments**: Midtrans / Resend (Draft)
 
-### 🔮 Tahap 3: The "Full Autopilot"
-Fokus: Menghilangkan revisi chat & support.
-- [ ] **Contextual Feedback**: Komen langsung di atas screenshot/preview (seperti Vercel comments).
-- [ ] **Codebase Chat**: RAG (Retrieval-Augmented Generation) untuk tanya jawab teknis otomatis.
-
----
-
-## 3. Tech Stack (Phase 1 Implemented)
-
-### Core
-- **Framework**: Next.js 14+ (App Router)
-- **Runtime**: Bun
-- **Styling**: Tailwind CSS v4 + Shadcn/UI (New York Style)
-
-### Backend & Data
-- **Database**: PostgreSQL (Self-Hosted via Docker)
-- **ORM**: Prisma v7.2 (via `@prisma/adapter-pg`)
-- **Authentication**: Stack Auth (`@stackframe/stack`)
-
-### DevOps
-- **Containerization**: Docker & Docker Compose
-- **Target Deployment**: VPS (Ubuntu/Linux)
+### AI Integration
+- **Framework**: Genkit AI
+- **Models**: Gemini 2.0 Flash (Primary), Gemini 1.5 Flash (Fallback)
+- **Logic**: Dynamic key rotation via `prisma.systemKey`
 
 ---
 
-## 4. Cara Menjalankan (Local Development)
+## ✅ 3. Fitur Terimplementasi (Ready to Use)
+- [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
+- [x] **Admin Project Management**: CRUD Proyek, Assignment, Status tracking (`app/admin/pm`).
+- [x] **System Key Rotation**: Manajemen LLM API keys dengan redundansi (`app/genkit/ai.ts`).
+- [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
+- [x] **Invoice PDF Generator**: Pembuatan invoice otomatis (`components/checkout/invoice-document.tsx`).
+- [x] **Conditional Floating Chat**: Widget chat pintar yang menyesuaikan konteks halaman.
 
-### Prerequisite
-- Docker Engine & Docker Compose
-- Bun (`curl -fsSL https://bun.sh/install | bash`)
+---
 
-### Steps
-1. **Clone Repo & Install Dependencies**
-   ```bash
-   git clone <repo_url>
-   cd agency-os
-   bun install
-   ```
+## 🚧 4. Apa yang Belum? (Missing/WIP)
+- [ ] **GitHub Full Integration**: Integrasi repo activity baru sebatas UI mockup, perlu koneksi API GitHub yang fungsional.
+- [ ] **Squad Wallet & Payout**: Model database sudah ada, namun UI withdrawal dan integrasi payout gateway belum aktif.
+- [ ] **Visual Feedback Pinning**: Fitur mengomentari langsung pada layar staging (mockup di `feedback-board.tsx`).
+- [ ] **Automated Testing Suite**: Kerangka pengujian ada, namun unit test untuk logika pricing & AI flow masih minim.
+- [ ] **Production Deployment Script**: Docker setup tersedia, namun workflow CI/CD penuh masih dalam pengembangan.
 
-2. **Setup Environment Variables**
-   Copy `.env.example` ke `.env` (atau buat manual) dan isi:
-   ```env
-   DATABASE_URL="postgresql://postgres:postgres_password_change_me@localhost:5432/agency_os?schema=public"
-   NEXT_PUBLIC_STACK_PROJECT_ID="your_stack_project_id"
-   NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY="your_stack_key"
-   STACK_SECRET_SERVER_KEY="your_stack_secret"
-   ```
+---
 
-3. **Start Database (Docker)**
-   ```bash
-   sudo docker compose up -d db
-   ```
+## 🚀 5. Cara Menjalankan
 
-4. **Run Migrations**
-   ```bash
-   bunx prisma migrate dev
-   ```
-
-5. **Start App**
-   ```bash
-   bun run dev
-   ```
-   Buka `http://localhost:3000` di browser.
+1.  **Install**: `pnpm install`
+2.  **Env**: Setup `.env` berdasarkan `prisma.schema` (DATABASE_URL, STACK_API_KEY).
+3.  **Database**: `npx prisma migrate dev`
+4.  **Dev Server**: `pnpm dev`
