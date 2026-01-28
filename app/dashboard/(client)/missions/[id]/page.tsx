@@ -5,13 +5,15 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RepoActivity } from "@/components/repo-activity";
-import { FeedbackBoard } from "@/components/feedback-board";
-import { DeployButton } from "@/components/deploy-button";
+import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
+import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
 import Image from "next/image";
-import { ProjectHeader } from "@/components/dashboard/project-header";
-import { FileText, MessageSquare, Terminal, Github, Globe } from "lucide-react";
-import { ServiceFeaturesList } from "@/components/dashboard/service-features-list";
+import { ProjectHeader } from "@/components/dashboard/missions/header";
+import { FileText, MessageSquare, Terminal, Github, Globe, CalendarClock } from "lucide-react";
+import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
+import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
+import { FeedbackBoard } from "@/components/feedback/board";
+import { type ExtendedProject } from "@/lib/types";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -32,9 +34,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             briefs: true,
             feedback: {
                 orderBy: { createdAt: 'desc' }
+            },
+            dailyLogs: {
+                orderBy: { createdAt: 'desc' }
             }
         },
-    });
+    }) as unknown as ExtendedProject;
 
     if (!project) {
         notFound();
@@ -125,7 +130,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                                     <div className="text-zinc-400 text-xs leading-relaxed line-clamp-2" dangerouslySetInnerHTML={{ __html: project.service.description }} />
 
                                     <ServiceFeaturesList
-                                        features={project.service.features as { title: string, description: string }[]}
+                                        features={(project.service.features as string[]) || []}
                                     />
                                 </div>
                             </div>
@@ -134,6 +139,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                         </div>
                     )}
 
+                    {/* Daily Updates */}
+                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
+                        <div className="flex items-center gap-2 mb-2 text-zinc-400">
+                            <CalendarClock className="w-3.5 h-3.5" />
+                            <h2 className="text-sm font-semibold tracking-tight text-white uppercase tracking-wider">Mission Updates</h2>
+                        </div>
+                        <div className="h-64">
+                            <DailyLogFeed projectId={project.id} initialLogs={project.dailyLogs} />
+                        </div>
+                    </div>
                     {/* Feedback Comms */}
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
                         <div className="flex items-center gap-2 mb-2 text-zinc-400">
@@ -162,7 +177,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                                         <span className="text-zinc-500 uppercase tracking-wider font-medium">Status</span>
                                         <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[9px] px-1.5 py-0">Online</Badge>
                                     </div>
-                                    <DeployButton projectId={project.id} deployUrl={project.deployUrl} />
+                                    <WorkbenchStatus projectId={project.id} deployUrl={project.deployUrl} />
                                 </div>
                                 <div className="border-t border-white/5 pt-3">
                                     <p className="text-[10px] text-zinc-500 mb-2 uppercase tracking-wider">Repository Activity</p>

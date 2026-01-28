@@ -3,7 +3,234 @@
         "loading": "Memuat...",
         "error": "Terjadi kesalahan",
         "save": "Simpan",
-        "cancel": "Batal"
+        "cancel": "Batal",
+        "login": "Masuk",
+        "logout": "Keluar",
+        "back": "Kembali",
+        "updated": "Diperbarui"
+    },
+    "Navigation": {
+        "forTalent": "Untuk Talent",
+        "priceCalculator": "Kalkulator Harga",
+        "services": "Layanan",
+        "myAccount": "Akun Saya",
+        "startProject": "Mulai Proyek"
+    },
+    "Hero": {
+        "statusBadge": "Status: Ketersediaan Terbatas (Sisa 2 Slot)",
+        "title1": "Bangun Aplikasi Enterprise",
+        "title2": "Dengan Kecepatan Startup",
+        "description": "Berhenti mengorbankan kualitas demi kecepatan. Kami memadukan kecepatan <white>Generative AI</white> dengan ketelitian <white>Senior Engineering</white> untuk menghadirkan perangkat lunak yang aman dan skalabel dalam hitungan minggu, bukan bulan.",
+        "launchDashboard": "Buka Dashboard",
+        "joinTalentSquad": "Gabung Talent Squad",
+        "poweredBy": "DIDUKUNG OLEH NEXT.JS 15 • TURBOPACK • GENKIT"
+    },
+    "Ecosystem": {
+        "title": "The Agency Operating System",
+        "subtitle": "Tiga antarmuka kuat yang terhubung oleh satu inti cerdas.",
+        "clientTitle": "Client Command Center",
+        "clientDesc": "Buat spesifikasi dengan AI, pantau progres real-time, dan deploy instan. Tidak ada lagi email.",
+        "clientCta": "Masuk Portal",
+        "squadTitle": "Talent Squad Engine",
+        "squadDesc": "Ambil misi, akses spesifikasi jelas, dan kirim kode. Dibayar berdasarkan output, bukan jam.",
+        "squadCta": "Gabung Squad",
+        "adminTitle": "Admin Core",
+        "adminDesc": "Otak pusat yang mengelola kontrol kualitas, pembayaran, dan integritas sistem.",
+        "adminCta": "Akses Terbatas"
+    },
+    "SocialProof": {
+        "faster": "2x Lebih Cepat",
+        "fasterSub": "Dibanding Agensi Konvensional",
+        "fixedPrice": "Harga Pasti",
+        "fixedPriceSub": "Tanpa Biaya Tersembunyi",
+        "verified": "100% Terverifikasi",
+        "verifiedSub": "Kode Diaudit oleh Senior Expert",
+        "techStack": "Didukung oleh Teknologi Modern"
+    },
+    "Comparison": {
+        "title": "Mengapa Memilih Hybrid Agency?",
+        "subtitle": "Masa depan pengembangan software adalah kolaborasi AI + Manusia.",
+        "oldTitle": "Agensi Tradisional (Masa Lalu)",
+        "old1": "Meeting Zoom berjam-jam tanpa hasil jelas.",
+        "old2": "Harga berubah-ubah (Time & Material).",
+        "old3": "Update progres harus ditanya via WA/Email.",
+        "old4": "Tim Junior yang sering berganti-ganti.",
+        "newTitle": "Crediblemark (Masa Depan)",
+        "recommended": "DIREKOMENDASIKAN",
+        "new1": "Zero Meeting.",
+        "new1Sub": "Briefing via AI Chat 10 menit beres.",
+        "new2": "Algorithmic Pricing.",
+        "new2Sub": "Harga dikunci sistem di awal.",
+        "new3": "Real-time Dashboard.",
+        "new3Sub": "Pantau progres detik demi detik.",
+        "new4": "Solo Senior Expert.",
+        "new4Sub": "Satu penanggung jawab selamanya."
+    },
+    "ProductCatalog": {
+        "title": "Solusi Siap Pakai",
+        "subtitle": "Pilih paket yang sesuai dengan kebutuhan bisnis Anda.",
+        "products": {
+            "ops": {
+                "title": "Business Ops Dashboard",
+                "target": "UKM & Distributor",
+                "desc": "Ubah tumpukan Excel menjadi aplikasi database internal yang aman. Otomatisasi hitung gaji & komisi.",
+                "price": "Mulai Rp 15 Jt",
+                "cta": "Rapikan Data Saya"
+            },
+            "publisher": {
+                "title": "The Publisher Engine",
+                "target": "Media & Penerbit",
+                "desc": "Portal berita Next.js super cepat dengan CMS redaksi modern. Siap monetisasi iklan & langganan.",
+                "price": "Mulai Rp 10 Jt",
+                "cta": "Buat Media Baru"
+            },
+            "saas": {
+                "title": "Custom SaaS MVP",
+                "target": "Startup Founder",
+                "desc": "Validasi ide startup Anda dalam 14 hari. AI membangun frontend, Saya membangun backend.",
+                "price": "Penawaran Kustom via AI",
+                "cta": "Konsultasi Ide"
+            }
+        }
+    },
+    "Workflow": {
+        "title": "Tanpa Drama. Tanpa Meeting. Langsung Kerja.",
+        "subtitle": "Efisiensi workflow asynchronous untuk hasil maksimal.",
+        "step1": "1. Chat dengan CredibleBot",
+        "step1Desc": "Ceritakan ide Anda pada AI kami. Dia akan menyusun spesifikasi teknis (PRD) yang rapi untuk Anda.",
+        "step2": "2. Terima Penawaran Instan",
+        "step2Desc": "Sistem menghitung kompleksitas fitur dan memberikan harga pasti (Fixed Price). Bayar deposit aman via Midtrans.",
+        "step3": "3. Pantau & Revisi Visual",
+        "step3Desc": "Lihat progres di dashboard. Ada revisi? Cukup klik bagian yang ingin diubah. Saya kerjakan, Anda terima beres."
+    },
+    "Financial": {
+        "title": "Hemat Biaya, Bukan Kualitas.",
+        "subtitle": "Logika investasi cerdas untuk bisnis modern.",
+        "comparison": "PERBANDINGAN",
+        "hireSenior": "HIRE SENIOR DEV",
+        "hybrid": "CREDIBLEMARK (HYBRID)",
+        "salary": "Biaya / Gaji",
+        "salaryOld": "Gaji 15jt/bln x 12",
+        "salaryNew": "Sekali Bayar",
+        "hiringTime": "Waktu Hiring",
+        "hiringTimeOld": "1 - 2 Bulan",
+        "hiringTimeNew": "Langsung Mulai",
+        "hiddenCost": "Hidden Cost",
+        "hiddenCostOld": "THR, BPJS, Laptop, Pajak",
+        "risk": "Risiko Utama",
+        "riskOld": "Karyawan Resign tiba-tiba",
+        "riskNew": "Garansi Bug & Maintenance",
+        "roi": "ROI: Efisien & Cepat"
+    },
+    "Guarantee": {
+        "title": "Kami Menanggung Risiko Untuk Anda.",
+        "subtitle": "100% Money Back Guarantee pada Fase Briefing",
+        "desc": "Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, kami kembalikan deposit Anda 100%.",
+        "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut."
+    },
+    "Expert": {
+        "title": "Satu Otak Manusia, Didukung Kecerdasan Mesin.",
+        "q": "Banyak klien bertanya: 'Apakah kodenya dibuat oleh robot?'",
+        "a": "Jawabannya: AI adalah tukang batu, saya Arsiteknya.",
+        "desc": "Saya menggunakan AI untuk menghilangkan pekerjaan membosankan (boilerplate, CSS, admin), sehingga saya bisa fokus 100% pada logika bisnis, keamanan data, dan performa aplikasi Anda.",
+        "footer": "Hasilnya? Kualitas Enterprise Agency, dengan kecepatan dan harga Freelancer.",
+        "role": "Senior Fullstack Developer"
+    },
+    "FAQ": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "q1": "Apakah saya benar-benar tidak bisa ngobrol langsung?",
+        "a1": "Platform kami didesain untuk Asynchronous agar efisien. Semua tercatat rapi. Tapi untuk situasi darurat atau konsultasi strategi mendalam, sesi Call Premium tersedia.",
+        "q2": "Bagaimana jika ada bug setelah selesai?",
+        "a2": "Semua paket termasuk Garansi Bug 30 Hari. Lapor via dashboard, perbaikan diprioritaskan.",
+        "q3": "Apakah source code menjadi milik saya?",
+        "a3": "Ya, 100%. Setelah pelunasan, repositori GitHub akan ditransfer ke akun Anda."
+    },
+    "Dashboard": {
+        "Sidebar": {
+            "platform": "Platform",
+            "dashboard": "Dashboard",
+            "missions": "Misi",
+            "inbox": "Inbox",
+            "support": "Support",
+            "store": "Toko",
+            "billing": "Tagihan",
+            "proPlan": "Pro Plan",
+            "upgradeDesc": "Upgrade untuk token AI lebih banyak.",
+            "upgrade": "Upgrade",
+            "settings": "Pengaturan",
+            "commandCenter": "Pusat Komando",
+            "overview": "Ikhtisar",
+            "missionBoard": "Papan Misi",
+            "orders": "Pesanan",
+            "clients": "Klien",
+            "supportInbox": "Inbox Support",
+            "system": "Sistem",
+            "serviceCatalog": "Katalog Layanan",
+            "financeConsole": "Konsol Keuangan",
+            "invoices": "Pesanan & Faktur",
+            "projectConsole": "Konsol Proyek",
+            "integrations": "Integrasi Sistem"
+        },
+        "Overview": {
+            "activeMission": "Misi Aktif",
+            "liveUpdate": "LIVE UPDATE",
+            "recentMissions": "Misi Terbaru",
+            "noMissions": "Belum ada misi yang diinisialisasi.",
+            "quickActions": "Aksi Cepat",
+            "needAssistance": "Butuh Bantuan?",
+            "aiHelperDesc": "AI Systems Engineer kami sedang online dan siap membantu Anda menyusun spesifikasi misi berikutnya.",
+            "openComms": "Buka Saluran Komunikasi"
+        },
+        "Workbench": {
+            "title": "Workbench Proyek",
+            "status": "Status Sistem",
+            "activity": "Aktivitas Repository",
+            "noAssets": "Belum ada aset teknis yang ditautkan.",
+            "manageAssets": "Kelola Aset Teknis",
+            "assignDeveloper": "Ditugaskan Ke",
+            "deployTrigger": "Trigger Deploy",
+            "deploying": "Sedang Deploy...",
+            "deployed": "Berhasil Deploy!"
+        },
+        "Integrations": {
+            "title": "Integrasi Sistem",
+            "description": "Hubungkan GitHub dan Vercel untuk mengaktifkan workflow otomatis, monitoring deployment, dan sinkronisasi kode.",
+            "connect": "Hubungkan Akun",
+            "disconnect": "Putuskan Koneksi",
+            "connected": "Terhubung",
+            "disconnected": "Terputus"
+        }
+    },
+    "Admin": {
+        "Finance": {
+            "title": "Pesanan & Faktur",
+            "revenue": "Pendapatan Real-time",
+            "financials": "Keuangan",
+            "description": "Arsip komprehensif untuk melacak pembayaran, invoice, dan status estimasi proyek secara real-time.",
+            "totalProjects": "Total Proyek",
+            "autoSync": "Auto-sync aktif",
+            "pendingUpdates": "Pembaruan Tertunda",
+            "poweredBy": "Didukung oleh AgencyOS Financial Core",
+            "noOrders": "Pesanan tidak ditemukan.",
+            "previous": "Sebelumnya",
+            "next": "Selanjutnya"
+        }
+    },
+    "Missions": {
+        "inOrbit": "Dalam Orbit",
+        "missionControl": "Kontrol Misi"
+    },
+    "Loader": {
+        "initializingCore": "MENGINISIALISASI_SISTEM_INTI...",
+        "loadingNeural": "MEMUAT_PROTOKOL_SARAF...",
+        "establishingUplink": "MEMBANGUN_UPLINK_TERENKRIPSI...",
+        "decryptingData": "MENDEKRIPSI_DATA_AGENCY...",
+        "syncingWorkspace": "MENYINKRONKAN_MODE_WORKSPACE...",
+        "systemReady": "SISTEM_SIAP.",
+        "terminalVersion": "Terminal Sistem v2.0.26",
+        "target": "Target",
+        "status": "Status",
+        "processing": "Sedang Memproses"
     },
     "Invoice": {
         "title": "TAGIHAN",
@@ -23,6 +250,17 @@
         "paymentReceived": "Pembayaran Diterima",
         "thankYou": "Terima kasih atas kepercayaan Anda.",
         "download": "Unduh / Cetak Tagihan",
-        "pay": "Bayar"
+        "pay": "Pay"
+    },
+    "Footer": {
+        "ctaTitle": "Siap Membangun Masa Depan Bisnis Anda?",
+        "ctaButton": "Mulai AI Briefing (Gratis)",
+        "clientLogin": "Login Klien",
+        "contactUs": "Hubungi Kami",
+        "services": "Layanan",
+        "supportHelp": "Bantuan / Support",
+        "terms": "Ketentuan Layanan",
+        "privacy": "Kebijakan Privasi",
+        "copyright": "© 2024 Crediblemark. Dibangun dengan Kecerdasan Manusia & Kecepatan Buatan."
     }
 }

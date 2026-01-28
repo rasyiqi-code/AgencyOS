@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db";
-import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { Input } from "@/components/ui/input";
 import { revalidatePath } from "next/cache";

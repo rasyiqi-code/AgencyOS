@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { confirmOrder } from "@/app/actions/admin";
+// import { confirmOrder } from "@/app/actions/admin";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
@@ -14,7 +14,10 @@ export function ConfirmPaymentButton({ estimateId }: { estimateId: string }) {
 
         startTransition(async () => {
             try {
-                await confirmOrder(estimateId);
+                const res = await fetch(`/api/estimates/${estimateId}/confirm`, {
+                    method: "POST"
+                });
+                if (!res.ok) throw new Error("Failed");
                 toast.success("Payment confirmed. Project activated.");
             } catch (error) {
                 toast.error("Failed to confirm payment.");

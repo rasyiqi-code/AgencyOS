@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import type { MessageAttachment } from "@/types/payment";
 
 export default async function AdminTicketChatPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -28,8 +29,7 @@ export default async function AdminTicketChatPage({ params }: { params: Promise<
         messages: ticket.messages.map(m => ({
             ...m,
             createdAt: m.createdAt.toISOString(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            attachments: m.attachments as any
+            attachments: m.attachments as unknown as MessageAttachment[]
         }))
     };
 

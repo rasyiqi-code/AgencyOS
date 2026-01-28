@@ -1,13 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, CheckCircle } from "lucide-react";
+import { Download, CheckCircle, Loader2 } from "lucide-react";
 import { ExtendedEstimate } from "@/lib/types";
 import { BankTransferInfoCard } from "@/components/payment/manual/bank-transfer/info-card";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
 export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number }) {
+    const [isProcessing, setIsProcessing] = useState(false);
     useCurrency();
 
     // Calculate IDR
@@ -83,14 +85,17 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: {
                         variant="outline"
                         className="w-full border-zinc-700 bg-transparent text-white hover:bg-zinc-800 hover:text-white cursor-pointer"
                         onClick={onPrint}
+                        disabled={isProcessing}
                     >
                         <Download className="w-4 h-4 mr-2" />
                         Download PDF Invoice
                     </Button>
 
                     <Button
-                        className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer"
+                        className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isProcessing}
                         onClick={async () => {
+                            setIsProcessing(true);
                             try {
                                 const response = await fetch("/api/checkout", {
                                     method: "POST",
@@ -104,7 +109,7 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: {
                                 if (!response.ok) {
                                     const err = await response.text();
                                     console.error("Payment Error:", err);
-                                    alert(`Payment Error: ${err}`); // Temporary feedback
+                                    alert(`Payment Error: ${err}`);
                                     throw new Error(err || "Failed to create order");
                                 }
                                 const { orderId } = await response.json();
@@ -113,16 +118,30 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: {
                                 window.location.href = `/invoices/${orderId}`;
                             } catch (e) {
                                 console.error(e);
+                                setIsProcessing(false);
                             }
                         }}
                     >
-                        Proceed to Payment
+                        {isProcessing ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Processing...
+                            </>
+                        ) : (
+                            "Proceed to Payment"
+                        )}
                     </Button>
                 </div>
 
                 <p className="text-xs text-zinc-500 text-center">
                     Secure 256-bit SSL encrypted.
                 </p>
+
+                <div className="text-center pt-2">
+                    <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 underline decoration-zinc-700 underline-offset-2 hover:decoration-zinc-400 transition-all">
+                        Problem with payment?
+                    </a>
+                </div>
             </CardContent>
         </Card>
     );

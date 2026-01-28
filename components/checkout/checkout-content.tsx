@@ -4,10 +4,10 @@ import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
-
 import { ExtendedEstimate } from "@/lib/types";
+import type { BankDetails } from "@/types/payment";
 
-export function CheckoutContent({ estimate, bankDetails, activeRate }: { estimate: ExtendedEstimate, bankDetails: unknown, activeRate: number }) {
+export function CheckoutContent({ estimate, bankDetails, activeRate }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
 
     const handlePrint = useReactToPrint({
@@ -27,8 +27,7 @@ export function CheckoutContent({ estimate, bankDetails, activeRate }: { estimat
                 <PaymentSidebar
                     estimate={estimate}
                     onPrint={() => handlePrint && handlePrint()}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    bankDetails={bankDetails as any}
+                    bankDetails={bankDetails}
                     activeRate={activeRate}
                 />
             </div>

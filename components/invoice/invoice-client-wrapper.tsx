@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useReactToPrint } from "react-to-print";
 import { Download } from "lucide-react";
@@ -9,6 +9,7 @@ import { InvoiceDocument } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
 import { ExtendedEstimate } from "@/lib/types";
 import { useCurrency } from "@/components/providers/currency-provider";
+import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails } from "@/types/payment";
 
 interface InvoiceClientWrapperProps {
     order: {
@@ -19,10 +20,15 @@ interface InvoiceClientWrapperProps {
         userId: string | null;
         createdAt: Date;
         updatedAt: Date;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        paymentMetadata: any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        project: any;
+        paymentMetadata: MidtransPaymentData | CreemPaymentMetadata | null;
+        project: {
+            id: string;
+            title: string;
+            service?: {
+                id: string;
+                title: string;
+            } | null;
+        } | null;
     };
     estimate: ExtendedEstimate;
     user: {
@@ -30,11 +36,7 @@ interface InvoiceClientWrapperProps {
         email: string;
     };
     isPaid: boolean;
-    bankDetails?: {
-        bank_name?: string;
-        bank_account?: string;
-        bank_holder?: string;
-    };
+    bankDetails?: BankDetails;
 }
 
 const thankYouQuotes = [
@@ -49,12 +51,10 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
-    const [quote, setQuote] = useState("");
-
-    useEffect(() => {
+    const quote = useMemo(() => {
         // Deterministic quote based on Order ID
         const index = order.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % thankYouQuotes.length;
-        setQuote(thankYouQuotes[index]);
+        return thankYouQuotes[index];
     }, [order.id]);
 
     useEffect(() => {
@@ -141,6 +141,12 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             </div>
                         </div>
                     )}
+
+                    <div className="mt-4 pt-4 border-t border-white/5 text-center">
+                        <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex items-center justify-center gap-1">
+                            Need Help? Contact Support
+                        </a>
+                    </div>
                 </div>
 
                 {/* Download Button (Only if Paid) */}
@@ -157,7 +163,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         <div className="relative group">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
                             <div className="relative bg-zinc-900 border border-white/10 p-6 rounded-lg text-center space-y-3">
-                                <div className="text-2xl text-lime-400 opacity-50 font-serif">"</div>
+                                <div className="text-2xl text-lime-400 opacity-50 font-serif">&quot;</div>
                                 <p className="text-sm text-zinc-300 italic font-serif leading-relaxed">
                                     {quote.split(" — ")[0]}
                                 </p>

@@ -9,6 +9,7 @@ import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-ch
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { CurrencyProvider } from "@/components/providers/currency-provider";
+import { PendingCheckoutRedirect } from "@/components/store/pending-checkout-redirect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,10 +35,11 @@ export default async function RootLayout({
           defer
         ></script>
         <NextIntlClientProvider messages={messages}>
-          <CurrencyProvider>
+          <CurrencyProvider initialLocale={locale}>
             <StackProvider app={stackServerApp}>
               <StackTheme>
                 {children}
+                <PendingCheckoutRedirect />
                 <Suspense fallback={null}>
                   <ConditionalFloatingChat />
                 </Suspense>

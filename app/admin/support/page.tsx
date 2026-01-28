@@ -4,6 +4,7 @@ import { Mail, MessageSquare, List } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TicketTable } from "@/components/admin/support/ticket-table";
 import { ChatConsole } from "@/components/admin/support/chat-console";
+import type { MessageAttachment } from "@/types/payment";
 
 export default async function AdminSupportInbox() {
     const rawTickets = await prisma.ticket.findMany({
@@ -23,8 +24,7 @@ export default async function AdminSupportInbox() {
         messages: t.messages.map(m => ({
             ...m,
             createdAt: m.createdAt.toISOString(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            attachments: m.attachments as any
+            attachments: m.attachments as unknown as MessageAttachment[]
         }))
     }));
 

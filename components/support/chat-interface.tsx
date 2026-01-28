@@ -5,7 +5,7 @@ import { Send, Paperclip, FileText, Loader2, User, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { sendMessage } from "@/app/actions/support";
+// import { sendMessage } from "@/app/actions/support";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -77,12 +77,17 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
         if (file) formData.append("file", file);
 
         try {
-            await sendMessage(formData);
+            const res = await fetch("/api/support/ticket/message", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error("Failed to send");
             setNewMessage("");
             setFile(null);
 
-            const res = await fetch(`/api/support/ticket/${ticket.id}`);
-            const data = await res.json();
+            const ticketRes = await fetch(`/api/support/ticket/${ticket.id}`);
+            const data = await ticketRes.json();
             setTicket(data);
 
             router.refresh();
@@ -127,8 +132,8 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
                             </Avatar>
                             <div className={`flex flex-col max-w-[85%] ${isAdminSender ? 'items-start' : 'items-end'}`}>
                                 <div className={`px-3 py-2 rounded-xl text-sm leading-relaxed ${isAdminSender
-                                        ? 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-white/5'
-                                        : 'bg-indigo-600 text-white rounded-tr-none'
+                                    ? 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-white/5'
+                                    : 'bg-indigo-600 text-white rounded-tr-none'
                                     }`}>
                                     {msg.content}
                                 </div>

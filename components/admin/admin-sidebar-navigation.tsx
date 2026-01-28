@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SidebarSuperAdmin, SidebarFinance, SidebarPM } from "@/components/dashboard/sidebar-roles";
+import { SidebarSuperAdmin, SidebarFinance, SidebarPM } from "@/components/dashboard/sidebar/roles";
 
 interface Props {
     pmAccess: boolean;

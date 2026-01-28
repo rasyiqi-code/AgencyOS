@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
     try {
-        const { projectId, content, type } = await req.json();
+        const { projectId, content, type, imageUrl } = await req.json();
 
         if (!projectId || !content) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
                 projectId,
                 content,
                 type: type || 'bug',
+                imageUrl,
                 status: 'open'
             }
         });

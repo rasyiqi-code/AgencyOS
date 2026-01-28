@@ -17,9 +17,9 @@ async function getClient() {
     const endpoint = getSetting('r2_endpoint');
     const accessKeyId = getSetting('r2_access_key_id');
     const secretAccessKey = getSetting('r2_secret_access_key');
-    const bucketName = getSetting('r2_bucket_name') || "agency-os-assets";
+    const bucketName = getSetting('r2_bucket_name');
 
-    if (!endpoint || !accessKeyId || !secretAccessKey) {
+    if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
         return null;
     }
 

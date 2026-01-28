@@ -1,4 +1,8 @@
-export function ExpertProfile() {
+import { getTranslations } from "next-intl/server";
+
+export async function ExpertProfile() {
+    const t = await getTranslations("Expert");
+
     return (
         <section className="py-24 bg-black">
             <div className="container mx-auto px-4">
@@ -11,25 +15,27 @@ export function ExpertProfile() {
                             </div>
                         </div>
                         <h3 className="text-white font-bold text-lg">Rasyiqi</h3>
-                        <p className="text-indigo-400 text-sm">Senior Fullstack Developer</p>
+                        <p className="text-indigo-400 text-sm">{t("role")}</p>
                     </div>
 
                     <div className="flex-1 space-y-6 text-center md:text-left">
                         <h2 className="text-3xl font-bold text-white">
-                            &ldquo;Satu Otak Manusia, Didukung Kecerdasan Mesin.&rdquo;
+                            &ldquo;{t("title")}&rdquo;
                         </h2>
                         <div className="space-y-4 text-zinc-400 leading-relaxed">
                             <p>
-                                Banyak klien bertanya: &apos;Apakah kodenya dibuat oleh robot?&apos;
+                                {t("q")}
                             </p>
                             <p>
-                                Jawabannya: <strong>AI adalah tukang batu, saya Arsiteknya.</strong>
+                                {t.rich("a", {
+                                    strong: (chunks) => <strong className="text-white">{chunks}</strong>
+                                })}
                             </p>
                             <p>
-                                Saya menggunakan AI untuk menghilangkan pekerjaan membosankan (boilerplate, CSS, admin), sehingga saya bisa fokus 100% pada logika bisnis, keamanan data, dan performa aplikasi Anda.
+                                {t("desc")}
                             </p>
                             <p className="text-white font-medium pt-2">
-                                Hasilnya? Kualitas Enterprise Agency, dengan kecepatan dan harga Freelancer.
+                                {t("footer")}
                             </p>
                         </div>
                     </div>

@@ -1,0 +1,63 @@
+$ eslint
+
+/home/rasyiqi/Project/AgencyOS/app/(public)/invoices/[id]/page.tsx
+   6:10  warning  'Prisma' is defined but never used        @typescript-eslint/no-unused-vars
+  98:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/(public)/services/page.tsx
+  31:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/admin/pm/services/[id]/edit/page.tsx
+  56:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/app/dashboard/(client)/missions/[id]/page.tsx
+   14:29   warning  'DailyLog' is defined but never used      @typescript-eslint/no-unused-vars
+   15:30   warning  'FeedbackItem' is defined but never used  @typescript-eslint/no-unused-vars
+  148:100  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  157:94   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/rasyiqi/Project/AgencyOS/components/admin/clients/clients-data-table.tsx
+  29:19  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+/home/rasyiqi/Project/AgencyOS/components/admin/clients/clients-data-table.tsx:29:19
+  27 |     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  28 |
+> 29 |     const table = useReactTable({
+     |                   ^^^^^^^^^^^^^ TanStack Table's `useReactTable()` API returns functions that cannot be memoized safely
+  30 |         data,
+  31 |         columns,
+  32 |         getCoreRowModel: getCoreRowModel(),  react-hooks/incompatible-library
+
+/home/rasyiqi/Project/AgencyOS/components/admin/finance/finance-table.tsx
+  18:19  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+/home/rasyiqi/Project/AgencyOS/components/admin/finance/finance-table.tsx:18:19
+  16 |
+  17 | export function FinanceTable({ data }: FinanceTableProps) {
+> 18 |     const table = useReactTable({
+     |                   ^^^^^^^^^^^^^ TanStack Table's `useReactTable()` API returns functions that cannot be memoized safely
+  19 |         data,
+  20 |         columns: financeColumns,
+  21 |         getCoreRowModel: getCoreRowModel(),  react-hooks/incompatible-library
+
+/home/rasyiqi/Project/AgencyOS/components/admin/finance/orders-data-table.tsx
+  23:19  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+/home/rasyiqi/Project/AgencyOS/components/admin/finance/orders-data-table.tsx:23:19
+  21 |     data,
+  22 | }: OrdersDataTableProps<TData, TValue>) {
+> 23 |     const table = useReactTable({
+     |                   ^^^^^^^^^^^^^ TanStack Table's `useReactTable()` API returns functions that cannot be memoized safely
+  24 |         data,
+  25 |         columns,
+  26 |         getCoreRowModel: getCoreRowModel(),  react-hooks/incompatible-library
+
+✖ 11 problems (5 errors, 6 warnings)
+
+error: script "lint" exited with code 1

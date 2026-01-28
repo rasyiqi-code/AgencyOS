@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp } from "lucide-react";
+import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function SystemNav() {
@@ -18,6 +18,11 @@ export function SystemNav() {
             href: "/admin/system/payment",
             label: "Payment Details",
             icon: CreditCard
+        },
+        {
+            href: "/admin/system/email",
+            label: "Email Service",
+            icon: Mail
         },
         {
             href: "/admin/system/keys",
@@ -38,6 +43,11 @@ export function SystemNav() {
             href: "/admin/system/currency",
             label: "Currency Rates",
             icon: DollarSign
+        },
+        {
+            href: "/admin/system/integrations",
+            label: "System Integrations",
+            icon: Share2
         }
     ];
 

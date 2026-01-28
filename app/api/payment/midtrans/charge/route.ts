@@ -1,8 +1,9 @@
-import { core } from "@/lib/midtrans";
+import { getCore } from "@/lib/midtrans";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/lib/stack";
 import { paymentService } from "@/lib/server/payment-service";
+import type { MidtransChargeParameter } from "@/types/payment";
 
 export async function POST(req: Request) {
     try {
@@ -65,10 +66,7 @@ export async function POST(req: Request) {
         // 1.5 Convert USD to IDR
         const { idrAmount } = await paymentService.convertToIDR(order.amount);
 
-        // ...
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const parameter: any = {
+        const parameter: MidtransChargeParameter = {
             payment_type: paymentType,
             transaction_details: {
                 order_id: uniqueTransactionId,
@@ -131,6 +129,7 @@ export async function POST(req: Request) {
         }
 
         // 4. Charge
+        const core = await getCore();
         const chargeResponse = await core.charge(parameter);
 
         // 5. Update Order with Payment Info
@@ -140,21 +139,20 @@ export async function POST(req: Request) {
             data: {
                 transactionId: uniqueTransactionId,
                 paymentType: paymentType,
-
                 paymentMetadata: chargeResponse
-            } as any // eslint-disable-line @typescript-eslint/no-explicit-any
+            }
         });
 
         return NextResponse.json(chargeResponse);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[CORE_CHARGE_ERROR]", error);
 
         // Handle "Order ID already used" error by suggesting a retry with new ID?
         // Or user handles it.
+        const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
         return NextResponse.json(
-            { message: error?.message || "Internal Server Error" },
+            { message: errorMessage },
             { status: 500 }
         );
     }

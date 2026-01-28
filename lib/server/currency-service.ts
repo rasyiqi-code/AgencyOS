@@ -67,38 +67,91 @@ export class CurrencyService {
     }
 
     async fetchAndCacheRates(apiKey: string): Promise<ExchangeRates | null> {
-        try {
-            // CurrencyFreaks API
-            // https://api.currencyfreaks.com/v2.0/rates/latest?apikey=APIKEY&symbols=IDR
-            const response = await fetch(`https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${apiKey}&symbols=IDR`);
-            if (!response.ok) throw new Error("Failed to fetch rates");
+        const MAX_RETRIES = 2;
+        const TIMEOUT_MS = 5000; // 5 seconds timeout
 
-            const data = await response.json();
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                console.log(`[CurrencyService] Fetching rates (attempt ${attempt}/${MAX_RETRIES})...`);
 
-            // Format: { date: "...", base: "USD", rates: { "IDR": "16000.50" } }
-            // Note: Rates are strings in response
-            const newRates: ExchangeRates = {
-                base: data.base || "USD",
-                rates: {
-                    IDR: parseFloat(data.rates.IDR)
-                },
-                lastUpdated: Date.now()
-            };
+                // Create abort controller for timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-            await prisma.systemSetting.upsert({
-                where: { key: RATES_KEY },
-                update: { value: JSON.stringify(newRates) },
-                create: { key: RATES_KEY, value: JSON.stringify(newRates) }
-            });
+                const response = await fetch(
+                    `https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${apiKey}&symbols=IDR`,
+                    { signal: controller.signal }
+                );
 
-            console.log("[CurrencyService] Rates updated successfully");
-            return newRates;
+                clearTimeout(timeoutId);
 
-        } catch (error) {
-            console.error("[CurrencyService] Error fetching rates:", error);
-            return null;
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API returned ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                // Validate response structure
+                if (!data.rates || !data.rates.IDR) {
+                    throw new Error("Invalid API response structure");
+                }
+
+                const newRates: ExchangeRates = {
+                    base: data.base || "USD",
+                    rates: {
+                        IDR: parseFloat(data.rates.IDR)
+                    },
+                    lastUpdated: Date.now()
+                };
+
+                await prisma.systemSetting.upsert({
+                    where: { key: RATES_KEY },
+                    update: { value: JSON.stringify(newRates) },
+                    create: { key: RATES_KEY, value: JSON.stringify(newRates) }
+                });
+
+                console.log(`[CurrencyService] Rates updated successfully: 1 USD = ${newRates.rates.IDR} IDR`);
+                return newRates;
+
+            } catch (error) {
+                const isLastAttempt = attempt === MAX_RETRIES;
+                const errorMessage = error instanceof Error ? error.message : String(error);
+
+                if (error instanceof Error && error.name === 'AbortError') {
+                    console.warn(`[CurrencyService] Request timeout after ${TIMEOUT_MS}ms (attempt ${attempt}/${MAX_RETRIES})`);
+                } else {
+                    console.error(`[CurrencyService] Error fetching rates (attempt ${attempt}/${MAX_RETRIES}):`, errorMessage);
+                }
+
+                if (isLastAttempt) {
+                    // Return cached rates if available
+                    const cachedSetting = await prisma.systemSetting.findUnique({
+                        where: { key: RATES_KEY }
+                    });
+
+                    if (cachedSetting) {
+                        try {
+                            const cached = JSON.parse(cachedSetting.value);
+                            console.warn("[CurrencyService] Using stale cached rates due to API failure");
+                            return cached;
+                        } catch {
+                            // Cached data is corrupted
+                        }
+                    }
+
+                    console.error("[CurrencyService] All retry attempts failed and no cached rates available");
+                    return null;
+                }
+
+                // Wait before retry (exponential backoff: 1s, 2s)
+                await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+            }
         }
+
+        return null;
     }
+
 }
 
 export const currencyService = new CurrencyService();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Upload, Check, Loader2 } from "lucide-react";
-import { uploadPaymentProof } from "@/app/actions/billing";
+// import { uploadPaymentProof } from "@/app/actions/billing";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
@@ -20,7 +20,11 @@ export function UploadProof({ estimateId, className }: { estimateId: string, cla
         formData.append("estimateId", estimateId);
 
         try {
-            await uploadPaymentProof(formData);
+            const res = await fetch("/api/billing/proof", {
+                method: "POST",
+                body: formData,
+            });
+            if (!res.ok) throw new Error("Upload failed");
             toast.success("Transfer proof uploaded successfully!");
             setIsUploaded(true);
         } catch (error) {

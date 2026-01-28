@@ -3,30 +3,11 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import "@/types/payment"; // Window.snap type augmentation
 
 interface EmbeddedPaymentProps {
     orderId: string;
     snapToken: string;
-}
-
-declare global {
-    interface Window {
-        snap: {
-            embed: (token: string, options: {
-                embedId: string;
-                onSuccess?: (result: unknown) => void;
-                onPending?: (result: unknown) => void;
-                onError?: (result: unknown) => void;
-                onClose?: () => void;
-            }) => void;
-            pay: (token: string, options: {
-                onSuccess?: (result: unknown) => void;
-                onPending?: (result: unknown) => void;
-                onError?: (result: unknown) => void;
-                onClose?: () => void;
-            }) => void;
-        };
-    }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

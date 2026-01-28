@@ -1,6 +1,35 @@
 
 import { z } from "zod";
 
+export interface ProjectFile {
+    name: string;
+    url: string;
+    type: string;
+    uploadedAt: string;
+}
+
+export interface ProjectBrief {
+    id: string;
+    content: string;
+    createdAt: Date;
+}
+
+export interface FeedbackItem {
+    id: string;
+    content: string;
+    type: string;
+    imageUrl?: string | null;
+    status: string;
+    createdAt: Date;
+}
+
+export interface DailyLog {
+    id: string;
+    content: string;
+    mood: string;
+    createdAt: Date;
+}
+
 // Zod Schemas for JSON fields
 export const ScreenItemSchema = z.object({
     title: z.string(),
@@ -60,6 +89,8 @@ export interface ExtendedEstimate {
 export interface ExtendedProject {
     id: string;
     title: string;
+    clientName: string | null;
+    invoiceId: string | null;
     description: string | null;
     status: string;
     createdAt: Date;
@@ -70,14 +101,29 @@ export interface ExtendedProject {
     repoOwner: string | null;
     repoName: string | null;
     deployUrl: string | null;
-    service?: {
+    service: {
         title: string;
         description: string;
         price: number;
         features: unknown;
         image: string | null;
     } | null;
-    briefs: unknown[];
-    feedback: unknown[];
-    repoUrl: string | null; // Added this as it was missing but used in UI
+    briefs: ProjectBrief[];
+    feedback: FeedbackItem[];
+    dailyLogs: DailyLog[];
+    repoUrl: string | null;
+    spec?: string | null;
+    previewUrl?: string | null;
+    developerId?: string | null;
+    files?: ProjectFile[];
+}
+
+export interface StackUser {
+    id: string;
+    displayName: string | null;
+    primaryEmail: string | null;
+    profileImageUrl?: string | null;
+    signedUpAt?: number | string | Date;
+    createdAt?: number | string | Date;
+    lastActiveAt?: number | string | Date;
 }

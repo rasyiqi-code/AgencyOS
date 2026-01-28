@@ -2,6 +2,7 @@ import { ChatInterface } from "@/components/support/chat-interface";
 import { prisma } from "@/lib/db";
 import { stackServerApp } from "@/lib/stack";
 import { notFound, redirect } from "next/navigation";
+import type { MessageAttachment } from "@/types/payment";
 
 export default async function TicketChatPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -38,8 +39,7 @@ export default async function TicketChatPage({ params }: { params: Promise<{ id:
         messages: ticket.messages.map(m => ({
             ...m,
             createdAt: m.createdAt.toISOString(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            attachments: m.attachments as any
+            attachments: m.attachments as unknown as MessageAttachment[]
         }))
     };
 

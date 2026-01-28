@@ -1,6 +1,9 @@
 import { ShieldCheck } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export function SectionGuarantee() {
+export async function SectionGuarantee() {
+    const t = await getTranslations("Guarantee");
+
     return (
         <section className="py-24 bg-black">
             <div className="container mx-auto px-4 text-center">
@@ -11,16 +14,16 @@ export function SectionGuarantee() {
                             <ShieldCheck className="w-8 h-8 text-white" />
                         </div>
                         <h2 className="text-2xl md:text-4xl font-bold text-white mb-6">
-                            Kami Menanggung Risiko Untuk Anda.
+                            {t("title")}
                         </h2>
                         <h3 className="text-lg text-indigo-300 font-medium mb-4">
-                            &ldquo;100% Money Back Guarantee pada Fase Briefing&rdquo;
+                            &ldquo;{t("subtitle")}&rdquo;
                         </h3>
                         <p className="text-zinc-400 leading-relaxed max-w-xl mx-auto text-sm md:text-base">
-                            Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, kami kembalikan deposit Anda 100%.
+                            {t("desc")}
                         </p>
                         <p className="text-zinc-500 text-sm mt-4 italic">
-                            Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut.
+                            {t("footer")}
                         </p>
                     </div>
                 </div>

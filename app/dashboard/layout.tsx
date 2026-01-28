@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Shield } from "lucide-react";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { SidebarContainer, SidebarContentWrapper } from "@/components/dashboard/sidebar-container";
-import { DashboardSidebarNavigation, DashboardSidebarFooter } from "@/components/dashboard/dashboard-sidebar-navigation";
+import { DashboardHeader } from "@/components/dashboard/header/main";
+import { SidebarContainer } from "@/components/dashboard/sidebar/container";
+import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
+import { DashboardSidebarNavigation, DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
 
 export default async function DashboardLayout({
     children,

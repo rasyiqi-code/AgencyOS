@@ -1,6 +1,6 @@
 import { stackServerApp } from "@/lib/stack";
 import { prisma } from "@/lib/db";
-import { MissionCard } from "@/components/dashboard/mission-card";
+import { MissionCard } from "@/components/dashboard/missions/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -27,6 +27,7 @@ export default async function MissionsPage({ searchParams }: { searchParams: Pro
                 include: { service: true }
             },
             briefs: true,
+            dailyLogs: true,
             feedback: true
         }
     });

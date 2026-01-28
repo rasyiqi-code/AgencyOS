@@ -19,10 +19,10 @@ async function getClient() {
     const endpoint = getSetting('r2_endpoint');
     const accessKeyId = getSetting('r2_access_key_id');
     const secretAccessKey = getSetting('r2_secret_access_key');
-    const bucketName = getSetting('r2_bucket_name') || "agency-os-assets"; // Fallback to avoid breaking if not set
+    const bucketName = getSetting('r2_bucket_name');
 
-    if (!endpoint || !accessKeyId || !secretAccessKey) {
-        throw new Error("Storage credentials not configured.");
+    if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
+        throw new Error("Storage configuration is incomplete. Please set R2 Endpoint, Keys, and Bucket Name in Admin Settings.");
     }
 
     s3Client = new S3Client({
@@ -61,11 +61,16 @@ export async function uploadFile(file: File, path: string): Promise<string> {
     const publicDomain = settings?.value;
 
     if (publicDomain) {
-        const domain = publicDomain.startsWith("http") ? publicDomain : `https://${publicDomain}`;
-        return `${domain}/${path}`;
-    } else {
-        console.warn("R2 Public Domain not set in SystemSetting (key: r2_public_domain). Returning relative path.");
-    }
+        let domain = publicDomain.trim();
+        if (!domain.startsWith("http")) domain = `https://${domain}`;
+        // Remove trailing slash if exists
+        if (domain.endsWith("/")) domain = domain.slice(0, -1);
 
-    return path; // Fallback
+        const finalUrl = `${domain}/${path}`;
+        console.log("R2 Upload Success. Public URL:", finalUrl);
+        return finalUrl;
+    } else {
+        console.warn("R2 Public Domain not set (key: r2_public_domain). Falling back to internal proxy.");
+        return `/api/storage/proxy?key=${path}`;
+    }
 }

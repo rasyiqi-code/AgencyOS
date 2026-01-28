@@ -4,14 +4,22 @@ import { Input } from "@/components/ui/input";
 import { revalidatePath } from "next/cache";
 import { CreditCard, Save, Building, User } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
+import { PaymentGatewayConfigForm } from "@/components/admin/payment-gateway-config-form";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 export default async function AdminPaymentPage() {
-    // Fetch settings
+    // Fetch bank settings
     const settings = await prisma.systemSetting.findMany({
         where: {
             key: { in: ['bank_name', 'bank_account', 'bank_holder'] }
         }
     });
+
+    // Fetch payment gateway configs
+    const [midtransConfig, creemConfig] = await Promise.all([
+        paymentGatewayService.getMidtransConfig(),
+        paymentGatewayService.getCreemConfig()
+    ]);
 
     const getSetting = (key: string) => settings.find((s: { key: string; value: string }) => s.key === key)?.value || "";
 
@@ -119,6 +127,14 @@ export default async function AdminPaymentPage() {
                             </form>
                         </div>
                     </div>
+
+                    {/* Payment Gateway Configuration */}
+                    <PaymentGatewayConfigForm
+                        initialConfig={{
+                            midtrans: midtransConfig,
+                            creem: creemConfig
+                        }}
+                    />
 
                 </div>
             </div>

@@ -4,31 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, CreditCard } from "lucide-react";
+import "@/types/payment"; // Window.snap type augmentation
 
 interface InvoicePayButtonProps {
     orderId: string;
     snapToken?: string | null;
     amount: number;
-}
-
-declare global {
-    interface Window {
-        snap: {
-            embed: (token: string, options: {
-                embedId: string;
-                onSuccess?: (result: unknown) => void;
-                onPending?: (result: unknown) => void;
-                onError?: (result: unknown) => void;
-                onClose?: () => void;
-            }) => void;
-            pay: (token: string, options: {
-                onSuccess?: (result: unknown) => void;
-                onPending?: (result: unknown) => void;
-                onError?: (result: unknown) => void;
-                onClose?: () => void;
-            }) => void;
-        };
-    }
 }
 
 export function InvoicePayButton({ orderId, snapToken, amount }: InvoicePayButtonProps) {

@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/db";
-import { core } from "@/lib/midtrans";
-import { creem } from "@/lib/creem";
+import { getCore } from "@/lib/midtrans";
+import { creem as getCreem } from "@/lib/creem";
 import { NextResponse } from "next/server";
+import type { CreemPaymentMetadata } from "@/types/payment";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -29,6 +30,7 @@ export async function GET(req: Request) {
         // Smart Check: If pending and has transactionId, check upstream
         if (order.status === 'pending' && order.transactionId) {
             try {
+                const core = await getCore();
                 const midtransStatus = await core.transaction.status(order.transactionId);
                 const transactionStatus = midtransStatus.transaction_status;
 
@@ -71,6 +73,7 @@ export async function GET(req: Request) {
             // Check if we have a checkout_id from query (redirect) or stored in metadata
             if (checkoutId) {
                 try {
+                    const creem = await getCreem();
                     const creemStatus = await creem.checkouts.get({ checkoutId });
                     // Creem status: 'ordered', 'paid', 'completed'? Need to check docs or payload. 
                     // Assuming 'completed' or 'paid' property inside.
@@ -85,8 +88,7 @@ export async function GET(req: Request) {
                             data: {
                                 status: "paid",
                                 transactionId: checkoutId, // Store checkout ID if not already
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                paymentMetadata: creemStatus as any
+                                paymentMetadata: creemStatus as unknown as CreemPaymentMetadata
                             }
                         });
                         order.status = "paid"; // Update local var for redirect logic

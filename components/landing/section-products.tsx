@@ -1,52 +1,55 @@
 import { BarChart3, Newspaper, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-const products = [
-    {
-        title: "Business Ops Dashboard",
-        target: "UKM & Distributor",
-        desc: "Ubah tumpukan Excel menjadi aplikasi database internal yang aman. Otomatisasi hitung gaji & komisi.",
-        price: "Mulai Rp 15 Jt",
-        cta: "Rapikan Data Saya",
-        icon: BarChart3,
-        color: "text-blue-500",
-        bg: "bg-blue-500/10",
-        link: "/price-calculator"
-    },
-    {
-        title: "The Publisher Engine",
-        target: "Media & Penerbit",
-        desc: "Portal berita Next.js super cepat dengan CMS redaksi modern. Siap monetisasi iklan & langganan.",
-        price: "Mulai Rp 10 Jt",
-        cta: "Buat Media Baru",
-        icon: Newspaper,
-        color: "text-orange-500",
-        bg: "bg-orange-500/10",
-        link: "/price-calculator"
-    },
-    {
-        title: "Custom SaaS MVP",
-        target: "Startup Founder",
-        desc: "Validasi ide startup Anda dalam 14 hari. AI membangun frontend, Saya membangun backend.",
-        price: "Custom Quote via AI",
-        cta: "Konsultasi Ide",
-        icon: Rocket,
-        color: "text-indigo-500",
-        bg: "bg-indigo-500/10",
-        link: "/price-calculator"
-    }
-];
+export async function ProductCatalog() {
+    const t = await getTranslations("ProductCatalog");
 
-export function ProductCatalog() {
+    const products = [
+        {
+            title: t("products.ops.title"),
+            target: t("products.ops.target"),
+            desc: t("products.ops.desc"),
+            price: t("products.ops.price"),
+            cta: t("products.ops.cta"),
+            icon: BarChart3,
+            color: "text-blue-500",
+            bg: "bg-blue-500/10",
+            link: "/price-calculator"
+        },
+        {
+            title: t("products.publisher.title"),
+            target: t("products.publisher.target"),
+            desc: t("products.publisher.desc"),
+            price: t("products.publisher.price"),
+            cta: t("products.publisher.cta"),
+            icon: Newspaper,
+            color: "text-orange-500",
+            bg: "bg-orange-500/10",
+            link: "/price-calculator"
+        },
+        {
+            title: t("products.saas.title"),
+            target: t("products.saas.target"),
+            desc: t("products.saas.desc"),
+            price: t("products.saas.price"),
+            cta: t("products.saas.cta"),
+            icon: Rocket,
+            color: "text-indigo-500",
+            bg: "bg-indigo-500/10",
+            link: "/price-calculator"
+        }
+    ];
+
     return (
         <section className="py-24 bg-black">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                        Solusi Siap Pakai
+                        {t("title")}
                     </h2>
-                    <p className="text-zinc-400">Pilih paket yang sesuai dengan kebutuhan bisnis Anda.</p>
+                    <p className="text-zinc-400">{t("subtitle")}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

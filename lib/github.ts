@@ -1,3 +1,4 @@
+import { prisma } from "./db";
 
 export interface GitHubRepo {
     name: string;
@@ -20,13 +21,27 @@ export interface GitHubCommit {
     html_url: string;
 }
 
+
 const GITHUB_API_BASE = "https://api.github.com";
+
+async function getGitHubToken() {
+    try {
+        const integration = await prisma.systemIntegration.findUnique({
+            where: { provider: "github", isActive: true }
+        });
+        return integration?.accessToken || process.env.GITHUB_ACCESS_TOKEN;
+    } catch (error) {
+        console.error("Error fetching GitHub token from DB:", error);
+        return process.env.GITHUB_ACCESS_TOKEN;
+    }
+}
 
 export async function getRepoDetails(owner: string, repo: string): Promise<GitHubRepo | null> {
     try {
+        const token = await getGitHubToken();
         const res = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}`, {
             headers: {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             next: { revalidate: 60 } // Cache for 1 minute
@@ -42,9 +57,10 @@ export async function getRepoDetails(owner: string, repo: string): Promise<GitHu
 
 export async function getRecentCommits(owner: string, repo: string, limit = 5): Promise<GitHubCommit[]> {
     try {
+        const token = await getGitHubToken();
         const res = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/commits?per_page=${limit}`, {
             headers: {
-                Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             next: { revalidate: 60 }

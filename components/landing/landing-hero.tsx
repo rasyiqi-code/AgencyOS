@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Code2, ShieldCheck, Zap } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export function LandingHero() {
+export async function LandingHero() {
+    const t = await getTranslations("Hero");
+
     return (
         <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center justify-center">
             {/* Dynamic Background */}
@@ -36,39 +39,40 @@ export function LandingHero() {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                         </span>
-                        Status: Limited Availability (2 Slots Left)
+                        {t("statusBadge")}
                     </div>
 
                     <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100 leading-[1.1]">
-                        Build Enterprise Apps <br />
+                        {t("title1")} <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 animate-gradient-x bg-[length:200%_auto]">
-                            At Startup Speed
+                            {t("title2")}
                         </span>
                     </h1>
 
                     <p className="text-lg md:text-2xl text-zinc-400 max-w-3xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                        Stop trading quality for speed. We fuse <span className="text-white font-semibold">Generative AI</span> velocity with <span className="text-white font-semibold">Senior Engineering</span> rigor to deliver secure, scalable software in weeks, not months.
+                        {t.rich("description", {
+                            white: (chunks) => <span className="text-white font-semibold">{chunks}</span>
+                        })}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 pt-4">
                         <Link href="/dashboard">
                             <Button size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-zinc-200 rounded-full font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.5)] transition-all">
-                                Launch Dashboard
+                                {t("launchDashboard")}
                                 <ArrowRight className="ml-2 w-5 h-5" />
                             </Button>
                         </Link>
                         <Link href="/squad">
                             <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/50 rounded-full transition-all backdrop-blur-sm">
                                 <Zap className="w-4 h-4 mr-2 text-yellow-500" />
-                                Join Talent Squad
+                                {t("joinTalentSquad")}
                             </Button>
                         </Link>
                     </div>
 
                     {/* Tech Stack Hints */}
                     <div className="pt-12 flex justify-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-                        {/* Simple text or icons for "Trusted by" effect could go here */}
-                        <span className="text-xs font-mono tracking-widest text-zinc-500">POWERED BY NEXT.JS 15 • TURBOPACK • GENKIT</span>
+                        <span className="text-xs font-mono tracking-widest text-zinc-500">{t("poweredBy")}</span>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { creem } from "@/lib/creem";
+import { creem as getCreem } from "@/lib/creem";
+import type { CreemPaymentMetadata } from "@/types/payment";
 
 export async function POST(req: NextRequest) {
     try {
@@ -27,23 +28,21 @@ export async function POST(req: NextRequest) {
         let productId = "";
 
         // 1. CHECK: Has a dynamic product already been created for this Order? (Use Metadata)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const meta = (order.paymentMetadata as any) || {};
+        const meta = (order.paymentMetadata as CreemPaymentMetadata | null) || {};
 
         if (meta.creemProductId) {
             productId = meta.creemProductId;
             console.log("Reusing existing Dynamic Creem Product ID:", productId);
         }
         // 2. CHECK: Use synced Creem Product ID if available (Official Services)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        else if (order.project?.service && (order.project.service as any).creemProductId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            productId = (order.project.service as any).creemProductId;
+        else if (order.project?.service && (order.project.service as { creemProductId?: string }).creemProductId) {
+            productId = (order.project.service as { creemProductId: string }).creemProductId;
             console.log("Using synced Official Creem Product ID:", productId);
         }
         else {
             // 3. FALLBACK: Create a NEW dynamic product
             console.log("Creating NEW Dynamic Creem Product for Order:", order.id);
+            const creem = await getCreem();
             const product = await creem.products.create({
                 name: `Invoice #${order.id.slice(-8).toUpperCase()}`,
                 description: `Payment for Order #${order.id}`,
@@ -69,6 +68,7 @@ export async function POST(req: NextRequest) {
         }
 
         // 2. Create Checkout Session
+        const creem = await getCreem();
         const checkout = await creem.checkouts.create({
             productId: productId, // CamelCase
             successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/payment/status?orderId=${order.id}`, // CamelCase

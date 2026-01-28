@@ -68,41 +68,41 @@ async function main() {
     }
     console.log('Created System Settings.');
 
-    // 3. Create Demo Projects
-    const userIds = ['user_demo_123']; // Mock user ID
+    // 3. Create Demo Projects - DISABLED PER USER REQUEST
+    // const userIds = ['user_demo_123']; // Mock user ID
 
-    await prisma.project.create({
-        data: {
-            userId: userIds[0],
-            title: 'Redesign Landing Page',
-            description: 'Modernize the current landing page with new branding guidelines.',
-            status: 'queue',
-            spec: 'Use the new color palette. Hero section needs a video background.',
-        },
-    });
+    // await prisma.project.create({
+    //     data: {
+    //         userId: userIds[0],
+    //         title: 'Redesign Landing Page',
+    //         description: 'Modernize the current landing page with new branding guidelines.',
+    //         status: 'queue',
+    //         spec: 'Use the new color palette. Hero section needs a video background.',
+    //     },
+    // });
 
-    await prisma.project.create({
-        data: {
-            userId: userIds[0],
-            title: 'API Integration for Mobile App',
-            description: 'Connect the React Native app to the backend strictly via REST API.',
-            status: 'dev',
-            repoOwner: 'agency-os',
-            repoName: 'mobile-api',
-            repoUrl: 'https://github.com/agency-os/mobile-api',
-            spec: 'Endpoints required: /auth, /products, /orders.',
-        },
-    });
+    // await prisma.project.create({
+    //     data: {
+    //         userId: userIds[0],
+    //         title: 'API Integration for Mobile App',
+    //         description: 'Connect the React Native app to the backend strictly via REST API.',
+    //         status: 'dev',
+    //         repoOwner: 'agency-os',
+    //         repoName: 'mobile-api',
+    //         repoUrl: 'https://github.com/agency-os/mobile-api',
+    //         spec: 'Endpoints required: /auth, /products, /orders.',
+    //     },
+    // });
 
-    await prisma.project.create({
-        data: {
-            userId: userIds[0],
-            title: 'Corporate Dashboard',
-            description: 'Internal analytical dashboard for finance team.',
-            status: 'done',
-            spec: 'Charts using Recharts. Data export to CSV.',
-        },
-    });
+    // await prisma.project.create({
+    //     data: {
+    //         userId: userIds[0],
+    //         title: 'Corporate Dashboard',
+    //         description: 'Internal analytical dashboard for finance team.',
+    //         status: 'done',
+    //         spec: 'Charts using Recharts. Data export to CSV.',
+    //     },
+    // });
 
     console.log('✅ Seeding finished.');
 }

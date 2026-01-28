@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2, RefreshCw, Save, DollarSign, Clock } from "lucide-react";
+import type { ExchangeRates } from "@/types/payment";
 
 export default function CurrencySettingsPage() {
     const [loading, setLoading] = useState(false);
@@ -16,8 +17,7 @@ export default function CurrencySettingsPage() {
     const [intervalHours, setIntervalHours] = useState(24);
 
     // Status State
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [rates, setRates] = useState<any>(null);
+    const [rates, setRates] = useState<ExchangeRates | null>(null);
 
     const loadData = async () => {
         try {
@@ -78,8 +78,7 @@ export default function CurrencySettingsPage() {
             setRates(newRates);
             toast.success("Rates updated successfully!");
         } catch (e) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            toast.error((e as any).message || "Failed to update rates");
+            toast.error(e instanceof Error ? e.message : "Failed to update rates");
         } finally {
             setFetching(false);
         }

@@ -8,6 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Need full ticket shape for ChatInterface
+interface Message {
+    id: string;
+    sender: string;
+    content: string;
+    createdAt: Date | string;
+}
+
 interface Ticket {
     id: string;
     name: string | null;
@@ -15,7 +22,7 @@ interface Ticket {
     status: string;
     updatedAt: Date | string;
     createdAt: Date | string;
-    messages: any[]; // ChatInterface handles specific shape
+    messages: Message[];
 }
 
 interface ChatConsoleProps {

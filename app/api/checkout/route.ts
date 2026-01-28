@@ -1,4 +1,4 @@
-import { snap } from "@/lib/midtrans";
+import { getSnap } from "@/lib/midtrans";
 import { prisma } from "@/lib/db";
 import { stackServerApp } from "@/lib/stack";
 import { NextResponse } from "next/server";
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
                 const newProject = await prisma.project.create({
                     data: {
                         userId: user.id,
+                        clientName: user.displayName || user.primaryEmail || "Unnamed Client",
                         title: estimate.title,
                         description: estimate.summary,
                         spec: JSON.stringify({ screens: estimate.screens, apis: estimate.apis }, null, 2),
@@ -86,6 +87,7 @@ export async function POST(req: Request) {
                 }]
             };
 
+            const snap = await getSnap();
             const transaction = await snap.createTransaction(parameter);
 
             await prisma.order.update({
@@ -96,6 +98,11 @@ export async function POST(req: Request) {
                     // Ideally store both, but schema has only amount. Let's keep USD in DB but charge IDR.
                     // Or we should store usage currency. For now, assuming system is USD based.
                 }
+            });
+
+            await prisma.project.update({
+                where: { id: finalProjectId },
+                data: { invoiceId: orderId }
             });
 
             return NextResponse.json({ token: transaction.token, orderId });
@@ -134,6 +141,7 @@ export async function POST(req: Request) {
         };
 
         // Get Snap Token from Midtrans
+        const snap = await getSnap();
         const transaction = await snap.createTransaction(parameter);
         const snapToken = transaction.token;
 
@@ -147,6 +155,12 @@ export async function POST(req: Request) {
                 snapToken,
                 status: "pending",
             },
+        });
+
+        // Sync invoiceId to project for easier dashboard access
+        await prisma.project.update({
+            where: { id: finalProjectId },
+            data: { invoiceId: orderId }
         });
 
         return NextResponse.json({ token: snapToken, orderId });

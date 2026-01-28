@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { sendMessage } from "@/app/actions/support";
+// import { sendMessage } from "@/app/actions/support";
 
 interface Ticket {
     id: string;
@@ -119,7 +119,11 @@ export default function InboxPage() {
             formData.append("sender", "user"); // Fixing this to "user" for Client Dashboard
             if (file) formData.append("file", file);
 
-            await sendMessage(formData);
+            const res = await fetch("/api/support/ticket/message", {
+                method: "POST",
+                body: formData,
+            });
+            if (!res.ok) throw new Error("Failed to send");
         } catch (e) {
             console.error(e);
         } finally {

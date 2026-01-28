@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { verifyAndSaveKey } from "@/app/actions/keys";
+// import { verifyAndSaveKey } from "@/app/actions/keys";
 
 export function AddKeyDialog() {
     const [open, setOpen] = useState(false);
@@ -22,7 +22,17 @@ export function AddKeyDialog() {
         setIsLoading(true);
 
         try {
-            await verifyAndSaveKey(key, label, modelId);
+            const res = await fetch("/api/system/keys", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ key, label, modelId })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || "Verification Failed");
+            }
+
             toast.success("Key Verified & Saved!");
             setOpen(false);
             setLabel("");

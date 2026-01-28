@@ -3,7 +3,234 @@
         "loading": "Loading...",
         "error": "Something went wrong",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "login": "Login",
+        "logout": "Logout",
+        "back": "Back",
+        "updated": "Updated"
+    },
+    "Navigation": {
+        "forTalent": "For Talent",
+        "priceCalculator": "Price Calculator",
+        "services": "Services",
+        "myAccount": "My Account",
+        "startProject": "Start Project"
+    },
+    "Hero": {
+        "statusBadge": "Status: Limited Availability (2 Slots Left)",
+        "title1": "Build Enterprise Apps",
+        "title2": "At Startup Speed",
+        "description": "Stop trading quality for speed. We fuse <white>Generative AI</white> velocity with <white>Senior Engineering</white> rigor to deliver secure, scalable software in weeks, not months.",
+        "launchDashboard": "Launch Dashboard",
+        "joinTalentSquad": "Join Talent Squad",
+        "poweredBy": "POWERED BY NEXT.JS 15 • TURBOPACK • GENKIT"
+    },
+    "Ecosystem": {
+        "title": "The Agency Operating System",
+        "subtitle": "Three powerful interfaces connected by one intelligent core.",
+        "clientTitle": "Client Command Center",
+        "clientDesc": "Generate specs with AI, track real-time progress, and deploy instantly. No more emails.",
+        "clientCta": "Enter Portal",
+        "squadTitle": "Talent Squad Engine",
+        "squadDesc": "Pick up missions, access clear specs, and submit code. Get paid for output, not hours.",
+        "squadCta": "Join Squad",
+        "adminTitle": "Admin Core",
+        "adminDesc": "The central brain managing quality control, payments, and system integrity.",
+        "adminCta": "Restricted Access"
+    },
+    "SocialProof": {
+        "faster": "2x Faster",
+        "fasterSub": "Compared to Conventional Agencies",
+        "fixedPrice": "Fixed Price",
+        "fixedPriceSub": "No Hidden Fees",
+        "verified": "100% Verified",
+        "verifiedSub": "Code Audited by Senior Experts",
+        "techStack": "Powered by Modern Tech Stack"
+    },
+    "Comparison": {
+        "title": "Why Choose a Hybrid Agency?",
+        "subtitle": "The future of software development is AI + Human collaboration.",
+        "oldTitle": "Traditional Agency (The Past)",
+        "old1": "Hours of Zoom meetings with no clear outcome.",
+        "old2": "Fluctuating prices (Time & Materials).",
+        "old3": "Progress updates must be requested via WhatsApp/Email.",
+        "old4": "Junior teams that change frequently.",
+        "newTitle": "Crediblemark (The Future)",
+        "recommended": "RECOMMENDED",
+        "new1": "Zero Meeting.",
+        "new1Sub": "Briefing via AI Chat in 10 minutes.",
+        "new2": "Algorithmic Pricing.",
+        "new2Sub": "Price locked by the system at start.",
+        "new3": "Real-time Dashboard.",
+        "new3Sub": "Monitor progress second by second.",
+        "new4": "Solo Senior Expert.",
+        "new4Sub": "One primary point of contact forever."
+    },
+    "ProductCatalog": {
+        "title": "Ready-to-Use Solutions",
+        "subtitle": "Choose the package that fits your business needs.",
+        "products": {
+            "ops": {
+                "title": "Business Ops Dashboard",
+                "target": "SMEs & Distributors",
+                "desc": "Turn Excel piles into secure internal database apps. Automate salary & commission calculations.",
+                "price": "Starting from Rp 15M",
+                "cta": "Organize My Data"
+            },
+            "publisher": {
+                "title": "The Publisher Engine",
+                "target": "Media & Publishers",
+                "desc": "Super fast Next.js news portal with modern editorial CMS. Ready for ad and subscription monetization.",
+                "price": "Starting from Rp 10M",
+                "cta": "Create New Media"
+            },
+            "saas": {
+                "title": "Custom SaaS MVP",
+                "target": "Startup Founders",
+                "desc": "Validate your startup idea in 14 days. AI builds frontend, I build backend.",
+                "price": "Custom Quote via AI",
+                "cta": "Ideation Consultation"
+            }
+        }
+    },
+    "Workflow": {
+        "title": "No Drama. No Meeting. Direct Action.",
+        "subtitle": "Efficiency of asynchronous workflow for maximum results.",
+        "step1": "1. Chat with CredibleBot",
+        "step1Desc": "Tell your idea to our AI. It will prepare a neat technical specification (PRD) yang rapi untuk Anda.",
+        "step2": "2. Receive Instant Quote",
+        "step2Desc": "The system calculates feature complexity and provides a definite Fixed Price. Pay secure deposit via Midtrans.",
+        "step3": "3. Monitor & Visual Revision",
+        "step3Desc": "See progress on dashboard. Need revisions? Just click the part you want to change. I do the work, you receive the result."
+    },
+    "Financial": {
+        "title": "Save Cost, Not Quality.",
+        "subtitle": "Smart investment logic for modern business.",
+        "comparison": "COMPARISON",
+        "hireSenior": "HIRE SENIOR DEV",
+        "hybrid": "CREDIBLEMARK (HYBRID)",
+        "salary": "Cost / Salary",
+        "salaryOld": "Gaji 15m/mo x 12",
+        "salaryNew": "One-time payment",
+        "hiringTime": "Hiring Time",
+        "hiringTimeOld": "1 - 2 Months",
+        "hiringTimeNew": "Start Immediately",
+        "hiddenCost": "Hidden Cost",
+        "hiddenCostOld": "Bonus, Healthcare, Laptop, Tax",
+        "risk": "Main Risk",
+        "riskOld": "Employee resigns suddenly",
+        "riskNew": "Bug & Maintenance Warranty",
+        "roi": "ROI: Efficient & Fast"
+    },
+    "Guarantee": {
+        "title": "We Take the Risk for You.",
+        "subtitle": "100% Money Back Guarantee on Briefing Phase",
+        "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving your initial Blueprint you feel our approach isn't a fit, we return your deposit 100%.",
+        "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
+    },
+    "Expert": {
+        "title": "One Human Brain, Supported by Machine Intelligence.",
+        "q": "Many clients ask: 'Is the code made by robots?'",
+        "a": "Answer: AI is the bricklayer, I am the Architect.",
+        "desc": "I use AI to eliminate boring work (boilerplate, CSS, admin), so I can focus 100% on business logic, data security, and your app's performance.",
+        "footer": "The result? Enterprise Agency quality, with Freelancer speed and price.",
+        "role": "Senior Fullstack Developer"
+    },
+    "FAQ": {
+        "title": "Frequently Asked Questions",
+        "q1": "Can I really not chat directly?",
+        "a1": "Our platform is designed for efficiency through Asynchronous communication. Everything is neatly recorded. But for emergency situations or deep strategy consultations, Premium Call sessions are available.",
+        "q2": "What if there are bugs after completion?",
+        "a2": "All packages include a 30-Day Bug Warranty. Report via dashboard, fixes are prioritized.",
+        "q3": "Do I own the source code?",
+        "a3": "Yes, 100%. After final payment, the GitHub repository will be transferred to your account."
+    },
+    "Dashboard": {
+        "Sidebar": {
+            "platform": "Platform",
+            "dashboard": "Dashboard",
+            "missions": "Missions",
+            "inbox": "Inbox",
+            "support": "Support",
+            "store": "Store",
+            "billing": "Billing",
+            "proPlan": "Pro Plan",
+            "upgradeDesc": "Upgrade for more AI tokens.",
+            "upgrade": "Upgrade",
+            "settings": "Settings",
+            "commandCenter": "Command Center",
+            "overview": "Overview",
+            "missionBoard": "Mission Board",
+            "orders": "Orders",
+            "clients": "Clients",
+            "supportInbox": "Support Inbox",
+            "system": "System",
+            "serviceCatalog": "Service Catalog",
+            "financeConsole": "Finance Console",
+            "invoices": "Orders & Invoices",
+            "projectConsole": "Project Console",
+            "integrations": "System Integrations"
+        },
+        "Overview": {
+            "activeMission": "Active Mission",
+            "liveUpdate": "LIVE UPDATE",
+            "recentMissions": "Recent Missions",
+            "noMissions": "No missions initialized yet.",
+            "quickActions": "Quick Actions",
+            "needAssistance": "Need Assistance?",
+            "aiHelperDesc": "Our AI Systems Engineer is online and ready to help you scope your next mission.",
+            "openComms": "Open Comms Channel"
+        },
+        "Workbench": {
+            "title": "Project Workbench",
+            "status": "System Status",
+            "activity": "Repository Activity",
+            "noAssets": "No technical assets linked yet.",
+            "manageAssets": "Manage Technical Assets",
+            "assignDeveloper": "Assigned To",
+            "deployTrigger": "Deploy Trigger",
+            "deploying": "Deploying...",
+            "deployed": "Deployed Successfully!"
+        },
+        "Integrations": {
+            "title": "System Integrations",
+            "description": "Connect GitHub and Vercel to enable automated workflows, deployment monitoring, and code synchronization.",
+            "connect": "Connect Account",
+            "disconnect": "Disconnect",
+            "connected": "Connected",
+            "disconnected": "Disconnected"
+        }
+    },
+    "Admin": {
+        "Finance": {
+            "title": "Orders & Invoices",
+            "revenue": "Real-time Revenue",
+            "financials": "Financials",
+            "description": "Comprehensive archive to track payments, invoices, and project estimate statuses in real-time.",
+            "totalProjects": "Total Projects",
+            "autoSync": "Auto-sync enabled",
+            "pendingUpdates": "Pending Updates",
+            "poweredBy": "Powered by AgencyOS Financial Core",
+            "noOrders": "No orders found.",
+            "previous": "Previous",
+            "next": "Next"
+        }
+    },
+    "Missions": {
+        "inOrbit": "In Orbit",
+        "missionControl": "Mission Control"
+    },
+    "Loader": {
+        "initializingCore": "INITIALIZING_CORE_SYSTEM...",
+        "loadingNeural": "LOADING_NEURAL_PROTOCOLS...",
+        "establishingUplink": "ESTABLISHING_ENCRYPTED_UPLINK...",
+        "decryptingData": "DECRYPTING_AGENCY_DATA...",
+        "syncingWorkspace": "SYNCING_WORKSPACE_MODES...",
+        "systemReady": "SYSTEM_READY.",
+        "terminalVersion": "System Terminal v2.0.26",
+        "target": "Target",
+        "status": "Status",
+        "processing": "Processing"
     },
     "Invoice": {
         "title": "INVOICE",
@@ -24,5 +251,16 @@
         "thankYou": "Thank you for your business.",
         "download": "Download / Print Invoice",
         "pay": "Pay"
+    },
+    "Footer": {
+        "ctaTitle": "Ready to Build Your Business Future?",
+        "ctaButton": "Start AI Briefing (Free)",
+        "clientLogin": "Client Login",
+        "contactUs": "Contact Us",
+        "services": "Services",
+        "supportHelp": "Support / Help",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "copyright": "© 2024 Crediblemark. Built with Human Intelligence & Artificial Speed."
     }
 }

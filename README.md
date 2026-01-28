@@ -52,7 +52,7 @@
 
 ## ✅ 3. Fitur Terimplementasi (Ready to Use)
 - [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
-- [x] **Admin Project Management**: CRUD Proyek, Assignment, Status tracking (`app/admin/pm`).
+- [x] **Admin Project Management**: Full Dashboard with Search, Filtering, Pagination, & Assignment (`app/admin/pm`).
 - [x] **System Key Rotation**: Manajemen LLM API keys dengan redundansi (`app/genkit/ai.ts`).
 - [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
 - [x] **Invoice PDF Generator**: Pembuatan invoice otomatis (`components/checkout/invoice-document.tsx`).

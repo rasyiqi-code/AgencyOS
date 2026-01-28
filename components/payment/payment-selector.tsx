@@ -5,22 +5,18 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { initiateCreemPayment } from "@/components/payment/creem/client";
-import { selectPaymentMethod } from "@/app/actions/billing";
+// import { selectPaymentMethod } from "@/app/actions/billing";
 import { ManualPayment } from "@/components/payment/manual/manual-payment";
 import { MidtransPayment } from "@/components/payment/midtrans/midtrans-payment";
+import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails, SelectedPaymentMethod } from "@/types/payment";
 
 export interface PaymentSelectorProps {
     orderId: string;
     amount: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    paymentMetadata?: any;
+    paymentMetadata?: MidtransPaymentData | CreemPaymentMetadata | null;
     allowedGroups?: string[];
     currency?: 'USD' | 'IDR';
-    bankDetails?: {
-        bank_name?: string;
-        bank_account?: string;
-        bank_holder?: string;
-    };
+    bankDetails?: BankDetails;
     orderStatus?: string;
 }
 
@@ -87,9 +83,8 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
 
 export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [paymentData, setPaymentData] = useState<any>(paymentMetadata || null);
-    const [selectedMethod, setSelectedMethod] = useState<{ type: string, bank?: string, id: string, label?: string } | null>(null);
+    const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(paymentMetadata || null);
+    const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
 
     // Check if waiting verification
     const isVerifying = orderStatus === 'waiting_verification';
@@ -120,7 +115,11 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
             try {
                 // Persist selection to DB
-                await selectPaymentMethod(orderId, 'manual_transfer', manualData);
+                await fetch("/api/billing/method", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ orderId, paymentType: 'manual_transfer', metadata: manualData })
+                });
 
                 setPaymentData(manualData);
                 toast.success("Please complete your transfer");
@@ -170,10 +169,9 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
             setPaymentData(data);
             toast.success("Payment initiated!");
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            toast.error(error.message || "Failed to initiate payment");
+            toast.error(error instanceof Error ? error.message : "Failed to initiate payment");
         } finally {
             setLoading(false);
         }
@@ -308,7 +306,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
             {/* PAYMENT INSTRUCTIONS DIALOG */}
             {paymentData && (
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-md max-h-[85vh] overflow-y-auto">
+                    <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-3xl max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle className="flex items-center gap-2 text-xl">
                                 <CheckCircle2 className="w-6 h-6 text-lime-400" />
@@ -326,7 +324,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                         ) : (
                             <MidtransPayment
                                 orderId={orderId}
-                                paymentData={paymentData}
+                                paymentData={paymentData as MidtransPaymentData}
                                 selectedMethod={selectedMethod}
                                 onClose={() => setIsDialogOpen(false)}
                             />

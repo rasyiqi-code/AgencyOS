@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Monitor, Code2, Calendar, ArrowRight, Sparkles } from "lucide-react";
 
-import { ChatInterface } from "@/components/chat-interface";
+import { ChatInterface } from "@/components/chat/interface";
 
 interface EstimateItem {
     title: string;
@@ -285,16 +285,20 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                 className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 text-base cursor-pointer"
                                 onClick={async () => {
                                     // Call Server Action
-                                    import("@/app/actions/estimate").then(async ({ finalizeEstimate }) => {
-                                        try {
-                                            const url = await finalizeEstimate(estimate.id);
-                                            window.location.href = url;
-                                        } catch (e) {
-                                            console.error(e);
-                                            // Handle error (alert/toast)
-                                            alert("Failed to finalize. Please try again.");
+                                    try {
+                                        const res = await fetch(`/api/estimates/${estimate.id}/finalize`, {
+                                            method: "POST"
+                                        });
+                                        const data = await res.json();
+                                        if (res.ok && data.url) {
+                                            window.location.href = data.url;
+                                        } else {
+                                            throw new Error(data.error || "Failed to finalize");
                                         }
-                                    });
+                                    } catch (e) {
+                                        console.error(e);
+                                        alert("Failed to finalize. Please try again.");
+                                    }
                                 }}
                             >
                                 Finalize Quote & Start

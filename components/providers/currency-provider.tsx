@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 
 type Currency = 'USD' | 'IDR';
 
@@ -22,10 +24,11 @@ const CurrencyContext = createContext<CurrencyContextType>({
 
 export const useCurrency = () => useContext(CurrencyContext);
 
-export function CurrencyProvider({ children }: { children: React.ReactNode }) {
+export function CurrencyProvider({ children, initialLocale = 'en-US' }: { children: React.ReactNode, initialLocale?: string }) {
     const [currency, setCurrency] = useState<Currency>('USD');
-    const [locale, setLocale] = useState('en-US');
+    const [locale, setLocale] = useState(initialLocale);
     const [rate, setRate] = useState(16000); // Default fallback
+    const router = useRouter();
 
     useEffect(() => {
         // 0. Fetch Dynamic Rate
@@ -40,17 +43,14 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
         // 1. Check LocalStorage
         const cachedCurrency = localStorage.getItem('agency-os-currency');
-        const cachedLocale = localStorage.getItem('agency-os-locale');
+        // We trust initialLocale (from cookie/server) more than localStorage for locale to avoid mismatch
+        // But for currency, we can still check localStorage
 
         if (cachedCurrency && (cachedCurrency === 'USD' || cachedCurrency === 'IDR')) {
             if (currency !== cachedCurrency) {
                 // eslint-disable-next-line react-hooks/set-state-in-effect
                 setCurrency(cachedCurrency as Currency);
             }
-        }
-
-        if (cachedLocale) {
-            setLocale(cachedLocale);
         }
 
         // Only detect if nothing cached
@@ -64,14 +64,11 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
                     // Check for Indonesia Timezones
                     if (['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'].includes(timeZone)) {
                         setCurrency('IDR');
-                        setLocale('id-ID');
                         localStorage.setItem('agency-os-currency', 'IDR');
-                        localStorage.setItem('agency-os-locale', 'id-ID');
+                        // We don't auto-switch locale here if it's already set by server/cookie
                     } else {
                         setCurrency('USD');
-                        setLocale('en-US');
                         localStorage.setItem('agency-os-currency', 'USD');
-                        localStorage.setItem('agency-os-locale', 'en-US');
                     }
                 } catch (error) {
                     console.error("Currency detection failed, defaulting to USD", error);
@@ -89,7 +86,12 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
     const updateLocale = (l: string) => {
         setLocale(l);
+        // Sync with Cookie for Server Components
+        setCookie('NEXT_LOCALE', l);
+        // Sync with LocalStorage (optional, but good for backup)
         localStorage.setItem('agency-os-locale', l);
+        // Refresh to re-render Server Components with new locale
+        router.refresh();
     };
 
     return (

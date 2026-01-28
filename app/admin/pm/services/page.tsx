@@ -1,7 +1,8 @@
-import { deleteService } from "@/app/actions/admin";
+// import { deleteService } from "@/app/actions/admin";
+import { DeleteServiceButton } from "@/components/admin/services/delete-service-button";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { Plus, Package, Edit, Trash2 } from "lucide-react";
+import { Plus, Package, Edit } from "lucide-react";
 import Link from "next/link";
 import { isAdmin } from "@/lib/auth-helpers";
 import { redirect } from "next/navigation";
@@ -81,12 +82,7 @@ export default async function ServicesPage() {
                                     Edit
                                 </Button>
                             </Link>
-                            <form action={deleteService}>
-                                <input type="hidden" name="id" value={service.id} />
-                                <Button variant="destructive" size="sm" type="submit" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
-                            </form>
+                            <DeleteServiceButton serviceId={service.id} />
                         </div>
                     </div>
                 ))}

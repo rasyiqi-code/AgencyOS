@@ -1,13 +1,16 @@
-
 import { prisma } from "@/lib/db";
-import { ShoppingCart } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { stackServerApp } from "@/lib/stack";
+import { type StackUser } from "@/lib/types";
+import { ShoppingCart, LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment";
-import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
-import { InvoiceDownloadButton } from "@/components/admin/orders/invoice-download-button";
+import { OrdersDataTable } from "@/components/admin/finance/orders-data-table";
+import { FinanceData, financeColumns } from "@/components/admin/finance/finance-columns";
+import { getTranslations } from "next-intl/server";
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminOrdersPage() {
+    const t = await getTranslations("Admin.Finance");
     const estimates = await prisma.estimate.findMany({
         orderBy: { createdAt: 'desc' },
         include: {
@@ -17,93 +20,103 @@ export default async function AdminOrdersPage() {
         }
     });
 
+    // 1. Initial Mapping
+    const financeData: FinanceData[] = estimates.map(e => ({
+        ...e,
+        project: e.project ? {
+            title: e.project.title,
+            clientName: e.project.clientName,
+            userId: e.project.userId,
+            order: e.project.order ? {
+                proofUrl: e.project.order.proofUrl
+            } : null
+        } : null,
+        screens: e.screens as FinanceData['screens'],
+        apis: e.apis as FinanceData['apis']
+    }));
+
+    // 2. Stack Auth User Resolution
+    // Collect specific IDs from project relations
+    const uniqueUserIds = Array.from(new Set(
+        estimates
+            .map(e => e.project?.userId)
+            .filter(Boolean) as string[]
+    ));
+
+    const stackUsers = await Promise.all(
+        uniqueUserIds.map(async (id) => {
+            try {
+                return await stackServerApp.getUser(id);
+            } catch (e) {
+                console.error(`Failed to fetch user ${id}`, e);
+                return null;
+            }
+        })
+    );
+    const userMap = new Map(stackUsers.filter(Boolean).map(u => [u!.id, u as StackUser]));
+
+    // 3. Enrich Data
+    const enrichedData = financeData.map(item => {
+        // If project exists and has userId but missing clientName, enrich it
+        if (item.project && item.project.userId && !item.project.clientName) {
+            const u = userMap.get(item.project.userId);
+            if (u) {
+                return {
+                    ...item,
+                    project: {
+                        ...item.project,
+                        clientName: u.displayName || u.primaryEmail || "Unnamed Client"
+                    }
+                };
+            }
+        }
+        return item;
+    });
+
     return (
-        <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">Financials</Badge>
+        <div className="w-full py-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className="p-1 px-2 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
+                            {t("revenue")}
+                        </div>
+                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px] font-medium px-2 py-0">
+                            {t("financials")}
+                        </Badge>
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Orders & Invoices
-                        <ShoppingCart className="w-6 h-6 text-zinc-600" />
+                    <h1 className="text-4xl font-extrabold tracking-tight text-white flex items-center gap-4 group">
+                        {t("title")}
+                        <div className="p-2 rounded-xl bg-zinc-900 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
+                            <ShoppingCart className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+                        </div>
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Track payments, invoices, and estimate statuses.
+                    <p className="text-zinc-400 mt-2 text-sm max-w-xl leading-relaxed">
+                        {t("description")}
                     </p>
+                </div>
+
+                <div className="flex gap-3">
+                    <div className="flex flex-col items-end px-4 py-2 rounded-2xl bg-zinc-900/50 border border-white/5 backdrop-blur-sm">
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">{t("totalProjects")}</span>
+                        <span className="text-xl font-bold text-white tabular-nums">{estimates.length}</span>
+                    </div>
                 </div>
             </div>
 
-            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-white/5">
-                        <TableRow className="hover:bg-transparent border-white/5">
-                            <TableHead className="text-zinc-400">Invoice ID</TableHead>
-                            <TableHead className="text-zinc-400">Project</TableHead>
-                            <TableHead className="text-zinc-400">Amount</TableHead>
-                            <TableHead className="text-zinc-400">Status</TableHead>
-                            <TableHead className="text-zinc-400">Proof</TableHead>
-                            <TableHead className="text-zinc-400">Date</TableHead>
-                            <TableHead className="text-right text-zinc-400">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {estimates.length === 0 ? (
-                            <TableRow className="border-white/5">
-                                <TableCell colSpan={6} className="text-center h-32 text-zinc-500">
-                                    No orders found.
-                                </TableCell>
-                            </TableRow>
-                        ) : estimates.map((estimate) => (
-                            <TableRow key={estimate.id} className="hover:bg-white/5 border-white/5">
-                                <TableCell className="font-mono text-xs text-white">#{estimate.id.slice(-8).toUpperCase()}</TableCell>
-                                <TableCell className="text-zinc-300 text-sm truncate max-w-[200px]">
-                                    {estimate.project?.title || estimate.title || "Untitled Project"}
-                                </TableCell>
-                                <TableCell className="font-medium text-emerald-400">
-                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimate.totalCost)}
-                                </TableCell>
-                                <TableCell>
-                                    <Badge className={
-                                        estimate.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                            estimate.status === 'pending_payment' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                                                'bg-zinc-800 text-zinc-400 border-zinc-700'
-                                    }>
-                                        {estimate.status.replace('_', ' ').toUpperCase()}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {(estimate.proofUrl || (estimate.project?.order as any)?.proofUrl) ? (
-                                        <ViewProofButton estimate={{
-                                            ...estimate,
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                            proofUrl: estimate.proofUrl || (estimate.project?.order as any)?.proofUrl || null
-                                        }} />
-                                    ) : (
-                                        <span className="text-zinc-600 text-xs">-</span>
-                                    )}
-                                </TableCell>
-                                <TableCell className="text-zinc-500 text-xs">{estimate.createdAt.toLocaleDateString()}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        {estimate.status === 'pending_payment' && (
-                                            <ConfirmPaymentButton estimateId={estimate.id} />
-                                        )}
-                                        <InvoiceDownloadButton
-                                            estimate={{
-                                                ...estimate,
-                                                screens: (estimate.screens as unknown as { title: string, hours: number, description?: string }[] || []).map(s => ({ ...s, description: s.description || "" })),
-                                                apis: (estimate.apis as unknown as { title: string, hours: number, description?: string }[] || []).map(a => ({ ...a, description: a.description || "" }))
-                                            }}
-                                        />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+            <OrdersDataTable columns={financeColumns} data={enrichedData} />
+
+            <div className="mt-8 flex items-center justify-between text-[11px] text-zinc-600 px-2">
+                <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("autoSync")}</span>
+                    <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-amber-500" /> {t("pendingUpdates")}</span>
+                </div>
+                <div className="flex items-center gap-2 italic">
+                    <LayoutDashboard className="w-3 h-3" />
+                    {t("poweredBy")}
+                </div>
             </div>
         </div>
     );
 }
+

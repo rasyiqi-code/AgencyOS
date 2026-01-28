@@ -1,0 +1,14 @@
+[
+    {
+        "id": "digital_payments",
+        "text_id": "Pembayaran Digital (Otomatis)",
+        "description": "Pembayaran melalui kartu kredit, Virtual Account (VA), QRIS, atau E-wallet akan dikonfirmasi secara otomatis oleh sistem melalui webhook Midtrans atau Creemio segera setelah transaksi berhasil.",
+        "manual_confirmation": false
+    },
+    {
+        "id": "manual_transfer",
+        "text_id": "Transfer Manual (Bank/Wise)",
+        "description": "Pembayaran melalui transfer manual ke rekening bank atau Wise memerlukan unggah bukti transfer. Tim kami akan memverifikasi secara manual dalam waktu maksimal 24 jam.",
+        "manual_confirmation": true
+    }
+]

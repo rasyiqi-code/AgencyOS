@@ -3,13 +3,12 @@ import { Building, Copy, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QRCode from "react-qr-code";
 import { useRouter } from "next/navigation";
+import type { MidtransPaymentData, SelectedPaymentMethod } from "@/types/payment";
 
 interface MidtransPaymentProps {
     orderId: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    paymentData: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selectedMethod: any;
+    paymentData: MidtransPaymentData;
+    selectedMethod: SelectedPaymentMethod | null;
     onClose: () => void;
 }
 
@@ -19,7 +18,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
     const handleCheckStatus = async () => {
         try {
             toast.loading("Checking payment status...", { id: "check-status" });
-            const res = await fetch(`/api/payment/status?orderId=${orderId}`);
+            const res = await fetch(`/api/payment/status?orderId=${orderId}&mode=json`);
             const data = await res.json();
 
             if (data.status === 'settled' || data.status === 'paid' || data.status === 'waiting_verification') {
@@ -75,7 +74,8 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                     {paymentData.permata_va_number || paymentData.va_numbers?.[0].va_number}
                                 </span>
                                 <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-400 hover:text-white hover:bg-zinc-800" onClick={() => {
-                                    navigator.clipboard.writeText(paymentData.permata_va_number || paymentData.va_numbers[0].va_number);
+                                    const vaNumber = paymentData.permata_va_number || paymentData.va_numbers?.[0]?.va_number;
+                                    if (vaNumber) navigator.clipboard.writeText(vaNumber);
                                     toast.success("Copied!");
                                 }}>
                                     <Copy className="w-5 h-5" />
@@ -107,7 +107,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                     <div className="flex justify-between items-center">
                                         <div className="text-xl font-mono text-white font-bold">{paymentData.biller_code}</div>
                                         <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" onClick={() => {
-                                            navigator.clipboard.writeText(paymentData.biller_code);
+                                            if (paymentData.biller_code) navigator.clipboard.writeText(paymentData.biller_code);
                                             toast.success("Copied!");
                                         }}>
                                             <Copy className="w-3 h-3" />
@@ -120,7 +120,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                     <div className="flex justify-between items-center">
                                         <div className="text-xl font-mono text-white font-bold">{paymentData.bill_key}</div>
                                         <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" onClick={() => {
-                                            navigator.clipboard.writeText(paymentData.bill_key);
+                                            if (paymentData.bill_key) navigator.clipboard.writeText(paymentData.bill_key);
                                             toast.success("Copied!");
                                         }}>
                                             <Copy className="w-3 h-3" />

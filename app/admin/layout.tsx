@@ -1,11 +1,12 @@
 
 import Link from "next/link";
 import { Shield, LogOut } from "lucide-react";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { DashboardHeader } from "@/components/dashboard/header/main";
 import { isAdmin, canManageProjects, canManageBilling } from "@/lib/auth-helpers";
 import { redirect } from "next/navigation";
 import { AdminSidebarNavigation } from "@/components/admin/admin-sidebar-navigation";
-import { SidebarContainer, SidebarContentWrapper } from "@/components/dashboard/sidebar-container";
+import { SidebarContainer } from "@/components/dashboard/sidebar/container";
+import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 
 export default async function AdminLayout({
     children,
