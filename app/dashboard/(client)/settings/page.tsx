@@ -41,22 +41,6 @@ export default async function SettingsPage() {
                     </CardContent>
                 </Card>
 
-                {/* Billing Section */}
-                <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <CreditCard className="w-5 h-5 text-purple-500" /> Billing
-                        </CardTitle>
-                        <CardDescription>Manage your subscription and payment methods.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-zinc-300 font-medium">Current Plan: <span className="text-white font-bold">Free Tier</span></p>
-                            <p className="text-xs text-zinc-500">Upgrade to Pro for more AI tokens and priority support.</p>
-                        </div>
-                        <Button className="bg-purple-600 hover:bg-purple-500 text-white">Upgrade Plan</Button>
-                    </CardContent>
-                </Card>
 
                 {/* Notifications */}
                 <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm">

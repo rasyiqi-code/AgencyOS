@@ -23,15 +23,6 @@ export function DashboardSidebarFooter() {
     const t = useTranslations("Dashboard.Sidebar");
     return (
         <>
-            <div className="w-full px-2 mb-4 group-data-[collapsed=true]:hidden">
-                <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-900/20 to-blue-900/20 border border-indigo-500/10">
-                    <h4 className="text-xs font-semibold text-indigo-400 mb-1">{t("proPlan")}</h4>
-                    <p className="text-[10px] text-zinc-400 mb-3">{t("upgradeDesc")}</p>
-                    <button className="w-full text-xs bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 rounded-md transition-colors">
-                        {t("upgrade")}
-                    </button>
-                </div>
-            </div>
             <SidebarLink href="/dashboard/settings" icon={Settings} label={t("settings")} />
         </>
     );

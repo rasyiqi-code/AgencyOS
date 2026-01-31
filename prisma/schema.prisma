@@ -151,6 +151,7 @@ model DailyLog {
   id        String   @id @default(cuid())
   projectId String
   content   String
+  images    String[] @default([])
   mood      String   @default("on_track")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -62,9 +62,9 @@ export function DashboardHeader() {
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+                <UserButton />
                 <DashboardLanguageSwitcher />
                 <DashboardCurrencySwitcher />
-                <UserButton />
             </div>
         </header>
     );

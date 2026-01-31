@@ -27,6 +27,8 @@ export interface DailyLog {
     id: string;
     content: string;
     mood: string;
+    images?: string[];
+    projectId?: string;
     createdAt: Date;
 }
 

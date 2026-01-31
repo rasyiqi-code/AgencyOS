@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield } from "lucide-react";
+import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function SiteFooter() {
@@ -9,8 +9,8 @@ export async function SiteFooter() {
         <footer className="border-t border-white/5 bg-black py-12 text-zinc-400">
             <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 uppercase tracking-widest font-bold">
                 <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-lg bg-zinc-800 flex items-center justify-center">
-                        <Shield className="h-3 w-3 text-white" />
+                    <div className="h-6 w-6 rounded-full bg-brand-grey flex items-center justify-center">
+                        <Check className="h-3 w-3 text-brand-yellow stroke-[3]" />
                     </div>
                     <span className="font-semibold text-white tracking-normal">Agency OS</span>
                 </div>

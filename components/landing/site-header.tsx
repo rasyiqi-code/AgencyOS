@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { stackServerApp } from "@/lib/stack";
+import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/db";
@@ -26,10 +27,10 @@ export async function SiteHeader() {
                         <img src={logoUrl} alt="Logo" className="h-9 w-auto object-contain hover:scale-105 transition-transform" />
                     ) : (
                         <>
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105">
-                                <span className="font-bold text-white text-lg">C</span>
+                            <div className="w-8 h-8 rounded-full bg-brand-grey flex items-center justify-center shadow-lg shadow-zinc-500/20 group-hover:shadow-zinc-500/30 transition-all duration-300 hover:scale-105">
+                                <Check className="h-5 w-5 text-brand-yellow stroke-[3]" />
                             </div>
-                            <span className="font-bold text-lg tracking-tight text-white hidden sm:block group-hover:text-blue-100 transition-colors">Crediblemark</span>
+                            <span className="font-bold text-lg tracking-tight text-white hidden sm:block group-hover:text-zinc-200 transition-colors">Agency OS</span>
                         </>
                     )}
                 </div>

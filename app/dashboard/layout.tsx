@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Shield } from "lucide-react";
+import { Check } from "lucide-react";
 import { DashboardHeader } from "@/components/dashboard/header/main";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
@@ -15,8 +15,8 @@ export default async function DashboardLayout({
             <SidebarContainer
                 header={
                     <Link href="/" className="flex items-center gap-2 font-semibold">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shrink-0">
-                            <Shield className="h-5 w-5 text-white" />
+                        <div className="h-8 w-8 rounded-full bg-brand-grey flex items-center justify-center shrink-0">
+                            <Check className="h-5 w-5 text-brand-yellow stroke-[3]" />
                         </div>
                         <span className="text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 truncate transition-all duration-300">
                             Agency OS

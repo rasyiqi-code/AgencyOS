@@ -29,37 +29,73 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
     const [logs, setLogs] = useState<DailyLog[]>(initialLogs);
     const [content, setContent] = useState('');
     const [mood, setMood] = useState<DailyLogMood>('on_track');
+    const [files, setFiles] = useState<File[]>([]);
+    const [previews, setPreviews] = useState<string[]>([]);
     const [isPending] = useTransition();
     const router = useRouter();
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const newFiles = Array.from(e.target.files);
+            setFiles([...files, ...newFiles]);
+
+            // Generate previews
+            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+            setPreviews([...previews, ...newPreviews]);
+        }
+    };
+
+    const removeFile = (index: number) => {
+        const newFiles = [...files];
+        const removedFile = newFiles.splice(index, 1);
+        setFiles(newFiles);
+
+        const newPreviews = [...previews];
+        URL.revokeObjectURL(newPreviews[index]); // Cleanup
+        newPreviews.splice(index, 1);
+        setPreviews(newPreviews);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!content.trim()) return;
 
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('mood', mood);
+        files.forEach(file => {
+            formData.append('images', file);
+        });
+
+        // Optimistic UI for text content (images won't show immediately in optimistic)
         const optimisticLog: DailyLog = {
             id: 'temp-' + Date.now(),
             content,
             mood,
             createdAt: new Date(),
+            images: [], // Images require upload first
+            projectId // Added missing prop
         };
 
         setLogs([optimisticLog, ...logs]);
         setContent('');
+        setFiles([]);
+        setPreviews([]);
+
+        // Cleanup previews
+        previews.forEach(url => URL.revokeObjectURL(url));
 
         const response = await fetch(`/api/projects/${projectId}/daily-log`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content, mood }),
+            body: formData, // Send FormData instead of JSON
         });
 
         if (!response.ok) {
             toast.error('Failed to post update');
-            // Revert optimistic update handling if you were doing any complex state management
         } else {
             toast.success('Update posted');
             router.refresh();
         }
-
     };
 
     return (
@@ -77,6 +113,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                     {logs.map((log) => {
                         const moodConfig = MOOD_CONFIG[log.mood] || MOOD_CONFIG['on_track'];
                         const Icon = moodConfig.icon;
+                        const hasImages = log.images && log.images.length > 0;
 
                         return (
                             <div key={log.id} className="relative pl-6 pb-2 border-l border-white/10 last:border-0 last:pb-0">
@@ -84,7 +121,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                                     <div className="w-1.5 h-1.5 rounded-full bg-current" />
                                 </div>
 
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                     <div className="flex items-center gap-2 text-xs">
                                         <span className="text-zinc-500">
                                             {new Date(log.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
@@ -97,6 +134,23 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                                     <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
                                         {log.content}
                                     </p>
+
+                                    {/* Image Grid */}
+                                    {hasImages && (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                                            {log.images!.map((img, idx) => (
+                                                <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-black/40 group">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={img}
+                                                        alt="Attachment"
+                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                    />
+                                                    <a href={img} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-transparent" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         );
@@ -119,8 +173,44 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                             onChange={(e) => setContent(e.target.value)}
                             className="min-h-[80px] bg-zinc-900 border-white/10 text-sm text-zinc-200 placeholder:text-zinc-500 focus:ring-opacity-50"
                         />
+
+                        {/* File Previews */}
+                        {previews.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {previews.map((preview, index) => (
+                                    <div key={index} className="relative w-16 h-16 rounded-md overflow-hidden border border-white/10 group">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={preview} alt="preview" className="w-full h-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFile(index)}
+                                            className="absolute top-0.5 right-0.5 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 18 18" /></svg>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
                         <div className="flex items-center justify-between">
-                            <div className="flex gap-1">
+                            <div className="flex gap-1 items-center">
+                                {/* File Input Button */}
+                                <div className="relative">
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={handleFileSelect}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    />
+                                    <Button size="sm" type="button" variant="ghost" className="h-8 w-8 p-0 text-zinc-500 hover:text-zinc-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                                    </Button>
+                                </div>
+
+                                <div className="w-px h-4 bg-white/10 mx-1" />
+
                                 {(Object.keys(MOOD_CONFIG) as DailyLogMood[]).map((m) => {
                                     const isActive = mood === m;
                                     const config = MOOD_CONFIG[m];
@@ -141,7 +231,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                                     )
                                 })}
                             </div>
-                            <Button size="sm" type="submit" disabled={isPending || !content.trim()} className="h-8 gap-2">
+                            <Button size="sm" type="submit" disabled={isPending || (!content.trim() && files.length === 0)} className="h-8 gap-2">
                                 Post Update
                                 <Send className="w-3 h-3" />
                             </Button>
