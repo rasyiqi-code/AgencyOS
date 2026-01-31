@@ -139,8 +139,7 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
                                 </div>
 
                                 {/* Attachments */}
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {msg.attachments && (msg.attachments as any[]).map((att: any, idx: number) => (
+                                {msg.attachments && msg.attachments.map((att, idx) => (
                                     <a
                                         key={idx}
                                         href={att.url}

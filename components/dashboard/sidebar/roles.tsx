@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, Sparkles } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -59,8 +59,10 @@ export function SidebarSuperAdmin() {
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
             <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
+            <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
             <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
             <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
+            <SidebarLink href="/admin/changelog" icon={Sparkles} label="Changelog" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
         </>

@@ -1,20 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { ExtendedEstimate } from "@/lib/types";
+import { ExtendedEstimate, Bonus, Coupon } from "@/lib/types";
 import { Gift, Zap, Check, ShieldCheck, Tag, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { validateCoupon } from "@/actions/marketing";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
 
 interface CheckoutSummaryProps {
     estimate: ExtendedEstimate;
-    bonuses: any[];
-    onApplyCoupon: (coupon: any) => void;
-    appliedCoupon: any;
+    bonuses: Bonus[];
+    onApplyCoupon: (coupon: Coupon | null) => void;
+    appliedCoupon: Coupon | null;
 }
 
 export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupon }: CheckoutSummaryProps) {
@@ -25,15 +24,22 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
         if (!couponInput) return;
         setIsValidating(true);
         try {
-            const result = await validateCoupon(couponInput);
+            const response = await fetch('/api/marketing/coupon/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponInput })
+            });
+
+            const result = await response.json();
+
             if (result.valid) {
-                onApplyCoupon(result.coupon);
+                onApplyCoupon((result.coupon as Coupon) || null);
                 toast.success("Coupon applied successfully!");
             } else {
                 toast.error(result.message || "Invalid coupon");
                 onApplyCoupon(null);
             }
-        } catch (error) {
+        } catch {
             toast.error("Failed to validate coupon");
         } finally {
             setIsValidating(false);
@@ -83,8 +89,8 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                     <div className="grid gap-3">
                         {bonuses.length > 0 ? (
                             bonuses.map((bonus, i) => {
-                                // @ts-ignore
-                                const Icon = LucideIcons[bonus.icon] || Check;
+                                // Dynamic Bonus Icon
+                                const Icon = (LucideIcons as unknown as Record<string, React.ElementType>)[bonus.icon] || Check;
                                 return (
                                     <div key={i} className="flex items-center gap-3 text-zinc-300">
                                         <div className="w-5 h-5 rounded-full bg-lime-500/20 flex items-center justify-center shrink-0">

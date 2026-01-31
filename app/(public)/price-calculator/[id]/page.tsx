@@ -2,12 +2,16 @@ import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/landing/site-header";
 import { EstimateViewer } from "@/components/estimate/estimate-viewer";
+import { getCurrentUser } from "@/lib/auth-helpers";
+import Link from "next/link";
+
+import { Estimate } from "@prisma/client";
 
 async function getEstimate(id: string) {
     const estimate = await prisma.estimate.findUnique({
         where: { id }
     });
-    return estimate;
+    return estimate as Estimate | null;
 }
 
 export default async function EstimateResultPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,6 +20,21 @@ export default async function EstimateResultPage({ params }: { params: Promise<{
 
     if (!estimate) {
         notFound();
+    }
+
+    // Access Control
+    if (estimate.userId) {
+        const currentUser = await getCurrentUser();
+        if (!currentUser || currentUser.id !== estimate.userId) {
+            // If logged in but wrong user, or not logged in at all for a private estimate
+            return (
+                <main className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+                    <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
+                    <p className="text-zinc-400 mb-6">You do not have permission to view this estimate.</p>
+                    <Link href="/price-calculator" className="text-lime-500 hover:underline">Create your own estimate</Link>
+                </main>
+            );
+        }
     }
 
     // Convert Prisma Json to specific types for the component props

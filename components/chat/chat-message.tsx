@@ -1,5 +1,5 @@
+"use client";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Bot } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -49,12 +49,12 @@ export function ChatMessage({ message }: { message: Message }) {
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                            p: ({ node: _node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                            ul: ({ node: _node, ...props }) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
-                            ol: ({ node: _node, ...props }) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
-                            li: ({ node: _node, ...props }) => <li className="mb-0.5" {...props} />,
-                            strong: ({ node: _node, ...props }) => <span className="font-semibold text-zinc-900" {...props} />,
-                            a: ({ node: _node, ...props }) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                            p: ({ node: _node, ...props }) => { void _node; return <p className="mb-2 last:mb-0" {...props} />; },
+                            ul: ({ node: _node, ...props }) => { void _node; return <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />; },
+                            ol: ({ node: _node, ...props }) => { void _node; return <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />; },
+                            li: ({ node: _node, ...props }) => { void _node; return <li className="mb-0.5" {...props} />; },
+                            strong: ({ node: _node, ...props }) => { void _node; return <span className="font-semibold text-zinc-900" {...props} />; },
+                            a: ({ node: _node, ...props }) => { void _node; return <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />; },
                         }}
                     >
                         {/* Remove JSON blocks from display text */}

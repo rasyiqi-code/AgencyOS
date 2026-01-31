@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -102,10 +103,14 @@ export function GeneralSettingsForm({ initialData }: Props) {
 
                         <div className="flex items-start gap-4">
                             {/* Preview */}
-                            <div className="w-16 h-16 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                            <div className="relative w-16 h-16 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                                 {data.logoUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={data.logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                                    <Image
+                                        src={data.logoUrl}
+                                        alt="Logo"
+                                        fill
+                                        className="object-contain"
+                                    />
                                 ) : (
                                     <Globe className="w-6 h-6 text-zinc-600" />
                                 )}

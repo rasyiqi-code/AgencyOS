@@ -14,6 +14,7 @@ interface Service {
     description: string;
     description_id?: string | null;
     price: number;
+    currency?: string | null;
     interval: string;
     features: string[];
     features_id?: string[] | null;

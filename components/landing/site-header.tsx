@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { stackServerApp } from "@/lib/stack";
@@ -23,8 +24,14 @@ export async function SiteHeader() {
             <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
                 <div className="flex items-center gap-3 group cursor-pointer">
                     {logoUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={logoUrl} alt="Logo" className="h-9 w-auto object-contain hover:scale-105 transition-transform" />
+                        <div className="relative h-9 w-32">
+                            <Image
+                                src={logoUrl}
+                                alt="Logo"
+                                fill
+                                className="object-contain hover:scale-105 transition-transform"
+                            />
+                        </div>
                     ) : (
                         <>
                             <div className="w-8 h-8 rounded-full bg-brand-grey flex items-center justify-center shadow-lg shadow-zinc-500/20 group-hover:shadow-zinc-500/30 transition-all duration-300 hover:scale-105">

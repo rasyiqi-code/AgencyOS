@@ -32,6 +32,8 @@ model Project {
   order       Order?
   estimate    Estimate?  @relation(fields: [estimateId], references: [id])
   service     Service?   @relation(fields: [serviceId], references: [id])
+  subscriptionEndsAt DateTime?
+  subscriptionStatus String?   // active, expired, cancelled
 }
 
 model Order {
@@ -108,6 +110,8 @@ model Estimate {
   serviceId  String?
   service    Service? @relation(fields: [serviceId], references: [id])
   project    Project?
+  userId     String?
+  creatorName String?
 }
 
 model SystemKey {
@@ -131,18 +135,19 @@ model SystemSetting {
 model Service {
   id             String     @id @default(cuid())
   title          String
-  title_id       String?
   description    String
-  description_id String?
   price          Float
+  currency       String     @default("USD")
   interval       String     @default("one_time")
   features       Json
-  features_id    Json?
   image          String?
   isActive       Boolean    @default(true)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   creemProductId String?
+  description_id String?
+  features_id    Json?
+  title_id       String?
   estimates      Estimate[]
   projects       Project[]
 }
@@ -151,10 +156,10 @@ model DailyLog {
   id        String   @id @default(cuid())
   projectId String
   content   String
-  images    String[] @default([])
   mood      String   @default("on_track")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  images    String[] @default([])
   project   Project  @relation(fields: [projectId], references: [id])
 }
 
@@ -171,6 +176,7 @@ model SystemIntegration {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String
@@ -181,13 +187,14 @@ model Notification {
   link      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@index([userId])
 }
 
 model Coupon {
   id            String    @id @default(cuid())
   code          String    @unique
-  discountType  String    @default("percentage") // percentage, fixed
+  discountType  String    @default("percentage")
   discountValue Float
   maxUses       Int?
   usedCount     Int       @default(0)
@@ -213,4 +220,27 @@ model MarketingSubscriber {
   email     String   @unique
   name      String?
   createdAt DateTime @default(now())
+}
+
+model UserPermission {
+  id        String   @id @default(cuid())
+  userId    String
+  email     String   
+  key       String   // e.g., 'manage_projects', 'manage_billing'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, key])
+}
+
+model Changelog {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // Markdown supported
+  version     String?
+  status      String   @default("draft") // 'draft', 'published'
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  authorName  String?
 }

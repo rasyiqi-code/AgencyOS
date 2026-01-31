@@ -4,12 +4,11 @@ import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
-import { ExtendedEstimate } from "@/lib/types";
+import { ExtendedEstimate, Bonus } from "@/lib/types";
 import type { BankDetails } from "@/types/payment";
 
-export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number, bonuses: any[] }) {
+export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number, bonuses: Bonus[] }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
-    const [couponCode, setCouponCode] = useState("");
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discountType: 'percentage' | 'fixed', discountValue: number } | null>(null);
 
     const handlePrint = useReactToPrint({

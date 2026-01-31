@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -131,9 +132,13 @@ export function FeedbackBoard({ projectId, feedbacks }: FeedbackBoardProps) {
                                 <div className="flex-1">
                                     <p className="text-zinc-300">{f.content}</p>
                                     {f.imageUrl && (
-                                        <div className="mt-2 rounded-md overflow-hidden border border-white/5 max-w-[200px]">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={f.imageUrl} alt="Feedback attachment" className="w-full h-auto opacity-80 hover:opacity-100 transition-opacity" />
+                                        <div className="mt-2 relative aspect-video rounded-md overflow-hidden border border-white/5 max-w-[200px]">
+                                            <Image
+                                                src={f.imageUrl}
+                                                alt="Feedback attachment"
+                                                fill
+                                                className="object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                            />
                                         </div>
                                     )}
                                     <span className="text-[10px] text-zinc-600 mt-1 block">

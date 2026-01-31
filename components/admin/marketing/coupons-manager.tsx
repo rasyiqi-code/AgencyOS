@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getCoupons, createCoupon, deleteCoupon } from "@/actions/marketing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -40,9 +39,11 @@ export function CouponsManager() {
 
     const loadCoupons = async () => {
         try {
-            const data = await getCoupons();
+            const response = await fetch('/api/admin/marketing/coupons');
+            if (!response.ok) throw new Error("Failed to load");
+            const data = await response.json();
             setCoupons(data);
-        } catch (error) {
+        } catch {
             toast.error("Failed to load coupons");
         } finally {
             setIsLoading(false);
@@ -56,17 +57,24 @@ export function CouponsManager() {
         }
 
         try {
-            await createCoupon({
-                code: newCoupon.code,
-                discountType: newCoupon.discountType,
-                discountValue: parseFloat(newCoupon.discountValue),
-                maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
-                expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
+            const response = await fetch('/api/admin/marketing/coupons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: newCoupon.code,
+                    discountType: newCoupon.discountType,
+                    discountValue: parseFloat(newCoupon.discountValue),
+                    maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
+                    expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
+                })
             });
+
+            if (!response.ok) throw new Error("Failed to create");
+
             toast.success("Coupon created successfully");
             setNewCoupon({ code: "", discountType: "percentage", discountValue: "", maxUses: "", expiresAt: "" });
             loadCoupons();
-        } catch (error) {
+        } catch {
             toast.error("Failed to create coupon");
         }
     };
@@ -74,10 +82,14 @@ export function CouponsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this coupon?")) return;
         try {
-            await deleteCoupon(id);
+            const response = await fetch(`/api/admin/marketing/coupons?id=${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error("Failed to delete");
+
             toast.success("Coupon deleted");
             loadCoupons();
-        } catch (error) {
+        } catch {
             toast.error("Failed to delete coupon");
         }
     };

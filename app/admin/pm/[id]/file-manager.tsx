@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
     FileText,
@@ -177,13 +178,14 @@ export function FileManager({ projectId, files }: FileManagerProps) {
                             Preview of the project document {previewFile?.name}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="flex-1 bg-black/40 overflow-auto flex items-center justify-center p-4">
+                    <div className="relative flex-1 bg-black/40 overflow-auto flex items-center justify-center p-4">
                         {previewFile?.type.startsWith('image/') ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
+                            <Image
                                 src={previewFile.url}
                                 alt={previewFile.name}
-                                className="max-w-full max-h-full object-contain rounded-lg"
+                                fill
+                                className="object-contain p-4"
+                                sizes="80vw"
                             />
                         ) : (
                             <iframe

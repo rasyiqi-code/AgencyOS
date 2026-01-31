@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getBonuses, createBonus, deleteBonus, toggleBonusStatus } from "@/actions/marketing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus, Gift, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, Gift } from "lucide-react";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 
@@ -37,9 +35,11 @@ export function BonusesManager() {
 
     const loadBonuses = async () => {
         try {
-            const data = await getBonuses();
+            const response = await fetch('/api/admin/marketing/bonuses');
+            if (!response.ok) throw new Error("Failed to load");
+            const data = await response.json();
             setBonuses(data);
-        } catch (error) {
+        } catch {
             toast.error("Failed to load bonuses");
         } finally {
             setIsLoading(false);
@@ -53,16 +53,23 @@ export function BonusesManager() {
         }
 
         try {
-            await createBonus({
-                title: newBonus.title,
-                description: newBonus.description || undefined,
-                value: newBonus.value || undefined,
-                icon: newBonus.icon || undefined,
+            const response = await fetch('/api/admin/marketing/bonuses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: newBonus.title,
+                    description: newBonus.description || undefined,
+                    value: newBonus.value || undefined,
+                    icon: newBonus.icon || undefined,
+                })
             });
+
+            if (!response.ok) throw new Error("Failed to create");
+
             toast.success("Bonus created successfully");
             setNewBonus({ title: "", description: "", value: "", icon: "CheckCircle2" });
             loadBonuses();
-        } catch (error) {
+        } catch {
             toast.error("Failed to create bonus");
         }
     };
@@ -70,19 +77,29 @@ export function BonusesManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this bonus?")) return;
         try {
-            await deleteBonus(id);
+            const response = await fetch(`/api/admin/marketing/bonuses?id=${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error("Failed to delete");
+
             toast.success("Bonus deleted");
             loadBonuses();
-        } catch (error) {
+        } catch {
             toast.error("Failed to delete bonus");
         }
     };
 
     const handleToggle = async (id: string, currentStatus: boolean) => {
         try {
-            await toggleBonusStatus(id, !currentStatus);
+            const response = await fetch('/api/admin/marketing/bonuses', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, isActive: !currentStatus })
+            });
+            if (!response.ok) throw new Error("Failed to update");
+
             loadBonuses();
-        } catch (error) {
+        } catch {
             toast.error("Failed to update status");
         }
     };
@@ -147,9 +164,8 @@ export function BonusesManager() {
                             </TableRow>
                         ) : (
                             bonuses.map((bonus) => {
-                                // Dynamic Icon Loading
-                                // @ts-ignore
-                                const IconComponent = LucideIcons[bonus.icon] || Gift;
+                                // Dynamic access to Lucide icons
+                                const IconComponent = (LucideIcons as unknown as Record<string, React.ElementType>)[bonus.icon || 'Gift'] || Gift;
 
                                 return (
                                     <TableRow key={bonus.id} className="border-white/5">

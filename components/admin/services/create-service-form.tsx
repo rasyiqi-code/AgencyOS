@@ -20,10 +20,23 @@ export function CreateServiceForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-        // ... (same as before)
         event.preventDefault();
         setIsSubmitting(true);
+
         const formData = new FormData(event.currentTarget);
+
+        // Manual Validation for Bilingual Fields
+        const title = formData.get("title") as string;
+        const description = formData.get("description") as string;
+        const titleId = formData.get("title_id") as string;
+        const descriptionId = formData.get("description_id") as string;
+
+        if (!title || !description || !titleId || !descriptionId) {
+            toast.error("Please complete all fields in both English and Bahasa Indonesia.");
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
             const res = await fetch("/api/services", { method: "POST", body: formData });
             if (!res.ok) throw new Error("Failed to create service");
@@ -114,6 +127,7 @@ export function CreateServiceForm() {
                                     <Input
                                         name="title_id"
                                         placeholder="Contoh: Pengembangan Web Enterprise"
+                                        required
                                         className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-red-500/20 h-10"
                                     />
                                 </div>
@@ -122,6 +136,7 @@ export function CreateServiceForm() {
                                     <RichTextEditorClient
                                         name="description_id"
                                         placeholder="Jelaskan nilai layanan..."
+                                        required
                                         className="min-h-[120px]"
                                     />
                                 </div>
@@ -156,16 +171,24 @@ export function CreateServiceForm() {
                     </div>
                     <div className="p-6 space-y-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Price (USD)</label>
-                            <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">$</span>
+                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Price</label>
+                            <div className="flex gap-2">
+                                <Select name="currency" defaultValue="USD">
+                                    <SelectTrigger className="w-[100px] bg-black/20 border-white/10 text-zinc-200">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="USD">USD ($)</SelectItem>
+                                        <SelectItem value="IDR">IDR (Rp)</SelectItem>
+                                    </SelectContent>
+                                </Select>
                                 <Input
                                     name="price"
                                     type="number"
                                     step="0.01"
                                     placeholder="0.00"
                                     required
-                                    className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 pl-7 text-lg font-semibold"
+                                    className="flex-1 bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 text-lg font-semibold"
                                 />
                             </div>
                         </div>

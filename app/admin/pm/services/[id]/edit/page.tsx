@@ -8,7 +8,7 @@ import { isAdmin } from "@/lib/auth-helpers";
 // import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 // import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 // import { SubmitButton } from "@/components/admin/submit-button";
-import { EditServiceForm } from "@/components/admin/services/edit-service-form";
+import { EditServiceForm, type ServiceData } from "@/components/admin/services/edit-service-form";
 
 export default async function EditServicePage({ params }: { params: Promise<{ id: string }> }) {
     if (!await isAdmin()) redirect('/dashboard');
@@ -21,8 +21,7 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
 
     if (!service) notFound();
     const features = Array.isArray(service.features) ? service.features as string[] : [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const features_id = Array.isArray((service as any).features_id) ? (service as any).features_id as string[] : [];
+    const features_id = Array.isArray((service as unknown as Record<string, unknown>).features_id) ? (service as unknown as Record<string, unknown>).features_id as string[] : [];
 
     return (
         <div className="w-full py-6">
@@ -51,8 +50,7 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
             </div>
 
             {/* Main Form Container */}
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <EditServiceForm service={service as unknown as any} features={features} features_id={features_id} />
+            <EditServiceForm service={service as unknown as ServiceData} features={features} features_id={features_id} />
         </div>
     );
 }

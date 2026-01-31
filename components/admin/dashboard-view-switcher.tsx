@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter, usePathname } from "next/navigation";
 import { LayoutDashboard, ShoppingCart, Layers } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from 'react';
 
 interface Props {
     currentView?: string;
@@ -19,12 +19,12 @@ interface Props {
 export function DashboardViewSwitcher({ currentView: propView }: Props) {
     const router = useRouter();
     const pathname = usePathname();
-    const [mounted, setMounted] = useState(false);
+    const mounted = useSyncExternalStore(
+        () => () => { },
+        () => true,
+        () => false
+    );
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMounted(true);
-    }, []);
 
     // Determine view based on path if prop not provided
     let currentView = propView || "all";

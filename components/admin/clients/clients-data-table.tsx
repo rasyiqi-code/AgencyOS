@@ -1,20 +1,23 @@
 "use client";
-"use no memo";
 
 import * as React from "react";
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
     getCoreRowModel,
-    useReactTable,
     getPaginationRowModel,
     getFilteredRowModel,
-    ColumnFiltersState,
+    type ColumnFiltersState,
+    type HeaderGroup,
+    type Header,
+    type Row,
+    type Cell,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useTableInstance } from "@/lib/table-instance";
 
 interface ClientsDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -27,8 +30,7 @@ export function ClientsDataTable<TData, TValue>({
 }: ClientsDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-    // eslint-disable-next-line react-hooks/incompatible-library
-    const table = useReactTable({
+    const table = useTableInstance({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
@@ -74,9 +76,9 @@ export function ClientsDataTable<TData, TValue>({
                         className="border-separate border-spacing-0 table-fixed w-full min-w-[1000px] text-sm"
                     >
                         <thead>
-                            {table.getHeaderGroups().map((headerGroup) => (
+                            {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
                                 <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
+                                    {headerGroup.headers.map((header: Header<TData, unknown>) => {
                                         const headerClasses = "h-10 px-2 text-left align-middle font-bold text-zinc-400 bg-zinc-950 border-b border-zinc-800 relative group transition-colors hover:bg-zinc-900 sticky top-0 z-40 border-r border-zinc-800/50";
 
                                         return (
@@ -103,12 +105,12 @@ export function ClientsDataTable<TData, TValue>({
                         </thead>
                         <tbody className="bg-transparent">
                             {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
+                                table.getRowModel().rows.map((row: Row<TData>) => (
                                     <tr
                                         key={row.id}
                                         className="group transition-colors hover:bg-zinc-900/30"
                                     >
-                                        {row.getVisibleCells().map((cell) => {
+                                        {row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
                                             const cellClasses = "h-14 px-2 align-middle border-b border-zinc-800/50 relative overflow-hidden transition-colors z-10 bg-transparent border-r border-zinc-800/50";
 
                                             return (

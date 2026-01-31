@@ -6,14 +6,35 @@ import { Prisma } from "@prisma/client";
 // Helper to update order/subscription status
 const updateOrderStatus = async (orderId: string, status: string, metadata: unknown) => {
     try {
-        await prisma.order.update({
+        const order = await prisma.order.update({
             where: { id: orderId },
             data: {
                 status,
                 paymentMetadata: metadata as Prisma.InputJsonValue
+            },
+            include: {
+                project: {
+                    include: { estimate: true }
+                }
             }
         });
         console.log(`[CREEM_WEBHOOK] Order ${orderId} updated to ${status}`);
+
+        // If paid, activate Project and Estimate
+        if (status === 'paid' && order.project) {
+            await prisma.project.update({
+                where: { id: order.project.id },
+                data: { status: 'queue' }
+            });
+
+            // If Project was created from an Estimate, mark Estimate as Paid too
+            if (order.project.estimateId) {
+                await prisma.estimate.update({
+                    where: { id: order.project.estimateId },
+                    data: { status: 'paid' }
+                });
+            }
+        }
     } catch (error) {
         console.error(`[CREEM_WEBHOOK] Failed to update order ${orderId}:`, error);
     }
@@ -44,7 +65,8 @@ export async function POST(req: NextRequest) {
             }
         };
 
-        await creem.webhooks.handleEvents(payload, signature, {
+        const sdk = await creem();
+        await sdk.webhooks.handleEvents(payload, signature, {
             onCheckoutCompleted: async (data: unknown) => {
                 const creemData = data as CreemPayload;
                 const orderId = creemData.metadata?.orderId;
@@ -52,24 +74,24 @@ export async function POST(req: NextRequest) {
                     await updateOrderStatus(orderId, "paid", data as Prisma.InputJsonValue);
                 }
             },
-            onSubscriptionActive: async (data) => {
+            onSubscriptionActive: async (data: unknown) => {
                 await handleSubscriptionEvent(data as CreemPayload, "paid", "Subscription Active");
             },
-            onSubscriptionPaid: async (data) => {
+            onSubscriptionPaid: async (data: unknown) => {
                 await handleSubscriptionEvent(data as CreemPayload, "paid", "Subscription Paid");
             },
-            onSubscriptionCanceled: async (data) => {
+            onSubscriptionCanceled: async (data: unknown) => {
                 await handleSubscriptionEvent(data as CreemPayload, "canceled", "Subscription Canceled");
             },
-            onSubscriptionExpired: async (data) => {
+            onSubscriptionExpired: async (data: unknown) => {
                 await handleSubscriptionEvent(data as CreemPayload, "expired", "Subscription Expired");
             },
-            onSubscriptionUnpaid: async (data) => {
+            onSubscriptionUnpaid: async (data: unknown) => {
                 const creemData = data as CreemPayload;
                 const orderId = creemData.metadata?.orderId;
                 console.warn(`[CREEM_WEBHOOK] Subscription Unpaid for Order ${orderId}`);
             },
-            onSubscriptionPastDue: async (data) => {
+            onSubscriptionPastDue: async (data: unknown) => {
                 const creemData = data as CreemPayload;
                 const orderId = creemData.metadata?.orderId;
                 console.warn(`[CREEM_WEBHOOK] Subscription Past Due for Order ${orderId}`);

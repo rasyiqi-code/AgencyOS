@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Gift, Loader2, CheckCircle2 } from "lucide-react";
+import { Gift, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { createSubscriber } from "@/actions/marketing";
 
 export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: string) => void }) {
     const [email, setEmail] = useState("");
@@ -23,17 +22,41 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [promoCoupon, setPromoCoupon] = useState<{ code: string, discountValue: number, discountType: string } | null>(null);
+
+    const fetchPromoCoupon = async () => {
+        try {
+            const response = await fetch('/api/marketing/coupon/promotion');
+            if (response.ok) {
+                const data = await response.json();
+                setPromoCoupon(data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch promo coupon:", error);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await createSubscriber(email, name);
+            const response = await fetch('/api/marketing/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, name })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to process subscription");
+            }
+
             setIsSuccess(true);
+            await fetchPromoCoupon();
             if (onSubscribe) onSubscribe(email);
             toast.success("Subscribed successfully!");
         } catch (error) {
-            toast.error("Failed to subscribe. Please try again.");
+            toast.error(error instanceof Error ? error.message : "Failed to process subscription");
         } finally {
             setIsLoading(false);
         }
@@ -64,9 +87,9 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
                             <CheckCircle2 className="w-8 h-8 text-emerald-500" />
                         </div>
                         <div>
-                            <DialogTitle className="text-xl mb-2">You're on the list!</DialogTitle>
+                            <DialogTitle className="text-xl mb-2">You&apos;re on the list!</DialogTitle>
                             <DialogDescription className="text-zinc-400">
-                                Use code <span className="text-brand-yellow font-mono font-bold bg-white/10 px-2 py-0.5 rounded">NEWUSER10</span> for 10% off.
+                                Use code <span className="text-brand-yellow font-mono font-bold bg-white/10 px-2 py-0.5 rounded">{promoCoupon?.code || "WELCOME10"}</span> for {promoCoupon ? (promoCoupon.discountType === 'percentage' ? `${promoCoupon.discountValue}%` : `$${promoCoupon.discountValue}`) : "10%"} off.
                             </DialogDescription>
                         </div>
                         <Button onClick={() => setIsOpen(false)} className="bg-brand-yellow text-black hover:bg-brand-yellow/80">

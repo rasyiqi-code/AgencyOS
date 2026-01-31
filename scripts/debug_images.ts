@@ -1,4 +1,4 @@
-import { prisma } from "./lib/db";
+import { prisma } from "../lib/db";
 
 async function main() {
     try {
@@ -8,7 +8,7 @@ async function main() {
         });
         console.error("FOUND " + services.length + " SERVICES");
         services.forEach(s => console.error("IMAGE: " + s.image));
-        
+
         const setting = await prisma.systemSetting.findUnique({
             where: { key: "r2_public_domain" }
         });

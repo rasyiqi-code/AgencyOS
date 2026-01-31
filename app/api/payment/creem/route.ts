@@ -82,7 +82,8 @@ export async function POST(req: NextRequest) {
         await prisma.order.update({
             where: { id: orderId },
             data: {
-                paymentType: "creem_credit_card",
+                paymentType: "creem",
+                transactionId: checkout.id,
             }
         });
 

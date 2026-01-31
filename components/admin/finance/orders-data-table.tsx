@@ -1,17 +1,20 @@
 "use client";
-"use no memo";
 
 import * as React from "react";
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
     getCoreRowModel,
-    useReactTable,
     getPaginationRowModel,
+    type HeaderGroup,
+    type Header,
+    type Row,
+    type Cell,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { useTableInstance } from "@/lib/table-instance";
 
 interface OrdersDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -23,8 +26,7 @@ export function OrdersDataTable<TData, TValue>({
     data,
 }: OrdersDataTableProps<TData, TValue>) {
     const t = useTranslations("Admin.Finance");
-    // eslint-disable-next-line react-hooks/incompatible-library
-    const table = useReactTable({
+    const table = useTableInstance({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
@@ -56,11 +58,10 @@ export function OrdersDataTable<TData, TValue>({
                         className="border-separate border-spacing-0 table-fixed w-full min-w-[1400px] text-sm"
                     >
                         <thead>
-                            {table.getHeaderGroups().map((headerGroup) => (
+                            {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
                                 <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
+                                    {headerGroup.headers.map((header: Header<TData, unknown>) => {
                                         const isActions = header.column.id === 'actions';
-                                        // isId was here
 
                                         let headerClasses = "h-10 px-2 text-left align-middle font-bold text-zinc-400 bg-zinc-950 border-b border-zinc-800 relative group transition-colors hover:bg-zinc-900 sticky top-0 z-40";
 
@@ -104,12 +105,12 @@ export function OrdersDataTable<TData, TValue>({
                         </thead>
                         <tbody className="bg-transparent">
                             {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
+                                table.getRowModel().rows.map((row: Row<TData>) => (
                                     <tr
                                         key={row.id}
                                         className="group transition-colors hover:bg-zinc-900/30"
                                     >
-                                        {row.getVisibleCells().map((cell) => {
+                                        {row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
                                             const isActions = cell.column.id === 'actions';
 
                                             let cellClasses = "h-12 px-2 align-middle border-b border-zinc-800/50 relative overflow-hidden transition-colors z-10 bg-transparent";

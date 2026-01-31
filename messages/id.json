@@ -262,5 +262,25 @@
         "terms": "Ketentuan Layanan",
         "privacy": "Kebijakan Privasi",
         "copyright": "© 2024 Crediblemark. Dibangun dengan Kecerdasan Manusia & Kecepatan Buatan."
+    },
+    "PriceCalculator": {
+        "badge": "Quote & Pricing",
+        "title": "Bangun software Anda <br/> <highlight>dengan kejelasan mutlak.</highlight>",
+        "subtitle": "Jelaskan ide Anda dengan kata-kata sendiri. Dapatkan rincian detail, timeline, dan harga pasti dalam hitungan detik.",
+        "placeholder": "Saya ingin membuat marketplace jam tangan vintage di mana pengguna bisa menawar...",
+        "poweredBy": "Didukung oleh Gemini 2.0 Flash",
+        "generate": "Buat Estimasi",
+        "analyzing": "Menganalisis...",
+        "success": "Estimasi berhasil dibuat!",
+        "error": "Gagal membuat estimasi. Silakan coba lagi.",
+        "recentEstimates": "Estimasi Terkini",
+        "by": "oleh",
+        "anonymous": "Anonim",
+        "complexity": "Kompleksitas",
+        "viewDetails": "Lihat Detail",
+        "loadMore": "Muat Lebih Banyak",
+        "deleteConfirm": "Apakah Anda yakin ingin menghapus estimasi ini?",
+        "deleteSuccess": "Estimasi dihapus",
+        "deleteError": "Gagal menghapus estimasi"
     }
 }

@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
         const description = formData.get("description") as string;
         const description_id = formData.get("description_id") as string;
         const price = parseFloat(formData.get("price") as string);
+        const currency = (formData.get("currency") as string) || "USD";
         const interval = formData.get("interval") as string;
         const featuresRaw = formData.get("features") as string;
         const featuresIdRaw = formData.get("features_id") as string;
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
                 name: title,
                 description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
                 price: Math.round(price * 100),
-                currency: "USD",
+                currency: currency,
                 billingType: interval === 'one_time' ? 'onetime' : 'recurring',
                 billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "every-month" | "every-year" | "every-three-months" | "every-six-months" | "once" | undefined,
                 taxMode: "inclusive",
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
                 description,
                 description_id,
                 price,
+                currency,
                 interval,
                 features,
                 features_id,

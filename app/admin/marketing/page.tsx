@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CouponsManager } from "@/components/admin/marketing/coupons-manager";
 import { BonusesManager } from "@/components/admin/marketing/bonuses-manager";
+import { SubscribersManager } from "@/components/admin/marketing/subscribers-manager";
 import { Megaphone } from "lucide-react";
 
 export default function MarketingPage() {
@@ -36,10 +36,8 @@ export default function MarketingPage() {
                     <BonusesManager />
                 </TabsContent>
 
-                <TabsContent value="subscribers">
-                    <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 text-center text-zinc-500">
-                        Subscriber management coming soon.
-                    </div>
+                <TabsContent value="subscribers" className="space-y-4">
+                    <SubscribersManager />
                 </TabsContent>
             </Tabs>
         </div>

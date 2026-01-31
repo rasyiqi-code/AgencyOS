@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FileText, Download } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -10,19 +11,40 @@ interface ViewProofButtonProps {
     estimate: {
         id: string;
         proofUrl?: string | null;
-        project?: { title: string } | null;
+        project?: { title: string; order?: { paymentType?: string | null } | null } | null;
         title?: string | null;
         createdAt: string | Date;
+        paymentType?: string | null; // Direct prop or via project order
     };
 }
 
 export function ViewProofButton({ estimate }: ViewProofButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Resolve payment type and proofUrl
+    const paymentType = estimate.paymentType || estimate.project?.order?.paymentType;
     const proofUrl = estimate.proofUrl;
-    if (!proofUrl) return null;
 
-    const isPdf = proofUrl.toLowerCase().endsWith(".pdf");
+    // 1. If Proof URL exists (Manual Transfer), show View Proof button
+    if (proofUrl) {
+        // Continue to Dialog logic... passing through to return
+        // We do NOT return early here, as we need the logic below to calculate displayUrl etc.
+    }
+    // 2. If NO Proof URL but YES Payment Type (Online), show Text
+    else if (paymentType) {
+        // User request: "kalau midtrans ya midtrans saja, kalau creem ya creem saja"
+        const isCreem = paymentType.toLowerCase().includes('creem');
+        const label = isCreem ? 'Creem' : 'Midtrans';
+        return <span className="text-xs text-zinc-500 font-medium whitespace-nowrap">Via {label}</span>;
+    }
+    // 3. Else show nothing
+    else {
+        return null;
+    }
 
+    const isPdf = proofUrl ? proofUrl.toLowerCase().endsWith(".pdf") : false;
+
+    // ... rest of logic
     const invoiceId = estimate.id.slice(-8).toUpperCase();
     const projectTitle = estimate.project?.title || estimate.title || "Untitled";
     const dateStr = estimate.createdAt instanceof Date
@@ -32,13 +54,15 @@ export function ViewProofButton({ estimate }: ViewProofButtonProps) {
     const fileName = `Proof-${invoiceId}-${projectTitle.replace(/[^a-z0-9]/gi, '_')}-${dateStr}${isPdf ? '.pdf' : ''}`;
 
     // Construct Proxy URL if it's an R2 URL (to bypass Public Access blocks)
-    let displayUrl = proofUrl;
+    let displayUrl = proofUrl || "";
     try {
-        const urlObj = new URL(proofUrl);
-        if (urlObj.host.includes("r2.dev")) {
-            const rawPath = decodeURIComponent(urlObj.pathname);
-            const key = rawPath.startsWith('/') ? rawPath.slice(1) : rawPath;
-            displayUrl = `/api/storage/proxy?key=${encodeURIComponent(key)}`;
+        if (proofUrl) {
+            const urlObj = new URL(proofUrl);
+            if (urlObj.host.includes("r2.dev")) {
+                const rawPath = decodeURIComponent(urlObj.pathname);
+                const key = rawPath.startsWith('/') ? rawPath.slice(1) : rawPath;
+                displayUrl = `/api/storage/proxy?key=${encodeURIComponent(key)}`;
+            }
         }
     } catch {
         // invalid url, keep original
@@ -74,10 +98,11 @@ export function ViewProofButton({ estimate }: ViewProofButtonProps) {
                         <iframe src={displayUrl} className="w-full h-full border-none" />
                     ) : (
                         <div className="relative">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                                 src={displayUrl}
                                 alt="Payment Proof"
+                                width={800}
+                                height={600}
                                 className="max-w-full max-h-[70vh] object-contain mx-auto rounded-md"
                             />
                         </div>

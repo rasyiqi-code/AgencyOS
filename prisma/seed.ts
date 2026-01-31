@@ -10,65 +10,87 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('🌱 Starting database seeding...');
 
-    // 1. Clean up existing data
-    await prisma.service.deleteMany();
-    await prisma.coupon.deleteMany();
-    await prisma.marketingBonus.deleteMany();
-    // await prisma.project.deleteMany(); // Keeping projects for now unless requested
+    // 1. Clean up existing data (Transactional only)
+    console.log('🧹 Cleaning up transactional data...');
 
-    // 2. Create Services
+    // Disconnect relations first to avoid Foreign Key constraints
+    await prisma.project.updateMany({ data: { serviceId: null, estimateId: null } });
+    await prisma.estimate.updateMany({ data: { serviceId: null } });
+
+    // Delete transactional data
+    await prisma.supportMessage.deleteMany();
+    await prisma.ticket.deleteMany();
+    await prisma.dailyLog.deleteMany();
+    await prisma.feedback.deleteMany();
+    await prisma.brief.deleteMany();
+    await prisma.order.deleteMany();
+    await prisma.notification.deleteMany();
+    await prisma.estimate.deleteMany();
+    await prisma.project.deleteMany();
+
+    // NOT DELETING reference data: Services, SystemSettings, Coupons, MarketingBonuses
+
+    // 2. Create Services (Idempotent)
     const services = [
         {
             title: 'Web Development Starter',
+            title_id: 'Paket Pemula Web Development',
             description: 'Perfect for small businesses needing a professional online presence. Includes 5 pages, contact form, and mobile responsiveness.',
+            description_id: 'Cocok untuk bisnis kecil yang membutuhkan kehadiran online profesional. Termasuk 5 halaman, formulir kontak, dan responsivitas seluler.',
             price: 1500,
+            currency: 'USD',
             interval: 'one_time',
             features: ['5 Pages', 'Mobile Responsive', 'Contact Form', 'SEO Basic', '1 Month Support'],
+            features_id: ['5 Halaman', 'Responsi Seluler', 'Formulir Kontak', 'SEO Dasar', 'Dukungan 1 Bulan'],
         },
         {
-            title: 'E-Commerce Pro',
-            description: 'Complete online store solution with payment gateway, product management, and inventory tracking.',
-            price: 3500,
-            interval: 'one_time',
-            features: ['Unlimited Products', 'Payment Gateway', 'Inventory Management', 'User Accounts', 'Admin Dashboard'],
-        },
-        {
-            title: 'Enterprise Retainer',
-            description: 'Ongoing dedicated support and development for scaling businesses.',
-            price: 2000,
+            title: 'E-Commerce Growth Plan',
+            title_id: 'Paket Pertumbuhan E-Commerce',
+            description: 'Scale your online store with ongoing maintenance, priority support, and monthly performance optimizations.',
+            description_id: 'Tingkatkan toko online Anda dengan pemeliharaan berkelanjutan, dukungan prioritas, dan optimasi performa bulanan.',
+            price: 299,
+            currency: 'USD',
             interval: 'monthly',
-            features: ['Dedicated Developer', 'Priority Support', 'Weekly Updates', 'Server Management', 'Custom Features'],
+            features: ['Monthly Maintenance', 'Performance Tuning', 'Priority Support', 'Security Patches', 'Analytics Report'],
+            features_id: ['Pemeliharaan Bulanan', 'Tuning Performa', 'Dukungan Prioritas', 'Patch Keamanan', 'Laporan Analitik'],
+        },
+        {
+            title: 'Enterprise Support (Annual)',
+            title_id: 'Dukungan Enterprise (Tahunan)',
+            description: 'Full-service dedicated support for large organizations needing guaranteed uptime and rapid response.',
+            description_id: 'Dukungan penuh khusus untuk organisasi besar yang membutuhkan jaminan uptime dan respons cepat.',
+            price: 50000000,
+            currency: 'IDR',
+            interval: 'yearly',
+            features: ['24/7 Dedicated Support', 'Rapid Response Time', 'Server Monitoring', 'Legal Compliance', 'Quarterly Reviews'],
+            features_id: ['Dukungan Khusus 24/7', 'Waktu Respons Cepat', 'Pemantauan Server', 'Kepatuhan Hukum', 'Tinjauan Kuartalan'],
+        },
+        {
+            title: 'Custom Website Design',
+            title_id: 'Desain Website Kustom',
+            description: 'High-end custom website design tailored to your brand identity and business goals.',
+            description_id: 'Desain website kustom kelas atas yang disesuaikan dengan identitas merek dan tujuan bisnis Anda.',
+            price: 25000000,
+            currency: 'IDR',
+            interval: 'one_time',
+            features: ['Custom UI/UX Design', 'High Performance', 'Interactive Elements', 'Brand Integration', 'Source Files Included'],
+            features_id: ['Desain UI/UX Kustom', 'Performa Tinggi', 'Elemen Interaktif', 'Integrasi Merek', 'Termasuk File Sumber'],
         },
     ];
 
     for (const s of services) {
-        const service = await prisma.service.create({
-            data: s,
-        });
-        console.log(`Created service: ${service.title}`);
+        const existing = await prisma.service.findFirst({ where: { title: s.title } });
+        if (!existing) {
+            const service = await prisma.service.create({
+                data: s,
+            });
+            console.log(`Created service: ${service.title}`);
+        } else {
+            console.log(`Service exists: ${s.title}`);
+        }
     }
 
-    // Create System Settings
-    const settings = [
-        { key: 'bank_name', value: 'BCA', description: 'Bank Name' },
-        { key: 'bank_account', value: '123 456 7890', description: 'Account Number' },
-        { key: 'bank_holder', value: 'PT Crediblemark', description: 'Account Holder Name' },
 
-        // R2 Storage
-        { key: 'r2_endpoint', value: 'https://150d6660ac49b58a02b6489155ddeaab.r2.cloudflarestorage.com', description: 'Cloudflare R2 Endpoint' },
-        { key: 'r2_access_key_id', value: '64f7444dc3ee2ef80baeae321e0b3b5c', description: 'R2 Access Key' },
-        { key: 'r2_secret_access_key', value: '831f7bf346e8ea37b5db957e2a982e2466c7c55a98c48390b4bbd422fc505894', description: 'R2 Secret Key' },
-        { key: 'r2_public_domain', value: 'https://pub-8444e4b7ff014377afa695d532f922cd.r2.dev', description: 'R2 Public Domain' },
-    ];
-
-    for (const s of settings) {
-        await prisma.systemSetting.upsert({
-            where: { key: s.key },
-            update: {}, // Don't overwrite if exists (to preserve manual changes), but for seed/reset it will create.
-            create: s
-        });
-    }
-    console.log('Created System Settings.');
 
     // 4. Create Marketing Data (Coupons & Bonuses)
 
@@ -109,42 +131,6 @@ async function main() {
     console.log('Created Marketing Bonuses.');
 
 
-    // 3. Create Demo Projects - DISABLED PER USER REQUEST
-    // const userIds = ['user_demo_123']; // Mock user ID
-
-    // await prisma.project.create({
-    //     data: {
-    //         userId: userIds[0],
-    //         title: 'Redesign Landing Page',
-    //         description: 'Modernize the current landing page with new branding guidelines.',
-    //         status: 'queue',
-    //         spec: 'Use the new color palette. Hero section needs a video background.',
-    //     },
-    // });
-
-    // await prisma.project.create({
-    //     data: {
-    //         userId: userIds[0],
-    //         title: 'API Integration for Mobile App',
-    //         description: 'Connect the React Native app to the backend strictly via REST API.',
-    //         status: 'dev',
-    //         repoOwner: 'agency-os',
-    //         repoName: 'mobile-api',
-    //         repoUrl: 'https://github.com/agency-os/mobile-api',
-    //         spec: 'Endpoints required: /auth, /products, /orders.',
-    //     },
-    // });
-
-    // await prisma.project.create({
-    //     data: {
-    //         userId: userIds[0],
-    //         title: 'Corporate Dashboard',
-    //         description: 'Internal analytical dashboard for finance team.',
-    //         status: 'done',
-    //         spec: 'Charts using Recharts. Data export to CSV.',
-    //     },
-    // });
-
     console.log('✅ Seeding finished.');
 }
 
@@ -156,3 +142,4 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+// Force TS re-check

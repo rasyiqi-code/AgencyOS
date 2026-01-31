@@ -262,5 +262,25 @@
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
         "copyright": "© 2024 Crediblemark. Built with Human Intelligence & Artificial Speed."
+    },
+    "PriceCalculator": {
+        "badge": "Quote & Pricing",
+        "title": "Build your software <br/> <highlight>with absolute clarity.</highlight>",
+        "subtitle": "Describe your idea in your own words. Get a detailed breakdown, timeline, and fixed price quote in seconds.",
+        "placeholder": "I want to build a marketplace for vintage watches where users can bid...",
+        "poweredBy": "Powered by Gemini 2.0 Flash",
+        "generate": "Generate Estimate",
+        "analyzing": "Analyzing...",
+        "success": "Estimate generated!",
+        "error": "Failed to generate estimate. Please try again.",
+        "recentEstimates": "Recent Estimates",
+        "by": "by",
+        "anonymous": "Anonymous",
+        "complexity": "Complexity",
+        "viewDetails": "View Details",
+        "loadMore": "Load More Estimates",
+        "deleteConfirm": "Are you sure you want to delete this estimate?",
+        "deleteSuccess": "Estimate deleted",
+        "deleteError": "Failed to delete estimate"
     }
 }

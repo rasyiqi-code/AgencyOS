@@ -1,23 +1,25 @@
 "use client";
-"use no memo";
 
 import * as React from "react";
 import {
     flexRender,
     getCoreRowModel,
-    useReactTable,
+    type HeaderGroup,
+    type Header,
+    type Row,
+    type Cell,
 } from "@tanstack/react-table";
 
 import { ShoppingCart } from "lucide-react";
 import { financeColumns, FinanceData } from "./finance-columns";
+import { useTableInstance } from "@/lib/table-instance";
 
 interface FinanceTableProps {
     data: FinanceData[];
 }
 
 export function FinanceTable({ data }: FinanceTableProps) {
-    // eslint-disable-next-line react-hooks/incompatible-library
-    const table = useReactTable({
+    const table = useTableInstance({
         data,
         columns: financeColumns,
         getCoreRowModel: getCoreRowModel(),
@@ -40,9 +42,9 @@ export function FinanceTable({ data }: FinanceTableProps) {
                 >
                     <table className="border-separate border-spacing-0 table-fixed w-full text-sm relative">
                         <thead>
-                            {table.getHeaderGroups().map((headerGroup) => (
+                            {table.getHeaderGroups().map((headerGroup: HeaderGroup<FinanceData>) => (
                                 <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
+                                    {headerGroup.headers.map((header: Header<FinanceData, unknown>) => {
                                         const isActions = header.column.id === 'actions';
 
                                         return (
@@ -75,12 +77,12 @@ export function FinanceTable({ data }: FinanceTableProps) {
                         </thead>
                         <tbody className="bg-transparent">
                             {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
+                                table.getRowModel().rows.map((row: Row<FinanceData>) => (
                                     <tr
                                         key={row.id}
                                         className="group transition-all hover:bg-white/[0.02] active:bg-white/[0.04]"
                                     >
-                                        {row.getVisibleCells().map((cell) => {
+                                        {row.getVisibleCells().map((cell: Cell<FinanceData, unknown>) => {
                                             const isActions = cell.column.id === 'actions';
                                             const isId = cell.column.id === 'id';
 

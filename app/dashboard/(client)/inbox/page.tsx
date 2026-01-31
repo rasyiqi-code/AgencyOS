@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 // import { sendMessage } from "@/app/actions/support";
+import { useCurrency } from "@/components/providers/currency-provider";
 
 interface Ticket {
     id: string;
@@ -34,6 +35,9 @@ export default function InboxPage() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
+
+    const { locale } = useCurrency();
+    const isId = locale === 'id-ID' || locale === 'id';
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -137,8 +141,8 @@ export default function InboxPage() {
             <div className="w-80 border-r border-white/5 bg-zinc-900/30 flex flex-col">
                 <div className="p-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/50">
                     <div>
-                        <h2 className="font-semibold text-white tracking-tight">Messages</h2>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">Support Tickets</p>
+                        <h2 className="font-semibold text-white tracking-tight">{isId ? 'Pesan' : 'Messages'}</h2>
+                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">{isId ? 'Tiket Bantuan' : 'Support Tickets'}</p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={fetchTickets} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8">
                         <RefreshCcw className="h-3.5 w-3.5" />
@@ -148,7 +152,7 @@ export default function InboxPage() {
                     <div className="flex flex-col p-2 gap-1">
                         {tickets.length === 0 && (
                             <div className="p-8 text-center text-zinc-500 text-sm">
-                                No active tickets.
+                                {isId ? 'Tidak ada tiket aktif.' : 'No active tickets.'}
                             </div>
                         )}
                         {tickets.map(ticket => (
@@ -167,7 +171,7 @@ export default function InboxPage() {
                                         "font-medium text-sm truncate max-w-[120px]",
                                         selectedTicketId === ticket.id ? "text-blue-100" : "text-zinc-300"
                                     )}>
-                                        {ticket.name || ticket.email || "Ticket #" + ticket.id.substring(0, 4)}
+                                        {ticket.name || ticket.email || (isId ? "Tiket #" : "Ticket #") + ticket.id.substring(0, 4)}
                                     </span>
                                     <span className={cn(
                                         "text-[10px]",
@@ -180,7 +184,7 @@ export default function InboxPage() {
                                     "text-xs line-clamp-1",
                                     selectedTicketId === ticket.id ? "text-blue-200/60" : "text-zinc-500"
                                 )}>
-                                    {ticket.messages[0]?.content || "No records"}
+                                    {ticket.messages[0]?.content || (isId ? "Tidak ada catatan" : "No records")}
                                 </p>
                             </button>
                         ))}
@@ -196,7 +200,7 @@ export default function InboxPage() {
                         <div className="w-16 h-16 rounded-2xl bg-zinc-900/50 border border-white/5 flex items-center justify-center">
                             <MessageSquare className="w-8 h-8 opacity-20" />
                         </div>
-                        <p className="text-sm">Select a conversation to start chatting.</p>
+                        <p className="text-sm">{isId ? 'Pilih percakapan untuk memulai obrolan.' : 'Select a conversation to start chatting.'}</p>
                     </div>
                 ) : (
                     <>
@@ -209,7 +213,7 @@ export default function InboxPage() {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h3 className="font-medium text-white text-sm">Customer Support</h3>
+                                    <h3 className="font-medium text-white text-sm">{isId ? 'Layanan Pelanggan' : 'Customer Support'}</h3>
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                         <p className="text-[10px] text-emerald-400">Online</p>
@@ -217,7 +221,7 @@ export default function InboxPage() {
                                 </div>
                             </div>
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/5 uppercase tracking-wide">
-                                Ticket #{selectedTicketId.substring(0, 6)}
+                                {isId ? 'Tiket #' : 'Ticket #'} {selectedTicketId.substring(0, 6)}
                             </span>
                         </div>
 
@@ -240,14 +244,14 @@ export default function InboxPage() {
                                                     "text-[10px]",
                                                     !isAgent ? "bg-zinc-800 text-zinc-300" : "bg-blue-600 text-white"
                                                 )}>
-                                                    {!isAgent ? "ME" : "CS"}
+                                                    {!isAgent ? (isId ? "SAYA" : "ME") : "CS"}
                                                 </AvatarFallback>
                                             </Avatar>
 
                                             <div className="space-y-1">
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className={cn("text-xs font-medium", !isAgent ? "text-zinc-400 text-right w-full" : "text-blue-400")}>
-                                                        {!isAgent ? "You" : "Support Agent"}
+                                                        {!isAgent ? (isId ? "Anda" : "You") : (isId ? "Agen Dukungan" : "Support Agent")}
                                                     </span>
                                                 </div>
 
@@ -275,7 +279,7 @@ export default function InboxPage() {
                                                 </div>
 
                                                 <p className={cn("text-[10px] text-zinc-600", !isAgent ? "text-right" : "")}>
-                                                    {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                                                    {m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : (isId ? 'Baru saja' : 'Just now')}
                                                 </p>
                                             </div>
                                         </div>
@@ -315,7 +319,7 @@ export default function InboxPage() {
                                     <Input
                                         value={input}
                                         onChange={e => setInput(e.target.value)}
-                                        placeholder="Type your message..."
+                                        placeholder={isId ? 'Ketik pesan Anda...' : 'Type your message...'}
                                         className="w-full bg-black/40 border-white/10 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-blue-500/30 h-11 rounded-xl pl-4 pr-4"
                                     />
                                 </div>

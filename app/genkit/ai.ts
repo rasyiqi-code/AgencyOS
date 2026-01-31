@@ -52,6 +52,8 @@ export async function getDynamicAI() {
                 plugins: [googleAI({ apiKey: randomKey.key })],
                 model: selectedModel,
             });
+        } else {
+            console.log("AI: No active keys found in database");
         }
     } catch (error) {
         console.error("Failed to fetch dynamic keys:", error);

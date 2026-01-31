@@ -6,8 +6,8 @@ import { Copy, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
+import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
 import { useCurrency } from "@/components/providers/currency-provider";
-import { type ExtendedEstimate } from "@/lib/types";
 
 const PriceCell = ({ amount }: { amount: number }) => {
     const { currency, locale, rate } = useCurrency();
@@ -36,8 +36,10 @@ export type FinanceData = {
         userId: string | null;
         order?: {
             proofUrl: string | null;
+            paymentType: string | null;
         } | null;
     } | null;
+    paymentType: string | null;
     screens: { title: string; description: string; hours: number }[];
     apis: { title: string; description: string; hours: number }[];
 };
@@ -142,16 +144,17 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
         cell: ({ row }) => {
             const estimate = row.original;
             const proofUrl = estimate.proofUrl || estimate.project?.order?.proofUrl;
-
-            if (proofUrl) {
-                return (
-                    <ViewProofButton estimate={{
-                        ...estimate,
-                        proofUrl: proofUrl as string
-                    }} />
-                );
-            }
-            return <span className="text-zinc-700 text-[10px] italic px-2">None</span>;
+            return (
+                <div className="flex items-center">
+                    {proofUrl || estimate.paymentType ? (
+                        <ViewProofButton estimate={{
+                            ...estimate,
+                            proofUrl: proofUrl as string,
+                            paymentType: estimate.paymentType
+                        }} />
+                    ) : <span className="text-zinc-700 text-[10px] italic px-2">None</span>}
+                </div>
+            );
         },
     },
     {
@@ -170,16 +173,23 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
         enableResizing: false,
         cell: ({ row }) => {
             const estimate = row.original;
+
+            const status = estimate.status;
+            const isPaid = status === 'paid' || status === 'settled';
+            const isPending = status === 'pending_payment';
+
             return (
                 <div className="flex items-center justify-end gap-0">
-                    {estimate.status === 'pending_payment' && (
+                    {isPending && (
                         <div className="scale-75 origin-right">
                             <ConfirmPaymentButton estimateId={estimate.id} />
                         </div>
                     )}
-                    <div className="scale-75 origin-center -ml-1">
-                        <ViewProofButton estimate={estimate as unknown as ExtendedEstimate} />
-                    </div>
+                    {isPaid && (
+                        <div className="scale-75 origin-right">
+                            <UnpaidButton estimateId={estimate.id} />
+                        </div>
+                    )}
                 </div>
             );
         },

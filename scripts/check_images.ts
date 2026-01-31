@@ -1,4 +1,4 @@
-import { prisma } from "./lib/db";
+import { prisma } from "../lib/db";
 
 async function main() {
     const services = await prisma.service.findMany({
@@ -6,7 +6,7 @@ async function main() {
     });
     console.log("SERVICE IMAGES:");
     services.forEach(s => console.log(`[${s.title}]: ${s.image}`));
-    
+
     const setting = await prisma.systemSetting.findUnique({
         where: { key: "r2_public_domain" }
     });

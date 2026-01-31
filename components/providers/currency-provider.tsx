@@ -25,13 +25,19 @@ const CurrencyContext = createContext<CurrencyContextType>({
 export const useCurrency = () => useContext(CurrencyContext);
 
 export function CurrencyProvider({ children, initialLocale = 'en-US' }: { children: React.ReactNode, initialLocale?: string }) {
-    const [currency, setCurrency] = useState<Currency>('USD');
+    const [currency, setCurrency] = useState<Currency>(() => {
+        if (typeof window !== 'undefined') {
+            const cached = localStorage.getItem('agency-os-currency');
+            if (cached === 'USD' || cached === 'IDR') return cached as Currency;
+        }
+        return 'USD';
+    });
     const [locale, setLocale] = useState(initialLocale);
     const [rate, setRate] = useState(16000); // Default fallback
     const router = useRouter();
 
     useEffect(() => {
-        // 0. Fetch Dynamic Rate
+        // Fetch Dynamic Rate
         fetch('/api/currency/rates')
             .then(res => res.json())
             .then(data => {
@@ -41,43 +47,25 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
             })
             .catch(err => console.error("Rate fetch failed", err));
 
-        // 1. Check LocalStorage
-        const cachedCurrency = localStorage.getItem('agency-os-currency');
-        // We trust initialLocale (from cookie/server) more than localStorage for locale to avoid mismatch
-        // But for currency, we can still check localStorage
-
-        if (cachedCurrency && (cachedCurrency === 'USD' || cachedCurrency === 'IDR')) {
-            if (currency !== cachedCurrency) {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setCurrency(cachedCurrency as Currency);
-            }
-        }
-
-        // Only detect if nothing cached
-        if (!cachedCurrency) {
-            // 2. Timezone Heuristic
+        // Detect currency if not set in localStorage
+        if (typeof window !== 'undefined' && !localStorage.getItem('agency-os-currency')) {
             const detect = () => {
                 try {
                     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                    console.log("Detected TimeZone:", timeZone);
-
-                    // Check for Indonesia Timezones
                     if (['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'].includes(timeZone)) {
                         setCurrency('IDR');
                         localStorage.setItem('agency-os-currency', 'IDR');
-                        // We don't auto-switch locale here if it's already set by server/cookie
                     } else {
                         setCurrency('USD');
                         localStorage.setItem('agency-os-currency', 'USD');
                     }
                 } catch (error) {
                     console.error("Currency detection failed, defaulting to USD", error);
-                    setCurrency('USD');
                 }
             };
             detect();
         }
-    }, [currency]);
+    }, []);
 
     const updateCurrency = (c: Currency) => {
         setCurrency(c);
@@ -101,12 +89,16 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
     );
 }
 
-export function PriceDisplay({ amount, baseCurrency = 'USD' }: { amount: number, baseCurrency?: 'USD' }) {
+export function PriceDisplay({ amount, baseCurrency = 'USD' }: { amount: number, baseCurrency?: 'USD' | 'IDR' }) {
     const { currency, locale, rate } = useCurrency();
 
     let displayAmount = amount;
+
+    // Convert if base currency and display currency are different
     if (baseCurrency === 'USD' && currency === 'IDR') {
         displayAmount = amount * rate;
+    } else if (baseCurrency === 'IDR' && currency === 'USD') {
+        displayAmount = amount / rate;
     }
 
     return (

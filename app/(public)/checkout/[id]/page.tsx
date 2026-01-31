@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
-import { SiteHeader } from "@/components/landing/site-header";
 import { CheckoutContent } from "@/components/checkout/checkout-content";
 import { stackServerApp } from "@/lib/stack";
 import { currencyService } from "@/lib/server/currency-service";
@@ -42,10 +41,14 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         currencyService.getRates()
     ]);
 
-    const bonuses = await prisma.marketingBonus.findMany({
+    const bonuses = (await prisma.marketingBonus.findMany({
         where: { isActive: true },
         orderBy: { createdAt: 'desc' }
-    });
+    })).map(b => ({
+        ...b,
+        icon: b.icon || "",
+        value: b.value || undefined
+    }));
 
     // Default rate if fetch fails or is null (though convertToIDR has fallback, UI needs something)
     const activeRate = exchangeRates?.rates?.IDR || 16000;
@@ -62,11 +65,8 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
 
 
     return (
-        <main className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
-            <SiteHeader />
-            <div className="container mx-auto px-4 py-24">
-                <CheckoutContent estimate={sanitizedEstimate} bankDetails={bankDetails} activeRate={activeRate} bonuses={bonuses} />
-            </div>
-        </main>
+        <div className="container mx-auto px-4 py-12">
+            <CheckoutContent estimate={sanitizedEstimate} bankDetails={bankDetails} activeRate={activeRate} bonuses={bonuses} />
+        </div>
     );
 }

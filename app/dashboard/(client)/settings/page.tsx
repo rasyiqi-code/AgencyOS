@@ -2,7 +2,7 @@ import { stackServerApp } from "@/lib/stack";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Bell, User } from "lucide-react";
+import { Bell, User } from "lucide-react";
 
 export default async function SettingsPage() {
     const user = await stackServerApp.getUser();

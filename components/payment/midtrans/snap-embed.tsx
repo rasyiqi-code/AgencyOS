@@ -10,8 +10,7 @@ interface EmbeddedPaymentProps {
     snapToken: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function EmbeddedPayment({ orderId, snapToken }: EmbeddedPaymentProps) {
+export function EmbeddedPayment({ snapToken }: EmbeddedPaymentProps) {
     const isEmbedInitialized = useRef(false);
 
     useEffect(() => {

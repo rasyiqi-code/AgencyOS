@@ -4,17 +4,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, Loader2 } from "lucide-react";
-import { ExtendedEstimate } from "@/lib/types";
-import { BankTransferInfoCard } from "@/components/payment/manual/bank-transfer/info-card";
-import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
+import { ExtendedEstimate, Coupon } from "@/lib/types";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 
-export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amount, appliedCoupon }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number, amount: number, appliedCoupon: any }) {
+export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number, amount: number, appliedCoupon: Coupon | null }) {
     const [isProcessing, setIsProcessing] = useState(false);
-    useCurrency();
+    const [billingCycle, setBillingCycle] = useState<"one_time" | "monthly" | "yearly">("one_time");
 
-    // Calculate IDR
-    const rate = activeRate || 16000;
-    const formattedRate = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rate);
+    // const { currency, formattedRate } = useCurrency(); // If implemented globally
+    const currency = activeRate && activeRate > 0 ? "IDR" : "USD"; // Simplistic fallback
+    const formattedRate = activeRate ? activeRate.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }) : '';
+
+    // Explicitly cast or access currency 
+    const activeCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
+
+    // Calculate monthly/yearly rates (Mock logic for display)
+    const monthlyAmount = amount / 12 * 1.2; // 20% premium for monthly
+    // ... comments ...
+
+    const displayAmount = billingCycle === 'monthly' ? monthlyAmount : (billingCycle === 'yearly' ? amount : amount);
 
     if (estimate.status === 'paid') {
         return (
@@ -58,17 +66,39 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amo
     return (
         <Card className="bg-zinc-900 border-white/10 text-white sticky top-24">
             <CardHeader>
-                <CardTitle>Payment Details</CardTitle>
-                <CardDescription>Complete your order via manual transfer</CardDescription>
+                <CardTitle>Choose Plan</CardTitle>
+                <CardDescription>Select a billing cycle that works for you</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
 
-                <BankTransferInfoCard bankDetails={bankDetails} />
+                {/* Billing Cycle Selection */}
+                <div className="grid grid-cols-3 gap-2">
+                    <button
+                        onClick={() => setBillingCycle("one_time")}
+                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "one_time" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                    >
+                        One-time
+                    </button>
+                    <button
+                        onClick={() => setBillingCycle("monthly")}
+                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "monthly" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                    >
+                        Monthly
+                    </button>
+                    <button
+                        onClick={() => setBillingCycle("yearly")}
+                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "yearly" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                    >
+                        Yearly
+                    </button>
+                </div>
 
                 {/* Currency Conversion Info */}
                 <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/5">
                     <div className="flex flex-col gap-1 mb-4">
-                        <span className="text-zinc-400 text-sm font-medium">Total Estimate</span>
+                        <span className="text-zinc-400 text-sm font-medium">
+                            {billingCycle === 'one_time' ? 'Total One-time Payment' : (billingCycle === 'monthly' ? 'Monthly Payment' : 'Yearly Payment')}
+                        </span>
                         {appliedCoupon && (
                             <div className="flex justify-between text-sm text-emerald-400 mb-1">
                                 <span>Discount ({appliedCoupon.code})</span>
@@ -78,18 +108,20 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amo
                             </div>
                         )}
                         <span className="text-3xl font-bold text-white tracking-tight">
-                            <PriceDisplay amount={amount} />
+                            <PriceDisplay amount={displayAmount} baseCurrency={activeCurrency} />
+                            {billingCycle === 'monthly' && <span className="text-sm font-normal text-zinc-500 ml-1">/mo</span>}
+                            {billingCycle === 'yearly' && <span className="text-sm font-normal text-zinc-500 ml-1">/yr</span>}
                         </span>
                         {appliedCoupon && (
                             <span className="text-xs text-zinc-500 line-through">
-                                <PriceDisplay amount={estimate.totalCost} />
+                                <PriceDisplay amount={estimate.totalCost} baseCurrency={activeCurrency} />
                             </span>
                         )}
                     </div>
 
                     <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
                         <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
-                        Processed in IDR (rate: {formattedRate})
+                        Processed in {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && `(rate: ${formattedRate})`}
                     </p>
                 </div>
 
@@ -106,8 +138,11 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amo
 
                     <Button
                         className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isProcessing}
+                        disabled={isProcessing || billingCycle !== 'one_time'}
                         onClick={async () => {
+                            // Only support one-time for now via this generic route
+                            if (billingCycle !== 'one_time') return;
+
                             setIsProcessing(true);
                             try {
                                 const response = await fetch("/api/checkout", {
@@ -142,9 +177,14 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amo
                                 Processing...
                             </>
                         ) : (
-                            "Proceed to Payment"
+                            billingCycle === 'one_time' ? "Proceed to Payment" : "Contact Sales for Subscription"
                         )}
                     </Button>
+                    {billingCycle !== 'one_time' && (
+                        <p className="text-xs text-center text-yellow-500/80">
+                            Currently only One-time payment is available for instant checkout.
+                        </p>
+                    )}
                 </div>
 
                 <p className="text-xs text-zinc-500 text-center">

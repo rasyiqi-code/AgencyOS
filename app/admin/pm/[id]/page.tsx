@@ -1,4 +1,5 @@
 
+import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { User, Github, FileText, Activity, MessageSquare, Clock, Calendar, Terminal } from "lucide-react";
@@ -85,9 +86,13 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                             <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40">
                                 <div className="flex flex-col md:flex-row gap-4">
                                     {project.service.image && (
-                                        <div className="w-full md:w-40 h-28 rounded-lg bg-zinc-800 overflow-hidden border border-white/5 flex-shrink-0">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={project.service.image} alt={project.service.title} className="w-full h-full object-cover" />
+                                        <div className="relative w-full md:w-40 h-28 rounded-lg bg-zinc-800 overflow-hidden border border-white/5 flex-shrink-0">
+                                            <Image
+                                                src={project.service.image}
+                                                alt={project.service.title}
+                                                fill
+                                                className="object-cover"
+                                            />
                                         </div>
                                     )}
                                     <div className="flex-1 space-y-3">

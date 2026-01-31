@@ -1,5 +1,3 @@
-"use server";
-
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
@@ -18,7 +16,7 @@ export async function createCoupon(data: {
     maxUses?: number;
     expiresAt?: Date;
 }) {
-    await prisma.coupon.create({
+    const coupon = await prisma.coupon.create({
         data: {
             code: data.code.toUpperCase(),
             discountType: data.discountType,
@@ -28,6 +26,7 @@ export async function createCoupon(data: {
         },
     });
     revalidatePath("/admin/marketing");
+    return coupon;
 }
 
 export async function deleteCoupon(id: string) {
@@ -62,10 +61,11 @@ export async function createBonus(data: {
     value?: string;
     icon?: string;
 }) {
-    await prisma.marketingBonus.create({
+    const bonus = await prisma.marketingBonus.create({
         data,
     });
     revalidatePath("/admin/marketing");
+    return bonus;
 }
 
 export async function deleteBonus(id: string) {
@@ -74,12 +74,15 @@ export async function deleteBonus(id: string) {
 }
 
 export async function toggleBonusStatus(id: string, isActive: boolean) {
-    await prisma.marketingBonus.update({
+    const bonus = await prisma.marketingBonus.update({
         where: { id },
         data: { isActive },
     });
     revalidatePath("/admin/marketing");
+    return bonus;
 }
+
+// --- Subscribers ---
 
 export async function createSubscriber(email: string, name?: string) {
     // Check if exists
@@ -87,12 +90,34 @@ export async function createSubscriber(email: string, name?: string) {
         where: { email },
     });
 
-    if (existing) return; // Already subscribed
+    if (existing) return { success: true, message: "Already subscribed" };
 
-    await prisma.marketingSubscriber.create({
+    const subscriber = await prisma.marketingSubscriber.create({
         data: {
             email,
             name,
         },
+    });
+
+    return { success: true, subscriber };
+}
+
+export async function getSubscribers() {
+    return await prisma.marketingSubscriber.findMany({
+        orderBy: { createdAt: "desc" },
+    });
+}
+
+export async function deleteSubscriber(id: string) {
+    await prisma.marketingSubscriber.delete({
+        where: { id },
+    });
+}
+
+export async function getPromotionCoupon() {
+    // Ambil kupon aktif terbaru (bisa difilter lebih lanjut jika perlu)
+    return await prisma.coupon.findFirst({
+        where: { isActive: true },
+        orderBy: { createdAt: "desc" },
     });
 }

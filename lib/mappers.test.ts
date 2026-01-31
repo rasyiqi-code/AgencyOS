@@ -27,6 +27,8 @@ describe("mapPrismaProjectToExtended", () => {
         feedback: [],
         service: null,
         estimate: null,
+        subscriptionEndsAt: null,
+        subscriptionStatus: null,
     };
 
     it("should map a basic project and handle null files correctly", () => {
@@ -56,7 +58,7 @@ describe("mapPrismaProjectToExtended", () => {
         const input: PrismaProjectWithRelations = {
             ...baseProject,
             briefs: [{ id: "b1", projectId: "proj_1", content: "Brief", createdAt: today, attachments: null }],
-            dailyLogs: [{ id: "l1", projectId: "proj_1", content: "Log", mood: "good", createdAt: today, updatedAt: today }],
+            dailyLogs: [{ id: "l1", projectId: "proj_1", content: "Log", mood: "good", createdAt: today, updatedAt: today, images: [] }],
             feedback: [{ id: "f1", projectId: "proj_1", content: "FB", type: "bug", status: "open", createdAt: today, imageUrl: null, metadata: null }],
         };
 

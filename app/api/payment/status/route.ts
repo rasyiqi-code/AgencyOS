@@ -45,15 +45,32 @@ export async function GET(req: Request) {
                     // Update Order
                     await prisma.order.update({
                         where: { id: orderId },
-                        data: { status: dbStatus }
+                        data: {
+                            status: dbStatus,
+                            paymentType: midtransStatus.payment_type
+                        }
                     });
 
-                    // Update Project if settled
-                    if (dbStatus === "settled" && order.projectId) {
-                        await prisma.project.update({
-                            where: { id: order.projectId },
-                            data: { status: "dev" }
+                    // Update Project/Estimate if settled
+                    if (dbStatus === "settled") {
+                        const updatedOrder = await prisma.order.findUnique({
+                            where: { id: orderId },
+                            include: { project: true }
                         });
+
+                        if (updatedOrder?.project) {
+                            await prisma.project.update({
+                                where: { id: updatedOrder.project.id },
+                                data: { status: "queue" }
+                            });
+
+                            if (updatedOrder.project.estimateId) {
+                                await prisma.estimate.update({
+                                    where: { id: updatedOrder.project.estimateId },
+                                    data: { status: "paid" }
+                                });
+                            }
+                        }
                     }
 
                     // Return updated status
@@ -67,30 +84,44 @@ export async function GET(req: Request) {
 
         // 2. Creem Check
         if (order.status === 'pending') {
-            const checkoutId = searchParams.get('checkout_id');
-            console.log(`[PAYMENT_STATUS] Params:`, Object.fromEntries(searchParams));
+            const checkoutId = searchParams.get('checkout_id') || order.transactionId;
+            console.log(`[PAYMENT_STATUS] Checking Creem for Order ${orderId}, Checkout: ${checkoutId}`);
 
-            // Check if we have a checkout_id from query (redirect) or stored in metadata
             if (checkoutId) {
                 try {
                     const creem = await getCreem();
                     const creemStatus = await creem.checkouts.get({ checkoutId });
-                    // Creem status: 'ordered', 'paid', 'completed'? Need to check docs or payload. 
-                    // Assuming 'completed' or 'paid' property inside.
-                    // The webhook log implies 'checkout.completed'.
-                    // Let's assume the status field is 'status'.
-                    console.log("[PAYMENT_STATUS] Creem Manual Check:", JSON.stringify(creemStatus, null, 2));
+
+                    console.log("[PAYMENT_STATUS] Creem Status:", JSON.stringify(creemStatus, null, 2));
 
                     const status = creemStatus.status as string;
                     if (status === 'completed' || status === 'paid') {
-                        await prisma.order.update({
+                        // Update Order
+                        const updatedOrder = await prisma.order.update({
                             where: { id: orderId },
                             data: {
                                 status: "paid",
-                                transactionId: checkoutId, // Store checkout ID if not already
+                                transactionId: checkoutId,
                                 paymentMetadata: creemStatus as unknown as CreemPaymentMetadata
-                            }
+                            },
+                            include: { project: true }
                         });
+
+                        // Activate Project/Estimate
+                        if (updatedOrder.project) {
+                            await prisma.project.update({
+                                where: { id: updatedOrder.project.id },
+                                data: { status: "queue" }
+                            });
+
+                            if (updatedOrder.project.estimateId) {
+                                await prisma.estimate.update({
+                                    where: { id: updatedOrder.project.estimateId },
+                                    data: { status: "paid" }
+                                });
+                            }
+                        }
+
                         order.status = "paid"; // Update local var for redirect logic
                     }
                 } catch (e) {

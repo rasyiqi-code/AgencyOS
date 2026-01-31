@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { X, Image as ImageIcon, AlertCircle, RefreshCw } from "lucide-react";
 
 export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | null }) {
@@ -54,11 +55,11 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
                 onClick={() => inputRef.current?.click()}
             >
                 {preview && !hasError ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                         src={preview}
                         alt="Preview"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                         onError={() => setHasError(true)}
                     />
                 ) : hasError ? (

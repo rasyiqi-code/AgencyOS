@@ -4,31 +4,46 @@ import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
+
+const listeners = new Set<() => void>();
+
+function subscribe(onStoreChange: () => void) {
+    listeners.add(onStoreChange);
+    return () => listeners.delete(onStoreChange);
+}
+
+function getLocaleSnapshot() {
+    if (typeof document === 'undefined') return 'en';
+    const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'));
+    return match ? match[2] : 'en';
+}
+
+function getServerSnapshot() {
+    return 'en';
+}
 
 export function NavControls() {
     const { currency, setCurrency } = useCurrency();
     const router = useRouter();
-    const [lang, setLang] = useState('en');
 
-    useEffect(() => {
-        // Sync state with cookie on load
-        const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'));
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (match && match[2] !== lang) setLang(match[2]);
-    }, [lang]);
+    const lang = useSyncExternalStore(
+        subscribe,
+        getLocaleSnapshot,
+        getServerSnapshot
+    );
 
     const toggleCurrency = () => {
         const next = currency === 'USD' ? 'IDR' : 'USD';
         setCurrency(next);
-        // We don't need to refresh for currency as it is client-side context
     };
 
     const toggleLanguage = () => {
         const next = lang === 'en' ? 'id' : 'en';
         // Set cookie for next-intl middleware
         document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; SameSite=Lax`;
-        setLang(next);
+        // Notify any listeners (including our own instances)
+        listeners.forEach(listener => listener());
         router.refresh(); // Refresh to re-render server components with new locale
     };
 

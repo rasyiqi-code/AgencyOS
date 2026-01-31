@@ -1,7 +1,7 @@
-
 "use client";
 
-import { Check, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, Sparkles, ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { useState } from "react";
@@ -14,6 +14,7 @@ interface Service {
     description: string;
     description_id?: string | null;
     price: number;
+    currency?: string | null;
     interval: string;
     features: unknown; // Prisma Json
     features_id?: unknown; // Prisma Json
@@ -31,15 +32,12 @@ export function ServiceCard({ service }: ServiceCardProps) {
     const isId = currency === 'IDR';
 
     // Fallback to EN if ID content is missing
-    const displayTitle = (isId && service.title_id) ? service.title_id : service.title;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const displayDescription = (isId && service.description_id) ? service.description_id : service.description;
+    const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
+    const displayDescription = (isId && (service as unknown as Record<string, unknown>).description_id) ? (service as unknown as Record<string, unknown>).description_id as string : service.description;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const displayFeatures = (isId && Array.isArray((service as any).features_id) && (service as any).features_id.length > 0)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ? (service as any).features_id as string[]
-        : (Array.isArray(service.features) ? service.features as string[] : []);
+    const displayFeatures = (isId && Array.isArray((service as unknown as Record<string, unknown>).features_id) && ((service as unknown as Record<string, unknown>).features_id as string[]).length > 0)
+        ? (service as unknown as Record<string, unknown>).features_id as string[]
+        : service.features as string[];
 
     return (
         <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl p-8 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 flex flex-col h-full">
@@ -53,11 +51,12 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     {/* Image - Square Aspect Ratio */}
                     {service.image ? (
                         <div className="mb-6 rounded-xl overflow-hidden border border-white/5 aspect-square relative group-hover:scale-[1.02] transition-transform duration-500">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                                 src={service.image}
                                 alt={displayTitle}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                             {/* Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
@@ -76,7 +75,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     <div className="mb-5">
                         <div className="flex flex-col items-start">
                             <span className="text-2xl font-extrabold text-white tracking-tight">
-                                <PriceDisplay amount={service.price} />
+                                <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
                             </span>
                             <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-widest mt-1">
                                 {service.interval === 'one_time'
@@ -94,47 +93,37 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
                 {/* Features */}
                 <div className="mb-8 flex-grow">
-                    <div className="space-y-3">
+                    <ul className="space-y-3 mb-8 flex-1">
                         {displayFeatures.slice(0, expanded ? undefined : 3).map((feature: string, i: number) => (
-                            <div key={i} className="flex items-start gap-3 group/item animate-in fade-in slide-in-from-top-1 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
+                            <li key={i} className="flex items-start gap-3 group/item animate-in fade-in slide-in-from-top-1 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
                                 <div className="mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/20 group-hover/item:border-emerald-500/40 transition-colors shrink-0">
                                     <Check className="w-2.5 h-2.5 text-emerald-400" />
                                 </div>
                                 <span className="text-xs text-zinc-300 group-hover/item:text-white transition-colors leading-relaxed">
                                     {feature.replace(/<[^>]*>?/gm, '')}
                                 </span>
-                            </div>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
+                </div>
 
-                    {displayFeatures.length > 3 && (
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setExpanded(!expanded);
-                            }}
-                            className="flex items-center gap-1.5 text-[10px] text-zinc-500 hover:text-white transition-colors mb-6 mx-auto w-fit"
-                        >
-                            {expanded ? (
-                                <>
-                                    Show Less <ChevronUp className="w-3 h-3" />
-                                </>
-                            ) : (
-                                <>
-                                    Show All ({displayFeatures.length - 3} more) <ChevronDown className="w-3 h-3" />
-                                </>
-                            )}
-                        </button>
-                    )}
+                {displayFeatures.length > 3 && (
+                    <button
+                        onClick={() => setExpanded(!expanded)}
+                        className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-medium tracking-wide uppercase"
+                    >
+                        {expanded ? 'Show Less' : `Show ${displayFeatures.length - 3} More`}
+                        <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
+                    </button>
+                )}
 
-                    {/* Action */}
-                    <div className="mt-auto pt-4 border-t border-white/5">
-                        <PurchaseButton
-                            serviceId={service.id}
-                            interval={service.interval}
-                            className="bg-white hover:bg-zinc-100 text-black shadow-lg shadow-white/5 hover:shadow-white/10 h-9 text-xs"
-                        />
-                    </div>
+                {/* Action */}
+                <div className="mt-auto pt-4 border-t border-white/5">
+                    <PurchaseButton
+                        serviceId={service.id}
+                        interval={service.interval}
+                        className="bg-white hover:bg-zinc-100 text-black shadow-lg shadow-white/5 hover:shadow-white/10 h-9 text-xs"
+                    />
                 </div>
             </div>
         </div>

@@ -41,6 +41,13 @@ interface CreemSDK {
         }): Promise<CreemCheckout>;
         get(params: { checkoutId: string }): Promise<CreemCheckout & { status: string }>;
     };
+    webhooks: {
+        handleEvents(
+            payload: string,
+            signature: string,
+            callbacks: Record<string, (data: unknown) => Promise<void> | void>
+        ): Promise<void>;
+    };
 }
 
 /**

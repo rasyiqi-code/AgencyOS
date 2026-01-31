@@ -1,5 +1,6 @@
 
 import { prisma } from "@/lib/db";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SystemNav } from "@/components/admin/system-nav";
@@ -67,8 +68,13 @@ export default async function AdminIntegrationsPage() {
                                 <div className="p-4 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         {github.metadata && typeof (github.metadata as Record<string, unknown>).avatar_url === 'string' && (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={(github.metadata as Record<string, unknown>).avatar_url as string} alt="" className="w-8 h-8 rounded-full border border-white/10" />
+                                            <Image
+                                                src={(github.metadata as Record<string, unknown>).avatar_url as string}
+                                                alt=""
+                                                width={32}
+                                                height={32}
+                                                className="rounded-full border border-white/10"
+                                            />
                                         )}
                                         <div>
                                             <p className="text-sm font-medium text-white">{github.accountName}</p>

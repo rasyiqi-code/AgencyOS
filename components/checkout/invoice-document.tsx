@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import Image from "next/image";
 
 import { ExtendedEstimate } from "@/lib/types";
 
@@ -72,9 +73,13 @@ export function InvoiceDocument({ estimate, refAction, user, isPaid = false }: {
                             <td className="py-6 pr-4" colSpan={3}>
                                 <div className="flex gap-6">
                                     {estimate.service.image && (
-                                        <div className="w-32 h-32 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={estimate.service.image} alt={estimate.service.title} className="w-full h-full object-cover" />
+                                        <div className="relative w-32 h-32 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
+                                            <Image
+                                                src={estimate.service.image}
+                                                alt={estimate.service.title}
+                                                fill
+                                                className="object-cover"
+                                            />
                                         </div>
                                     )}
                                     <div className="flex-1">
@@ -83,13 +88,17 @@ export function InvoiceDocument({ estimate, refAction, user, isPaid = false }: {
 
                                         {Array.isArray(estimate.service.features) && estimate.service.features.length > 0 && (
                                             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                                {(estimate.service.features as any[]).map((feature: any, idx: number) => (
-                                                    <div key={idx} className="flex items-center gap-2 text-xs text-zinc-500">
-                                                        <div className="w-1 h-1 rounded-full bg-zinc-300" />
-                                                        <span>{typeof feature === 'string' ? feature.replace(/<[^>]*>?/gm, '') : (feature.text || feature.title || "").replace(/<[^>]*>?/gm, '')}</span>
-                                                    </div>
-                                                ))}
+                                                {(estimate.service.features as unknown[]).map((feature: unknown, idx: number) => {
+                                                    const text = typeof feature === 'string'
+                                                        ? feature
+                                                        : (feature as Record<string, string>).text || (feature as Record<string, string>).title || "";
+                                                    return (
+                                                        <div key={idx} className="flex items-center gap-2 text-xs text-zinc-500">
+                                                            <div className="w-1 h-1 rounded-full bg-zinc-300" />
+                                                            <span>{text.replace(/<[^>]*>?/gm, '')}</span>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         )}
                                     </div>

@@ -16,6 +16,8 @@ interface StackUser {
     primaryEmail: string | null;
 }
 
+import { cookies } from "next/headers";
+
 // Safe to dynamic render as we rely on searchParams
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +32,10 @@ export default async function AdminProjectsPage({
     const status = params.status;
     const ITEMS_PER_PAGE = 10;
     const skip = 0; // Always fetch initial page from server
+
+    const cookieStore = await cookies();
+    const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en-US';
+    const isId = locale === 'id-ID' || locale === 'id';
 
     // 1. Resolve Users for Name-based Search
     // Since Client Names are not consistently stored in DB, we search Stack Auth first
@@ -124,14 +130,14 @@ export default async function AdminProjectsPage({
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">Management</Badge>
+                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">{isId ? 'Manajemen' : 'Management'}</Badge>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Mission Board
+                        {isId ? 'Papan Misi' : 'Mission Board'}
                         <Layers className="w-6 h-6 text-zinc-600" />
                     </h1>
                     <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Overview of all client projects, development status, and assignments.
+                        {isId ? 'Ringkasan semua proyek klien, status pengembangan, dan penugasan.' : 'Overview of all client projects, development status, and assignments.'}
                     </p>
                 </div>
             </div>

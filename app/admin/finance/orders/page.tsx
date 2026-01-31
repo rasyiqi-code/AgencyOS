@@ -28,9 +28,11 @@ export default async function AdminOrdersPage() {
             clientName: e.project.clientName,
             userId: e.project.userId,
             order: e.project.order ? {
-                proofUrl: e.project.order.proofUrl
+                proofUrl: e.project.order.proofUrl,
+                paymentType: e.project.order.paymentType
             } : null
         } : null,
+        paymentType: e.project?.order?.paymentType || null,
         screens: e.screens as FinanceData['screens'],
         apis: e.apis as FinanceData['apis']
     }));

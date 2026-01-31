@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton, useUser } from "@stackframe/stack";
+import { UserButton } from "@stackframe/stack";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,22 +11,17 @@ import { ProjectSearch } from "@/components/admin/pm/project-search";
 import { ProjectFilter } from "@/components/admin/pm/project-filter";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "./currency-switcher";
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+    allowedToSwitchViews?: boolean;
+}
+
+export function DashboardHeader({ allowedToSwitchViews = false }: DashboardHeaderProps) {
     const pathname = usePathname();
     const router = useRouter();
-    const user = useUser();
     const t = useTranslations("Common");
 
     // Fix for Stack Auth bug: empty string profile image causes browser error
-    if (user && user.profileImageUrl === "") {
-        try {
-            // @ts-expect-error - patching readonly property to fix library bug
-            // eslint-disable-next-line react-hooks/immutability
-            user.profileImageUrl = null;
-        } catch {
-            // Ignore if object is frozen
-        }
-    }
+
 
     // Check if we are not on the root dashboard page
     const showBackButton = pathname !== "/dashboard";
@@ -47,7 +42,7 @@ export function DashboardHeader() {
                         <span className="hidden sm:inline">{t("back")}</span>
                     </Button>
                 )}
-                {isAdminPage && (
+                {isAdminPage && allowedToSwitchViews && (
                     <div className="ml-2 border-l border-white/10 pl-4 shrink-0">
                         <DashboardViewSwitcher />
                     </div>

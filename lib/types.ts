@@ -60,6 +60,19 @@ export type ScreenItem = z.infer<typeof ScreenItemSchema>;
 export type ApiItem = z.infer<typeof ApiItemSchema>;
 export type EstimateData = z.infer<typeof EstimateSchema>;
 
+// Basic shared types
+export interface Bonus {
+    icon: string;
+    value?: string;
+    title?: string;
+}
+
+export interface Coupon {
+    code: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+}
+
 // Extended Interface for Prisma Result (including sub-items)
 // Note: Prisma returns 'JsonValue' for Json fields, so we need to cast them in UI components
 export interface ExtendedEstimate {
@@ -78,6 +91,7 @@ export interface ExtendedEstimate {
         title: string;
         description: string;
         price: number;
+        currency?: string | null;
         features: unknown;
         image: string | null;
     } | null;
@@ -107,6 +121,7 @@ export interface ExtendedProject {
         title: string;
         description: string;
         price: number;
+        currency?: string | null;
         features: unknown;
         image: string | null;
     } | null;
@@ -118,6 +133,8 @@ export interface ExtendedProject {
     previewUrl?: string | null;
     developerId?: string | null;
     files?: ProjectFile[];
+    subscriptionEndsAt?: Date | null;
+    subscriptionStatus?: string | null;
 }
 
 export interface StackUser {

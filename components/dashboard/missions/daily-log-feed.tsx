@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -38,7 +39,6 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
         if (e.target.files && e.target.files.length > 0) {
             const newFiles = Array.from(e.target.files);
             setFiles([...files, ...newFiles]);
-
             // Generate previews
             const newPreviews = newFiles.map(file => URL.createObjectURL(file));
             setPreviews([...previews, ...newPreviews]);
@@ -47,7 +47,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
 
     const removeFile = (index: number) => {
         const newFiles = [...files];
-        const removedFile = newFiles.splice(index, 1);
+        newFiles.splice(index, 1);
         setFiles(newFiles);
 
         const newPreviews = [...previews];
@@ -140,11 +140,11 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
                                             {log.images!.map((img, idx) => (
                                                 <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-black/40 group">
-                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                    <img
+                                                    <Image
                                                         src={img}
                                                         alt="Attachment"
-                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                        fill
+                                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                     <a href={img} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-transparent" />
                                                 </div>
@@ -179,8 +179,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                             <div className="flex flex-wrap gap-2">
                                 {previews.map((preview, index) => (
                                     <div key={index} className="relative w-16 h-16 rounded-md overflow-hidden border border-white/10 group">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={preview} alt="preview" className="w-full h-full object-cover" />
+                                        <Image src={preview} alt="preview" fill className="object-cover" />
                                         <button
                                             type="button"
                                             onClick={() => removeFile(index)}

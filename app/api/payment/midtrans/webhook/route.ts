@@ -49,27 +49,30 @@ export async function POST(req: Request) {
         // Update order in database
         // NOTE: Midtrans 'order_id' is actually our 'transactionId' (e.g. ORDER-XXX-TIMESTAMP)
         // We must query by transactionId, not the internal Order ID.
-        await prisma.order.update({
-            where: { transactionId: order_id },
+        // Update order in database
+        const order = await prisma.order.update({
+            where: { id: order_id },
             data: {
                 status: dbStatus,
                 transactionId: transaction_id,
                 paymentType: payment_type,
             },
+            include: {
+                project: true,
+            }
         });
 
-        // If payment is settled, we might want to update the project status or notify the architect
-        if (dbStatus === "settled") {
-            const order = await prisma.order.findUnique({
-                where: { id: order_id },
-                include: { project: true }
+        // If payment is settled, activate the project and mark estimate as paid
+        if (dbStatus === "settled" && order.project) {
+            await prisma.project.update({
+                where: { id: order.project.id },
+                data: { status: "queue" }
             });
 
-            if (order?.projectId) {
-                // Update project status if needed, e.g., move from "queue" to "dev"
-                await prisma.project.update({
-                    where: { id: order.projectId },
-                    data: { status: "dev" }
+            if (order.project.estimateId) {
+                await prisma.estimate.update({
+                    where: { id: order.project.estimateId },
+                    data: { status: "paid" }
                 });
             }
         }

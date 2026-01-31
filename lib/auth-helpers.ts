@@ -1,4 +1,4 @@
-
+                            
 import { stackServerApp } from "@/lib/stack";
 
 export async function getCurrentUser() {
@@ -12,6 +12,8 @@ export async function getCurrentUser() {
  * Use user.getPermission(team, key) for team-scoped check.
  */
 
+import { prisma } from "@/lib/db";
+
 export async function hasPermission(permission: string) {
     const user = await getCurrentUser();
     if (!user) return false;
@@ -22,7 +24,18 @@ export async function hasPermission(permission: string) {
 
     if (adminEmails.includes(user.primaryEmail || '') || user.id === superAdminId) return true;
 
-    // 2. Check Project Permission (Global Level)
+    // 2. Check Local Database Permission (NEW)
+    const localPerm = await prisma.userPermission.findUnique({
+        where: {
+            userId_key: {
+                userId: user.id,
+                key: permission
+            }
+        }
+    });
+    if (localPerm) return true;
+
+    // 3. Check Project Permission (Global Level)
     const projectPerm = await user.getPermission(permission);
     if (projectPerm) return true;
 
