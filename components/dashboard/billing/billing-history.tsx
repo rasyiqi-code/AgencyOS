@@ -25,6 +25,7 @@ export interface BillingOrder {
     project: {
         title: string;
         invoiceId: string | null;
+        estimateId: string | null;
     } | null;
 }
 
@@ -33,29 +34,6 @@ interface BillingHistoryProps {
 }
 
 export function BillingHistory({ orders }: BillingHistoryProps) {
-    const handlePay = (snapToken: string) => {
-        // Trigger Midtrans Popup
-        if (window.snap) {
-            window.snap.pay(snapToken, {
-                onSuccess: function (result) {
-                    console.log('payment success!', result);
-                    window.location.reload();
-                },
-                onPending: function (result) {
-                    console.log('wating your payment!', result);
-                },
-                onError: function (result) {
-                    console.log('payment failed!', result);
-                },
-                onClose: function () {
-                    console.log('customer closed the popup without finishing the payment');
-                }
-            });
-        } else {
-            console.error("Midtrans Snap not loaded");
-        }
-    };
-
     return (
         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
             <Table>
@@ -99,7 +77,7 @@ export function BillingHistory({ orders }: BillingHistoryProps) {
                                             order.status === 'paid' || order.status === 'settled'
                                                 ? "bg-emerald-500/10 text-emerald-500 ring-1 ring-inset ring-emerald-500/20"
                                                 : order.status === 'pending'
-                                                    ? "bg-amber-500/10 text-amber-500 ring-1 ring-inset ring-amber-500/20"
+                                                    ? "bg-brand-yellow/10 text-brand-yellow ring-1 ring-inset ring-brand-yellow/20"
                                                     : "bg-zinc-800 text-zinc-400 ring-1 ring-inset ring-zinc-700/50"
                                         )}
                                     >
@@ -108,15 +86,17 @@ export function BillingHistory({ orders }: BillingHistoryProps) {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
-                                        {(order.status === 'pending' && order.snapToken) ? (
+                                        {(order.status === 'pending' && order.project?.estimateId) ? (
                                             <Button
                                                 size="sm"
                                                 variant="default"
-                                                className="h-7 text-xs bg-amber-500 hover:bg-amber-600 text-black border-0"
-                                                onClick={() => handlePay(order.snapToken!)}
+                                                className="h-7 text-xs bg-brand-yellow hover:bg-brand-yellow/80 text-black border-0 font-bold"
+                                                asChild
                                             >
-                                                <CreditCard className="w-3 h-3 mr-1.5" />
-                                                Pay Now
+                                                <Link href={`/checkout/${order.project.estimateId}`}>
+                                                    <CreditCard className="w-3 h-3 mr-1.5" />
+                                                    Pay Now
+                                                </Link>
                                             </Button>
                                         ) : (
                                             <Button

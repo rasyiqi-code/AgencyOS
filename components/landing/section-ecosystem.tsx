@@ -23,21 +23,21 @@ export async function SectionEcosystem() {
                 <div className="grid md:grid-cols-3 gap-8">
                     {/* Client Portal */}
                     <Link href="/dashboard" className="group block h-full">
-                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-blue-500/50 transition-all duration-300 overflow-hidden">
+                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-brand-yellow/50 transition-all duration-300 overflow-hidden">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <LayoutDashboard className="w-24 h-24 text-blue-500 rotate-12" />
+                                <LayoutDashboard className="w-24 h-24 text-brand-yellow rotate-12" />
                             </div>
 
-                            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 rounded-xl bg-brand-yellow/10 flex items-center justify-center text-brand-yellow mb-6 group-hover:scale-110 transition-transform">
                                 <LayoutDashboard className="w-6 h-6" />
                             </div>
 
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{t("clientTitle")}</h3>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-yellow transition-colors">{t("clientTitle")}</h3>
                             <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                                 {t("clientDesc")}
                             </p>
 
-                            <div className="flex items-center text-blue-400 text-sm font-bold mt-auto">
+                            <div className="flex items-center text-brand-yellow text-sm font-bold mt-auto">
                                 {t("clientCta")} <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </div>
@@ -45,21 +45,21 @@ export async function SectionEcosystem() {
 
                     {/* Squad Portal */}
                     <Link href="/squad" className="group block h-full">
-                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-green-500/50 transition-all duration-300 overflow-hidden">
+                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-brand-grey/50 transition-all duration-300 overflow-hidden">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Users className="w-24 h-24 text-green-500 rotate-12" />
+                                <Users className="w-24 h-24 text-brand-grey rotate-12" />
                             </div>
 
-                            <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 mb-6 group-hover:scale-110 transition-transform">
-                                <Users className="w-6 h-6" />
+                            <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-brand-grey mb-6 group-hover:scale-110 transition-transform">
+                                <Users className="w-6 h-6 text-white" />
                             </div>
 
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">{t("squadTitle")}</h3>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-grey transition-colors">{t("squadTitle")}</h3>
                             <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                                 {t("squadDesc")}
                             </p>
 
-                            <div className="flex items-center text-green-400 text-sm font-bold mt-auto">
+                            <div className="flex items-center text-brand-grey text-sm font-bold mt-auto">
                                 {t("squadCta")} <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </div>
@@ -67,21 +67,21 @@ export async function SectionEcosystem() {
 
                     {/* Admin Core */}
                     <div className="group block h-full select-none cursor-default opacity-80 hover:opacity-100 transition-opacity">
-                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-purple-500/50 transition-all duration-300 overflow-hidden">
+                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-white/50 transition-all duration-300 overflow-hidden">
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <ShieldCheck className="w-24 h-24 text-purple-500 rotate-12" />
+                                <ShieldCheck className="w-24 h-24 text-white rotate-12" />
                             </div>
 
-                            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
                                 <ShieldCheck className="w-6 h-6" />
                             </div>
 
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">{t("adminTitle")}</h3>
+                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-white transition-colors">{t("adminTitle")}</h3>
                             <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                                 {t("adminDesc")}
                             </p>
 
-                            <div className="flex items-center text-purple-500/50 text-sm font-bold mt-auto">
+                            <div className="flex items-center text-white/50 text-sm font-bold mt-auto">
                                 {t("adminCta")} <ShieldCheck className="w-4 h-4 ml-2" />
                             </div>
                         </div>

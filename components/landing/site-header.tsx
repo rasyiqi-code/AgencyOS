@@ -69,7 +69,7 @@ export async function SiteHeader() {
                         )}
 
                         <Link href="/price-calculator">
-                            <Button className="h-9 text-sm bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium cursor-pointer rounded-full px-5 shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 border-0">
+                            <Button className="h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0">
                                 {t("startProject")}
                             </Button>
                         </Link>

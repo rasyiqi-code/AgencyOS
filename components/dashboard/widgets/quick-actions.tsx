@@ -30,7 +30,7 @@ export function QuickActions() {
 
             <Link href="/squad" className="group">
                 <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 hover:bg-zinc-900/60 transition-colors h-full flex flex-col gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-brand-yellow/10 flex items-center justify-center text-brand-yellow group-hover:scale-110 transition-transform">
                         <Zap className="w-4 h-4" />
                     </div>
                     <div>

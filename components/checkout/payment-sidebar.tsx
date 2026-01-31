@@ -8,7 +8,7 @@ import { ExtendedEstimate } from "@/lib/types";
 import { BankTransferInfoCard } from "@/components/payment/manual/bank-transfer/info-card";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
-export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number }) {
+export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate, amount, appliedCoupon }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number, amount: number, appliedCoupon: any }) {
     const [isProcessing, setIsProcessing] = useState(false);
     useCurrency();
 
@@ -69,9 +69,22 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: {
                 <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/5">
                     <div className="flex flex-col gap-1 mb-4">
                         <span className="text-zinc-400 text-sm font-medium">Total Estimate</span>
+                        {appliedCoupon && (
+                            <div className="flex justify-between text-sm text-emerald-400 mb-1">
+                                <span>Discount ({appliedCoupon.code})</span>
+                                <span>
+                                    - <PriceDisplay amount={estimate.totalCost - amount} />
+                                </span>
+                            </div>
+                        )}
                         <span className="text-3xl font-bold text-white tracking-tight">
-                            <PriceDisplay amount={estimate.totalCost} />
+                            <PriceDisplay amount={amount} />
                         </span>
+                        {appliedCoupon && (
+                            <span className="text-xs text-zinc-500 line-through">
+                                <PriceDisplay amount={estimate.totalCost} />
+                            </span>
+                        )}
                     </div>
 
                     <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
@@ -101,8 +114,9 @@ export function PaymentSidebar({ estimate, onPrint, bankDetails, activeRate }: {
                                     method: "POST",
                                     body: JSON.stringify({
                                         estimateId: estimate.id,
-                                        amount: estimate.totalCost,
+                                        amount: amount, // Use discounted amount
                                         title: estimate.title,
+                                        couponCode: appliedCoupon?.code
                                     }),
                                 });
 

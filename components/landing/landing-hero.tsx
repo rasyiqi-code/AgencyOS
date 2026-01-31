@@ -29,22 +29,22 @@ export async function LandingHero() {
                     </div>
                     <div className="absolute top-1/2 -right-12 hidden md:block animate-pulse duration-[5s] delay-700">
                         <div className="bg-zinc-900/80 border border-white/10 p-3 rounded-2xl backdrop-blur-md rotate-[12deg]">
-                            <ShieldCheck className="w-6 h-6 text-green-400" />
+                            <ShieldCheck className="w-6 h-6 text-brand-yellow" />
                         </div>
                     </div>
 
                     {/* Status Widget */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium animate-in fade-in slide-in-from-top-4 duration-500 mb-4 hover:bg-blue-500/20 transition-colors cursor-default">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium animate-in fade-in slide-in-from-top-4 duration-500 mb-4 hover:bg-brand-yellow/20 transition-colors cursor-default">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
                         </span>
                         {t("statusBadge")}
                     </div>
 
                     <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100 leading-[1.1]">
                         {t("title1")} <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 animate-gradient-x bg-[length:200%_auto]">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto]">
                             {t("title2")}
                         </span>
                     </h1>
@@ -57,14 +57,14 @@ export async function LandingHero() {
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 pt-4">
                         <Link href="/dashboard">
-                            <Button size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-zinc-200 rounded-full font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.5)] transition-all">
+                            <Button size="lg" className="h-14 px-8 text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all">
                                 {t("launchDashboard")}
                                 <ArrowRight className="ml-2 w-5 h-5" />
                             </Button>
                         </Link>
                         <Link href="/squad">
-                            <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/50 rounded-full transition-all backdrop-blur-sm">
-                                <Zap className="w-4 h-4 mr-2 text-yellow-500" />
+                            <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-brand-yellow/10 hover:text-brand-yellow hover:border-brand-yellow/50 rounded-full transition-all backdrop-blur-sm">
+                                <Zap className="w-4 h-4 mr-2 text-brand-yellow" />
                                 {t("joinTalentSquad")}
                             </Button>
                         </Link>

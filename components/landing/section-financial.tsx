@@ -18,7 +18,7 @@ export async function FinancialLogic() {
                     <div className="grid grid-cols-3 bg-white/5 border-b border-white/10 text-sm font-bold text-white p-4">
                         <div className="text-zinc-500 uppercase">{t("comparison")}</div>
                         <div className="text-center text-zinc-400 uppercase">{t("hireSenior")}</div>
-                        <div className="text-center text-blue-400 uppercase">{t("hybrid")}</div>
+                        <div className="text-center text-brand-yellow uppercase">{t("hybrid")}</div>
                     </div>
 
                     {/* Row 1: Cost */}
@@ -45,7 +45,7 @@ export async function FinancialLogic() {
                         </div>
                         <div className="text-center text-white">
                             <div className="flex items-center justify-center gap-2">
-                                <Check className="w-4 h-4 text-blue-500" />
+                                <Check className="w-4 h-4 text-brand-yellow" />
                                 {t("hiringTimeNew")}
                             </div>
                         </div>
@@ -67,13 +67,13 @@ export async function FinancialLogic() {
                     </div>
 
                     {/* Row 4: Risk */}
-                    <div className="grid grid-cols-3 p-6 items-center hover:bg-white/5 transition-colors bg-blue-500/5">
+                    <div className="grid grid-cols-3 p-6 items-center hover:bg-white/5 transition-colors bg-brand-yellow/5">
                         <div className="font-medium text-zinc-300">{t("risk")}</div>
                         <div className="text-center text-zinc-400">
                             <div className="text-sm text-red-400">{t("riskOld")}</div>
                         </div>
                         <div className="text-center text-white">
-                            <div className="text-sm text-blue-200 font-medium">{t("riskNew")}</div>
+                            <div className="text-sm text-brand-yellow font-medium">{t("riskNew")}</div>
                             <div className="text-[10px] text-zinc-500 mt-1">{t("roi")}</div>
                         </div>
                     </div>

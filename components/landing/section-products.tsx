@@ -14,8 +14,8 @@ export async function ProductCatalog() {
             price: t("products.ops.price"),
             cta: t("products.ops.cta"),
             icon: BarChart3,
-            color: "text-blue-500",
-            bg: "bg-blue-500/10",
+            color: "text-brand-yellow",
+            bg: "bg-brand-yellow/10",
             link: "/price-calculator"
         },
         {
@@ -25,8 +25,8 @@ export async function ProductCatalog() {
             price: t("products.publisher.price"),
             cta: t("products.publisher.cta"),
             icon: Newspaper,
-            color: "text-orange-500",
-            bg: "bg-orange-500/10",
+            color: "text-brand-grey",
+            bg: "bg-brand-grey/10",
             link: "/price-calculator"
         },
         {
@@ -36,8 +36,8 @@ export async function ProductCatalog() {
             price: t("products.saas.price"),
             cta: t("products.saas.cta"),
             icon: Rocket,
-            color: "text-indigo-500",
-            bg: "bg-indigo-500/10",
+            color: "text-brand-yellow",
+            bg: "bg-brand-yellow/10",
             link: "/price-calculator"
         }
     ];

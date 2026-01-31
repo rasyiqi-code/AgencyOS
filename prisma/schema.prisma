@@ -181,6 +181,36 @@ model Notification {
   link      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   @@index([userId])
+}
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  discountType  String    @default("percentage") // percentage, fixed
+  discountValue Float
+  maxUses       Int?
+  usedCount     Int       @default(0)
+  expiresAt     DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model MarketingBonus {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  value       String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MarketingSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
 }

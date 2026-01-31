@@ -10,9 +10,11 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('🌱 Starting database seeding...');
 
-    // 1. Clean up existing data (optional, be careful in prod)
-    // await prisma.service.deleteMany();
-    // await prisma.project.deleteMany();
+    // 1. Clean up existing data
+    await prisma.service.deleteMany();
+    await prisma.coupon.deleteMany();
+    await prisma.marketingBonus.deleteMany();
+    // await prisma.project.deleteMany(); // Keeping projects for now unless requested
 
     // 2. Create Services
     const services = [
@@ -67,6 +69,45 @@ async function main() {
         });
     }
     console.log('Created System Settings.');
+
+    // 4. Create Marketing Data (Coupons & Bonuses)
+
+    // Coupons
+    const coupons = [
+        { code: 'WELCOME10', discountType: 'percentage', discountValue: 10, isActive: true },
+        { code: 'LAUNCH50', discountType: 'fixed', discountValue: 50, isActive: true },
+        { code: 'VIP20', discountType: 'percentage', discountValue: 20, isActive: true },
+    ];
+
+    for (const c of coupons) {
+        await prisma.coupon.upsert({
+            where: { code: c.code },
+            update: {},
+            create: c
+        });
+    }
+    console.log('Created Coupons.');
+
+    // Bonuses
+    const bonuses = [
+        { title: '1 Year Server Maintenance', value: 'Worth $500', icon: 'Server', isActive: true },
+        { title: 'Basic SEO Setup', value: 'Worth $300', icon: 'Search', isActive: true },
+        { title: 'AgencyOS Dashboard Access', value: null, icon: 'LayoutDashboard', isActive: true },
+        { title: 'Priority Support (1 Month)', value: null, icon: 'Headphones', isActive: true },
+    ];
+
+    for (const b of bonuses) {
+        // We use findFirst to simulate upsert on non-unique fields for seeding idempotency
+        const existing = await prisma.marketingBonus.findFirst({
+            where: { title: b.title }
+        });
+
+        if (!existing) {
+            await prisma.marketingBonus.create({ data: b });
+        }
+    }
+    console.log('Created Marketing Bonuses.');
+
 
     // 3. Create Demo Projects - DISABLED PER USER REQUEST
     // const userIds = ['user_demo_123']; // Mock user ID

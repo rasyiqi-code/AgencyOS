@@ -22,7 +22,7 @@ interface DailyLogFeedProps {
 const MOOD_CONFIG: Record<string, { icon: React.ComponentType<{ className?: string }>, color: string, label: string }> = {
     on_track: { icon: CheckCircle2, color: 'text-emerald-500', label: 'On Track' },
     delayed: { icon: AlertCircle, color: 'text-amber-500', label: 'Delayed' },
-    shipped: { icon: Ship, color: 'text-blue-500', label: 'Shipped Feature' },
+    shipped: { icon: Ship, color: 'text-brand-yellow', label: 'Shipped Feature' },
 };
 
 export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyLogFeedProps) {

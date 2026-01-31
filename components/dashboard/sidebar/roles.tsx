@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -11,9 +11,13 @@ const subscribe = () => () => { };
 const getSnapshot = () => true;
 const getServerSnapshot = () => false;
 
+import { usePathname } from "next/navigation";
+
 export function SidebarLink({ href, icon: Icon, label }: { href: string; icon: ComponentType<{ className?: string }>; label: string }) {
     const { isCollapsed } = useSidebarStore();
     const isClient = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+    const pathname = usePathname();
+    const isActive = pathname === href;
 
     if (!isClient) return null;
 
@@ -22,7 +26,8 @@ export function SidebarLink({ href, icon: Icon, label }: { href: string; icon: C
             href={href}
             title={isCollapsed ? label : undefined}
             className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-zinc-400 transition-all hover:text-white hover:bg-white/5",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-white/5",
+                isActive ? "text-brand-yellow bg-brand-yellow/10" : "text-zinc-400 hover:text-white",
                 isCollapsed ? "justify-center px-2" : ""
             )}
         >
@@ -55,6 +60,7 @@ export function SidebarSuperAdmin() {
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
             <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
             <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
+            <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
         </>

@@ -21,7 +21,7 @@ export function FinanceWidget({ totalInvestment, nextInvoice }: FinanceWidgetPro
                     <Wallet className="w-4 h-4" />
                     <span className="text-xs font-semibold uppercase tracking-wider">Financial Overview</span>
                 </div>
-                <button className="text-xs text-blue-400 hover:text-blue-300">Manage</button>
+                <button className="text-xs text-brand-yellow hover:text-brand-yellow/80">Manage</button>
             </div>
 
             <div className="space-y-6">

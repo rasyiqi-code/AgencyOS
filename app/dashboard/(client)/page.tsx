@@ -68,7 +68,7 @@ export default async function DashboardPage() {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-bold text-white tracking-tight">{t("activeMission")}</h2>
-                                <span className="text-xs font-mono text-blue-400 animate-pulse">● {t("liveUpdate")}</span>
+                                <span className="text-xs font-mono text-brand-yellow animate-pulse">● {t("liveUpdate")}</span>
                             </div>
                             <MissionCard project={activeProject} />
                         </div>
@@ -106,12 +106,12 @@ export default async function DashboardPage() {
                     </div>
 
                     {/* Support Widget */}
-                    <div className="rounded-2xl border border-blue-900/30 bg-blue-900/10 p-6">
-                        <h4 className="font-bold text-blue-400 mb-2">{t("needAssistance")}</h4>
-                        <p className="text-sm text-blue-300/70 mb-4">{t("aiHelperDesc")}</p>
+                    <div className="rounded-2xl border border-brand-yellow/30 bg-brand-yellow/10 p-6">
+                        <h4 className="font-bold text-brand-yellow mb-2">{t("needAssistance")}</h4>
+                        <p className="text-sm text-brand-yellow/70 mb-4">{t("aiHelperDesc")}</p>
                         <Link
                             href="/dashboard/inbox"
-                            className="text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg w-full transition-colors flex items-center justify-center gap-2"
+                            className="text-xs bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold px-4 py-2 rounded-lg w-full transition-colors flex items-center justify-center gap-2"
                         >
                             {t("openComms")}
                         </Link>

@@ -9,20 +9,20 @@ export async function SocialProof() {
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8 items-center text-center">
                     <div className="space-y-2">
-                        <div className="flex items-center justify-center gap-2 text-blue-400 font-bold text-3xl">
+                        <div className="flex items-center justify-center gap-2 text-brand-yellow font-bold text-3xl">
                             <Zap className="w-6 h-6" />
                             <span>{t("faster")}</span>
                         </div>
                         <p className="text-zinc-500 text-sm">{t("fasterSub")}</p>
                     </div>
                     <div className="space-y-2 border-x border-white/5">
-                        <div className="flex items-center justify-center gap-2 text-indigo-400 font-bold text-3xl">
+                        <div className="flex items-center justify-center gap-2 text-white font-bold text-3xl">
                             <span>{t("fixedPrice")}</span>
                         </div>
                         <p className="text-zinc-500 text-sm">{t("fixedPriceSub")}</p>
                     </div>
                     <div className="space-y-2">
-                        <div className="flex items-center justify-center gap-2 text-green-400 font-bold text-3xl">
+                        <div className="flex items-center justify-center gap-2 text-brand-grey font-bold text-3xl">
                             <Lock className="w-6 h-6" />
                             <span>{t("verified")}</span>
                         </div>

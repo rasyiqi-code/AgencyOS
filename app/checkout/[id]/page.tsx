@@ -42,6 +42,11 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         currencyService.getRates()
     ]);
 
+    const bonuses = await prisma.marketingBonus.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: 'desc' }
+    });
+
     // Default rate if fetch fails or is null (though convertToIDR has fallback, UI needs something)
     const activeRate = exchangeRates?.rates?.IDR || 16000;
 
@@ -60,7 +65,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         <main className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
             <SiteHeader />
             <div className="container mx-auto px-4 py-24">
-                <CheckoutContent estimate={sanitizedEstimate} bankDetails={bankDetails} activeRate={activeRate} />
+                <CheckoutContent estimate={sanitizedEstimate} bankDetails={bankDetails} activeRate={activeRate} bonuses={bonuses} />
             </div>
         </main>
     );

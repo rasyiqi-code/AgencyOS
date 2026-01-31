@@ -38,28 +38,28 @@ export async function Comparison() {
                         </ul>
                     </div>
 
-                    {/* Crediblemark */}
-                    <div className="p-8 rounded-2xl border border-blue-500/30 bg-blue-500/5 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 px-4 py-1 bg-blue-600 text-xs font-bold text-white rounded-bl-xl">
+                    {/* Agency OS */}
+                    <div className="p-8 rounded-2xl border border-brand-yellow/30 bg-brand-yellow/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 px-4 py-1 bg-brand-yellow text-xs font-bold text-black rounded-bl-xl">
                             {t("recommended")}
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-8 border-b border-blue-500/20 pb-4">{t("newTitle")}</h3>
+                        <h3 className="text-xl font-bold text-white mb-8 border-b border-brand-yellow/20 pb-4">{t("newTitle")}</h3>
                         <ul className="space-y-6">
                             <li className="flex gap-4 items-start text-white">
-                                <Check className="w-5 h-5 text-blue-400 shrink-0 mt-1" />
-                                <span><strong className="text-blue-200">{t("new1")}</strong> {t("new1Sub")}</span>
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" />
+                                <span><strong className="text-brand-yellow">{t("new1")}</strong> {t("new1Sub")}</span>
                             </li>
                             <li className="flex gap-4 items-start text-white">
-                                <Check className="w-5 h-5 text-blue-400 shrink-0 mt-1" />
-                                <span><strong className="text-blue-200">{t("new2")}</strong> {t("new2Sub")}</span>
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" />
+                                <span><strong className="text-brand-yellow">{t("new2")}</strong> {t("new2Sub")}</span>
                             </li>
                             <li className="flex gap-4 items-start text-white">
-                                <Check className="w-5 h-5 text-blue-400 shrink-0 mt-1" />
-                                <span><strong className="text-blue-200">{t("new3")}</strong> {t("new3Sub")}</span>
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" />
+                                <span><strong className="text-brand-yellow">{t("new3")}</strong> {t("new3Sub")}</span>
                             </li>
                             <li className="flex gap-4 items-start text-white">
-                                <Check className="w-5 h-5 text-blue-400 shrink-0 mt-1" />
-                                <span><strong className="text-blue-200">{t("new4")}</strong> {t("new4Sub")}</span>
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" />
+                                <span><strong className="text-brand-yellow">{t("new4")}</strong> {t("new4Sub")}</span>
                             </li>
                         </ul>
                     </div>
