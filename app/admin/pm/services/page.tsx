@@ -1,5 +1,6 @@
 // import { deleteService } from "@/app/actions/admin";
 import { DeleteServiceButton } from "@/components/admin/services/delete-service-button";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, Edit } from "lucide-react";
@@ -48,21 +49,22 @@ export default async function ServicesPage() {
 
                 {services.map((service) => (
                     <div key={service.id} className="group relative overflow-hidden rounded-xl border border-white/10 bg-zinc-900/40 p-6 transition-all hover:border-blue-500/50">
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                {service.image && (
-                                    <div className="mb-4 rounded-lg overflow-hidden border border-white/5 aspect-video w-full">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
-                                    </div>
-                                )}
-                                <h3 className="text-lg font-semibold text-white">{service.title}</h3>
-                                <div className="text-xs font-medium text-emerald-400 uppercase tracking-wider mt-1">
-                                    {service.interval === 'one_time' ? 'One Time Fee' : service.interval}
-                                </div>
+                        {service.image && (
+                            <div className="mb-4 rounded-lg overflow-hidden border border-white/5 aspect-square w-full">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                             </div>
-                            <div className="text-xl font-bold text-white">
-                                ${service.price}
+                        )}
+
+                        <div className="mb-4">
+                            <h3 className="text-lg font-semibold text-white mb-3 line-clamp-1">{service.title}</h3>
+                            <div className="flex items-center justify-between">
+                                <div className="text-xl font-bold text-white bg-white/10 px-2.5 py-1 rounded-lg">
+                                    <PriceDisplay amount={service.price} />
+                                </div>
+                                <div className="text-xs font-medium text-emerald-400 uppercase tracking-wider bg-emerald-400/10 px-2 py-1 rounded">
+                                    {service.interval === 'one_time' ? 'One Time' : service.interval}
+                                </div>
                             </div>
                         </div>
 

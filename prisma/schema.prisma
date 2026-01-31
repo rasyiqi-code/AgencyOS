@@ -131,10 +131,13 @@ model SystemSetting {
 model Service {
   id             String     @id @default(cuid())
   title          String
+  title_id       String?
   description    String
+  description_id String?
   price          Float
   interval       String     @default("one_time")
   features       Json
+  features_id    Json?
   image          String?
   isActive       Boolean    @default(true)
   createdAt      DateTime   @default(now())

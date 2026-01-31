@@ -14,17 +14,15 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
     if (!await isAdmin()) redirect('/dashboard');
 
     const { id } = await params;
+
     const service = await prisma.service.findUnique({
         where: { id }
     });
 
     if (!service) notFound();
-
-    // Transform features JSON to string for editor
-    const featuresContent = Array.isArray(service.features)
-        ? (service.features as string[]).map(f => `< li > ${f}</li > `).join('')
-        : '';
-    const featuresHtml = `< ul > ${featuresContent}</ul > `;
+    const features = Array.isArray(service.features) ? service.features as string[] : [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const features_id = Array.isArray((service as any).features_id) ? (service as any).features_id as string[] : [];
 
     return (
         <div className="w-full py-6">
@@ -54,7 +52,7 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
 
             {/* Main Form Container */}
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <EditServiceForm service={service as unknown as any} featuresHtml={featuresHtml} />
+            <EditServiceForm service={service as unknown as any} features={features} features_id={features_id} />
         </div>
     );
 }

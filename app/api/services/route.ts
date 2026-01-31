@@ -40,13 +40,17 @@ export async function POST(req: NextRequest) {
 
         // CREATE LOGIC
         const title = formData.get("title") as string;
+        const title_id = formData.get("title_id") as string;
         const description = formData.get("description") as string;
+        const description_id = formData.get("description_id") as string;
         const price = parseFloat(formData.get("price") as string);
         const interval = formData.get("interval") as string;
         const featuresRaw = formData.get("features") as string;
+        const featuresIdRaw = formData.get("features_id") as string;
         const imageFile = formData.get("image") as File;
 
         const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
+        const features_id = featuresIdRaw ? featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '') : [];
 
         let imageUrl = null;
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
@@ -75,12 +79,16 @@ export async function POST(req: NextRequest) {
         }
 
         const service = await prisma.service.create({
+            // Force type check
             data: {
                 title,
+                title_id,
                 description,
+                description_id,
                 price,
                 interval,
                 features,
+                features_id,
                 image: imageUrl,
                 creemProductId
             }

@@ -21,7 +21,8 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ servic
         if (service?.creemProductId) {
             try {
                 const { creem } = await import("@/lib/creem");
-                await creem.products.delete({ productId: service.creemProductId });
+                const sdk = await creem();
+                await sdk.products.delete({ productId: service.creemProductId });
             } catch (e) {
                 console.error("Failed to delete from Creem:", e);
             }
@@ -44,10 +45,13 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
     try {
         const formData = await req.formData();
         const title = formData.get("title") as string;
+        const title_id = formData.get("title_id") as string;
         const description = formData.get("description") as string;
+        const description_id = formData.get("description_id") as string;
         const price = parseFloat(formData.get("price") as string);
         const interval = formData.get("interval") as string;
         const featuresRaw = formData.get("features") as string;
+        const featuresIdRaw = formData.get("features_id") as string;
         const imageFile = formData.get("image") as File;
 
         let features: string[] = [];
@@ -60,20 +64,28 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
         }
 
+        const features_id = featuresIdRaw ? featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '') : [];
+
         const data: {
             title: string;
+            title_id?: string;
             description: string;
+            description_id?: string;
             price: number;
             interval: string;
             features: string[];
+            features_id?: string[];
             image?: string;
             creemProductId?: string;
         } = {
             title,
+            title_id,
             description,
+            description_id,
             price,
             interval,
-            features
+            features,
+            features_id
         };
 
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
@@ -85,11 +97,12 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         let newCreemId: string | null = null;
         try {
             const { creem } = await import("@/lib/creem");
+            const sdk = await creem();
             const existingService = await prisma.service.findUnique({ where: { id } });
 
             if (existingService?.creemProductId) {
                 // Update Logic
-                const syncPromise = creem.products.update({
+                const syncPromise = sdk.products.update({
                     productId: existingService.creemProductId,
                     name: title,
                     description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
@@ -103,7 +116,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
                     await Promise.race([syncPromise, timeoutPromise]);
                 } catch (innerError: unknown) {
                     if (innerError && typeof innerError === 'object' && 'status' in innerError && innerError.status === 404) {
-                        const newProduct = await creem.products.create({
+                        const newProduct = await sdk.products.create({
                             name: title,
                             description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
                             price: Math.round(price * 100),
@@ -121,7 +134,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
                 }
             } else {
                 // Create Logic
-                const creemProduct = await creem.products.create({
+                const creemProduct = await sdk.products.create({
                     name: title,
                     description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
                     price: Math.round(price * 100),

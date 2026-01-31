@@ -111,7 +111,12 @@ export function PriceDisplay({ amount, baseCurrency = 'USD' }: { amount: number,
 
     return (
         <span>
-            {new Intl.NumberFormat(locale, { style: 'currency', currency: currency }).format(displayAmount)}
+            {new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency: currency,
+                maximumFractionDigits: currency === 'IDR' ? 0 : 2,
+                minimumFractionDigits: currency === 'IDR' ? 0 : 2,
+            }).format(displayAmount)}
         </span>
     );
 }

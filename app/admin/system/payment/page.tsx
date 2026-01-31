@@ -57,8 +57,10 @@ export default async function AdminPaymentPage() {
             <div className="grid gap-8 lg:grid-cols-3">
 
                 {/* Navigation Sidebar */}
-                <div className="lg:col-span-1 space-y-4">
-                    <SystemNav />
+                <div className="lg:col-span-1">
+                    <div className="sticky top-24 space-y-4">
+                        <SystemNav />
+                    </div>
                 </div>
 
                 {/* Forms */}

@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { CurrencyProvider } from "@/components/providers/currency-provider";
 import { PendingCheckoutRedirect } from "@/components/store/pending-checkout-redirect";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,15 +26,21 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const midtransConfig = await paymentGatewayService.getMidtransConfig();
+  const snapUrl = midtransConfig.isProduction
+    ? "https://app.midtrans.com/snap/snap.js"
+    : "https://app.sandbox.midtrans.com/snap/snap.js";
 
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <script
-          src="https://app.sandbox.midtrans.com/snap/snap.js"
-          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
-          defer
-        ></script>
+        {midtransConfig.clientKey && (
+          <script
+            src={snapUrl}
+            data-client-key={midtransConfig.clientKey}
+            defer
+          ></script>
+        )}
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <StackProvider app={stackServerApp}>

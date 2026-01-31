@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 export async function POST(req: Request) {
     try {
@@ -15,8 +16,15 @@ export async function POST(req: Request) {
             transaction_id,
         } = body;
 
+        const midtransConfig = await paymentGatewayService.getMidtransConfig();
+
         // Verify signature
-        const serverKey = process.env.MIDTRANS_SERVER_KEY as string;
+        const serverKey = midtransConfig.serverKey;
+        if (!serverKey) {
+            console.error("[MIDTRANS_WEBHOOK] Server key not configured");
+            return new NextResponse("Configuration error", { status: 500 });
+        }
+
         const hashed = crypto
             .createHash("sha512")
             .update(order_id + status_code + gross_amount + serverKey)

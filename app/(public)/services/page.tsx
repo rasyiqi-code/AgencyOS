@@ -10,11 +10,14 @@ import { toast } from "sonner";
 interface Service {
     id: string;
     title: string;
+    title_id?: string | null;
     description: string;
+    description_id?: string | null;
     price: number;
     interval: string;
     features: string[];
-    image?: string | null;
+    features_id?: string[] | null;
+    image: string | null;
 }
 
 export default function PublicServicesPage() {
@@ -103,7 +106,7 @@ export default function PublicServicesPage() {
                     </p>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-[1400px] mx-auto">
                     {services.map((service) => (
                         <ServiceCard key={service.id} service={service} />
                     ))}

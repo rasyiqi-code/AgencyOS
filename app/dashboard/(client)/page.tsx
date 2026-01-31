@@ -5,14 +5,15 @@ import { MissionCard } from "@/components/dashboard/missions/card";
 import { FinanceWidget } from "@/components/dashboard/widgets/finance";
 import { QuickActions } from "@/components/dashboard/widgets/quick-actions";
 import { getTranslations } from "next-intl/server";
-import { type ExtendedProject } from "@/lib/types";
 import Link from "next/link";
+
+import { mapPrismaProjectToExtended } from "@/lib/mappers";
 
 export default async function DashboardPage() {
     const user = await stackServerApp.getUser();
     const t = await getTranslations("Dashboard.Overview");
 
-    const projects = (await prisma.project.findMany({
+    const prismaProjects = await prisma.project.findMany({
         where: {
             userId: user?.id,
             status: { not: 'payment_pending' }
@@ -28,7 +29,9 @@ export default async function DashboardPage() {
                 include: { service: true }
             }
         }
-    })) as unknown as ExtendedProject[];
+    });
+
+    const projects = prismaProjects.map(mapPrismaProjectToExtended);
 
     // Fetch financial data
     const paidOrders = await prisma.order.findMany({
