@@ -40,8 +40,8 @@
 ### Backend & Database
 - **Auth**: Stack Auth (Migration from NextAuth selesai)
 - **Database**: PostgreSQL with Prisma ORM 7.2.0
-- **Storage**: AWS S3 (via `@aws-sdk/client-s3`)
-- **Payments**: Midtrans / Resend (Draft)
+- **Storage**: AWS S3 (via `@aws-sdk/client-s3`) / Cloudflare R2
+- **Payments**: Midtrans / Creem (Fully Automated)
 
 ### AI Integration
 - **Framework**: Genkit AI
@@ -52,6 +52,7 @@
 
 ## ✅ 3. Fitur Terimplementasi (Ready to Use)
 - [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
+- [x] **Automated Payment System**: Konfirmasi pembayaran otomatis via Webhooks & Redirect Checks (Midtrans/Creem).
 - [x] **Admin Project Management**: Full Dashboard with Search, Filtering, Pagination, & Assignment (`app/admin/pm`).
 - [x] **System Key Rotation**: Manajemen LLM API keys dengan redundansi (`app/genkit/ai.ts`).
 - [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
@@ -71,7 +72,7 @@
 
 ## 🚀 5. Cara Menjalankan
 
-1.  **Install**: `pnpm install`
+1.  **Install**: `bun install`
 2.  **Env**: Setup `.env` berdasarkan `prisma.schema` (DATABASE_URL, STACK_API_KEY).
-3.  **Database**: `npx prisma migrate dev`
-4.  **Dev Server**: `pnpm dev`
+3.  **Database**: `bun prisma migrate dev`
+4.  **Dev Server**: `bun dev`
