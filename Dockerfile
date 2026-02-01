@@ -9,7 +9,7 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM base AS builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -20,9 +20,9 @@ COPY start.sh ./start.sh
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Generate Prisma Client (Wajib sebelum build)
-RUN bunx prisma generate
+RUN npx prisma generate
 
-RUN bun run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
