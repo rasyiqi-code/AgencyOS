@@ -17,8 +17,10 @@ COPY start.sh ./start.sh
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# Generate Prisma Client (Wajib sebelum build)
+RUN bunx prisma generate
 
 RUN bun run build
 
