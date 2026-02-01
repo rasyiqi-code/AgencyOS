@@ -2,14 +2,12 @@
 FROM node:20-alpine AS base
 # Install libraries required for Bun to run on Alpine
 RUN apk add --no-cache libc6-compat
+# Install Bun globally here so it's available in all stages (deps & builder)
+RUN npm install -g bun
 
 # Stage 1: Install dependencies using Bun
 FROM base AS deps
 WORKDIR /app
-
-# Install Bun via npm (easiest way to get matching binary)
-RUN npm install -g bun
-
 COPY package.json bun.lock ./
 # Install dependencies using Bun (Fast & respects lockfile)
 RUN bun install --frozen-lockfile
@@ -24,8 +22,8 @@ COPY start.sh ./start.sh
 # Disable telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# 1. Generate Prisma Client (Use Bun runtime, it worked previously)
-RUN npx bunx prisma generate
+# 1. Generate Prisma Client (Use Bun runtime, available from base)
+RUN bunx prisma generate
 
 # 2. Build Next.js (Use Node runtime to avoid SIGILL crash)
 RUN npm run build
