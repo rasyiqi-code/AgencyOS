@@ -1,33 +1,37 @@
-# Stage 1: Install dependencies
-FROM node:18-alpine AS deps
-WORKDIR /app
-# Install dependencies required for some packages
+# Base image: Node 20 (Alpine)
+FROM node:20-alpine AS base
+# Install libraries required for Bun to run on Alpine
 RUN apk add --no-cache libc6-compat
 
-COPY package.json ./
-# Jika ada lockfile lain, copy juga (misal yarn.lock atau package-lock.json jika nanti ada)
-# Saat ini kita pakai npm install biasa karena bun.lock tidak bisa dibaca npm
-RUN npm install
+# Stage 1: Install dependencies using Bun
+FROM base AS deps
+WORKDIR /app
+
+# Install Bun via npm (easiest way to get matching binary)
+RUN npm install -g bun
+
+COPY package.json bun.lock ./
+# Install dependencies using Bun (Fast & respects lockfile)
+RUN bun install --frozen-lockfile
 
 # Stage 2: Build the application
-FROM node:18-alpine AS builder
+FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Copy start script
 COPY start.sh ./start.sh
 
 # Disable telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Generate Prisma Client
-RUN npx prisma generate
+# 1. Generate Prisma Client (Use Bun runtime, it worked previously)
+RUN npx bunx prisma generate
 
-# Build Next.js app
+# 2. Build Next.js (Use Node runtime to avoid SIGILL crash)
 RUN npm run build
 
 # Stage 3: Production runner
-FROM node:18-alpine AS runner
+FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
