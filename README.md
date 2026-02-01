@@ -66,13 +66,44 @@
 - [ ] **Squad Wallet & Payout**: Model database sudah ada, namun UI withdrawal dan integrasi payout gateway belum aktif.
 - [ ] **Visual Feedback Pinning**: Fitur mengomentari langsung pada layar staging (mockup di `feedback-board.tsx`).
 - [ ] **Automated Testing Suite**: Kerangka pengujian ada, namun unit test untuk logika pricing & AI flow masih minim.
-- [ ] **Production Deployment Script**: Docker setup tersedia, namun workflow CI/CD penuh masih dalam pengembangan.
+- [x] **Production Deployment Script**: Docker setup tersedia (`Dockerfile` & `docker-compose.yml`), panduan lengkap di `DEPLOY_DOKPLOY.md`.
 
 ---
 
-## 🚀 5. Cara Menjalankan
-
 1.  **Install**: `bun install`
-2.  **Env**: Setup `.env` berdasarkan `prisma.schema` (DATABASE_URL, STACK_API_KEY).
-3.  **Database**: `bun prisma migrate dev`
+2.  **Env**: Setup `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
+3.  **Database**:
+    *   **Lokal Native**: `bun prisma migrate dev`
+    *   **Lokal Docker**: `docker compose -f docker-compose.dev.yml up -d db`
 4.  **Dev Server**: `bun dev`
+
+## 🚢 6. Deployment (Dokploy / VPS)
+Lihat panduan lengkap di **`DEPLOY_DOKPLOY.md`**.
+*   **One-Click Deploy**: Gunakan `docker-compose.yml` (App + DB).
+*   **Manual Deploy**: Gunakan `Dockerfile` (App only) + Managed DB.
+
+## 🛠️ 7. Command Cheat Sheet (Useful)
+
+### 🐳 Docker Management
+| Action | Command |
+| :--- | :--- |
+| **Start Local DB** | `docker compose -f docker-compose.dev.yml up -d db` |
+| **Stop Local DB** | `docker compose -f docker-compose.dev.yml down` |
+| **Test Prod locally** | `docker compose up --build` |
+| **Clean Docker** | `docker system prune -a` |
+
+### 🗄️ Database (Prisma)
+| Action | Command |
+| :--- | :--- |
+| **Open DB GUI** | `bunx prisma studio` |
+| **Migrate Dev** | `bun prisma migrate dev --name <migration_name>` |
+| **Reset DB** | `bun prisma migrate reset` |
+| **Seed Data** | `bun prisma db seed` |
+
+### 🚀 Deployment Prep
+```bash
+# Commit changes
+git add .
+git commit -m "chore: readiness for deployment"
+git push
+```
