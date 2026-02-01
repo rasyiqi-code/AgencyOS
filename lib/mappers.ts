@@ -1,11 +1,11 @@
-import { type Project, type Brief, type Feedback, type DailyLog } from "@prisma/client";
+import { type Project, type Brief, type Feedback, type DailyLog, type FeedbackComment } from "@prisma/client";
 import { type ProjectFile, type ExtendedProject } from "@/lib/types";
 
 // Define a type that matches what Prisma returns including relations
 export type PrismaProjectWithRelations = Project & {
     briefs: Brief[];
     dailyLogs: DailyLog[];
-    feedback: Feedback[];
+    feedback: (Feedback & { comments?: FeedbackComment[] })[];
     service: {
         title: string;
         description: string;
@@ -51,7 +51,14 @@ export function mapPrismaProjectToExtended(project: PrismaProjectWithRelations):
             type: f.type,
             imageUrl: f.imageUrl,
             status: f.status,
-            createdAt: f.createdAt
+            createdAt: f.createdAt,
+            comments: Array.isArray(f.comments) ? f.comments.map(c => ({
+                id: c.id,
+                content: c.content,
+                role: c.role,
+                createdAt: c.createdAt,
+                imageUrl: c.imageUrl
+            })) : []
         })),
     };
 }

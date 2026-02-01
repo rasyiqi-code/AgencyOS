@@ -14,10 +14,19 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Agency OS",
-  description: "SoloDev Async Platform",
-};
+import { prisma } from "@/lib/db";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await prisma.systemSetting.findMany({
+    where: { key: { in: ["AGENCY_NAME"] } }
+  });
+  const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+
+  return {
+    title: agencyName,
+    description: "SoloDev Async Platform",
+  };
+}
 
 export default async function RootLayout({
   children,

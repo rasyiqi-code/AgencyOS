@@ -9,6 +9,7 @@ import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
 import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
 import Image from "next/image";
 import { ProjectHeader } from "@/components/dashboard/missions/header";
+import { ProjectPreview } from "@/components/dashboard/missions/project-preview";
 import { FileText, MessageSquare, Terminal, Github, Globe, CalendarClock } from "lucide-react";
 import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
 import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
@@ -33,7 +34,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             service: true,
             briefs: true,
             feedback: {
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'desc' },
+                include: { comments: { orderBy: { createdAt: 'asc' } } }
             },
             dailyLogs: {
                 orderBy: { createdAt: 'desc' }
@@ -161,7 +163,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Sidebar: Workbench */}
-                <div className="space-y-4">
+                <div className="space-y-4 sticky top-6 self-start">
+
+                    <ProjectPreview url={project.previewUrl || null} />
 
                     {/* Workbench Widget */}
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">

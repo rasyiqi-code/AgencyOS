@@ -1,15 +1,22 @@
 import { Check, X } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/db";
 
 export async function Comparison() {
     const t = await getTranslations("Comparison");
+
+    // Fetch Agency Name
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (
         <section className="py-24 bg-zinc-950">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                        {t("title")}
+                        {t("title", { brand: agencyName })}
                     </h2>
                     <p className="text-zinc-400">{t("subtitle")}</p>
                 </div>
@@ -43,7 +50,9 @@ export async function Comparison() {
                         <div className="absolute top-0 right-0 px-4 py-1 bg-brand-yellow text-xs font-bold text-black rounded-bl-xl">
                             {t("recommended")}
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-8 border-b border-brand-yellow/20 pb-4">{t("newTitle")}</h3>
+                        <h3 className="text-xl font-bold text-white mb-8 border-b border-brand-yellow/20 pb-4">
+                            {t("newTitle", { brand: agencyName })}
+                        </h3>
                         <ul className="space-y-6">
                             <li className="flex gap-4 items-start text-white">
                                 <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" />

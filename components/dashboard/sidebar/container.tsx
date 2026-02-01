@@ -46,7 +46,7 @@ export function SidebarContainer({ children, header, footer }: SidebarContainerP
                     <SidebarToggle />
                 </div>
 
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1 overflow-y-auto scrollbar-custom">
                     <nav className="flex flex-col gap-2 px-3 py-6">
                         {children}
                     </nav>

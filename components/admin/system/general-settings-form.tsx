@@ -10,11 +10,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Loader2, Globe, Save } from "lucide-react";
 import { toast } from "sonner";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 export interface ContactInfo {
     email: string | null;
     phone: string | null;
     address: string | null;
     logoUrl: string | null;
+    agencyName: string | null;
+    companyName: string | null;
+    logoDisplayMode: string | null;
 }
 
 interface Props {
@@ -22,10 +27,12 @@ interface Props {
 }
 
 export function GeneralSettingsForm({ initialData }: Props) {
+    // ... hooks ...
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [data, setData] = useState<ContactInfo>(initialData);
 
+    // ... handleLogoUpload ...
     async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -52,6 +59,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
         }
     }
 
+    // ... handleSave ...
     async function handleSave() {
         setIsLoading(true);
         try {
@@ -70,6 +78,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
         }
     }
 
+    // ... return ...
     return (
         <Card className="bg-zinc-900/40 border-white/5">
             <CardHeader>
@@ -87,17 +96,6 @@ export function GeneralSettingsForm({ initialData }: Props) {
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300">Public Email</Label>
-                        <Input
-                            placeholder="hello@crediblemark.com"
-                            value={data.email || ""}
-                            onChange={(e) => setData({ ...data, email: e.target.value })}
-                            className="bg-black/50 border-white/10 text-white"
-                        />
-                        <p className="text-xs text-zinc-500">Displayed in the contact section.</p>
-                    </div>
-
                     <div className="space-y-4">
                         <Label className="text-zinc-300">Brand Logo</Label>
 
@@ -117,30 +115,78 @@ export function GeneralSettingsForm({ initialData }: Props) {
                             </div>
 
                             {/* Upload Button */}
-                            <div className="flex-1">
-                                <label
-                                    htmlFor="logo-upload"
-                                    className={`inline-flex items-center justify-center px-4 py-2 border border-white/10 rounded-md text-sm font-medium text-zinc-300 bg-white/5 hover:bg-white/10 hover:text-white cursor-pointer transition-colors ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
-                                >
-                                    {isUploading ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            Uploading...
-                                        </>
-                                    ) : "Upload New Logo"}
-                                </label>
-                                <Input
-                                    id="logo-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={handleLogoUpload}
-                                />
-                                <p className="mt-2 text-xs text-zinc-500">
-                                    Recommended: Square PNG/SVG, min 128x128px.
-                                </p>
+                            <div className="flex-1 space-y-3">
+                                <div>
+                                    <label
+                                        htmlFor="logo-upload"
+                                        className={`inline-flex items-center justify-center px-4 py-2 border border-white/10 rounded-md text-sm font-medium text-zinc-300 bg-white/5 hover:bg-white/10 hover:text-white cursor-pointer transition-colors ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                    >
+                                        {isUploading ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Uploading...
+                                            </>
+                                        ) : "Upload New Logo"}
+                                    </label>
+                                    <Input
+                                        id="logo-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleLogoUpload}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <Label className="text-xs text-zinc-400">Display Mode</Label>
+                                    <Select
+                                        value={data.logoDisplayMode || "both"}
+                                        onValueChange={(val) => setData({ ...data, logoDisplayMode: val })}
+                                    >
+                                        <SelectTrigger className="w-full bg-black/50 border-white/10 text-white h-8 text-xs">
+                                            <SelectValue placeholder="Display Mode" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="both">Logo + Text</SelectItem>
+                                            <SelectItem value="logo">Logo Only</SelectItem>
+                                            <SelectItem value="text">Text Only</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Public Email</Label>
+                        <Input
+                            placeholder="hello@crediblemark.com"
+                            value={data.email || ""}
+                            onChange={(e) => setData({ ...data, email: e.target.value })}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">Displayed in the contact section.</p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Agency Name (Brand)</Label>
+                        <Input
+                            placeholder="e.g. AgencyOS"
+                            value={data.agencyName || ""}
+                            onChange={(e) => setData({ ...data, agencyName: e.target.value })}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">Used in Headers, Emails, and Titles.</p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Company Name (Legal)</Label>
+                        <Input
+                            placeholder="e.g. Crediblemark Pte Ltd"
+                            value={data.companyName || ""}
+                            onChange={(e) => setData({ ...data, companyName: e.target.value })}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">Used in Invoices, Terms, and Footer.</p>
                     </div>
 
                     <div className="space-y-2">

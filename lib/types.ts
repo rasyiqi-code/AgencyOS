@@ -14,6 +14,14 @@ export interface ProjectBrief {
     createdAt: Date;
 }
 
+export interface FeedbackComment {
+    id: string;
+    content: string;
+    role: string;
+    createdAt: Date;
+    imageUrl?: string | null;
+}
+
 export interface FeedbackItem {
     id: string;
     content: string;
@@ -21,6 +29,7 @@ export interface FeedbackItem {
     imageUrl?: string | null;
     status: string;
     createdAt: Date;
+    comments: FeedbackComment[];
 }
 
 export interface DailyLog {

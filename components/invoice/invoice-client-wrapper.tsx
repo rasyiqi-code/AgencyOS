@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useReactToPrint } from "react-to-print";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { InvoiceDocument } from "@/components/checkout/invoice-document";
+import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
 import { ExtendedEstimate } from "@/lib/types";
 import { useCurrency } from "@/components/providers/currency-provider";
@@ -37,6 +37,7 @@ interface InvoiceClientWrapperProps {
     };
     isPaid: boolean;
     bankDetails?: BankDetails;
+    agencySettings?: AgencyInvoiceSettings;
 }
 
 const thankYouQuotes = [
@@ -47,7 +48,7 @@ const thankYouQuotes = [
     "“Technology is best when it brings people together.” — Matt Mullenweg"
 ];
 
-export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails }: InvoiceClientWrapperProps) {
+export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings }: InvoiceClientWrapperProps) {
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
@@ -101,6 +102,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         estimate={estimate}
                         user={user}
                         isPaid={isPaid}
+                        agencySettings={agencySettings}
                     />
                 </div>
             </div>

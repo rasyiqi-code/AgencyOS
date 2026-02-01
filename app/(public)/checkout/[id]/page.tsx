@@ -32,7 +32,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
     // Auth Guard
     const user = await stackServerApp.getUser();
     if (!user) {
-        redirect(`/handler/sign-in?return_to=/checkout/${id}`);
+        redirect(`/handler/sign-in?after_auth_return_to=/checkout/${id}`);
     }
 
     const [estimate, bankDetails, exchangeRates] = await Promise.all([

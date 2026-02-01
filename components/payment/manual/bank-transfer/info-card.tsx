@@ -14,7 +14,7 @@ export function BankTransferInfoCard({ bankDetails }: BankTransferInfoCardProps)
     const bank = {
         name: bankDetails?.bank_name || "BCA",
         account: bankDetails?.bank_account || "123 456 7890",
-        holder: bankDetails?.bank_holder || "PT Crediblemark"
+        holder: bankDetails?.bank_holder || "Agency Admin"
     };
 
     return (

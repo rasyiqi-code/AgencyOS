@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 export async function ExpertProfile() {
     const t = await getTranslations("Expert");
@@ -8,13 +9,16 @@ export async function ExpertProfile() {
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto rounded-3xl bg-zinc-900/30 border border-white/5 p-8 md:p-12">
                     <div className="shrink-0 text-center">
-                        <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-white/10 mx-auto mb-4 bg-zinc-800">
-                            {/* Placeholder for Expert Photo */}
-                            <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">
-                                FOTO ANDA
-                            </div>
+                        <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-white/10 mx-auto mb-4 bg-zinc-800 relative shadow-2xl">
+                            <Image
+                                src="/expert-photo.png"
+                                alt="Rasyiqi"
+                                fill
+                                className="object-cover"
+                                unoptimized
+                            />
                         </div>
-                        <h3 className="text-white font-bold text-lg">Rasyiqi</h3>
+                        <h3 className="text-white font-bold text-lg">{t("name")}</h3>
                         <p className="text-indigo-400 text-sm">{t("role")}</p>
                     </div>
 

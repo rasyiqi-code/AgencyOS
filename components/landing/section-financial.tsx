@@ -1,8 +1,14 @@
 import { Check, X, Info } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { prisma } from "@/lib/db";
+
 export async function FinancialLogic() {
     const t = await getTranslations("Financial");
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return (
         <section className="py-24 bg-zinc-950 border-y border-white/5">
@@ -18,7 +24,7 @@ export async function FinancialLogic() {
                     <div className="grid grid-cols-3 bg-white/5 border-b border-white/10 text-sm font-bold text-white p-4">
                         <div className="text-zinc-500 uppercase">{t("comparison")}</div>
                         <div className="text-center text-zinc-400 uppercase">{t("hireSenior")}</div>
-                        <div className="text-center text-brand-yellow uppercase">{t("hybrid")}</div>
+                        <div className="text-center text-brand-yellow uppercase">{t("hybrid", { brand: agencyName })}</div>
                     </div>
 
                     {/* Row 1: Cost */}

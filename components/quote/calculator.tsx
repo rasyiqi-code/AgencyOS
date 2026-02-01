@@ -53,7 +53,7 @@ export function QuoteCalculator() {
                     Instant Quote Calculator
                 </CardTitle>
                 <CardDescription>
-                    Estimasi harga transparan berdasarkan algoritma Crediblemark OS.
+                    Estimasi harga transparan berdasarkan algoritma sistem kami.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">

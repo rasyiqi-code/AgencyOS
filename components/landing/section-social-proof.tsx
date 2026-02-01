@@ -1,4 +1,4 @@
-import { Terminal, Database, Cloud, Code2, Zap, Lock } from "lucide-react";
+import { Database, Cloud, Zap, Lock, Brain, LayoutTemplate } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function SocialProof() {
@@ -33,18 +33,18 @@ export async function SocialProof() {
                 <div className="mt-12 text-center space-y-4">
                     <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest">{t("techStack")}</p>
                     <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                        {/* Simple text placeholders for logos as lucide icons are limited for brands */}
+                        {/* Generalized Tech Stack */}
                         <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                            <Code2 className="w-5 h-5" /> Next.js
+                            <LayoutTemplate className="w-5 h-5" /> {t("stackFramework")}
                         </div>
                         <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                            <Cloud className="w-5 h-5" /> Vercel
+                            <Cloud className="w-5 h-5" /> {t("stackCloud")}
                         </div>
                         <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                            <Database className="w-5 h-5" /> Supabase
+                            <Database className="w-5 h-5" /> {t("stackDatabase")}
                         </div>
                         <div className="flex items-center gap-2 text-zinc-300 font-bold">
-                            <Terminal className="w-5 h-5" /> OpenAI
+                            <Brain className="w-5 h-5" /> {t("stackAI")}
                         </div>
                     </div>
                 </div>

@@ -62,7 +62,7 @@
 ---
 
 ## 🚧 4. Apa yang Belum? (Missing/WIP)
-- [ ] **GitHub Full Integration**: Integrasi repo activity baru sebatas UI mockup, perlu koneksi API GitHub yang fungsional.
+- [ ] **GitHub & Vercel Integrations**: Integrasi baru sebatas UI mockup di halaman admin. API route fungsional untuk OAuth GitHub dan Vercel perlu diimplementasikan secara penuh.
 - [ ] **Squad Wallet & Payout**: Model database sudah ada, namun UI withdrawal dan integrasi payout gateway belum aktif.
 - [ ] **Visual Feedback Pinning**: Fitur mengomentari langsung pada layar staging (mockup di `feedback-board.tsx`).
 - [ ] **Automated Testing Suite**: Kerangka pengujian ada, namun unit test untuk logika pricing & AI flow masih minim.

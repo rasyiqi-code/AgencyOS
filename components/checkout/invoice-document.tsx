@@ -5,8 +5,33 @@ import Image from "next/image";
 
 import { ExtendedEstimate } from "@/lib/types";
 
-export function InvoiceDocument({ estimate, refAction, user, isPaid = false }: { estimate: ExtendedEstimate, refAction?: React.RefObject<HTMLDivElement | null>, user?: { displayName?: string | null, email?: string | null } | null, isPaid?: boolean }) {
+export interface AgencyInvoiceSettings {
+    agencyName: string;
+    companyName: string;
+    address: string;
+    email: string;
+}
+
+export function InvoiceDocument({
+    estimate,
+    refAction,
+    user,
+    isPaid = false,
+    agencySettings
+}: {
+    estimate: ExtendedEstimate,
+    refAction?: React.RefObject<HTMLDivElement | null>,
+    user?: { displayName?: string | null, email?: string | null } | null,
+    isPaid?: boolean,
+    agencySettings?: AgencyInvoiceSettings
+}) {
     const today = new Date(); // Hydration safe as long as date doesn't change during render
+
+    // Fallback values
+    const agencyName = agencySettings?.agencyName || "Agency OS";
+    const companyName = agencySettings?.companyName || "Agency OS";
+    const address = agencySettings?.address || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000";
+    const billingEmail = agencySettings?.email || "billing@crediblemark.com";
 
     return (
         <div ref={refAction} className="p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-hidden" id="invoice-doc">
@@ -27,11 +52,10 @@ export function InvoiceDocument({ estimate, refAction, user, isPaid = false }: {
                     <p className="text-zinc-500 text-sm">#{estimate.id.slice(-8).toUpperCase()}</p>
                 </div>
                 <div className="text-right">
-                    <div className="font-bold text-xl mb-1">Crediblemark Agency</div>
-                    <div className="text-zinc-500 text-sm">
-                        Tech Valley, Cyberjaya<br />
-                        Selangor, Malaysia 63000<br />
-                        billing@crediblemark.com
+                    <div className="font-bold text-xl mb-1">{companyName}</div>
+                    <div className="text-zinc-500 text-sm whitespace-pre-line">
+                        {address}<br />
+                        {billingEmail}
                     </div>
                 </div>
             </div>

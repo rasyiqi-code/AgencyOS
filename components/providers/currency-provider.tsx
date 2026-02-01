@@ -25,18 +25,40 @@ const CurrencyContext = createContext<CurrencyContextType>({
 export const useCurrency = () => useContext(CurrencyContext);
 
 export function CurrencyProvider({ children, initialLocale = 'en-US' }: { children: React.ReactNode, initialLocale?: string }) {
-    const [currency, setCurrency] = useState<Currency>(() => {
-        if (typeof window !== 'undefined') {
-            const cached = localStorage.getItem('agency-os-currency');
-            if (cached === 'USD' || cached === 'IDR') return cached as Currency;
-        }
-        return 'USD';
-    });
+    const [currency, setCurrency] = useState<Currency>('USD');
     const [locale, setLocale] = useState(initialLocale);
+    const [mounted, setMounted] = useState(false);
     const [rate, setRate] = useState(16000); // Default fallback
     const router = useRouter();
 
     useEffect(() => {
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
+        // Sync with localStorage on client mount
+        if (typeof window !== 'undefined') {
+            const cached = localStorage.getItem('agency-os-currency');
+            if (cached === 'USD' || cached === 'IDR') {
+                setCurrency(cached as Currency);
+            } else {
+                // Detect currency if not set
+                const detect = () => {
+                    try {
+                        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                        if (['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'].includes(timeZone)) {
+                            setCurrency('IDR');
+                            localStorage.setItem('agency-os-currency', 'IDR');
+                        } else {
+                            setCurrency('USD');
+                            localStorage.setItem('agency-os-currency', 'USD');
+                        }
+                    } catch (error) {
+                        console.error("Currency detection failed, defaulting to USD", error);
+                    }
+                };
+                detect();
+            }
+        }
+
         // Fetch Dynamic Rate
         fetch('/api/currency/rates')
             .then(res => res.json())
@@ -46,26 +68,11 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
                 }
             })
             .catch(err => console.error("Rate fetch failed", err));
-
-        // Detect currency if not set in localStorage
-        if (typeof window !== 'undefined' && !localStorage.getItem('agency-os-currency')) {
-            const detect = () => {
-                try {
-                    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                    if (['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'].includes(timeZone)) {
-                        setCurrency('IDR');
-                        localStorage.setItem('agency-os-currency', 'IDR');
-                    } else {
-                        setCurrency('USD');
-                        localStorage.setItem('agency-os-currency', 'USD');
-                    }
-                } catch (error) {
-                    console.error("Currency detection failed, defaulting to USD", error);
-                }
-            };
-            detect();
-        }
     }, []);
+
+    if (!mounted) {
+        return null; // or return children with default USD to avoid flash, but returning null ensures clean hydration
+    }
 
     const updateCurrency = (c: Currency) => {
         setCurrency(c);

@@ -17,54 +17,89 @@
         "startProject": "Start Project"
     },
     "Hero": {
-        "statusBadge": "Status: Limited Availability (2 Slots Left)",
-        "title1": "Build Enterprise Apps",
-        "title2": "At Startup Speed",
-        "description": "Stop trading quality for speed. We fuse <white>Generative AI</white> velocity with <white>Senior Engineering</white> rigor to deliver secure, scalable software in weeks, not months.",
-        "launchDashboard": "Launch Dashboard",
-        "joinTalentSquad": "Join Talent Squad",
-        "poweredBy": "POWERED BY NEXT.JS 15 • TURBOPACK • GENKIT"
+        "statusBadge": "Accepting New Projects: Build your MVP in 30 Days",
+        "title1": "Hire AI + Experts.",
+        "title2": "Launch MVP in 30 Days.",
+        "description": "Building a tech team is slow, expensive, and risky. {brand} combines <white>AI Automation</white> with <white>Senior Engineers</white> to build your app faster, cheaper, and better. No outsourcing, no compromises.",
+        "launchDashboard": "Start a Project",
+        "viewServices": "Browse Services",
+        "poweredBy": "AI-POWERED • AUTOMATED WORKFLOWS • SENIOR EXPERTS"
     },
     "Ecosystem": {
-        "title": "The Agency Operating System",
-        "subtitle": "Three powerful interfaces connected by one intelligent core.",
-        "clientTitle": "Client Command Center",
-        "clientDesc": "Generate specs with AI, track real-time progress, and deploy instantly. No more emails.",
-        "clientCta": "Enter Portal",
-        "squadTitle": "Talent Squad Engine",
-        "squadDesc": "Pick up missions, access clear specs, and submit code. Get paid for output, not hours.",
+        "title": "Your Mission Control Center",
+        "subtitle": "Complete transparency. We use AI where it matters — directly into your project workbench.",
+        "clientTitle": "Mission Control",
+        "clientDesc": "Real-time visibility. Track daily logs, provide feedack on features, and monitor deployment status in one secure dashboard.",
+        "clientCta": "Enter Mission Control",
+        "squadTitle": "The Talent Squad",
+        "squadDesc": "Access a network of vetted Senior Engineers. No juniors, no interns. Just elite builders.",
         "squadCta": "Join Squad",
         "adminTitle": "Admin Core",
-        "adminDesc": "The central brain managing quality control, payments, and system integrity.",
-        "adminCta": "Restricted Access"
+        "adminDesc": "Our system automatically tests every line of code for security and performance before deployment.",
+        "adminCta": "System Core"
     },
     "SocialProof": {
-        "faster": "2x Faster",
-        "fasterSub": "Compared to Conventional Agencies",
-        "fixedPrice": "Fixed Price",
-        "fixedPriceSub": "No Hidden Fees",
-        "verified": "100% Verified",
-        "verifiedSub": "Code Audited by Senior Experts",
-        "techStack": "Powered by Modern Tech Stack"
+        "faster": "Weeks, Not Months",
+        "fasterSub": "AI-Accelerated Development",
+        "fixedPrice": "Fixed Cost",
+        "fixedPriceSub": "Guaranteed Quote upfront",
+        "verified": "Top 1% Talent",
+        "verifiedSub": "Senior Engineers Only",
+        "techStack": "Modern Tech Stack",
+        "stackFramework": "Modern Frameworks",
+        "stackCloud": "Cloud Infrastructure",
+        "stackDatabase": "Scalable Database",
+        "stackAI": "Artificial Intelligence"
+    },
+    "Testimonials": {
+        "title": "Trusted by Builders",
+        "subtitle": "Join hundreds of founders building with {brand}.",
+        "reviews": [
+            {
+                "name": "Alex Chen",
+                "role": "CTO, InnovateLabs",
+                "text": "Their platform accelerated our development cycle significantly. A game-changer for our team."
+            },
+            {
+                "name": "Sarah Davis",
+                "role": "Lead Engineer, Nexus Systems",
+                "text": "The best SaaS tool I've used. Integration was seamless and the support is top-notch."
+            },
+            {
+                "name": "Michael Kim",
+                "role": "Founder, CodeCraft",
+                "text": "We've scaled effortlessly with their robust infrastructure. Highly recommended for any startup."
+            },
+            {
+                "name": "Jessica Lee",
+                "role": "Product Manager, Apex Digital",
+                "text": "{brand} provided the stability and speed we needed to launch our MVP in record time."
+            },
+            {
+                "name": "David Wilson",
+                "role": "VP of Engineering, CloudScale",
+                "text": "Incredible performance and reliability. The AI integration works like magic."
+            }
+        ]
     },
     "Comparison": {
-        "title": "Why Choose a Hybrid Agency?",
-        "subtitle": "The future of software development is AI + Human collaboration.",
-        "oldTitle": "Traditional Agency (The Past)",
-        "old1": "Hours of Zoom meetings with no clear outcome.",
-        "old2": "Fluctuating prices (Time & Materials).",
-        "old3": "Progress updates must be requested via WhatsApp/Email.",
-        "old4": "Junior teams that change frequently.",
-        "newTitle": "Crediblemark (The Future)",
-        "recommended": "RECOMMENDED",
-        "new1": "Zero Meeting.",
-        "new1Sub": "Briefing via AI Chat in 10 minutes.",
-        "new2": "Algorithmic Pricing.",
-        "new2Sub": "Price locked by the system at start.",
-        "new3": "Real-time Dashboard.",
-        "new3Sub": "Monitor progress second by second.",
-        "new4": "Solo Senior Expert.",
-        "new4Sub": "One primary point of contact forever."
+        "title": "Traditional vs. {brand} Hybrid",
+        "subtitle": "Why founders choose AI-Enhanced Development.",
+        "oldTitle": "Traditional Dev Shop",
+        "old1": "3-6 Month Timeline",
+        "old2": "Hourly billing (costs explode)",
+        "old3": "Opaque progress updates",
+        "old4": "Outsourced to Junior Devs",
+        "newTitle": "{brand} Hybrid Model",
+        "recommended": "SMART CHOICE",
+        "new1": "Instant kickoff",
+        "new1Sub": "Start building in 24 hours.",
+        "new2": "Fixed Project Price.",
+        "new2Sub": "Know exactly what you pay.",
+        "new3": "Live Progress Tracker.",
+        "new3Sub": "See code commits real-time.",
+        "new4": "Senior Engineers only.",
+        "new4Sub": "Vetted experts, no beginners."
     },
     "ProductCatalog": {
         "title": "Ready-to-Use Solutions",
@@ -91,24 +126,25 @@
                 "price": "Custom Quote via AI",
                 "cta": "Ideation Consultation"
             }
-        }
+        },
+        "ctaGeneric": "Order Now"
     },
     "Workflow": {
         "title": "No Drama. No Meeting. Direct Action.",
         "subtitle": "Efficiency of asynchronous workflow for maximum results.",
-        "step1": "1. Chat with CredibleBot",
-        "step1Desc": "Tell your idea to our AI. It will prepare a neat technical specification (PRD) yang rapi untuk Anda.",
-        "step2": "2. Receive Instant Quote",
-        "step2Desc": "The system calculates feature complexity and provides a definite Fixed Price. Pay secure deposit via Midtrans.",
-        "step3": "3. Monitor & Visual Revision",
-        "step3Desc": "See progress on dashboard. Need revisions? Just click the part you want to change. I do the work, you receive the result."
+        "step1": "1. Initialize Mission",
+        "step1Desc": "Chat with our AI to scope your project. It generates a comprehensive Brief and Technical Spec instantly.",
+        "step2": "2. Development & Workbench",
+        "step2Desc": "Watch your project build in real-time via the Workbench. Senior Engineers execute the spec with AI assistance.",
+        "step3": "3. Feedback & Deploy",
+        "step3Desc": "Review progress in your Dashboard. Drop comments on specific features. Approve completed milestones directly from your secure portal."
     },
     "Financial": {
         "title": "Save Cost, Not Quality.",
         "subtitle": "Smart investment logic for modern business.",
         "comparison": "COMPARISON",
         "hireSenior": "HIRE SENIOR DEV",
-        "hybrid": "CREDIBLEMARK (HYBRID)",
+        "hybrid": "{brand} (HYBRID)",
         "salary": "Cost / Salary",
         "salaryOld": "Gaji 15m/mo x 12",
         "salaryNew": "One-time payment",
@@ -129,21 +165,28 @@
         "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
     },
     "Expert": {
-        "title": "One Human Brain, Supported by Machine Intelligence.",
-        "q": "Many clients ask: 'Is the code made by robots?'",
-        "a": "Answer: AI is the bricklayer, I am the Architect.",
-        "desc": "I use AI to eliminate boring work (boilerplate, CSS, admin), so I can focus 100% on business logic, data security, and your app's performance.",
-        "footer": "The result? Enterprise Agency quality, with Freelancer speed and price.",
+        "title": "Human Brain. Machine Intelligence.",
+        "name": "Rasyiqi",
+        "q": "Is the code built by robots?",
+        "a": "<strong>AI is the hammer.</strong> I am the Architect.",
+        "desc": "I use AI to handle the boring stuff so I can focus on what matters: your app's logic, security, and performance.",
+        "footer": "Enterprise results. Freelancer speed.",
         "role": "Senior Fullstack Developer"
     },
     "FAQ": {
         "title": "Frequently Asked Questions",
         "q1": "Can I really not chat directly?",
-        "a1": "Our platform is designed for efficiency through Asynchronous communication. Everything is neatly recorded. But for emergency situations or deep strategy consultations, Premium Call sessions are available.",
+        "a1": "Our platform is designed for efficiency through <strong>Asynchronous communication</strong>. Everything is neatly recorded. But for emergency situations or deep strategy consultations, Premium Call sessions are available.",
         "q2": "What if there are bugs after completion?",
-        "a2": "All packages include a 30-Day Bug Warranty. Report via dashboard, fixes are prioritized.",
+        "a2": "All packages include a <strong>30-Day Bug Warranty</strong>. Report via dashboard, fixes are prioritized.",
         "q3": "Do I own the source code?",
-        "a3": "Yes, 100%. After final payment, the GitHub repository will be transferred to your account."
+        "a3": "Yes, <strong>100%</strong>. After final payment, the GitHub repository will be transferred to your account.",
+        "q4": "How do revisions work?",
+        "a4": "We build in public. You can provide feedback on every milestone via the <strong>Mission Control</strong> dashboard. Major shifts in scope are handled as new mission add-ons.",
+        "q5": "What tech stack do you use?",
+        "a5": "We primarily utilize <strong>Next.js & TypeScript</strong>, but flexibility is key. We have <strong>Human Experts</strong> specializing in various stacks, allowing us to adapt perfectly to your specific requirements.",
+        "q6": "Can you integrate with my existing systems?",
+        "a6": "Absolutely. We routinely integrate with <strong>Stripe, Midtrans, Slack, Discord, Google Cloud</strong>, and various third-party APIs to build a unified ecosystem."
     },
     "Dashboard": {
         "Sidebar": {
@@ -210,7 +253,7 @@
             "totalProjects": "Total Projects",
             "autoSync": "Auto-sync enabled",
             "pendingUpdates": "Pending Updates",
-            "poweredBy": "Powered by AgencyOS Financial Core",
+            "poweredBy": "Powered by {brand} Financial Core",
             "noOrders": "No orders found.",
             "previous": "Previous",
             "next": "Next"
@@ -261,7 +304,7 @@
         "supportHelp": "Support / Help",
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
-        "copyright": "© 2024 Crediblemark. Built with Human Intelligence & Artificial Speed."
+        "copyright": "All Rights Reserved."
     },
     "PriceCalculator": {
         "badge": "Quote & Pricing",

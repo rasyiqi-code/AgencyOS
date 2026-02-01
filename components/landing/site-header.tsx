@@ -14,33 +14,60 @@ export async function SiteHeader() {
     const tc = await getTranslations("Common");
 
     // Fetch Logo
-    const logoSetting = await prisma.systemSetting.findUnique({
-        where: { key: "LOGO_URL" }
+    // Fetch Logo & Brand
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["LOGO_URL", "AGENCY_NAME", "LOGO_DISPLAY_MODE"] } }
     });
-    const logoUrl = logoSetting?.value;
+    const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const displayMode = settings.find(s => s.key === "LOGO_DISPLAY_MODE")?.value || "both"; // 'both', 'logo', 'text'
+
+
+
+
+    // Actually, "Text Only" usually implies just the text name.
+    // "Logo Only" implies just the image.
+    // "Both" implies Image + Text.
+    // If no Image exists, we show Fallback Icon + Text usually.
+    // Let's refine:
+
+    // RENDER LOGIC:
+    // Image/Icon component:
+    // IF (ShowLogo AND logoUrl) -> Render Image
+    // ELSE IF (mode != 'text') -> Render Icon (Fallback)
+
+    // Text component:
+    // IF (ShowText) -> Render Text
 
     return (
         <header className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 transition-all duration-300">
             <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
-                <div className="flex items-center gap-3 group cursor-pointer">
-                    {logoUrl ? (
-                        <div className="relative h-9 w-32">
+                <Link href="/" className="flex items-center gap-2 group cursor-pointer">
+                    {/* Logo / Icon Section */}
+                    {displayMode !== 'text' && (
+                        logoUrl ? (
                             <Image
                                 src={logoUrl}
                                 alt="Logo"
-                                fill
-                                className="object-contain hover:scale-105 transition-transform"
+                                width={120}
+                                height={32}
+                                className="h-8 w-auto object-contain hover:scale-105 transition-transform"
+                                priority
                             />
-                        </div>
-                    ) : (
-                        <>
+                        ) : (
                             <div className="w-8 h-8 rounded-full bg-brand-grey flex items-center justify-center shadow-lg shadow-zinc-500/20 group-hover:shadow-zinc-500/30 transition-all duration-300 hover:scale-105">
                                 <Check className="h-5 w-5 text-brand-yellow stroke-[3]" />
                             </div>
-                            <span className="font-bold text-lg tracking-tight text-white hidden sm:block group-hover:text-zinc-200 transition-colors">Agency OS</span>
-                        </>
+                        )
                     )}
-                </div>
+
+                    {/* Text Section */}
+                    {(displayMode === 'text' || displayMode === 'both') && (
+                        <span className="font-bold text-lg tracking-tight text-white hidden sm:block group-hover:text-zinc-200 transition-colors">
+                            {agencyName}
+                        </span>
+                    )}
+                </Link>
 
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2 mr-2 border-r border-white/5 pr-6 hidden md:flex">

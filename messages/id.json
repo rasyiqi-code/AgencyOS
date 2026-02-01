@@ -17,54 +17,89 @@
         "startProject": "Mulai Proyek"
     },
     "Hero": {
-        "statusBadge": "Status: Ketersediaan Terbatas (Sisa 2 Slot)",
-        "title1": "Bangun Aplikasi Enterprise",
-        "title2": "Dengan Kecepatan Startup",
-        "description": "Berhenti mengorbankan kualitas demi kecepatan. Kami memadukan kecepatan <white>Generative AI</white> dengan ketelitian <white>Senior Engineering</white> untuk menghadirkan perangkat lunak yang aman dan skalabel dalam hitungan minggu, bukan bulan.",
-        "launchDashboard": "Buka Dashboard",
-        "joinTalentSquad": "Gabung Talent Squad",
-        "poweredBy": "DIDUKUNG OLEH NEXT.JS 15 • TURBOPACK • GENKIT"
+        "statusBadge": "Menerima Proyek: Bangun MVP dalam 30 Hari",
+        "title1": "Sewa AI + Pakar.",
+        "title2": "Launch MVP dalam 30 Hari.",
+        "description": "Membangun tim tech itu lambat dan mahal. {brand} menggabungkan <white>Otomasi AI</white> dengan <white>Senior Engineer</white> untuk membangun aplikasi Anda lebih cepat dan hemat. Tanpa outsourcing, tanpa kompromi.",
+        "launchDashboard": "Mulai Proyek",
+        "viewServices": "Lihat Layanan",
+        "poweredBy": "AI-POWERED • AUTOMATED WORKFLOWS • SENIOR EXPERTS"
     },
     "Ecosystem": {
-        "title": "The Agency Operating System",
-        "subtitle": "Tiga antarmuka kuat yang terhubung oleh satu inti cerdas.",
-        "clientTitle": "Client Command Center",
-        "clientDesc": "Buat spesifikasi dengan AI, pantau progres real-time, dan deploy instan. Tidak ada lagi email.",
-        "clientCta": "Masuk Portal",
-        "squadTitle": "Talent Squad Engine",
-        "squadDesc": "Ambil misi, akses spesifikasi jelas, dan kirim kode. Dibayar berdasarkan output, bukan jam.",
+        "title": "Pusat Kontrol Misi Anda",
+        "subtitle": "Transparansi penuh. Kami gunakan AI di tempat yang tepat — langsung di workbench proyek Anda.",
+        "clientTitle": "Mission Control",
+        "clientDesc": "Visibilitas real-time. Pantau daily log, berikan feedback pada fitur, dan monitor status deployment dalam satu dashboard aman.",
+        "clientCta": "Masuk Mission Control",
+        "squadTitle": "The Talent Squad",
+        "squadDesc": "Akses ke jaringan Engineer Senior terverifikasi. Tanpa junior, tanpa magang. Hanya builder elit.",
         "squadCta": "Gabung Squad",
         "adminTitle": "Admin Core",
-        "adminDesc": "Otak pusat yang mengelola kontrol kualitas, pembayaran, dan integritas sistem.",
-        "adminCta": "Akses Terbatas"
+        "adminDesc": "Sistem kami secara otomatis menguji setiap baris kode untuk keamanan dan performa sebelum deployment.",
+        "adminCta": "Sistem Inti"
     },
     "SocialProof": {
-        "faster": "2x Lebih Cepat",
-        "fasterSub": "Dibanding Agensi Konvensional",
-        "fixedPrice": "Harga Pasti",
-        "fixedPriceSub": "Tanpa Biaya Tersembunyi",
-        "verified": "100% Terverifikasi",
-        "verifiedSub": "Kode Diaudit oleh Senior Expert",
-        "techStack": "Didukung oleh Teknologi Modern"
+        "faster": "Mingguan, Bukan Bulanan",
+        "fasterSub": "Pengembangan Terakselerasi AI",
+        "fixedPrice": "Biaya Pasti",
+        "fixedPriceSub": "Quote dijamin di awal",
+        "verified": "Top 1% Talent",
+        "verifiedSub": "Hanya Senior Engineer",
+        "techStack": "Teknologi Modern",
+        "stackFramework": "Framework Modern",
+        "stackCloud": "Infrastruktur Cloud",
+        "stackDatabase": "Database Skalabel",
+        "stackAI": "Kecerdasan Buatan"
+    },
+    "Testimonials": {
+        "title": "Dipercaya oleh Para Builder",
+        "subtitle": "Bergabung dengan ratusan founder yang membangun bersama {brand}.",
+        "reviews": [
+            {
+                "name": "Alex Chen",
+                "role": "CTO, InnovateLabs",
+                "text": "Platform mereka mempercepat siklus pengembangan kami secara signifikan. Perubahan besar bagi tim kami."
+            },
+            {
+                "name": "Sarah Davis",
+                "role": "Lead Engineer, Nexus Systems",
+                "text": "Alat SaaS terbaik yang pernah saya gunakan. Integrasi mulus dan dukungannya luar biasa."
+            },
+            {
+                "name": "Michael Kim",
+                "role": "Founder, CodeCraft",
+                "text": "Kami telah berkembang dengan mudah berkat infrastruktur mereka yang kuat. Sangat direkomendasikan untuk startup apapun."
+            },
+            {
+                "name": "Jessica Lee",
+                "role": "Product Manager, Apex Digital",
+                "text": "{brand} memberikan stabilitas dan kecepatan yang kami butuhkan untuk meluncurkan MVP dalam waktu singkat."
+            },
+            {
+                "name": "David Wilson",
+                "role": "VP of Engineering, CloudScale",
+                "text": "Performa dan keandalan luar biasa. Integrasi AI-nya bekerja seperti sihir."
+            }
+        ]
     },
     "Comparison": {
-        "title": "Mengapa Memilih Hybrid Agency?",
-        "subtitle": "Masa depan pengembangan software adalah kolaborasi AI + Manusia.",
-        "oldTitle": "Agensi Tradisional (Masa Lalu)",
-        "old1": "Meeting Zoom berjam-jam tanpa hasil jelas.",
-        "old2": "Harga berubah-ubah (Time & Material).",
-        "old3": "Update progres harus ditanya via WA/Email.",
-        "old4": "Tim Junior yang sering berganti-ganti.",
-        "newTitle": "Crediblemark (Masa Depan)",
-        "recommended": "DIREKOMENDASIKAN",
-        "new1": "Zero Meeting.",
-        "new1Sub": "Briefing via AI Chat 10 menit beres.",
-        "new2": "Algorithmic Pricing.",
-        "new2Sub": "Harga dikunci sistem di awal.",
-        "new3": "Real-time Dashboard.",
-        "new3Sub": "Pantau progres detik demi detik.",
-        "new4": "Solo Senior Expert.",
-        "new4Sub": "Satu penanggung jawab selamanya."
+        "title": "Tradisional vs. {brand} Hybrid",
+        "subtitle": "Mengapa founder memilih Pengembangan Berbasis AI.",
+        "oldTitle": "Dev Shop Tradisional",
+        "old1": "Waktu pengerjaan 3-6 Bulan",
+        "old2": "Biaya per jam (bengkak)",
+        "old3": "Update progres tertutup",
+        "old4": "Di-outsource ke Junior Dev",
+        "newTitle": "Model Hybrid {brand}",
+        "recommended": "PILIHAN CERDAS",
+        "new1": "Kickoff Instan",
+        "new1Sub": "Mulai bangun dalam 24 jam.",
+        "new2": "Harga Proyek Pasti.",
+        "new2Sub": "Tahu persis apa yang Anda bayar.",
+        "new3": "Pelacak Progres Live.",
+        "new3Sub": "Lihat commit kode real-time.",
+        "new4": "Hanya Senior Engineer.",
+        "new4Sub": "Ahli terverifikasi, bukan pemula."
     },
     "ProductCatalog": {
         "title": "Solusi Siap Pakai",
@@ -91,24 +126,25 @@
                 "price": "Penawaran Kustom via AI",
                 "cta": "Konsultasi Ide"
             }
-        }
+        },
+        "ctaGeneric": "Pesan Sekarang"
     },
     "Workflow": {
         "title": "Tanpa Drama. Tanpa Meeting. Langsung Kerja.",
         "subtitle": "Efisiensi workflow asynchronous untuk hasil maksimal.",
-        "step1": "1. Chat dengan CredibleBot",
-        "step1Desc": "Ceritakan ide Anda pada AI kami. Dia akan menyusun spesifikasi teknis (PRD) yang rapi untuk Anda.",
-        "step2": "2. Terima Penawaran Instan",
-        "step2Desc": "Sistem menghitung kompleksitas fitur dan memberikan harga pasti (Fixed Price). Bayar deposit aman via Midtrans.",
-        "step3": "3. Pantau & Revisi Visual",
-        "step3Desc": "Lihat progres di dashboard. Ada revisi? Cukup klik bagian yang ingin diubah. Saya kerjakan, Anda terima beres."
+        "step1": "1. Inisialisasi Misi",
+        "step1Desc": "Chat dengan AI kami untuk scoping proyek. Sistem akan membuat Brief dan Spesifikasi Teknis komprehensif secara instan.",
+        "step2": "2. Development & Workbench",
+        "step2Desc": "Pantau pembangunan proyek secara real-time via Workbench. Senior Engineer mengeksekusi spek dengan bantuan AI.",
+        "step3": "3. Feedback & Deploy",
+        "step3Desc": "Review progres di Dashboard. Berikan komentar pada fitur spesifik. Setujui milestone yang selesai langsung dari portal aman Anda."
     },
     "Financial": {
         "title": "Hemat Biaya, Bukan Kualitas.",
         "subtitle": "Logika investasi cerdas untuk bisnis modern.",
         "comparison": "PERBANDINGAN",
         "hireSenior": "HIRE SENIOR DEV",
-        "hybrid": "CREDIBLEMARK (HYBRID)",
+        "hybrid": "{brand} (HYBRID)",
         "salary": "Biaya / Gaji",
         "salaryOld": "Gaji 15jt/bln x 12",
         "salaryNew": "Sekali Bayar",
@@ -129,21 +165,28 @@
         "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut."
     },
     "Expert": {
-        "title": "Satu Otak Manusia, Didukung Kecerdasan Mesin.",
-        "q": "Banyak klien bertanya: 'Apakah kodenya dibuat oleh robot?'",
-        "a": "Jawabannya: AI adalah tukang batu, saya Arsiteknya.",
-        "desc": "Saya menggunakan AI untuk menghilangkan pekerjaan membosankan (boilerplate, CSS, admin), sehingga saya bisa fokus 100% pada logika bisnis, keamanan data, dan performa aplikasi Anda.",
-        "footer": "Hasilnya? Kualitas Enterprise Agency, dengan kecepatan dan harga Freelancer.",
+        "title": "Otak Manusia. Kecerdasan Mesin.",
+        "name": "Rasyiqi",
+        "q": "Apakah aplikasi dibuat robot?",
+        "a": "<strong>AI adalah alat.</strong> Saya Arsiteknya.",
+        "desc": "AI memberantas pekerjaan rutin agar saya bisa fokus pada logika, keamanan, dan performa aplikasi Anda.",
+        "footer": "Kualitas Korporat. Harga Freelancer.",
         "role": "Senior Fullstack Developer"
     },
     "FAQ": {
         "title": "Pertanyaan yang Sering Diajukan",
         "q1": "Apakah saya benar-benar tidak bisa ngobrol langsung?",
-        "a1": "Platform kami didesain untuk Asynchronous agar efisien. Semua tercatat rapi. Tapi untuk situasi darurat atau konsultasi strategi mendalam, sesi Call Premium tersedia.",
+        "a1": "Platform kami didesain untuk <strong>Asynchronous</strong> agar efisien. Semua tercatat rapi. Tapi untuk situasi darurat atau konsultasi strategi mendalam, sesi Call Premium tersedia.",
         "q2": "Bagaimana jika ada bug setelah selesai?",
-        "a2": "Semua paket termasuk Garansi Bug 30 Hari. Lapor via dashboard, perbaikan diprioritaskan.",
+        "a2": "Semua paket termasuk <strong>Garansi Bug 30 Hari</strong>. Lapor via dashboard, perbaikan diprioritaskan.",
         "q3": "Apakah source code menjadi milik saya?",
-        "a3": "Ya, 100%. Setelah pelunasan, repositori GitHub akan ditransfer ke akun Anda."
+        "a3": "Ya, <strong>100%</strong>. Setelah pelunasan, repositori GitHub akan ditransfer ke akun Anda.",
+        "q4": "Bagaimana sistem revisinya?",
+        "a4": "Kami membangun secara terbuka. Anda bisa memberikan feedback pada setiap milestone melalui dashboard <strong>Mission Control</strong>. Perubahan besar pada scope akan ditangani sebagai add-on misi baru.",
+        "q5": "Teknologi apa yang digunakan?",
+        "a5": "Kami utamanya menggunakan <strong>Next.js & TypeScript</strong>, namun fleksibilitas adalah kuncinya. Kami memiliki <strong>Human Expert</strong> yang spesialis dalam berbagai stack, sehingga kami bisa menyesuaikan diri dengan kebutuhan spesifik Anda.",
+        "q6": "Bisa integrasi dengan sistem saya sekarang?",
+        "a6": "Tentu saja. Kami rutin melakukan integrasi dengan <strong>Stripe, Midtrans, Slack, Discord, Google Cloud</strong>, dan berbagai API pihak ketiga lainnya."
     },
     "Dashboard": {
         "Sidebar": {
@@ -210,7 +253,7 @@
             "totalProjects": "Total Proyek",
             "autoSync": "Auto-sync aktif",
             "pendingUpdates": "Pembaruan Tertunda",
-            "poweredBy": "Didukung oleh AgencyOS Financial Core",
+            "poweredBy": "Didukung oleh {brand} Financial Core",
             "noOrders": "Pesanan tidak ditemukan.",
             "previous": "Sebelumnya",
             "next": "Selanjutnya"
@@ -261,7 +304,7 @@
         "supportHelp": "Bantuan / Support",
         "terms": "Ketentuan Layanan",
         "privacy": "Kebijakan Privasi",
-        "copyright": "© 2024 Crediblemark. Dibangun dengan Kecerdasan Manusia & Kecepatan Buatan."
+        "copyright": "All Rights Reserved."
     },
     "PriceCalculator": {
         "badge": "Quote & Pricing",

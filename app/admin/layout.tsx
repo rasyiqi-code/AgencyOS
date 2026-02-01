@@ -7,12 +7,21 @@ import { redirect } from "next/navigation";
 import { AdminSidebarNavigation } from "@/components/admin/admin-sidebar-navigation";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
+import { prisma } from "@/lib/db";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME", "LOGO_URL"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
+
     // Security Guard: Admin Only
     if (!await isAdmin()) {
         redirect('/dashboard');
@@ -26,13 +35,31 @@ export default async function AdminLayout({
         <div className="flex min-h-screen w-full flex-col bg-black">
             <SidebarContainer
                 header={
-                    <Link href="/admin" className="flex items-center gap-2 font-semibold">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-indigo-600 flex items-center justify-center shrink-0">
-                            <Shield className="h-5 w-5 text-white" />
+                    <Link href="/admin" className="flex items-center gap-2 group">
+                        {logoUrl ? (
+                            <div className="relative h-9 w-9 overflow-hidden rounded-lg">
+                                <Image
+                                    src={logoUrl}
+                                    alt={agencyName}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        ) : (
+                            <div className="h-9 w-9 rounded-lg bg-red-600 flex items-center justify-center shrink-0">
+                                <Shield className="h-5 w-5 text-white" />
+                            </div>
+                        )}
+                        <div className="flex flex-col gap-0.5 overflow-hidden">
+                            <span className="text-sm font-bold text-white truncate max-w-[140px] leading-tight">
+                                {agencyName}
+                            </span>
+                            <div className="flex">
+                                <Badge variant="outline" className="h-[18px] px-1.5 text-[9px] uppercase tracking-widest border-red-500/50 text-red-500 bg-red-500/10 font-black">
+                                    Admin
+                                </Badge>
+                            </div>
                         </div>
-                        <span className="text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 truncate">
-                            Agency Admin
-                        </span>
                     </Link>
                 }
                 footer={

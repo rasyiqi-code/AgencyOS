@@ -79,7 +79,7 @@ export function ManualPayment({ orderId, bankDetails, onClose }: ManualPaymentPr
                         <div className="w-full h-px bg-zinc-800" />
                         <div>
                             <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1.5">Account Holder</div>
-                            <div className="text-white font-medium text-lg">{bankDetails?.bank_holder || "PT Crediblemark Agency"}</div>
+                            <div className="text-white font-medium text-lg">{bankDetails?.bank_holder || "Agency Admin"}</div>
                         </div>
                     </div>
                 </div>

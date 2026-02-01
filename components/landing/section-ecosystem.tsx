@@ -1,9 +1,17 @@
 import { LayoutDashboard, Users, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/db";
+import { Badge } from "@/components/ui/badge";
 
 export async function SectionEcosystem() {
     const t = await getTranslations("Ecosystem");
+
+    // Fetch Agency Name
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (
         <section className="py-24 bg-black relative overflow-hidden">
@@ -13,7 +21,7 @@ export async function SectionEcosystem() {
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
                     <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
-                        {t("title")}
+                        {t("title", { brand: agencyName })}
                     </h2>
                     <p className="text-zinc-400 text-lg">
                         {t("subtitle")}
@@ -44,26 +52,31 @@ export async function SectionEcosystem() {
                     </Link>
 
                     {/* Squad Portal */}
-                    <Link href="/squad" className="group block h-full">
-                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-brand-grey/50 transition-all duration-300 overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <div className="group block h-full opacity-70 cursor-not-allowed">
+                        <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 transition-all duration-300 overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10">
                                 <Users className="w-24 h-24 text-brand-grey rotate-12" />
                             </div>
 
-                            <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-brand-grey mb-6 group-hover:scale-110 transition-transform">
-                                <Users className="w-6 h-6 text-white" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-brand-grey">
+                                    <Users className="w-6 h-6 text-white" />
+                                </div>
+                                <Badge variant="outline" className="border-white/20 text-white/50 bg-white/5 px-3 py-1 text-[10px] tracking-widest uppercase">
+                                    Coming Soon
+                                </Badge>
                             </div>
 
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-grey transition-colors">{t("squadTitle")}</h3>
+                            <h3 className="text-xl font-bold text-white mb-2">{t("squadTitle")}</h3>
                             <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                                 {t("squadDesc")}
                             </p>
 
-                            <div className="flex items-center text-brand-grey text-sm font-bold mt-auto">
-                                {t("squadCta")} <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                            <div className="flex items-center text-brand-grey/50 text-sm font-bold mt-auto">
+                                {t("squadCta")} <ArrowRight className="w-4 h-4 ml-2" />
                             </div>
                         </div>
-                    </Link>
+                    </div>
 
                     {/* Admin Core */}
                     <div className="group block h-full select-none cursor-default opacity-80 hover:opacity-100 transition-opacity">

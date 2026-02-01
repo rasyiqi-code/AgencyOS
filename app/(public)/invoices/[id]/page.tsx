@@ -79,9 +79,9 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         email: "client@example.com"
     };
 
-    // Fetch System Settings for Bank
+    // Fetch System Settings for Bank and Agency
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ['bank_name', 'bank_account', 'bank_holder'] } }
+        where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
     });
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
 
@@ -89,6 +89,13 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         bank_name: getSetting('bank_name'),
         bank_account: getSetting('bank_account'),
         bank_holder: getSetting('bank_holder')
+    };
+
+    const agencySettings = {
+        agencyName: getSetting('AGENCY_NAME') || "Agency OS",
+        companyName: getSetting('COMPANY_NAME') || "Agency OS",
+        address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
+        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com"
     };
 
     return (
@@ -100,6 +107,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
                     user={userData}
                     isPaid={isPaid}
                     bankDetails={bankDetails}
+                    agencySettings={agencySettings}
                 />
             </div>
         </div>

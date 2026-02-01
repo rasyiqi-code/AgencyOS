@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { type ExtendedProject, type ProjectFile } from "@/lib/types";
 import { PreviewUploader } from "./preview-uploader";
 import { FileManager } from "./file-manager";
+import { FeedbackBoard } from "@/components/feedback/board";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -30,7 +31,9 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
         include: {
             service: true,
             briefs: true,
-            feedback: true,
+            feedback: {
+                include: { comments: { orderBy: { createdAt: 'asc' } } }
+            },
             dailyLogs: {
                 orderBy: { createdAt: 'desc' }
             }
@@ -73,6 +76,15 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                     </div>
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
                         <DailyLogFeed projectId={project.id} initialLogs={project.dailyLogs} isAdmin={true} />
+                    </div>
+
+                    {/* Communications Channel */}
+                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
+                        <div className="flex items-center gap-2 mb-2 text-zinc-400">
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <h2 className="text-sm font-semibold tracking-tight text-white uppercase tracking-wider">Communications Channel</h2>
+                        </div>
+                        <FeedbackBoard projectId={project.id} feedbacks={project.feedback} />
                     </div>
 
                     {/* Service Specs Section */}
@@ -145,7 +157,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Right Column (Metadata) */}
-                <div className="lg:col-span-1 space-y-4">
+                <div className="lg:col-span-1 space-y-4 sticky top-6 self-start">
 
                     {/* Project Preview Widget */}
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">

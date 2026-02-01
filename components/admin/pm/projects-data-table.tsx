@@ -5,12 +5,11 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
-    useReactTable,
 } from "@tanstack/react-table";
+import { useTableInstance } from "@/lib/table-instance";
 
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-// import { getProjects } from "@/app/actions/project";
 
 interface ProjectsDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -63,7 +62,7 @@ export function ProjectsDataTable<TData, TValue>({
         }
     };
 
-    const table = useReactTable({
+    const table = useTableInstance({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),

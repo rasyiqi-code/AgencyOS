@@ -33,7 +33,7 @@ export default async function ChangelogPage() {
                             <div className="flex flex-col gap-4">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <div className="flex items-center gap-3">
-                                        <h2 className="text-2xl font-bold">{log.title}</h2>
+                                        <h2 className="text-2xl font-bold text-white">{log.title}</h2>
                                         {log.version && (
                                             <Badge variant="outline" className="border-zinc-700 text-zinc-400">
                                                 {log.version}
