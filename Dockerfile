@@ -1,30 +1,32 @@
-FROM oven/bun:1 AS base
-
-# Install dependencies only when needed
-FROM base AS deps
+# Stage 1: Install dependencies
+FROM node:18-alpine AS deps
 WORKDIR /app
+# Install dependencies required for some packages
+RUN apk add --no-cache libc6-compat
 
-# Install dependencies based on the preferred package manager
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package.json ./
+# Jika ada lockfile lain, copy juga (misal yarn.lock atau package-lock.json jika nanti ada)
+# Saat ini kita pakai npm install biasa karena bun.lock tidak bisa dibaca npm
+RUN npm install
 
-# Rebuild the source code only when needed
+# Stage 2: Build the application
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Copy start script
 COPY start.sh ./start.sh
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
+# Disable telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Generate Prisma Client (Wajib sebelum build)
+# Generate Prisma Client
 RUN npx prisma generate
 
+# Build Next.js app
 RUN npm run build
 
-# Production image, copy all the files and run next
+# Stage 3: Production runner
 FROM node:18-alpine AS runner
 WORKDIR /app
 
@@ -36,14 +38,17 @@ RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 
-# Set the correct permission for prerender cache
+# Set permission for nextjs cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Copy standalone build
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy start script
+COPY --from=builder /app/start.sh ./start.sh
+RUN chmod +x ./start.sh
 
 USER nextjs
 
@@ -51,7 +56,5 @@ EXPOSE 3000
 
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-
-COPY --from=builder /app/start.sh ./start.sh
 
 CMD ["./start.sh"]
