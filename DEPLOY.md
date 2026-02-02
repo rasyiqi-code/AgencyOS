@@ -13,19 +13,12 @@ This guide describes how to deploy the Agency OS MVP to a Virtual Private Server
 
 ## Deployment Steps
 
-### 1. Clone Repository (or Transfer Files)
-SSH into your VPS and clone your repository (if hosted) or copy the files manually.
-```bash
-git clone <your-repo-url> agency-os
-cd agency-os
-```
+### 1. Prepare for Dokploy
+Ensure your repository is connected to your Dokploy panel.
 
 ### 2. Configure Environment Variables
-Create a `.env` file based on `.env.example` (if you created one) or your local `.env`.
-```bash
-nano .env
-```
-**Required Variables:**
+In your Dokploy project settings, add the following environment variables:
+
 ```env
 # Database (Internal Docker URL)
 DATABASE_URL="postgresql://postgres:postgres_password_change_me@db:5432/agency_os?schema=public"
@@ -36,24 +29,18 @@ NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY="your_public_key"
 STACK_SECRET_SERVER_KEY="your_secret_key"
 ```
 
-### 3. Build & Run with Docker Compose
-Run the application in detached mode. This will build the Next.js image and start the Postgres container.
-```bash
-docker compose up -d --build
-```
+### 3. Deployment Configuration (Docker Compose)
+Use the following `docker-compose.yml` configuration in Dokploy. You can copy the content of `docker-compose.yml` from this repository directly.
 
-### 4. Apply Database Migrations
-Once the containers are running, execute the Prisma migration inside the container.
-```bash
-docker compose exec app bunx prisma migrate deploy
-```
+Make sure to mount the volume correctly so your database persists:
+- Volume: `postgres_data_prod` -> `/var/lib/postgresql/data`
 
-### 5. Verify Deployment
-Access your domain or IP on port 3000 (unless you configured a reverse proxy like Nginx).
-`http://<your-vps-ip>:3000`
+### 4. Deploy
+Click "Deploy" in Dokploy. The system will:
+1. Build the Docker image (using the optimized `standalone` output).
+2. Start the PostgreSQL database.
+3. Automatically run migrations via `start.sh` when the app container starts.
 
-## Maintenance
+### 5. Verify
+Access your configured domain. The application should be running.
 
-- **View Logs**: `docker compose logs -f`
-- **Stop Server**: `docker compose down`
-- **Update Application**: `git pull && docker compose up -d --build`
