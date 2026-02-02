@@ -126,7 +126,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                     onClick={() => toggleScreen(idx)}
                                 >
                                     <div className="mt-1 flex items-start">
-                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-lime-500 border-lime-500' : 'border-zinc-700 bg-transparent'}`}>
+                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-brand-yellow border-brand-yellow' : 'border-zinc-700 bg-transparent'}`}>
                                             {isSelected && <Check className="w-3 h-3 text-black font-bold" />}
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                     onClick={() => toggleApi(idx)}
                                 >
                                     <div className="mt-1 flex items-start">
-                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-lime-500 border-lime-500' : 'border-zinc-700 bg-transparent'}`}>
+                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-brand-yellow border-brand-yellow' : 'border-zinc-700 bg-transparent'}`}>
                                             {isSelected && <Check className="w-3 h-3 text-black font-bold" />}
                                         </div>
                                     </div>
@@ -195,7 +195,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                     <div className="bg-zinc-900 rounded-2xl border border-white/10 overflow-hidden shadow-2xl h-[calc(100vh-8rem)] min-h-[500px] max-h-[700px] flex flex-col">
                         <div className="p-4 border-b border-white/5 bg-zinc-800/50 flex justify-between items-center">
                             <h3 className="font-bold text-white flex items-center gap-2">
-                                <Sparkles className="w-4 h-4 text-lime-400" />
+                                <Sparkles className="w-4 h-4 text-brand-yellow" />
                                 Proposal Assistant
                             </h3>
                             <Button
@@ -237,7 +237,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                         <div className="text-center space-y-2 pb-6 border-b border-white/5">
                             <div className="text-zinc-500 text-sm">Est. Duration</div>
                             <div className="text-3xl font-bold text-white transition-all duration-300">{totalHours} hours</div>
-                            <div className="text-emerald-400 text-sm font-medium flex items-center justify-center gap-2">
+                            <div className="text-brand-yellow text-sm font-medium flex items-center justify-center gap-2">
                                 <Calendar className="w-3 h-3" />
                                 Approx {timelineDays} working days
                             </div>
@@ -246,7 +246,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-zinc-400">Payment Type</span>
-                                <Badge variant="outline" className="border-lime-500/30 text-lime-400 bg-lime-500/10">
+                                <Badge variant="outline" className="border-brand-yellow/30 text-brand-yellow bg-brand-yellow/10">
                                     Milestone Based
                                 </Badge>
                             </div>
@@ -270,7 +270,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                         <div className="space-y-3 pt-4">
                             <Button
                                 variant="outline"
-                                className="w-full border-lime-500/20 hover:bg-lime-500/10 text-lime-400 hover:text-lime-300 font-medium h-12 text-base relative z-20 cursor-pointer"
+                                className="w-full border-brand-yellow/20 hover:bg-brand-yellow/10 text-brand-yellow hover:text-brand-yellow font-medium h-12 text-base relative z-20 cursor-pointer"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -282,7 +282,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                             </Button>
 
                             <Button
-                                className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 text-base cursor-pointer"
+                                className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12 text-base cursor-pointer"
                                 onClick={async () => {
                                     // Call Server Action
                                     try {

@@ -1,5 +1,5 @@
 import { z } from 'genkit';
-import { ai, getDynamicAI } from '../ai';
+import { ai, getActiveAIConfig } from '../ai';
 
 interface Message {
     role: 'user' | 'assistant' | 'system';
@@ -21,9 +21,11 @@ export const consultantFlow = ai.defineFlow(
         outputSchema: z.string(),
     },
     async ({ messages }, { sendChunk }) => {
+        const { model } = await getActiveAIConfig();
+
         let systemPrompt = `You are **CredibleBot**, an **Estimate Manager** at Crediblemark.
     Your SOLE GOAL is to help the client adjust their project scope and update the cost estimate accordingly.
-
+    
     **Your Behavior:**
     1.  **Listen & Act**: The client will tell you what features they want to add, remove, or change.
     2.  **Clarify Only If Needed**: If a request is ambiguous (e.g., "add payments" -> ask "Stripe or Paypal?"), ask a short clarifying question.
@@ -81,7 +83,8 @@ export const consultantFlow = ai.defineFlow(
             historyMessages.shift();
         }
 
-        const { stream } = await (await getDynamicAI()).generateStream({
+        const { stream } = await ai.generateStream({
+            model: `googleai/${model}`,
             messages: [
                 { role: 'system', content: [{ text: systemPrompt }] },
                 ...historyMessages,

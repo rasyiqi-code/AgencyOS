@@ -1,64 +1,42 @@
+import { prisma } from '@/lib/db';
 import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
-import { prisma } from '@/lib/db';
-
-// Static instance (fallback)
-export const ai = genkit({
-    plugins: [googleAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY })],
-    model: 'googleai/gemini-flash-latest',
-});
-
-// List of models to rotate (Low latency & High RPM focus)
-const MODEL_POOL = [
-    'googleai/gemini-2.0-flash',      // Primary
-    'googleai/gemini-1.5-flash',      // Fallback
-];
 
 /**
- * Returns a Genkit instance configured with:
- * 1. A rotated API key (Load Balancing)
- * 2. A rotated Model (Quota Distribution)
+ * Fetch the active key and model from DB once at module load (Startup).
  */
-export async function getDynamicAI() {
+const config = await (async () => {
     try {
-        // Fetch active keys
-        const keys = await prisma.systemKey.findMany({
+        const key = await prisma.systemKey.findFirst({
             where: { isActive: true, provider: 'google' }
         });
-
-        if (keys.length > 0) {
-            // 1. Rotate Key
-            const randomKey = keys[Math.floor(Math.random() * keys.length)];
-
-            // 2. Determine Model: Key Specific -> Global Setting -> Pool Rotation
-            let selectedModel = randomKey.modelId;
-
-            if (!selectedModel) {
-                // Check Global Setting via Env
-                selectedModel = process.env.DEFAULT_AI_MODEL || null;
-            }
-
-            if (!selectedModel) {
-                selectedModel = MODEL_POOL[Math.floor(Math.random() * MODEL_POOL.length)];
-            }
-
-            // Ensure prefix exists (User might enter just "gemini-1.5-flash")
-            if (selectedModel && !selectedModel.startsWith('googleai/')) {
-                selectedModel = `googleai/${selectedModel}`;
-            }
-
-            // Return a new instance
-            return genkit({
-                plugins: [googleAI({ apiKey: randomKey.key })],
-                model: selectedModel,
-            });
-        } else {
-            console.log("AI: No active keys found in database");
+        if (!key) {
+            console.warn("AI: No active API key found in database.");
+            return { key: null, model: 'gemini-1.5-flash' };
         }
-    } catch (error) {
-        console.error("Failed to fetch dynamic keys:", error);
+        return {
+            key: key.key,
+            model: key.modelId || 'gemini-1.5-flash'
+        };
+    } catch {
+        console.warn("AI: Database error at startup.");
+        return { key: null, model: 'gemini-1.5-flash' };
     }
+})();
 
-    // Fallback
-    return ai;
+export const ai = genkit({
+    plugins: [googleAI({ apiKey: config.key || 'MISSING_KEY' })],
+    model: `googleai/${config.model}`, // Set default model
+});
+
+/**
+ * Helper to check AI availability.
+ */
+export function isAIConfigured() {
+    return !!config.key;
+}
+
+export async function getActiveAIConfig() {
+    if (!config.key) throw new Error("AI is not configured.");
+    return { apiKey: config.key, model: config.model };
 }

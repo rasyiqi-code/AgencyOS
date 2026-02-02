@@ -19,7 +19,7 @@ export async function SectionCTA() {
                     <Link href="/price-calculator">
                         <Button
                             size="lg"
-                            className="rounded-full bg-white text-black hover:bg-zinc-200 hover:scale-105 transition-all duration-300 font-medium px-8 h-12 text-base"
+                            className="rounded-full bg-brand-yellow text-black hover:bg-brand-yellow/90 hover:scale-105 transition-all duration-300 font-bold px-8 h-12 text-base shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)]"
                         >
                             {t("ctaButton")}
                             <ArrowRight className="ml-2 w-4 h-4" />

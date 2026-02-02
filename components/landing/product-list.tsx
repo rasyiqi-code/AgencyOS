@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PurchaseButton } from "@/components/store/purchase-button";
+import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { BarChart3, Newspaper, Rocket, Package, Layers, Sparkles, ChevronDown } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -40,9 +41,34 @@ export function ProductList({ initialServices }: ProductListProps) {
 
     const visibleServices = initialServices.slice(0, visibleCount);
 
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }
+        }
+    };
+
     return (
         <div className="flex flex-col items-center">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12">
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={containerVariants}
+                className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12"
+            >
                 {visibleServices.map((service, i) => {
                     // Bilingual Logic
                     const title = (isId && service.title_id) ? service.title_id : service.title;
@@ -59,11 +85,15 @@ export function ProductList({ initialServices }: ProductListProps) {
                         : (isId ? `Per ${service.interval}` : `Per ${service.interval}`);
 
                     return (
-                        <div key={service.id} className="group rounded-2xl border border-white/10 bg-zinc-900/50 p-8 hover:bg-zinc-900 transition-all hover:border-white/20 flex flex-col overflow-hidden relative">
+                        <motion.div
+                            variants={itemVariants}
+                            key={service.id}
+                            className="group rounded-2xl border border-white/10 bg-zinc-900/50 p-8 hover:bg-zinc-900 transition-all hover:border-brand-yellow/30 flex flex-col overflow-hidden relative"
+                        >
                             {/* Icon or Image */}
                             <div className="mb-6 relative">
                                 {service.image ? (
-                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform">
                                         <Image
                                             src={service.image}
                                             alt={title || "Service Icon"}
@@ -73,14 +103,14 @@ export function ProductList({ initialServices }: ProductListProps) {
                                         />
                                     </div>
                                 ) : (
-                                    <div className={`w-12 h-12 rounded-lg ${bg} flex items-center justify-center`}>
+                                    <div className={`w-12 h-12 rounded-lg ${bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                                         <Icon className={`w-6 h-6 ${color}`} />
                                     </div>
                                 )}
                             </div>
 
                             <div className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">{intervalLabel}</div>
-                            <h3 className="text-2xl font-bold text-white mb-4 line-clamp-2 min-h-[64px]">{title}</h3>
+                            <h3 className="text-2xl font-bold text-white mb-4 line-clamp-2 min-h-[64px] group-hover:text-brand-yellow transition-colors">{title}</h3>
                             <div
                                 className="text-zinc-400 mb-8 min-h-[80px] text-sm leading-relaxed line-clamp-3"
                                 dangerouslySetInnerHTML={{ __html: desc || "" }}
@@ -95,14 +125,14 @@ export function ProductList({ initialServices }: ProductListProps) {
                                         serviceId={service.id}
                                         interval={service.interval}
                                         customLabel={t("ctaGeneric")}
-                                        className="bg-white text-black hover:bg-zinc-200 font-semibold h-9 px-4 rounded-md w-auto"
+                                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-9 px-4 rounded-lg w-auto shadow-lg shadow-brand-yellow/10"
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     );
                 })}
-            </div>
+            </motion.div>
 
             {/* Load More Button */}
             {initialServices.length > visibleCount && (

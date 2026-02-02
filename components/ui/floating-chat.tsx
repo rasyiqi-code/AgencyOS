@@ -8,6 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@stackframe/stack";
+import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import Link from "next/link";
 
 interface Message {
     id: string;
@@ -41,6 +45,26 @@ export function FloatingChatWidget() {
         },
     ]);
     const [isLoading, setIsLoading] = useState(false);
+    const [aiAvailable, setAiAvailable] = useState(true);
+
+    // Initial check for AI status
+    useEffect(() => {
+        fetch("/api/system/keys/status")
+            .then(res => res.json())
+            .then(data => {
+                setAiAvailable(data.configured);
+                if (!data.configured) {
+                    setMessages([
+                        {
+                            id: "welcome-1",
+                            role: "assistant",
+                            content: "Welcome! Our AI Assistant is currently offline (Not Configured). Please click 'Talk to Human' for assistance.",
+                        },
+                    ]);
+                }
+            })
+            .catch(() => setAiAvailable(false));
+    }, []);
 
     // Notification State
     const [unreadCount, setUnreadCount] = useState(0);
@@ -106,6 +130,11 @@ export function FloatingChatWidget() {
     const handleAiSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
+
+        if (!aiAvailable) {
+            toast.error("AI is not configured. Please contact support or check admin settings.");
+            return;
+        }
 
         const userMessage: Message = {
             id: Date.now().toString(),
@@ -260,9 +289,9 @@ export function FloatingChatWidget() {
                         setIsOpen(true);
                         setUnreadCount(0);
                     }}
-                    className="h-14 w-14 rounded-full shadow-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 transition-all duration-300 hover:scale-110 cursor-pointer"
+                    className="h-14 w-14 rounded-full shadow-2xl bg-brand-yellow hover:bg-brand-yellow/80 transition-all duration-300 hover:scale-110 cursor-pointer"
                 >
-                    <MessageCircle className="h-7 w-7 text-white" />
+                    <MessageCircle className="h-7 w-7 text-black" />
                 </Button>
             </div>
         );
@@ -276,23 +305,23 @@ export function FloatingChatWidget() {
             )}
         >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-emerald-900/20 to-green-900/10">
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-brand-yellow/10 to-transparent">
                 <div className="flex items-center gap-3">
                     <div className="relative">
-                        <Avatar className="h-10 w-10 border border-emerald-500/30">
+                        <Avatar className="h-10 w-10 border border-brand-yellow/30">
                             <AvatarImage src="/bot-avatar.png" />
-                            <AvatarFallback className="bg-emerald-900 text-emerald-400">
+                            <AvatarFallback className="bg-brand-yellow text-black font-bold">
                                 {mode === "human_chat" ? <User className="w-5 h-5" /> : "AI"}
                             </AvatarFallback>
                         </Avatar>
-                        <span className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-black", mode === "human_chat" ? "bg-blue-500" : "bg-emerald-500")}></span>
+                        <span className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-black", "bg-brand-yellow")}></span>
                     </div>
                     <div>
                         <h3 className="font-semibold text-white text-sm">
                             {mode === "human_chat" ? "Human Agent" : "Customer Support"}
                         </h3>
                         <p className="text-xs text-zinc-400 flex items-center gap-1">
-                            <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", mode === "human_chat" ? "bg-blue-500" : "bg-emerald-500")}></span>
+                            <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", "bg-brand-yellow")}></span>
                             {mode === "human_chat" ? "Connected" : "Online"}
                         </p>
                     </div>
@@ -302,7 +331,7 @@ export function FloatingChatWidget() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-xs text-emerald-400 hover:text-emerald-300 mr-2"
+                            className="text-xs text-brand-yellow hover:text-black hover:bg-brand-yellow font-medium mr-2"
                             onClick={startHumanHandoff}
                         >
                             Talk to Human
@@ -311,7 +340,7 @@ export function FloatingChatWidget() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-zinc-400 hover:text-white cursor-pointer"
+                        className="h-8 w-8 text-zinc-400 hover:text-brand-yellow hover:bg-white/5 cursor-pointer"
                         onClick={() => setIsExpanded(!isExpanded)}
                     >
                         {isExpanded ? <MinusCircle className="h-5 w-5" /> : <div className="h-4 w-4 border-2 border-current rounded-sm" />}
@@ -319,7 +348,7 @@ export function FloatingChatWidget() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-zinc-400 hover:text-white cursor-pointer"
+                        className="h-8 w-8 text-zinc-400 hover:text-red-400 hover:bg-white/5 cursor-pointer"
                         onClick={() => setIsOpen(false)}
                     >
                         <X className="h-5 w-5" />
@@ -358,7 +387,7 @@ export function FloatingChatWidget() {
                         <Button
                             onClick={() => createTicket(onboardingData.email, onboardingData.name)}
                             disabled={!onboardingData.email || isLoading}
-                            className="flex-1 bg-blue-600 hover:bg-blue-500 text-white"
+                            className="flex-1 bg-brand-yellow hover:bg-brand-yellow/80 text-black font-bold"
                         >
                             {isLoading ? "Connecting..." : "Start Chat"}
                         </Button>
@@ -380,8 +409,8 @@ export function FloatingChatWidget() {
                                     <Avatar className="h-8 w-8 mt-1 border border-white/10 shrink-0">
                                         <AvatarFallback
                                             className={cn(
-                                                "text-xs",
-                                                m.role === "user" ? "bg-zinc-800 text-zinc-300" : (mode === "human_chat" ? "bg-blue-900/50 text-blue-400" : "bg-emerald-900/50 text-emerald-400")
+                                                "text-xs font-bold",
+                                                m.role === "user" ? "bg-zinc-800 text-zinc-300" : "bg-brand-yellow/20 text-brand-yellow"
                                             )}
                                         >
                                             {m.role === "user" ? "ME" : (mode === "human_chat" ? <User className="w-4 h-4" /> : "AI")}
@@ -391,21 +420,41 @@ export function FloatingChatWidget() {
                                         className={cn(
                                             "p-3 rounded-2xl max-w-[80%]",
                                             m.role === "user"
-                                                ? (mode === "human_chat" ? "bg-blue-600 text-white rounded-tr-sm" : "bg-emerald-600 text-white rounded-tr-sm")
+                                                ? "bg-brand-yellow text-black rounded-tr-sm font-medium"
                                                 : "bg-zinc-900 border border-white/10 text-zinc-300 rounded-tl-sm"
                                         )}
                                     >
-                                        <span>{m.content}</span>
+                                        <div className="prose prose-sm prose-invert max-w-none break-words">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    a: ({ ...props }) => {
+                                                        const isInternal = props.href?.startsWith("/");
+                                                        if (isInternal) {
+                                                            return <Link href={props.href!} className="text-brand-yellow underline font-bold hover:text-white transition-colors" {...props} />;
+                                                        }
+                                                        return <a target="_blank" rel="noopener noreferrer" className="text-brand-yellow underline font-bold hover:text-white transition-colors" {...props} />;
+                                                    },
+                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                    strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                                                }}
+                                            >
+                                                {m.content}
+                                            </ReactMarkdown>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                             {isLoading && (
                                 <div className="flex gap-3 text-sm">
                                     <Avatar className="h-8 w-8 mt-1 border border-white/10 shrink-0">
-                                        <AvatarFallback className="bg-emerald-900/50 text-emerald-400">AI</AvatarFallback>
+                                        <AvatarFallback className="bg-brand-yellow/20 text-brand-yellow font-bold">AI</AvatarFallback>
                                     </Avatar>
                                     <div className="bg-zinc-900 border border-white/10 p-4 rounded-2xl rounded-tl-sm">
-                                        <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
+                                        <Loader2 className="h-4 w-4 animate-spin text-brand-yellow" />
                                     </div>
                                 </div>
                             )}
@@ -419,13 +468,13 @@ export function FloatingChatWidget() {
                                 value={input}
                                 onChange={handleInputChange}
                                 placeholder={mode === "human_chat" ? "Type to human agent..." : "Type your message..."}
-                                className="flex-1 bg-zinc-900/50 border-white/10 focus-visible:ring-emerald-500/50 text-white"
+                                className="flex-1 bg-zinc-900/50 border-white/10 focus-visible:ring-brand-yellow/50 text-white"
                             />
                             <Button
                                 type="submit"
                                 size="icon"
                                 disabled={isLoading || !input.trim()}
-                                className={cn("text-white cursor-pointer", mode === "human_chat" ? "bg-blue-600 hover:bg-blue-500" : "bg-emerald-600 hover:bg-emerald-500")}
+                                className={cn("text-black cursor-pointer font-bold", "bg-brand-yellow hover:bg-brand-yellow/90")}
                             >
                                 <Send className="h-4 w-4" />
                             </Button>

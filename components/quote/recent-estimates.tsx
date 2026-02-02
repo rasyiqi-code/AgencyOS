@@ -74,7 +74,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
     if (loading) {
         return (
             <div className="flex justify-center py-8">
-                <Loader2 className="w-6 h-6 text-lime-500 animate-spin" />
+                <Loader2 className="w-6 h-6 text-brand-yellow animate-spin" />
             </div>
         );
     }
@@ -84,7 +84,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
     return (
         <div className="mt-16 w-full max-w-4xl mx-auto px-4">
             <div className="flex items-center gap-2 mb-6">
-                <Sparkles className="w-5 h-5 text-lime-400" />
+                <Sparkles className="w-5 h-5 text-brand-yellow" />
                 <h2 className="text-xl font-bold text-white">{t("recentEstimates")}</h2>
             </div>
 
@@ -93,18 +93,18 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
                     <div key={estimate.id} className="group relative">
                         <Link
                             href={`/price-calculator/${estimate.id}`}
-                            className="block p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-lime-500/50 hover:bg-zinc-800/80 transition-all group-hover:shadow-lg group-hover:shadow-lime-900/10"
+                            className="block p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-yellow/50 hover:bg-zinc-800/80 transition-all group-hover:shadow-lg group-hover:shadow-brand-yellow/10"
                         >
                             <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h3 className="font-bold text-white text-lg line-clamp-1 group-hover:text-lime-400 transition-colors">
+                                    <h3 className="font-bold text-white text-lg line-clamp-1 group-hover:text-brand-yellow transition-colors">
                                         {estimate.title}
                                     </h3>
                                     <p className="text-xs text-zinc-500 mt-1">
                                         {t("by")} {estimate.creatorName || t("anonymous")} • {formatDistanceToNow(new Date(estimate.createdAt), { addSuffix: true })}
                                     </p>
                                 </div>
-                                <div className="bg-zinc-950 px-3 py-1 rounded-full border border-zinc-800 text-lime-400 font-mono text-sm">
+                                <div className="bg-zinc-950 px-3 py-1 rounded-full border border-zinc-800 text-brand-yellow font-mono text-sm">
                                     <PriceDisplay amount={estimate.totalCost} baseCurrency="USD" />
                                 </div>
                             </div>

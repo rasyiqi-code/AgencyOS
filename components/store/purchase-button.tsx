@@ -55,7 +55,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
                 handlePurchase();
             }}
             disabled={loading}
-            className={`w-full bg-white text-black hover:bg-zinc-200 font-bold h-11 text-sm rounded-xl transition-transform active:scale-[0.98] ${className}`}
+            className={`w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-11 text-sm rounded-xl transition-transform active:scale-[0.98] ${className}`}
         >
             {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
             {customLabel ? customLabel : (interval === 'one_time' ? 'Purchase Package' : 'Purchase Plan')}

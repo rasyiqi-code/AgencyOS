@@ -31,8 +31,28 @@ export default async function AdminLayout({
     const pmAccess = await canManageProjects();
     const financeAccess = await canManageBilling();
 
+    // AI Configuration Check
+    const activeAiKey = await prisma.systemKey.findFirst({
+        where: { isActive: true, provider: "google" }
+    });
+    const isAiConfigured = !!activeAiKey;
+
     return (
         <div className="flex min-h-screen w-full flex-col bg-black">
+            {!isAiConfigured && (
+                <div className="bg-amber-950/30 border-b border-amber-500/20 py-2 px-6 flex justify-between items-center z-50">
+                    <div className="flex items-center gap-2 text-amber-500 text-xs">
+                        <Shield className="w-3.5 h-3.5 animate-pulse" />
+                        <span><strong>IMPORTANT:</strong> No active AI API Keys found. Customer Support and Price Estimator features are <strong>offline</strong> for users.</span>
+                    </div>
+                    <Link
+                        href="/admin/system/keys"
+                        className="text-[10px] bg-amber-500 hover:bg-amber-400 text-black px-2 py-0.5 rounded font-bold uppercase transition-colors"
+                    >
+                        Fix Now
+                    </Link>
+                </div>
+            )}
             <SidebarContainer
                 header={
                     <Link href="/admin" className="flex items-center gap-2 group">

@@ -14,9 +14,17 @@ export function QuoteForm({ isAdmin }: { isAdmin?: boolean }) {
     const t = useTranslations("PriceCalculator");
     const [prompt, setPrompt] = useState("");
     const [loading, setLoading] = useState(false);
+    const [aiAvailable, setAiAvailable] = useState(true);
+
+    useState(() => {
+        fetch("/api/system/keys/status")
+            .then(res => res.json())
+            .then(data => setAiAvailable(data.configured))
+            .catch(() => setAiAvailable(false));
+    });
 
     const handleGenerate = async () => {
-        if (!prompt.trim()) return;
+        if (!prompt.trim() || !aiAvailable) return;
         setLoading(true);
 
         try {
@@ -42,13 +50,13 @@ export function QuoteForm({ isAdmin }: { isAdmin?: boolean }) {
         <div className="container mx-auto px-4 py-32 flex flex-col items-center justify-center min-h-[80vh]">
 
             <div className="text-center space-y-6 max-w-3xl mx-auto mb-12">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-500/10 text-lime-500 text-sm font-medium border border-lime-500/20 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 text-brand-yellow text-sm font-medium border border-brand-yellow/20 mb-4">
                     <Sparkles className="w-4 h-4" />
                     <span>{t("badge")}</span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight">
                     {t.rich("title", {
-                        highlight: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-emerald-500">{chunks}</span>,
+                        highlight: (chunks) => <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto]">{chunks}</span>,
                         br: () => <br />
                     })}
                 </h1>
@@ -71,14 +79,16 @@ export function QuoteForm({ isAdmin }: { isAdmin?: boolean }) {
                     </span>
                     <Button
                         onClick={handleGenerate}
-                        disabled={loading || !prompt.trim()}
-                        className="bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-xl px-6 cursor-pointer"
+                        disabled={loading || !prompt.trim() || !aiAvailable}
+                        className={`${aiAvailable ? 'bg-brand-yellow hover:bg-brand-yellow/90 text-black' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'} font-bold rounded-xl px-6 transition-all`}
                     >
                         {loading ? (
                             <>
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                 {t("analyzing")}
                             </>
+                        ) : !aiAvailable ? (
+                            "AI Not Configured"
                         ) : (
                             <>
                                 {t("generate")}

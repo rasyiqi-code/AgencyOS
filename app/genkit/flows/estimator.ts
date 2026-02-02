@@ -1,5 +1,5 @@
 import { z } from 'genkit';
-import { ai, getDynamicAI } from '../ai';
+import { ai, getActiveAIConfig } from '../ai';
 
 import { pricingService } from '@/lib/server/pricing-service';
 
@@ -26,11 +26,14 @@ export const estimateFlow = ai.defineFlow(
         }),
     },
     async (prompt) => {
+        const { model } = await getActiveAIConfig();
+
         // Fetch Dynamic Pricing Config
         const pricing = await pricingService.getConfig();
         const { baseRate, multipliers } = pricing;
 
-        const { output } = await (await getDynamicAI()).generate({
+        const { output } = await ai.generate({
+            model: `googleai/${model}`,
             prompt: `
             You are an expert software estimator.
             Analyze this project requirement and generate a detailed cost estimate.

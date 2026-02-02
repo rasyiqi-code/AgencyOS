@@ -26,13 +26,26 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: `Verification Failed: ${message}` }, { status: 400 });
         }
 
-        // 2. Save
-        await prisma.systemKey.create({
-            data: {
+        // 2. Deactivate others if this will be active
+        await prisma.systemKey.updateMany({
+            where: { provider: "google" },
+            data: { isActive: false },
+        });
+
+        // 3. Save (Upsert to avoid P2002)
+        await prisma.systemKey.upsert({
+            where: { key: key },
+            update: {
+                label: label || "Unnamed Key",
+                modelId: modelId || null,
+                isActive: true,
+            },
+            create: {
                 key,
                 label: label || "Unnamed Key",
                 provider: "google",
                 modelId: modelId || null,
+                isActive: true,
             },
         });
 

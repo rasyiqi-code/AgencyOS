@@ -78,7 +78,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                         Back to Home
                     </Link>
                     <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 flex items-center justify-center gap-3">
-                        <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-yellow-500" />
+                        <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-brand-yellow" />
                         {pageTitle || "Premium Services"}
                     </h1>
                     <p className="text-lg text-zinc-400 leading-relaxed">

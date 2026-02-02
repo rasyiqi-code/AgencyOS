@@ -31,7 +31,7 @@ export default async function EstimateResultPage({ params }: { params: Promise<{
                 <main className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
                     <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
                     <p className="text-zinc-400 mb-6">You do not have permission to view this estimate.</p>
-                    <Link href="/price-calculator" className="text-lime-500 hover:underline">Create your own estimate</Link>
+                    <Link href="/price-calculator" className="text-brand-yellow hover:underline">Create your own estimate</Link>
                 </main>
             );
         }
@@ -45,7 +45,7 @@ export default async function EstimateResultPage({ params }: { params: Promise<{
     };
 
     return (
-        <main className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
+        <main className="min-h-screen bg-black selection:bg-blue-500/30 pb-24">
             <SiteHeader />
             <div className="container mx-auto px-4 py-24">
                 <EstimateViewer estimate={sanitizedEstimate} />

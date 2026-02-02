@@ -28,7 +28,7 @@ export default async function QuotePage() {
     const isUserAdmin = await isAdmin();
 
     return (
-        <div className="min-h-screen bg-black selection:bg-lime-500/30">
+        <div className="min-h-screen bg-black selection:bg-blue-500/30">
             <QuoteForm isAdmin={isUserAdmin} />
         </div>
     );

@@ -20,12 +20,12 @@ export async function SiteFooter() {
     const showText = logoDisplayMode === "both" || logoDisplayMode === "text";
 
     return (
-        <footer className="border-t border-white/5 bg-black py-6 text-zinc-400">
-            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 uppercase tracking-widest font-bold">
+        <footer className="border-t border-white/5 bg-black py-8 md:py-6 text-zinc-400">
+            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-6 font-medium text-center md:text-left">
                 <div className="flex items-center gap-2">
                     {showLogo && (
                         logoUrl ? (
-                            <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/10">
                                 <Image
                                     src={logoUrl}
                                     alt={agencyName}
@@ -44,11 +44,11 @@ export async function SiteFooter() {
                     )}
                 </div>
 
-                <div className="text-[10px]">
+                <div className="text-[10px] order-3 md:order-2">
                     © {new Date().getFullYear()} {companyName}. {t("copyright")}
                 </div>
 
-                <div className="flex gap-6 text-[10px]">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
                     <Link href="/changelog" className="hover:text-white transition-colors">Changelog</Link>
                     <Link href="/privacy" className="hover:text-white transition-colors">{t("privacy")}</Link>
                     <Link href="/terms" className="hover:text-white transition-colors">{t("terms")}</Link>

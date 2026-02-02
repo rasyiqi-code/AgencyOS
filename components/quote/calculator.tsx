@@ -62,7 +62,7 @@ export function QuoteCalculator() {
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
                         <Label className="text-zinc-300">Tingkat Kompleksitas</Label>
-                        <Badge variant="outline" className={`capitalize ${params.complexity === 'low' ? 'text-emerald-400 border-emerald-400/30' :
+                        <Badge variant="outline" className={`capitalize ${params.complexity === 'low' ? 'text-brand-yellow border-brand-yellow/30' :
                             params.complexity === 'medium' ? 'text-yellow-400 border-yellow-400/30' :
                                 'text-red-400 border-red-400/30'
                             }`}>
@@ -151,7 +151,7 @@ export function QuoteCalculator() {
                         <span className="text-zinc-400">Total Estimasi</span>
                         <div className="text-right">
                             <div className="text-3xl font-bold text-white tracking-tight">{quote.formattedPrice}</div>
-                            <div className="text-sm text-emerald-400 flex items-center justify-end gap-1">
+                            <div className="text-sm text-brand-yellow flex items-center justify-end gap-1">
                                 <Check className="w-3 h-3" /> Fixed Price Guaranteed
                             </div>
                         </div>
@@ -166,7 +166,7 @@ export function QuoteCalculator() {
             <CardFooter>
                 <Button
                     size="lg"
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12"
+                    className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12"
                     disabled={isLoading}
                     onClick={async () => {
                         setIsLoading(true);

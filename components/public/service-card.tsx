@@ -40,7 +40,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         : service.features as string[];
 
     return (
-        <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl p-8 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 flex flex-col h-full">
+        <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-black/60 backdrop-blur-xl p-8 hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:shadow-brand-yellow/10 flex flex-col h-full">
             {/* Premium Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -67,7 +67,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         </div>
                     )}
 
-                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400 mb-2 group-hover:from-blue-400 group-hover:to-violet-400 transition-all duration-300">
+                    <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400 mb-2 group-hover:from-brand-yellow group-hover:to-yellow-200 transition-all duration-300">
                         {displayTitle}
                     </h3>
 
@@ -96,8 +96,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     <ul className="space-y-3 mb-8 flex-1">
                         {displayFeatures.slice(0, expanded ? undefined : 3).map((feature: string, i: number) => (
                             <li key={i} className="flex items-start gap-3 group/item animate-in fade-in slide-in-from-top-1 duration-300" style={{ animationDelay: `${i * 50}ms` }}>
-                                <div className="mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/20 group-hover/item:border-emerald-500/40 transition-colors shrink-0">
-                                    <Check className="w-2.5 h-2.5 text-emerald-400" />
+                                <div className="mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-br from-brand-yellow/20 to-yellow-500/20 border border-brand-yellow/20 group-hover/item:border-brand-yellow/40 transition-colors shrink-0">
+                                    <Check className="w-2.5 h-2.5 text-brand-yellow" />
                                 </div>
                                 <span className="text-xs text-zinc-300 group-hover/item:text-white transition-colors leading-relaxed">
                                     {feature.replace(/<[^>]*>?/gm, '')}
@@ -110,7 +110,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 {displayFeatures.length > 3 && (
                     <button
                         onClick={() => setExpanded(!expanded)}
-                        className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-medium tracking-wide uppercase"
+                        className="text-xs text-brand-yellow hover:text-brand-yellow/80 transition-colors flex items-center gap-1 font-medium tracking-wide uppercase"
                     >
                         {expanded ? 'Show Less' : `Show ${displayFeatures.length - 3} More`}
                         <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
@@ -122,7 +122,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     <PurchaseButton
                         serviceId={service.id}
                         interval={service.interval}
-                        className="bg-white hover:bg-zinc-100 text-black shadow-lg shadow-white/5 hover:shadow-white/10 h-9 text-xs"
+                        className="bg-brand-yellow hover:bg-brand-yellow/90 text-black shadow-lg shadow-brand-yellow/20 h-10 text-xs font-bold"
                     />
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2, Key } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { AddKeyDialog } from "@/components/admin/add-key-dialog";
+import { EditKeyDialog } from "@/components/admin/edit-key-dialog";
 
 export default async function AdminKeysPage() {
     const keys = await prisma.systemKey.findMany({
@@ -18,8 +19,37 @@ export default async function AdminKeysPage() {
         revalidatePath("/admin/system/keys");
     }
 
+    async function updateKey(id: string, label: string, modelId: string) {
+        "use server";
+
+        // Deactivate all others because we want this one to be active on save
+        await prisma.systemKey.updateMany({
+            where: { provider: "google" },
+            data: { isActive: false },
+        });
+
+        await prisma.systemKey.update({
+            where: { id },
+            data: {
+                label,
+                modelId: modelId || null,
+                isActive: true
+            },
+        });
+        revalidatePath("/admin/system/keys");
+    }
+
     async function toggleKey(id: string, current: boolean) {
         "use server";
+
+        // If we're activating this key, deactivate all others first
+        if (!current) {
+            await prisma.systemKey.updateMany({
+                where: { provider: "google" },
+                data: { isActive: false },
+            });
+        }
+
         await prisma.systemKey.update({
             where: { id },
             data: { isActive: !current },
@@ -120,7 +150,8 @@ export default async function AdminKeysPage() {
                                                 </button>
                                             </form>
                                         </TableCell>
-                                        <TableCell className="text-right">
+                                        <TableCell className="text-right flex items-center justify-end gap-1">
+                                            <EditKeyDialog keyData={key} onSave={updateKey} />
                                             <form action={deleteKey.bind(null, key.id)}>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-950/30">
                                                     <Trash2 className="w-4 h-4" />
