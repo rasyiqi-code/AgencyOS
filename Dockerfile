@@ -19,7 +19,7 @@ COPY start.sh ./start.sh
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
-
+RUN bunx prisma generate
 RUN bun run build
 
 # Production image, copy all the files and run next
