@@ -61,6 +61,9 @@ COPY --from=builder /app/start.sh ./start.sh
 # Install Prisma globally for migrations
 RUN npm install -g prisma@7
 
+# Install dependencies required for prisma.config.ts
+RUN npm install dotenv @prisma/config
+
 USER nextjs
 
 EXPOSE 3000
