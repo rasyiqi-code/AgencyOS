@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_STACK_PROJECT_ID: ${NEXT_PUBLIC_STACK_PROJECT_ID}
+        NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY: ${NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY}
     container_name: agency-os-web-prod
     restart: always
     ports:
