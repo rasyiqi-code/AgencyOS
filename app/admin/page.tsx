@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { SuperAdminDashboardView } from "@/components/admin/views/super-admin-view";
 import { BillingDashboardView } from "@/components/admin/views/billing-view";
 import { ProjectDashboardView } from "@/components/admin/views/project-view";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { AlertTriangle } from "lucide-react";
 
 
 interface PageProps {
@@ -37,11 +39,28 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     const params = await searchParams;
     const requestedView = params?.view;
 
+    // Check gateway status
+    const hasGateway = await paymentGatewayService.hasActiveGateway();
+
     // 1. Super Admin Logic (Can Switch)
     // If user has both permissions (or is super_admin), show switcher
     if (isProjectAdmin && isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
+                {!hasGateway && (
+                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-4 mb-4">
+                        <div className="p-2 bg-amber-500/10 rounded-lg">
+                            <AlertTriangle className="w-5 h-5 text-amber-500" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-semibold text-amber-500">Gateway Pembayaran Belum Aktif</h3>
+                            <p className="text-xs text-amber-500/70 mt-1">
+                                Midtrans atau Creem belum dikonfigurasi. Pelanggan akan diarahkan ke transfer bank manual.
+                                <Link href="/admin/system/payment" className="ml-1 underline font-medium">Konfigurasi Sekarang</Link>
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 {requestedView === 'finance' ? (
                     <BillingDashboardView />

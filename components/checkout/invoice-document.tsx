@@ -28,7 +28,6 @@ export function InvoiceDocument({
     const today = new Date(); // Hydration safe as long as date doesn't change during render
 
     // Fallback values
-    const agencyName = agencySettings?.agencyName || "Agency OS";
     const companyName = agencySettings?.companyName || "Agency OS";
     const address = agencySettings?.address || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000";
     const billingEmail = agencySettings?.email || "billing@crediblemark.com";

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 interface SubmitTestimonialFormProps {
     agencyName: string;
@@ -84,10 +85,11 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
                     {userAvatar && (
                         <div className="flex justify-center mb-6">
                             <div className="relative">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
+                                <Image
                                     src={userAvatar}
                                     alt="Profile"
+                                    width={80}
+                                    height={80}
                                     className="w-20 h-20 rounded-full border-2 border-white/10 object-cover"
                                 />
                                 <div className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1 border-2 border-black">

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
 import { ExtendedEstimate } from "@/lib/types";
 import { stackServerApp } from "@/lib/stack";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import type { InvoiceOrder } from "@/types/payment";
 
 async function getOrder(id: string) {
@@ -80,9 +81,12 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     };
 
     // Fetch System Settings for Bank and Agency
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
-    });
+    const [settings, hasActiveGateway] = await Promise.all([
+        prisma.systemSetting.findMany({
+            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+        }),
+        paymentGatewayService.hasActiveGateway()
+    ]);
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
 
     const bankDetails = {
@@ -108,6 +112,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
                     isPaid={isPaid}
                     bankDetails={bankDetails}
                     agencySettings={agencySettings}
+                    hasActiveGateway={hasActiveGateway}
                 />
             </div>
         </div>

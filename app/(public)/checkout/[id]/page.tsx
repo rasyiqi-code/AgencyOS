@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { CheckoutContent } from "@/components/checkout/checkout-content";
 import { stackServerApp } from "@/lib/stack";
 import { currencyService } from "@/lib/server/currency-service";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 async function getEstimate(id: string) {
     return await prisma.estimate.findUnique({
@@ -35,10 +36,11 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         redirect(`/handler/sign-in?after_auth_return_to=/checkout/${id}`);
     }
 
-    const [estimate, bankDetails, exchangeRates] = await Promise.all([
+    const [estimate, bankDetails, exchangeRates, hasActiveGateway] = await Promise.all([
         getEstimate(id),
         getBankSettings(),
-        currencyService.getRates()
+        currencyService.getRates(),
+        paymentGatewayService.hasActiveGateway()
     ]);
 
     const bonuses = (await prisma.marketingBonus.findMany({
@@ -62,11 +64,15 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         apis: (estimate.apis as unknown as { title: string, hours: number, description?: string }[] || []).map(a => ({ ...a, description: a.description || "" }))
     };
 
-
-
     return (
         <div className="container mx-auto px-4 py-12">
-            <CheckoutContent estimate={sanitizedEstimate} bankDetails={bankDetails} activeRate={activeRate} bonuses={bonuses} />
+            <CheckoutContent
+                estimate={sanitizedEstimate}
+                bankDetails={bankDetails}
+                activeRate={activeRate}
+                bonuses={bonuses}
+                hasActiveGateway={hasActiveGateway}
+            />
         </div>
     );
 }

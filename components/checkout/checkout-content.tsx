@@ -7,7 +7,7 @@ import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { ExtendedEstimate, Bonus } from "@/lib/types";
 import type { BankDetails } from "@/types/payment";
 
-export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number, bonuses: Bonus[] }) {
+export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses, hasActiveGateway = true }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number, bonuses: Bonus[], hasActiveGateway?: boolean }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discountType: 'percentage' | 'fixed', discountValue: number } | null>(null);
 
@@ -43,6 +43,7 @@ export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses }: 
                     bankDetails={bankDetails}
                     activeRate={activeRate}
                     appliedCoupon={appliedCoupon}
+                    hasActiveGateway={hasActiveGateway}
                 />
             </div>
         </div>

@@ -267,3 +267,14 @@ model Testimonial {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model PageSeo {
+  id          String   @id @default(cuid())
+  path        String   @unique
+  title       String?
+  description String?
+  ogImage     String?
+  keywords    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

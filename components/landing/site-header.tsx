@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { stackServerApp } from "@/lib/stack";
 import { Check } from "lucide-react";
+
 import { getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/db";
@@ -21,8 +22,6 @@ export async function SiteHeader() {
     const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const displayMode = settings.find(s => s.key === "LOGO_DISPLAY_MODE")?.value || "both"; // 'both', 'logo', 'text'
-
-
 
 
     // Actually, "Text Only" usually implies just the text name.
@@ -76,13 +75,13 @@ export async function SiteHeader() {
                     </div>
 
                     <nav className="flex items-center gap-6 hidden md:flex">
-                        <Link href="/squad" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200">
+                        <Link href="/squad" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                             {t("forTalent")}
                         </Link>
-                        <Link href="/price-calculator" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200">
+                        <Link href="/price-calculator" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                             {t("priceCalculator")}
                         </Link>
-                        <Link href="/services" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200">
+                        <Link href="/services" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                             {t("services")}
                         </Link>
                     </nav>

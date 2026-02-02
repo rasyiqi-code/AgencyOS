@@ -26,7 +26,7 @@ export function SidebarLink({ href, icon: Icon, label }: { href: string; icon: C
             href={href}
             title={isCollapsed ? label : undefined}
             className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-white/5",
+                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-white/5 cursor-pointer",
                 isActive ? "text-brand-yellow bg-brand-yellow/10" : "text-zinc-400 hover:text-white",
                 isCollapsed ? "justify-center px-2" : ""
             )}

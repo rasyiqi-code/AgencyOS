@@ -1,26 +1,24 @@
 
-import { Settings2 } from "lucide-react";
+import { Globe } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
-import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
+import { SeoSettingsForm } from "@/components/admin/system/seo-settings-form";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminSettingsPage() {
+export default async function AdminSeoPage() {
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] } }
+        where: { key: { in: ["SEO_TITLE", "SEO_DESCRIPTION", "SEO_KEYWORDS", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
     });
 
-    const contactData = {
-        email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,
-        phone: settings.find(s => s.key === "CONTACT_PHONE")?.value || null,
-        address: settings.find(s => s.key === "CONTACT_ADDRESS")?.value || null,
-        agencyName: settings.find(s => s.key === "AGENCY_NAME")?.value || null,
-        companyName: settings.find(s => s.key === "COMPANY_NAME")?.value || null,
-        logoUrl: settings.find(s => s.key === "AGENCY_LOGO")?.value || null,
-        logoDisplayMode: settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both",
-        servicesTitle: null,
-        servicesSubtitle: null
+    const seoData = {
+        title: settings.find(s => s.key === "SEO_TITLE")?.value || null,
+        description: settings.find(s => s.key === "SEO_DESCRIPTION")?.value || null,
+        keywords: settings.find(s => s.key === "SEO_KEYWORDS")?.value || null,
+        ogImage: settings.find(s => s.key === "SEO_OG_IMAGE")?.value || null,
+        favicon: settings.find(s => s.key === "SEO_FAVICON")?.value || null,
+        googleVerification: settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value || null,
+        gaId: settings.find(s => s.key === "SEO_GA_ID")?.value || null,
     };
 
     return (
@@ -31,11 +29,11 @@ export default async function AdminSettingsPage() {
                         <span className="text-[10px] font-semibold tracking-widest text-zinc-500 uppercase">System Configuration</span>
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        General Settings
-                        <Settings2 className="w-6 h-6 text-zinc-600" />
+                        SEO Settings
+                        <Globe className="w-6 h-6 text-zinc-600" />
                     </h1>
                     <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Manage global system parameters and default behaviors.
+                        Manage global search engine optimization parameters.
                     </p>
                 </div>
             </div>
@@ -49,7 +47,7 @@ export default async function AdminSettingsPage() {
 
                 {/* Right Column: Forms */}
                 <div className="lg:col-span-2 space-y-6">
-                    <GeneralSettingsForm initialData={contactData} />
+                    <SeoSettingsForm initialData={seoData} />
                 </div>
             </div>
         </div>

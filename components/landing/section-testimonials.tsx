@@ -43,7 +43,7 @@ export async function Testimonials() {
             name: t(`reviews.${i}.name`),
             role: t(`reviews.${i}.role`),
             text: t(`reviews.${i}.text`, { brand: agencyName }),
-            image: `/placeholder-user-${i + 1}.jpg`
+            image: `https://i.pravatar.cc/150?u=user${i + 1}`
         }));
     }
 

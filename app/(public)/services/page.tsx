@@ -1,125 +1,51 @@
-"use client";
+import { prisma } from "@/lib/db";
+import { ServicesClientWrapper } from "@/components/public/services-client-wrapper";
+import { Metadata } from "next";
+import { Service } from "@prisma/client";
 
-import { useEffect, useState } from "react";
-import { Sparkles, ArrowLeft } from "lucide-react";
-import { ServiceCard } from "@/components/public/service-card";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 
-interface Service {
-    id: string;
-    title: string;
-    title_id?: string | null;
-    description: string;
-    description_id?: string | null;
-    price: number;
-    currency?: string | null;
-    interval: string;
-    features: string[];
-    features_id?: string[] | null;
-    image: string | null;
+
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const pageSeo = await prisma.pageSeo.findUnique({
+        where: {
+            path: "/services"
+        }
+    });
+
+    return {
+        title: pageSeo?.title || "Services",
+        description: pageSeo?.description || "Explore our premium productized services. Transparent pricing, rapid delivery, and professional quality.",
+        keywords: pageSeo?.keywords?.split(",").map((k: string) => k.trim()) || undefined,
+        openGraph: pageSeo?.ogImage ? {
+            images: [{ url: pageSeo.ogImage }]
+        } : undefined,
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_APP_URL}/services`
+        }
+    };
 }
 
-export default function PublicServicesPage() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const [services, setServices] = useState<Service[]>([]);
-    const [loading, setLoading] = useState(true);
+export default async function PublicServicesPage() {
+    // Parallel data fetching for performance
+    const [services] = await Promise.all([
+        prisma.service.findMany({
+            where: { isActive: true },
+            orderBy: { updatedAt: 'desc' }
+        })
+    ]);
 
-    useEffect(() => {
-        // Fetch services
-        const fetchServices = async () => {
-            try {
-                const res = await fetch("/api/services");
-                const data = await res.json();
-                setServices(data.filter((s: Service) => s));
-            } catch (error) {
-                console.error("Failed to fetch services:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchServices();
-    }, []);
-
-    useEffect(() => {
-        // Handle post-login checkout
-        const action = searchParams.get('action');
-        if (action === 'checkout') {
-            const pendingServiceId = sessionStorage.getItem('pendingServiceCheckout');
-            if (pendingServiceId) {
-                sessionStorage.removeItem('pendingServiceCheckout');
-
-                // Trigger checkout for the pending service
-                const proceedToCheckout = async () => {
-                    try {
-                        const res = await fetch("/api/store/order", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ serviceId: pendingServiceId })
-                        });
-
-                        const data = await res.json();
-
-                        if (!res.ok) {
-                            toast.error(data.error || "Failed to create order");
-                            return;
-                        }
-
-                        if (data.url) {
-                            router.push(data.url);
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        toast.error("Failed to proceed to checkout");
-                    }
-                };
-
-                proceedToCheckout();
-            }
-        }
-    }, [searchParams, router]);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-zinc-500">Loading services...</div>
-            </div>
-        );
-    }
+    // Transform to match interface (handle potential type mismatches safely)
+    const processedServices = services.map((s: Service) => ({
+        ...s,
+        features: s.features as unknown,
+        features_id: s.features_id as unknown
+    }));
 
     return (
-        <div className="min-h-screen bg-black selection:bg-blue-500/30">
-            <div className="container mx-auto px-4 py-24 sm:py-32">
-                <div className="mb-12 text-center max-w-2xl mx-auto">
-                    <Link href="/" className="inline-flex items-center text-sm text-zinc-500 hover:text-white mb-6 transition-colors gap-1">
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Home
-                    </Link>
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 flex items-center justify-center gap-3">
-                        <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-yellow-500" />
-                        Premium Services
-                    </h1>
-                    <p className="text-lg text-zinc-400 leading-relaxed">
-                        Scale your business with our productized services. High-quality deliverables, transparent pricing, and rapid turnaround times.
-                    </p>
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-[1400px] mx-auto">
-                    {services.map((service) => (
-                        <ServiceCard key={service.id} service={service} />
-                    ))}
-
-                    {services.length === 0 && (
-                        <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5">
-                            <p className="text-zinc-500 text-lg">No services available publicly at the moment.</p>
-                            <p className="text-zinc-600 text-sm mt-2">Check back soon for updates.</p>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
+        <ServicesClientWrapper
+            services={processedServices}
+        />
     );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2 } from "lucide-react";
+import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2, Globe, FileText, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function SystemNav() {
@@ -48,6 +48,21 @@ export function SystemNav() {
             href: "/admin/system/integrations",
             label: "System Integrations",
             icon: Share2
+        },
+        {
+            href: "/admin/system/ai",
+            label: "Generative AI",
+            icon: Sparkles
+        },
+        {
+            href: "/admin/system/seo",
+            label: "SEO / Metadata",
+            icon: Globe
+        },
+        {
+            href: "/admin/system/seo/pages",
+            label: "Page Manager",
+            icon: FileText
         }
     ];
 

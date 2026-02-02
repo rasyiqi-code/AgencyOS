@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useReactToPrint } from "react-to-print";
-import { Download } from "lucide-react";
+import { Download, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
@@ -38,6 +38,7 @@ interface InvoiceClientWrapperProps {
     isPaid: boolean;
     bankDetails?: BankDetails;
     agencySettings?: AgencyInvoiceSettings;
+    hasActiveGateway?: boolean;
 }
 
 const thankYouQuotes = [
@@ -48,7 +49,7 @@ const thankYouQuotes = [
     "“Technology is best when it brings people together.” — Matt Mullenweg"
 ];
 
-export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings }: InvoiceClientWrapperProps) {
+export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true }: InvoiceClientWrapperProps) {
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
@@ -129,6 +130,19 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                                     {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency }).format(displayAmount)}
                                 </span>
                             </div>
+
+                            {!hasActiveGateway && (
+                                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                                    <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
+                                        <AlertTriangle className="w-4 h-4" />
+                                        Metode Otomatis Belum Aktif
+                                    </p>
+                                    <p className="text-[10px] text-amber-200/70 leading-relaxed">
+                                        Gateway pembayaran belum dikonfigurasi. Mohon gunakan transfer bank manual ke rekening yang tertera di invoice.
+                                    </p>
+                                </div>
+                            )}
+
                             <p className="text-xs text-zinc-500">
                                 Please complete payment below to activate project.
                             </p>

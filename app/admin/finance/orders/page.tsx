@@ -20,6 +20,11 @@ export default async function AdminOrdersPage() {
         }
     });
 
+    const agencySetting = await prisma.systemSetting.findUnique({
+        where: { key: "AGENCY_NAME" }
+    });
+    const agencyName = agencySetting?.value || "Agency OS";
+
     // 1. Initial Mapping
     const financeData: FinanceData[] = estimates.map(e => ({
         ...e,
@@ -115,7 +120,7 @@ export default async function AdminOrdersPage() {
                 </div>
                 <div className="flex items-center gap-2 italic">
                     <LayoutDashboard className="w-3 h-3" />
-                    {t("poweredBy")}
+                    {t("poweredBy", { brand: agencyName })}
                 </div>
             </div>
         </div>

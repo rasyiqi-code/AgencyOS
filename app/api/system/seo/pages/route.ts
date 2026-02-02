@@ -1,0 +1,58 @@
+
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/stack";
+import { revalidatePath } from "next/cache";
+
+export async function GET() {
+    try {
+        const pages = await prisma.pageSeo.findMany({
+            orderBy: { path: 'asc' }
+        });
+        return NextResponse.json(pages);
+    } catch {
+        return NextResponse.json({ error: "Failed to fetch pages" }, { status: 500 });
+    }
+}
+
+export async function POST(req: NextRequest) {
+    const user = await stackServerApp.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    try {
+        const body = await req.json();
+        const { path, title, description, keywords, ogImage } = body;
+
+        if (!path) {
+            return NextResponse.json({ error: "Path is required" }, { status: 400 });
+        }
+
+        // Ensure path starts with /
+        const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+        const page = await prisma.pageSeo.upsert({
+            where: {
+                path: normalizedPath
+            },
+            create: {
+                path: normalizedPath,
+                title,
+                description,
+                keywords,
+                ogImage
+            },
+            update: {
+                title,
+                description,
+                keywords,
+                ogImage
+            }
+        });
+
+        revalidatePath(normalizedPath);
+        return NextResponse.json(page);
+    } catch (error) {
+        console.error("Page SEO upsert error:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    }
+}

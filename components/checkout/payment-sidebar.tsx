@@ -3,11 +3,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, CheckCircle, Loader2 } from "lucide-react";
+import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, Coupon } from "@/lib/types";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
-export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon }: { estimate: ExtendedEstimate, onPrint: () => void, bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null, activeRate?: number, amount: number, appliedCoupon: Coupon | null }) {
+export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true }: {
+    estimate: ExtendedEstimate,
+    onPrint: () => void,
+    bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
+    activeRate?: number,
+    amount: number,
+    appliedCoupon: Coupon | null,
+    hasActiveGateway?: boolean
+}) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [billingCycle, setBillingCycle] = useState<"one_time" | "monthly" | "yearly">("one_time");
 
@@ -136,50 +144,71 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                         Download PDF Invoice
                     </Button>
 
-                    <Button
-                        className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isProcessing || billingCycle !== 'one_time'}
-                        onClick={async () => {
-                            // Only support one-time for now via this generic route
-                            if (billingCycle !== 'one_time') return;
+                    {hasActiveGateway ? (
+                        <Button
+                            className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isProcessing || billingCycle !== 'one_time'}
+                            onClick={async () => {
+                                // Only support one-time for now via this generic route
+                                if (billingCycle !== 'one_time') return;
 
-                            setIsProcessing(true);
-                            try {
-                                const response = await fetch("/api/checkout", {
-                                    method: "POST",
-                                    body: JSON.stringify({
-                                        estimateId: estimate.id,
-                                        amount: amount, // Use discounted amount
-                                        title: estimate.title,
-                                        couponCode: appliedCoupon?.code
-                                    }),
-                                });
+                                setIsProcessing(true);
+                                try {
+                                    const response = await fetch("/api/checkout", {
+                                        method: "POST",
+                                        body: JSON.stringify({
+                                            estimateId: estimate.id,
+                                            amount: amount, // Use discounted amount
+                                            title: estimate.title,
+                                            couponCode: appliedCoupon?.code
+                                        }),
+                                    });
 
-                                if (!response.ok) {
-                                    const err = await response.text();
-                                    console.error("Payment Error:", err);
-                                    alert(`Payment Error: ${err}`);
-                                    throw new Error(err || "Failed to create order");
+                                    if (!response.ok) {
+                                        const err = await response.text();
+                                        console.error("Payment Error:", err);
+                                        alert(`Payment Error: ${err}`);
+                                        throw new Error(err || "Failed to create order");
+                                    }
+                                    const { orderId } = await response.json();
+
+                                    // Redirect to Public Invoice
+                                    window.location.href = `/invoices/${orderId}`;
+                                } catch (e) {
+                                    console.error(e);
+                                    setIsProcessing(false);
                                 }
-                                const { orderId } = await response.json();
-
-                                // Redirect to Public Invoice
-                                window.location.href = `/invoices/${orderId}`;
-                            } catch (e) {
-                                console.error(e);
-                                setIsProcessing(false);
-                            }
-                        }}
-                    >
-                        {isProcessing ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Processing...
-                            </>
-                        ) : (
-                            billingCycle === 'one_time' ? "Proceed to Payment" : "Contact Sales for Subscription"
-                        )}
-                    </Button>
+                            }}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                billingCycle === 'one_time' ? "Proceed to Payment" : "Contact Sales for Subscription"
+                            )}
+                        </Button>
+                    ) : (
+                        <div className="space-y-3">
+                            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                                <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
+                                    <AlertTriangle className="w-4 h-4" />
+                                    Pembayaran Otomatis Tidak Tersedia
+                                </p>
+                                <p className="text-[10px] text-amber-200/70 leading-relaxed">
+                                    Mohon lakukan pembayaran manual via transfer bank. Detail rekening tersedia pada invoice PDF atau halaman tagihan.
+                                </p>
+                            </div>
+                            <Button
+                                className="w-full bg-white hover:bg-zinc-200 text-black font-bold h-12"
+                                onClick={onPrint}
+                            >
+                                <Download className="w-4 h-4 mr-2" />
+                                Pay via Bank Transfer
+                            </Button>
+                        </div>
+                    )}
                     {billingCycle !== 'one_time' && (
                         <p className="text-xs text-center text-yellow-500/80">
                             Currently only One-time payment is available for instant checkout.

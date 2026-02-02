@@ -14,71 +14,52 @@ interface CreemConfig {
 }
 
 export class PaymentGatewayService {
-    /**
-     * Get Midtrans configuration from database, fallback to .env
-     */
     async getMidtransConfig(): Promise<MidtransConfig> {
+        const defaultConfig: MidtransConfig = {
+            serverKey: "",
+            clientKey: "",
+            merchantId: "",
+            isProduction: false
+        };
+
         try {
-            // Try DB first
             const setting = await prisma.systemSetting.findUnique({
                 where: { key: "midtrans_config" }
             });
 
             if (setting?.value) {
-                try {
-                    const config = JSON.parse(setting.value);
-                    console.log("[PaymentGateway] Using Midtrans config from database");
-                    return config;
-                } catch (e) {
-                    console.error("[PaymentGateway] Failed to parse midtrans config from DB:", e);
-                }
+                return JSON.parse(setting.value);
             }
         } catch (dbError) {
             console.error("[PaymentGateway] Database error fetching midtrans config:", dbError);
         }
 
-        // Fallback to .env
-        console.log("[PaymentGateway] Using Midtrans config from .env (fallback)");
-        return {
-            serverKey: process.env.MIDTRANS_SERVER_KEY || "",
-            clientKey: process.env.MIDTRANS_CLIENT_KEY || process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "",
-            merchantId: process.env.MIDTRANS_MERCHANT_ID || "",
-            isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true"
-        };
+        return defaultConfig;
     }
 
     /**
-     * Get Creem configuration from database, fallback to .env
+     * Get Creem configuration from database
      */
     async getCreemConfig(): Promise<CreemConfig> {
+        const defaultConfig: CreemConfig = {
+            apiKey: "",
+            storeId: "",
+            isProduction: false
+        };
+
         try {
-            // Try DB first
             const setting = await prisma.systemSetting.findUnique({
                 where: { key: "creem_config" }
             });
 
             if (setting?.value) {
-                try {
-                    const config = JSON.parse(setting.value);
-                    console.log("[PaymentGateway] Using Creem config from database");
-                    return config;
-                } catch (e) {
-                    console.error("[PaymentGateway] Failed to parse creem config from DB:", e);
-                }
+                return JSON.parse(setting.value);
             }
         } catch (dbError) {
             console.error("[PaymentGateway] Database error fetching creem config:", dbError);
         }
 
-        // Fallback to .env
-        console.log("[PaymentGateway] Using Creem config from .env (fallback)");
-        const apiKey = process.env.CREEM_API_KEY || "";
-        return {
-            apiKey,
-            storeId: process.env.CREEM_STORE_ID || "",
-            // Auto detect mode from API key prefix
-            isProduction: apiKey ? !apiKey.startsWith("creem_test_") : false
-        };
+        return defaultConfig;
     }
 
     /**
@@ -103,6 +84,19 @@ export class PaymentGatewayService {
             create: { key: "creem_config", value: JSON.stringify(config) }
         });
         console.log("[PaymentGateway] Creem config saved to database");
+    }
+
+    /**
+     * Check if at least one payment gateway is configured and active
+     */
+    async hasActiveGateway(): Promise<boolean> {
+        const [midtrans, creem] = await Promise.all([
+            this.getMidtransConfig(),
+            this.getCreemConfig()
+        ]);
+
+        return (midtrans.serverKey !== "" && midtrans.clientKey !== "") ||
+            (creem.apiKey !== "" && creem.storeId !== "");
     }
 }
 

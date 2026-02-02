@@ -20,6 +20,8 @@ export interface ContactInfo {
     agencyName: string | null;
     companyName: string | null;
     logoDisplayMode: string | null;
+    servicesTitle: string | null;
+    servicesSubtitle: string | null;
 }
 
 interface Props {
@@ -27,12 +29,10 @@ interface Props {
 }
 
 export function GeneralSettingsForm({ initialData }: Props) {
-    // ... hooks ...
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [data, setData] = useState<ContactInfo>(initialData);
 
-    // ... handleLogoUpload ...
     async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -59,7 +59,6 @@ export function GeneralSettingsForm({ initialData }: Props) {
         }
     }
 
-    // ... handleSave ...
     async function handleSave() {
         setIsLoading(true);
         try {
@@ -78,7 +77,6 @@ export function GeneralSettingsForm({ initialData }: Props) {
         }
     }
 
-    // ... return ...
     return (
         <Card className="bg-zinc-900/40 border-white/5">
             <CardHeader>
@@ -87,9 +85,9 @@ export function GeneralSettingsForm({ initialData }: Props) {
                         <Globe className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <CardTitle className="text-white">Public Information</CardTitle>
+                        <CardTitle className="text-white">General & Public Information</CardTitle>
                         <CardDescription className="text-zinc-400">
-                            Manage contact details displayed on the public contact page.
+                            Manage contact details and page customization.
                         </CardDescription>
                     </div>
                 </div>
