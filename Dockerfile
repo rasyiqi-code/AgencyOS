@@ -59,9 +59,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/start.sh ./start.sh
 
-# Install Prisma and config dependencies globally/locally
-RUN bun add -g prisma@7
-RUN bun add dotenv @prisma/config
+# Install Prisma and config dependencies locally
+RUN bun add prisma@7 dotenv @prisma/config
+
+# Ensure permissions for nextjs user
+RUN chown -R nextjs:nodejs /app/node_modules
 
 USER nextjs
 
