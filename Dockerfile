@@ -36,7 +36,8 @@ RUN bun run build
 
 # Production image, copy all the files and run next
 # Production image, copy all the files and run next
-FROM oven/bun:1-alpine AS runner
+# Production image, copy all the files and run next
+FROM oven/bun:1 AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
