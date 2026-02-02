@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  serverExternalPackages: ['@prisma/client', 'prisma'],
   images: {
     remotePatterns: [
       {
