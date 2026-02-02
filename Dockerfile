@@ -55,9 +55,11 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder /app/start.sh ./start.sh
 
 # Install Prisma globally for migrations
-RUN npm install -g prisma
+RUN npm install -g prisma@7
 
 USER nextjs
 
