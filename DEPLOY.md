@@ -27,6 +27,18 @@ DATABASE_URL="postgresql://postgres:postgres_password_change_me@db:5432/agency_o
 NEXT_PUBLIC_STACK_PROJECT_ID="your_project_id"
 NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY="your_public_key"
 STACK_SECRET_SERVER_KEY="your_secret_key"
+
+# App
+NEXT_PUBLIC_APP_URL="https://your-domain.com"
+SUPER_ADMIN_ID="uuid_of_admin"
+
+# OAuth (Optional but recommended)
+GITHUB_CLIENT_ID=""
+GITHUB_CLIENT_SECRET=""
+VERCEL_CLIENT_ID=""
+VERCEL_CLIENT_SECRET=""
+VERCEL_INTEGRATION_SLUG=""
+
 ```
 
 ### 3. Deployment Configuration (Docker Compose)
