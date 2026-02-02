@@ -35,7 +35,8 @@ RUN bunx prisma generate
 RUN bun run build
 
 # Production image, copy all the files and run next
-FROM node:22-alpine AS runner
+# Production image, copy all the files and run next
+FROM oven/bun:1-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
@@ -58,11 +59,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/start.sh ./start.sh
 
-# Install Prisma globally for migrations
-RUN npm install -g prisma@7
-
-# Install dependencies required for prisma.config.ts
-RUN npm install dotenv @prisma/config
+# Install Prisma and config dependencies globally/locally
+RUN bun add -g prisma@7
+RUN bun add dotenv @prisma/config
 
 USER nextjs
 

@@ -7,4 +7,4 @@ prisma migrate deploy
 
 # Start the application
 echo "Starting application..."
-exec node server.js
+exec bun server.js
