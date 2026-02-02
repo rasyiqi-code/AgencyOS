@@ -20,6 +20,7 @@ interface Ticket {
     name: string | null;
     email: string | null;
     status: string;
+    type: string;
     updatedAt: Date | string;
     createdAt: Date | string;
     messages: Message[];

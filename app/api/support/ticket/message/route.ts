@@ -4,7 +4,8 @@ import { stackServerApp } from "@/lib/stack";
 
 export async function POST(req: Request) {
     const user = await stackServerApp.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Allow messages if they are from a logged-in user OR it's a guest message to a valid ticket
+    // Authentication for admin is still needed if sender is 'admin'
 
     try {
         const formData = await req.formData();
@@ -15,6 +16,11 @@ export async function POST(req: Request) {
 
         if (!ticketId || (!content && !file)) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
+        // Security: If sender is admin, MUST be a logged in user (admin check should be added here later)
+        if (sender === 'admin' && !user) {
+            return NextResponse.json({ error: "Unauthorized - Admin must be logged in" }, { status: 401 });
         }
 
         const attachments = [];

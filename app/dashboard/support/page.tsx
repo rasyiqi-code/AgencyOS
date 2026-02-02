@@ -4,6 +4,11 @@ import { stackServerApp } from "@/lib/stack";
 import { redirect } from "next/navigation";
 
 import { cookies } from "next/headers";
+import { Prisma } from "@prisma/client";
+
+type TicketWithMessages = Prisma.TicketGetPayload<{
+    include: { messages: { take: 1; orderBy: { createdAt: 'desc' } } }
+}>;
 
 export default async function SupportPage() {
     const user = await stackServerApp.getUser();
@@ -17,7 +22,7 @@ export default async function SupportPage() {
     const isId = locale === 'id-ID' || locale === 'id';
 
     const tickets = await prisma.ticket.findMany({
-        where: { userId: user.id },
+        where: { userId: user.id, type: 'ticket' } as Prisma.TicketWhereInput,
         orderBy: { updatedAt: 'desc' },
         include: {
             messages: {
@@ -25,14 +30,14 @@ export default async function SupportPage() {
                 orderBy: { createdAt: 'desc' }
             }
         }
-    });
+    }) as TicketWithMessages[];
 
     // Serializable ticket data
-    const serializableTickets = tickets.map(t => ({
+    const serializableTickets = tickets.map((t: TicketWithMessages) => ({
         ...t,
         createdAt: t.createdAt.toISOString(),
         updatedAt: t.updatedAt.toISOString(),
-        messages: t.messages.map(m => ({
+        messages: t.messages.map((m) => ({
             ...m,
             createdAt: m.createdAt.toISOString()
         }))

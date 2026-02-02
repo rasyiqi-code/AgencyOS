@@ -11,14 +11,15 @@ export default async function AdminSupportInbox() {
         orderBy: { updatedAt: 'desc' },
         include: {
             messages: {
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'asc' }
             }
         }
     });
 
     // Serialize for Client Components
-    const tickets = rawTickets.map(t => ({
+    const allTickets = rawTickets.map(t => ({
         ...t,
+        type: (t as any).type, // Handle potential Prisma type lag in IDE
         createdAt: t.createdAt.toISOString(),
         updatedAt: t.updatedAt.toISOString(),
         messages: t.messages.map(m => ({
@@ -27,6 +28,9 @@ export default async function AdminSupportInbox() {
             attachments: m.attachments as unknown as MessageAttachment[]
         }))
     }));
+
+    const liveChatTickets = allTickets.filter(t => t.type === 'chat');
+    const supportTickets = allTickets.filter(t => t.type === 'ticket');
 
     return (
         <div className="w-full py-6 h-screen flex flex-col">
@@ -57,11 +61,11 @@ export default async function AdminSupportInbox() {
                 </div>
 
                 <TabsContent value="chat" className="flex-1 mt-0">
-                    <ChatConsole tickets={tickets} />
+                    <ChatConsole tickets={liveChatTickets} />
                 </TabsContent>
 
                 <TabsContent value="table" className="mt-0">
-                    <TicketTable tickets={tickets} />
+                    <TicketTable tickets={supportTickets} />
                 </TabsContent>
             </Tabs>
         </div>

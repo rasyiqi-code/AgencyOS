@@ -25,7 +25,8 @@ export function CreateTicketForm() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name: subject,
-                    initialMessage: message
+                    initialMessage: message,
+                    type: "ticket"
                 })
             });
 

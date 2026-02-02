@@ -43,7 +43,7 @@ export default function InboxPage() {
 
     const fetchTickets = async () => {
         try {
-            const res = await fetch("/api/dashboard/tickets");
+            const res = await fetch("/api/dashboard/tickets?type=chat");
             if (res.ok) setTickets(await res.json());
         } catch (e) {
             console.error(e);
@@ -141,8 +141,8 @@ export default function InboxPage() {
             <div className="w-80 border-r border-white/5 bg-zinc-900/30 flex flex-col">
                 <div className="p-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/50">
                     <div>
-                        <h2 className="font-semibold text-white tracking-tight">{isId ? 'Pesan' : 'Messages'}</h2>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">{isId ? 'Tiket Bantuan' : 'Support Tickets'}</p>
+                        <h2 className="font-semibold text-white tracking-tight">{isId ? 'Chat' : 'Chat'}</h2>
+                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">{isId ? 'Obrolan Langsung' : 'Live Chat'}</p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={fetchTickets} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8">
                         <RefreshCcw className="h-3.5 w-3.5" />
@@ -171,7 +171,7 @@ export default function InboxPage() {
                                         "font-medium text-sm truncate max-w-[120px]",
                                         selectedTicketId === ticket.id ? "text-blue-100" : "text-zinc-300"
                                     )}>
-                                        {ticket.name || ticket.email || (isId ? "Tiket #" : "Ticket #") + ticket.id.substring(0, 4)}
+                                        {ticket.name || ticket.email || (isId ? "Chat #" : "Chat #") + ticket.id.substring(0, 4)}
                                     </span>
                                     <span className={cn(
                                         "text-[10px]",
@@ -221,13 +221,13 @@ export default function InboxPage() {
                                 </div>
                             </div>
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/5 uppercase tracking-wide">
-                                {isId ? 'Tiket #' : 'Ticket #'} {selectedTicketId.substring(0, 6)}
+                                {isId ? 'Chat #' : 'Chat #'} {selectedTicketId.substring(0, 6)}
                             </span>
                         </div>
 
                         {/* Messages */}
                         <ScrollArea className="flex-1 p-6" ref={scrollRef}>
-                            <div className="space-y-6">
+                            <div className="flex flex-col space-y-6">
                                 {messages.map((m, idx) => {
                                     const isAgent = m.sender === "agent";
 
@@ -242,24 +242,24 @@ export default function InboxPage() {
                                             <Avatar className="h-8 w-8 mt-1 border border-white/10 shrink-0">
                                                 <AvatarFallback className={cn(
                                                     "text-[10px]",
-                                                    !isAgent ? "bg-zinc-800 text-zinc-300" : "bg-blue-600 text-white"
+                                                    isAgent ? "bg-zinc-800 text-zinc-300" : "bg-blue-600 text-white"
                                                 )}>
-                                                    {!isAgent ? (isId ? "SAYA" : "ME") : "CS"}
+                                                    {isAgent ? "CS" : (isId ? "SAYA" : "ME")}
                                                 </AvatarFallback>
                                             </Avatar>
 
                                             <div className="space-y-1">
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className={cn("text-xs font-medium", !isAgent ? "text-zinc-400 text-right w-full" : "text-blue-400")}>
-                                                        {!isAgent ? (isId ? "Anda" : "You") : (isId ? "Agen Dukungan" : "Support Agent")}
+                                                        {isAgent ? (isId ? "Agen Dukungan" : "Support Agent") : (isId ? "Anda" : "You")}
                                                     </span>
                                                 </div>
 
                                                 <div className={cn(
                                                     "p-3.5 rounded-2xl text-sm leading-relaxed shadow-lg",
                                                     !isAgent
-                                                        ? "bg-zinc-800 text-white rounded-tr-sm border border-white/5"
-                                                        : "bg-blue-600 text-white rounded-tl-sm shadow-blue-900/20"
+                                                        ? "bg-blue-600 text-white rounded-tr-sm shadow-blue-900/20"
+                                                        : "bg-zinc-800 text-white rounded-tl-sm border border-white/5"
                                                 )}>
                                                     {m.content && <p className="whitespace-pre-wrap">{m.content}</p>}
 

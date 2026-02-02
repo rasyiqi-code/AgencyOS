@@ -12,6 +12,7 @@ interface Ticket {
     name: string | null;
     email: string | null;
     status: string;
+    type: string;
     updatedAt: Date | string;
     messages: { content: string }[];
 }

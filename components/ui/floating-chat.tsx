@@ -223,14 +223,14 @@ export function FloatingChatWidget() {
         setMessages((prev) => [...prev, userMessage]);
 
         try {
+            const formData = new FormData();
+            formData.append("ticketId", ticketId);
+            formData.append("content", content);
+            formData.append("sender", "user");
+
             await fetch("/api/support/ticket/message", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ticketId,
-                    content,
-                    sender: "user"
-                })
+                body: formData
             });
         } catch (e) {
             console.error("Failed to send message", e);
@@ -238,16 +238,23 @@ export function FloatingChatWidget() {
     };
 
     const startHumanHandoff = async () => {
+        console.log("Starting human handoff, user state:", user ? "logged in" : "guest");
         if (user) {
-            // Already logged in, create ticket directly
-            createTicket(user.primaryEmail || "", user.displayName || "");
+            // Already logged in, initiate chat directly
+            try {
+                await initiateLiveChat(user.primaryEmail || "", user.displayName || "");
+            } catch (err) {
+                console.error("Handoff failed", err);
+                toast.error("Failed to start live chat. Please check if server is ready.");
+            }
         } else {
             // Guest, show form
+            console.log("Switching to human_onboarding mode");
             setMode("human_onboarding");
         }
     };
 
-    const createTicket = async (email: string, name: string) => {
+    const initiateLiveChat = async (email: string, name: string) => {
         setIsLoading(true);
         try {
             const res = await fetch("/api/support/ticket/create", {
@@ -256,9 +263,16 @@ export function FloatingChatWidget() {
                 body: JSON.stringify({
                     email,
                     name,
-                    initialMessage: "Requesting human support."
+                    initialMessage: "User started a live chat session.",
+                    type: "chat"
                 })
             });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to create ticket");
+            }
+
             const data = await res.json();
             if (data.id) {
                 setTicketId(data.id);
@@ -268,9 +282,12 @@ export function FloatingChatWidget() {
                     content: m.content
                 })));
                 setMode("human_chat");
+                toast.success("Connected to human support");
             }
         } catch (e) {
-            console.error(e);
+            const errorMessage = e instanceof Error ? e.message : "Failed to connect to support";
+            console.error("Create Ticket Error:", e);
+            toast.error(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -385,7 +402,7 @@ export function FloatingChatWidget() {
                             Cancel
                         </Button>
                         <Button
-                            onClick={() => createTicket(onboardingData.email, onboardingData.name)}
+                            onClick={() => initiateLiveChat(onboardingData.email, onboardingData.name)}
                             disabled={!onboardingData.email || isLoading}
                             className="flex-1 bg-brand-yellow hover:bg-brand-yellow/80 text-black font-bold"
                         >
@@ -424,22 +441,25 @@ export function FloatingChatWidget() {
                                                 : "bg-zinc-900 border border-white/10 text-zinc-300 rounded-tl-sm"
                                         )}
                                     >
-                                        <div className="prose prose-sm prose-invert max-w-none break-words">
+                                        <div className={cn(
+                                            "prose prose-sm max-w-none break-words",
+                                            m.role === "user" ? "prose-black" : "prose-invert"
+                                        )}>
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
                                                 components={{
                                                     a: ({ ...props }) => {
                                                         const isInternal = props.href?.startsWith("/");
                                                         if (isInternal) {
-                                                            return <Link href={props.href!} className="text-brand-yellow underline font-bold hover:text-white transition-colors" {...props} />;
+                                                            return <Link href={props.href!} className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
                                                         }
-                                                        return <a target="_blank" rel="noopener noreferrer" className="text-brand-yellow underline font-bold hover:text-white transition-colors" {...props} />;
+                                                        return <a target="_blank" rel="noopener noreferrer" className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
                                                     },
                                                     p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
                                                     ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
                                                     ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
                                                     li: ({ children }) => <li className="mb-1">{children}</li>,
-                                                    strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                                                    strong: ({ children }) => <strong className={cn("font-bold", m.role === "user" ? "text-black" : "text-white")}>{children}</strong>,
                                                 }}
                                             >
                                                 {m.content}

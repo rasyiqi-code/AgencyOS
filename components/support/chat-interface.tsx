@@ -21,6 +21,7 @@ interface Ticket {
     id: string;
     name: string | null;
     status: string;
+    type?: string;
     messages: Message[];
 }
 
@@ -104,9 +105,9 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
             {/* Header */}
             <div className="px-4 py-3 border-b border-white/5 bg-zinc-900/80 flex justify-between items-center shrink-0">
                 <div>
-                    <h2 className="text-white font-bold text-sm">{ticket.name || "Untitled Ticket"}</h2>
+                    <h2 className="text-white font-bold text-sm">{ticket.name || (ticket.type === 'chat' ? "Live Chat" : "Untitled Ticket")}</h2>
                     <div className="flex items-center gap-2 text-[10px] text-zinc-400">
-                        <span className="font-mono">#{ticket.id.slice(-6).toUpperCase()}</span>
+                        <span className="font-mono">{ticket.type === 'chat' ? 'Chat' : 'Ticket'} #{ticket.id.slice(-6).toUpperCase()}</span>
                         <span>•</span>
                         <span className={`capitalize ${ticket.status === 'open' ? 'text-emerald-400' : 'text-zinc-500'}`}>
                             {ticket.status}
