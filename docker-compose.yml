@@ -11,8 +11,8 @@ services:
         STACK_SECRET_SERVER_KEY: ${STACK_SECRET_SERVER_KEY}
     container_name: agency-os-web-prod
     restart: always
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/agency_os?schema=public
       - NEXT_PUBLIC_STACK_PROJECT_ID=${NEXT_PUBLIC_STACK_PROJECT_ID}
