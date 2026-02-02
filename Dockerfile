@@ -61,7 +61,7 @@ COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/start.sh ./start.sh
 
 # Install Prisma and config dependencies locally
-RUN bun add prisma@7 dotenv @prisma/config
+RUN bun add prisma@7 dotenv @prisma/config @prisma/client@7
 
 # Ensure permissions for nextjs user
 RUN chown -R nextjs:nodejs /app/node_modules
