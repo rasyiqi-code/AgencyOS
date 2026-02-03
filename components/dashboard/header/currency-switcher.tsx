@@ -2,12 +2,14 @@
 
 import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
-import { Globe, DollarSign } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Globe, DollarSign, Loader2 } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 export function DashboardCurrencySwitcher() {
     const { currency, setCurrency } = useCurrency();
     const [mounted, setMounted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const id = requestAnimationFrame(() => setMounted(true));
@@ -15,7 +17,13 @@ export function DashboardCurrencySwitcher() {
     }, []);
 
     const toggle = () => {
-        setCurrency(currency === 'USD' ? 'IDR' : 'USD');
+        if (isLoading) return;
+        setIsLoading(true);
+        // Simulate network/transition delay for UX
+        setTimeout(() => {
+            setCurrency(currency === 'USD' ? 'IDR' : 'USD');
+            setIsLoading(false);
+        }, 500);
     };
 
     return (
@@ -23,9 +31,14 @@ export function DashboardCurrencySwitcher() {
             variant="ghost"
             size="sm"
             onClick={toggle}
-            className="flex items-center gap-2 text-zinc-400 hover:text-white border border-white/5 hover:bg-white/10"
+            disabled={isLoading}
+            className="flex items-center gap-2 text-zinc-400 hover:text-white hover:bg-white/10"
         >
-            <DollarSign className="w-3.5 h-3.5" />
+            {isLoading ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-yellow" />
+            ) : (
+                <DollarSign className="w-3.5 h-3.5 text-brand-yellow" />
+            )}
             <span className="font-mono text-xs font-semibold">
                 {mounted ? currency : '---'}
             </span>
@@ -34,16 +47,39 @@ export function DashboardCurrencySwitcher() {
 }
 
 export function DashboardLanguageSwitcher() {
-    const { locale, setLocale } = useCurrency();
+    const router = useRouter();
+    const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         const id = requestAnimationFrame(() => setMounted(true));
         return () => cancelAnimationFrame(id);
     }, []);
 
+    // Simple detection based on first path segment being 2 chars
+    const currentLocale = pathname?.split('/')[1]?.length === 2 ? pathname.split('/')[1] : 'en';
+
     const toggle = () => {
-        setLocale(locale === 'en-US' ? 'id-ID' : 'en-US');
+        const newLocale = currentLocale === 'en' ? 'id' : 'en';
+
+        // Remove old locale if present
+        const segments = pathname?.split('/') || [];
+        if (segments[1]?.length === 2) {
+            segments[1] = newLocale;
+        } else {
+            segments.splice(1, 0, newLocale);
+        }
+
+        const newPath = segments.join('/') || '/';
+
+        // Optimistic UI & Transition
+        startTransition(() => {
+            // Set cookie for client-side persistence redundancy
+            document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+            router.push(newPath);
+            router.refresh();
+        });
     };
 
     return (
@@ -51,11 +87,16 @@ export function DashboardLanguageSwitcher() {
             variant="ghost"
             size="sm"
             onClick={toggle}
-            className="flex items-center gap-2 text-zinc-400 hover:text-white border border-white/5 hover:bg-white/10"
+            disabled={isPending}
+            className="flex items-center gap-2 text-zinc-400 hover:text-white hover:bg-white/10"
         >
-            <Globe className="w-3.5 h-3.5" />
+            {isPending ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-yellow" />
+            ) : (
+                <Globe className="w-3.5 h-3.5 text-brand-yellow" />
+            )}
             <span className="font-mono text-xs font-semibold">
-                {!mounted ? '...' : (locale === 'en-US' ? 'EN' : 'ID')}
+                {!mounted ? '...' : (currentLocale === 'en' ? 'EN' : 'ID')}
             </span>
         </Button>
     );

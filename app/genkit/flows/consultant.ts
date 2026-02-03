@@ -21,7 +21,7 @@ export const consultantFlow = ai.defineFlow(
         outputSchema: z.string(),
     },
     async ({ messages }, { sendChunk }) => {
-        const { model } = await getActiveAIConfig();
+        const { apiKey, model } = await getActiveAIConfig();
 
         let systemPrompt = `You are **CredibleBot**, an **Estimate Manager** at Crediblemark.
     Your SOLE GOAL is to help the client adjust their project scope and update the cost estimate accordingly.
@@ -82,6 +82,9 @@ export const consultantFlow = ai.defineFlow(
         while (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
             historyMessages.shift();
         }
+
+        // Set dynamic API key for this request execution
+        process.env.GOOGLE_GENAI_API_KEY = apiKey;
 
         const { stream } = await ai.generateStream({
             model: `googleai/${model}`,

@@ -32,6 +32,38 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
 
     const displayAmount = billingCycle === 'monthly' ? monthlyAmount : (billingCycle === 'yearly' ? amount : amount);
 
+    const handleCheckout = async () => {
+        // Only support one-time for now via this generic route
+        if (billingCycle !== 'one_time') return;
+
+        setIsProcessing(true);
+        try {
+            const response = await fetch("/api/checkout", {
+                method: "POST",
+                body: JSON.stringify({
+                    estimateId: estimate.id,
+                    amount: amount, // Use discounted amount
+                    title: estimate.title,
+                    appliedCoupon: appliedCoupon?.code
+                }),
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                console.error("Payment Error:", err);
+                alert(`Payment Error: ${err.message || JSON.stringify(err)}`);
+                throw new Error(err.message || "Failed to create order");
+            }
+            const { orderId } = await response.json();
+
+            // Redirect to Public Invoice
+            window.location.href = `/invoices/${orderId}`;
+        } catch (e) {
+            console.error(e);
+            setIsProcessing(false);
+        }
+    };
+
     if (estimate.status === 'paid') {
         return (
             <Card className="bg-emerald-950/30 border-emerald-500/20 text-white sticky top-24">
@@ -148,37 +180,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                         <Button
                             className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={isProcessing || billingCycle !== 'one_time'}
-                            onClick={async () => {
-                                // Only support one-time for now via this generic route
-                                if (billingCycle !== 'one_time') return;
-
-                                setIsProcessing(true);
-                                try {
-                                    const response = await fetch("/api/checkout", {
-                                        method: "POST",
-                                        body: JSON.stringify({
-                                            estimateId: estimate.id,
-                                            amount: amount, // Use discounted amount
-                                            title: estimate.title,
-                                            couponCode: appliedCoupon?.code
-                                        }),
-                                    });
-
-                                    if (!response.ok) {
-                                        const err = await response.text();
-                                        console.error("Payment Error:", err);
-                                        alert(`Payment Error: ${err}`);
-                                        throw new Error(err || "Failed to create order");
-                                    }
-                                    const { orderId } = await response.json();
-
-                                    // Redirect to Public Invoice
-                                    window.location.href = `/invoices/${orderId}`;
-                                } catch (e) {
-                                    console.error(e);
-                                    setIsProcessing(false);
-                                }
-                            }}
+                            onClick={handleCheckout}
                         >
                             {isProcessing ? (
                                 <>
@@ -202,10 +204,20 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             </div>
                             <Button
                                 className="w-full bg-white hover:bg-zinc-200 text-black font-bold h-12"
-                                onClick={onPrint}
+                                onClick={handleCheckout}
+                                disabled={isProcessing}
                             >
-                                <Download className="w-4 h-4 mr-2" />
-                                Pay via Bank Transfer
+                                {isProcessing ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Processing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="w-4 h-4 mr-2" />
+                                        Pay via Bank Transfer
+                                    </>
+                                )}
                             </Button>
                         </div>
                     )}

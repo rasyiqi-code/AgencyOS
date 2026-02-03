@@ -22,7 +22,7 @@ export const supportFlow = ai.defineFlow(
         outputSchema: z.string(),
     },
     async ({ messages }, { sendChunk }) => {
-        const { model } = await getActiveAIConfig();
+        const { apiKey, model } = await getActiveAIConfig();
 
         // Fetch Dynamic Services from DB
         const services = await prisma.service.findMany({
@@ -67,6 +67,9 @@ export const supportFlow = ai.defineFlow(
             role: (m.role === 'assistant' ? 'model' : m.role) as 'user' | 'model' | 'system',
             content: [{ text: m.content }],
         }));
+
+        // Set dynamic API key for this request execution
+        process.env.GOOGLE_GENAI_API_KEY = apiKey;
 
         const { stream } = await ai.generateStream({
             model: `googleai/${model}`,

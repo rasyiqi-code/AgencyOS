@@ -3,6 +3,6 @@ import { isAIConfigured } from "@/app/genkit/ai";
 
 export async function GET() {
     return NextResponse.json({
-        configured: isAIConfigured()
+        configured: await isAIConfigured()
     });
 }

@@ -70,8 +70,17 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
     }, [searchParams, router]);
 
     return (
-        <div className="min-h-screen bg-black selection:bg-blue-500/30">
-            <div className="container mx-auto px-4 py-24 sm:py-32">
+        <div className="relative bg-black overflow-hidden">
+            {/* Landing Style Background */}
+            <div className="absolute inset-0">
+                {/* Grid Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+                {/* Radial Gradient overlay */}
+                <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-brand-yellow/10 blur-[100px]" />
+            </div>
+
+            <div className="container mx-auto px-4 py-12 sm:py-24 relative z-10">
                 <div className="mb-12 text-center max-w-2xl mx-auto">
                     <Link href="/" className="inline-flex items-center text-sm text-zinc-500 hover:text-white mb-6 transition-colors gap-1">
                         <ArrowLeft className="w-4 h-4" />
@@ -86,7 +95,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                     </p>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-[1400px] mx-auto">
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
                     {services.map((service) => (
                         <ServiceCard key={service.id} service={service} />
                     ))}

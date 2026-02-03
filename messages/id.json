@@ -10,7 +10,7 @@
         "updated": "Diperbarui"
     },
     "Navigation": {
-        "forTalent": "Untuk Talent",
+        "forTalent": "Squad",
         "priceCalculator": "Kalkulator Harga",
         "services": "Layanan",
         "myAccount": "Akun Saya",
@@ -164,6 +164,22 @@
         "desc": "Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, kami kembalikan deposit Anda 100%.",
         "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut."
     },
+    "Included": {
+        "title": "Sudah Terpasang di Setiap Layanan",
+        "subtitle": "Apapun paket yang Anda pilih, standar kualitas AgencyOS sudah termasuk di dalamnya.",
+        "f1": "100% Hak Milik Penuh",
+        "f1Desc": "Seluruh source code dan aset desain menjadi milik Anda sepenuhnya selamanya.",
+        "f2": "Sesi Strategi 1-on-1",
+        "f2Desc": "Briefing mendalam dengan tim kami untuk memastikan visi proyek Anda akurat.",
+        "f3": "Expert Berdedikasi",
+        "f3Desc": "Satu developer senior berdedikasi yang fokus mengeksekusi kebutuhan bisnis Anda.",
+        "f4": "Dukungan Paska Rilis",
+        "f4Desc": "Garansi perbaikan bug dan bantuan teknis selama 30 hari setelah deployment.",
+        "f5": "Pengiriman Cepat",
+        "f5Desc": "Timeline terukur (biasanya 2-4 minggu) untuk hasil yang bisa langsung Anda pakai.",
+        "f6": "Kode Rapi & Skalabel",
+        "f6Desc": "Dokumentasi lengkap dan struktur kode standar industri yang mudah dikembangkan."
+    },
     "Expert": {
         "title": "Otak Manusia. Kecerdasan Mesin.",
         "name": "Rasyiqi",
@@ -311,7 +327,7 @@
         "title": "Apa yang Mau Anda Bangun? <br></br> <highlight>Rencanakan Ide Sekarang</highlight>",
         "subtitle": "Cukup jelaskan ide Anda, kami urus detailnya. Dapatkan rincian lengkap, linimasa, dan harga pasti secara instan.",
         "placeholder": "Saya ingin membuat marketplace jam tangan vintage di mana pengguna bisa menawar...",
-        "poweredBy": "Didukung oleh Gemini 2.0 Flash",
+        "poweredBy": "Didukung oleh Gemini",
         "generate": "Buat Estimasi",
         "analyzing": "Sedang menganalisis ide Anda...",
         "success": "Estimasi berhasil dibuat!",
@@ -325,5 +341,8 @@
         "deleteConfirm": "Apakah Anda yakin ingin menghapus estimasi ini?",
         "deleteSuccess": "Estimasi dihapus",
         "deleteError": "Gagal menghapus estimasi"
+    },
+    "Service": {
+        "deliverables": "Deliverables & Fitur"
     }
 }

@@ -123,18 +123,22 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
                 )}
 
                 {ticket.messages.map((msg) => {
-                    const isAdminSender = msg.sender !== 'user';
+                    // Refined logic: 'Me' depends on who is viewing the page
+                    const isMe = isAdmin
+                        ? (msg.sender === 'admin' || msg.sender === 'agent')
+                        : (msg.sender === 'user');
+
                     return (
-                        <div key={msg.id} className={`flex gap-2 ${isAdminSender ? '' : 'flex-row-reverse'}`}>
+                        <div key={msg.id} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
                             <Avatar className="w-7 h-7 border border-white/10 mt-1">
-                                <AvatarFallback className={`text-[10px] ${isAdminSender ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'bg-zinc-800 text-zinc-400'}`}>
-                                    {isAdminSender ? <Shield className="w-3 h-3" /> : <User className="w-3 h-3" />}
+                                <AvatarFallback className={`text-[10px] ${isMe ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-400'}`}>
+                                    {isMe ? <User className="w-3 h-3" /> : <Shield className="w-3 h-3" />}
                                 </AvatarFallback>
                             </Avatar>
-                            <div className={`flex flex-col max-w-[85%] ${isAdminSender ? 'items-start' : 'items-end'}`}>
-                                <div className={`px-3 py-2 rounded-xl text-sm leading-relaxed ${isAdminSender
-                                    ? 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-white/5'
-                                    : 'bg-indigo-600 text-white rounded-tr-none'
+                            <div className={`flex flex-col max-w-[85%] ${isMe ? 'items-end' : 'items-start'}`}>
+                                <div className={`px-3 py-2 rounded-xl text-sm leading-relaxed ${isMe
+                                    ? 'bg-blue-600 text-white rounded-tr-none'
+                                    : 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-white/5'
                                     }`}>
                                     {msg.content}
                                 </div>

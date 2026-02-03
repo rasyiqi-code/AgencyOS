@@ -4,10 +4,27 @@ import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
+import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { ExtendedEstimate, Bonus } from "@/lib/types";
 import type { BankDetails } from "@/types/payment";
 
-export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses, hasActiveGateway = true }: { estimate: ExtendedEstimate, bankDetails: BankDetails, activeRate: number, bonuses: Bonus[], hasActiveGateway?: boolean }) {
+export function CheckoutContent({
+    estimate,
+    bankDetails,
+    activeRate,
+    bonuses,
+    user,
+    agencySettings,
+    hasActiveGateway = true
+}: {
+    estimate: ExtendedEstimate,
+    bankDetails: BankDetails,
+    activeRate: number,
+    bonuses: Bonus[],
+    user: { displayName: string | null, email: string | null },
+    agencySettings?: AgencyInvoiceSettings,
+    hasActiveGateway?: boolean
+}) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discountType: 'percentage' | 'fixed', discountValue: number } | null>(null);
 
@@ -45,6 +62,18 @@ export function CheckoutContent({ estimate, bankDetails, activeRate, bonuses, ha
                     appliedCoupon={appliedCoupon}
                     hasActiveGateway={hasActiveGateway}
                 />
+            </div>
+
+            {/* Hidden Invoice for Printing */}
+            <div className="hidden">
+                <div className="bg-white">
+                    <InvoiceDocument
+                        refAction={invoiceRef}
+                        estimate={estimate}
+                        user={user}
+                        agencySettings={agencySettings}
+                    />
+                </div>
             </div>
         </div>
     );

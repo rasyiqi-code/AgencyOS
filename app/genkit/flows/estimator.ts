@@ -1,6 +1,5 @@
 import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
-
 import { pricingService } from '@/lib/server/pricing-service';
 
 export const estimateFlow = ai.defineFlow(
@@ -26,7 +25,10 @@ export const estimateFlow = ai.defineFlow(
         }),
     },
     async (prompt) => {
-        const { model } = await getActiveAIConfig();
+        const { apiKey, model } = await getActiveAIConfig();
+
+        // Set dynamic API key for this request execution
+        process.env.GOOGLE_GENAI_API_KEY = apiKey;
 
         // Fetch Dynamic Pricing Config
         const pricing = await pricingService.getConfig();

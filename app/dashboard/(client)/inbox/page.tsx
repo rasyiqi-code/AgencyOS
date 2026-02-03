@@ -22,7 +22,7 @@ interface Ticket {
 interface Message {
     id: string;
     ticketId: string;
-    sender: "user" | "agent";
+    sender: "user" | "agent" | "admin";
     content: string;
     attachments?: { name: string, url: string, type: string }[];
     createdAt: string;
@@ -229,7 +229,7 @@ export default function InboxPage() {
                         <ScrollArea className="flex-1 p-6" ref={scrollRef}>
                             <div className="flex flex-col space-y-6">
                                 {messages.map((m, idx) => {
-                                    const isAgent = m.sender === "agent";
+                                    const isAgent = m.sender === "agent" || m.sender === "admin";
 
                                     return (
                                         <div

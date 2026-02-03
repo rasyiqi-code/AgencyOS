@@ -10,7 +10,7 @@
         "updated": "Updated"
     },
     "Navigation": {
-        "forTalent": "For Talent",
+        "forTalent": "Squad",
         "priceCalculator": "Price Calculator",
         "services": "Services",
         "myAccount": "My Account",
@@ -164,6 +164,22 @@
         "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving your initial Blueprint you feel our approach isn't a fit, we return your deposit 100%.",
         "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
     },
+    "Included": {
+        "title": "Included with Every Service",
+        "subtitle": "No matter which package you choose, AgencyOS quality standards are included.",
+        "f1": "100% Full Ownership",
+        "f1Desc": "All source code and design assets are fully yours, forever.",
+        "f2": "1-on-1 Strategy Session",
+        "f2Desc": "In-depth briefing with our team to ensure your project vision is accurate.",
+        "f3": "Dedicated Expert",
+        "f3Desc": "One dedicated senior developer focused on executing your business needs.",
+        "f4": "Post-Launch Support",
+        "f4Desc": "30-day bug fix warranty and technical assistance after deployment.",
+        "f5": "Rapid Delivery",
+        "f5Desc": "Measured timeline (typically 2-4 weeks) for production-ready results.",
+        "f6": "Clean & Scalable Code",
+        "f6Desc": "Full documentation and industry-standard code structure for easy scaling."
+    },
     "Expert": {
         "title": "Human Brain. Machine Intelligence.",
         "name": "Rasyiqi",
@@ -311,7 +327,7 @@
         "title": "What do you want to build? <br></br> <highlight>Plan Your Idea Now</highlight>",
         "subtitle": "Just describe your idea, we'll handle the details. Get a full breakdown, timeline, and fixed price instantly.",
         "placeholder": "I want to build a marketplace for vintage watches where users can bid...",
-        "poweredBy": "Powered by Gemini 2.0 Flash",
+        "poweredBy": "Powered by Gemini",
         "generate": "Generate Estimate",
         "analyzing": "Analyzing your idea...",
         "success": "Estimate generated!",
@@ -325,5 +341,8 @@
         "deleteConfirm": "Are you sure you want to delete this estimate?",
         "deleteSuccess": "Estimate deleted",
         "deleteError": "Failed to delete estimate"
+    },
+    "Service": {
+        "deliverables": "Deliverables & Features"
     }
 }

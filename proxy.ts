@@ -2,43 +2,69 @@ import { stackServerApp } from "@/lib/stack";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
-    // 1. Auth Check (Dashboard)
-    if (pathname.startsWith("/dashboard")) {
+    // 1. Identify Locale and Clean Path
+    const locales = ['en', 'id'];
+    const pathnameHasLocale = locales.some(
+        (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+
+    let locale = 'en'; // Default fallback
+    let cleanPathname = pathname;
+
+    if (pathnameHasLocale) {
+        const pathLocale = pathname.split('/')[1];
+        if (locales.includes(pathLocale)) {
+            locale = pathLocale;
+            cleanPathname = pathname.replace(`/${locale}`, '') || '/';
+        }
+    }
+
+    // 2. Auth Check (Dashboard) - Check on CLEAN pathname to cover /id/dashboard etc.
+    if (cleanPathname.startsWith("/dashboard")) {
         const user = await stackServerApp.getUser();
         if (!user) {
             return NextResponse.redirect(new URL("/handler/sign-in", request.url));
         }
     }
 
-    // 2. Localization Logic
-    const locales = ['en', 'id'];
-    const pathnameHasLocale = locales.some(
-        (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-    );
+    // 3. Logic for paths WITHOUT locale (e.g. /, /squad)
+    if (!pathnameHasLocale) {
+        // Detect preference: Cookie > Geo > Default
+        const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
+        const geoCountry = (request as NextRequest & { geo?: { country?: string } }).geo?.country || request.headers.get('x-vercel-ip-country');
 
-    if (pathnameHasLocale) {
-        const locale = pathname.split('/')[1];
-        const newPathname = pathname.replace(`/${locale}`, '') || '/';
+        let targetLocale = 'en';
+        if (cookieLocale && locales.includes(cookieLocale)) {
+            targetLocale = cookieLocale;
+        } else if (geoCountry === 'ID') {
+            targetLocale = 'id';
+        }
 
-        const url = new URL(newPathname, request.url);
+        // Redirect to localized path
+        const url = new URL(`/${targetLocale}${pathname === '/' ? '' : pathname}`, request.url);
         request.nextUrl.searchParams.forEach((value, key) => {
             url.searchParams.set(key, value);
         });
-
-        const response = NextResponse.rewrite(url);
-        response.headers.set('x-next-intl-locale', locale);
-        response.cookies.set('NEXT_LOCALE', locale, { path: '/' });
-
-        return response;
+        return NextResponse.redirect(url);
     }
 
-    return NextResponse.next();
+    // 4. Logic for paths WITH locale (Rewrite to clean path)
+    const url = new URL(cleanPathname, request.url);
+    request.nextUrl.searchParams.forEach((value, key) => {
+        url.searchParams.set(key, value);
+    });
+
+    const response = NextResponse.rewrite(url);
+    response.headers.set('x-next-intl-locale', locale);
+    response.cookies.set('NEXT_LOCALE', locale, { path: '/' }); // Functionally redundant if only reading, but good for enforcing consistency
+
+    return response;
 }
 
 export const config = {
-    // Broad matcher to handle both dashboard and localization
-    matcher: ['/((?!api|admin|static|.*\\..*|_next|handler|genkit|test|squad).*)']
+    // Removed 'squad' from exclusions to allow localization
+    matcher: ['/((?!api|admin|static|.*\\..*|_next|handler|genkit|test).*)']
 };

@@ -2,6 +2,10 @@ import { prisma } from "@/lib/db";
 import { ServicesClientWrapper } from "@/components/public/services-client-wrapper";
 import { Metadata } from "next";
 import { Service } from "@prisma/client";
+import { Testimonials } from "@/components/landing/section-testimonials";
+import { SectionIncluded } from "@/components/landing/section-included";
+import { SectionGuarantee } from "@/components/landing/section-guarantee";
+import { FAQSection } from "@/components/landing/section-faq";
 
 
 
@@ -44,8 +48,15 @@ export default async function PublicServicesPage() {
     }));
 
     return (
-        <ServicesClientWrapper
-            services={processedServices}
-        />
+        <div className="flex flex-col">
+            <ServicesClientWrapper
+                services={processedServices}
+            />
+            {/* Landing style components to make the page complete */}
+            <Testimonials />
+            <SectionIncluded />
+            <SectionGuarantee />
+            <FAQSection />
+        </div>
     );
 }

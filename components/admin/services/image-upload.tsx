@@ -59,6 +59,7 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
                         src={preview}
                         alt="Preview"
                         fill
+                        unoptimized={true}
                         className="object-cover"
                         onError={() => setHasError(true)}
                     />

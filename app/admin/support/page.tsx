@@ -19,7 +19,7 @@ export default async function AdminSupportInbox() {
     // Serialize for Client Components
     const allTickets = rawTickets.map(t => ({
         ...t,
-        type: (t as any).type, // Handle potential Prisma type lag in IDE
+        type: t.type,
         createdAt: t.createdAt.toISOString(),
         updatedAt: t.updatedAt.toISOString(),
         messages: t.messages.map(m => ({

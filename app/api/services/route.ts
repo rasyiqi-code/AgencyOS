@@ -33,30 +33,45 @@ export async function POST(req: NextRequest) {
         // Check if sync request or create request
         const action = formData.get("action");
         if (action === 'sync') {
-            // SYNC LOGIC
             console.warn("Creem API: List Products not supported by current endpoint. Import skipped.");
             return NextResponse.json({ success: true, count: 0, warning: "Import checks skipped: API limitation" });
         }
 
         // CREATE LOGIC
-        const title = formData.get("title") as string;
-        const title_id = formData.get("title_id") as string;
-        const description = formData.get("description") as string;
-        const description_id = formData.get("description_id") as string;
-        const price = parseFloat(formData.get("price") as string);
-        const currency = (formData.get("currency") as string) || "USD";
-        const interval = formData.get("interval") as string;
-        const featuresRaw = formData.get("features") as string;
-        const featuresIdRaw = formData.get("features_id") as string;
+        const title = formData.get("title")?.toString();
+        const title_id = formData.get("title_id")?.toString();
+        const description = formData.get("description")?.toString();
+        const description_id = formData.get("description_id")?.toString();
+        const priceRaw = formData.get("price")?.toString();
+        const currency = formData.get("currency")?.toString() || "USD";
+        const interval = formData.get("interval")?.toString() || "one_time";
+        const featuresRaw = formData.get("features")?.toString() || "";
+        const featuresIdRaw = formData.get("features_id")?.toString() || "";
         const imageFile = formData.get("image") as File;
 
+        // Validation
+        if (!title || !description || !title_id || !description_id || !priceRaw) {
+            console.error("Missing required fields in POST /api/services", { title, title_id, hasDescription: !!description, hasDescriptionId: !!description_id, priceRaw });
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
+        const price = parseFloat(priceRaw);
+        if (isNaN(price)) {
+            return NextResponse.json({ error: "Invalid price format" }, { status: 400 });
+        }
+
         const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
-        const features_id = featuresIdRaw ? featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '') : [];
+        const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
 
         let imageUrl = null;
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
-            const { uploadFile } = await import("@/lib/storage");
-            imageUrl = await uploadFile(imageFile, `services/${Date.now()}-${imageFile.name}`);
+            try {
+                const { uploadFile } = await import("@/lib/storage");
+                imageUrl = await uploadFile(imageFile, `services/${Date.now()}-${imageFile.name}`);
+            } catch (storageError) {
+                console.error("Storage upload failed:", storageError);
+                // Continue without image or handle as error? For now continue.
+            }
         }
 
         let creemProductId = null;
@@ -69,18 +84,17 @@ export async function POST(req: NextRequest) {
                 price: Math.round(price * 100),
                 currency: currency,
                 billingType: interval === 'one_time' ? 'onetime' : 'recurring',
-                billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "every-month" | "every-year" | "every-three-months" | "every-six-months" | "once" | undefined,
+                billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
                 taxMode: "inclusive",
                 taxCategory: "digital-goods-service",
                 imageUrl: imageUrl || undefined
             });
             creemProductId = creemProduct.id;
         } catch (error) {
-            console.error("Failed to create Creem product:", error);
+            console.error("Failed to create Creem product (Proceeding anyway):", error);
         }
 
         const service = await prisma.service.create({
-            // Force type check
             data: {
                 title,
                 title_id,
@@ -99,7 +113,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(service, { status: 201 });
 
     } catch (error) {
-        console.error("Service API Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.error("CRITICAL Service API Error:", error);
+        return NextResponse.json({
+            error: "Internal Server Error",
+            details: error instanceof Error ? error.message : String(error)
+        }, { status: 500 });
     }
 }

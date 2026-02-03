@@ -61,11 +61,12 @@
 @layer utilities {
   .scrollbar-custom {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
   .scrollbar-custom::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   .scrollbar-custom::-webkit-scrollbar-track {
@@ -73,11 +74,12 @@
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    background: rgba(250, 250, 250, 0.1);
+    border-radius: 20px;
+    transition: all 0.3s ease;
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(254, 215, 0, 0.4); /* Brand Yellow hint */
   }
 }

@@ -44,42 +44,32 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
 
     try {
         const formData = await req.formData();
-        const title = formData.get("title") as string;
-        const title_id = formData.get("title_id") as string;
-        const description = formData.get("description") as string;
-        const description_id = formData.get("description_id") as string;
-        const price = parseFloat(formData.get("price") as string);
-        const currency = (formData.get("currency") as string) || "USD";
-        const interval = formData.get("interval") as string;
-        const featuresRaw = formData.get("features") as string;
-        const featuresIdRaw = formData.get("features_id") as string;
+        const title = formData.get("title")?.toString();
+        const title_id = formData.get("title_id")?.toString();
+        const description = formData.get("description")?.toString();
+        const description_id = formData.get("description_id")?.toString();
+        const priceRaw = formData.get("price")?.toString();
+        const currency = formData.get("currency")?.toString() || "USD";
+        const interval = formData.get("interval")?.toString() || "one_time";
+        const featuresRaw = formData.get("features")?.toString() || "";
+        const featuresIdRaw = formData.get("features_id")?.toString() || "";
         const imageFile = formData.get("image") as File;
 
-        let features: string[] = [];
-        if (featuresRaw.includes('<li>')) {
-            const matches = featuresRaw.match(/<li>(.*?)<\/li>/g);
-            if (matches) {
-                features = matches.map(m => m.replace(/<\/?li>/g, '').trim());
-            }
-        } else {
-            features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
+        // Validation
+        if (!title || !description || !title_id || !description_id || !priceRaw) {
+            console.error("Missing required fields in PUT /api/services/[id]", { title, title_id, hasDescription: !!description, hasDescriptionId: !!description_id, priceRaw });
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        const features_id = featuresIdRaw ? featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '') : [];
+        const price = parseFloat(priceRaw);
+        if (isNaN(price)) {
+            return NextResponse.json({ error: "Invalid price format" }, { status: 400 });
+        }
 
-        const data: {
-            title: string;
-            title_id?: string;
-            description: string;
-            description_id?: string;
-            price: number;
-            currency: string;
-            interval: string;
-            features: string[];
-            features_id?: string[];
-            image?: string;
-            creemProductId?: string;
-        } = {
+        const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
+        const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
+
+        const data: Record<string, unknown> = {
             title,
             title_id,
             description,
@@ -92,70 +82,65 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         };
 
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
-            const { uploadFile } = await import("@/lib/storage");
-            data.image = await uploadFile(imageFile, `services/${Date.now()}-${imageFile.name}`);
+            try {
+                const { uploadFile } = await import("@/lib/storage");
+                data.image = await uploadFile(imageFile, `services/${Date.now()}-${imageFile.name}`);
+            } catch (storageError) {
+                console.error("Storage upload failed during update:", storageError);
+            }
         }
 
         // Creem Sync Logic
-        let newCreemId: string | null = null;
         try {
             const { creem } = await import("@/lib/creem");
             const sdk = await creem();
             const existingService = await prisma.service.findUnique({ where: { id } });
 
             if (existingService?.creemProductId) {
-                // Update Logic
-                const syncPromise = sdk.products.update({
-                    productId: existingService.creemProductId,
-                    name: title,
-                    description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
-                    price: Math.round(price * 100),
-                    billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "every-month" | "every-year" | "every-three-months" | "every-six-months" | "once" | undefined,
-                    imageUrl: data.image || undefined
-                });
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Creem Sync Timeout")), 8000));
-
                 try {
-                    await Promise.race([syncPromise, timeoutPromise]);
-                } catch (innerError: unknown) {
-                    if (innerError && typeof innerError === 'object' && 'status' in innerError && innerError.status === 404) {
+                    await sdk.products.update({
+                        productId: existingService.creemProductId,
+                        name: title,
+                        description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
+                        price: Math.round(price * 100),
+                        billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
+                        imageUrl: (data.image as string) || undefined
+                    });
+                } catch (innerError) {
+                    const errorObj = innerError as { status?: number; message?: string };
+                    if (errorObj?.status === 404) {
                         const newProduct = await sdk.products.create({
                             name: title,
                             description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
                             price: Math.round(price * 100),
                             currency: currency,
                             billingType: interval === 'one_time' ? 'onetime' : 'recurring',
-                            billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "every-month" | "every-year" | "every-three-months" | "every-six-months" | "once" | undefined,
+                            billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
                             taxMode: "inclusive",
                             taxCategory: "digital-goods-service",
-                            imageUrl: data.image || undefined
+                            imageUrl: (data.image as string) || undefined
                         });
-                        newCreemId = newProduct.id;
+                        data.creemProductId = newProduct.id;
                     } else {
                         throw innerError;
                     }
                 }
             } else {
-                // Create Logic
                 const creemProduct = await sdk.products.create({
                     name: title,
                     description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
                     price: Math.round(price * 100),
                     currency: currency,
                     billingType: interval === 'one_time' ? 'onetime' : 'recurring',
-                    billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "every-month" | "every-year" | "every-three-months" | "every-six-months" | "once" | undefined,
+                    billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
                     taxMode: "inclusive",
                     taxCategory: "digital-goods-service",
-                    imageUrl: data.image || undefined
+                    imageUrl: (data.image as string) || undefined
                 });
-                newCreemId = creemProduct.id;
+                data.creemProductId = creemProduct.id;
             }
         } catch (e) {
-            console.error("Creem sync failed", e);
-        }
-
-        if (newCreemId) {
-            data.creemProductId = newCreemId;
+            console.error("Creem sync failed during update:", e);
         }
 
         const updated = await prisma.service.update({
@@ -165,7 +150,10 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
 
         return NextResponse.json(updated);
     } catch (error) {
-        console.error("Update Service Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.error("CRITICAL Update Service Error:", error);
+        return NextResponse.json({
+            error: "Internal Server Error",
+            details: error instanceof Error ? error.message : String(error)
+        }, { status: 500 });
     }
 }

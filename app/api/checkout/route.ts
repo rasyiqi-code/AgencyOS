@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { stackServerApp } from "@/lib/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 export async function POST(req: Request) {
     try {
@@ -53,6 +54,9 @@ export async function POST(req: Request) {
         const { idrAmount, rate } = await paymentService.convertToIDR(amount);
         console.log(`[CHECKOUT] Converting ${amount} USD to ${idrAmount} IDR (Rate: ${rate})`);
 
+        // Detect gateway availability
+        const hasGateway = await paymentGatewayService.hasActiveGateway();
+
         // Check for existing pending order for this project
         const existingOrder = await prisma.order.findUnique({
             where: { projectId: finalProjectId }
@@ -69,34 +73,37 @@ export async function POST(req: Request) {
             // Midtrans doesn't allow reusing Order ID for different amount, but same amount is fine?
             // Safest is to generate NEW transaction for the SAME Order Record.
 
-            const parameter = {
-                transaction_details: {
-                    order_id: orderId, // Reuse the DB ID
-                    gross_amount: idrAmount, // Use IDR
-                },
-                credit_card: { secure: true },
-                customer_details: {
-                    first_name: user.displayName || user.primaryEmail || "Customer",
-                    email: user.primaryEmail,
-                },
-                item_details: [{
-                    id: finalProjectId,
-                    price: idrAmount, // Use IDR
-                    quantity: 1,
-                    name: title ? title.substring(0, 50) : "Project Deposit",
-                }]
-            };
+            let snapToken = existingOrder.snapToken;
 
-            const snap = await getSnap();
-            const transaction = await snap.createTransaction(parameter);
+            if (hasGateway) {
+                const parameter = {
+                    transaction_details: {
+                        order_id: orderId, // Reuse the DB ID
+                        gross_amount: idrAmount, // Use IDR
+                    },
+                    credit_card: { secure: true },
+                    customer_details: {
+                        first_name: user.displayName || user.primaryEmail || "Customer",
+                        email: user.primaryEmail,
+                    },
+                    item_details: [{
+                        id: finalProjectId,
+                        price: idrAmount, // Use IDR
+                        quantity: 1,
+                        name: title ? title.substring(0, 50) : "Project Deposit",
+                    }]
+                };
+
+                const snap = await getSnap();
+                const transaction = await snap.createTransaction(parameter);
+                snapToken = transaction.token;
+            }
 
             await prisma.order.update({
                 where: { id: orderId },
                 data: {
-                    snapToken: transaction.token,
-                    amount: amount // Keep USD amount in DB for consistency? Or store IDR?
-                    // Ideally store both, but schema has only amount. Let's keep USD in DB but charge IDR.
-                    // Or we should store usage currency. For now, assuming system is USD based.
+                    snapToken,
+                    amount: amount
                 }
             });
 
@@ -105,7 +112,7 @@ export async function POST(req: Request) {
                 data: { invoiceId: orderId }
             });
 
-            return NextResponse.json({ token: transaction.token, orderId });
+            return NextResponse.json({ token: snapToken, orderId });
         } else if (existingOrder && (existingOrder.status === 'paid' || existingOrder.status === 'settled')) {
             return NextResponse.json({
                 token: existingOrder.snapToken,
@@ -117,33 +124,37 @@ export async function POST(req: Request) {
         // Create a unique order ID
         const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-        // Prepare Midtrans transaction details
-        const parameter = {
-            transaction_details: {
-                order_id: orderId,
-                gross_amount: idrAmount, // Use IDR
-            },
-            credit_card: {
-                secure: true,
-            },
-            customer_details: {
-                first_name: user.displayName || user.primaryEmail || "Customer",
-                email: user.primaryEmail,
-            },
-            item_details: [
-                {
-                    id: finalProjectId,
-                    price: idrAmount, // Use IDR
-                    quantity: 1,
-                    name: title ? title.substring(0, 50) : "Project Deposit", // Midtrans name limit
-                },
-            ],
-        };
+        let snapToken = null;
 
-        // Get Snap Token from Midtrans
-        const snap = await getSnap();
-        const transaction = await snap.createTransaction(parameter);
-        const snapToken = transaction.token;
+        if (hasGateway) {
+            // Prepare Midtrans transaction details
+            const parameter = {
+                transaction_details: {
+                    order_id: orderId,
+                    gross_amount: idrAmount, // Use IDR
+                },
+                credit_card: {
+                    secure: true,
+                },
+                customer_details: {
+                    first_name: user.displayName || user.primaryEmail || "Customer",
+                    email: user.primaryEmail,
+                },
+                item_details: [
+                    {
+                        id: finalProjectId,
+                        price: idrAmount, // Use IDR
+                        quantity: 1,
+                        name: title ? title.substring(0, 50) : "Project Deposit", // Midtrans name limit
+                    },
+                ],
+            };
+
+            // Get Snap Token from Midtrans
+            const snap = await getSnap();
+            const transaction = await snap.createTransaction(parameter);
+            snapToken = transaction.token;
+        }
 
         // Save order to database
         await prisma.order.create({

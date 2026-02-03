@@ -36,11 +36,14 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         redirect(`/handler/sign-in?after_auth_return_to=/checkout/${id}`);
     }
 
-    const [estimate, bankDetails, exchangeRates, hasActiveGateway] = await Promise.all([
+    const [estimate, bankDetails, exchangeRates, hasActiveGateway, settings] = await Promise.all([
         getEstimate(id),
         getBankSettings(),
         currencyService.getRates(),
-        paymentGatewayService.hasActiveGateway()
+        paymentGatewayService.hasActiveGateway(),
+        prisma.systemSetting.findMany({
+            where: { key: { in: ['AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+        })
     ]);
 
     const bonuses = (await prisma.marketingBonus.findMany({
@@ -54,6 +57,14 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
 
     // Default rate if fetch fails or is null (though convertToIDR has fallback, UI needs something)
     const activeRate = exchangeRates?.rates?.IDR || 16000;
+
+    const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
+    const agencySettings = {
+        agencyName: getSetting('AGENCY_NAME') || "Agency OS",
+        companyName: getSetting('COMPANY_NAME') || "Agency OS",
+        address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
+        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com"
+    };
 
     if (!estimate) notFound();
 
@@ -72,6 +83,11 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
                 activeRate={activeRate}
                 bonuses={bonuses}
                 hasActiveGateway={hasActiveGateway}
+                user={{
+                    displayName: user.displayName,
+                    email: user.primaryEmail
+                }}
+                agencySettings={agencySettings}
             />
         </div>
     );

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { prisma } from "@/lib/db";
 
 import Image from "next/image";
 
 export async function SiteFooter() {
     const t = await getTranslations("Footer");
+    const locale = await getLocale();
 
     const settings = await prisma.systemSetting.findMany({
         where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] } }
@@ -49,10 +50,10 @@ export async function SiteFooter() {
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
-                    <Link href="/changelog" className="hover:text-white transition-colors">Changelog</Link>
-                    <Link href="/privacy" className="hover:text-white transition-colors">{t("privacy")}</Link>
-                    <Link href="/terms" className="hover:text-white transition-colors">{t("terms")}</Link>
-                    <Link href="/contact" className="hover:text-white transition-colors">{t("contactUs")}</Link>
+                    <Link href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" className="hover:text-white transition-colors">Changelog</Link>
+                    <Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</Link>
+                    <Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</Link>
+                    <Link href={`/${locale}/contact`} className="hover:text-white transition-colors">{t("contactUs")}</Link>
                 </div>
             </div>
         </footer>
