@@ -17,11 +17,11 @@ export async function SiteHeader() {
     // Fetch Logo
     // Fetch Logo & Brand
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["LOGO_URL", "AGENCY_NAME", "LOGO_DISPLAY_MODE"] } }
+        where: { key: { in: ["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"] } }
     });
-    const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
+    const logoUrl = settings.find(s => s.key === "AGENCY_LOGO")?.value;
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
-    const displayMode = settings.find(s => s.key === "LOGO_DISPLAY_MODE")?.value || "both"; // 'both', 'logo', 'text'
+    const displayMode = settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both"; // 'both', 'logo', 'text'
 
 
     // Actually, "Text Only" usually implies just the text name.

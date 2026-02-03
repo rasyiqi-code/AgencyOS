@@ -9,12 +9,12 @@ export async function SiteFooter() {
     const t = await getTranslations("Footer");
 
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME", "LOGO_URL", "LOGO_DISPLAY_MODE"] } }
+        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] } }
     });
     const agencyName = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const companyName = settings.find((s: { key: string; value: string }) => s.key === "COMPANY_NAME")?.value || "AgencyOS";
-    const logoUrl = settings.find((s: { key: string; value: string }) => s.key === "LOGO_URL")?.value;
-    const logoDisplayMode = settings.find((s: { key: string; value: string }) => s.key === "LOGO_DISPLAY_MODE")?.value || "both";
+    const logoUrl = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO")?.value;
+    const logoDisplayMode = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both";
 
     const showLogo = logoDisplayMode === "both" || logoDisplayMode === "logo";
     const showText = logoDisplayMode === "both" || logoDisplayMode === "text";

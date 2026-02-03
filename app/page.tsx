@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const settings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["AGENCY_NAME", "LOGO_URL", "CONTACT_PHONE"] } }
+    where: { key: { in: ["AGENCY_NAME", "AGENCY_LOGO", "CONTACT_PHONE"] } }
   });
   const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
@@ -52,7 +52,7 @@ export default async function Home() {
           "@type": "Organization",
           name: agencyName,
           url: process.env.NEXT_PUBLIC_APP_URL || "",
-          logo: settings.find((s: SystemSetting) => s.key === "LOGO_URL")?.value || "",
+          logo: settings.find((s: SystemSetting) => s.key === "AGENCY_LOGO")?.value || "",
           contactPoint: {
             "@type": "ContactPoint",
             telephone: settings.find((s: SystemSetting) => s.key === "CONTACT_PHONE")?.value || "",
