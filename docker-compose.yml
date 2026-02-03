@@ -39,7 +39,7 @@ services:
       - agency-network-prod
 
   db:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: agency-os-db-prod
     restart: always
     environment:
