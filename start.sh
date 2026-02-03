@@ -7,7 +7,7 @@ bunx prisma generate
 
 # Run migrations
 echo "Running database migrations..."
-bunx prisma migrate deploy
+bunx prisma db push
 
 # Start the application
 echo "Starting application..."
