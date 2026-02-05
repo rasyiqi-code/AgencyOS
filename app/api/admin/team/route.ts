@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { grantPermission, revokePermission } from "@/lib/server/admin-team";
 import { isAdmin } from "@/lib/auth-helpers";
+import { stackServerApp } from "@/lib/stack";
 
 export async function POST(req: NextRequest) {
     if (!await isAdmin()) {
@@ -8,6 +9,11 @@ export async function POST(req: NextRequest) {
     }
     try {
         const { userId, email, key, action } = await req.json();
+        const user = await stackServerApp.getUser();
+
+        if (user?.id === userId) {
+            return NextResponse.json({ error: "Admin cannot manage their own permissions to prevent accidental lockout." }, { status: 400 });
+        }
 
         if (action === 'grant') {
             await grantPermission(userId, email, key);

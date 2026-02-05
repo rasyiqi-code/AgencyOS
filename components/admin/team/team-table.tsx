@@ -27,9 +27,10 @@ interface TeamMember {
 
 interface TeamTableProps {
     data: TeamMember[]
+    currentUserId?: string
 }
 
-export function TeamTable({ data }: TeamTableProps) {
+export function TeamTable({ data, currentUserId }: TeamTableProps) {
     const [search, setSearch] = useState("")
     const router = useRouter()
     const [loading, setLoading] = useState<string | null>(null) // '{userId}-{role}'
@@ -111,7 +112,7 @@ export function TeamTable({ data }: TeamTableProps) {
                                     <div className="flex justify-center">
                                         <Switch
                                             checked={user.isPm}
-                                            disabled={loading === `${user.id}-manage_projects`}
+                                            disabled={loading === `${user.id}-manage_projects` || user.id === currentUserId}
                                             onCheckedChange={() => handleToggle(user.id, user.email, 'manage_projects', user.isPm)}
                                             className="data-[state=checked]:bg-indigo-600"
                                         />
@@ -121,7 +122,7 @@ export function TeamTable({ data }: TeamTableProps) {
                                     <div className="flex justify-center">
                                         <Switch
                                             checked={user.isFinance}
-                                            disabled={loading === `${user.id}-manage_billing`}
+                                            disabled={loading === `${user.id}-manage_billing` || user.id === currentUserId}
                                             onCheckedChange={() => handleToggle(user.id, user.email, 'manage_billing', user.isFinance)}
                                             className="data-[state=checked]:bg-emerald-600"
                                         />

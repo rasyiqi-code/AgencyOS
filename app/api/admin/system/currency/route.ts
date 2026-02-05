@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currencyService } from "@/lib/server/currency-service";
+import { isAdmin } from "@/lib/auth-helpers";
 
 export async function POST(req: NextRequest) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
         const body = await req.json();
         const { apiKey, intervalHours, action } = body;
@@ -30,6 +34,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const config = await currencyService.getConfig();
     const rates = await currencyService.getRates(); // Will fetch if expired, but here we probably just want status
     // Actually getRates() does fetch if expired.

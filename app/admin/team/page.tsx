@@ -71,7 +71,7 @@ export default async function AdminTeamPage() {
                 </div>
             </div>
 
-            <TeamTable data={teamMembers} />
+            <TeamTable data={teamMembers} currentUserId={currentUser?.id} />
         </div>
     );
 }

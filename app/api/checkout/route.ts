@@ -12,12 +12,13 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { projectId, estimateId, amount, title } = await req.json();
+        const { projectId, estimateId, title } = await req.json();
 
-        if ((!projectId && !estimateId) || !amount) {
+        if (!projectId && !estimateId) {
             return new NextResponse("Missing required fields", { status: 400 });
         }
 
+        let dbAmount = 0;
         let finalProjectId = projectId;
 
         // If no projectId but we have estimateId, find or create the project
@@ -30,6 +31,8 @@ export async function POST(req: Request) {
             if (!estimate) {
                 return new NextResponse("Estimate not found", { status: 404 });
             }
+
+            dbAmount = estimate.totalCost;
 
             if (estimate.project) {
                 finalProjectId = estimate.project.id;
@@ -48,7 +51,31 @@ export async function POST(req: Request) {
                 });
                 finalProjectId = newProject.id;
             }
+        } else if (finalProjectId) {
+            // Existing project - find the price from estimate or service
+            const project = await prisma.project.findUnique({
+                where: { id: finalProjectId },
+                include: { estimate: true, service: true }
+            });
+
+            if (!project) {
+                return new NextResponse("Project not found", { status: 404 });
+            }
+
+            if (project.estimate) {
+                dbAmount = project.estimate.totalCost;
+            } else if (project.service) {
+                dbAmount = project.service.price;
+            } else {
+                return new NextResponse("No pricing source found for this project", { status: 400 });
+            }
         }
+
+        if (dbAmount <= 0) {
+            return new NextResponse("Invalid payment amount calculation", { status: 400 });
+        }
+
+        const amount = dbAmount; // Override any incoming amount with checked DB amount
 
         // Convert to IDR
         const { idrAmount, rate } = await paymentService.convertToIDR(amount);

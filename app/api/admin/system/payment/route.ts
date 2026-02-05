@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { resetMidtransInstances } from "@/lib/midtrans";
 import { resetCreemInstance } from "@/lib/creem";
+import { isAdmin } from "@/lib/auth-helpers";
 
 /**
  * GET /api/admin/system/payment
  * Fetch current payment gateway configurations
  */
 export async function GET() {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
         const [midtrans, creem] = await Promise.all([
             paymentGatewayService.getMidtransConfig(),
@@ -44,6 +48,9 @@ export async function GET() {
  * Save payment gateway configuration
  */
 export async function POST(req: NextRequest) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
         const { gateway, config } = await req.json();
 
