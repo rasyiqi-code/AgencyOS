@@ -62,24 +62,24 @@ export async function POST(req: Request) {
             where: { projectId: finalProjectId }
         });
 
-        if (existingOrder && existingOrder.status === 'pending') {
-            // Reuse existing order, potentially update Snap Token if needed
-            // For simplicity, we create a new transaction to ensure freshness, updating the existing order
-            // OR just return existing if valid. Midtrans tokens usually last 24h.
-            // Let's UPDATE the existing order with a new ID/Token to be safe + avoid constraint issues if we wanted to recreate.
-            // BUT, if projectId is unique in Order table, we MUST update the row, not create new.
+        if (existingOrder && (existingOrder.status === 'paid' || existingOrder.status === 'settled')) {
+            return NextResponse.json({
+                token: existingOrder.snapToken,
+                orderId: existingOrder.id,
+                message: "Order already paid"
+            });
+        }
 
-            const orderId = existingOrder.id; // Reuse the DB ID
-            // Midtrans doesn't allow reusing Order ID for different amount, but same amount is fine?
-            // Safest is to generate NEW transaction for the SAME Order Record.
-
+        if (existingOrder && existingOrder.status === 'pending' && existingOrder.amount === amount) {
+            // Reuse existing order with SAME amount
+            const orderId = existingOrder.id;
             let snapToken = existingOrder.snapToken;
 
-            if (hasGateway) {
+            if (hasGateway && !snapToken) {
                 const parameter = {
                     transaction_details: {
-                        order_id: orderId, // Reuse the DB ID
-                        gross_amount: idrAmount, // Use IDR
+                        order_id: orderId,
+                        gross_amount: idrAmount,
                     },
                     credit_card: { secure: true },
                     customer_details: {
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
                     },
                     item_details: [{
                         id: finalProjectId,
-                        price: idrAmount, // Use IDR
+                        price: idrAmount,
                         quantity: 1,
                         name: title ? title.substring(0, 50) : "Project Deposit",
                     }]
@@ -97,15 +97,12 @@ export async function POST(req: Request) {
                 const snap = await getSnap();
                 const transaction = await snap.createTransaction(parameter);
                 snapToken = transaction.token;
-            }
 
-            await prisma.order.update({
-                where: { id: orderId },
-                data: {
-                    snapToken,
-                    amount: amount
-                }
-            });
+                await prisma.order.update({
+                    where: { id: orderId },
+                    data: { snapToken }
+                });
+            }
 
             await prisma.project.update({
                 where: { id: finalProjectId },
@@ -113,11 +110,10 @@ export async function POST(req: Request) {
             });
 
             return NextResponse.json({ token: snapToken, orderId });
-        } else if (existingOrder && (existingOrder.status === 'paid' || existingOrder.status === 'settled')) {
-            return NextResponse.json({
-                token: existingOrder.snapToken,
-                orderId: existingOrder.id,
-                message: "Order already paid"
+        } else if (existingOrder && existingOrder.status === 'pending') {
+            // Amount changed, delete old pending order to allow fresh one with new ID
+            await prisma.order.delete({
+                where: { id: existingOrder.id }
             });
         }
 

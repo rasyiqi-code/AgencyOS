@@ -11,8 +11,8 @@ export class PaymentService {
         // Default fallback if API fails completely (e.g. 15,000) - preferably we shouldn't fail silently but for now safety.
         // But better to throw if no rate to avoid charging wrong.
         if (!rates || !rates.rates.IDR) {
-            console.warn("[PaymentService] Failed to get real-time rates. Using fallback 16000.");
-            const fallbackRate = 16000;
+            const fallbackRate = 15000;
+            console.warn(`[PaymentService] Real-time rates unavailable. Using fallback: ${fallbackRate}. Please check currency API connection.`);
             return {
                 idrAmount: Math.ceil(usdAmount * fallbackRate),
                 rate: fallbackRate

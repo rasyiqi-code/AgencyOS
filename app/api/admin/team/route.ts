@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { grantPermission, revokePermission } from "@/lib/server/admin-team";
+import { isAdmin } from "@/lib/auth-helpers";
 
 export async function POST(req: NextRequest) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     try {
         const { userId, email, key, action } = await req.json();
 

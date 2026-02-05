@@ -47,9 +47,8 @@ export async function POST(req: Request) {
         }
 
         // Update order in database
-        // NOTE: Midtrans 'order_id' is actually our 'transactionId' (e.g. ORDER-XXX-TIMESTAMP)
-        // We must query by transactionId, not the internal Order ID.
         // Update order in database
+        // NOTE: Midtrans 'order_id' matches our internal Order 'id'.
         const order = await prisma.order.update({
             where: { id: order_id },
             data: {
