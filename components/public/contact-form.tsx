@@ -68,8 +68,7 @@ export function ContactForm() {
                     Thank you for reaching out. Our team will get back to you within 24 hours.
                 </p>
                 <Button
-                    variant="outline"
-                    className="mt-4 border-white/10 hover:bg-white/5 text-zinc-300"
+                    className="mt-4 bg-white text-black hover:bg-zinc-200 font-medium"
                     onClick={() => window.location.reload()}
                 >
                     Send another message

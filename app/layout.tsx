@@ -19,14 +19,19 @@ const inter = Inter({ subsets: ["latin"] });
 import { prisma } from "@/lib/db";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
   const settings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["AGENCY_NAME", "SEO_TITLE", "SEO_DESCRIPTION", "SEO_KEYWORDS", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
+    where: { key: { in: ["AGENCY_NAME", "SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
   });
 
+  const isId = locale === 'id';
+
   const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
-  const seoTagline = settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
-  const seoDesc = settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "SoloDev Async Platform";
-  const seoKeywords = settings.find(s => s.key === "SEO_KEYWORDS")?.value || "";
+
+  const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
+  const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "SoloDev Async Platform";
+  const seoKeywords = (isId ? settings.find(s => s.key === "SEO_KEYWORDS_ID")?.value : null) || settings.find(s => s.key === "SEO_KEYWORDS")?.value || "";
+
   const seoOgImage = settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
   const seoFavicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
   const googleVerification = settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value;

@@ -5,8 +5,11 @@ import { stackServerApp } from "@/lib/stack";
 import { revalidatePath } from "next/cache";
 
 const SEO_TITLE_KEY = "SEO_TITLE";
+const SEO_TITLE_ID_KEY = "SEO_TITLE_ID";
 const SEO_DESCRIPTION_KEY = "SEO_DESCRIPTION";
+const SEO_DESCRIPTION_ID_KEY = "SEO_DESCRIPTION_ID";
 const SEO_KEYWORDS_KEY = "SEO_KEYWORDS";
+const SEO_KEYWORDS_ID_KEY = "SEO_KEYWORDS_ID";
 const SEO_OG_IMAGE_KEY = "SEO_OG_IMAGE";
 const SEO_FAVICON_KEY = "SEO_FAVICON";
 const SEO_GOOGLE_VERIFICATION_KEY = "SEO_GOOGLE_VERIFICATION";
@@ -15,7 +18,7 @@ const SEO_GA_ID_KEY = "SEO_GA_ID";
 export async function GET() {
     const settings = await prisma.systemSetting.findMany({
         where: {
-            key: { in: [SEO_TITLE_KEY, SEO_DESCRIPTION_KEY, SEO_KEYWORDS_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY, SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY] }
+            key: { in: [SEO_TITLE_KEY, SEO_TITLE_ID_KEY, SEO_DESCRIPTION_KEY, SEO_DESCRIPTION_ID_KEY, SEO_KEYWORDS_KEY, SEO_KEYWORDS_ID_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY, SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY] }
         }
     });
 
@@ -23,8 +26,11 @@ export async function GET() {
 
     return NextResponse.json({
         title: getVal(SEO_TITLE_KEY),
+        title_id: getVal(SEO_TITLE_ID_KEY),
         description: getVal(SEO_DESCRIPTION_KEY),
+        description_id: getVal(SEO_DESCRIPTION_ID_KEY),
         keywords: getVal(SEO_KEYWORDS_KEY),
+        keywords_id: getVal(SEO_KEYWORDS_ID_KEY),
         ogImage: getVal(SEO_OG_IMAGE_KEY),
         favicon: getVal(SEO_FAVICON_KEY),
         googleVerification: getVal(SEO_GOOGLE_VERIFICATION_KEY),
@@ -38,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { title, description, keywords, ogImage, favicon, googleVerification, gaId } = body;
+        const { title, title_id, description, description_id, keywords, keywords_id, ogImage, favicon, googleVerification, gaId } = body;
 
         const updates = [
             prisma.systemSetting.upsert({
@@ -47,14 +53,29 @@ export async function POST(req: NextRequest) {
                 create: { key: SEO_TITLE_KEY, value: title || "", description: "Global SEO Title Suffix or Default" }
             }),
             prisma.systemSetting.upsert({
+                where: { key: SEO_TITLE_ID_KEY },
+                update: { value: title_id || "", description: "Global SEO Title Suffix or Default (ID)" },
+                create: { key: SEO_TITLE_ID_KEY, value: title_id || "", description: "Global SEO Title Suffix or Default (ID)" }
+            }),
+            prisma.systemSetting.upsert({
                 where: { key: SEO_DESCRIPTION_KEY },
                 update: { value: description || "", description: "Global Meta Description" },
                 create: { key: SEO_DESCRIPTION_KEY, value: description || "", description: "Global Meta Description" }
             }),
             prisma.systemSetting.upsert({
+                where: { key: SEO_DESCRIPTION_ID_KEY },
+                update: { value: description_id || "", description: "Global Meta Description (ID)" },
+                create: { key: SEO_DESCRIPTION_ID_KEY, value: description_id || "", description: "Global Meta Description (ID)" }
+            }),
+            prisma.systemSetting.upsert({
                 where: { key: SEO_KEYWORDS_KEY },
                 update: { value: keywords || "", description: "Global SEO Keywords" },
                 create: { key: SEO_KEYWORDS_KEY, value: keywords || "", description: "Global SEO Keywords" }
+            }),
+            prisma.systemSetting.upsert({
+                where: { key: SEO_KEYWORDS_ID_KEY },
+                update: { value: keywords_id || "", description: "Global SEO Keywords (ID)" },
+                create: { key: SEO_KEYWORDS_ID_KEY, value: keywords_id || "", description: "Global SEO Keywords (ID)" }
             }),
             prisma.systemSetting.upsert({
                 where: { key: SEO_OG_IMAGE_KEY },

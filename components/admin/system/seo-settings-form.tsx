@@ -12,8 +12,11 @@ import { toast } from "sonner";
 
 export interface SeoSettings {
     title: string | null;
+    title_id: string | null;
     description: string | null;
+    description_id: string | null;
     keywords: string | null;
+    keywords_id: string | null;
     ogImage: string | null;
     favicon: string | null;
     googleVerification: string | null;
@@ -120,37 +123,69 @@ export function SeoSettingsForm({ initialData }: Props) {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300">Homepage Tagline / Keywords</Label>
-                        <Input
-                            placeholder="Digital Solutions & Growth Partner"
-                            value={data.title || ""}
-                            onChange={(e) => setData({ ...data, title: e.target.value })}
-                            className="bg-black/50 border-white/10 text-white"
-                        />
-                        <p className="text-xs text-zinc-500">Combined with Agency Name on homepage: &quot;Agency Name | Tagline&quot;</p>
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Homepage Tagline (EN)</Label>
+                            <Input
+                                placeholder="Digital Solutions & Growth Partner"
+                                value={data.title || ""}
+                                onChange={(e) => setData({ ...data, title: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white"
+                            />
+                            <p className="text-xs text-zinc-500">English version.</p>
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Homepage Tagline (ID)</Label>
+                            <Input
+                                placeholder="Solusi Digital & Partner Pertumbuhan"
+                                value={data.title_id || ""}
+                                onChange={(e) => setData({ ...data, title_id: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white"
+                            />
+                            <p className="text-xs text-zinc-500">Indonesian version.</p>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300">Meta Description</Label>
-                        <Textarea
-                            placeholder="A brief description of your agency..."
-                            value={data.description || ""}
-                            onChange={(e) => setData({ ...data, description: e.target.value })}
-                            className="bg-black/50 border-white/10 text-white min-h-[100px]"
-                        />
-                        <p className="text-xs text-zinc-500">Recommended length: 150-160 characters.</p>
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Meta Description (EN)</Label>
+                            <Textarea
+                                placeholder="A brief description of your agency..."
+                                value={data.description || ""}
+                                onChange={(e) => setData({ ...data, description: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white min-h-[100px]"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Meta Description (ID)</Label>
+                            <Textarea
+                                placeholder="Deskripsi singkat agensi Anda..."
+                                value={data.description_id || ""}
+                                onChange={(e) => setData({ ...data, description_id: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white min-h-[100px]"
+                            />
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300">Keywords</Label>
-                        <Input
-                            placeholder="agency, web design, marketing, software development"
-                            value={data.keywords || ""}
-                            onChange={(e) => setData({ ...data, keywords: e.target.value })}
-                            className="bg-black/50 border-white/10 text-white"
-                        />
-                        <p className="text-xs text-zinc-500">Comma-separated list of keywords.</p>
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Keywords (EN)</Label>
+                            <Input
+                                placeholder="agency, web design"
+                                value={data.keywords || ""}
+                                onChange={(e) => setData({ ...data, keywords: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-300">Keywords (ID)</Label>
+                            <Input
+                                placeholder="agensi, desain web"
+                                value={data.keywords_id || ""}
+                                onChange={(e) => setData({ ...data, keywords_id: e.target.value })}
+                                className="bg-black/50 border-white/10 text-white"
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-white/5">

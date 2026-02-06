@@ -50,8 +50,11 @@ export async function POST(req: NextRequest) {
 
         const resend = new Resend(apiKey);
 
+        // Use verified domain or fallback
+        const fromAddress = "noreply@update.crediblemark.com";
+
         const { error } = await resend.emails.send({
-            from: "AgencyOS Contact <onboarding@resend.dev>",
+            from: `AgencyOS Contact <${fromAddress}>`,
             to: [recipient],
             replyTo: email,
             subject: `[Contact Form] ${subject} - ${firstName} ${lastName}`,
@@ -67,7 +70,11 @@ export async function POST(req: NextRequest) {
 
         if (error) {
             console.error("Resend Error:", error);
-            return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+            // Return specific error message for debugging
+            return NextResponse.json({
+                error: error.message || "Failed to send email",
+                details: error
+            }, { status: 500 });
         }
 
         return NextResponse.json({ success: true });

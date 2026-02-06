@@ -7,19 +7,21 @@ import { prisma } from "@/lib/db";
 
 export default async function ContactPage() {
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS"] } }
+        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "CONTACT_HOURS"] } }
     });
 
     const info = {
         email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,
         phone: settings.find(s => s.key === "CONTACT_PHONE")?.value || null,
         address: settings.find(s => s.key === "CONTACT_ADDRESS")?.value || null,
+        hours: settings.find(s => s.key === "CONTACT_HOURS")?.value || null,
     };
 
     // Fallbacks
     const email = info.email || "hello@crediblemark.com";
     const phone = info.phone || "+65 6688 8868";
     const address = info.address || "Level 39, Marina Bay Financial Centre\n10 Marina Blvd, Singapore 018983";
+    const hours = info.hours || "(Mon-Fri, 9am - 6pm SGT)";
 
     return (
         <div className="min-h-screen bg-black selection:bg-blue-500/30">
@@ -78,7 +80,7 @@ export default async function ContactPage() {
                                 <div>
                                     <h3 className="font-semibold text-white">Phone</h3>
                                     <p className="text-zinc-500 text-sm mt-1">{phone}</p>
-                                    <p className="text-zinc-500 text-xs mt-1">(Mon-Fri, 9am - 6pm SGT)</p>
+                                    <p className="text-zinc-500 text-xs mt-1">{hours}</p>
                                 </div>
                             </div>
                         </div>

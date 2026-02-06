@@ -22,6 +22,7 @@ export interface ContactInfo {
     logoDisplayMode: string | null;
     servicesTitle: string | null;
     servicesSubtitle: string | null;
+    hours: string | null;
 }
 
 interface Props {
@@ -196,6 +197,17 @@ export function GeneralSettingsForm({ initialData }: Props) {
                             className="bg-black/50 border-white/10 text-white"
                         />
                         <p className="text-xs text-zinc-500">Includes format (e.g. Mon-Fri details).</p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Business Hours</Label>
+                        <Input
+                            placeholder="(Mon-Fri, 9am - 6pm SGT)"
+                            value={data.hours || ""}
+                            onChange={(e) => setData({ ...data, hours: e.target.value })}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">Displayed below phone number on contact page.</p>
                     </div>
                 </div>
 

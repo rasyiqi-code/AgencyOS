@@ -13,12 +13,13 @@ const AGENCY_LOGO_KEY = "AGENCY_LOGO";
 const AGENCY_LOGO_DISPLAY_KEY = "AGENCY_LOGO_DISPLAY";
 const SERVICES_TITLE_KEY = "SERVICES_TITLE";
 const SERVICES_SUBTITLE_KEY = "SERVICES_SUBTITLE";
+const CONTACT_HOURS_KEY = "CONTACT_HOURS";
 
 export async function GET() {
     const settings = await prisma.systemSetting.findMany({
         where: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY] as any }
+            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] as any }
         }
     });
 
@@ -34,6 +35,7 @@ export async function GET() {
         logoDisplayMode: getVal(AGENCY_LOGO_DISPLAY_KEY),
         servicesTitle: getVal(SERVICES_TITLE_KEY),
         servicesSubtitle: getVal(SERVICES_SUBTITLE_KEY),
+        hours: getVal(CONTACT_HOURS_KEY),
     });
 }
 
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { email, phone, address, agencyName, companyName, logoUrl, logoDisplayMode, servicesTitle, servicesSubtitle } = body;
+        const { email, phone, address, agencyName, companyName, logoUrl, logoDisplayMode, servicesTitle, servicesSubtitle, hours } = body;
 
         const updates = [
             prisma.systemSetting.upsert({
@@ -91,11 +93,17 @@ export async function POST(req: NextRequest) {
                 update: { value: servicesSubtitle || "", description: "Services Page Subtitle" },
                 create: { key: SERVICES_SUBTITLE_KEY, value: servicesSubtitle || "", description: "Services Page Subtitle" }
             }),
+            prisma.systemSetting.upsert({
+                where: { key: CONTACT_HOURS_KEY },
+                update: { value: hours || "", description: "Business Hours" },
+                create: { key: CONTACT_HOURS_KEY, value: hours || "", description: "Business Hours" }
+            }),
         ];
 
         await prisma.$transaction(updates);
 
         revalidatePath("/admin/system/settings");
+        revalidatePath("/", "layout");
         revalidatePath("/", "layout");
 
         return NextResponse.json({ success: true });

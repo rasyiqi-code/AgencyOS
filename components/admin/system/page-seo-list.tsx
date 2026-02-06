@@ -17,8 +17,11 @@ interface PageSeo {
     id: string;
     path: string;
     title: string | null;
+    title_id: string | null;
     description: string | null;
+    description_id: string | null;
     keywords: string | null;
+    keywords_id: string | null;
     ogImage: string | null;
 }
 
@@ -35,8 +38,11 @@ export function PageSeoList({ initialPages }: Props) {
     const [formData, setFormData] = useState({
         path: "",
         title: "",
+        title_id: "",
         description: "",
+        description_id: "",
         keywords: "",
+        keywords_id: "",
         ogImage: ""
     });
 
@@ -47,8 +53,11 @@ export function PageSeoList({ initialPages }: Props) {
         setFormData({
             path: page.path,
             title: page.title || "",
+            title_id: page.title_id || "",
             description: page.description || "",
+            description_id: page.description_id || "",
             keywords: page.keywords || "",
+            keywords_id: page.keywords_id || "",
             ogImage: page.ogImage || ""
         });
         setIsOpen(true);
@@ -59,8 +68,11 @@ export function PageSeoList({ initialPages }: Props) {
         setFormData({
             path: "",
             title: "",
+            title_id: "",
             description: "",
+            description_id: "",
             keywords: "",
+            keywords_id: "",
             ogImage: ""
         });
         setIsOpen(true);
@@ -143,32 +155,65 @@ export function PageSeoList({ initialPages }: Props) {
                                     />
                                     <p className="text-[10px] text-zinc-500">Must start with /</p>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Meta Title</Label>
-                                    <Input
-                                        placeholder="Page Title | Agency"
-                                        value={formData.title}
-                                        onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                        className="bg-black/50 border-white/10"
-                                    />
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label>Meta Title (EN)</Label>
+                                        <Input
+                                            placeholder="Page Title"
+                                            value={formData.title}
+                                            onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Meta Title (ID)</Label>
+                                        <Input
+                                            placeholder="Judul Halaman"
+                                            value={formData.title_id}
+                                            onChange={e => setFormData({ ...formData, title_id: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Meta Description</Label>
-                                    <Textarea
-                                        placeholder="Description for search engines..."
-                                        value={formData.description}
-                                        onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                        className="bg-black/50 border-white/10"
-                                    />
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label>Meta Description (EN)</Label>
+                                        <Textarea
+                                            placeholder="Description..."
+                                            value={formData.description}
+                                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Meta Description (ID)</Label>
+                                        <Textarea
+                                            placeholder="Deskripsi..."
+                                            value={formData.description_id}
+                                            onChange={e => setFormData({ ...formData, description_id: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Keywords</Label>
-                                    <Input
-                                        placeholder="keyword1, keyword2"
-                                        value={formData.keywords}
-                                        onChange={e => setFormData({ ...formData, keywords: e.target.value })}
-                                        className="bg-black/50 border-white/10"
-                                    />
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label>Keywords (EN)</Label>
+                                        <Input
+                                            placeholder="keyword1, keyword2"
+                                            value={formData.keywords}
+                                            onChange={e => setFormData({ ...formData, keywords: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Keywords (ID)</Label>
+                                        <Input
+                                            placeholder="kata kunci, ..."
+                                            value={formData.keywords_id}
+                                            onChange={e => setFormData({ ...formData, keywords_id: e.target.value })}
+                                            className="bg-black/50 border-white/10"
+                                        />
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label>OG Image URL</Label>

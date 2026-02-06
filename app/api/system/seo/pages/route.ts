@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { path, title, description, keywords, ogImage } = body;
+        const { path, title, title_id, description, description_id, keywords, keywords_id, ogImage } = body;
 
         if (!path) {
             return NextResponse.json({ error: "Path is required" }, { status: 400 });
@@ -37,14 +37,20 @@ export async function POST(req: NextRequest) {
             create: {
                 path: normalizedPath,
                 title,
+                title_id,
                 description,
+                description_id,
                 keywords,
+                keywords_id,
                 ogImage
             },
             update: {
                 title,
+                title_id,
                 description,
+                description_id,
                 keywords,
+                keywords_id,
                 ogImage
             }
         });

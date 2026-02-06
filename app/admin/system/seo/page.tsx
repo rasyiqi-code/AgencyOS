@@ -8,13 +8,16 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminSeoPage() {
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["SEO_TITLE", "SEO_DESCRIPTION", "SEO_KEYWORDS", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
+        where: { key: { in: ["SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
     });
 
     const seoData = {
         title: settings.find(s => s.key === "SEO_TITLE")?.value || null,
+        title_id: settings.find(s => s.key === "SEO_TITLE_ID")?.value || null,
         description: settings.find(s => s.key === "SEO_DESCRIPTION")?.value || null,
+        description_id: settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value || null,
         keywords: settings.find(s => s.key === "SEO_KEYWORDS")?.value || null,
+        keywords_id: settings.find(s => s.key === "SEO_KEYWORDS_ID")?.value || null,
         ogImage: settings.find(s => s.key === "SEO_OG_IMAGE")?.value || null,
         favicon: settings.find(s => s.key === "SEO_FAVICON")?.value || null,
         googleVerification: settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value || null,

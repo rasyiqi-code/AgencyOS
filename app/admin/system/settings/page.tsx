@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] } }
+        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"] } }
     });
 
     const contactData = {
@@ -20,7 +20,8 @@ export default async function AdminSettingsPage() {
         logoUrl: settings.find(s => s.key === "AGENCY_LOGO")?.value || null,
         logoDisplayMode: settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both",
         servicesTitle: null,
-        servicesSubtitle: null
+        servicesSubtitle: null,
+        hours: settings.find(s => s.key === "CONTACT_HOURS")?.value || null,
     };
 
     return (
