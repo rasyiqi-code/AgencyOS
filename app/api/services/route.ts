@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 
 const billingPeriodMap: Record<string, string> = {
     'monthly': 'every-month',
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         let imageUrl = null;
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {
             try {
-                const { uploadFile } = await import("@/lib/storage");
+                const { uploadFile } = await import("@/lib/integrations/storage");
                 imageUrl = await uploadFile(imageFile, `services/${Date.now()}-${imageFile.name}`);
             } catch (storageError) {
                 console.error("Storage upload failed:", storageError);
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
         let creemProductId = null;
         try {
-            const { creem } = await import("@/lib/creem");
+            const { creem } = await import("@/lib/integrations/creem");
             const sdk = await creem();
             const creemProduct = await sdk.products.create({
                 name: title,

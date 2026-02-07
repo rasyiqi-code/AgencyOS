@@ -1,5 +1,5 @@
 
-import { canManageProjects } from "@/lib/auth-helpers";
+import { canManageProjects } from "@/lib/shared/auth-helpers";
 import { ProjectDashboardView } from "@/components/admin/views/project-view";
 import { redirect } from "next/navigation";
 

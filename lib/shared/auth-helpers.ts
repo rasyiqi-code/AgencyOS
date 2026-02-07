@@ -1,5 +1,5 @@
                             
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function getCurrentUser() {
     return await stackServerApp.getUser();
@@ -12,7 +12,7 @@ export async function getCurrentUser() {
  * Use user.getPermission(team, key) for team-scoped check.
  */
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function hasPermission(permission: string) {
     const user = await getCurrentUser();

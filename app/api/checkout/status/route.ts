@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function PATCH(req: Request) {
     if (!await isAdmin()) {

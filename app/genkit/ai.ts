@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/config/db';
 import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 

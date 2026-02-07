@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export default async function TermsPage() {
     const settings = await prisma.systemSetting.findMany({

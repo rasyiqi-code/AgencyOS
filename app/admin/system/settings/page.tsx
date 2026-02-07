@@ -2,7 +2,7 @@
 import { Settings2 } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export const dynamic = "force-dynamic";
 

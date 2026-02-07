@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 import { BillingHistory, type BillingOrder } from "@/components/dashboard/billing/billing-history";
 import { Receipt } from "lucide-react";
 import { redirect } from "next/navigation";

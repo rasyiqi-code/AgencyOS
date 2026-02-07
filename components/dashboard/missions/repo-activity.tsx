@@ -1,4 +1,4 @@
-import { getRecentCommits } from "@/lib/github";
+import { getRecentCommits } from "@/lib/integrations/github";
 import { GitCommit, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function POST(req: NextRequest) {
     try {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         if (!file) return NextResponse.json({ error: "Missing file" }, { status: 400 });
         if (!estimateId && !orderId) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
 
-        const { uploadFile } = await import("@/lib/storage");
+        const { uploadFile } = await import("@/lib/integrations/storage");
 
         // Handle Estimate Proof
         if (estimateId) {

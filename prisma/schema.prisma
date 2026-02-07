@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -31,6 +32,7 @@ model Project {
   briefs             Brief[]
   dailyLogs          DailyLog[]
   feedback           Feedback[]
+  applications       MissionApplication[]
   order              Order?
   estimate           Estimate?  @relation(fields: [estimateId], references: [id])
   service            Service?   @relation(fields: [serviceId], references: [id])
@@ -281,4 +283,41 @@ model PageSeo {
   keywords_id String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model SquadProfile {
+  id           String               @id @default(cuid())
+  userId       String               @unique // Link to Auth User
+  name         String
+  email        String
+  role         String               @default("engineer") // Engineer, Designer, PM
+  skills       String[]             // e.g. ["React", "Node.js", "Solidity"]
+  yearsOfExp   Int
+  bio          String?
+  linkedin     String?
+  github       String?
+  portfolio    String?
+  status       String               @default("pending") // pending, vetted, rejected
+  availability String               @default("available") // available, busy
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  totalEarnings Float               @default(0)
+  reputation    Int                 @default(100)
+  applications MissionApplication[]
+}
+
+model MissionApplication {
+  id             String       @id @default(cuid())
+  missionId      String
+  squadId        String
+  status         String       @default("pending") // pending, interviewing, accepted, rejected
+  coverLetter    String?      // Why they are a good fit
+  proposedRate   Float?       // Optional
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  mission        Project      @relation(fields: [missionId], references: [id])
+  squad          SquadProfile @relation(fields: [squadId], references: [id])
+
+  @@unique([missionId, squadId]) // Prevent double applying
 }

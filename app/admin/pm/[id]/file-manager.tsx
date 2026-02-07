@@ -24,14 +24,15 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 
-import { type ProjectFile } from "@/lib/types";
+import { type ProjectFile } from "@/lib/shared/types";
 
 interface FileManagerProps {
     projectId: string;
     files: ProjectFile[];
+    readonly?: boolean;
 }
 
-export function FileManager({ projectId, files }: FileManagerProps) {
+export function FileManager({ projectId, files, readonly = false }: FileManagerProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [previewFile, setPreviewFile] = useState<ProjectFile | null>(null);
     const router = useRouter();
@@ -50,13 +51,17 @@ export function FileManager({ projectId, files }: FileManagerProps) {
                 body: formData,
             });
 
-            if (!res.ok) throw new Error("Upload failed");
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || "Upload failed");
+            }
 
             toast.success("File uploaded successfully");
             router.refresh();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(error);
-            toast.error("Failed to upload file");
+            const message = error instanceof Error ? error.message : "Failed to upload file";
+            toast.error(message);
         } finally {
             setIsLoading(false);
         }
@@ -97,18 +102,20 @@ export function FileManager({ projectId, files }: FileManagerProps) {
                     <Paperclip className="w-4 h-4 text-blue-400" />
                     <h4 className="text-xs font-bold text-white uppercase tracking-wider">Project Documents</h4>
                 </div>
-                <label className="cursor-pointer">
-                    <input
-                        type="file"
-                        className="hidden"
-                        onChange={handleUpload}
-                        disabled={isLoading}
-                    />
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-tight transition-all border border-blue-500/20">
-                        {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
-                        Upload Document
-                    </div>
-                </label>
+                {!readonly && (
+                    <label className="cursor-pointer">
+                        <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleUpload}
+                            disabled={isLoading}
+                        />
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-tight transition-all border border-blue-500/20">
+                            {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                            Upload Document
+                        </div>
+                    </label>
+                )}
             </div>
 
             <div className="grid gap-2">
@@ -152,15 +159,17 @@ export function FileManager({ projectId, files }: FileManagerProps) {
                                         <Download className="w-3.5 h-3.5" />
                                     </a>
                                 </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => handleDelete(file.url)}
-                                    disabled={isLoading}
-                                    className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-400/5"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
+                                {!readonly && (
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleDelete(file.url)}
+                                        disabled={isLoading}
+                                        className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-400/5"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     ))

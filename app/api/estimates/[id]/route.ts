@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/config/db';
 import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
-import { ApiItem, ScreenItem, ScreenItemSchema, ApiItemSchema } from '@/lib/types';
+import { ApiItem, ScreenItem, ScreenItemSchema, ApiItemSchema } from '@/lib/shared/types';
 import { z } from 'zod';
 
 const UpdateBodySchema = z.object({

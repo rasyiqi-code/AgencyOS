@@ -3,7 +3,7 @@
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { Button } from "@/components/ui/button";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore } from "react";
 
 const subscribe = () => () => { };

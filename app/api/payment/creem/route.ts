@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { creem as getCreem } from "@/lib/creem";
+import { prisma } from "@/lib/config/db";
+import { creem as getCreem } from "@/lib/integrations/creem";
 import type { CreemPaymentMetadata } from "@/types/payment";
 
 export async function POST(req: NextRequest) {

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
-import { resetMidtransInstances } from "@/lib/midtrans";
-import { resetCreemInstance } from "@/lib/creem";
-import { isAdmin } from "@/lib/auth-helpers";
+import { resetMidtransInstances } from "@/lib/integrations/midtrans";
+import { resetCreemInstance } from "@/lib/integrations/creem";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 /**
  * GET /api/admin/system/payment

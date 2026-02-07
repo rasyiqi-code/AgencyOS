@@ -1,4 +1,4 @@
-import { prisma } from "./db";
+import { prisma } from "../config/db";
 
 export interface GitHubRepo {
     name: string;

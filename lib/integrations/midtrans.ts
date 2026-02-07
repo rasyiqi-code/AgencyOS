@@ -1,5 +1,5 @@
 import Midtrans from "midtrans-client";
-import { paymentGatewayService } from "./server/payment-gateway-service";
+import { paymentGatewayService } from "../server/payment-gateway-service";
 import type { MidtransPaymentMetadata } from "@/types/payment";
 
 /**

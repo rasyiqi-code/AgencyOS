@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCoupons, createCoupon, deleteCoupon } from "@/lib/server/marketing";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET() {
     if (!await isAdmin()) {

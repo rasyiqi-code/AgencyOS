@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 
 const validMoods = ["on_track", "delayed", "shipped"];
 
@@ -15,6 +15,42 @@ export async function POST(
 
     const projectId = params.projectId;
     if (!projectId) return NextResponse.json({ error: "Project ID missing" }, { status: 400 });
+
+    // Permission Check
+    const { isAdmin } = await import("@/lib/shared/auth-helpers");
+    const isGlobalAdmin = await isAdmin();
+
+    if (!isGlobalAdmin) {
+        // Check if user is an accepted squad member
+        const squadProfile = await prisma.squadProfile.findUnique({
+            where: { userId: user.id }
+        });
+
+        if (!squadProfile) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const application = await prisma.missionApplication.findUnique({
+            where: {
+                missionId_squadId: {
+                    missionId: projectId,
+                    squadId: squadProfile.id
+                }
+            }
+        });
+
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+            select: { developerId: true }
+        });
+
+        const isAssigned = project?.developerId === squadProfile.id;
+        const isAccepted = application?.status === 'accepted';
+
+        if (!isAssigned && !isAccepted) {
+            return NextResponse.json({ error: "Unauthorized access to this mission" }, { status: 403 });
+        }
+    }
 
     try {
         const formData = await req.formData();
@@ -33,7 +69,7 @@ export async function POST(
         const uploadedUrls: string[] = [];
 
         if (files && files.length > 0) {
-            const { uploadFile } = await import("@/lib/storage");
+            const { uploadFile } = await import("@/lib/integrations/storage");
 
             for (const file of files) {
                 if (file.size > 0 && file.name !== 'undefined') {

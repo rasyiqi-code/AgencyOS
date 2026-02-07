@@ -17,7 +17,7 @@ const calculateHeaderSize = (header: string) => {
     return (text.length * 8.5) + 20; // Very tight fit
 };
 
-import { type ExtendedProject } from "@/lib/types";
+import { type ExtendedProject } from "@/lib/shared/types";
 
 export const columns: ColumnDef<ExtendedProject>[] = [
     {

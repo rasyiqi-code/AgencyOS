@@ -1,5 +1,5 @@
 import { ChatInterface } from "@/components/support/chat-interface";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

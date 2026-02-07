@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 
 const RESEND_KEY_DB_KEY = "RESEND_API_KEY";
 const ADMIN_EMAIL_DB_KEY = "ADMIN_EMAIL_TARGET";

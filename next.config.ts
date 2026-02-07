@@ -7,22 +7,28 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['@prisma/client', 'prisma'],
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 300,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'media.crediblemark.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: '*.r2.dev',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
       }
     ],
   },

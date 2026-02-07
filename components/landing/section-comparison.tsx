@@ -1,6 +1,6 @@
 import { Check, X } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function Comparison() {
     const t = await getTranslations("Comparison");

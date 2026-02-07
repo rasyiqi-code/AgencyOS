@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/landing/site-header";
 import { EstimateViewer } from "@/components/estimate/estimate-viewer";
-import { getCurrentUser } from "@/lib/auth-helpers";
+import { getCurrentUser } from "@/lib/shared/auth-helpers";
 import Link from "next/link";
 
 import { Estimate } from "@prisma/client";

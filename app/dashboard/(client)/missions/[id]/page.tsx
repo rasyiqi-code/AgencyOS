@@ -1,20 +1,23 @@
 
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
 import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import { ProjectHeader } from "@/components/dashboard/missions/header";
 import { ProjectPreview } from "@/components/dashboard/missions/project-preview";
-import { FileText, MessageSquare, Terminal, Github, Globe, CalendarClock } from "lucide-react";
+import { Activity, Clock, Calendar, Terminal, MessageSquare, Github, Globe } from "lucide-react";
 import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
 import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
 import { FeedbackBoard } from "@/components/feedback/board";
-import { type ExtendedProject } from "@/lib/types";
+import { type ExtendedProject, type ProjectFile } from "@/lib/shared/types";
+import { FileManager } from "@/app/admin/pm/[id]/file-manager";
+import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
+import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -39,7 +42,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             },
             dailyLogs: {
                 orderBy: { createdAt: 'desc' }
-            }
+            },
+            estimate: true,
         },
     }) as unknown as ExtendedProject;
 
@@ -58,6 +62,18 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
         );
     }
+
+    const statusLabel = {
+        queue: "Queue",
+        dev: "In Development",
+        review: "In Review",
+        done: "Done",
+    }[project.status] || project.status;
+
+
+    const assignedProfile = project.developerId ? await prisma.squadProfile.findUnique({
+        where: { userId: project.developerId }
+    }) : null;
 
     return (
         <div className="pb-6 min-h-screen">
@@ -80,77 +96,29 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
 
-                {/* Main Column: Intel & Feedback */}
+                {/* Main Column: Content */}
                 <div className="lg:col-span-2 space-y-4">
 
-                    {/* Mission Briefing */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
-                        <div className="flex items-center gap-2 mb-2 text-zinc-400">
-                            <FileText className="w-3.5 h-3.5" />
-                            <h2 className="text-sm font-semibold tracking-tight text-white uppercase tracking-wider">Mission Briefing</h2>
-                        </div>
+                    {/* Overview Section */}
+                    <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40">
+                        {project.description && !project.description.startsWith("Purchase of") && (
+                            <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap mb-4">{project.description}</p>
+                        )}
 
-                        <div className="prose prose-invert max-w-none">
-                            <div className="text-zinc-300 bg-black/20 p-2.5 rounded-lg border border-white/5 font-mono text-xs leading-relaxed">
-                                {project.description || "No description provided."}
-                            </div>
-                        </div>
+                        {project.service?.description && (
+                            <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: project.service.description }} />
+                        )}
 
-                        {project.briefs.length > 0 && (
-                            <div className="mt-3 flex flex-col gap-2">
-                                {project.briefs.map((brief, index) => (
-                                    <div key={brief.id} className="p-2.5 rounded-lg bg-blue-900/10 border border-blue-500/10 text-[11px]">
-                                        <div className="mb-0.5 font-bold text-[9px] uppercase tracking-wider text-blue-400 opacity-70">
-                                            Supplemental Intel #{index + 1}
-                                        </div>
-                                        <div className="whitespace-pre-wrap text-zinc-300 leading-normal">{brief.content}</div>
-                                    </div>
-                                ))}
-                            </div>
+                        {!project.description && !project.service?.description && (
+                            <p className="text-zinc-500 text-sm italic">No description provided.</p>
                         )}
                     </div>
-                    {/* Service Intel */}
-                    {project.service && (
-                        <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-4 mb-4 overflow-hidden relative group">
-                            <div className="flex flex-col md:flex-row gap-4 relative z-10">
-                                {project.service.image && (
-                                    <div className="w-full md:w-40 h-28 rounded-lg bg-zinc-800/50 overflow-hidden border border-white/5 flex-shrink-0 relative">
-                                        <Image
-                                            src={project.service.image}
-                                            alt={project.service.title}
-                                            fill
-                                            className="object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                                            unoptimized
-                                        />
-                                    </div>
-                                )}
-                                <div className="flex-1 space-y-2">
-                                    <div>
-                                        <div className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mb-0.5 opacity-80">Authenticated Service</div>
-                                        <h2 className="text-lg font-bold text-white tracking-tight">{project.service.title}</h2>
-                                    </div>
-                                    <div className="text-zinc-400 text-xs leading-relaxed line-clamp-2" dangerouslySetInnerHTML={{ __html: project.service.description }} />
-
-                                    <ServiceFeaturesList
-                                        features={(project.service.features as string[]) || []}
-                                    />
-                                </div>
-                            </div>
-                            {/* Decorative background element */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[80px] -mr-16 -mt-16 pointer-events-none" />
-                        </div>
-                    )}
 
                     {/* Daily Updates */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
-                        <div className="flex items-center gap-2 mb-2 text-zinc-400">
-                            <CalendarClock className="w-3.5 h-3.5" />
-                            <h2 className="text-sm font-semibold tracking-tight text-white uppercase tracking-wider">Mission Updates</h2>
-                        </div>
-                        <div className="h-64">
-                            <DailyLogFeed projectId={project.id} initialLogs={project.dailyLogs} />
-                        </div>
+                    <div className="h-[500px]">
+                        <DailyLogFeed projectId={project.id} initialLogs={project.dailyLogs} />
                     </div>
+
                     {/* Feedback Comms */}
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
                         <div className="flex items-center gap-2 mb-2 text-zinc-400">
@@ -160,12 +128,112 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                         <FeedbackBoard projectId={project.id} feedbacks={project.feedback} />
                     </div>
 
+                    {/* Service Specs Section */}
+                    {(project.service || project.estimate) && (
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2 pb-1 border-b border-white/5">
+                                <Activity className="w-3 h-3 text-emerald-400" />
+                                <h3 className="text-[10px] font-semibold text-white uppercase tracking-wider">Service Specifications</h3>
+                            </div>
+                            <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40">
+                                <div className="flex flex-col md:flex-row gap-4">
+                                    {project.service?.image && (
+                                        <div className="relative w-full md:w-40 h-28 rounded-lg bg-zinc-800 overflow-hidden border border-white/5 flex-shrink-0">
+                                            <SafeImage
+                                                src={project.service.image}
+                                                alt={project.service.title}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 160px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex-1 space-y-3">
+                                        {/* Service Features */}
+                                        {!!project.service?.features && (
+                                            <ServiceFeaturesList
+                                                features={(project.service.features as string[]) || []}
+                                            />
+                                        )}
+
+                                        {/* Estimate Stats */}
+                                        {project.estimate && !project.service && (
+                                            <div className="grid grid-cols-3 gap-2 mt-2">
+                                                <div className="p-2 bg-black/30 rounded border border-white/5">
+                                                    <span className="text-[10px] text-zinc-500 uppercase block">Screens</span>
+                                                    <span className="text-sm font-mono text-zinc-300">{(project.estimate.screens as unknown[]).length} Pages</span>
+                                                </div>
+                                                <div className="p-2 bg-black/30 rounded border border-white/5">
+                                                    <span className="text-[10px] text-zinc-500 uppercase block">API Endpoints</span>
+                                                    <span className="text-sm font-mono text-zinc-300">{(project.estimate.apis as unknown[]).length} Endpoints</span>
+                                                </div>
+                                                <div className="p-2 bg-black/30 rounded border border-white/5">
+                                                    <span className="text-[10px] text-zinc-500 uppercase block">Total Time</span>
+                                                    <span className="text-sm font-mono text-zinc-300">{project.estimate.totalHours} Hours</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {project.spec && (
+                                            <div className="mt-4 pt-4 border-t border-white/5">
+                                                <h4 className="text-[9px] font-semibold text-zinc-500 uppercase mb-2">Technical Specs</h4>
+                                                <TechnicalSpecsViewer spec={project.spec} />
+                                            </div>
+                                        )}
+
+                                        <div className="pt-4 mt-4 border-t border-white/5">
+                                            <FileManager
+                                                projectId={project.id}
+                                                files={(project.files as ProjectFile[]) || []}
+                                                readonly={true}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+
+
                 </div>
 
-                {/* Sidebar: Workbench */}
+                {/* Sidebar */}
                 <div className="space-y-4 sticky top-6 self-start">
 
                     <ProjectPreview url={project.previewUrl || null} />
+
+                    {/* Status Card */}
+                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
+                        <div className="px-3 py-2 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <Activity className="w-3 h-3 text-emerald-400" />
+                            <h3 className="text-[10px] font-semibold text-white uppercase tracking-wider">Mission Status</h3>
+                        </div>
+                        <div className="p-3 space-y-3">
+                            <div>
+                                <label className="text-[9px] font-bold text-zinc-500 uppercase block mb-1.5">Current Status</label>
+                                <div className="text-sm text-zinc-200 font-medium px-3 py-2 bg-black/20 rounded border border-white/5">
+                                    {statusLabel}
+                                </div>
+                            </div>
+                            <div className="pt-3 border-t border-white/5 grid grid-cols-2 gap-3">
+                                <div>
+                                    <div className="flex items-center gap-1.5 text-zinc-500 mb-0.5">
+                                        <Calendar className="w-2.5 h-2.5" />
+                                        <span className="text-[9px] uppercase font-medium">Created</span>
+                                    </div>
+                                    <span className="text-xs text-zinc-300 font-mono">{new Date(project.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-1.5 text-zinc-500 mb-0.5">
+                                        <Clock className="w-2.5 h-2.5" />
+                                        <span className="text-[9px] uppercase font-medium">Updated</span>
+                                    </div>
+                                    <span className="text-xs text-zinc-300 font-mono">{new Date(project.updatedAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Workbench Widget */}
                     <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
@@ -197,6 +265,17 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                             </div>
                         )}
                     </div>
+
+                    {/* Team Info Card */}
+                    <AssignedTeamCard
+                        projectId={project.id}
+                        developerId={project.developerId || null}
+                        assignedProfile={assignedProfile}
+                        repoOwner={project.repoOwner}
+                        repoName={project.repoName}
+                        repoUrl={project.repoUrl}
+                        isEditable={false}
+                    />
 
                 </div>
 

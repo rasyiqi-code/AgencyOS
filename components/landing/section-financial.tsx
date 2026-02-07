@@ -1,7 +1,7 @@
 import { Check, X, Info } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function FinancialLogic() {
     const t = await getTranslations("Financial");

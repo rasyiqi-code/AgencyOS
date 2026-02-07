@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { creem } from "@/lib/creem";
+import { prisma } from "@/lib/config/db";
+import { creem } from "@/lib/integrations/creem";
 import { Prisma } from "@prisma/client";
 
 // Helper to update order/subscription status

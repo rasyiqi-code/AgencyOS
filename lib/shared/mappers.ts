@@ -1,27 +1,15 @@
-import { type Project, type Brief, type Feedback, type DailyLog, type FeedbackComment } from "@prisma/client";
-import { type ProjectFile, type ExtendedProject } from "@/lib/types";
+import { type Project, type Brief, type Feedback, type DailyLog, type FeedbackComment, type Estimate, type Service } from "@prisma/client";
+import { type ProjectFile, type ExtendedProject } from "@/lib/shared/types";
 
 // Define a type that matches what Prisma returns including relations
 export type PrismaProjectWithRelations = Project & {
     briefs: Brief[];
     dailyLogs: DailyLog[];
     feedback: (Feedback & { comments?: FeedbackComment[] })[];
-    service: {
-        title: string;
-        description: string;
-        price: number;
-        features: unknown;
-        image: string | null;
-    } | null;
-    estimate: {
-        service: {
-            title: string;
-            description: string;
-            price: number;
-            features: unknown;
-            image: string | null;
-        } | null;
-    } | null;
+    service: Service | null;
+    estimate: (Estimate & {
+        service: Service | null;
+    }) | null;
 };
 
 export function mapPrismaProjectToExtended(project: PrismaProjectWithRelations): ExtendedProject {
@@ -60,5 +48,10 @@ export function mapPrismaProjectToExtended(project: PrismaProjectWithRelations):
                 imageUrl: c.imageUrl
             })) : []
         })),
+        estimate: project.estimate ? {
+            ...project.estimate,
+            screens: (project.estimate.screens as unknown as { title: string; description: string; hours: number }[]) || [],
+            apis: (project.estimate.apis as unknown as { title: string; description: string; hours: number }[]) || [],
+        } : null,
     };
 }

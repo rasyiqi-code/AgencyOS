@@ -1,5 +1,5 @@
 
-import { canManageBilling } from "@/lib/auth-helpers";
+import { canManageBilling } from "@/lib/shared/auth-helpers";
 import { BillingDashboardView } from "@/components/admin/views/billing-view";
 import { redirect } from "next/navigation";
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/stack";
-import { deleteFile } from "@/lib/storage";
+import { stackServerApp } from "@/lib/config/stack";
+import { deleteFile } from "@/lib/integrations/storage";
 
 export async function DELETE(
     req: NextRequest,

@@ -1,5 +1,5 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 // Trigger re-lint
 import { NextResponse } from "next/server";
 

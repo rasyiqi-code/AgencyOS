@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { Check } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function SiteHeader() {
     const user = await stackServerApp.getUser();

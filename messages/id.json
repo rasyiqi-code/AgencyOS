@@ -20,27 +20,27 @@
         "statusBadge": "Menerima Proyek: Bangun MVP dalam 30 Hari",
         "title1": "Sewa AI + Pakar.",
         "title2": "Launch MVP dalam 30 Hari.",
-        "description": "Membangun tim tech itu lambat dan mahal. {brand} menggabungkan <white>Otomasi AI</white> dengan <white>Senior Engineer</white> untuk membangun aplikasi Anda lebih cepat dan hemat. Tanpa outsourcing, tanpa kompromi.",
+        "description": "Membangun tim tech itu lambat dan mahal. Crediblemark menggabungkan <white>Otomasi AI</white> dengan <white>Senior Engineer</white> untuk membangun aplikasi Anda lebih cepat dan hemat. Kami tim produk Anda.",
         "launchDashboard": "Mulai Proyek",
         "viewServices": "Lihat Layanan",
-        "poweredBy": "AI-POWERED • AUTOMATED WORKFLOWS • SENIOR EXPERTS"
+        "poweredBy": "PREMIUM DEVELOPMENT • OTOMASI AI • SENIOR EXPERTS"
     },
     "Ecosystem": {
-        "title": "Pusat Kontrol Misi Anda",
-        "subtitle": "Transparansi penuh. Kami gunakan AI di tempat yang tepat — langsung di workbench proyek Anda.",
-        "clientTitle": "Mission Control",
-        "clientDesc": "Visibilitas real-time. Pantau daily log, berikan feedback pada fitur, dan monitor status deployment dalam satu dashboard aman.",
-        "clientCta": "Masuk Mission Control",
-        "squadTitle": "The Talent Squad",
-        "squadDesc": "Akses ke jaringan Engineer Senior terverifikasi. Tanpa junior, tanpa magang. Hanya builder elit.",
-        "squadCta": "Gabung Squad",
-        "adminTitle": "Admin Core",
-        "adminDesc": "Sistem kami secara otomatis menguji setiap baris kode untuk keamanan dan performa sebelum deployment.",
-        "adminCta": "Sistem Inti"
+        "title": "Mengapa Memilih Kami?",
+        "subtitle": "Kami tidak cuma kirim update via email. Anda dapat memantau progress secara real-time.",
+        "clientTitle": "Transparansi Total",
+        "clientDesc": "Tidak ada kotak hitam. Pantau daily log, setujui fitur, dan lacak setiap pengeluaran secara real-time.",
+        "clientCta": "Lihat Cara Kerja",
+        "squadTitle": "Hanya Senior Engineer",
+        "squadDesc": "Sukses butuh pengalaman. Kami hanya menurunkan Senior Engineer terverifikasi. Bukan junior yang belajar dari proyek Anda.",
+        "squadCta": "Temui Tim Kami",
+        "adminTitle": "Keamanan Enterprise",
+        "adminDesc": "Tidur tenang mengetahui IP Anda aman. Kami menerapkan standar keamanan dan performance testing tingkat tinggi di setiap rilis.",
+        "adminCta": "Standar Keamanan"
     },
     "SocialProof": {
         "faster": "Mingguan, Bukan Bulanan",
-        "fasterSub": "Pengembangan Terakselerasi AI",
+        "fasterSub": "Pengiriman Terakselerasi AI",
         "fixedPrice": "Biaya Pasti",
         "fixedPriceSub": "Quote dijamin di awal",
         "verified": "Top 1% Talent",
@@ -52,77 +52,77 @@
         "stackAI": "Kecerdasan Buatan"
     },
     "Testimonials": {
-        "title": "Dipercaya oleh Para Builder",
-        "subtitle": "Bergabung dengan ratusan founder yang membangun bersama {brand}.",
+        "title": "Dipercaya oleh Para Pendiri",
+        "subtitle": "Bergabung dengan klien puas yang membangun bersama Crediblemark.",
         "reviews": [
             {
                 "name": "Alex Chen",
                 "role": "CTO, InnovateLabs",
-                "text": "Platform mereka mempercepat siklus pengembangan kami secara signifikan. Perubahan besar bagi tim kami."
+                "text": "Crediblemark mempercepat siklus pengembangan kami secara signifikan. Mereka membangun MVP kami dalam waktu singkat."
             },
             {
                 "name": "Sarah Davis",
                 "role": "Lead Engineer, Nexus Systems",
-                "text": "Alat SaaS terbaik yang pernah saya gunakan. Integrasi mulus dan dukungannya luar biasa."
+                "text": "Agency paling profesional yang pernah saya temui. Dashboard Mission Control sangat membantu sinkronisasi."
             },
             {
                 "name": "Michael Kim",
                 "role": "Founder, CodeCraft",
-                "text": "Kami telah berkembang dengan mudah berkat infrastruktur mereka yang kuat. Sangat direkomendasikan untuk startup apapun."
+                "text": "Kami scaling dengan mudah. Sangat direkomendasikan untuk founder non-teknis."
             },
             {
                 "name": "Jessica Lee",
                 "role": "Product Manager, Apex Digital",
-                "text": "{brand} memberikan stabilitas dan kecepatan yang kami butuhkan untuk meluncurkan MVP dalam waktu singkat."
+                "text": "Crediblemark memberikan stabilitas dan kecepatan untuk meluncurkan MVP hanya dalam 4 minggu."
             },
             {
                 "name": "David Wilson",
                 "role": "VP of Engineering, CloudScale",
-                "text": "Performa dan keandalan luar biasa. Integrasi AI-nya bekerja seperti sihir."
+                "text": "Performa luar biasa. Pendekatan hybrid AI mereka bekerja sangat efektif."
             }
         ]
     },
     "Comparison": {
-        "title": "Tradisional vs. {brand} Hybrid",
-        "subtitle": "Mengapa founder memilih Pengembangan Berbasis AI.",
-        "oldTitle": "Dev Shop Tradisional",
+        "title": "Outsourcing Tradisional vs. Crediblemark",
+        "subtitle": "Mengapa founder memilih Model Agency Hybrid kami.",
+        "oldTitle": "Agency Biasa",
         "old1": "Waktu pengerjaan 3-6 Bulan",
         "old2": "Biaya per jam (bengkak)",
         "old3": "Update progres tertutup",
         "old4": "Di-outsource ke Junior Dev",
-        "newTitle": "Model Hybrid {brand}",
+        "newTitle": "Crediblemark Hybrid",
         "recommended": "PILIHAN CERDAS",
         "new1": "Kickoff Instan",
         "new1Sub": "Mulai bangun dalam 24 jam.",
         "new2": "Harga Proyek Pasti.",
         "new2Sub": "Tahu persis apa yang Anda bayar.",
-        "new3": "Pelacak Progres Live.",
-        "new3Sub": "Lihat commit kode real-time.",
+        "new3": "Portal Klien Live.",
+        "new3Sub": "Lihat pengerjaan kode real-time.",
         "new4": "Hanya Senior Engineer.",
         "new4Sub": "Ahli terverifikasi, bukan pemula."
     },
     "ProductCatalog": {
-        "title": "Solusi Siap Pakai",
-        "subtitle": "Pilih paket yang sesuai dengan kebutuhan bisnis Anda.",
+        "title": "Paket Layanan",
+        "subtitle": "Pilih model kerjasama yang sesuai dengan fase bisnis Anda.",
         "products": {
             "ops": {
-                "title": "Business Ops Dashboard",
+                "title": "Internal Tools & Ops",
                 "target": "UKM & Distributor",
                 "desc": "Ubah tumpukan Excel menjadi aplikasi database internal yang aman. Otomatisasi hitung gaji & komisi.",
                 "price": "Mulai Rp 15 Jt",
-                "cta": "Rapikan Data Saya"
+                "cta": "Digitalisasi Bisnis"
             },
             "publisher": {
-                "title": "The Publisher Engine",
+                "title": "Media Publisher Platform",
                 "target": "Media & Penerbit",
                 "desc": "Portal berita Next.js super cepat dengan CMS redaksi modern. Siap monetisasi iklan & langganan.",
                 "price": "Mulai Rp 10 Jt",
-                "cta": "Buat Media Baru"
+                "cta": "Launch Media Baru"
             },
             "saas": {
                 "title": "Custom SaaS MVP",
                 "target": "Startup Founder",
-                "desc": "Validasi ide startup Anda dalam 14 hari. AI membangun frontend, Saya membangun backend.",
+                "desc": "Validasi ide startup Anda dalam 30 hari. Kami bangun frontend & backend, Anda launch.",
                 "price": "Penawaran Kustom via AI",
                 "cta": "Konsultasi Ide"
             }
@@ -166,7 +166,7 @@
     },
     "Included": {
         "title": "Sudah Terpasang di Setiap Layanan",
-        "subtitle": "Apapun paket yang Anda pilih, standar kualitas AgencyOS sudah termasuk di dalamnya.",
+        "subtitle": "Apapun paket yang Anda pilih, standar kualitas Crediblemark sudah termasuk di dalamnya.",
         "f1": "100% Hak Milik Penuh",
         "f1Desc": "Seluruh source code dan aset desain menjadi milik Anda sepenuhnya selamanya.",
         "f2": "Sesi Strategi 1-on-1",
@@ -279,6 +279,17 @@
         "inOrbit": "Dalam Orbit",
         "missionControl": "Kontrol Misi"
     },
+    "Squad": {
+        "networkTitle": "Jaringan Squad",
+        "networkSubtitle": "Kelola insinyur dan operatif elit.",
+        "profilesTab": "Profil Operatif",
+        "applicationsTab": "Aplikasi Misi",
+        "noProfiles": "Tidak ada profil squad ditemukan.",
+        "exp": "Pengalaman",
+        "missions": "Misi",
+        "cleared": "OPERATIF TERVERIFIKASI",
+        "denied": "AKSES DITOLAK"
+    },
     "Loader": {
         "initializingCore": "MENGINISIALISASI_SISTEM_INTI...",
         "loadingNeural": "MEMUAT_PROTOKOL_SARAF...",
@@ -313,7 +324,7 @@
     },
     "Footer": {
         "ctaTitle": "Siap Membangun Masa Depan Bisnis Anda?",
-        "ctaButton": "Mulai AI Briefing (Gratis)",
+        "ctaButton": "Mulai Konsultasi Proyek",
         "clientLogin": "Login Klien",
         "contactUs": "Hubungi Kami",
         "services": "Layanan",

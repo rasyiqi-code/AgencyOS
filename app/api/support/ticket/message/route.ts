@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function POST(req: Request) {
     const user = await stackServerApp.getUser();
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
         const attachments = [];
         if (file && file.size > 0 && file.name !== 'undefined') {
-            const { uploadFile } = await import("@/lib/storage");
+            const { uploadFile } = await import("@/lib/integrations/storage");
             const url = await uploadFile(file, `tickets/${ticketId}/${Date.now()}-${file.name}`);
             attachments.push({
                 name: file.name,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebarStore } from "@/lib/store/sidebar-store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore } from "react";
 
 const subscribe = () => () => { };

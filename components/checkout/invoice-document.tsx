@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import Image from "next/image";
 
-import { ExtendedEstimate } from "@/lib/types";
+import { ExtendedEstimate } from "@/lib/shared/types";
 
 export interface AgencyInvoiceSettings {
     agencyName: string;

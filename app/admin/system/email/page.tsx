@@ -1,7 +1,7 @@
 import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 // import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
 
 export default async function AdminEmailPage() {

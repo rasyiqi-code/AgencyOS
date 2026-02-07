@@ -1,6 +1,6 @@
 
-import { stackServerApp } from "@/lib/stack";
-import { isAdmin } from "@/lib/auth-helpers";
+import { stackServerApp } from "@/lib/config/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 import { NextResponse } from "next/server";
 
 export async function GET() {

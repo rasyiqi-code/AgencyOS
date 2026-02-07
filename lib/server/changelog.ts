@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function getChangelogs(publishedOnly = true) {
     return await prisma.changelog.findMany({

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
 import { useTranslations } from "next-intl";
 
@@ -13,11 +13,16 @@ const getServerSnapshot = () => false;
 
 import { usePathname } from "next/navigation";
 
-export function SidebarLink({ href, icon: Icon, label }: { href: string; icon: ComponentType<{ className?: string }>; label: string }) {
+export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: string; icon: ComponentType<{ className?: string }>; label: string; iconClass?: string }) {
     const { isCollapsed } = useSidebarStore();
     const isClient = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
     const pathname = usePathname();
-    const isActive = pathname === href;
+    const isActive = pathname === href || (
+        href !== '/admin' &&
+        href !== '/dashboard' &&
+        href !== '/' &&
+        pathname?.startsWith(href)
+    );
 
     if (!isClient) return null;
 
@@ -31,7 +36,7 @@ export function SidebarLink({ href, icon: Icon, label }: { href: string; icon: C
                 isCollapsed ? "justify-center px-2" : ""
             )}
         >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className={cn("h-4 w-4 shrink-0", iconClass)} />
             {!isCollapsed && <span className="truncate">{label}</span>}
         </Link>
     );
@@ -65,6 +70,7 @@ export function SidebarSuperAdmin() {
             <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
+            <SidebarLink href="/admin/squad" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/media" icon={Images} label="Media" />
         </>
     );

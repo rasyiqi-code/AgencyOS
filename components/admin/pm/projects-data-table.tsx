@@ -6,7 +6,7 @@ import {
     flexRender,
     getCoreRowModel,
 } from "@tanstack/react-table";
-import { useTableInstance } from "@/lib/table-instance";
+import { useTableInstance } from "@/lib/shared/table-instance";
 
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";

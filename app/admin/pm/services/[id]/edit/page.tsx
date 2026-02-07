@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { redirect, notFound } from "next/navigation";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 // import { updateService } from "@/app/actions/admin";
 // import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 // import { ServiceImageUpload } from "@/components/admin/services/image-upload";

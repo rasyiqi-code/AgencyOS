@@ -1,5 +1,5 @@
 import { CreateTicketForm } from "@/components/support/create-ticket-form";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { redirect } from "next/navigation";
 
 export default async function NewTicketPage() {

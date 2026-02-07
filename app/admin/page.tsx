@@ -1,5 +1,5 @@
 
-import { isAdmin, canManageProjects, canManageBilling } from "@/lib/auth-helpers";
+import { isAdmin, canManageProjects, canManageBilling } from "@/lib/shared/auth-helpers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 

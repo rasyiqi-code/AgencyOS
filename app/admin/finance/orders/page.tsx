@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
-import { type StackUser } from "@/lib/types";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { type StackUser } from "@/lib/shared/types";
 import { ShoppingCart, LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { OrdersDataTable } from "@/components/admin/finance/orders-data-table";

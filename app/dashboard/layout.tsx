@@ -4,7 +4,7 @@ import { DashboardHeader } from "@/components/dashboard/header/main";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import Image from "next/image";
 
 export default async function DashboardLayout({

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { StackTheme, StackProvider } from "@stackframe/stack";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { Toaster } from "@/components/ui/sonner";
 import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
 import { CurrencyProvider } from "@/components/providers/currency-provider";
@@ -16,7 +16,7 @@ import Script from 'next/script';
 
 const inter = Inter({ subsets: ["latin"] });
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();

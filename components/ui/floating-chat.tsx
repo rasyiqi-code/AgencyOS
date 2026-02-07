@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { useUser } from "@stackframe/stack";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";

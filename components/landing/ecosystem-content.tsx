@@ -3,7 +3,6 @@
 import { motion, Variants } from "framer-motion";
 import { LayoutDashboard, Users, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 
 interface EcosystemContentProps {
@@ -74,33 +73,28 @@ export function EcosystemContent({ agencyName }: EcosystemContentProps) {
                         </Link>
                     </motion.div>
 
-                    {/* Squad Portal */}
+                    {/* Squad Portal (Activated) */}
                     <motion.div variants={itemVariants}>
-                        <div className="group block h-full opacity-70 cursor-not-allowed">
-                            <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 transition-all duration-300 overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-10">
-                                    <Users className="w-24 h-24 text-brand-grey rotate-12" />
+                        <Link href="/squad" className="group block h-full">
+                            <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-blue-500/50 transition-all duration-300 overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Users className="w-24 h-24 text-blue-500 rotate-12" />
                                 </div>
 
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center text-brand-grey">
-                                        <Users className="w-6 h-6 text-white" />
-                                    </div>
-                                    <Badge variant="outline" className="border-white/20 text-white/50 bg-white/5 px-3 py-1 text-[10px] tracking-widest uppercase">
-                                        Coming Soon
-                                    </Badge>
+                                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-transform">
+                                    <Users className="w-6 h-6" />
                                 </div>
 
-                                <h3 className="text-xl font-bold text-white mb-2">{t("squadTitle")}</h3>
+                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">{t("squadTitle")}</h3>
                                 <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                                     {t("squadDesc")}
                                 </p>
 
-                                <div className="flex items-center text-brand-grey/50 text-sm font-bold mt-auto">
-                                    {t("squadCta")} <ArrowRight className="w-4 h-4 ml-2" />
+                                <div className="flex items-center text-blue-500 text-sm font-bold mt-auto">
+                                    {t("squadCta")} <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </motion.div>
 
                     {/* Admin Core */}

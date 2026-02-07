@@ -1,5 +1,5 @@
 
-import Image from "next/image";
+import { SafeImage } from "@/components/ui/safe-image";
 import { Eye } from "lucide-react";
 
 interface ProjectPreviewProps {
@@ -18,10 +18,11 @@ export function ProjectPreview({ url }: ProjectPreviewProps) {
                 </h4>
             </div>
             <div className="relative aspect-video rounded-xl overflow-hidden border border-white/5 bg-black/20 group">
-                <Image
+                <SafeImage
                     src={url}
                     alt="Project Preview"
                     fill
+                    sizes="(max-width: 768px) 100vw, 300px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <a

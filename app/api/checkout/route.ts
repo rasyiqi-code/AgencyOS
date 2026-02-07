@@ -1,6 +1,6 @@
-import { getSnap } from "@/lib/midtrans";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { getSnap } from "@/lib/integrations/midtrans";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";

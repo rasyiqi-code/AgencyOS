@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 import Image from "next/image";
 

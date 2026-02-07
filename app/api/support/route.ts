@@ -1,5 +1,5 @@
 import { supportFlow } from '../../genkit';
-import { toReadableStream } from '@/lib/genkit-stream';
+import { toReadableStream } from '@/lib/config/genkit-stream';
 
 export const maxDuration = 60;
 

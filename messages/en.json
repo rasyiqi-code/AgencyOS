@@ -20,27 +20,27 @@
         "statusBadge": "Accepting New Projects: Build your MVP in 30 Days",
         "title1": "Hire AI + Experts.",
         "title2": "Launch MVP in 30 Days.",
-        "description": "Building a tech team is slow, expensive, and risky. {brand} combines <white>AI Automation</white> with <white>Senior Engineers</white> to build your app faster, cheaper, and better. No outsourcing, no compromises.",
+        "description": "Building a tech team is slow, expensive, and risky. Crediblemark combines <white>AI Automation</white> with <white>Senior Engineers</white> to build your app faster, cheaper, and better. We are your dedicated product team.",
         "launchDashboard": "Start a Project",
         "viewServices": "Browse Services",
-        "poweredBy": "AI-POWERED • AUTOMATED WORKFLOWS • SENIOR EXPERTS"
+        "poweredBy": "PREMIUM DEVELOPMENT • SENIOR EXPERTS • AI WORKFLOWS"
     },
     "Ecosystem": {
-        "title": "Your Mission Control Center",
-        "subtitle": "Complete transparency. We use AI where it matters — directly into your project workbench.",
-        "clientTitle": "Mission Control",
-        "clientDesc": "Real-time visibility. Track daily logs, provide feedack on features, and monitor deployment status in one secure dashboard.",
-        "clientCta": "Enter Mission Control",
-        "squadTitle": "The Talent Squad",
-        "squadDesc": "Access a network of vetted Senior Engineers. No juniors, no interns. Just elite builders.",
-        "squadCta": "Join Squad",
-        "adminTitle": "Admin Core",
-        "adminDesc": "Our system automatically tests every line of code for security and performance before deployment.",
-        "adminCta": "System Core"
+        "title": "Why Choose Us?",
+        "subtitle": "We don't just email you updates. You get full access to track progress in real-time.",
+        "clientTitle": "Total Transparency",
+        "clientDesc": "No more black boxes. Monitor daily logs, approve features, and track every dollar spent in real-time.",
+        "clientCta": "See How It Works",
+        "squadTitle": "Senior Engineers Only",
+        "squadDesc": "Success requires experience. We strictly deploy vetted Senior Engineers. No juniors, no interns learning on your dime.",
+        "squadCta": "Meet Our Team",
+        "adminTitle": "Enterprise Security",
+        "adminDesc": "Sleep well knowing your IP is safe. We implement banking-grade security and performance testing on every release.",
+        "adminCta": "Security Standards"
     },
     "SocialProof": {
         "faster": "Weeks, Not Months",
-        "fasterSub": "AI-Accelerated Development",
+        "fasterSub": "AI-Accelerated Delivery",
         "fixedPrice": "Fixed Cost",
         "fixedPriceSub": "Guaranteed Quote upfront",
         "verified": "Top 1% Talent",
@@ -52,79 +52,79 @@
         "stackAI": "Artificial Intelligence"
     },
     "Testimonials": {
-        "title": "Trusted by Builders",
-        "subtitle": "Join hundreds of founders building with {brand}.",
+        "title": "Trusted by Founders",
+        "subtitle": "Join satisfied clients building with Crediblemark.",
         "reviews": [
             {
                 "name": "Alex Chen",
                 "role": "CTO, InnovateLabs",
-                "text": "Their platform accelerated our development cycle significantly. A game-changer for our team."
+                "text": "Crediblemark accelerated our development cycle significantly. They built our MVP in record time."
             },
             {
                 "name": "Sarah Davis",
                 "role": "Lead Engineer, Nexus Systems",
-                "text": "The best SaaS tool I've used. Integration was seamless and the support is top-notch."
+                "text": "The most professional agency I've worked with. The Mission Control dashboard kept us perfectly in sync."
             },
             {
                 "name": "Michael Kim",
                 "role": "Founder, CodeCraft",
-                "text": "We've scaled effortlessly with their robust infrastructure. Highly recommended for any startup."
+                "text": "We scaled effortlessly with their code. Highly recommended for any non-technical founder."
             },
             {
                 "name": "Jessica Lee",
                 "role": "Product Manager, Apex Digital",
-                "text": "{brand} provided the stability and speed we needed to launch our MVP in record time."
+                "text": "Crediblemark provided the stability and speed we needed to launch our MVP in just 4 weeks."
             },
             {
                 "name": "David Wilson",
                 "role": "VP of Engineering, CloudScale",
-                "text": "Incredible performance and reliability. The AI integration works like magic."
+                "text": "Incredible performance and reliability. Their hybrid AI approach works like magic."
             }
         ]
     },
     "Comparison": {
-        "title": "Traditional vs. {brand} Hybrid",
-        "subtitle": "Why founders choose AI-Enhanced Development.",
-        "oldTitle": "Traditional Dev Shop",
+        "title": "Traditional Outsourcing vs. Crediblemark",
+        "subtitle": "Why founders choose our AI-Enhanced Agency model.",
+        "oldTitle": "Typical Dev Agency",
         "old1": "3-6 Month Timeline",
         "old2": "Hourly billing (costs explode)",
         "old3": "Opaque progress updates",
         "old4": "Outsourced to Junior Devs",
-        "newTitle": "{brand} Hybrid Model",
+        "newTitle": "Crediblemark Hybrid",
         "recommended": "SMART CHOICE",
         "new1": "Instant kickoff",
         "new1Sub": "Start building in 24 hours.",
         "new2": "Fixed Project Price.",
         "new2Sub": "Know exactly what you pay.",
-        "new3": "Live Progress Tracker.",
-        "new3Sub": "See code commits real-time.",
+        "new3": "Live Client Portal.",
+        "new3Sub": "See code contributions real-time.",
         "new4": "Senior Engineers only.",
         "new4Sub": "Vetted experts, no beginners."
     },
     "ProductCatalog": {
-        "title": "Ready-to-Use Solutions",
-        "subtitle": "Choose the package that fits your business needs.",
+        "title": "Service Packages",
+        "subtitle": "Choose the engagement model that fits your stage.",
         "products": {
             "ops": {
-                "title": "Business Ops Dashboard",
+                "title": "Internal Tools & Ops",
                 "target": "SMEs & Distributors",
                 "desc": "Turn Excel piles into secure internal database apps. Automate salary & commission calculations.",
                 "price": "Starting from Rp 15M",
-                "cta": "Organize My Data"
+                "cta": "Digitize My Biz"
             },
             "publisher": {
-                "title": "The Publisher Engine",
-                "target": "Media & Publishers",
+                "title": "Media Publisher Platform",
+                "target": "Media Companies",
                 "desc": "Super fast Next.js news portal with modern editorial CMS. Ready for ad and subscription monetization.",
                 "price": "Starting from Rp 10M",
-                "cta": "Create New Media"
+                "cta": "Launch Media Site"
             },
             "saas": {
                 "title": "Custom SaaS MVP",
                 "target": "Startup Founders",
-                "desc": "Validate your startup idea in 14 days. AI builds frontend, I build backend.",
+                "desc": "Validate your startup idea in 30 days. We build the frontend and backend, you launch.",
                 "price": "Custom Quote via AI",
-                "cta": "Ideation Consultation"
+                "cta": "Consulate Idea"
             }
         },
         "ctaGeneric": "Order Now"
@@ -166,7 +166,7 @@
     },
     "Included": {
         "title": "Included with Every Service",
-        "subtitle": "No matter which package you choose, AgencyOS quality standards are included.",
+        "subtitle": "No matter which package you choose, Crediblemark quality standards are included.",
         "f1": "100% Full Ownership",
         "f1Desc": "All source code and design assets are fully yours, forever.",
         "f2": "1-on-1 Strategy Session",
@@ -279,6 +279,17 @@
         "inOrbit": "In Orbit",
         "missionControl": "Mission Control"
     },
+    "Squad": {
+        "networkTitle": "Squad Network",
+        "networkSubtitle": "Manage elite engineers and operatives.",
+        "profilesTab": "Operative Profiles",
+        "applicationsTab": "Mission Applications",
+        "noProfiles": "No squad profiles found.",
+        "exp": "Exp",
+        "missions": "Missions",
+        "cleared": "CLEARED OPERATIVE",
+        "denied": "ACCESS DENIED"
+    },
     "Loader": {
         "initializingCore": "INITIALIZING_CORE_SYSTEM...",
         "loadingNeural": "LOADING_NEURAL_PROTOCOLS...",
@@ -313,7 +324,7 @@
     },
     "Footer": {
         "ctaTitle": "Ready to Build Your Business Future?",
-        "ctaButton": "Start AI Briefing (Free)",
+        "ctaButton": "Start Project Consultation",
         "clientLogin": "Client Login",
         "contactUs": "Contact Us",
         "services": "Services",

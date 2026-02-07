@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChatInterface } from "@/components/support/chat-interface";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import { User, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

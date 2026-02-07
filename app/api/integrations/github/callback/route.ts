@@ -1,7 +1,7 @@
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { isAdmin } from "@/lib/auth-helpers";
+import { prisma } from "@/lib/config/db";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 import type { PrismaWithIntegration } from "@/types/payment";
 
 export async function GET(req: Request) {

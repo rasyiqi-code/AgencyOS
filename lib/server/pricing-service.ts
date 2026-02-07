@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export interface PricingConfig {
     baseRate: number;

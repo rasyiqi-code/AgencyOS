@@ -1,5 +1,5 @@
 import { HeroContent } from "@/components/landing/hero-content";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { SystemSetting } from "@prisma/client";
 
 export async function LandingHero() {

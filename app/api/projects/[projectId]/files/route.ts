@@ -1,8 +1,8 @@
 
-import { prisma } from "@/lib/db";
-import { isAdmin } from "@/lib/auth-helpers";
+import { prisma } from "@/lib/config/db";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 import { NextResponse } from "next/server";
-import { uploadFile } from "@/lib/storage";
+import { uploadFile } from "@/lib/integrations/storage";
 
 export async function POST(
     request: Request,
@@ -26,7 +26,7 @@ export async function POST(
         const filename = `projects/${projectId}/docs/${Date.now()}-${file.name.replace(/\s/g, "_")}`;
         const url = await uploadFile(file, filename);
 
-        if (!url || !url.startsWith("http")) {
+        if (!url || (!url.startsWith("http") && !url.startsWith("/"))) {
             throw new Error("Failed to upload to R2");
         }
 

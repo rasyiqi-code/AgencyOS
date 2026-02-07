@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 // import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
 
 // Reusing schema definition

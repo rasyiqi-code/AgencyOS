@@ -1,6 +1,6 @@
 
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET() {
     if (!await isAdmin()) {

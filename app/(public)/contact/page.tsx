@@ -2,7 +2,7 @@ import { ContactForm } from "@/components/public/contact-form";
 import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 // import { getContactInfo } from "@/app/actions/general";
 
 export default async function ContactPage() {

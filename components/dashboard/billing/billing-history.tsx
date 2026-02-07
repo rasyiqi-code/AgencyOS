@@ -13,7 +13,7 @@ import {
 import { FileText, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 import "@/types/payment"; // Import for Window.snap type augmentation
 
 export interface BillingOrder {

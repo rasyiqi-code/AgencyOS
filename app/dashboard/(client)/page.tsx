@@ -1,5 +1,5 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 import { OverviewHeader } from "@/components/dashboard/header/overview";
 import { MissionCard } from "@/components/dashboard/missions/card";
 import { FinanceWidget } from "@/components/dashboard/widgets/finance";
@@ -7,7 +7,7 @@ import { QuickActions } from "@/components/dashboard/widgets/quick-actions";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-import { mapPrismaProjectToExtended } from "@/lib/mappers";
+import { mapPrismaProjectToExtended } from "@/lib/shared/mappers";
 
 export default async function DashboardPage() {
     const user = await stackServerApp.getUser();

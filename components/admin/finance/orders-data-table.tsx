@@ -14,7 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
-import { useTableInstance } from "@/lib/table-instance";
+import { useTableInstance } from "@/lib/shared/table-instance";
 
 interface OrdersDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];

@@ -1,13 +1,13 @@
 
 
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 import { Badge } from "@/components/ui/badge";
 import { Layers } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ProjectsDataTable } from "@/components/admin/pm/projects-data-table";
 import { columns } from "@/components/admin/pm/project-columns";
-import { type ExtendedProject } from "@/lib/types";
+import { type ExtendedProject } from "@/lib/shared/types";
 import type { EnrichedProjectInput } from "@/types/payment";
 
 interface StackUser {

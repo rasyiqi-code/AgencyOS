@@ -1,5 +1,5 @@
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";

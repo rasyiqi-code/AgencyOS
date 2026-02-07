@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { SubmitTestimonialForm } from "./form";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";

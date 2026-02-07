@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/stack";
-import { uploadFile } from "@/lib/storage";
+import { stackServerApp } from "@/lib/config/stack";
+import { uploadFile } from "@/lib/integrations/storage";
 
 export async function POST(req: NextRequest) {
     const user = await stackServerApp.getUser();

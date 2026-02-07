@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExtendedEstimate, Bonus, Coupon } from "@/lib/types";
+import { ExtendedEstimate, Bonus, Coupon } from "@/lib/shared/types";
 import { Gift, Zap, Check, ShieldCheck, Tag, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

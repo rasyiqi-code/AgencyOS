@@ -2,11 +2,11 @@
 import { DeleteServiceButton } from "@/components/admin/services/delete-service-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import Image from "next/image";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, Edit } from "lucide-react";
 import Link from "next/link";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 

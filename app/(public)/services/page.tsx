@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { ServicesClientWrapper } from "@/components/public/services-client-wrapper";
 import { Metadata } from "next";
 import { Service } from "@prisma/client";

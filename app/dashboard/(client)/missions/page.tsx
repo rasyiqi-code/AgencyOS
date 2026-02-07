@@ -1,11 +1,11 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 import { MissionCard } from "@/components/dashboard/missions/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import Link from "next/link"; // Added Link import
-import { type ExtendedProject } from "@/lib/types";
+import { type ExtendedProject } from "@/lib/shared/types";
 
 import { cookies } from "next/headers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

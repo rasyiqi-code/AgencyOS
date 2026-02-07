@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { notFound, redirect } from "next/navigation";
 import { CheckoutContent } from "@/components/checkout/checkout-content";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { currencyService } from "@/lib/server/currency-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 

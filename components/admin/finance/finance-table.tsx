@@ -12,7 +12,7 @@ import {
 
 import { ShoppingCart } from "lucide-react";
 import { financeColumns, FinanceData } from "./finance-columns";
-import { useTableInstance } from "@/lib/table-instance";
+import { useTableInstance } from "@/lib/shared/table-instance";
 
 interface FinanceTableProps {
     data: FinanceData[];

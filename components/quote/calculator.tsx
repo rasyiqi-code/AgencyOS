@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { calculateProjectQuote, type QuoteParams } from "@/lib/pricing";
+import { calculateProjectQuote, type QuoteParams } from "@/lib/shared/pricing";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";

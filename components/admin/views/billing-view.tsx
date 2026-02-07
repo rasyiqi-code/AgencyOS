@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Zap, ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function BillingDashboardView() {
     // Fetch Finance Specific Stats

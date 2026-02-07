@@ -2,7 +2,7 @@
 import { Globe } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { SeoSettingsForm } from "@/components/admin/system/seo-settings-form";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export const dynamic = "force-dynamic";
 

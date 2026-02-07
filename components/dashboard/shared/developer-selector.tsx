@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import {
     Select,
     SelectContent,
@@ -9,9 +9,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useTransition } from "react";
 import { toast } from "sonner";
 import { UserCheck, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Developer {
     id: string;
@@ -29,11 +29,12 @@ export function DeveloperSelector({
     const [isPending, startTransition] = useTransition();
     const [developers, setDevelopers] = useState<Developer[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         async function fetchDevelopers() {
             try {
-                const res = await fetch("/api/admin/users"); // We'll need to create this API
+                const res = await fetch("/api/admin/squad/users"); // Fetch from Squad APIs
                 if (res.ok) {
                     const data = await res.json();
                     setDevelopers(data);
@@ -58,6 +59,7 @@ export function DeveloperSelector({
                 });
                 if (!res.ok) throw new Error("Failed");
                 toast.success("Developer assigned successfully");
+                router.refresh();
             } catch (error) {
                 console.error("Failed to assign developer", error);
                 toast.error("Failed to assign developer");

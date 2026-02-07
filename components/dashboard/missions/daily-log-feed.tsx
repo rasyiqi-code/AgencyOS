@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import { SafeImage } from '@/components/ui/safe-image';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,16 +9,16 @@ export type DailyLogMood = "on_track" | "delayed" | "shipped";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/shared/utils';
 import { CalendarClock, CheckCircle2, AlertCircle, Ship, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { type DailyLog } from '@/lib/types';
+import { type DailyLog } from '@/lib/shared/types';
 
 interface DailyLogFeedProps {
     projectId: string;
     initialLogs: DailyLog[];
-    isAdmin?: boolean;
+    canPost?: boolean;
 }
 
 const MOOD_CONFIG: Record<string, { icon: React.ComponentType<{ className?: string }>, color: string, label: string }> = {
@@ -26,7 +27,7 @@ const MOOD_CONFIG: Record<string, { icon: React.ComponentType<{ className?: stri
     shipped: { icon: Ship, color: 'text-brand-yellow', label: 'Shipped Feature' },
 };
 
-export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyLogFeedProps) {
+export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyLogFeedProps) {
     const [logs, setLogs] = useState<DailyLog[]>(initialLogs);
     const [content, setContent] = useState('');
     const [mood, setMood] = useState<DailyLogMood>('on_track');
@@ -108,8 +109,8 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                 <span className="text-xs text-zinc-500">{logs.length} entries</span>
             </div>
 
-            <ScrollArea className="flex-1 p-4">
-                <div className="space-y-6">
+            <ScrollArea className="flex-1">
+                <div className="space-y-6 p-4 pl-6">
                     {logs.map((log) => {
                         const moodConfig = MOOD_CONFIG[log.mood] || MOOD_CONFIG['on_track'];
                         const Icon = moodConfig.icon;
@@ -140,10 +141,11 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
                                             {log.images!.map((img, idx) => (
                                                 <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-black/40 group">
-                                                    <Image
+                                                    <SafeImage
                                                         src={img}
                                                         alt="Attachment"
                                                         fill
+                                                        sizes="(max-width: 640px) 50vw, 33vw"
                                                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                     <a href={img} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-transparent" />
@@ -164,7 +166,7 @@ export function DailyLogFeed({ projectId, initialLogs, isAdmin = false }: DailyL
                 </div>
             </ScrollArea>
 
-            {isAdmin && (
+            {canPost && (
                 <div className="p-3 bg-zinc-950 border-t border-white/5">
                     <form onSubmit={handleSubmit} className="space-y-3">
                         <Textarea

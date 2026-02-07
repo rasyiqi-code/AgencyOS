@@ -1,10 +1,10 @@
 import { QuoteForm } from "@/components/quote/quote-form";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export const dynamic = "force-dynamic";
 
 import { Metadata } from "next";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 export async function generateMetadata(): Promise<Metadata> {
     const pageSeo = await prisma.pageSeo.findUnique({

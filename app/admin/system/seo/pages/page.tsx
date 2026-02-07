@@ -1,5 +1,5 @@
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { Badge } from "@/components/ui/badge";
 import { SystemNav } from "@/components/admin/system-nav";
 import { PageSeoList } from "@/components/admin/system/page-seo-list";

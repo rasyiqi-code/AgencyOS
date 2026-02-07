@@ -1,5 +1,5 @@
 import { createCreem } from "creem_io";
-import { paymentGatewayService } from "./server/payment-gateway-service";
+import { paymentGatewayService } from "../server/payment-gateway-service";
 
 /**
  * Creem SDK interface - based on the methods we actually use

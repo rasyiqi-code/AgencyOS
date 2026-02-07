@@ -1,6 +1,6 @@
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         // Handle File Upload if present (Shared logic for both Feedback and Comment)
         if (file && file.size > 0 && file.name !== 'undefined') {
             try {
-                const { uploadFile } = await import("@/lib/storage");
+                const { uploadFile } = await import("@/lib/integrations/storage");
                 const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
                 const folder = feedbackId ? 'comments' : 'feedback';
                 const path = `projects/${projectId}/${folder}/${Date.now()}-${safeName}`;

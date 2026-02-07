@@ -1,5 +1,5 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 

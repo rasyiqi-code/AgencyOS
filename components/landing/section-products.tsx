@@ -1,6 +1,6 @@
 
 import { getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { ProductList } from "./product-list";
 
 export async function ProductCatalog() {

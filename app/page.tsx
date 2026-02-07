@@ -14,7 +14,7 @@ import { FAQSection } from "@/components/landing/section-faq";
 import { Testimonials } from "@/components/landing/section-testimonials";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Organization } from "schema-dts";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { Metadata } from "next";
 import { SystemSetting } from "@prisma/client";
 
@@ -62,15 +62,15 @@ export default async function Home() {
       />
       <SiteHeader />
       <LandingHero />
-      <SectionEcosystem />
       <SocialProof />
-      <Testimonials />
       <Comparison />
       <FinancialLogic />
-      <ProductCatalog />
+      <SectionEcosystem />
       <Workflow />
-      <SectionGuarantee />
+      <ProductCatalog />
+      <Testimonials />
       <ExpertProfile />
+      <SectionGuarantee />
       <FAQSection />
       <SectionCTA />
       <SiteFooter />

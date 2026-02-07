@@ -1,8 +1,8 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
 import { ClientsDataTable } from "@/components/admin/clients/clients-data-table";
 import { clientColumns } from "@/components/admin/clients/client-columns";
-import { type StackUser } from "@/lib/types";
+import { type StackUser } from "@/lib/shared/types";
 
 export const dynamic = 'force-dynamic';
 

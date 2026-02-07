@@ -1,5 +1,5 @@
 
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { Check, Sparkles } from "lucide-react";
 // import { createServiceOrder } from "@/app/actions/store";
 import { PurchaseButton } from "@/components/store/purchase-button";

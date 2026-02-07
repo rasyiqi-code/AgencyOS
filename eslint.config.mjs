@@ -13,12 +13,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
-  {
-    files: ["**/lib/table-instance.ts"],
-    rules: {
-      "react-hooks/incompatible-library": "off",
-    },
-  },
+
 ]);
 
 export default eslintConfig;

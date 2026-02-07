@@ -1,7 +1,7 @@
-import { getCore } from "@/lib/midtrans";
-import { prisma } from "@/lib/db";
+import { getCore } from "@/lib/integrations/midtrans";
+import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/stack";
+import { stackServerApp } from "@/lib/config/stack";
 import { paymentService } from "@/lib/server/payment-service";
 import type { MidtransChargeParameter } from "@/types/payment";
 

@@ -13,7 +13,7 @@ import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCi
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag } from "lucide-react";
-import { generateServiceAction } from '@/app/actions/genkit';
+// import { generateServiceAction } from '@/app/actions/genkit';
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Link from "next/link";
@@ -51,7 +51,13 @@ export function EditServiceForm({ service, features, features_id }: { service: S
 
         setIsGenerating(true);
         try {
-            const result = await generateServiceAction(prompt);
+            const res = await fetch("/api/genkit/generate-service", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ description: prompt })
+            });
+            const result = await res.json();
+
             if (result.success) {
                 setGeneratedData(result.data ?? null);
                 setGenerationKey(prev => prev + 1);

@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { Shield, LogOut } from "lucide-react";
 import { DashboardHeader } from "@/components/dashboard/header/main";
-import { isAdmin, canManageProjects, canManageBilling } from "@/lib/auth-helpers";
+import { isAdmin, canManageProjects, canManageBilling } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
 import { AdminSidebarNavigation } from "@/components/admin/admin-sidebar-navigation";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 

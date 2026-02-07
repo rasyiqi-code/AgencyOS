@@ -7,7 +7,7 @@ import { Download, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
-import { ExtendedEstimate } from "@/lib/types";
+import { ExtendedEstimate } from "@/lib/shared/types";
 import { useCurrency } from "@/components/providers/currency-provider";
 import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails } from "@/types/payment";
 

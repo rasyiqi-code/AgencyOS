@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Github, Globe } from "lucide-react";
 import Link from "next/link";
-import type { ExtendedProject } from "@/lib/types";
+import type { ExtendedProject } from "@/lib/shared/types";
 
 interface ProjectHeaderProps {
     project: ExtendedProject;

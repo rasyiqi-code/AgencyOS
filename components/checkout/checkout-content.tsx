@@ -5,7 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
-import { ExtendedEstimate, Bonus } from "@/lib/types";
+import { ExtendedEstimate, Bonus } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 
 export function CheckoutContent({

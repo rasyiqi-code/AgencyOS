@@ -1,39 +1,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { prisma } from "@/lib/db";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getClient } from "@/lib/integrations/storage";
 
-// Helper to get S3 Client (Duplicated logic from lib/storage temporarily or we should export it)
-// Ideally we refactor lib/storage to export this.
-async function getClient() {
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_bucket_name'] }
-        }
-    });
 
-    const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
-
-    const endpoint = getSetting('r2_endpoint');
-    const accessKeyId = getSetting('r2_access_key_id');
-    const secretAccessKey = getSetting('r2_secret_access_key');
-    const bucketName = getSetting('r2_bucket_name');
-
-    if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
-        return null;
-    }
-
-    const client = new S3Client({
-        region: "auto",
-        endpoint,
-        credentials: {
-            accessKeyId,
-            secretAccessKey,
-        },
-    });
-
-    return { client, bucketName };
-}
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);

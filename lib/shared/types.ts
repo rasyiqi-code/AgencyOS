@@ -144,6 +144,7 @@ export interface ExtendedProject {
     files?: ProjectFile[];
     subscriptionEndsAt?: Date | null;
     subscriptionStatus?: string | null;
+    estimate?: ExtendedEstimate | null;
 }
 
 export interface StackUser {

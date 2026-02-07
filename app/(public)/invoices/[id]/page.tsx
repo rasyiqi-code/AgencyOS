@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
-import { ExtendedEstimate } from "@/lib/types";
-import { stackServerApp } from "@/lib/stack";
+import { ExtendedEstimate } from "@/lib/shared/types";
+import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import type { InvoiceOrder } from "@/types/payment";
 

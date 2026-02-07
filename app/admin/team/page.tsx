@@ -1,7 +1,7 @@
-import { stackServerApp } from "@/lib/stack";
-import { prisma } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth-helpers";
-import { type StackUser } from "@/lib/types";
+import { stackServerApp } from "@/lib/config/stack";
+import { prisma } from "@/lib/config/db";
+import { getCurrentUser } from "@/lib/shared/auth-helpers";
+import { type StackUser } from "@/lib/shared/types";
 import { UserPermission } from "@prisma/client";
 import { TeamTable } from "@/components/admin/team/team-table";
 import { ShieldAlert } from "lucide-react";

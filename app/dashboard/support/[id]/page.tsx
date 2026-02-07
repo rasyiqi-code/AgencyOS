@@ -1,6 +1,6 @@
 import { ChatInterface } from "@/components/support/chat-interface";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 import { notFound, redirect } from "next/navigation";
 import type { MessageAttachment } from "@/types/payment";
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Clock, Github, Rocket, Calendar } from "lucide-react";
-import type { ExtendedProject } from "@/lib/types";
+import type { ExtendedProject } from "@/lib/shared/types";
 import { useCurrency } from "@/components/providers/currency-provider";
 
 export function MissionCard({ project }: { project: ExtendedProject }) {

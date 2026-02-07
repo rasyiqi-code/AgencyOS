@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { CheckCircle2, Circle, Send, Paperclip, X, File as FileIcon, Link2, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { type FeedbackItem } from "@/lib/types";
+import { type FeedbackItem } from "@/lib/shared/types";
 
 interface FeedbackBoardProps {
     projectId: string;

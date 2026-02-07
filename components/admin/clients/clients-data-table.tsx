@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useTableInstance } from "@/lib/table-instance";
+import { useTableInstance } from "@/lib/shared/table-instance";
 
 interface ClientsDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];

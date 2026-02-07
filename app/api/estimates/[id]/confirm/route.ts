@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;

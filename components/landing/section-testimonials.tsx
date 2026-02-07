@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Star } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface DBTestimonial {

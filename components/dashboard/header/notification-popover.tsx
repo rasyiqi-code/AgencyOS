@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDistanceToNow } from "date-fns"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/shared/utils"
 
 interface Notification {
     id: string

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
-import { ExtendedEstimate, Coupon } from "@/lib/types";
+import { ExtendedEstimate, Coupon } from "@/lib/shared/types";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true }: {

@@ -5,7 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { InvoiceDocument } from "@/components/checkout/invoice-document";
-import { ExtendedEstimate } from "@/lib/types";
+import { ExtendedEstimate } from "@/lib/shared/types";
 
 interface InvoiceDownloadButtonProps {
     estimate: ExtendedEstimate;

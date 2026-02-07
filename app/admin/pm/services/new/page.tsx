@@ -1,6 +1,6 @@
 
 import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 // import { createService } from "@/app/actions/admin";
 // import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 // import { ServiceImageUpload } from "@/components/admin/services/image-image-upload";

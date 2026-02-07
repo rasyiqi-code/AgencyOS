@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { stackServerApp } from "@/lib/stack";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function POST(req: NextRequest) {
     const user = await stackServerApp.getUser();

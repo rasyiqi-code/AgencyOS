@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 import { EcosystemContent } from "@/components/landing/ecosystem-content";
 import { SystemSetting } from "@prisma/client";
 

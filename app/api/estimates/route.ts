@@ -1,7 +1,7 @@
 import { estimateFlow } from '@/app/genkit';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/config/db';
 import { NextResponse, NextRequest } from 'next/server';
-import { getCurrentUser, isAdmin } from '@/lib/auth-helpers';
+import { getCurrentUser, isAdmin } from '@/lib/shared/auth-helpers';
 
 export async function GET(req: NextRequest) {
     try {

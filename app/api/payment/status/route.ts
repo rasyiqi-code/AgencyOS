@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
-import { getCore } from "@/lib/midtrans";
-import { creem as getCreem } from "@/lib/creem";
+import { prisma } from "@/lib/config/db";
+import { getCore } from "@/lib/integrations/midtrans";
+import { creem as getCreem } from "@/lib/integrations/creem";
 import { NextResponse } from "next/server";
 import type { CreemPaymentMetadata } from "@/types/payment";
 

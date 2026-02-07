@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { grantPermission, revokePermission } from "@/lib/server/admin-team";
-import { isAdmin } from "@/lib/auth-helpers";
-import { stackServerApp } from "@/lib/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function POST(req: NextRequest) {
     if (!await isAdmin()) {

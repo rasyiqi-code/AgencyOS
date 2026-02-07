@@ -15,7 +15,7 @@ import { FileText, ListChecks, CreditCard } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag } from "lucide-react";
 
-import { generateServiceAction } from '@/app/actions/genkit';
+// import { generateServiceAction } from '@/app/actions/genkit';
 import { Sparkles, Loader2, ArrowLeft, Package } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -40,9 +40,15 @@ export function CreateServiceForm() {
         if (!prompt.trim()) return;
         setIsGenerating(true);
         try {
-            const res = await generateServiceAction(prompt);
-            if (res.success && res.data) {
-                setGeneratedData(res.data ?? null);
+            const res = await fetch("/api/genkit/generate-service", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ description: prompt })
+            });
+            const result = await res.json();
+
+            if (result.success && result.data) {
+                setGeneratedData(result.data ?? null);
                 setGenerationKey(prev => prev + 1);
                 toast.success("Service drafted by AI!");
             } else {

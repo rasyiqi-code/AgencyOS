@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/shared/utils";
 // import { sendMessage } from "@/app/actions/support";
 import { useCurrency } from "@/components/providers/currency-provider";
 

@@ -1,12 +1,12 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 // Singleton to avoid re-initializing
 let s3ClientInstance: S3Client | null = null;
 let s3BucketName: string | null = null;
 let s3ConfigHash: string | null = null;
 
-async function getClient() {
+export async function getClient() {
     const settings = await prisma.systemSetting.findMany({
         where: {
             key: { in: ['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name'] }

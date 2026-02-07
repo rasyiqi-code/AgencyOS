@@ -1,6 +1,6 @@
 import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/config/db';
 
 interface Message {
     role: 'user' | 'assistant' | 'system';

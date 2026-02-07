@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currencyService } from "@/lib/server/currency-service";
-import { isAdmin } from "@/lib/auth-helpers";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function POST(req: NextRequest) {
     if (!await isAdmin()) {

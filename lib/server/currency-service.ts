@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/config/db";
 
 const CONFIG_KEY = "currency_config";
 const RATES_KEY = "currency_rates";
