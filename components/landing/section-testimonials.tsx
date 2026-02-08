@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Star } from "lucide-react";
+import { Quote } from "lucide-react";
 import { prisma } from "@/lib/config/db";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -92,7 +92,7 @@ function TestimonialCard({ review }: { review: { name: string; role: string; tex
                         <div className="text-zinc-500 text-xs">{review.role}</div>
                     </div>
                 </div>
-                <Star className="w-4 h-4 text-brand-yellow fill-brand-yellow/20" />
+                <Quote className="w-5 h-5 text-brand-yellow/40" />
             </div>
             <p className="text-zinc-300 text-sm leading-relaxed line-clamp-2">
                 &quot;{review.text}&quot;

@@ -34,6 +34,7 @@ export type FinanceData = {
         title: string;
         clientName: string | null;
         userId: string | null;
+        paymentStatus?: string | null; // Added
         order?: {
             proofUrl: string | null;
             paymentType: string | null;
@@ -119,21 +120,31 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
         size: 140,
         cell: ({ row }) => {
             const status = row.getValue("status") as string;
+            const project = row.original.project;
             const isPaid = status === 'paid' || status === 'settled';
-            const isPending = status === 'pending_payment' || status === 'pending';
+            const isPending = status === 'pending_payment' || status === 'pending' || status === 'payment_pending';
+            const isPartial = project?.paymentStatus === 'PARTIAL';
 
             return (
-                <Badge
-                    variant="outline"
-                    className={`py-0 px-2 h-5 text-[10px] w-fit flex items-center gap-1.5
-                        ${isPaid ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                            isPending ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                                'text-zinc-400 border-zinc-700'}
-                    `}
-                >
-                    {isPaid ? <CheckCircle2 className="w-3 h-3" /> : null}
-                    {status.replace(/_/g, ' ').toUpperCase()}
-                </Badge>
+                <div className="flex items-center">
+                    <Badge
+                        variant="outline"
+                        className={`py-0 px-2 h-5 text-[10px] w-fit flex items-center gap-1.5
+                            ${isPaid ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                isPartial ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                    isPending ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                        'text-zinc-400 border-zinc-700'}
+                        `}
+                    >
+                        {isPaid ? <CheckCircle2 className="w-3 h-3" /> : null}
+                        {isPartial ? 'PARTIAL (DP)' : status.replace(/_/g, ' ').toUpperCase()}
+                    </Badge>
+                    {row.original.paymentType && (
+                        <Badge variant="secondary" className="text-[9px] h-5 px-1.5 ml-1 bg-zinc-800 text-zinc-400 border border-zinc-700">
+                            {row.original.paymentType}
+                        </Badge>
+                    )}
+                </div>
             );
         },
     },
@@ -176,7 +187,7 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
 
             const status = estimate.status;
             const isPaid = status === 'paid' || status === 'settled';
-            const isPending = status === 'pending_payment';
+            const isPending = status === 'pending_payment' || status === 'payment_pending';
 
             return (
                 <div className="flex items-center justify-end gap-0">

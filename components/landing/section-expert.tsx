@@ -19,26 +19,21 @@ export async function ExpertProfile() {
                             />
                         </div>
                         <h3 className="text-white font-bold text-lg">{t("name")}</h3>
-                        <p className="text-indigo-400 text-sm">{t("role")}</p>
+                        <p className="text-indigo-400 text-sm mb-2">{t("role")}</p>
+                        <span className="inline-block px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold tracking-wider text-white/70 border border-white/5">
+                            {t("badge")}
+                        </span>
                     </div>
 
                     <div className="flex-1 space-y-6 text-center md:text-left">
-                        <h2 className="text-3xl font-bold text-white">
-                            &ldquo;{t("title")}&rdquo;
+                        <h2 className="text-2xl md:text-3xl font-bold text-white italic">
+                            &ldquo;{t("quote")}&rdquo;
                         </h2>
-                        <div className="space-y-4 text-zinc-400 leading-relaxed">
+                        <div className="space-y-4 text-zinc-400 leading-relaxed text-sm md:text-base">
                             <p>
-                                {t("q")}
+                                {t("description")}
                             </p>
-                            <p>
-                                {t.rich("a", {
-                                    strong: (chunks) => <strong className="text-white">{chunks}</strong>
-                                })}
-                            </p>
-                            <p>
-                                {t("desc")}
-                            </p>
-                            <p className="text-white font-medium pt-2">
+                            <p className="text-white font-medium pt-2 border-t border-white/5 mt-4">
                                 {t("footer")}
                             </p>
                         </div>

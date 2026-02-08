@@ -29,12 +29,15 @@ model Project {
   previewUrl         String?
   subscriptionEndsAt DateTime?
   subscriptionStatus String?
+  paymentStatus      String     @default("UNPAID") // UNPAID, PARTIAL, PAID
+  paidAmount         Float      @default(0)
+  totalAmount        Float      @default(0)
   bounty             Float?     // Budget for Squad (Net)
   briefs             Brief[]
   dailyLogs          DailyLog[]
   feedback           Feedback[]
   applications       MissionApplication[]
-  order              Order?
+  orders             Order[]
   estimate           Estimate?  @relation(fields: [estimateId], references: [id])
   service            Service?   @relation(fields: [serviceId], references: [id])
 }
@@ -46,8 +49,9 @@ model Order {
   snapToken       String?
   transactionId   String?  @unique
   paymentType     String?
+  type            String   @default("FULL") // FULL, DP, REPAYMENT
   userId          String
-  projectId       String?  @unique
+  projectId       String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   paymentMetadata Json?

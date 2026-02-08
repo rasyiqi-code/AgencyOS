@@ -96,7 +96,15 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
     );
 }
 
-export function PriceDisplay({ amount, baseCurrency = 'USD' }: { amount: number, baseCurrency?: 'USD' | 'IDR' }) {
+export function PriceDisplay({
+    amount,
+    baseCurrency = 'USD',
+    compact = false
+}: {
+    amount: number,
+    baseCurrency?: 'USD' | 'IDR',
+    compact?: boolean
+}) {
     const { currency, locale, rate } = useCurrency();
 
     let displayAmount = amount;
@@ -108,13 +116,33 @@ export function PriceDisplay({ amount, baseCurrency = 'USD' }: { amount: number,
         displayAmount = amount / rate;
     }
 
+    // Custom compact formatting for IDR (jt/rb) - Only for Indonesian locale
+    const isIdLocale = locale.startsWith('id');
+    if (compact && currency === 'IDR' && isIdLocale) {
+        if (displayAmount >= 1000000) {
+            const formatted = (displayAmount / 1000000).toLocaleString(locale, {
+                maximumFractionDigits: displayAmount % 1000000 === 0 ? 0 : 1
+            });
+            return <span>Rp {formatted}jt</span>;
+        }
+        if (displayAmount >= 1000) {
+            const formatted = (displayAmount / 1000).toLocaleString(locale, {
+                maximumFractionDigits: 0
+            });
+            return <span>Rp {formatted}rb</span>;
+        }
+    }
+
+    // Standard formatting for all other cases (USD or non-ID locale IDR)
+    // notation: 'compact' will use M, K for English locales
     return (
         <span>
             {new Intl.NumberFormat(locale, {
                 style: 'currency',
                 currency: currency,
-                maximumFractionDigits: currency === 'IDR' ? 0 : 2,
-                minimumFractionDigits: currency === 'IDR' ? 0 : 2,
+                notation: compact ? 'compact' : 'standard',
+                maximumFractionDigits: (compact && currency === 'USD') ? 1 : (currency === 'IDR' ? 0 : 2),
+                minimumFractionDigits: (currency === 'IDR' || compact) ? 0 : 2,
             }).format(displayAmount)}
         </span>
     );

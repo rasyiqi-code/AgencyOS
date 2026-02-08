@@ -103,6 +103,7 @@ export interface ExtendedEstimate {
         currency?: string | null;
         features: unknown;
         image: string | null;
+        interval: string;
     } | null;
     project?: {
         id: string;
@@ -133,6 +134,7 @@ export interface ExtendedProject {
         currency?: string | null;
         features: unknown;
         image: string | null;
+        interval: string;
     } | null;
     briefs: ProjectBrief[];
     feedback: FeedbackItem[];
@@ -146,6 +148,9 @@ export interface ExtendedProject {
     subscriptionStatus?: string | null;
     estimate?: ExtendedEstimate | null;
     bounty?: number | null;
+    paymentStatus?: string | null;
+    paidAmount?: number | null;
+    totalAmount?: number | null;
 }
 
 export interface StackUser {

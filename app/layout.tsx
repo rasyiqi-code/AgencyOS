@@ -14,10 +14,11 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import NextTopLoader from 'nextjs-toploader';
 import Script from 'next/script';
 import { getSystemSettings } from "@/lib/server/settings";
+import { cn } from "@/lib/shared/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
-import { prisma } from "@/lib/config/db";
+
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -71,8 +72,8 @@ export default async function RootLayout({
     : "https://app.sandbox.midtrans.com/snap/snap.js";
 
   return (
-    <html lang={locale}>
-      <body className={inter.className}>
+    <html lang={locale} className="dark">
+      <body className={cn(inter.className, "bg-black text-white")}>
         <NextTopLoader
           color="#FFB800"
           initialPosition={0.08}

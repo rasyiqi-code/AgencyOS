@@ -3,8 +3,8 @@ import { stackServerApp } from "@/lib/config/stack";
 import { type StackUser } from "@/lib/shared/types";
 import { ShoppingCart, LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { OrdersDataTable } from "@/components/admin/finance/orders-data-table";
-import { FinanceData, financeColumns } from "@/components/admin/finance/finance-columns";
+import { FinanceList } from "@/components/admin/finance/finance-list";
+import { FinanceData } from "@/components/admin/finance/finance-columns";
 import { getTranslations } from "next-intl/server";
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,11 @@ export default async function AdminOrdersPage() {
         orderBy: { createdAt: 'desc' },
         include: {
             project: {
-                include: { order: true }
+                include: {
+                    orders: {
+                        orderBy: { createdAt: 'desc' }
+                    }
+                }
             }
         }
     });
@@ -32,12 +36,14 @@ export default async function AdminOrdersPage() {
             title: e.project.title,
             clientName: e.project.clientName,
             userId: e.project.userId,
-            order: e.project.order ? {
-                proofUrl: e.project.order.proofUrl,
-                paymentType: e.project.order.paymentType
+            paymentStatus: e.project.paymentStatus, // Map this field
+            // Access array of orders, taking the first one (most recent?) or relevant one
+            order: e.project.orders && e.project.orders.length > 0 ? {
+                proofUrl: e.project.orders[0].proofUrl,
+                paymentType: e.project.orders[0].type
             } : null
         } : null,
-        paymentType: e.project?.order?.paymentType || null,
+        paymentType: e.project?.orders?.[0]?.type || null,
         screens: e.screens as FinanceData['screens'],
         apis: e.apis as FinanceData['apis']
     }));
@@ -111,7 +117,8 @@ export default async function AdminOrdersPage() {
                 </div>
             </div>
 
-            <OrdersDataTable columns={financeColumns} data={enrichedData} />
+
+            <FinanceList data={enrichedData} />
 
             <div className="mt-8 flex items-center justify-between text-[11px] text-zinc-600 px-2">
                 <div className="flex items-center gap-4">

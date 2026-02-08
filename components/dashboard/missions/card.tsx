@@ -15,12 +15,19 @@ export function MissionCard({ project }: { project: ExtendedProject }) {
     const isId = locale === 'id-ID' || locale === 'id';
 
     return (
-        <Link href={`/dashboard/missions/${project.id}`} className="group block relative">
+        <div className="group block relative h-full">
+            {/* Main Link Overlay */}
+            <Link
+                href={`/dashboard/missions/${project.id}`}
+                className="absolute inset-0 z-0 rounded-2xl"
+                aria-label={`View details for ${project.title}`}
+            />
+
             <div className={`
-                relative overflow-hidden rounded-2xl border p-6 h-full transition-all duration-300
+                relative overflow-hidden rounded-2xl border p-6 h-full transition-all duration-300 pointer-events-none
                 ${(isDev && !isSubscription) || (isSubscription && isActive)
-                    ? 'bg-gradient-to-br from-brand-yellow/10 to-zinc-900/50 border-brand-yellow/30 hover:border-brand-yellow/50 hover:shadow-2xl hover:shadow-brand-yellow/10'
-                    : 'bg-zinc-900/40 border-white/5 hover:border-white/10 hover:bg-zinc-900/60'
+                    ? 'bg-gradient-to-br from-brand-yellow/10 to-zinc-900/50 border-brand-yellow/30 group-hover:border-brand-yellow/50 group-hover:shadow-2xl group-hover:shadow-brand-yellow/10'
+                    : 'bg-zinc-900/40 border-white/5 group-hover:border-white/10 group-hover:bg-zinc-900/60'
                 }
             `}>
                 {/* Background Glow for active projects */}
@@ -60,9 +67,32 @@ export function MissionCard({ project }: { project: ExtendedProject }) {
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-yellow transition-colors">
                         {project.title}
                     </h3>
-                    <p className="text-sm text-zinc-400 line-clamp-2">
+                    <p className="text-sm text-zinc-400 line-clamp-2 mb-3">
                         {project.description}
                     </p>
+
+                    {/* Payment Status Indicator for DP */}
+                    {project.paymentStatus === 'PARTIAL' && (
+                        <div className="flex flex-col xs:flex-row xs:items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 mb-2 pointer-events-auto">
+                            <div className="flex-1">
+                                <div className="text-[10px] uppercase tracking-wider text-amber-500 font-black mb-0.5">
+                                    {isId ? 'Status Pembayaran' : 'Payment Status'}
+                                </div>
+                                <div className="text-sm text-amber-200 font-bold">
+                                    {isId ? 'DP Lunas (50%)' : 'DP Paid (50%)'}
+                                </div>
+                            </div>
+                            {project.estimateId && (
+                                <Link
+                                    href={`/checkout/${project.estimateId}?paymentType=REPAYMENT`}
+                                    className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-black transition-colors whitespace-nowrap z-20 relative block text-center shadow-lg shadow-amber-500/20"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {isId ? 'Lunasi Sekarang' : 'Pay Remaining'}
+                                </Link>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-white/5 pt-4 relative z-10">
@@ -75,6 +105,6 @@ export function MissionCard({ project }: { project: ExtendedProject }) {
                     </span>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }

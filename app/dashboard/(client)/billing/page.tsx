@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { BillingHistory, type BillingOrder } from "@/components/dashboard/billing/billing-history";
+import { BillingList, type BillingOrder } from "@/components/dashboard/billing/billing-list";
 import { Receipt } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -25,7 +25,8 @@ export default async function ClientBillingPage() {
                 select: {
                     title: true,
                     invoiceId: true,
-                    estimateId: true
+                    estimateId: true,
+                    paymentStatus: true
                 }
             }
         }
@@ -43,7 +44,8 @@ export default async function ClientBillingPage() {
                 </p>
             </div>
 
-            <BillingHistory orders={orders as unknown as BillingOrder[]} />
+
+            <BillingList orders={orders as unknown as BillingOrder[]} />
         </div>
     );
 }

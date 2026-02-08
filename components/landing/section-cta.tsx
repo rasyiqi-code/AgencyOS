@@ -11,7 +11,7 @@ export async function SectionCTA() {
             <div className="absolute inset-0 bg-brand-primary/5 blur-3xl rounded-full opacity-20 transform translate-y-1/2" />
 
             <div className="container mx-auto px-4 text-center relative z-10 space-y-8">
-                <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight max-w-2xl mx-auto leading-tight">
+                <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight max-w-4xl mx-auto leading-tight">
                     {t("ctaTitle")}
                 </h2>
 

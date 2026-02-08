@@ -4,6 +4,7 @@
         "error": "Terjadi kesalahan",
         "save": "Simpan",
         "cancel": "Batal",
+        "login": "Masuk",
         "inbox": "Chat",
         "logout": "Keluar",
         "back": "Kembali",
@@ -17,34 +18,34 @@
         "startProject": "Mulai Proyek"
     },
     "Hero": {
-        "statusBadge": "Menerima Proyek: Bangun MVP dalam 30 Hari",
-        "title1": "Sewa AI + Pakar.",
-        "title2": "Launch MVP dalam 30 Hari.",
-        "description": "Membangun tim tech itu lambat dan mahal. Crediblemark menggabungkan <white>Otomasi AI</white> dengan <white>Senior Engineer</white> untuk membangun aplikasi Anda lebih cepat dan hemat. Kami tim produk Anda.",
-        "launchDashboard": "Mulai Proyek",
-        "viewServices": "Lihat Layanan",
-        "poweredBy": "PREMIUM DEVELOPMENT • OTOMASI AI • SENIOR EXPERTS"
+        "statusBadge": "Partner Strategis Pengembangan: Eksekusi Kelas Enterprise",
+        "title1": "Bangun untuk Tumbuh.",
+        "title2": "Rancang untuk Tangguh.",
+        "description": "Arsitektur performa tinggi untuk masa depan. {brand} menghadirkan solusi software <white>kelas enterprise</white> dengan pendekatan hybrid pakar-AI yang dirancang untuk mendukung skalabilitas bisnis dan mendominasi kompetisi pasar.",
+        "launchDashboard": "Dapatkan Quote",
+        "viewServices": "Solusi Bisnis",
+        "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL"
     },
     "Ecosystem": {
-        "title": "Mengapa Memilih Kami?",
-        "subtitle": "Kami tidak cuma kirim update via email. Anda dapat memantau progress secara real-time.",
+        "title": "Partner Software Strategis Anda",
+        "subtitle": "Arsitektur platform terpadu yang dibangun untuk kebutuhan bisnis kompleks dan integrasi sistem yang mulus.",
         "clientTitle": "Transparansi Total",
-        "clientDesc": "Tidak ada kotak hitam. Pantau daily log, setujui fitur, dan lacak setiap pengeluaran secara real-time.",
-        "clientCta": "Lihat Cara Kerja",
-        "squadTitle": "Hanya Senior Engineer",
-        "squadDesc": "Sukses butuh pengalaman. Kami hanya menurunkan Senior Engineer terverifikasi. Bukan junior yang belajar dari proyek Anda.",
-        "squadCta": "Temui Tim Kami",
-        "adminTitle": "Keamanan Enterprise",
-        "adminDesc": "Tidur tenang mengetahui IP Anda aman. Kami menerapkan standar keamanan dan performance testing tingkat tinggi di setiap rilis.",
-        "adminCta": "Standar Keamanan"
+        "clientDesc": "Tata kelola korporat sebagai inti. Pantau log pengiriman, setujui milestone, dan lacak kesehatan proyek secara real-time.",
+        "clientCta": "Dashboard Klien",
+        "squadTitle": "Elite Engineering",
+        "squadDesc": "Kesuksesan membutuhkan keahlian domain yang dalam. Kami menugaskan Senior Engineer yang telah difilter ketat.",
+        "squadCta": "Kenali Ahli Kami",
+        "adminTitle": "Kepatuhan Enterprise",
+        "adminDesc": "Pertahankan kedaulatan aset digital Anda. Kami menerapkan standar keamanan perbankan dan ISO-standard performance testing.",
+        "adminCta": "Standar Kepatuhan"
     },
     "SocialProof": {
-        "faster": "Mingguan, Bukan Bulanan",
-        "fasterSub": "Pengiriman Terakselerasi AI",
-        "fixedPrice": "Biaya Pasti",
-        "fixedPriceSub": "Quote dijamin di awal",
-        "verified": "Top 1% Talent",
-        "verifiedSub": "Hanya Senior Engineer",
+        "faster": "Terprediksi",
+        "fasterSub": "Jadwal & Milestone Pasti",
+        "fixedPrice": "ROI Jelas",
+        "fixedPriceSub": "Logika Finansial Transparan",
+        "verified": "Keamanan Utama",
+        "verifiedSub": "Standar Kelas Enterprise",
         "techStack": "Teknologi Modern",
         "stackFramework": "Framework Modern",
         "stackCloud": "Infrastruktur Cloud",
@@ -84,79 +85,79 @@
     },
     "Comparison": {
         "title": "Outsourcing Tradisional vs. Crediblemark",
-        "subtitle": "Mengapa founder memilih Model Agency Hybrid kami.",
-        "oldTitle": "Agency Biasa",
-        "old1": "Waktu pengerjaan 3-6 Bulan",
-        "old2": "Biaya per jam (bengkak)",
-        "old3": "Update progres tertutup",
-        "old4": "Di-outsource ke Junior Dev",
+        "subtitle": "Mengapa perusahaan memilih Model Engineering Strategis kami.",
+        "oldTitle": "Outsourcing Standar",
+        "old1": "Kickoff 3-6 Bulan",
+        "old2": "Penagihan bervariasi (risiko anggaran)",
+        "old3": "Siklus pengiriman tertutup",
+        "old4": "Tim didominasi Junior",
         "newTitle": "Crediblemark Hybrid",
-        "recommended": "PILIHAN CERDAS",
-        "new1": "Kickoff Instan",
-        "new1Sub": "Mulai bangun dalam 24 jam.",
-        "new2": "Harga Proyek Pasti.",
-        "new2Sub": "Tahu persis apa yang Anda bayar.",
-        "new3": "Portal Klien Live.",
-        "new3Sub": "Lihat pengerjaan kode real-time.",
-        "new4": "Hanya Senior Engineer.",
-        "new4Sub": "Ahli terverifikasi, bukan pemula."
+        "recommended": "PILIHAN ENTERPRISE",
+        "new1": "Akselerasi Peluncuran",
+        "new1Sub": "Dari strategi ke eksekusi dalam 48 jam.",
+        "new2": "Kepastian Finansial.",
+        "new2Sub": "Harga tetap, nol biaya tersembunyi.",
+        "new3": "Dashboard Tata Kelola.",
+        "new3Sub": "Visibilitas penuh atas progres & log.",
+        "new4": "Tenaga Ahli Senior.",
+        "new4Sub": "Senior Engineer berdedikasi."
     },
     "ProductCatalog": {
-        "title": "Paket Layanan",
-        "subtitle": "Pilih model kerjasama yang sesuai dengan fase bisnis Anda.",
+        "title": "Solusi Strategis",
+        "subtitle": "Model kerjasama yang disesuaikan untuk transformasi digital.",
         "products": {
             "ops": {
-                "title": "Internal Tools & Ops",
-                "target": "UKM & Distributor",
-                "desc": "Ubah tumpukan Excel menjadi aplikasi database internal yang aman. Otomatisasi hitung gaji & komisi.",
-                "price": "Mulai Rp 15 Jt",
-                "cta": "Digitalisasi Bisnis"
+                "title": "Ekosistem Internal & Ops",
+                "target": "Pasar Menengah & Ops Terdistribusi",
+                "desc": "Skalakan proses manual menjadi lingkungan database yang aman dan terintegrasi. Audit trail otomatis & logika komisi.",
+                "price": "Penawaran Enterprise Kustom",
+                "cta": "Minta Studi Kasus"
             },
             "publisher": {
-                "title": "Media Publisher Platform",
-                "target": "Media & Penerbit",
-                "desc": "Portal berita Next.js super cepat dengan CMS redaksi modern. Siap monetisasi iklan & langganan.",
-                "price": "Mulai Rp 10 Jt",
-                "cta": "Launch Media Baru"
+                "title": "Hub Media Next-Gen",
+                "target": "Perusahaan Media & Konten",
+                "desc": "Portal berita berbasis Next.js dengan kecepatan tinggi. CMS redaksi mutakhir dengan caching & distribusi data kelas industri.",
+                "price": "Mulai dari Rp 10 Jt",
+                "cta": "Lihat Arsitektur"
             },
             "saas": {
-                "title": "Custom SaaS MVP",
-                "target": "Startup Founder",
-                "desc": "Validasi ide startup Anda dalam 30 hari. Kami bangun frontend & backend, Anda launch.",
-                "price": "Penawaran Kustom via AI",
-                "cta": "Konsultasi Ide"
+                "title": "Ekspansi Lab Inovasi Korporat",
+                "target": "Corporate Innovation Labs",
+                "desc": "Protokol cepat untuk validasi unit bisnis baru. Pengembangan siklus penuh dari strategi hingga deployment siap produksi.",
+                "price": "Konsultasi Strategis",
+                "cta": "Mulai Sesi Strategi"
             }
         },
-        "ctaGeneric": "Pesan Sekarang"
+        "ctaGeneric": "Jadwalkan Konsultasi"
     },
     "Workflow": {
-        "title": "Tanpa Drama. Tanpa Meeting. Langsung Kerja.",
-        "subtitle": "Efisiensi workflow asynchronous untuk hasil maksimal.",
-        "step1": "1. Inisialisasi Misi",
-        "step1Desc": "Chat dengan AI kami untuk scoping proyek. Sistem akan membuat Brief dan Spesifikasi Teknis komprehensif secara instan.",
-        "step2": "2. Development & Workbench",
-        "step2Desc": "Pantau pembangunan proyek secara real-time via Workbench. Senior Engineer mengeksekusi spek dengan bantuan AI.",
-        "step3": "3. Feedback & Deploy",
-        "step3Desc": "Review progres di Dashboard. Berikan komentar pada fitur spesifik. Setujui milestone yang selesai langsung dari portal aman Anda."
+        "title": "Presisi Strategis. Kecepatan Maksimal.",
+        "subtitle": "Pengiriman model asynchronous yang efisien untuk kebutuhan bisnis yang kompleks.",
+        "step1": "1. Scoping Strategis",
+        "step1Desc": "Kolaborasi dengan sistem berbasis AI kami untuk mendefinisikan kebutuhan dan spesifikasi teknis standar industri secara instan.",
+        "step2": "2. Agile Engineering",
+        "step2Desc": "Pantau pengiriman secara real-time. Senior Engineer kami menggunakan AI untuk menjamin kualitas kode, keamanan, dan kecepatan.",
+        "step3": "3. Tata Kelola & Deployment",
+        "step3Desc": "Setujui milestone melalui Dashboard aman Anda. Transparansi penuh atas progres, dokumentasi, dan peluncuran produksi."
     },
     "Financial": {
-        "title": "Hemat Biaya, Bukan Kualitas.",
-        "subtitle": "Logika investasi cerdas untuk bisnis modern.",
-        "comparison": "PERBANDINGAN",
-        "hireSenior": "HIRE SENIOR DEV",
-        "hybrid": "{brand} (HYBRID)",
-        "salary": "Biaya / Gaji",
-        "salaryOld": "Gaji 15jt/bln x 12",
-        "salaryNew": "Sekali Bayar",
-        "hiringTime": "Waktu Hiring",
-        "hiringTimeOld": "1 - 2 Bulan",
-        "hiringTimeNew": "Langsung Mulai",
-        "hiddenCost": "Hidden Cost",
-        "hiddenCostOld": "THR, BPJS, Laptop, Pajak",
-        "risk": "Risiko Utama",
-        "riskOld": "Karyawan Resign tiba-tiba",
-        "riskNew": "Garansi Bug & Maintenance",
-        "roi": "ROI: Efisien & Cepat"
+        "title": "Optimalkan Investasi, Bukan Sekadar Biaya.",
+        "subtitle": "Logika finansial strategis untuk pertumbuhan perusahaan modern.",
+        "comparison": "LOGIKA FINANSIAL",
+        "hireSenior": "REKRUTMEN FULL-TIME BIASA",
+        "hybrid": "{brand} (PARTNER STRATEGIS)",
+        "salary": "Pengeluaran Modal (CapEx)",
+        "salaryOld": "Gaji Tahunan + Biaya Overhead",
+        "salaryNew": "Investasi Berbasis Proyek",
+        "hiringTime": "Hambatan Operasional",
+        "hiringTimeOld": "Rekrutmen 2 - 4 Bulan",
+        "hiringTimeNew": "Mobilisasi Segera",
+        "hiddenCost": "Total Biaya Kepemilikan (TCO)",
+        "hiddenCostOld": "Pajak, Tunjangan, Lisensi, Retensi",
+        "risk": "Risiko Bisnis",
+        "riskOld": "Turnover karyawan & utang teknis",
+        "riskNew": "Jaminan Performa & Garansi",
+        "roi": "ROI: Skalabilitas & Efisiensi"
     },
     "Guarantee": {
         "title": "Kami Menanggung Risiko Untuk Anda.",
@@ -181,28 +182,122 @@
         "f6Desc": "Dokumentasi lengkap dan struktur kode standar industri yang mudah dikembangkan."
     },
     "Expert": {
-        "title": "Otak Manusia. Kecerdasan Mesin.",
+        "role": "Pendiri & Principal Engineer",
         "name": "Rasyiqi",
-        "q": "Apakah aplikasi dibuat robot?",
-        "a": "<strong>AI adalah alat.</strong> Saya Arsiteknya.",
-        "desc": "AI memberantas pekerjaan rutin agar saya bisa fokus pada logika, keamanan, dan performa aplikasi Anda.",
-        "footer": "Kualitas Korporat. Harga Freelancer.",
-        "role": "Senior Fullstack Developer"
+        "badge": "PENGALAMAN 12+ TAHUN",
+        "quote": "Koding itu mudah. Membangun bisnis berkelanjutan itu sulit. Saya menjembatani keduanya.",
+        "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan Crediblemark. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
+        "footer": "Keahlian Enterprise. Kecepatan Industri."
+    },
+    "Experts": {
+        "badge": "TALENTA KELAS DUNIA",
+        "title": "Tim <blue>Elite Engineering</blue>",
+        "description": "Kami tidak merekrut developer junior. Setiap proyek dieksekusi oleh Senior Engineer yang telah terkurasi ketat dengan pengalaman industri yang luas.",
+        "Rasyiqi": {
+            "role": "Senior Systems Architect",
+            "specialty": "Next.js, AI Protocols, Cloud Infra",
+            "exp": "10+ Tahun"
+        },
+        "Alexander": {
+            "role": "Principal Frontend Engineer",
+            "specialty": "UX Strategist, Design Systems",
+            "exp": "8+ Tahun"
+        },
+        "Sarah": {
+            "role": "Cybersecurity Expert",
+            "specialty": "Penetration Testing, Compliance",
+            "exp": "12+ Tahun"
+        },
+        "Vetting": {
+            "title": "Standar Kurasi Kami",
+            "subtitle": "Hanya 1% teratas dari talenta engineering yang lolos ke tim kami.",
+            "Technical": {
+                "title": "Penilaian Teknis",
+                "desc": "Pengujian arsitektur dan algoritma mendalam untuk memastikan keahlian mutlak dalam sistem yang kompleks."
+            },
+            "Industrial": {
+                "title": "Pengalaman Industri",
+                "desc": "Validasi rekam jejak di lingkungan produksi beban tinggi dan produk kelas enterprise."
+            },
+            "Strategic": {
+                "title": "Komunikasi Strategis",
+                "desc": "Memastikan setiap engineer dapat menerjemahkan kebutuhan teknis yang kompleks menjadi solusi bisnis."
+            }
+        },
+        "cta": "Tanyakan tentang alokasi tim kustom"
+    },
+    "ClientDashboard": {
+        "badge": "DASHBOARD KLIEN",
+        "title": "Transparansi Total via \n<yellow>Dashboard Strategis</yellow>",
+        "description": "Rasakan pengalaman \"Dapur Terbuka\" dalam pengembangan perangkat lunak. Dashboard Klien kami menampilkan detak jantung real-time proyek Anda melalui portal terpusat yang aman.",
+        "Features": {
+            "dailyUpdates": {
+                "title": "Update Harian",
+                "desc": "Visibilitas penuh ke progres harian. Setiap fitur yang dikirim, bug yang diperbaiki, atau milestone yang tercapai dicatat dalam feed Update Harian Anda."
+            },
+            "comms": {
+                "title": "Saluran Komunikasi Terpadu",
+                "desc": "Komunikasi langsung dan asinkron dengan tim engineering. Semua diskusi strategis terpusat dan terekam."
+            },
+            "issues": {
+                "title": "Manajemen Masalah",
+                "desc": "Pelacakan transparan isu terbuka dan hambatan. Tinjau, komentari, dan lacak penyelesaian setiap rintangan teknis."
+            },
+            "specs": {
+                "title": "Spesifikasi Layanan",
+                "desc": "Cetak biru teknis dan spesifikasi langsung selalu dapat diakses. Ketahui persis apa yang sedang dibangun sesuai standar industri yang berlaku."
+            },
+            "docs": {
+                "title": "Pusat Dokumen",
+                "desc": "Repositori terpusat untuk semua aset proyek, mulai dari diagram arsitektur hingga dokumentasi pengiriman akhir."
+            },
+            "status": {
+                "title": "Status Operasional",
+                "desc": "Pelacakan kesehatan misi real-time. Pantau status deployment, kesehatan environment, dan alokasi tim secara instan."
+            }
+        },
+        "Philosophy": {
+            "badge": "ASYNC FIRST",
+            "title": "Mengapa Kami Menghindari <red>Meeting</red>",
+            "desc": "Rapat sinkronus seringkali membunuh momentum. Kami mengganti pertemuan yang tidak efisien dengan dokumentasi mutlak untuk menghormati waktu Anda.",
+            "stat1": "Manajer terhalang dari deep work",
+            "stat2": "Rapat sering tidak produktif",
+            "stat3": "Waktu untuk kembali fokus setelah gangguan",
+            "stat4": "Orang multitasking saat rapat",
+            "wayTitle": "Cara Crediblemark",
+            "way1": "<strong>Keputusan Terdokumentasi.</strong> Tidak ada \"katanya, katanya\". Semua tertulis permanen.",
+            "way2": "<strong>Async secara Default.</strong> Respon saat fokus, bukan saat kalender memaksa.",
+            "way3": "<strong>Update Visual.</strong> Jangan tanya status layout, lihat langsung di dashboard.",
+            "way4": "<strong>Hanya Darurat.</strong> Kami hanya rapat jika strategi membutuhkan perubahan besar."
+        },
+        "Cta": {
+            "title": "Dirancang untuk Pengawasan Korporat",
+            "desc": "Dashboard kami menyediakan jejak audit dan visibilitas operasional yang dibutuhkan oleh pemangku kepentingan enterprise dan CTO untuk misi berisiko tinggi.",
+            "button": "Login Dashboard"
+        }
     },
     "FAQ": {
-        "title": "Pertanyaan yang Sering Diajukan",
-        "q1": "Apakah saya benar-benar tidak bisa ngobrol langsung?",
-        "a1": "Platform kami didesain untuk <strong>Asynchronous</strong> agar efisien. Semua tercatat rapi. Tapi untuk situasi darurat atau konsultasi strategi mendalam, sesi Call Premium tersedia.",
-        "q2": "Bagaimana jika ada bug setelah selesai?",
-        "a2": "Semua paket termasuk <strong>Garansi Bug 30 Hari</strong>. Lapor via dashboard, perbaikan diprioritaskan.",
-        "q3": "Apakah source code menjadi milik saya?",
-        "a3": "Ya, <strong>100%</strong>. Setelah pelunasan, repositori GitHub akan ditransfer ke akun Anda.",
-        "q4": "Bagaimana sistem revisinya?",
-        "a4": "Kami membangun secara terbuka. Anda bisa memberikan feedback pada setiap milestone melalui dashboard <strong>Mission Control</strong>. Perubahan besar pada scope akan ditangani sebagai add-on misi baru.",
-        "q5": "Teknologi apa yang digunakan?",
-        "a5": "Kami utamanya menggunakan <strong>Next.js & TypeScript</strong>, namun fleksibilitas adalah kuncinya. Kami memiliki <strong>Human Expert</strong> yang spesialis dalam berbagai stack, sehingga kami bisa menyesuaikan diri dengan kebutuhan spesifik Anda.",
-        "q6": "Bisa integrasi dengan sistem saya sekarang?",
-        "a6": "Tentu saja. Kami rutin melakukan integrasi dengan <strong>Stripe, Midtrans, Slack, Discord, Google Cloud</strong>, dan berbagai API pihak ketiga lainnya."
+        "title": "FAQ: Kerangka Kerja & Tata Kelola",
+        "q1": "Apakah kami bisa berkomunikasi secara langsung?",
+        "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk kordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
+        "q2": "Bagaimana manajemen bug setelah fase deployment?",
+        "a2": "Setiap proyek mencakup <strong>Garansi Bug 30 Hari</strong>. Laporan ditangani melalui dashboard dengan prioritas tinggi untuk menjamin kontinuitas operasional bisnis Anda.",
+        "q3": "Siapa pemegang hak kedaulatan source code?",
+        "a3": "Anda memiliki <strong>100% hak milik</strong>. Setelah penyelesaian kewajiban finansial, seluruh aset teknis dan repositori GitHub ditransfer sepenuhnya ke kendali perusahaan Anda.",
+        "q4": "Bagaimana prosedur perubahan lingkup (change request)?",
+        "a4": "Kami menerapkan transparansi penuh. Perubahan kecil ditangani dalam iterasi berjalan, sementara perubahan lingkup besar dikelola sebagai misi add-on terpisah untuk menjaga linimasa tetap terukur.",
+        "q5": "Teknologi apa yang menjadi standar pengembangan?",
+        "a5": "Kami menggunakan stack modern seperti <strong>Next.js & TypeScript</strong> untuk skalabilitas maksimal. Namun, tim <strong>Senior Arsitek</strong> kami memiliki kompetensi luas untuk beradaptasi dengan infrastruktur teknologi yang sudah ada di perusahaan Anda.",
+        "q6": "Dapatkah sistem diintegrasikan dengan infrastruktur enterprise pihak ketiga?",
+        "a6": "Tentu. Kami memiliki pengalaman luas mengintegrasikan sistem dengan berbagai API dan layanan cloud standar industri seperti <strong>Stripe, SAP, Google Cloud</strong>, serta sistem internal kustom lainnya.",
+        "q7": "Bagaimana dengan NDA dan kerahasiaan?",
+        "a7": "Kami sangat menjaga kekayaan intelektual. Kami siap menandatangani NDA standar perusahaan Anda sebelum penulisan kode dimulai.",
+        "q8": "Bagaimana struktur pembayarannya?",
+        "a8": "Kami menggunakan sistem pembayaran berbasis milestone. Dana hanya dicairkan ketika deliverable tertentu telah Anda setujui di dashboard.",
+        "q9": "Apakah ada layanan maintenance jangka panjang?",
+        "a9": "Ya, kami menawarkan paket retainer untuk pengembangan fitur berkelanjutan, pembaruan keamanan, dan monitoring infrastruktur.",
+        "q10": "Berapa lama durasi proyek biasanya?",
+        "a10": "Sebagian besar MVP dikirim dalam 4-8 minggu. Migrasi enterprise mungkin memakan waktu 3-6 bulan tergantung kompleksitas."
     },
     "Dashboard": {
         "Sidebar": {
@@ -211,7 +306,7 @@
             "missions": "Misi",
             "inbox": "Inbox",
             "support": "Support",
-            "store": "Toko",
+            "store": "Layanan",
             "billing": "Tagihan",
             "proPlan": "Pro Plan",
             "upgradeDesc": "Upgrade untuk token AI lebih banyak.",
@@ -323,14 +418,14 @@
         "pay": "Pay"
     },
     "Footer": {
-        "ctaTitle": "Siap Membangun Masa Depan Bisnis Anda?",
-        "ctaButton": "Mulai Konsultasi Proyek",
-        "clientLogin": "Login Klien",
-        "contactUs": "Hubungi Kami",
-        "services": "Layanan",
-        "supportHelp": "Bantuan / Support",
+        "ctaTitle": "Bermitra dengan Ahli yang Memahami Kompleksitas Enterprise",
+        "ctaButton": "Jadwalkan Konsultasi Strategis",
+        "clientLogin": "Konsol Klien",
+        "contactUs": "Hubungi Tenaga Ahli",
+        "services": "Solusi Bisnis",
+        "supportHelp": "Dukungan & Governance",
         "terms": "Ketentuan Layanan",
-        "privacy": "Kebijakan Privasi",
+        "privacy": "Kepatuhan Privasi",
         "copyright": "All Rights Reserved."
     },
     "PriceCalculator": {

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { projectId, estimateId, title } = await req.json();
+        const { projectId, estimateId, title, paymentType = "FULL" } = await req.json();
 
         if (!projectId && !estimateId) {
             return new NextResponse("Missing required fields", { status: 400 });
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
 
         let dbAmount = 0;
         let finalProjectId = projectId;
+        let projectTotalAmount = 0;
 
         // If no projectId but we have estimateId, find or create the project
         if (!finalProjectId && estimateId) {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
             }
 
             dbAmount = estimate.totalCost;
+            projectTotalAmount = estimate.totalCost;
 
             if (estimate.project) {
                 finalProjectId = estimate.project.id;
@@ -47,6 +49,7 @@ export async function POST(req: Request) {
                         spec: JSON.stringify({ screens: estimate.screens, apis: estimate.apis }, null, 2),
                         status: "pending_payment",
                         estimateId: estimateId,
+                        totalAmount: estimate.totalCost,
                     }
                 });
                 finalProjectId = newProject.id;
@@ -69,36 +72,58 @@ export async function POST(req: Request) {
             } else {
                 return new NextResponse("No pricing source found for this project", { status: 400 });
             }
+            projectTotalAmount = dbAmount;
+
+            // Update totalAmount if it's 0 (migration for existing projects)
+            if (project.totalAmount === 0 && dbAmount > 0) {
+                await prisma.project.update({
+                    where: { id: finalProjectId },
+                    data: { totalAmount: dbAmount }
+                });
+            }
         }
 
         if (dbAmount <= 0) {
             return new NextResponse("Invalid payment amount calculation", { status: 400 });
         }
 
-        const amount = dbAmount; // Override any incoming amount with checked DB amount
+        // Calculate amount based on payment type
+        let amountToPay = dbAmount;
+        let itemName = title ? title.substring(0, 50) : "Project Payment";
+
+        if (paymentType === "DP") {
+            amountToPay = dbAmount * 0.5; // 50% DP
+            itemName = `DP: ${itemName}`;
+        } else if (paymentType === "REPAYMENT") {
+            const project = await prisma.project.findUnique({ where: { id: finalProjectId } });
+            const paid = project?.paidAmount || 0;
+            const total = project?.totalAmount || dbAmount;
+            amountToPay = total - paid;
+            itemName = `Repayment: ${itemName}`;
+
+            if (amountToPay <= 0) {
+                return NextResponse.json({ message: "Project already fully paid" }, { status: 400 });
+            }
+        }
 
         // Convert to IDR
-        const { idrAmount, rate } = await paymentService.convertToIDR(amount);
-        console.log(`[CHECKOUT] Converting ${amount} USD to ${idrAmount} IDR (Rate: ${rate})`);
+        const { idrAmount, rate } = await paymentService.convertToIDR(amountToPay);
+        console.log(`[CHECKOUT] Type: ${paymentType}, Amount: ${amountToPay} USD -> ${idrAmount} IDR (Rate: ${rate})`);
 
         // Detect gateway availability
         const hasGateway = await paymentGatewayService.hasActiveGateway();
 
-        // Check for existing pending order for this project
-        const existingOrder = await prisma.order.findUnique({
-            where: { projectId: finalProjectId }
+        // Check for existing pending order for this project AND this payment type
+        const existingOrder = await prisma.order.findFirst({
+            where: {
+                projectId: finalProjectId,
+                type: paymentType,
+                status: 'pending'
+            }
         });
 
-        if (existingOrder && (existingOrder.status === 'paid' || existingOrder.status === 'settled')) {
-            return NextResponse.json({
-                token: existingOrder.snapToken,
-                orderId: existingOrder.id,
-                message: "Order already paid"
-            });
-        }
-
-        if (existingOrder && existingOrder.status === 'pending' && existingOrder.amount === amount) {
-            // Reuse existing order with SAME amount
+        // Reuse existing order logic
+        if (existingOrder && existingOrder.amount === amountToPay) {
             const orderId = existingOrder.id;
             let snapToken = existingOrder.snapToken;
 
@@ -117,7 +142,7 @@ export async function POST(req: Request) {
                         id: finalProjectId,
                         price: idrAmount,
                         quantity: 1,
-                        name: title ? title.substring(0, 50) : "Project Deposit",
+                        name: itemName,
                     }]
                 };
 
@@ -131,17 +156,16 @@ export async function POST(req: Request) {
                 });
             }
 
+            // Sync invoiceId to project for easier dashboard access (optional, maybe specific for latest order)
             await prisma.project.update({
                 where: { id: finalProjectId },
                 data: { invoiceId: orderId }
             });
 
             return NextResponse.json({ token: snapToken, orderId });
-        } else if (existingOrder && existingOrder.status === 'pending') {
-            // Amount changed, delete old pending order to allow fresh one with new ID
-            await prisma.order.delete({
-                where: { id: existingOrder.id }
-            });
+        } else if (existingOrder) {
+            // Amount changed, delete old pending order
+            await prisma.order.delete({ where: { id: existingOrder.id } });
         }
 
         // Create a unique order ID
@@ -168,7 +192,7 @@ export async function POST(req: Request) {
                         id: finalProjectId,
                         price: idrAmount, // Use IDR
                         quantity: 1,
-                        name: title ? title.substring(0, 50) : "Project Deposit", // Midtrans name limit
+                        name: itemName,
                     },
                 ],
             };
@@ -183,18 +207,35 @@ export async function POST(req: Request) {
         await prisma.order.create({
             data: {
                 id: orderId,
-                amount,
+                amount: amountToPay,
                 userId: user.id,
                 projectId: finalProjectId,
                 snapToken,
                 status: "pending",
+                type: paymentType, // Save type
             },
         });
 
-        // Sync invoiceId to project for easier dashboard access
+        // Sync invoiceId to project and RESET estimate if REPAYMENT
+        const updateData = {
+            invoiceId: orderId,
+            totalAmount: projectTotalAmount // Ensure total amount is set
+        };
+
+        if (paymentType === 'REPAYMENT' && estimateId) {
+            // Reset estimate to pending to show up in Admin Finance as "Awaiting Confirmation"
+            await prisma.estimate.update({
+                where: { id: estimateId },
+                data: {
+                    status: 'pending_payment',
+                    // Optional: we can track the current payment type in the estimate too if needed
+                }
+            });
+        }
+
         await prisma.project.update({
             where: { id: finalProjectId },
-            data: { invoiceId: orderId }
+            data: updateData
         });
 
         return NextResponse.json({ token: snapToken, orderId });

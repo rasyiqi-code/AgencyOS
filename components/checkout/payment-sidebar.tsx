@@ -7,17 +7,20 @@ import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, Coupon } from "@/lib/shared/types";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
-export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true }: {
+export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
     appliedCoupon: Coupon | null,
-    hasActiveGateway?: boolean
+    hasActiveGateway?: boolean,
+    defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
+    projectPaidAmount?: number,
+    projectTotalAmount?: number
 }) {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [billingCycle, setBillingCycle] = useState<"one_time" | "monthly" | "yearly">("one_time");
+    const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
 
     // const { currency, formattedRate } = useCurrency(); // If implemented globally
     const currency = activeRate && activeRate > 0 ? "IDR" : "USD"; // Simplistic fallback
@@ -26,25 +29,28 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     // Explicitly cast or access currency 
     const activeCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
 
-    // Calculate monthly/yearly rates (Mock logic for display)
-    const monthlyAmount = amount / 12 * 1.2; // 20% premium for monthly
-    // ... comments ...
-
-    const displayAmount = billingCycle === 'monthly' ? monthlyAmount : (billingCycle === 'yearly' ? amount : amount);
+    let amountToPay = amount;
+    if (paymentType === "DP") {
+        amountToPay = amount * 0.5;
+    } else if (paymentType === "REPAYMENT") {
+        // Calculate remaining amount
+        // Use projectTotalAmount if available, otherwise fallback to current amount (which might be estimate cost)
+        const total = projectTotalAmount && projectTotalAmount > 0 ? projectTotalAmount : amount;
+        const paid = projectPaidAmount || 0;
+        amountToPay = Math.max(0, total - paid);
+    }
 
     const handleCheckout = async () => {
-        // Only support one-time for now via this generic route
-        if (billingCycle !== 'one_time') return;
-
         setIsProcessing(true);
         try {
             const response = await fetch("/api/checkout", {
                 method: "POST",
                 body: JSON.stringify({
                     estimateId: estimate.id,
-                    amount: amount, // Use discounted amount
+                    amount: amountToPay, // Calculated based on type
                     title: estimate.title,
-                    appliedCoupon: appliedCoupon?.code
+                    appliedCoupon: appliedCoupon?.code,
+                    paymentType: paymentType
                 }),
             });
 
@@ -106,38 +112,45 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     return (
         <Card className="bg-zinc-900 border-white/10 text-white sticky top-24">
             <CardHeader>
-                <CardTitle>Choose Plan</CardTitle>
-                <CardDescription>Select a billing cycle that works for you</CardDescription>
+                <CardTitle>Payment Options</CardTitle>
+                <CardDescription>Select how you want to pay</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
 
-                {/* Billing Cycle Selection */}
-                <div className="grid grid-cols-3 gap-2">
-                    <button
-                        onClick={() => setBillingCycle("one_time")}
-                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "one_time" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
-                    >
-                        One-time
-                    </button>
-                    <button
-                        onClick={() => setBillingCycle("monthly")}
-                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "monthly" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
-                    >
-                        Monthly
-                    </button>
-                    <button
-                        onClick={() => setBillingCycle("yearly")}
-                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${billingCycle === "yearly" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
-                    >
-                        Yearly
-                    </button>
-                </div>
+                {/* Payment Type Selection */}
+                {/* Hide selection if query param enforces repayment */}
+                {defaultPaymentType === 'REPAYMENT' ? (
+                    <div className="p-3 rounded-lg border border-brand-yellow/30 bg-brand-yellow/10 text-brand-yellow text-sm font-medium text-center mb-2">
+                        Project Repayment (Pelunasan)
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            onClick={() => setPaymentType("FULL")}
+                            className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "FULL" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                        >
+                            Full Payment
+                        </button>
+                        <button
+                            onClick={() => setPaymentType("DP")}
+                            className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "DP" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                        >
+                            DP (50%)
+                        </button>
+                    </div>
+                )}
+
+                {paymentType === "DP" && (
+                    <div className="text-xs text-amber-500 bg-amber-500/10 p-3 rounded border border-amber-500/20">
+                        Pay 50% now to start the project. The remaining 50% will be billed upon completion.
+                    </div>
+                )}
 
                 {/* Currency Conversion Info */}
                 <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/5">
                     <div className="flex flex-col gap-1 mb-4">
                         <span className="text-zinc-400 text-sm font-medium">
-                            {billingCycle === 'one_time' ? 'Total One-time Payment' : (billingCycle === 'monthly' ? 'Monthly Payment' : 'Yearly Payment')}
+                            Total to Pay Now
                         </span>
                         {appliedCoupon && (
                             <div className="flex justify-between text-sm text-emerald-400 mb-1">
@@ -148,11 +161,15 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             </div>
                         )}
                         <span className="text-3xl font-bold text-white tracking-tight">
-                            <PriceDisplay amount={displayAmount} baseCurrency={activeCurrency} />
-                            {billingCycle === 'monthly' && <span className="text-sm font-normal text-zinc-500 ml-1">/mo</span>}
-                            {billingCycle === 'yearly' && <span className="text-sm font-normal text-zinc-500 ml-1">/yr</span>}
+                            <PriceDisplay amount={amountToPay} baseCurrency={activeCurrency} />
                         </span>
-                        {appliedCoupon && (
+                        {paymentType === "DP" && (
+                            <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
+                                <span>Total Project Value:</span>
+                                <span><PriceDisplay amount={amount} baseCurrency={activeCurrency} /></span>
+                            </div>
+                        )}
+                        {appliedCoupon && paymentType === "FULL" && (
                             <span className="text-xs text-zinc-500 line-through">
                                 <PriceDisplay amount={estimate.totalCost} baseCurrency={activeCurrency} />
                             </span>
@@ -179,7 +196,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                     {hasActiveGateway ? (
                         <Button
                             className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isProcessing || billingCycle !== 'one_time'}
+                            disabled={isProcessing}
                             onClick={handleCheckout}
                         >
                             {isProcessing ? (
@@ -188,7 +205,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                     Processing...
                                 </>
                             ) : (
-                                billingCycle === 'one_time' ? "Proceed to Payment" : "Contact Sales for Subscription"
+                                "Proceed to Payment"
                             )}
                         </Button>
                     ) : (
@@ -220,11 +237,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                 )}
                             </Button>
                         </div>
-                    )}
-                    {billingCycle !== 'one_time' && (
-                        <p className="text-xs text-center text-yellow-500/80">
-                            Currently only One-time payment is available for instant checkout.
-                        </p>
                     )}
                 </div>
 

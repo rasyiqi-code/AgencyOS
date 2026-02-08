@@ -20,7 +20,7 @@ export function UnpaidButton({ estimateId }: { estimateId: string }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     estimateId,
-                    status: "payment_pending"
+                    status: "pending_payment"
                 })
             });
 

@@ -17,34 +17,34 @@
         "startProject": "Start Project"
     },
     "Hero": {
-        "statusBadge": "Accepting New Projects: Build your MVP in 30 Days",
-        "title1": "Hire AI + Experts.",
-        "title2": "Launch MVP in 30 Days.",
-        "description": "Building a tech team is slow, expensive, and risky. Crediblemark combines <white>AI Automation</white> with <white>Senior Engineers</white> to build your app faster, cheaper, and better. We are your dedicated product team.",
-        "launchDashboard": "Start a Project",
-        "viewServices": "Browse Services",
-        "poweredBy": "PREMIUM DEVELOPMENT • SENIOR EXPERTS • AI WORKFLOWS"
+        "statusBadge": "Strategic Development Partner: Enterprise-Grade Execution",
+        "title1": "Build to Scale.",
+        "title2": "Design to Prevail.",
+        "description": "Engineered for excellence. {brand} delivers <white>high-performance software</white> with a hybrid expert-AI approach designed to scale your enterprise and prevail in competitive markets.",
+        "launchDashboard": "Get Enterprise Quote",
+        "viewServices": "Business Solutions",
+        "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE"
     },
     "Ecosystem": {
-        "title": "Why Choose Us?",
-        "subtitle": "We don't just email you updates. You get full access to track progress in real-time.",
+        "title": "Your Strategic Software Partner",
+        "subtitle": "A unified platform architecture built for complex business requirements and seamless integration.",
         "clientTitle": "Total Transparency",
-        "clientDesc": "No more black boxes. Monitor daily logs, approve features, and track every dollar spent in real-time.",
-        "clientCta": "See How It Works",
-        "squadTitle": "Senior Engineers Only",
-        "squadDesc": "Success requires experience. We strictly deploy vetted Senior Engineers. No juniors, no interns learning on your dime.",
-        "squadCta": "Meet Our Team",
-        "adminTitle": "Enterprise Security",
-        "adminDesc": "Sleep well knowing your IP is safe. We implement banking-grade security and performance testing on every release.",
-        "adminCta": "Security Standards"
+        "clientDesc": "Enterprise governance at its core. Monitor delivery logs, approve milestones, and track project health in real-time.",
+        "clientCta": "Client Dashboard",
+        "squadTitle": "Elite Engineering",
+        "squadDesc": "Success requires deep domain expertise. We deploy strictly vetted Senior Engineers managed by industrial standards.",
+        "squadCta": "Meet Our Experts",
+        "adminTitle": "Enterprise Compliance",
+        "adminDesc": "Maintain sovereignty over your digital assets. We implement banking-grade security and ISO-standard performance testing.",
+        "adminCta": "Compliance Standards"
     },
     "SocialProof": {
-        "faster": "Weeks, Not Months",
-        "fasterSub": "AI-Accelerated Delivery",
-        "fixedPrice": "Fixed Cost",
-        "fixedPriceSub": "Guaranteed Quote upfront",
-        "verified": "Top 1% Talent",
-        "verifiedSub": "Senior Engineers Only",
+        "faster": "Predictability",
+        "fasterSub": "Fixed Milestones & Schedules",
+        "fixedPrice": "Clear ROI",
+        "fixedPriceSub": "Transparent Financial Logic",
+        "verified": "Security first",
+        "verifiedSub": "Enterprise-Grade Standards",
         "techStack": "Modern Tech Stack",
         "stackFramework": "Modern Frameworks",
         "stackCloud": "Cloud Infrastructure",
@@ -83,80 +83,80 @@
         ]
     },
     "Comparison": {
-        "title": "Traditional Outsourcing vs. Crediblemark",
-        "subtitle": "Why founders choose our AI-Enhanced Agency model.",
-        "oldTitle": "Typical Dev Agency",
-        "old1": "3-6 Month Timeline",
-        "old2": "Hourly billing (costs explode)",
-        "old3": "Opaque progress updates",
-        "old4": "Outsourced to Junior Devs",
+        "title": "Legacy Outsourcing vs. Crediblemark",
+        "subtitle": "Why enterprises choose our Strategic Engineering model.",
+        "oldTitle": "Standard Outsourcing",
+        "old1": "3-6 Month Kickoff",
+        "old2": "Variable billing (budget risk)",
+        "old3": "Opaque delivery cycles",
+        "old4": "Junior-heavy teams",
         "newTitle": "Crediblemark Hybrid",
-        "recommended": "SMART CHOICE",
-        "new1": "Instant kickoff",
-        "new1Sub": "Start building in 24 hours.",
-        "new2": "Fixed Project Price.",
-        "new2Sub": "Know exactly what you pay.",
-        "new3": "Live Client Portal.",
-        "new3Sub": "See code contributions real-time.",
-        "new4": "Senior Engineers only.",
-        "new4Sub": "Vetted experts, no beginners."
+        "recommended": "ENTERPRISE CHOICE",
+        "new1": "Accelerated Launch",
+        "new1Sub": "Strategy to execution in 48h.",
+        "new2": "Financial Certainty.",
+        "new2Sub": "Fixed pricing, zero hidden costs.",
+        "new3": "Governance Dashboard.",
+        "new3Sub": "Full visibility into progress & logs.",
+        "new4": "Subject Matter Experts.",
+        "new4Sub": "Senior Engineers, no rotation."
     },
     "ProductCatalog": {
-        "title": "Service Packages",
-        "subtitle": "Choose the engagement model that fits your stage.",
+        "title": "Strategic Solutions",
+        "subtitle": "Tailored engagement models for digital transformation.",
         "products": {
             "ops": {
-                "title": "Internal Tools & Ops",
-                "target": "SMEs & Distributors",
-                "desc": "Turn Excel piles into secure internal database apps. Automate salary & commission calculations.",
-                "price": "Starting from Rp 15M",
-                "cta": "Digitize My Biz"
+                "title": "Internal Ecosystems & Ops",
+                "target": "Mid-Market & Distributed Ops",
+                "desc": "Scale legacy processes into secure, integrated database environments. Automated audit trails & commission logic.",
+                "price": "Custom Enterprise Quote",
+                "cta": "Request Case Study"
             },
             "publisher": {
-                "title": "Media Publisher Platform",
-                "target": "Media Companies",
-                "desc": "Super fast Next.js news portal with modern editorial CMS. Ready for ad and subscription monetization.",
+                "title": "Next-Gen Media Hub",
+                "target": "Media & Content Enterprise",
+                "desc": "High-velocity news portals built on Next.js. Advanced editorial CMS with enterprise-grade caching & distribution.",
                 "price": "Starting from Rp 10M",
-                "cta": "Launch Media Site"
+                "cta": "View Architecture"
             },
             "saas": {
-                "title": "Custom SaaS MVP",
-                "target": "Startup Founders",
-                "desc": "Validate your startup idea in 30 days. We build the frontend and backend, you launch.",
-                "price": "Custom Quote via AI",
-                "cta": "Consulate Idea"
+                "title": "Enterprise MVP Expansion",
+                "target": "Corporate Innovation Labs",
+                "desc": "Rapidly prototype and validate new business units. Full-cycle development from strategy to production-ready deployment.",
+                "price": "Strategic Consultation",
+                "cta": "Start Strategy Session"
             }
         },
-        "ctaGeneric": "Order Now"
+        "ctaGeneric": "Schedule a Call"
     },
     "Workflow": {
-        "title": "No Drama. No Meeting. Direct Action.",
-        "subtitle": "Efficiency of asynchronous workflow for maximum results.",
-        "step1": "1. Initialize Mission",
-        "step1Desc": "Chat with our AI to scope your project. It generates a comprehensive Brief and Technical Spec instantly.",
-        "step2": "2. Development & Workbench",
-        "step2Desc": "Watch your project build in real-time via the Workbench. Senior Engineers execute the spec with AI assistance.",
-        "step3": "3. Feedback & Deploy",
-        "step3Desc": "Review progress in your Dashboard. Drop comments on specific features. Approve completed milestones directly from your secure portal."
+        "title": "Strategic Precision. Maximum Velocity.",
+        "subtitle": "Highly efficient asynchronous delivery for complex requirements.",
+        "step1": "1. Strategic Scoping",
+        "step1Desc": "Collaborate with our AI-enhanced system to define industrial-grade requirements and technical specifications instantly.",
+        "step2": "2. Agile Engineering",
+        "step2Desc": "Monitor delivery in real-time. Our Senior Engineers leverage AI to ensure code quality, security, and velocity.",
+        "step3": "3. Governance & Deployment",
+        "step3Desc": "Approve milestones through your secure Dashboard. Full transparency over progress, documentation, and production rollout."
     },
     "Financial": {
-        "title": "Save Cost, Not Quality.",
-        "subtitle": "Smart investment logic for modern business.",
-        "comparison": "COMPARISON",
-        "hireSenior": "HIRE SENIOR DEV",
-        "hybrid": "{brand} (HYBRID)",
-        "salary": "Cost / Salary",
-        "salaryOld": "Gaji 15m/mo x 12",
-        "salaryNew": "One-time payment",
-        "hiringTime": "Hiring Time",
-        "hiringTimeOld": "1 - 2 Months",
-        "hiringTimeNew": "Start Immediately",
-        "hiddenCost": "Hidden Cost",
-        "hiddenCostOld": "Bonus, Healthcare, Laptop, Tax",
-        "risk": "Main Risk",
-        "riskOld": "Employee resigns suddenly",
-        "riskNew": "Bug & Maintenance Warranty",
-        "roi": "ROI: Efficient & Fast"
+        "title": "Optimize Investment, Not Just Cost.",
+        "subtitle": "Strategic financial logic for modern enterprise growth.",
+        "comparison": "FINANCIAL LOGIC",
+        "hireSenior": "TYPICAL FULL-TIME HIRE",
+        "hybrid": "{brand} (STRATEGIC PARTNER)",
+        "salary": "Capital Expenditure",
+        "salaryOld": "Annual Salary + Fixed Overhead",
+        "salaryNew": "Project-Based Investment",
+        "hiringTime": "Operational Delay",
+        "hiringTimeOld": "2 - 4 Months Recruitment",
+        "hiringTimeNew": "Immediate Mobilization",
+        "hiddenCost": "Total Cost of Ownership",
+        "hiddenCostOld": "Taxes, Benefits, Licenses, Retention",
+        "risk": "Business Risk",
+        "riskOld": "Resource turnover & legacy debt",
+        "riskNew": "Performance Guarantee & Warranty",
+        "roi": "ROI: Scalable Growth & Efficiency"
     },
     "Guarantee": {
         "title": "We Take the Risk for You.",
@@ -181,28 +181,122 @@
         "f6Desc": "Full documentation and industry-standard code structure for easy scaling."
     },
     "Expert": {
-        "title": "Human Brain. Machine Intelligence.",
+        "role": "Founder & Principal Engineer",
         "name": "Rasyiqi",
-        "q": "Is the code built by robots?",
-        "a": "<strong>AI is the hammer.</strong> I am the Architect.",
-        "desc": "I use AI to handle the boring stuff so I can focus on what matters: your app's logic, security, and performance.",
-        "footer": "Enterprise results. Freelancer speed.",
-        "role": "Senior Fullstack Developer"
+        "badge": "12+ YEARS EXPERIENCE",
+        "quote": "Code is easy. Building a sustainable business is hard. I bridge that gap.",
+        "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of Crediblemark. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
+        "footer": "Enterprise Expertise. Industrial Velocity."
+    },
+    "Experts": {
+        "badge": "WORLD-CLASS TALENT",
+        "title": "The <blue>Elite Engineering</blue> Squad",
+        "description": "We don't hire junior developers. Every project is executed by strictly vetted Senior Engineers with extensive industrial experience.",
+        "Rasyiqi": {
+            "role": "Senior Systems Architect",
+            "specialty": "Next.js, AI Protocols, Cloud Infra",
+            "exp": "10+ Years"
+        },
+        "Alexander": {
+            "role": "Principal Frontend Engineer",
+            "specialty": "UX Strategist, Design Systems",
+            "exp": "8+ Years"
+        },
+        "Sarah": {
+            "role": "Cybersecurity Expert",
+            "specialty": "Penetration Testing, Compliance",
+            "exp": "12+ Years"
+        },
+        "Vetting": {
+            "title": "Our Vetting Standard",
+            "subtitle": "Only the top 1% of engineering talent makes it into our squad.",
+            "Technical": {
+                "title": "Technical Assessment",
+                "desc": "Deep architectural and algorithmic testing to ensure absolute proficiency in complex systems."
+            },
+            "Industrial": {
+                "title": "Industrial Background",
+                "desc": "Validating track records in high-load production environments and enterprise-grade products."
+            },
+            "Strategic": {
+                "title": "Strategic Comms",
+                "desc": "Ensuring every engineer can translate complex technical requirements into business results."
+            }
+        },
+        "cta": "Inquire about our custom squad allocation"
+    },
+    "ClientDashboard": {
+        "badge": "CLIENT DASHBOARD",
+        "title": "Absolute Transparency via \n<yellow>Strategic Dashboard</yellow>",
+        "description": "Experience the \"Open Kitchen\" of software development. Our Client Dashboard exposes the real-time heartbeat of your project via a secure, centralized portal.",
+        "Features": {
+            "dailyUpdates": {
+                "title": "Daily Shipped Updates",
+                "desc": "Full visibility into daily progress. Every feature shipped, bug fixed, or milestone reached is logged in your Daily Updates feed."
+            },
+            "comms": {
+                "title": "Integrated Comms Channel",
+                "desc": "Direct, asynchronous communication with the engineering team. All strategic discussions are centralized and recorded."
+            },
+            "issues": {
+                "title": "Issue Management",
+                "desc": "Transparent tracking of open issues and roadblocks. Review, comment, and track the resolution of every technical hurdle."
+            },
+            "specs": {
+                "title": "Service Specifications",
+                "desc": "Technical blueprints and live specs always accessible. Know exactly what is being built against which industrial standard."
+            },
+            "docs": {
+                "title": "Document Vault",
+                "desc": "Centralized repository for all project assets, from architecture diagrams to final delivery documentation."
+            },
+            "status": {
+                "title": "Operational Status",
+                "desc": "Real-time mission health tracking. Monitor deployment status, environment health, and team allocation instantly."
+            }
+        },
+        "Philosophy": {
+            "badge": "ASYNC FIRST",
+            "title": "Why We Don't Do <red>Calls</red>",
+            "desc": "Traditional calls kill momentum. We replace inefficient meetings with absolute documentation to respect your time.",
+            "stat1": "Managers blocked from deep work",
+            "stat2": "Meetings are unproductive",
+            "stat3": "To regain focus after distraction",
+            "stat4": "People multitask during meetings",
+            "wayTitle": "The Crediblemark Way",
+            "way1": "<strong>Documented Decisions.</strong> No \"he said, she said\". Written in stone.",
+            "way2": "<strong>Async by Default.</strong> Respond when ready, not when calendar dictates.",
+            "way3": "<strong>Visual Updates.</strong> Don't ask layout status, just look at the dashboard.",
+            "way4": "<strong>Emergency Only.</strong> We only meet if strategy needs a massive pivot."
+        },
+        "Cta": {
+            "title": "Designed for Corporate Oversight",
+            "desc": "Our dashboard provides the audit trails and operational visibility required by enterprise stakeholders and CTOs for high-risk missions.",
+            "button": "Login Dashboard"
+        }
     },
     "FAQ": {
-        "title": "Frequently Asked Questions",
-        "q1": "Can I really not chat directly?",
-        "a1": "Our platform is designed for efficiency through <strong>Asynchronous communication</strong>. Everything is neatly recorded. But for emergency situations or deep strategy consultations, Premium Call sessions are available.",
-        "q2": "What if there are bugs after completion?",
-        "a2": "All packages include a <strong>30-Day Bug Warranty</strong>. Report via dashboard, fixes are prioritized.",
-        "q3": "Do I own the source code?",
-        "a3": "Yes, <strong>100%</strong>. After final payment, the GitHub repository will be transferred to your account.",
-        "q4": "How do revisions work?",
-        "a4": "We build in public. You can provide feedback on every milestone via the <strong>Mission Control</strong> dashboard. Major shifts in scope are handled as new mission add-ons.",
-        "q5": "What tech stack do you use?",
-        "a5": "We primarily utilize <strong>Next.js & TypeScript</strong>, but flexibility is key. We have <strong>Human Experts</strong> specializing in various stacks, allowing us to adapt perfectly to your specific requirements.",
-        "q6": "Can you integrate with my existing systems?",
-        "a6": "Absolutely. We routinely integrate with <strong>Stripe, Midtrans, Slack, Discord, Google Cloud</strong>, and various third-party APIs to build a unified ecosystem."
+        "title": "FAQ: Framework & Governance",
+        "q1": "Is direct synchronous communication available?",
+        "a1": "Our platform is optimized for <strong>Asynchronous Communication</strong> to ensure precision and absolute documentation. However, for critical coordination or deep strategic consulting, scheduled Premium Call sessions are available.",
+        "q2": "How is post-deployment stability managed?",
+        "a2": "All projects include a <strong>30-Day Performance Warranty</strong>. Bug reports are prioritized within your dashboard to ensure zero disruption to your business operations.",
+        "q3": "Who retains ownership of the source code?",
+        "a3": "Your organization retains <strong>100% full ownership</strong>. Upon project completion, all technical assets and GitHub repositories are transferred to your corporate control.",
+        "q4": "What is the procedure for scope adjustments?",
+        "a4": "We operate with full transparency. Minor adjustments are handled within active iterations, while significant scope changes are managed as supplemental missions to keep the primary timeline predictable.",
+        "q5": "What technology standards do you follow?",
+        "a5": "We standardize on high-performance stacks like <strong>Next.js & TypeScript</strong>. Our <strong>Senior Systems Architects</strong> are equipped to adapt to your existing enterprise infrastructure as required.",
+        "q6": "Can you integrate with third-party enterprise systems?",
+        "a6": "Absolutely. We routinely integrate with industrial-grade APIs and cloud services such as <strong>Stripe, SAP, Google Cloud</strong>, and various custom internal gateways.",
+        "q7": "What about NDA and confidentiality?",
+        "a7": "We take intellectual property seriously. We are ready to sign your company's standard NDA before any code is written.",
+        "q8": "How are payments structured?",
+        "a8": "We use a milestone-based payment system. You only release funds when a specific deliverable is approved on your dashboard.",
+        "q9": "Do you provide long-term maintenance?",
+        "a9": "Yes, we offer retainer packages for ongoing feature development, security updates, and infrastructure monitoring.",
+        "q10": "How long does a typical project take?",
+        "a10": "Most MVPs are shipped in 4-8 weeks. Enterprise migrations may take 3-6 months depending on complexity."
     },
     "Dashboard": {
         "Sidebar": {
@@ -211,7 +305,7 @@
             "missions": "Missions",
             "inbox": "Chat",
             "support": "Support",
-            "store": "Store",
+            "store": "Services",
             "billing": "Billing",
             "proPlan": "Pro Plan",
             "upgradeDesc": "Upgrade for more AI tokens.",
@@ -323,14 +417,14 @@
         "pay": "Pay"
     },
     "Footer": {
-        "ctaTitle": "Ready to Build Your Business Future?",
-        "ctaButton": "Start Project Consultation",
-        "clientLogin": "Client Login",
-        "contactUs": "Contact Us",
-        "services": "Services",
-        "supportHelp": "Support / Help",
+        "ctaTitle": "Partner with Experts Who Understand Enterprise Complexity",
+        "ctaButton": "Schedule an Enterprise Consultation",
+        "clientLogin": "Client Console",
+        "contactUs": "Contact Expert",
+        "services": "Business Solutions",
+        "supportHelp": "Support & Governance",
         "terms": "Terms of Service",
-        "privacy": "Privacy Policy",
+        "privacy": "Privacy Compliance",
         "copyright": "All Rights Reserved."
     },
     "PriceCalculator": {

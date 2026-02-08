@@ -8,7 +8,10 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 async function getEstimate(id: string) {
     return await prisma.estimate.findUnique({
         where: { id },
-        include: { service: true }
+        include: {
+            service: true,
+            project: true
+        }
     });
 }
 
@@ -27,8 +30,9 @@ async function getBankSettings() {
     }, {} as Record<string, string>);
 }
 
-export default async function CheckoutPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CheckoutPage({ params, searchParams }: { params: Promise<{ id: string }>, searchParams: Promise<{ paymentType?: string }> }) {
     const { id } = await params;
+    const { paymentType } = await searchParams;
 
     // Auth Guard
     const user = await stackServerApp.getUser();
@@ -88,6 +92,9 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
                     email: user.primaryEmail
                 }}
                 agencySettings={agencySettings}
+                defaultPaymentType={paymentType as "FULL" | "DP" | "REPAYMENT"}
+                projectPaidAmount={estimate.project?.paidAmount || 0}
+                projectTotalAmount={estimate.project?.totalAmount || 0}
             />
         </div>
     );

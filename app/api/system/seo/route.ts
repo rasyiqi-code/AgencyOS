@@ -101,9 +101,9 @@ export async function POST(req: NextRequest) {
 
         await prisma.$transaction(updates);
 
-        (revalidatePath as any)("/", "layout");
-        (revalidatePath as any)("/admin/system/seo", "page");
-        (revalidateTag as any)("system-settings");
+        revalidatePath("/", "layout");
+        revalidatePath("/admin/system/seo", "page");
+        (revalidateTag as unknown as (tag: string) => void)("system-settings");
 
         return NextResponse.json({ success: true });
     } catch (error) {

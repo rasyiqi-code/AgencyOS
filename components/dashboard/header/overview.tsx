@@ -5,9 +5,9 @@ export function OverviewHeader({ user }: { user: { displayName?: string | null }
     const greeting = hours < 12 ? "Good morning" : hours < 18 ? "Good afternoon" : "Good evening";
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 mt-2">
             <div>
-                <h1 className="text-3xl font-bold text-white tracking-tight">
+                <h1 className="text-2xl md:text-3xl font-black text-white tracking-tighter">
                     {greeting}, {user?.displayName || "Architect"}.
                 </h1>
                 <p className="text-zinc-400 mt-1 flex items-center gap-2">

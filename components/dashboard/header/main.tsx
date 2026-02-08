@@ -10,12 +10,22 @@ import { DashboardViewSwitcher } from "@/components/admin/dashboard-view-switche
 import { ProjectSearch } from "@/components/admin/pm/project-search";
 import { ProjectFilter } from "@/components/admin/pm/project-filter";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "./currency-switcher";
+import { MobileNav } from "./mobile-nav";
+import Link from "next/link";
+import { Check } from "lucide-react";
+import Image from "next/image";
 
 interface DashboardHeaderProps {
     allowedToSwitchViews?: boolean;
+    agencyName?: string;
+    logoUrl?: string;
 }
 
-export function DashboardHeader({ allowedToSwitchViews = false }: DashboardHeaderProps) {
+export function DashboardHeader({
+    allowedToSwitchViews = false,
+    agencyName = "Agency OS",
+    logoUrl
+}: DashboardHeaderProps) {
     const pathname = usePathname();
     const router = useRouter();
     const t = useTranslations("Common");
@@ -31,6 +41,28 @@ export function DashboardHeader({ allowedToSwitchViews = false }: DashboardHeade
     return (
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-white/5 bg-black/50 backdrop-blur-sm px-4 sm:h-16 sm:px-6">
             <div className="flex items-center gap-2 flex-1">
+                <MobileNav agencyName={agencyName} logoUrl={logoUrl} />
+
+                {/* Mobile Logo Visibility */}
+                <div className="md:hidden flex items-center ml-2 shrink-0">
+                    <Link href="/" className="flex items-center gap-2 font-semibold">
+                        {logoUrl ? (
+                            <div className="relative h-7 w-7 overflow-hidden rounded-full">
+                                <Image
+                                    src={logoUrl}
+                                    alt={agencyName}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        ) : (
+                            <div className="h-7 w-7 rounded-full bg-brand-grey flex items-center justify-center">
+                                <Check className="h-4 w-4 text-brand-yellow stroke-[3]" />
+                            </div>
+                        )}
+                    </Link>
+                </div>
+
                 {showBackButton && (
                     <Button
                         variant="ghost"

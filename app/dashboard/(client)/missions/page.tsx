@@ -42,11 +42,15 @@ export default async function MissionsPage({ searchParams }: { searchParams: Pro
     }) as unknown as ExtendedProject[];
 
     // Split projects into Active Subscriptions and History/One-time
-    // Split projects into Active Subscriptions and History/One-time
-    // We exclude projects with an estimateId from "Subscriptions" because they are custom projects, 
-    // even if they were accidentally created with subscriptionStatus="active" due to previous defaults.
-    const subscribedProjects = allProjects.filter(p => p.subscriptionStatus === 'active' && !p.estimateId);
-    const historyProjects = allProjects.filter(p => p.subscriptionStatus !== 'active' || !!p.estimateId);
+    // Subscribed if: subscriptionStatus is active OR it's a service with non-one-time billing
+    const subscribedProjects = allProjects.filter(p =>
+        (p.subscriptionStatus === 'active' && !p.estimateId) ||
+        (p.service && p.service.interval !== 'one_time')
+    );
+    const historyProjects = allProjects.filter(p =>
+        (p.subscriptionStatus !== 'active' || !!p.estimateId) &&
+        !(p.service && p.service.interval !== 'one_time')
+    );
 
     return (
         <div className="pb-10">

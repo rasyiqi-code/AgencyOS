@@ -51,7 +51,7 @@ export function EcosystemContent({ agencyName }: EcosystemContentProps) {
                 <div className="grid md:grid-cols-3 gap-8">
                     {/* Client Portal */}
                     <motion.div variants={itemVariants}>
-                        <Link href="/dashboard" className="group block h-full">
+                        <Link href="/client-dashboard" className="group block h-full">
                             <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-brand-yellow/50 transition-all duration-300 overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <LayoutDashboard className="w-24 h-24 text-brand-yellow rotate-12" />
@@ -75,7 +75,7 @@ export function EcosystemContent({ agencyName }: EcosystemContentProps) {
 
                     {/* Squad Portal (Activated) */}
                     <motion.div variants={itemVariants}>
-                        <Link href="/squad" className="group block h-full">
+                        <Link href="/experts" className="group block h-full">
                             <div className="relative h-full p-8 rounded-2xl bg-zinc-900/50 border border-white/10 hover:border-blue-500/50 transition-all duration-300 overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <Users className="w-24 h-24 text-blue-500 rotate-12" />

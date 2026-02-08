@@ -4,7 +4,7 @@ import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign, Loader2 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export function DashboardCurrencySwitcher() {
     const { currency, setCurrency } = useCurrency();
@@ -49,6 +49,7 @@ export function DashboardCurrencySwitcher() {
 export function DashboardLanguageSwitcher() {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [mounted, setMounted] = useState(false);
     const [isPending, startTransition] = useTransition();
 
@@ -72,12 +73,14 @@ export function DashboardLanguageSwitcher() {
         }
 
         const newPath = segments.join('/') || '/';
+        const queryString = searchParams?.toString();
+        const newPathWithParams = queryString ? `${newPath}?${queryString}` : newPath;
 
         // Optimistic UI & Transition
         startTransition(() => {
             // Set cookie for client-side persistence redundancy
             document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-            router.push(newPath);
+            router.push(newPathWithParams);
             router.refresh();
         });
     };

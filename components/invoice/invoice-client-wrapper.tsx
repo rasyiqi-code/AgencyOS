@@ -16,6 +16,7 @@ interface InvoiceClientWrapperProps {
         id: string;
         amount: number;
         status: string;
+        type: string; // Added type for DP/Repayment check
         projectId: string | null;
         userId: string | null;
         createdAt: Date;
@@ -104,6 +105,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         user={user}
                         isPaid={isPaid}
                         agencySettings={agencySettings}
+                        paymentType={order.type}
                     />
                 </div>
             </div>
@@ -117,8 +119,15 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             <h2 className="text-lg font-bold text-white">Invoice Status</h2>
                             <p className="text-zinc-400 text-xs">#{order.id}</p>
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
-                            {isPaid ? "PAID" : "UNPAID"}
+                        <div className="flex items-center gap-2">
+                            <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
+                                {isPaid ? "PAID" : "UNPAID"}
+                            </div>
+                            {(order.type === 'DP' || order.type === 'REPAYMENT') && (
+                                <div className="px-2 py-1 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
+                                    {order.type}
+                                </div>
+                            )}
                         </div>
                     </div>
 

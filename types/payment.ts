@@ -285,6 +285,7 @@ export interface InvoiceOrder {
     id: string;
     amount: number;
     status: string;
+    type: string; // Added type field from Prisma
     userId: string | null;
     projectId: string | null;
     snapToken: string | null;

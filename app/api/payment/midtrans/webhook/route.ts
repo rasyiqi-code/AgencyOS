@@ -63,12 +63,30 @@ export async function POST(req: Request) {
 
         // If payment is settled, activate the project and mark estimate as paid
         if (dbStatus === "settled" && order.project) {
+            const currentPaid = order.project.paidAmount || 0;
+            const newPaid = currentPaid + order.amount;
+
+            let paymentStatus = "UNPAID";
+            if (order.type === "FULL" || order.type === "REPAYMENT") {
+                paymentStatus = "PAID";
+            } else if (order.type === "DP") {
+                paymentStatus = "PARTIAL";
+            }
+
+            // Update project status
             await prisma.project.update({
                 where: { id: order.project.id },
-                data: { status: "queue" }
+                data: {
+                    status: "queue", // Start working on it
+                    paymentStatus: paymentStatus,
+                    paidAmount: newPaid
+                }
             });
 
             if (order.project.estimateId) {
+                // Only mark estimate as paid if fully paid or if we want to lock it after DP?
+                // Usually estimate is "accepted/paid" once project starts. 
+                // Let's keep it "paid" if at least DP is in.
                 await prisma.estimate.update({
                     where: { id: order.project.estimateId },
                     data: { status: "paid" }

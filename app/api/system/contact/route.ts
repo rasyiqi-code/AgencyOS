@@ -18,8 +18,7 @@ const CONTACT_HOURS_KEY = "CONTACT_HOURS";
 export async function GET() {
     const settings = await prisma.systemSetting.findMany({
         where: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] as any }
+            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] }
         }
     });
 
@@ -102,9 +101,9 @@ export async function POST(req: NextRequest) {
 
         await prisma.$transaction(updates);
 
-        (revalidatePath as any)("/admin/system/settings", "page");
-        (revalidatePath as any)("/", "layout");
-        (revalidateTag as any)("system-settings");
+        revalidatePath("/admin/system/settings", "page");
+        revalidatePath("/", "layout");
+        (revalidateTag as unknown as (tag: string) => void)("system-settings");
 
         return NextResponse.json({ success: true });
     } catch (error) {

@@ -19,7 +19,7 @@ export async function FAQSection() {
                 </div>
 
                 <Accordion type="single" collapsible className="w-full text-zinc-300">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
                         <AccordionItem key={i} value={`item-${i}`} className="border-b border-white/10">
                             <AccordionTrigger className="hover:no-underline hover:text-white text-left">
                                 {t(`q${i}`)}

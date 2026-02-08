@@ -15,7 +15,10 @@ export function CheckoutContent({
     bonuses,
     user,
     agencySettings,
-    hasActiveGateway = true
+    hasActiveGateway = true,
+    defaultPaymentType,
+    projectPaidAmount = 0,
+    projectTotalAmount = 0
 }: {
     estimate: ExtendedEstimate,
     bankDetails: BankDetails,
@@ -23,7 +26,10 @@ export function CheckoutContent({
     bonuses: Bonus[],
     user: { displayName: string | null, email: string | null },
     agencySettings?: AgencyInvoiceSettings,
-    hasActiveGateway?: boolean
+    hasActiveGateway?: boolean,
+    defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
+    projectPaidAmount?: number,
+    projectTotalAmount?: number
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discountType: 'percentage' | 'fixed', discountValue: number } | null>(null);
@@ -61,6 +67,9 @@ export function CheckoutContent({
                     activeRate={activeRate}
                     appliedCoupon={appliedCoupon}
                     hasActiveGateway={hasActiveGateway}
+                    defaultPaymentType={defaultPaymentType}
+                    projectPaidAmount={projectPaidAmount}
+                    projectTotalAmount={projectTotalAmount}
                 />
             </div>
 
