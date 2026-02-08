@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const CONTACT_EMAIL_KEY = "CONTACT_EMAIL";
 const CONTACT_PHONE_KEY = "CONTACT_PHONE";
@@ -102,8 +102,9 @@ export async function POST(req: NextRequest) {
 
         await prisma.$transaction(updates);
 
-        revalidatePath("/admin/system/settings");
-        revalidatePath("/", "layout");
+        (revalidatePath as any)("/admin/system/settings", "page");
+        (revalidatePath as any)("/", "layout");
+        (revalidateTag as any)("system-settings");
 
         return NextResponse.json({ success: true });
     } catch (error) {

@@ -3,7 +3,33 @@ import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 import { prisma } from "@/lib/config/db";
-// import { getContactInfo } from "@/app/actions/general";
+import { getLocale } from "next-intl/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const locale = await getLocale();
+    const pageSeo = await prisma.pageSeo.findUnique({
+        where: { path: "/contact" }
+    });
+
+    const isId = locale === 'id';
+
+    if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
+        return {
+            title: "Contact Us",
+            description: "Get in touch with us for your software development needs."
+        };
+    }
+
+    return {
+        title: (isId ? pageSeo.title_id : null) || pageSeo.title || "Contact Us",
+        description: (isId ? pageSeo.description_id : null) || pageSeo.description || undefined,
+        keywords: ((isId ? pageSeo.keywords_id : null) || pageSeo.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean),
+        openGraph: pageSeo.ogImage ? {
+            images: [{ url: pageSeo.ogImage }]
+        } : undefined,
+    };
+}
 
 export default async function ContactPage() {
     const settings = await prisma.systemSetting.findMany({

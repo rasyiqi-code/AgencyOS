@@ -20,61 +20,37 @@ const inter = Inter({ subsets: ["latin"] });
 import { prisma } from "@/lib/config/db";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
-  const settings = await getSystemSettings(["AGENCY_NAME", "SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
+  try {
+    const locale = await getLocale();
+    const settings = await getSystemSettings(["AGENCY_NAME", "SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
+    const isId = locale === 'id';
 
-  const isId = locale === 'id';
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
-  const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
+    const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "Senior Software House";
 
-  const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
-  const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "SoloDev Async Platform";
-  const seoKeywords = (isId ? settings.find(s => s.key === "SEO_KEYWORDS_ID")?.value : null) || settings.find(s => s.key === "SEO_KEYWORDS")?.value || "";
+    const homepageTitle = `${agencyName} | ${seoTagline}`;
 
-  const seoOgImage = settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
-  const seoFavicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
-  const googleVerification = settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value;
-  // const gaId = settings.find(s => s.key === "SEO_GA_ID")?.value;
-
-  const homepageTitle = `${agencyName} | ${seoTagline}`;
-
-  return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
-    title: {
-      default: homepageTitle,
-      template: `%s | ${agencyName}`,
-    },
-    description: seoDesc,
-    keywords: seoKeywords.split(",").map(k => k.trim()).filter(k => k),
-    icons: {
-      icon: seoFavicon || '/favicon.ico',
-      shortcut: seoFavicon || '/favicon.ico',
-      apple: seoFavicon || '/apple-touch-icon.png',
-    },
-    openGraph: {
-      title: homepageTitle,
-      description: seoDesc,
-      siteName: agencyName,
-      images: seoOgImage ? [{ url: seoOgImage }] : [],
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: homepageTitle,
-      description: seoDesc,
-      images: seoOgImage ? [seoOgImage] : [],
-    },
-    verification: {
-      google: googleVerification || undefined,
-    },
-    alternates: {
-      canonical: '/',
-      languages: {
-        'en': '/en',
-        'id': '/id',
+    return {
+      metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+      title: {
+        default: homepageTitle,
+        template: `%s | ${agencyName}`,
       },
-    },
-  };
+      description: seoDesc,
+      openGraph: {
+        title: homepageTitle,
+        description: seoDesc,
+        type: 'website',
+      }
+    };
+  } catch (error) {
+    console.error("[Metadata Debug] Error:", error);
+    return {
+      title: "Crediblemark",
+    };
+  }
 }
 
 export default async function RootLayout({

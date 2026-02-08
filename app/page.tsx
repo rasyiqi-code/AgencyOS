@@ -25,16 +25,13 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   });
 
+  if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
+    return {};
+  }
+
   return {
-    title: pageSeo?.title || undefined, // Fallback to layout default
-    description: pageSeo?.description || undefined,
-    keywords: pageSeo?.keywords?.split(",").map((k: string) => k.trim()) || undefined,
-    openGraph: pageSeo?.ogImage ? {
-      images: [{ url: pageSeo.ogImage }]
-    } : undefined,
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/`
-    }
+    title: pageSeo.title || undefined,
+    description: pageSeo.description || undefined,
   };
 }
 

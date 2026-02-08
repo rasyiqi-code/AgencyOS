@@ -18,7 +18,7 @@ export const getSystemSettings = unstable_cache(
     ["system-settings"],
     {
         tags: ["system-settings"],
-        revalidate: 3600, // Cache selama 1 jam sebagai fallback
+        revalidate: 3600,
     }
 );
 

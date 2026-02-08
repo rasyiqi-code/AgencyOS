@@ -1,5 +1,31 @@
 import React from 'react';
 import { prisma } from "@/lib/config/db";
+import { getLocale } from "next-intl/server";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const locale = await getLocale();
+    const pageSeo = await prisma.pageSeo.findUnique({
+        where: { path: "/terms" }
+    });
+
+    const isId = locale === 'id';
+
+    if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
+        return {
+            title: isId ? "Syarat & Ketentuan" : "Terms & Conditions",
+        };
+    }
+
+    return {
+        title: (isId ? pageSeo.title_id : null) || pageSeo.title || (isId ? "Syarat & Ketentuan" : "Terms & Conditions"),
+        description: (isId ? pageSeo.description_id : null) || pageSeo.description || undefined,
+        keywords: ((isId ? pageSeo.keywords_id : null) || pageSeo.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean),
+        openGraph: pageSeo.ogImage ? {
+            images: [{ url: pageSeo.ogImage }]
+        } : undefined,
+    };
+}
 
 export default async function TermsPage() {
     const settings = await prisma.systemSetting.findMany({

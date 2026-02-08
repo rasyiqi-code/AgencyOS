@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function GET() {
     try {
@@ -55,7 +55,8 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        revalidatePath(normalizedPath);
+        (revalidatePath as any)(normalizedPath, "page");
+        (revalidateTag as any)("page-seo");
         return NextResponse.json(page);
     } catch (error) {
         console.error("Page SEO upsert error:", error);
