@@ -104,7 +104,6 @@ export async function POST(req: NextRequest) {
 
         revalidatePath("/admin/system/settings");
         revalidatePath("/", "layout");
-        revalidatePath("/", "layout");
 
         return NextResponse.json({ success: true });
     } catch (error) {

@@ -13,6 +13,7 @@ import { PendingCheckoutRedirect } from "@/components/store/pending-checkout-red
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import NextTopLoader from 'nextjs-toploader';
 import Script from 'next/script';
+import { getSystemSettings } from "@/lib/server/settings";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +21,7 @@ import { prisma } from "@/lib/config/db";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
-  const settings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["AGENCY_NAME", "SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
-  });
+  const settings = await getSystemSettings(["AGENCY_NAME", "SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
 
   const isId = locale === 'id';
 
@@ -87,10 +86,8 @@ export default async function RootLayout({
   const messages = await getMessages();
   const midtransConfig = await paymentGatewayService.getMidtransConfig();
 
-  // Fetch SEO Settings for GA Script (Client Side Injection)
-  const seoSettings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["SEO_GA_ID"] } }
-  });
+  // Fetch SEO Settings for GA Script (using cache)
+  const seoSettings = await getSystemSettings(["SEO_GA_ID"]);
   const gaId = seoSettings.find(s => s.key === "SEO_GA_ID")?.value;
 
   const snapUrl = midtransConfig.isProduction
