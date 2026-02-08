@@ -15,12 +15,7 @@ export type CreateSquadProfileInput = {
     portfolio?: string;
 };
 
-export type ApplyMissionInput = {
-    missionId: string;
-    squadId: string;
-    coverLetter: string;
-    proposedRate?: number;
-};
+
 
 export const squadService = {
     // --- Profiles ---
@@ -38,6 +33,21 @@ export const squadService = {
                 github: input.github,
                 portfolio: input.portfolio,
                 status: "pending"
+            }
+        });
+    },
+
+    async updateProfile(userId: string, data: Partial<CreateSquadProfileInput>) {
+        return await prisma.squadProfile.update({
+            where: { userId },
+            data: {
+                name: data.name,
+                skills: data.skills,
+                yearsOfExp: data.yearsOfExp,
+                bio: data.bio,
+                linkedin: data.linkedin,
+                github: data.github,
+                portfolio: data.portfolio,
             }
         });
     },
@@ -64,29 +74,7 @@ export const squadService = {
 
     // --- Mission Applications ---
 
-    async applyForMission(input: ApplyMissionInput) {
-        // Check if already applied
-        const existing = await prisma.missionApplication.findFirst({
-            where: {
-                missionId: input.missionId,
-                squadId: input.squadId
-            }
-        });
 
-        if (existing) {
-            throw new Error("Already applied to this mission");
-        }
-
-        return await prisma.missionApplication.create({
-            data: {
-                missionId: input.missionId,
-                squadId: input.squadId,
-                coverLetter: input.coverLetter,
-                proposedRate: input.proposedRate,
-                status: "pending"
-            }
-        });
-    },
 
     async acceptApplication(applicationId: string) {
         const application = await prisma.missionApplication.findUnique({
@@ -117,5 +105,59 @@ export const squadService = {
         ]);
 
         return true;
+    },
+
+
+
+
+
+    async respondToInvitation(applicationId: string, accept: boolean) {
+        return await prisma.$transaction(async (tx) => {
+            const application = await tx.missionApplication.findUnique({
+                where: { id: applicationId },
+                include: { mission: true }
+            });
+
+            if (!application || application.status !== 'invited') {
+                throw new Error("Invitation not found or no longer valid");
+            }
+
+            if (accept) {
+                // Accept invitation
+                const updatedApp = await tx.missionApplication.update({
+                    where: { id: applicationId },
+                    data: { status: "accepted" }
+                });
+
+                // Set project to active/dev if not already
+                if (application.mission.status === 'queue') {
+                    await tx.project.update({
+                        where: { id: application.missionId },
+                        data: { status: "dev" }
+                    });
+                }
+
+                // Optional: If no developerId set on project, set this user as lead (or leave it generic)
+                // Optional: If no developerId set on project, set this user as lead
+                if (!application.mission.developerId) {
+                    const squad = await tx.squadProfile.findUnique({ where: { id: application.squadId } });
+                    if (squad) {
+                        await tx.project.update({
+                            where: { id: application.missionId },
+                            data: { developerId: squad.userId }
+                        });
+                    }
+                }
+
+                return updatedApp;
+            } else {
+                // Reject invitation
+                const updatedApp = await tx.missionApplication.update({
+                    where: { id: applicationId },
+                    data: { status: "rejected" }
+                });
+                return updatedApp;
+            }
+        });
     }
 };

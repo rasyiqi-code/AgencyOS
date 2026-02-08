@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 // import { applyForMission } from "@/app/actions/squad";
 import { toast } from "sonner";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
@@ -27,8 +24,6 @@ interface MissionApplicationFormProps {
 export function MissionApplicationForm({ missionId, hasApplied = false, status }: MissionApplicationFormProps) {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [coverLetter, setCoverLetter] = useState("");
-    const [proposedRate, setProposedRate] = useState("");
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -37,18 +32,18 @@ export function MissionApplicationForm({ missionId, hasApplied = false, status }
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    missionId,
-                    coverLetter,
-                    proposedRate: proposedRate ? parseFloat(proposedRate) : undefined
+                    missionId
                 })
             });
             const result = await response.json();
 
             if (result.success) {
-                toast.success("Application submitted successfully!");
+                toast.success("Mission Claimed Successfully!");
                 setOpen(false);
+                // Optional: Refresh page or redirect
+                window.location.reload();
             } else {
-                toast.error(result.error || "Failed to submit application");
+                toast.error(result.error || "Failed to claim mission");
             }
         } catch {
             toast.error("Signal lost. Please retry.");
@@ -99,46 +94,32 @@ export function MissionApplicationForm({ missionId, hasApplied = false, status }
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="w-full bg-brand-yellow text-black font-bold text-lg hover:bg-brand-yellow/90 flex items-center gap-2 h-12 rounded-xl transition-all shadow-lg shadow-brand-yellow/20">
-                    <Send className="w-5 h-5" /> Start Application
+                    <Send className="w-5 h-5" /> Claim Task
                 </Button>
             </DialogTrigger>
             <DialogContent className="bg-zinc-950 border border-zinc-800 text-white sm:max-w-md rounded-xl">
                 <DialogHeader>
                     <DialogTitle className="text-white text-xl tracking-tight font-bold">
-                        Apply for Mission
+                        Confirm Mission Claim
                     </DialogTitle>
                     <DialogDescription className="text-zinc-400">
-                        Provide intel on why you are the optimal operative for this mission.
+                        Are you sure you want to claim this task? By claiming, you agree to the mission parameters and deadline.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300 font-medium">Cover Letter / Pitch</Label>
-                        <Textarea
-                            value={coverLetter}
-                            onChange={(e) => setCoverLetter(e.target.value)}
-                            placeholder="I have executed similar protocols in..."
-                            className="bg-zinc-900 border-zinc-800 focus-visible:ring-brand-yellow focus-visible:ring-offset-0 h-32 rounded-lg text-white"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label className="text-zinc-300 font-medium">Proposed Rate (Optional)</Label>
-                        <Input
-                            type="number"
-                            value={proposedRate}
-                            onChange={(e) => setProposedRate(e.target.value)}
-                            placeholder="Leave empty for standard bounty"
-                            className="bg-zinc-900 border-zinc-800 focus-visible:ring-brand-yellow focus-visible:ring-offset-0 rounded-lg text-white"
-                        />
+                <div className="py-4">
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                        <p className="text-yellow-500 text-sm font-medium">
+                            Warning: This action is binding. Failure to deliver may affect your reputation score.
+                        </p>
                     </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)} className="border-zinc-800 text-zinc-400 hover:bg-zinc-900 hover:text-white rounded-lg">
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit} disabled={isLoading || !coverLetter} className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold rounded-lg">
-                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
-                        Submit Application
+                    <Button onClick={handleSubmit} disabled={isLoading} className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold rounded-lg">
+                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
+                        Confirm & Claim
                     </Button>
                 </DialogFooter>
             </DialogContent>

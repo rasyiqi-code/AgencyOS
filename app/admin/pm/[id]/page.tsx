@@ -20,6 +20,7 @@ import { FeedbackBoard } from "@/components/feedback/board";
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
 
+
 interface PageProps {
     params: Promise<{ id: string }>;
 }
@@ -46,6 +47,23 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     }) as unknown as ExtendedProject;
 
     if (!project) notFound();
+
+    // Fetch Team (Accepted or Invited Applications)
+    const teamApplications = await prisma.missionApplication.findMany({
+        where: {
+            missionId: project.id,
+            status: { in: ['accepted', 'invited'] }
+        },
+        include: {
+            squad: true
+        }
+    });
+
+    // Map with status so we can display it
+    const team = teamApplications.map(app => ({
+        ...app.squad,
+        applicationStatus: app.status // Hack: Injecting status into the profile object for UI usage (needs type adjustment or loose typing in component) 
+    }));
 
     return (
         <div className="w-full py-4 pb-12">
@@ -202,6 +220,8 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                                     <span className="text-xs text-zinc-300 font-mono">{new Date(project.updatedAt).toLocaleDateString()}</span>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
 
@@ -244,6 +264,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                         repoName={project.repoName}
                         repoUrl={project.repoUrl}
                         isEditable={true}
+                        team={team}
                     />
 
                 </div>

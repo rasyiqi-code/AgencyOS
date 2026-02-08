@@ -71,14 +71,7 @@ export async function SiteHeader() {
                     </Link>
 
                     <nav className="flex items-center gap-6 hidden md:flex">
-                        <div className="flex items-center gap-1.5 cursor-not-allowed opacity-60 select-none">
-                            <span className="text-sm font-medium text-zinc-400">
-                                {t("forTalent")}
-                            </span>
-                            <span className="px-1.5 py-0.5 rounded-[4px] bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-[9px] font-bold tracking-wider leading-none">
-                                SOON
-                            </span>
-                        </div>
+
                         <Link href={`/${locale}/price-calculator`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                             {t("priceCalculator")}
                         </Link>

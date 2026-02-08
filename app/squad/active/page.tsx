@@ -7,6 +7,7 @@ import { Activity, Code2, Clock, TerminalSquare, ArrowRight, MessageSquare, Cale
 import { SafeImage } from "@/components/ui/safe-image";
 import { DailyLog } from "@/lib/shared/types";
 import { cn } from "@/lib/shared/utils";
+import { CompleteMissionButton } from "@/components/squad/complete-mission-button";
 
 const MOOD_COLORS = {
     on_track: "text-emerald-500",
@@ -27,25 +28,35 @@ export default async function SquadActivePage() {
         redirect('/handler/sign-in');
     }
 
-    const activeMissions = await prisma.project.findMany({
+    // Fetch active missions via MissionApplication (Multi-Developer Support)
+    const applications = await prisma.missionApplication.findMany({
         where: {
-            developerId: user.id,
-            status: 'dev'
+            squad: { userId: user.id },
+            status: 'accepted',
+            mission: {
+                status: { not: 'archived' } // Optional: ensure not archived
+            }
         },
         orderBy: { updatedAt: 'desc' },
         include: {
-            briefs: true,
-            service: true,
-            estimate: true,
-            dailyLogs: {
-                orderBy: { createdAt: 'desc' },
-                take: 1
-            },
-            feedback: {
-                where: { status: 'open' }
+            mission: {
+                include: {
+                    briefs: true,
+                    service: true,
+                    estimate: true,
+                    dailyLogs: {
+                        orderBy: { createdAt: 'desc' },
+                        take: 1
+                    },
+                    feedback: {
+                        where: { status: 'open' }
+                    }
+                }
             }
         }
     });
+
+    const activeMissions = applications.map(app => app.mission);
 
     return (
         <div className="flex flex-col gap-8 pb-10 w-full">
@@ -178,6 +189,7 @@ export default async function SquadActivePage() {
 
                                             {/* Quick Links */}
                                             <div className="flex gap-2">
+                                                <CompleteMissionButton missionId={mission.id} />
                                                 {mission.repoUrl && (
                                                     <Link href={mission.repoUrl} target="_blank">
                                                         <button className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium rounded border border-white/5 transition-colors flex items-center gap-1.5">

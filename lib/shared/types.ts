@@ -145,6 +145,7 @@ export interface ExtendedProject {
     subscriptionEndsAt?: Date | null;
     subscriptionStatus?: string | null;
     estimate?: ExtendedEstimate | null;
+    bounty?: number | null;
 }
 
 export interface StackUser {

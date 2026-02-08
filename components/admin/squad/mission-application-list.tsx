@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 // import { acceptMissionApplication } from "@/app/actions/squad";
 import { useRouter } from "next/navigation";
-import { CheckCircle, DollarSign, Calendar, Clock, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, Calendar, Clock, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -19,8 +19,6 @@ interface MissionWithApps {
             name: string;
             role: string;
         };
-        coverLetter: string | null;
-        proposedRate: number | null;
         createdAt: string | Date;
         status: string;
     }[];
@@ -100,19 +98,9 @@ export function MissionApplicationList({ missions }: MissionApplicationListProps
                                             </Badge>
                                         </div>
 
-                                        <div className="bg-zinc-900/50 p-4 rounded-lg border border-zinc-800/50">
-                                            <p className="text-sm text-zinc-300 italic">&quot;{app.coverLetter}&quot;</p>
-                                        </div>
-
-                                        <div className="flex gap-4 text-sm text-zinc-500">
-                                            <div className="flex items-center gap-1">
-                                                <DollarSign className="w-4 h-4 text-green-500" />
-                                                <span className="text-white font-medium">{app.proposedRate ? `$${app.proposedRate}` : 'Standard Rate'}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <Calendar className="w-4 h-4" />
-                                                Applied {new Date(app.createdAt).toLocaleDateString()}
-                                            </div>
+                                        <div className="flex items-center gap-1 text-sm text-zinc-500">
+                                            <Calendar className="w-4 h-4" />
+                                            Applied {new Date(app.createdAt).toLocaleDateString()}
                                         </div>
                                     </div>
 

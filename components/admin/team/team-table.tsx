@@ -23,6 +23,7 @@ interface TeamMember {
     profileImageUrl?: string | null
     isPm: boolean
     isFinance: boolean
+    isDeveloper: boolean
 }
 
 interface TeamTableProps {
@@ -90,6 +91,7 @@ export function TeamTable({ data, currentUserId }: TeamTableProps) {
                             <TableHead className="w-[300px]">User</TableHead>
                             <TableHead className="text-center w-[150px]">Project Manager</TableHead>
                             <TableHead className="text-center w-[150px]">Finance</TableHead>
+                            <TableHead className="text-center w-[150px]">Developer</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -125,6 +127,16 @@ export function TeamTable({ data, currentUserId }: TeamTableProps) {
                                             disabled={loading === `${user.id}-manage_billing` || user.id === currentUserId}
                                             onCheckedChange={() => handleToggle(user.id, user.email, 'manage_billing', user.isFinance)}
                                             className="data-[state=checked]:bg-emerald-600"
+                                        />
+                                    </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <div className="flex justify-center">
+                                        <Switch
+                                            checked={user.isDeveloper}
+                                            disabled={loading === `${user.id}-developer` || user.id === currentUserId}
+                                            onCheckedChange={() => handleToggle(user.id, user.email, 'developer', user.isDeveloper)}
+                                            className="data-[state=checked]:bg-amber-500"
                                         />
                                     </div>
                                 </TableCell>

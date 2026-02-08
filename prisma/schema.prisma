@@ -29,6 +29,7 @@ model Project {
   previewUrl         String?
   subscriptionEndsAt DateTime?
   subscriptionStatus String?
+  bounty             Float?     // Budget for Squad (Net)
   briefs             Brief[]
   dailyLogs          DailyLog[]
   feedback           Feedback[]
@@ -301,9 +302,7 @@ model SquadProfile {
   availability String               @default("available") // available, busy
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
-  totalEarnings Float               @default(0)
-  reputation    Int                 @default(100)
-  applications MissionApplication[]
+  applications  MissionApplication[]
 }
 
 model MissionApplication {
@@ -311,8 +310,7 @@ model MissionApplication {
   missionId      String
   squadId        String
   status         String       @default("pending") // pending, interviewing, accepted, rejected
-  coverLetter    String?      // Why they are a good fit
-  proposedRate   Float?       // Optional
+
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   
@@ -321,3 +319,6 @@ model MissionApplication {
 
   @@unique([missionId, squadId]) // Prevent double applying
 }
+
+
+

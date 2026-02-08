@@ -52,3 +52,30 @@ export async function GET(req: NextRequest) {
         );
     }
 }
+
+export async function PATCH(req: NextRequest) {
+    const user = await stackServerApp.getUser();
+
+    if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+        const body = await req.json();
+
+        // Ensure user can only update their own profile
+        const profile = await squadService.getProfile(user.id);
+        if (!profile) {
+            return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+        }
+
+        const updatedProfile = await squadService.updateProfile(user.id, body);
+
+        return NextResponse.json({ success: true, data: updatedProfile });
+    } catch (error) {
+        return NextResponse.json(
+            { success: false, error: error instanceof Error ? error.message : "Failed to update profile" },
+            { status: 500 }
+        );
+    }
+}

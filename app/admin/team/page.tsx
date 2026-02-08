@@ -41,9 +41,13 @@ export default async function AdminTeamPage() {
     // Fetch all active permissions
     const permissions: UserPermission[] = await prisma.userPermission.findMany();
 
+    // Fetch all squad profiles
+    const squadProfiles = await prisma.squadProfile.findMany();
+
     // Transform data for UI
     const teamMembers = users.map(user => {
         const userPerms = permissions.filter(p => p.userId === user.id);
+        const userProfile = squadProfiles.find(p => p.userId === user.id);
         return {
             id: user.id,
             email: user.primaryEmail || '',
@@ -51,6 +55,7 @@ export default async function AdminTeamPage() {
             profileImageUrl: user.profileImageUrl,
             isPm: userPerms.some(p => p.key === 'manage_projects'),
             isFinance: userPerms.some(p => p.key === 'manage_billing'),
+            isDeveloper: !!userProfile && userProfile.status === 'vetted',
         };
     });
 

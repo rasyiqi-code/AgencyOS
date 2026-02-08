@@ -14,6 +14,7 @@ const updateProjectSchema = z.object({
     developerId: z.string().optional().nullable(),
     previewUrl: z.string().optional().nullable(),
     files: z.any().optional(),
+    bounty: z.number().optional().nullable(),
 });
 
 export async function PATCH(
@@ -30,9 +31,72 @@ export async function PATCH(
         const json = await request.json();
         const body = updateProjectSchema.parse(json);
 
-        const project = await prisma.project.update({
-            where: { id: projectId },
-            data: body,
+        // Separate developerId from other updates to handle invitation flow
+        const { developerId, ...otherUpdates } = body;
+
+        const project = await prisma.$transaction(async (tx) => {
+            const updated = await tx.project.update({
+                where: { id: projectId },
+                data: otherUpdates,
+            });
+
+            // If developerId is set (assignment attempted), create invitation
+            if (developerId) {
+                const squadProfile = await tx.squadProfile.findUnique({
+                    where: { userId: developerId }
+                });
+
+                if (squadProfile) {
+                    // Check if already applied or invited
+                    const existingApp = await tx.missionApplication.findFirst({
+                        where: {
+                            missionId: projectId,
+                            squadId: squadProfile.id
+                        }
+                    });
+
+                    if (!existingApp) {
+                        await tx.missionApplication.create({
+                            data: {
+                                missionId: projectId,
+                                squadId: squadProfile.id,
+                                status: "invited", // Changed from "accepted"
+                            }
+                        });
+
+                        // Notify Developer
+                        await tx.notification.create({
+                            data: {
+                                userId: developerId,
+                                title: "New Mission Invitation",
+                                content: `You have been invited to join mission: ${updated.title || 'Untitled Project'}. Check your Squad Dashboard to accept.`,
+                                link: "/squad",
+                                type: "invitation"
+                            }
+                        });
+
+                    } else if (existingApp.status !== "accepted" && existingApp.status !== "invited") {
+                        // Re-invite if previously rejected or pending
+                        await tx.missionApplication.update({
+                            where: { id: existingApp.id },
+                            data: { status: "invited" }
+                        });
+
+                        // Notify (Duplicate check omitted for brevity, but good practice)
+                        await tx.notification.create({
+                            data: {
+                                userId: developerId,
+                                title: "Mission Invitation Updated",
+                                content: `You have a pending invitation for mission: ${updated.title || 'Untitled Project'}.`,
+                                link: "/squad",
+                                type: "invitation"
+                            }
+                        });
+                    }
+                }
+            }
+
+            return updated;
         });
 
         return NextResponse.json(project);

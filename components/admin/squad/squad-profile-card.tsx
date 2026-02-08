@@ -27,12 +27,12 @@ export function SquadProfileCard({ profile }: SquadProfileCardProps) {
                     variant="outline"
                     className={`
                         text-[10px] px-1.5 py-0.5 h-5
-                        ${profile.status === 'vetted' ? 'border-green-500/30 text-green-500 bg-green-500/10' : ''}
-                        ${profile.status === 'pending' ? 'border-yellow-500/30 text-yellow-500 bg-yellow-500/10' : ''}
+                        ${profile.status === 'vetted' ? 'border-brand-yellow/30 text-brand-yellow bg-brand-yellow/10' : ''}
+                        ${profile.status === 'pending' ? 'border-zinc-500/30 text-zinc-400 bg-zinc-500/10' : ''}
                         ${profile.status === 'rejected' ? 'border-red-500/30 text-red-500 bg-red-500/10' : ''}
                     `}
                 >
-                    {profile.status.toUpperCase()}
+                    {profile.status === 'vetted' ? 'ACTIVE' : profile.status.toUpperCase()}
                 </Badge>
             </div>
 
@@ -95,11 +95,21 @@ export function SquadProfileCard({ profile }: SquadProfileCardProps) {
                 {profile.status === 'pending' ? (
                     <ProfileActions profileId={profile.id} />
                 ) : (
-                    <div className={`
-                        text-center text-[10px] font-bold py-1.5 rounded bg-zinc-900 border border-zinc-800
-                        ${profile.status === 'vetted' ? 'text-green-500' : 'text-red-500'}
-                    `}>
-                        {profile.status === 'vetted' ? t('cleared') : t('denied')}
+                    <div className="space-y-2">
+                        <div className={`
+                            text-center text-[10px] font-bold py-1.5 rounded bg-zinc-900 border border-zinc-800
+                            ${profile.status === 'vetted' ? 'text-brand-yellow border-brand-yellow/20' : 'text-red-500'}
+                        `}>
+                            {profile.status === 'vetted' ? 'AUTHORIZED OPERATIVE' : 'ACCESS DENIED'}
+                        </div>
+                        {profile.status === 'vetted' && (
+                            <div className={`
+                                text-center text-[10px] font-bold py-1 rounded bg-zinc-900/50 border border-zinc-800
+                                ${profile.availability === 'available' ? 'text-green-500' : 'text-zinc-500'}
+                            `}>
+                                {profile.availability === 'available' ? '● AVAILABLE FOR DEPLOYMENT' : '○ CURRENTLY DEPLOYED'}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

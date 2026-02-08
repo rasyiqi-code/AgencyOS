@@ -2,9 +2,8 @@ import { prisma } from "@/lib/config/db";
 import { notFound, redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { ChevronLeft, TerminalSquare, FileText, Activity, Calendar, Clock, Github, Terminal, MessageSquare } from "lucide-react";
+import { ChevronLeft, FileText, Activity, Calendar, Clock, Github, Terminal, MessageSquare, Shield } from "lucide-react";
 import { stackServerApp } from "@/lib/config/stack";
-import { MissionApplicationForm } from "@/components/squad/mission-application-form";
 import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { FileManager } from "@/app/admin/pm/[id]/file-manager";
@@ -16,6 +15,7 @@ import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
 import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
 import { FeedbackBoard } from "@/components/feedback/board";
 import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
+import { InvitationAction } from "@/components/dashboard/missions/invitation-action";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -65,12 +65,34 @@ export default async function MissionDetailPage({ params }: PageProps) {
         }
     });
 
-    const hasApplied = !!existingApplication;
+
     const canPost = (existingApplication?.status === 'accepted') || (project.developerId === squadProfile.id);
 
-    const assignedData = project.developerId ? await prisma.squadProfile.findUnique({
-        where: { userId: project.developerId }
-    }) : null;
+    // ... existing imports ...
+
+    // Inside component ...
+    // Fetch Team (Accepted Applications)
+    const teamApplications = await prisma.missionApplication.findMany({
+        where: {
+            missionId: project.id,
+            status: { in: ['accepted', 'invited'] } // Fetch both to determine status
+        },
+        include: {
+            squad: true
+        }
+    });
+
+    // Separate active team from invited
+    const activeTeam = teamApplications.filter(app => app.status === 'accepted').map(app => app.squad);
+    const invitedTeam = teamApplications.filter(app => app.status === 'invited').map(app => app.squad);
+
+    // Full team for card display (with status injected)
+    const team = teamApplications.map(app => ({
+        ...app.squad,
+        applicationStatus: app.status
+    }));
+
+    const isInvited = existingApplication?.status === 'invited';
 
     return (
         <div className="flex flex-col gap-8 pb-10 w-full">
@@ -78,6 +100,11 @@ export default async function MissionDetailPage({ params }: PageProps) {
             <Link href="/squad" className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-medium">
                 <ChevronLeft className="w-4 h-4" /> Back to Missions
             </Link>
+
+            {/* Invitation Banner */}
+            {isInvited && (
+                <InvitationAction missionId={project.id} />
+            )}
 
             {/* Header */}
             <div className="border-b border-white/5 pb-4">
@@ -93,9 +120,19 @@ export default async function MissionDetailPage({ params }: PageProps) {
                                 </Badge>
                             </Link>
                         )}
-                        <span className="text-xs text-brand-yellow font-bold bg-brand-yellow/10 px-2 py-1 rounded border border-brand-yellow/20">
-                            OPEN FOR APPLICATION
-                        </span>
+                        {activeTeam.length > 0 ? (
+                            <span className="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">
+                                ACTIVE MISSION
+                            </span>
+                        ) : invitedTeam.length > 0 ? (
+                            <span className="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20 animate-pulse">
+                                AWAITING ACCEPTANCE
+                            </span>
+                        ) : (
+                            <span className="text-xs text-brand-yellow font-bold bg-brand-yellow/10 px-2 py-1 rounded border border-brand-yellow/20">
+                                PENDING ASSIGNMENT
+                            </span>
+                        )}
                     </div>
                 </div>
                 <h1 className="text-3xl font-bold text-white mb-4 tracking-tight">{project.title}</h1>
@@ -230,21 +267,25 @@ export default async function MissionDetailPage({ params }: PageProps) {
 
                 {/* Sidebar (Right Column) */}
                 <div className="space-y-4">
-                    {/* Application Action - Not Sticky */}
-                    <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-3">
-                        <TerminalSquare className="w-8 h-8 text-brand-yellow mb-1" />
-                        <div>
-                            <h3 className="text-sm font-bold text-white">Accept Mission</h3>
-                            <p className="text-zinc-500 text-[10px] mt-0.5">
-                                Ready to deploy? Submit your proposal.
-                            </p>
+                    {/* Effort Card */}
+                    <div className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-1">
+                        <span className="text-zinc-500 text-[10px] uppercase tracking-wider font-semibold">Estimated Effort</span>
+                        <div className="text-3xl font-bold text-white tracking-tight text-white">
+                            {project.estimate?.totalHours ? `${project.estimate.totalHours}h` : "TBD"}
                         </div>
-                        <div className="w-full">
-                            <MissionApplicationForm
-                                missionId={project.id}
-                                hasApplied={hasApplied}
-                                status={existingApplication?.status}
-                            />
+                        <div className="text-[10px] text-zinc-500">
+                            {project.estimate?.totalHours ? "Resource Allocation" : "Pending Estimation"}
+                        </div>
+                    </div>
+
+                    {/* Assignment Status Card */}
+                    <div className="bg-zinc-900/40 border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-3">
+                        <Shield className="w-8 h-8 text-zinc-700 mb-1" />
+                        <div>
+                            <h3 className="text-sm font-bold text-white">Protected Mission</h3>
+                            <p className="text-zinc-500 text-[10px] mt-0.5">
+                                Assignment is restricted to authorized personnel only.
+                            </p>
                         </div>
                     </div>
 
@@ -314,7 +355,7 @@ export default async function MissionDetailPage({ params }: PageProps) {
                         <AssignedTeamCard
                             projectId={project.id}
                             developerId={project.developerId}
-                            assignedProfile={assignedData}
+                            team={team}
                             repoOwner={project.repoOwner}
                             repoName={project.repoName}
                             repoUrl={project.repoUrl}

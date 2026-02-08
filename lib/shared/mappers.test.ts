@@ -29,6 +29,7 @@ describe("mapPrismaProjectToExtended", () => {
         estimate: null,
         subscriptionEndsAt: null,
         subscriptionStatus: null,
+        bounty: 0,
     };
 
     it("should map a basic project and handle null files correctly", () => {

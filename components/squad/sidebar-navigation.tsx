@@ -9,6 +9,7 @@ export function SquadSidebarNavigation() {
             <SidebarSectionHeader>Squad Protocol</SidebarSectionHeader>
             <SidebarLink href="/squad" icon={Code2} label="Mission Board" />
             <SidebarLink href="/squad/active" icon={Activity} label="Active Protocol" />
+
             <SidebarLink href="/squad/profile" icon={Shield} label="Operative Data" />
         </>
     );

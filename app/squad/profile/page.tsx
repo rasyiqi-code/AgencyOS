@@ -3,7 +3,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Star, Wallet, Shield } from "lucide-react";
+import { Shield, Activity } from "lucide-react";
 
 export default async function SquadProfilePage() {
     const user = await stackServerApp.getUser();
@@ -13,18 +13,25 @@ export default async function SquadProfilePage() {
     }
 
 
-    const completedMissions = await prisma.project.count({
+    const completedTasks = await prisma.project.count({
         where: {
             developerId: user.id,
             status: 'done'
         }
     });
 
+    const activeTasks = await prisma.project.count({
+        where: {
+            developerId: user.id,
+            status: 'dev'
+        }
+    });
+
     // Calculate Rank
     let rank = "SCOUT";
-    if (completedMissions >= 5) rank = "VANGUARD";
-    if (completedMissions >= 20) rank = "ELITE";
-    if (completedMissions >= 50) rank = "LEGEND";
+    if (completedTasks >= 5) rank = "VANGUARD";
+    if (completedTasks >= 20) rank = "ELITE";
+    if (completedTasks >= 50) rank = "LEGEND";
 
     const squadProfile = await prisma.squadProfile.findUnique({
         where: { userId: user.id }
@@ -46,8 +53,13 @@ export default async function SquadProfilePage() {
                         {squadProfile.name} <span className="text-zinc-600">({user.primaryEmail})</span>
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="px-3 py-1 bg-brand-yellow/10 text-brand-yellow hover:bg-brand-yellow/20 border border-brand-yellow/20 rounded-full">
+                <div className="flex items-center gap-3">
+                    <Link href="/squad/profile/edit">
+                        <button className="text-sm font-medium text-zinc-400 hover:text-white transition-colors bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg hover:border-zinc-700">
+                            Edit Profile
+                        </button>
+                    </Link>
+                    <Badge variant="secondary" className="px-3 py-1.5 bg-brand-yellow/10 text-brand-yellow hover:bg-brand-yellow/20 border border-brand-yellow/20 rounded-full">
                         RANK: {rank}
                     </Badge>
                 </div>
@@ -57,41 +69,32 @@ export default async function SquadProfilePage() {
             <div className="grid gap-6 md:grid-cols-3">
                 <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6 flex flex-col justify-between hover:border-zinc-700 transition-colors">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-zinc-500 font-medium text-xs uppercase tracking-wider">Total Earnings</span>
+                        <span className="text-zinc-500 font-medium text-xs uppercase tracking-wider">Active Tasks</span>
                         <div className="p-2 bg-zinc-800 rounded-lg">
-                            <Wallet className="w-4 h-4 text-zinc-400" />
+                            <Activity className="w-4 h-4 text-brand-yellow" />
                         </div>
                     </div>
                     <div>
                         <div className="text-2xl font-bold text-white">
-                            ${(squadProfile.totalEarnings || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {activeTasks}
                         </div>
                         <div className="text-xs text-zinc-500 mt-1 flex items-center gap-1 font-medium">
-                            Lifetime earnings
+                            Current load
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl flex items-center gap-4">
-                    <div className="p-3 bg-yellow-500/10 rounded-lg">
-                        <Star className="w-6 h-6 text-yellow-500" />
-                    </div>
-                    <div>
-                        <div className="text-sm text-zinc-400">Reputation Score</div>
-                        <div className="text-2xl font-bold text-white">{squadProfile.reputation || 100}%</div>
-                        <div className="text-xs text-zinc-500 mt-1">Reliability Score</div>
-                    </div>
-                </div>
+
 
                 <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6 flex flex-col justify-between hover:border-zinc-700 transition-colors">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-zinc-500 font-medium text-xs uppercase tracking-wider">Missions Completed</span>
+                        <span className="text-zinc-500 font-medium text-xs uppercase tracking-wider">Tasks Completed</span>
                         <div className="p-2 bg-zinc-800 rounded-lg">
                             <Shield className="w-4 h-4 text-zinc-400" />
                         </div>
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-white">{completedMissions}</div>
+                        <div className="text-2xl font-bold text-white">{completedTasks}</div>
                         <div className="text-xs text-zinc-500 mt-1">Lifetime total</div>
                     </div>
                 </div>
