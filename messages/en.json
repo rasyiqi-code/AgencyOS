@@ -192,20 +192,31 @@
         "badge": "WORLD-CLASS TALENT",
         "title": "The <blue>Elite Engineering</blue> Squad",
         "description": "We don't hire junior developers. Every project is executed by strictly vetted Senior Engineers with extensive industrial experience.",
+        "keys": [
+            "Rasyiqi",
+            "Alexander",
+            "Sarah"
+        ],
         "Rasyiqi": {
+            "name": "Rasyiqi",
             "role": "Senior Systems Architect",
             "specialty": "Next.js, AI Protocols, Cloud Infra",
-            "exp": "10+ Years"
+            "exp": "10+ Years",
+            "image": "https://github.com/shadcn.png"
         },
         "Alexander": {
+            "name": "Alexander",
             "role": "Principal Frontend Engineer",
             "specialty": "UX Strategist, Design Systems",
-            "exp": "8+ Years"
+            "exp": "8+ Years",
+            "image": "https://github.com/nutlope.png"
         },
         "Sarah": {
+            "name": "Sarah Chen",
             "role": "Cybersecurity Expert",
             "specialty": "Penetration Testing, Compliance",
-            "exp": "12+ Years"
+            "exp": "12+ Years",
+            "image": "https://i.pravatar.cc/150?u=sarah"
         },
         "Vetting": {
             "title": "Our Vetting Standard",

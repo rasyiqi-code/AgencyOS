@@ -302,6 +302,8 @@ model SquadProfile {
   linkedin     String?
   github       String?
   portfolio    String?
+  avatar       String?
+  specialty    String?
   status       String               @default("pending") // pending, vetted, rejected
   availability String               @default("available") // available, busy
   createdAt    DateTime             @default(now())

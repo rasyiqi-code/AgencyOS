@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        pathname: '/**',
       }
     ],
   },
@@ -44,7 +49,7 @@ const nextConfig: NextConfig = {
               default-src 'self';
               script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.sandbox.midtrans.com https://app.midtrans.com https://snap.midtrans.com https://www.googletagmanager.com https://static.cloudflareinsights.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-              img-src 'self' blob: data: https://media.crediblemark.com https://*.r2.dev https://avatars.githubusercontent.com https://lh3.googleusercontent.com;
+              img-src 'self' blob: data: https://media.crediblemark.com https://*.r2.dev https://avatars.githubusercontent.com https://lh3.googleusercontent.com https://i.pravatar.cc;
               font-src 'self' https://fonts.gstatic.com;
               connect-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com https://*.google-analytics.com https://api.stack-auth.com https://app.stack-auth.com https://1.1.1.1 https://static.cloudflareinsights.com;
               frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com https://snap.midtrans.com;

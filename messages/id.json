@@ -193,20 +193,31 @@
         "badge": "TALENTA KELAS DUNIA",
         "title": "Tim <blue>Elite Engineering</blue>",
         "description": "Kami tidak merekrut developer junior. Setiap proyek dieksekusi oleh Senior Engineer yang telah terkurasi ketat dengan pengalaman industri yang luas.",
+        "keys": [
+            "Rasyiqi",
+            "Alexander",
+            "Sarah"
+        ],
         "Rasyiqi": {
+            "name": "Rasyiqi",
             "role": "Senior Systems Architect",
             "specialty": "Next.js, AI Protocols, Cloud Infra",
-            "exp": "10+ Tahun"
+            "exp": "10+ Tahun",
+            "image": "https://github.com/shadcn.png"
         },
         "Alexander": {
+            "name": "Alexander",
             "role": "Principal Frontend Engineer",
             "specialty": "UX Strategist, Design Systems",
-            "exp": "8+ Tahun"
+            "exp": "8+ Tahun",
+            "image": "https://github.com/nutlope.png"
         },
         "Sarah": {
+            "name": "Sarah Chen",
             "role": "Cybersecurity Expert",
             "specialty": "Penetration Testing, Compliance",
-            "exp": "12+ Tahun"
+            "exp": "12+ Tahun",
+            "image": "https://i.pravatar.cc/150?u=sarah"
         },
         "Vetting": {
             "title": "Standar Kurasi Kami",
