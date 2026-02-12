@@ -53,6 +53,7 @@ export async function SiteFooter() {
                     <Link href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" className="hover:text-white transition-colors">Changelog</Link>
                     <Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</Link>
                     <Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</Link>
+                    <Link href="/affiliate/join" className="hover:text-white transition-colors">{t("partners")}</Link>
                     <Link href={`/${locale}/contact`} className="hover:text-white transition-colors">{t("contactUs")}</Link>
                 </div>
             </div>

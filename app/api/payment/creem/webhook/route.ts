@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { creem } from "@/lib/integrations/creem";
 import { Prisma } from "@prisma/client";
+import { processAffiliateCommission } from "@/lib/affiliate/commission";
 
 // Helper to update order/subscription status
 const updateOrderStatus = async (orderId: string, status: string, metadata: unknown) => {
     try {
+        // Simpan paymentMetadata asli sebelum di-overwrite (untuk affiliate code)
+        const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
+        const affiliateMetadata = existingOrder?.paymentMetadata;
+
         const order = await prisma.order.update({
             where: { id: orderId },
             data: {
@@ -34,6 +39,9 @@ const updateOrderStatus = async (orderId: string, status: string, metadata: unkn
                     data: { status: 'paid' }
                 });
             }
+
+            // Proses komisi affiliate (gunakan metadata asli sebelum overwrite)
+            await processAffiliateCommission(orderId, order.amount, affiliateMetadata);
         }
     } catch (error) {
         console.error(`[CREEM_WEBHOOK] Failed to update order ${orderId}:`, error);

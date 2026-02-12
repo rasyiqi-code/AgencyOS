@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
+import { processAffiliateCommission } from "@/lib/affiliate/commission";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -85,6 +86,11 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                     },
                     data: { status: 'paid' }
                 });
+
+                // Process commissions for each confirmed order
+                for (const order of pendingOrders) {
+                    await processAffiliateCommission(order.id, order.amount, order.paymentMetadata);
+                }
             }
         }
 

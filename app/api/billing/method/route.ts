@@ -9,11 +9,22 @@ export async function POST(req: NextRequest) {
 
         if (!orderId) return NextResponse.json({ error: "Missing order ID" }, { status: 400 });
 
+        // Fetch existing metadata to preserve affiliate code
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            select: { paymentMetadata: true }
+        });
+
+        const currentMeta = order?.paymentMetadata as object || {};
+
         await prisma.order.update({
             where: { id: orderId },
             data: {
                 paymentType,
-                paymentMetadata: metadata
+                paymentMetadata: {
+                    ...currentMeta,
+                    ...metadata
+                } as any
             }
         });
 

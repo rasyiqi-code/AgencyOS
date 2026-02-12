@@ -83,7 +83,15 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
 
 export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
-    const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(paymentMetadata || null);
+    const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
+        if (!paymentMetadata) return null;
+        // Only consider it as payment data if it has payment fields
+        // This prevents affiliate_code-only metadata from triggering the "Pending" state
+        if ('payment_type' in paymentMetadata || 'transaction_id' in paymentMetadata || 'status_code' in paymentMetadata) {
+            return paymentMetadata;
+        }
+        return null;
+    });
     const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
 
     // Check if waiting verification
@@ -122,6 +130,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                 });
 
                 setPaymentData(manualData);
+                setIsDialogOpen(true); // Open dialog explicitly after action
                 toast.success("Please complete your transfer");
             } catch (error) {
                 console.error(error);
@@ -168,6 +177,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
             if (!res.ok) throw new Error(data.message || "Payment Failed");
 
             setPaymentData(data);
+            setIsDialogOpen(true); // Open dialog explicitly
             toast.success("Payment initiated!");
         } catch (error) {
             console.error(error);
@@ -180,12 +190,8 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
     // State for Dialog
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    // Auto-open dialog when paymentData is available and initial load happens
-    useEffect(() => {
-        if (paymentData) {
-            setIsDialogOpen(true);
-        }
-    }, [paymentData]);
+    // Auto-open dialog REMOVED to prevent annoying popups on load
+    // Dialog will be opened manually or after successful charge initiation
 
     // Helper to check selection
     const isSelected = (id: string) => selectedMethod?.id === id;

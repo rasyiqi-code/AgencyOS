@@ -15,6 +15,7 @@ import NextTopLoader from 'nextjs-toploader';
 import Script from 'next/script';
 import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
+import { ReferralTracker } from "@/components/marketing/referral-tracker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -113,6 +114,7 @@ export default async function RootLayout({
             <StackProvider app={stackServerApp}>
               <StackTheme>
                 {children}
+                <ReferralTracker />
                 <PendingCheckoutRedirect />
                 <Suspense fallback={null}>
                   <ConditionalFloatingChat />

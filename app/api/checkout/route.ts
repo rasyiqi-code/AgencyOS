@@ -4,6 +4,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
     try {
@@ -203,6 +204,10 @@ export async function POST(req: Request) {
             snapToken = transaction.token;
         }
 
+        // Check for affiliate cookie
+        const cookieStore = await cookies();
+        const affiliateCode = cookieStore.get('agencyos_affiliate_id')?.value;
+
         // Save order to database
         await prisma.order.create({
             data: {
@@ -213,6 +218,7 @@ export async function POST(req: Request) {
                 snapToken,
                 status: "pending",
                 type: paymentType, // Save type
+                paymentMetadata: affiliateCode ? { affiliate_code: affiliateCode } : undefined,
             },
         });
 

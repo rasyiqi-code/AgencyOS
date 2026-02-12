@@ -139,7 +139,10 @@ export async function POST(req: Request) {
             data: {
                 transactionId: uniqueTransactionId,
                 paymentType: paymentType,
-                paymentMetadata: chargeResponse
+                paymentMetadata: {
+                    ...(order.paymentMetadata as object || {}),
+                    ...chargeResponse
+                } as any
             }
         });
 

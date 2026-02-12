@@ -328,3 +328,79 @@ model MissionApplication {
 
 
 
+
+model AffiliateProfile {
+  id              String          @id @default(cuid())
+  userId          String          @unique
+  name            String
+  email           String          @unique
+  referralCode    String          @unique
+  status          String          @default("pending") // pending, active, suspended
+  commissionRate  Float           @default(10) // Percentage
+  totalEarnings   Float           @default(0)
+  paidEarnings    Float           @default(0)
+  bankInfo        Json?           // Bank Name, Account Number, etc.
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  referrals       ReferralUsage[]
+  commissions     CommissionLog[]
+  payoutRequests  PayoutRequest[]
+}
+
+model PayoutRequest {
+  id              String          @id @default(cuid())
+  affiliateId     String
+  amount          Float
+  status          String          @default("pending") // pending, approved, rejected
+  bankInfo        Json?           // Snapshot info bank saat request
+  notes           String?         // Catatan dari admin
+  processedAt     DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+}
+
+model ReferralUsage {
+  id              String          @id @default(cuid())
+  affiliateId     String
+  referredUserId  String?         // The user who used the code (can be null if just a click)
+  visitorId       String?         // Fingerprint/Cookie ID for non-logged in users
+  source          String?         // e.g., "twitter", "facebook" (from query param)
+  converted       Boolean         @default(false)
+  convertedAt     DateTime?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+}
+
+model CommissionLog {
+  id              String          @id @default(cuid())
+  affiliateId     String
+  amount          Float
+  status          String          @default("pending") // pending, paid, rejected
+  orderId         String?
+  description     String?
+  paidAt          DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+}
+
+model MarketingAsset {
+  id           String   @id @default(cuid())
+  type         String   // 'banner', 'copy', 'widget'
+  title        String
+  content      String?  // Text content or HTML/JS code
+  imageUrl     String?  // R2 URL for banners
+  thumbnailUrl String?  // Optional preview
+  category     String?  // e.g. 'Social Media', 'Email', 'Blog'
+  isActive     Boolean  @default(true)
+  metadata     Json?    // Dimensions, etc.
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

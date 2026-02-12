@@ -292,6 +292,9 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                         const data = await res.json();
                                         if (res.ok && data.url) {
                                             window.location.href = data.url;
+                                        } else if (res.status === 401) {
+                                            // User belum login — redirect ke sign-in lalu kembali ke halaman ini
+                                            window.location.href = `/handler/sign-in?after_auth_return_to=${encodeURIComponent(window.location.pathname)}`;
                                         } else {
                                             throw new Error(data.error || "Failed to finalize");
                                         }

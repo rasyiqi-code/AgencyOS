@@ -232,7 +232,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                 ) : (
                                     <>
                                         <Download className="w-4 h-4 mr-2" />
-                                        Pay via Bank Transfer
+                                        Continue to Payment
                                     </>
                                 )}
                             </Button>

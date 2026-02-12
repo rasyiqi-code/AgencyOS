@@ -2,6 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { processAffiliateCommission } from "@/lib/affiliate/commission";
 
 export async function POST(req: Request) {
     try {
@@ -92,6 +93,9 @@ export async function POST(req: Request) {
                     data: { status: "paid" }
                 });
             }
+
+            // --- COMMISSION LOGIC ---
+            await processAffiliateCommission(order_id, order.amount, order.paymentMetadata);
         }
 
         return NextResponse.json({ status: "ok" });
