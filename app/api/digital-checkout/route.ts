@@ -1,0 +1,92 @@
+import { getSnap } from "@/lib/integrations/midtrans";
+import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { NextResponse } from "next/server";
+import { paymentService } from "@/lib/server/payment-service";
+import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+
+/**
+ * API Route: POST /api/digital-checkout
+ *
+ * Membuat DigitalOrder dan Snap token Midtrans untuk pembayaran produk digital.
+ * Flow:
+ * 1. Validasi input (productId, email wajib)
+ * 2. Cek produk ada dan aktif
+ * 3. Buat DigitalOrder (status PENDING)
+ * 4. Convert harga USD → IDR
+ * 5. Buat Snap token via Midtrans
+ * 6. Simpan snapToken ke DigitalOrder
+ * 7. Return { token, orderId } ke client
+ */
+export async function POST(req: Request) {
+    try {
+        const { productId, email, name, userId } = await req.json();
+
+        // Validasi input wajib
+        if (!productId || !email) {
+            return NextResponse.json(
+                { error: "productId dan email wajib diisi" },
+                { status: 400 }
+            );
+        }
+
+        // Cek produk ada dan aktif
+        const product = await prisma.product.findUnique({
+            where: { id: productId },
+        });
+
+        if (!product || !product.isActive) {
+            return NextResponse.json(
+                { error: "Produk tidak ditemukan atau tidak aktif" },
+                { status: 404 }
+            );
+        }
+
+        if (product.price <= 0) {
+            return NextResponse.json(
+                { error: "Harga produk tidak valid" },
+                { status: 400 }
+            );
+        }
+
+        // Cek apakah payment gateway aktif
+        const hasGateway = await paymentGatewayService.hasActiveGateway();
+        if (!hasGateway) {
+            return NextResponse.json(
+                { error: "Payment gateway belum dikonfigurasi. Hubungi admin." },
+                { status: 503 }
+            );
+        }
+
+        // Buat ID order unik dengan prefix DIGI- agar bisa dibedakan di webhook
+        const orderId = `DIGI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+        // Buat DigitalOrder di database
+        const db = prisma as any;
+        const order = await db.digitalOrder.create({
+            data: {
+                id: orderId,
+                productId: product.id,
+                userId: userId || null,
+                userEmail: email,
+                userName: name || null,
+                amount: product.price,
+                status: "PENDING",
+            },
+        });
+
+        console.log(`[DIGITAL_CHECKOUT] Order ${orderId} created (Ready for Core API payment)`);
+
+        return NextResponse.json({
+            orderId: orderId,
+            redirectUrl: `/digital-invoices/${orderId}`
+        });
+
+    } catch (error) {
+        console.error("[DIGITAL_CHECKOUT_ERROR]", error);
+        return NextResponse.json(
+            { error: "Terjadi kesalahan saat memproses checkout" },
+            { status: 500 }
+        );
+    }
+}

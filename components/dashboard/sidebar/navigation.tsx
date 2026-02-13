@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Settings, Inbox, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Settings, Inbox, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare, Package } from "lucide-react";
 import { SidebarLink, SidebarSectionHeader } from "./roles";
 import { useTranslations } from "next-intl";
 
@@ -15,6 +15,7 @@ export function DashboardSidebarNavigation() {
             <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />
             <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />
             <SidebarLink href="/dashboard/billing" icon={Receipt} label={t("billing")} />
+            <SidebarLink href="/dashboard/my-products" icon={Package} label="My Products" />
             <SidebarLink href="/submit-testimonial" icon={MessageSquare} label="Give Feedback" />
         </>
     );

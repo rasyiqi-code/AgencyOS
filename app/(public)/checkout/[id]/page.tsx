@@ -1,101 +1,143 @@
-import { prisma } from "@/lib/config/db";
-import { notFound, redirect } from "next/navigation";
+import { CheckoutForm } from "@/components/checkout/digital-checkout-form";
 import { CheckoutContent } from "@/components/checkout/checkout-content";
+import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { currencyService } from "@/lib/server/currency-service";
+import { notFound } from "next/navigation";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { ExtendedEstimate } from "@/lib/shared/types";
 
-async function getEstimate(id: string) {
-    return await prisma.estimate.findUnique({
-        where: { id },
-        include: {
-            service: true,
-            project: true
-        }
-    });
+interface PageProps {
+    params: Promise<{ id: string }>;
 }
 
-async function getBankSettings() {
-    // Fetch all SystemSettings and reduce
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['bank_name', 'bank_account', 'bank_holder'] }
-        }
+/**
+ * Halaman Checkout Unified.
+ * Menangani dua jenis checkout:
+ * 1. Digital Product (via Product ID)
+ * 2. Service/Estimate (via Estimate ID) - Legacy/Existing Flow
+ */
+export default async function CheckoutPage(props: PageProps) {
+    const params = await props.params;
+    const { id } = params;
+
+    // 1. Coba cari sebagai Digital Product
+    const product = await prisma.product.findUnique({
+        where: { id }
     });
 
-    // Convert array to object
-    return settings.reduce((acc: Record<string, string>, curr) => {
-        acc[curr.key] = curr.value;
-        return acc;
-    }, {} as Record<string, string>);
-}
+    // Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
+    if (product && product.isActive) {
+        let userId: string | undefined;
+        let userEmail: string | undefined;
+        try {
+            const user = await stackServerApp.getUser();
+            if (user) {
+                userId = user.id;
+                userEmail = user.primaryEmail || undefined;
+            }
+        } catch {
+            // Guest mode
+        }
 
-export default async function CheckoutPage({ params, searchParams }: { params: Promise<{ id: string }>, searchParams: Promise<{ paymentType?: string }> }) {
-    const { id } = await params;
-    const { paymentType } = await searchParams;
+        const p = product as any;
+        const productData = {
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            purchaseType: p.purchaseType || "one_time",
+            interval: p.interval || undefined,
+        };
 
-    // Auth Guard
-    const user = await stackServerApp.getUser();
-    if (!user) {
-        redirect(`/handler/sign-in?after_auth_return_to=/checkout/${id}`);
+        return (
+            <div className="min-h-screen w-full bg-black relative flex items-center justify-center py-24 px-4 overflow-hidden">
+                {/* Background Gradients */}
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-yellow/5 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-lime-500/5 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="relative z-10 w-full flex justify-center">
+                    <CheckoutForm
+                        product={productData}
+                        userId={userId}
+                        userEmail={userEmail}
+                    />
+                </div>
+            </div>
+        );
     }
 
-    const [estimate, bankDetails, exchangeRates, hasActiveGateway, settings] = await Promise.all([
-        getEstimate(id),
-        getBankSettings(),
-        currencyService.getRates(),
-        paymentGatewayService.hasActiveGateway(),
-        prisma.systemSetting.findMany({
-            where: { key: { in: ['AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
-        })
-    ]);
+    // 2. Jika Product tidak ditemukan, cari sebagai Service Estimate (Legacy Flow)
+    const estimate = await prisma.estimate.findUnique({
+        where: { id },
+        include: { service: true }
+    });
 
-    const bonuses = (await prisma.marketingBonus.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: 'desc' }
-    })).map(b => ({
-        ...b,
-        icon: b.icon || "",
-        value: b.value || undefined
-    }));
+    // Jika Estimate ditemukan, render Service Checkout Flow (Legacy)
+    if (estimate) {
+        // Fetch dependencies for Service Checkout
+        const user = await stackServerApp.getUser();
+        const settings = await prisma.systemSetting.findMany({
+            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'usd_rate', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+        });
+        const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
+        const activeRate = parseInt(getSetting('usd_rate') || "15000");
 
-    // Default rate if fetch fails or is null (though convertToIDR has fallback, UI needs something)
-    const activeRate = exchangeRates?.rates?.IDR || 16000;
+        const bonuses = await prisma.marketingBonus.findMany({
+            where: { isActive: true }
+        });
 
-    const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
-    const agencySettings = {
-        agencyName: getSetting('AGENCY_NAME') || "Agency OS",
-        companyName: getSetting('COMPANY_NAME') || "Agency OS",
-        address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
-        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com"
-    };
+        const hasActiveGateway = await paymentGatewayService.hasActiveGateway();
 
-    if (!estimate) notFound();
+        // Data preparation
+        const bankDetails = {
+            bank_name: getSetting('bank_name'),
+            bank_account: getSetting('bank_account'),
+            bank_holder: getSetting('bank_holder')
+        };
 
-    // Sanitize JSON
-    const sanitizedEstimate = {
-        ...estimate,
-        screens: (estimate.screens as unknown as { title: string, hours: number, description?: string }[] || []).map(s => ({ ...s, description: s.description || "" })),
-        apis: (estimate.apis as unknown as { title: string, hours: number, description?: string }[] || []).map(a => ({ ...a, description: a.description || "" }))
-    };
+        const agencySettings = {
+            agencyName: getSetting('AGENCY_NAME') || "Agency OS",
+            companyName: getSetting('COMPANY_NAME') || "Agency OS",
+            address: getSetting('CONTACT_ADDRESS') || "Tech Valley\nCyberjaya, Malaysia",
+            email: getSetting('CONTACT_EMAIL') || "billing@agencyos.com"
+        };
 
-    return (
-        <div className="container mx-auto px-4 py-12">
-            <CheckoutContent
-                estimate={sanitizedEstimate}
-                bankDetails={bankDetails}
-                activeRate={activeRate}
-                bonuses={bonuses}
-                hasActiveGateway={hasActiveGateway}
-                user={{
-                    displayName: user.displayName,
-                    email: user.primaryEmail
-                }}
-                agencySettings={agencySettings}
-                defaultPaymentType={paymentType as "FULL" | "DP" | "REPAYMENT"}
-                projectPaidAmount={estimate.project?.paidAmount || 0}
-                projectTotalAmount={estimate.project?.totalAmount || 0}
-            />
-        </div>
-    );
+        // Construct ExtendedEstimate
+        const extendedEstimate: ExtendedEstimate = {
+            ...estimate,
+            screens: (estimate.screens as unknown) as ExtendedEstimate['screens'],
+            apis: (estimate.apis as unknown) as ExtendedEstimate['apis'],
+            service: estimate.service
+        };
+
+        const bonusesData = bonuses.map(b => ({
+            ...b,
+            icon: b.icon || "Check",
+            value: b.value || "",
+            description: b.description || ""
+        }));
+
+        const userData = {
+            displayName: user?.displayName || "Valued Client",
+            email: user?.primaryEmail || "",
+        };
+
+        return (
+            <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
+                <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
+                    <CheckoutContent
+                        estimate={extendedEstimate}
+                        bankDetails={bankDetails}
+                        activeRate={activeRate}
+                        bonuses={bonusesData}
+                        user={userData}
+                        agencySettings={agencySettings}
+                        hasActiveGateway={hasActiveGateway}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // 3. Jika ID tidak ditemukan di Product maupun Estimate -> 404
+    notFound();
 }

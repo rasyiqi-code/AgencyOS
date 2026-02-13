@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Loader2, Building, Wallet, CheckCircle2, Store, CreditCard, Smartphone } from "lucide-react";
@@ -18,6 +19,7 @@ export interface PaymentSelectorProps {
     currency?: 'USD' | 'IDR';
     bankDetails?: BankDetails;
     orderStatus?: string;
+    chargeEndpoint?: string; // NEW PROP
 }
 
 interface PaymentMethod {
@@ -81,7 +83,7 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
     },
 ];
 
-export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus }: PaymentSelectorProps) {
+export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
         if (!paymentMetadata) return null;
@@ -155,7 +157,8 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
         // CORE API HANDLER (For VA, QRIS, CStore)
         try {
-            const res = await fetch("/api/payment/midtrans/charge", {
+            const endpoint = chargeEndpoint || "/api/payment/midtrans/charge";
+            const res = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

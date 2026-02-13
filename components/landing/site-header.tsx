@@ -78,6 +78,9 @@ export async function SiteHeader() {
                         <Link href={`/${locale}/services`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                             {t("services")}
                         </Link>
+                        <Link href={`/${locale}/products`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            {t("products")}
+                        </Link>
                     </nav>
                 </div>
 

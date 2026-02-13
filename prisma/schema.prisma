@@ -404,3 +404,61 @@ model MarketingAsset {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  price       Float     @default(0)
+  type        String    @default("plugin") // plugin, template, etc.
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  licenses     License[]
+  digitalOrders DigitalOrder[]
+
+  purchaseType String    @default("one_time") // one_time, subscription
+  interval     String?   // month, year (if subscription)
+  image        String?
+  fileUrl      String?   // Link to download the product
+}
+
+model License {
+  id             String    @id @default(cuid())
+  key            String    @unique
+  productId      String
+  product        Product   @relation(fields: [productId], references: [id])
+  userId         String?   // Optional: Link to a user if purchase is tracked
+  status         String    @default("active") // active, revoked, expired
+  maxActivations Int       @default(1)
+  activations    Int       @default(0)
+  expiresAt      DateTime?
+  metadata       Json?     // Stores domain, IP, machine ID of activations
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  digitalOrder   DigitalOrder?
+}
+
+model DigitalOrder {
+  id            String   @id @default(cuid())
+  userId        String?
+  userEmail     String
+  userName      String?
+  
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  
+  amount        Float
+  status        String   @default("PENDING")
+  snapToken     String?
+  paymentId     String?
+  paymentType   String?
+  paymentMetadata Json?
+
+  licenseId     String?  @unique
+  license       License? @relation(fields: [licenseId], references: [id]) 
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

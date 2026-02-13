@@ -1,3 +1,4 @@
+"use client";
 import { toast } from "sonner";
 import { Building, Copy, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";

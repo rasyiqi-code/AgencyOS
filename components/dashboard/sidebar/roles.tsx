@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -61,17 +61,29 @@ export function SidebarSuperAdmin() {
         <>
             <SidebarSectionHeader>{t("commandCenter")}</SidebarSectionHeader>
             <SidebarLink href="/admin" icon={LayoutDashboard} label={t("overview")} />
+
+            <SidebarSectionHeader>Operations</SidebarSectionHeader>
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
+            <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
+
+            <SidebarSectionHeader>CRM & Team</SidebarSectionHeader>
             <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
             <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
+            <SidebarLink href="/admin/squad" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
+
+            <SidebarSectionHeader>Growth</SidebarSectionHeader>
             <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
             <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
-            <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
-            <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
-            <SidebarLink href="/admin/squad" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
+
+            <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
+            <SidebarLink href="/admin/products" icon={Package} label="DigiProducts" />
+            <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
+
+            <SidebarSectionHeader>System</SidebarSectionHeader>
             <SidebarLink href="/admin/media" icon={Images} label="Media" />
+            <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
         </>
     );
 }

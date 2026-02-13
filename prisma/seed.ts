@@ -22,6 +22,8 @@ async function main() {
     await prisma.ticket.deleteMany();
     await prisma.dailyLog.deleteMany();
     await prisma.feedback.deleteMany();
+    await prisma.missionApplication.deleteMany();
+    await prisma.feedbackComment.deleteMany();
     await prisma.brief.deleteMany();
     await prisma.order.deleteMany();
     await prisma.notification.deleteMany();
@@ -129,6 +131,35 @@ async function main() {
         }
     }
     console.log('Created Marketing Bonuses.');
+
+    // 5. Create Products (Templates/Plugins)
+    const products = [
+        {
+            name: 'AgencyOS Premium Template',
+            slug: 'agencyos-premium',
+            description: 'The ultimate agency operating system template.',
+            price: 49.99,
+            type: 'template',
+            isActive: true
+        },
+        {
+            name: 'SEO Booster Plugin',
+            slug: 'seo-booster',
+            description: 'Boost your ranking with this powerful plugin.',
+            price: 29.99,
+            type: 'plugin',
+            isActive: true
+        }
+    ];
+
+    for (const p of products) {
+        await prisma.product.upsert({
+            where: { slug: p.slug },
+            update: {},
+            create: p
+        });
+    }
+    console.log('Created Products.');
 
 
     console.log('✅ Seeding finished.');
