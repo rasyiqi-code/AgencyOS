@@ -4,7 +4,7 @@
     var currentScript = scripts[scripts.length - 1];
     var refCode = currentScript.getAttribute('data-ref') || new URL(currentScript.src).searchParams.get('ref') || 'default';
     var agencyName = currentScript.getAttribute('data-name') || 'Agency OS';
-    var baseUrl = window.location.origin;
+
 
     // 2. Create Badge Elements
     var badge = document.createElement('div');

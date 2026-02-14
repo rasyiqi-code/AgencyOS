@@ -1,22 +1,24 @@
 import { getSnap } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
+import { Prisma } from "@prisma/client";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
     try {
         const user = await stackServerApp.getUser();
         if (!user) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { projectId, estimateId, title, paymentType = "FULL" } = await req.json();
+        const { projectId, estimateId, title, paymentType = "FULL", appliedCoupon, currency = "USD" } = await req.json();
 
         if (!projectId && !estimateId) {
-            return new NextResponse("Missing required fields", { status: 400 });
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         let dbAmount = 0;
@@ -27,15 +29,22 @@ export async function POST(req: Request) {
         if (!finalProjectId && estimateId) {
             const estimate = await prisma.estimate.findUnique({
                 where: { id: estimateId },
-                include: { project: true }
+                include: { project: true, service: true }
             });
 
             if (!estimate) {
-                return new NextResponse("Estimate not found", { status: 404 });
+                return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
             }
 
             dbAmount = estimate.totalCost;
-            projectTotalAmount = estimate.totalCost;
+
+            // Check currency for estimate
+            if (estimate.service?.currency === 'IDR') {
+                const { rate } = await paymentService.convertToIDR(1);
+                dbAmount = dbAmount / rate;
+            }
+
+            projectTotalAmount = dbAmount;
 
             if (estimate.project) {
                 finalProjectId = estimate.project.id;
@@ -50,7 +59,7 @@ export async function POST(req: Request) {
                         spec: JSON.stringify({ screens: estimate.screens, apis: estimate.apis }, null, 2),
                         status: "pending_payment",
                         estimateId: estimateId,
-                        totalAmount: estimate.totalCost,
+                        totalAmount: projectTotalAmount,
                     }
                 });
                 finalProjectId = newProject.id;
@@ -59,19 +68,28 @@ export async function POST(req: Request) {
             // Existing project - find the price from estimate or service
             const project = await prisma.project.findUnique({
                 where: { id: finalProjectId },
-                include: { estimate: true, service: true }
+                include: { estimate: { include: { service: true } }, service: true }
             });
 
             if (!project) {
-                return new NextResponse("Project not found", { status: 404 });
+                return NextResponse.json({ error: "Project not found" }, { status: 404 });
             }
 
             if (project.estimate) {
                 dbAmount = project.estimate.totalCost;
+                // Estimates are usually in USD by default, but check service if linked
+                if (project.estimate.service?.currency === 'IDR') {
+                    const { rate } = await paymentService.convertToIDR(1);
+                    dbAmount = dbAmount / rate;
+                }
             } else if (project.service) {
                 dbAmount = project.service.price;
+                if (project.service.currency === 'IDR') {
+                    const { rate } = await paymentService.convertToIDR(1);
+                    dbAmount = dbAmount / rate;
+                }
             } else {
-                return new NextResponse("No pricing source found for this project", { status: 400 });
+                return NextResponse.json({ error: "No pricing source found for this project" }, { status: 400 });
             }
             projectTotalAmount = dbAmount;
 
@@ -85,7 +103,7 @@ export async function POST(req: Request) {
         }
 
         if (dbAmount <= 0) {
-            return new NextResponse("Invalid payment amount calculation", { status: 400 });
+            return NextResponse.json({ error: "Invalid payment amount calculation" }, { status: 400 });
         }
 
         // Calculate amount based on payment type
@@ -107,9 +125,48 @@ export async function POST(req: Request) {
             }
         }
 
-        // Convert to IDR
-        const { idrAmount, rate } = await paymentService.convertToIDR(amountToPay);
-        console.log(`[CHECKOUT] Type: ${paymentType}, Amount: ${amountToPay} USD -> ${idrAmount} IDR (Rate: ${rate})`);
+        // Ensure itemName fits Midtrans limit (50 chars)
+        itemName = itemName.substring(0, 50);
+
+        // Validasi dan terapkan kupon server-side (jika ada)
+        let validatedCoupon: { code: string; discountType: string; discountValue: number } | null = null;
+        if (appliedCoupon && typeof appliedCoupon === 'string') {
+            const couponResult = await validateCoupon(appliedCoupon);
+            if (couponResult.valid && couponResult.coupon) {
+                validatedCoupon = couponResult.coupon;
+                // Hitung diskon
+                if (validatedCoupon.discountType === 'percentage') {
+                    amountToPay = amountToPay * (1 - validatedCoupon.discountValue / 100);
+                } else {
+                    // Fixed amount discount
+                    amountToPay = Math.max(0, amountToPay - validatedCoupon.discountValue);
+                }
+                amountToPay = Math.round(amountToPay * 100) / 100; // Round to 2 decimal
+                console.log(`[CHECKOUT] Coupon ${validatedCoupon.code} applied: ${validatedCoupon.discountType} ${validatedCoupon.discountValue} → final $${amountToPay}`);
+            } else {
+                // Kupon tidak valid — lanjutkan tanpa diskon, log warning
+                console.warn(`[CHECKOUT] Invalid coupon code: ${appliedCoupon}`);
+            }
+        }
+
+        if (amountToPay <= 0) {
+            return NextResponse.json({ error: "Invalid payment amount after discount" }, { status: 400 });
+        }
+
+        // Convert to IDR and ensure integer for Midtrans
+        // Determine Rate and IDR Amount based on requested currency
+        let finalRate = 1;
+        let finalIdrAmount = 0;
+
+        // Fetch current rate
+        const { idrAmount: calculatedIdrAmount, rate } = await paymentService.convertToIDR(amountToPay);
+
+        // Lock the rate and calculate IDR amount regardless of selected currency
+        // This ensures consistent rate display and logging
+        finalRate = rate;
+        finalIdrAmount = Math.ceil(calculatedIdrAmount);
+
+        console.log(`[CHECKOUT] Type: ${paymentType}, Currency: ${currency}, Amount: ${amountToPay} USD -> ${finalIdrAmount} IDR (Rate: ${finalRate})`);
 
         // Detect gateway availability
         const hasGateway = await paymentGatewayService.hasActiveGateway();
@@ -132,7 +189,7 @@ export async function POST(req: Request) {
                 const parameter = {
                     transaction_details: {
                         order_id: orderId,
-                        gross_amount: idrAmount,
+                        gross_amount: finalIdrAmount,
                     },
                     credit_card: { secure: true },
                     customer_details: {
@@ -141,7 +198,7 @@ export async function POST(req: Request) {
                     },
                     item_details: [{
                         id: finalProjectId,
-                        price: idrAmount,
+                        price: finalIdrAmount,
                         quantity: 1,
                         name: itemName,
                     }]
@@ -179,7 +236,7 @@ export async function POST(req: Request) {
             const parameter = {
                 transaction_details: {
                     order_id: orderId,
-                    gross_amount: idrAmount, // Use IDR
+                    gross_amount: finalIdrAmount, // Use IDR
                 },
                 credit_card: {
                     secure: true,
@@ -191,7 +248,7 @@ export async function POST(req: Request) {
                 item_details: [
                     {
                         id: finalProjectId,
-                        price: idrAmount, // Use IDR
+                        price: finalIdrAmount, // Use IDR
                         quantity: 1,
                         name: itemName,
                     },
@@ -214,13 +271,23 @@ export async function POST(req: Request) {
                 id: orderId,
                 amount: amountToPay,
                 userId: user.id,
-                projectId: finalProjectId,
+                project: finalProjectId ? { connect: { id: finalProjectId } } : undefined,
                 snapToken,
                 status: "pending",
                 type: paymentType, // Save type
-                paymentMetadata: affiliateCode ? { affiliate_code: affiliateCode } : undefined,
+                currency: currency,
+                exchangeRate: finalRate,
+                paymentMetadata: {
+                    ...(affiliateCode ? { affiliate_code: affiliateCode } : {}),
+                    ...(validatedCoupon ? { coupon_code: validatedCoupon.code, coupon_discount: validatedCoupon.discountValue, coupon_type: validatedCoupon.discountType } : {}),
+                } as unknown as Prisma.InputJsonValue,
             },
         });
+
+        // Increment usedCount kupon jika valid
+        if (validatedCoupon) {
+            await applyCoupon(validatedCoupon.code);
+        }
 
         // Sync invoiceId to project and RESET estimate if REPAYMENT
         const updateData = {
@@ -247,7 +314,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ token: snapToken, orderId });
     } catch (error) {
         console.error("[MIDTRANS_CHECKOUT_ERROR]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json({ error: "Internal Error" }, { status: 500 });
     }
 }
 

@@ -3,7 +3,18 @@
 import { useState } from "react";
 import { FinanceData } from "@/components/admin/finance/finance-columns";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, CheckCircle2, Clock, AlertCircle, User, Copy, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+    Search,
+    Filter,
+    CheckCircle2,
+    Clock,
+    AlertCircle,
+    User,
+    Copy,
+    ChevronLeft,
+    ChevronRight,
+    XCircle
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,6 +28,8 @@ import { toast } from "sonner";
 import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment";
 import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
+import { CancelOrderButton } from "@/components/admin/orders/cancel-button";
+import { useTranslations } from "next-intl";
 
 interface FinanceListProps {
     data: FinanceData[];
@@ -25,6 +38,7 @@ interface FinanceListProps {
 type FilterStatus = 'ALL' | 'PAID' | 'PENDING' | 'PARTIAL';
 
 export function FinanceList({ data }: FinanceListProps) {
+    const t = useTranslations("Admin.Finance");
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState<FilterStatus>('ALL');
     const [currentPage, setCurrentPage] = useState(1);
@@ -47,18 +61,15 @@ export function FinanceList({ data }: FinanceListProps) {
 
         if (statusFilter === 'PAID') matchesFilter = isPaid;
         if (statusFilter === 'PENDING') {
-            // Include if actually pending payment OR if it's a PARTIAL project that currently has a pending REPAYMENT
             matchesFilter = (isPending && !isPartial) || (isPending && isPartial && isRepayment);
         }
         if (statusFilter === 'PARTIAL') {
-            // Show only if it's PARTIAL but NOT currently in a pending REPAYMENT state (to avoid double entry in Pending tab)
             matchesFilter = isPartial && (!isPending || !isRepayment);
         }
 
         return matchesSearch && matchesFilter;
     });
 
-    // Pagination Logic
     const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
     const paginatedData = filteredData.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -67,12 +78,12 @@ export function FinanceList({ data }: FinanceListProps) {
 
     const handleFilterChange = (newFilter: FilterStatus) => {
         setStatusFilter(newFilter);
-        setCurrentPage(1); // Reset to first page
+        setCurrentPage(1);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1); // Reset to first page
+        setCurrentPage(1);
     };
 
     const getCount = (filter: FilterStatus) => {
@@ -92,7 +103,6 @@ export function FinanceList({ data }: FinanceListProps) {
 
     return (
         <div className="space-y-6">
-            {/* Filters Toolbar */}
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between sticky top-0 z-20 bg-black/80 backdrop-blur-md py-4 px-1 border-b border-white/5">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -135,13 +145,12 @@ export function FinanceList({ data }: FinanceListProps) {
                 </div>
             </div>
 
-            {/* List Content */}
             {filteredData.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/10">
                     <div className="bg-zinc-800/50 p-4 rounded-full mb-4">
                         <Filter className="w-8 h-8 text-zinc-600" />
                     </div>
-                    <h3 className="text-zinc-400 font-medium">No transactions found</h3>
+                    <h3 className="text-zinc-400 font-medium">{t("noOrders")}</h3>
                     <p className="text-zinc-600 text-sm mt-1">Try adjusting your filters or search query</p>
                     <Button
                         variant="link"
@@ -159,7 +168,6 @@ export function FinanceList({ data }: FinanceListProps) {
                 </Accordion>
             )}
 
-            {/* Pagination Controls */}
             {totalPages > 1 && (
                 <div className="flex items-center justify-between border-t border-white/5 pt-4">
                     <div className="text-xs text-zinc-500">
@@ -195,12 +203,12 @@ export function FinanceList({ data }: FinanceListProps) {
 }
 
 function FinanceListItem({ data }: { data: FinanceData }) {
+    const t = useTranslations("Admin.Finance.Status");
     const isPaid = data.status === 'paid' || data.status === 'settled';
     const isPending = data.status === 'pending_payment' || data.status === 'pending' || data.status === 'payment_pending';
     const isPartial = data.project?.paymentStatus === 'PARTIAL';
     const isSettledDP = (data.project?.paymentStatus === 'PARTIAL' || data.project?.paymentStatus === 'PAID') && data.paymentType === 'DP';
 
-    // Status Logic
     let statusClass = "text-zinc-400 border-zinc-700 bg-zinc-800/50";
     let statusIcon = <Clock className="w-3 h-3" />;
 
@@ -213,6 +221,9 @@ function FinanceListItem({ data }: { data: FinanceData }) {
     } else if (isPending) {
         statusClass = "bg-amber-500/10 text-amber-500 border-amber-500/20";
         statusIcon = <Clock className="w-3 h-3" />;
+    } else if (data.status === 'cancelled') {
+        statusClass = "bg-red-500/10 text-red-500 border-red-500/20";
+        statusIcon = <XCircle className="w-3 h-3" />;
     }
 
     const copyId = (e: React.MouseEvent) => {
@@ -225,9 +236,8 @@ function FinanceListItem({ data }: { data: FinanceData }) {
         <AccordionItem value={data.id} className="border border-white/5 rounded-xl bg-zinc-900/50 overflow-hidden px-0">
             <AccordionTrigger className="px-4 py-3 hover:bg-zinc-800/50 hover:no-underline [&[data-state=open]]:bg-zinc-800/30 transition-all group">
                 <div className="flex items-center justify-between w-full gap-4 text-left">
-                    {/* Left: Info */}
                     <div className="flex items-center gap-4 min-w-0 flex-1">
-                        <div className={`w-1 h-8 rounded-full ${isPaid ? 'bg-emerald-500' : isPartial ? 'bg-indigo-500' : 'bg-amber-500'} shrink-0`} />
+                        <div className={`w-1 h-8 rounded-full ${isPaid ? 'bg-emerald-500' : isPartial ? 'bg-indigo-500' : data.status === 'cancelled' ? 'bg-red-500' : 'bg-amber-500'} shrink-0`} />
 
                         <div className="flex flex-col min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
@@ -254,25 +264,50 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                         </div>
                     </div>
 
-                    {/* Right: Status & Amount */}
                     <div className="flex items-center gap-4 mr-2">
                         <div className="flex items-center gap-1.5">
                             {data.paymentType && (
-                                <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 border ${data.paymentType === 'REPAYMENT'
-                                    ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                                    : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                                <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 border ${(data.paymentType === 'REPAYMENT' && isPaid) ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                    data.paymentType === 'DP' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                        data.paymentType === 'REPAYMENT' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                            'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                                     }`}>
-                                    {data.paymentType}
+                                    {(data.paymentType === 'REPAYMENT' && isPaid) ? t('full') :
+                                        data.paymentType === 'DP' ? t('dp') :
+                                            data.paymentType === 'REPAYMENT' ? t('repayment') :
+                                                t('full')}
                                 </Badge>
                             )}
                             <Badge variant="outline" className={`py-0.5 px-2 text-[10px] h-6 flex items-center gap-1.5 whitespace-nowrap ${statusClass}`}>
                                 {statusIcon}
-                                {isPending && data.paymentType === 'REPAYMENT' ? 'PENDING' : isPartial ? 'PARTIAL (DP)' : data.status.replace(/_/g, ' ').toUpperCase()}
+                                {isPending && data.paymentType === 'REPAYMENT' ? t('pending') : isPartial ? t('partial') : data.status.replace(/_/g, ' ').toUpperCase()}
                             </Badge>
                         </div>
 
-                        <div className="font-bold text-white text-sm tabular-nums text-right min-w-[80px]">
-                            <PriceDisplay amount={data.totalCost} />
+                        <div className="flex flex-col items-end">
+                            <div className="font-bold text-white text-sm tabular-nums text-right min-w-[80px]">
+                                <PriceDisplay
+                                    amount={
+                                        data.paymentType === 'DP'
+                                            ? (data.transactionAmount || (data.project?.totalAmount || 0) * 0.5)
+                                            : data.paymentType === 'REPAYMENT' && !isPaid
+                                                ? Math.max(0, (data.project?.totalAmount || 0) - (data.project?.paidAmount || 0))
+                                                : (data.transactionAmount || data.project?.totalAmount || data.totalCost)
+                                    }
+                                    baseCurrency={(data.paymentType === 'REPAYMENT' && !isPaid) ? 'USD' : (data.isLegacyMismatched ? 'USD' : data.currency) as 'USD' | 'IDR'}
+                                    exchangeRate={data.exchangeRate || undefined}
+                                />
+                            </div>
+                            {data.paymentType === 'REPAYMENT' && !isPaid && (
+                                <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-medium">
+                                    {t("remaining")}
+                                </span>
+                            )}
+                            {data.paymentType === 'DP' && (
+                                <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-medium">
+                                    {t("downPayment")}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -280,7 +315,6 @@ function FinanceListItem({ data }: { data: FinanceData }) {
 
             <AccordionContent className="px-4 pb-4 pt-2 bg-zinc-900/30 border-t border-white/5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                    {/* Detail Information */}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between text-xs p-2 rounded bg-zinc-950/50 border border-white/5">
                             <span className="text-zinc-500">Full Invoice ID</span>
@@ -298,7 +332,7 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                                 </Badge>
                                 {isPartial && !isSettledDP && (
                                     <span className="text-[10px] text-indigo-400">
-                                        {data.paymentType === 'REPAYMENT' ? '(Waiting for Confirmation)' : '(Waiting for Repayment)'}
+                                        {data.paymentType === 'REPAYMENT' ? t("waitingConfirmation") : t("waitingRepayment")}
                                     </span>
                                 )}
                             </div>
@@ -316,31 +350,28 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                         )}
                     </div>
 
-                    {/* Actions Panel */}
                     <div className="flex flex-col items-end justify-center gap-3 p-4 rounded-lg bg-zinc-950/30 border border-white/5 border-dashed">
                         <span className="text-[10px] uppercase text-zinc-600 font-bold tracking-widest mb-1 w-full text-right block border-b border-zinc-800 pb-2">
                             Quick Actions
                         </span>
 
                         <div className="flex items-center gap-2 mt-2">
-                            {/* Action Buttons based on Status */}
                             {isPending && !isSettledDP && (
-                                <>
-                                    <span className="text-xs text-amber-500 italic mr-2">Awaiting Confirmation</span>
+                                <div className="flex items-center">
+                                    <span className="text-xs text-amber-500 italic mr-2">{t("waitingConfirmation")}</span>
                                     <ConfirmPaymentButton estimateId={data.id} paymentType={data.paymentType} />
-                                </>
+                                </div>
                             )}
                             {isPaid && (
-                                <>
-                                    <span className="text-xs text-emerald-500 italic mr-2">Payment Verified</span>
+                                <div className="flex items-center">
+                                    <span className="text-xs text-emerald-500 italic mr-2">{t("paymentVerified")}</span>
                                     <UnpaidButton estimateId={data.id} />
-                                </>
+                                </div>
                             )}
                             {isSettledDP && (
-                                <span className="text-xs text-zinc-500 italic">DP Settled - No Action Needed</span>
+                                <span className="text-xs text-zinc-500 italic">{t("dpSettled")} - No Action Needed</span>
                             )}
-
-                            {/* Additional Actions can go here */}
+                            {data.status !== 'cancelled' && <CancelOrderButton estimateId={data.id} />}
                         </div>
                     </div>
                 </div>

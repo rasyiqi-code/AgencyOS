@@ -29,16 +29,27 @@ export async function POST(req: Request) {
             sameSite: 'lax'
         });
 
-        // Record usage (optional: throttle this to avoid spam?)
-        // For now, record every "new" session or click.
-        // We can use visitorId to prevent duplicate logging if needed.
+        // Deduplication: cek apakah visitorId ini sudah pernah di-track untuk affiliate yang sama
+        // Mencegah spam DB dan data referral yang tidak akurat
+        if (visitorId) {
+            const existing = await prisma.referralUsage.findFirst({
+                where: {
+                    affiliateId: affiliate.id,
+                    visitorId: visitorId,
+                }
+            });
+
+            // Skip jika visitor sudah pernah di-track
+            if (existing) {
+                return NextResponse.json({ status: "ok" });
+            }
+        }
 
         await prisma.referralUsage.create({
             data: {
                 affiliateId: affiliate.id,
                 source: source || "direct",
                 visitorId: visitorId,
-                // referredUserId is null until they sign up/login, which we can't easily link here without auth context
             }
         });
 

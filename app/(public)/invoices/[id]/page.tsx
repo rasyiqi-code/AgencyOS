@@ -4,6 +4,7 @@ import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrappe
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { paymentService } from "@/lib/server/payment-service";
 import type { InvoiceOrder } from "@/types/payment";
 
 async function getOrder(id: string) {
@@ -67,6 +68,15 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         apis: (estimateData.apis as unknown) as ExtendedEstimate['apis'],
         service: estimateData.service
     };
+
+    // Fix: Convert to USD if Service is in IDR
+    if (extendedEstimate.service?.currency === 'IDR') {
+        const { rate } = await paymentService.convertToIDR(1);
+        // Avoid division by zero
+        if (rate > 0) {
+            extendedEstimate.totalCost = extendedEstimate.totalCost / rate;
+        }
+    }
 
     // User data for InvoiceDocument
     // If user is logged in and matches the order owner, use their details. 

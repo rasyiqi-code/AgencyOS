@@ -34,11 +34,8 @@ export async function POST(req: Request) {
         // Check activations
         // We use a simple JSON structure to track devices: { devices: ["machineId1", "domain1"] }
 
-        let currentActivations: any = license.metadata || {};
-        // Ensure it's an object
-        if (typeof currentActivations !== 'object') {
-            currentActivations = {};
-        }
+        const metadata = (license.metadata as object) || {};
+        const currentActivations = metadata as { devices?: string[] };
 
         const devices: string[] = Array.isArray(currentActivations.devices) ? currentActivations.devices : [];
         const deviceId = machineId || domain || 'unknown';

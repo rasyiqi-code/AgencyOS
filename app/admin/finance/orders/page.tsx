@@ -30,23 +30,40 @@ export default async function AdminOrdersPage() {
     const agencyName = agencySetting?.value || "Agency OS";
 
     // 1. Initial Mapping
-    const financeData: FinanceData[] = estimates.map(e => ({
-        ...e,
-        project: e.project ? {
-            title: e.project.title,
-            clientName: e.project.clientName,
-            userId: e.project.userId,
-            paymentStatus: e.project.paymentStatus, // Map this field
-            // Access array of orders, taking the first one (most recent?) or relevant one
-            order: e.project.orders && e.project.orders.length > 0 ? {
-                proofUrl: e.project.orders[0].proofUrl,
-                paymentType: e.project.orders[0].type
-            } : null
-        } : null,
-        paymentType: e.project?.orders?.[0]?.type || null,
-        screens: e.screens as FinanceData['screens'],
-        apis: e.apis as FinanceData['apis']
-    }));
+    const financeData: FinanceData[] = estimates.map(e => {
+        const latestOrder = e.project?.orders?.[0] as {
+            type: string;
+            currency: string;
+            exchangeRate: number;
+            amount: number;
+            proofUrl: string | null
+        } | undefined;
+        return {
+            ...e,
+            project: e.project ? {
+                title: e.project.title,
+                clientName: e.project.clientName,
+                userId: e.project.userId,
+                paymentStatus: e.project.paymentStatus,
+                paidAmount: e.project.paidAmount,
+                totalAmount: e.project.totalAmount,
+                // Access array of orders, taking the first one (most recent?) or relevant one
+                order: latestOrder ? {
+                    proofUrl: latestOrder.proofUrl,
+                    paymentType: latestOrder.type
+                } : null
+            } : null,
+            paymentType: latestOrder?.type || null,
+            currency: latestOrder?.currency || 'USD',
+            // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
+            // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR
+            isLegacyMismatched: latestOrder?.currency === 'IDR' && (latestOrder?.amount || 0) < 5000,
+            exchangeRate: latestOrder?.exchangeRate && latestOrder.exchangeRate !== 1 ? latestOrder.exchangeRate : undefined,
+            transactionAmount: latestOrder?.amount,
+            screens: e.screens as FinanceData['screens'],
+            apis: e.apis as FinanceData['apis']
+        };
+    });
 
     // 2. Stack Auth User Resolution
     // Collect specific IDs from project relations
@@ -133,4 +150,3 @@ export default async function AdminOrdersPage() {
         </div>
     );
 }
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, CheckCircle, CreditCard } from "lucide-react";
+import { Loader2, CreditCard } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
 
 interface Product {
@@ -45,8 +45,18 @@ export function CheckoutForm({ product, userId, userEmail }: {
     userEmail?: string;
 }) {
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
     const router = useRouter();
+
+    // Read affiliate cookie on mount
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            const match = document.cookie.match(new RegExp('(^| )agencyos_affiliate_id=([^;]+)'));
+            if (match) {
+                setAffiliateCode(match[2]);
+            }
+        }
+    }, []);
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutSchema),
@@ -68,6 +78,7 @@ export function CheckoutForm({ product, userId, userEmail }: {
                     email: data.email,
                     name: data.name,
                     userId: userId,
+                    affiliateCode: affiliateCode,
                 }),
             });
 
@@ -85,29 +96,14 @@ export function CheckoutForm({ product, userId, userEmail }: {
                 throw new Error("Gagal mendapatkan URL redirect invoice.");
             }
 
-        } catch (error: any) {
-            toast.error(error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Terjadi kesalahan";
+            toast.error(message);
             setLoading(false);
         }
     };
 
-    // Success state setelah pembayaran berhasil
-    if (success) {
-        return (
-            <Card className="max-w-md w-full border-zinc-800 bg-zinc-950 text-zinc-100">
-                <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-                        <CheckCircle className="w-8 h-8 text-green-400" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-white">Pembelian Berhasil!</h3>
-                    <p className="text-zinc-400 text-center text-sm">
-                        License key sedang dibuat dan akan tersedia di dashboard Anda.
-                        {userId && " Anda akan diarahkan ke dashboard..."}
-                    </p>
-                </CardContent>
-            </Card>
-        );
-    }
+
 
     return (
         <Card className="max-w-md w-full border-zinc-800 bg-zinc-950 text-zinc-100 shadow-2xl relative overflow-hidden">

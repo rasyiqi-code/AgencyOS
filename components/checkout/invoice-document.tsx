@@ -18,14 +18,18 @@ export function InvoiceDocument({
     user,
     isPaid = false,
     agencySettings,
-    paymentType
+    paymentType,
+    currency,
+    exchangeRate
 }: {
     estimate: ExtendedEstimate,
     refAction?: React.RefObject<HTMLDivElement | null>,
     user?: { displayName?: string | null, email?: string | null } | null,
     isPaid?: boolean,
     agencySettings?: AgencyInvoiceSettings,
-    paymentType?: string | null
+    paymentType?: string | null,
+    currency?: string,
+    exchangeRate?: number
 }) {
     const today = new Date(); // Hydration safe as long as date doesn't change during render
 
@@ -118,7 +122,7 @@ export function InvoiceDocument({
                     <div>
                         <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Amount</h3>
                         <p className="text-2xl font-bold text-zinc-900">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimate.totalCost)}
+                            {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
                         </p>
                     </div>
                 </div>
@@ -182,7 +186,7 @@ export function InvoiceDocument({
                             </td>
                             <td className="py-4 text-right">-</td>
                             <td className="py-4 text-right">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(estimate.totalCost)}
+                                {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
                             </td>
                         </tr>
                     )}
@@ -193,7 +197,7 @@ export function InvoiceDocument({
                                 <div className="text-zinc-500 text-xs mt-1">{item.description}</div>
                             </td>
                             <td className="py-4 text-right">{item.hours}</td>
-                            <td className="py-4 text-right">${item.hours * 12}</td>
+                            <td className="py-4 text-right">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((item.hours * 12) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</td>
                         </tr>
                     ))}
                     {estimate.apis.map((item, i) => (
@@ -203,7 +207,7 @@ export function InvoiceDocument({
                                 <div className="text-zinc-500 text-xs mt-1">{item.description}</div>
                             </td>
                             <td className="py-4 text-right">{item.hours}</td>
-                            <td className="py-4 text-right">${item.hours * 12}</td>
+                            <td className="py-4 text-right">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((item.hours * 12) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -229,7 +233,7 @@ export function InvoiceDocument({
                 <div className="w-64">
                     <div className="flex justify-between mb-2">
                         <span className="text-zinc-500">Subtotal</span>
-                        <span className="font-medium">${estimate.totalCost}</span>
+                        <span className="font-medium">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</span>
                     </div>
                     {(paymentType === 'DP' || paymentType === 'REPAYMENT') && (
                         <div className="flex justify-between mb-2 text-indigo-600 font-medium">
@@ -239,19 +243,21 @@ export function InvoiceDocument({
                                     <span className="ml-2 text-[10px] font-bold text-emerald-600 border border-emerald-600 px-1 rounded">PAID</span>
                                 )}
                             </span>
-                            <span>-${estimate.totalCost * 0.5}</span>
+                            <span>-{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((estimate.totalCost * 0.5) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</span>
                         </div>
                     )}
                     <div className="flex justify-between mb-1">
                         <span className="text-zinc-500">Tax (0%)</span>
-                        <span className="font-medium">$0.00</span>
+                        <span className="font-medium">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(0)}</span>
                     </div>
                     <div className="flex justify-between text-xl font-bold border-t border-zinc-200 pt-4">
                         <span>{(paymentType === 'DP' || paymentType === 'REPAYMENT') ? 'Total to Pay' : 'Total'}</span>
-                        <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((paymentType === 'DP' || paymentType === 'REPAYMENT') ? estimate.totalCost * 0.5 : estimate.totalCost)}</span>
+                        <span>{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(
+                            ((paymentType === 'DP' || paymentType === 'REPAYMENT') ? estimate.totalCost * 0.5 : estimate.totalCost) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1)
+                        )}</span>
                     </div>
                     <div className="text-[10px] text-zinc-400 mt-2 text-right uppercase tracking-widest">
-                        Grand Total: ${estimate.totalCost}
+                        Grand Total: {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
                     </div>
                 </div>
             </div>

@@ -2,6 +2,19 @@ import { Resend } from "resend";
 import { prisma } from "@/lib/config/db";
 
 /**
+ * Escape karakter HTML untuk mencegah XSS di email templates.
+ * Sanitasi input user sebelum dimasukkan ke HTML email.
+ */
+function escapeHtml(text: string): string {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/**
  * Helper untuk mendapatkan Resend client.
  * Prioritas: DB setting → environment variable.
  */
@@ -40,6 +53,9 @@ export async function sendCommissionEmail(
     const resend = await getResendClient();
     if (!resend) return;
 
+    const safeAffiliateName = escapeHtml(affiliateName);
+    const safeOrderId = escapeHtml(orderId);
+
     await resend.emails.send({
         from: `AgencyOS Partner <${FROM_ADDRESS}>`,
         to: [toEmail],
@@ -47,11 +63,11 @@ export async function sendCommissionEmail(
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
                 <h2 style="color: #10b981;">New Commission Earned!</h2>
-                <p>Hi ${affiliateName},</p>
+                <p>Hi ${safeAffiliateName},</p>
                 <p>Great news! You just earned a new commission:</p>
                 <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
                     <p style="margin: 0;"><strong>Amount:</strong> $${amount.toFixed(2)}</p>
-                    <p style="margin: 8px 0 0;"><strong>Order:</strong> ${orderId}</p>
+                    <p style="margin: 8px 0 0;"><strong>Order:</strong> ${safeOrderId}</p>
                     <p style="margin: 8px 0 0;"><strong>Status:</strong> Pending</p>
                 </div>
                 <p>Keep sharing your referral link to earn more!</p>
@@ -72,6 +88,8 @@ export async function sendPayoutApprovedEmail(
     const resend = await getResendClient();
     if (!resend) return;
 
+    const safeAffiliateName = escapeHtml(affiliateName);
+
     await resend.emails.send({
         from: `AgencyOS Partner <${FROM_ADDRESS}>`,
         to: [toEmail],
@@ -79,7 +97,7 @@ export async function sendPayoutApprovedEmail(
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
                 <h2 style="color: #10b981;">Payout Approved!</h2>
-                <p>Hi ${affiliateName},</p>
+                <p>Hi ${safeAffiliateName},</p>
                 <p>Your payout request has been approved:</p>
                 <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
                     <p style="margin: 0;"><strong>Amount:</strong> $${amount.toFixed(2)}</p>
@@ -104,6 +122,9 @@ export async function sendPayoutRejectedEmail(
     const resend = await getResendClient();
     if (!resend) return;
 
+    const safeAffiliateName = escapeHtml(affiliateName);
+    const safeReason = reason ? escapeHtml(reason) : undefined;
+
     await resend.emails.send({
         from: `AgencyOS Partner <${FROM_ADDRESS}>`,
         to: [toEmail],
@@ -111,11 +132,11 @@ export async function sendPayoutRejectedEmail(
         html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
                 <h2 style="color: #ef4444;">Payout Request Rejected</h2>
-                <p>Hi ${affiliateName},</p>
+                <p>Hi ${safeAffiliateName},</p>
                 <p>Unfortunately, your payout request was not approved:</p>
                 <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
                     <p style="margin: 0;"><strong>Amount:</strong> $${amount.toFixed(2)}</p>
-                    ${reason ? `<p style="margin: 8px 0 0;"><strong>Reason:</strong> ${reason}</p>` : ""}
+                    ${safeReason ? `<p style="margin: 8px 0 0;"><strong>Reason:</strong> ${safeReason}</p>` : ""}
                 </div>
                 <p>If you have questions, please contact our support team.</p>
                 <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— AgencyOS Partner Program</p>

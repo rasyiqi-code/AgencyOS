@@ -31,7 +31,7 @@ export default async function DigitalSalesPage() {
                 </div>
             ) : (
                 <div className="space-y-3">
-                    {orders.map((order: any) => (
+                    {orders.map((order) => (
                         <Card key={order.id} className="border-zinc-800 bg-zinc-950 text-zinc-100">
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-center">

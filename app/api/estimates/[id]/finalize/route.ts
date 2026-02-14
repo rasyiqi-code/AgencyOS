@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
+import { Prisma } from "@prisma/client";
 import { stackServerApp } from "@/lib/config/stack";
 
 export async function POST(
@@ -25,13 +26,35 @@ export async function POST(
             return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
         }
 
-        // Update Estimate Status
+        // Parse body — selected items dari EstimateViewer (opsional untuk backward compat)
+        let selectedScreens = estimate.screens;
+        let selectedApis = estimate.apis;
+        let finalTotalHours = estimate.totalHours;
+        let finalTotalCost = estimate.totalCost;
+
+        try {
+            const body = await req.json();
+            if (body.selectedScreens) selectedScreens = body.selectedScreens;
+            if (body.selectedApis) selectedApis = body.selectedApis;
+            if (typeof body.totalHours === 'number') finalTotalHours = body.totalHours;
+            if (typeof body.totalCost === 'number') finalTotalCost = body.totalCost;
+        } catch {
+            // Body kosong = pakai data asli estimate (backward compatibility)
+        }
+
+        // Update Estimate dengan data yang dipilih user + status
         await prisma.estimate.update({
             where: { id: estimateId },
-            data: { status: "pending_payment" }
+            data: {
+                status: "pending_payment",
+                screens: selectedScreens as unknown as Prisma.InputJsonValue,
+                apis: selectedApis as unknown as Prisma.InputJsonValue,
+                totalHours: finalTotalHours,
+                totalCost: finalTotalCost,
+            }
         });
 
-        // Create Project if not exists (upsert)
+        // Create Project if not exists (upsert) — gunakan data yang sudah difilter
         await prisma.project.upsert({
             where: { estimateId: estimateId },
             update: {},
@@ -40,7 +63,7 @@ export async function POST(
                 clientName: user.displayName || user.primaryEmail || "Client",
                 title: estimate.title,
                 description: estimate.summary,
-                spec: JSON.stringify({ screens: estimate.screens, apis: estimate.apis }, null, 2),
+                spec: JSON.stringify({ screens: selectedScreens, apis: selectedApis }, null, 2),
                 status: "pending_payment",
                 estimateId: estimateId,
                 developerId: null,

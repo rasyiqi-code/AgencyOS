@@ -2,7 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST() {
     try {
         const user = await stackServerApp.getUser();
         if (!user) {
@@ -23,14 +23,23 @@ export async function POST(req: Request) {
         const namePart = (user.displayName || "user").split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
         let referralCode = `${namePart}${Math.floor(Math.random() * 1000)}`;
 
-        // Ensure uniqueness
+        // Ensure uniqueness (dengan batas retry untuk mencegah infinite loop)
+        const MAX_RETRIES = 10;
         let isUnique = false;
+        let retries = 0;
         while (!isUnique) {
+            if (retries >= MAX_RETRIES) {
+                return NextResponse.json(
+                    { error: "Failed to generate unique referral code. Please try again." },
+                    { status: 500 }
+                );
+            }
             const check = await prisma.affiliateProfile.findUnique({ where: { referralCode } });
             if (!check) {
                 isUnique = true;
             } else {
-                referralCode = `${namePart}${Math.floor(Math.random() * 10000)}`;
+                referralCode = `${namePart}${Math.floor(Math.random() * 100000)}`;
+                retries++;
             }
         }
 

@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { ApiItem, ScreenItem, ScreenItemSchema, ApiItemSchema } from '@/lib/shared/types';
 import { z } from 'zod';
+import { isAdmin } from '@/lib/shared/auth-helpers';
 
 const UpdateBodySchema = z.object({
     title: z.string().optional(),
@@ -24,6 +25,11 @@ export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    // Auth check: hanya admin yang boleh mengubah estimate
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         const json = await request.json();

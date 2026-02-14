@@ -50,6 +50,8 @@ model Order {
   transactionId   String?  @unique
   paymentType     String?
   type            String   @default("FULL") // FULL, DP, REPAYMENT
+  currency        String   @default("USD")
+  exchangeRate    Float    @default(1)
   userId          String
   projectId       String?
   createdAt       DateTime @default(now())

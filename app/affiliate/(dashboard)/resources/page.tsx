@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Download, Code, Check, ExternalLink, Image as ImageIcon } from "lucide-react";
+import { Copy, Download, Code, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -129,7 +130,13 @@ export default function MarketingKitPage() {
                         {getAssets('banner').map(asset => (
                             <Card key={asset.id} className="bg-zinc-900 border-zinc-800 overflow-hidden">
                                 <div className="aspect-video bg-black relative group">
-                                    <img src={asset.imageUrl || ""} alt={asset.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                                    <Image
+                                        src={asset.imageUrl || ""}
+                                        alt={asset.title}
+                                        fill
+                                        className="object-cover transition-transform group-hover:scale-105"
+                                        unoptimized
+                                    />
                                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                         <Button size="sm" variant="secondary" onClick={() => downloadImage(asset.imageUrl || "", `banner-${asset.id}.png`)}>
                                             <Download className="w-4 h-4 mr-2" /> Download
@@ -176,7 +183,13 @@ export default function MarketingKitPage() {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div className="aspect-[3/1] bg-black/50 rounded-lg overflow-hidden border border-zinc-800">
-                                        <img src={asset.imageUrl} alt={asset.title} className="w-full h-full object-cover" />
+                                        <Image
+                                            src={asset.imageUrl || ""}
+                                            alt={asset.title}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                        />
                                     </div>
                                     <p className="text-sm text-zinc-400">
                                         This banner will automatically update if the admin changes the official artwork.
@@ -216,7 +229,7 @@ export default function MarketingKitPage() {
                         <CardContent className="space-y-4">
                             <p className="text-sm text-zinc-400">
                                 This is a smart floating badge that appears at the bottom-right of any website.
-                                It's designed to be non-intrusive yet effective for conversion.
+                                It&apos;s designed to be non-intrusive yet effective for conversion.
                             </p>
 
                             <div className="bg-black/50 p-4 rounded-lg border border-zinc-800">
@@ -228,7 +241,7 @@ export default function MarketingKitPage() {
                                         <span className="text-xs text-white">Powered by <strong>{agencyName}</strong></span>
                                         <span className="bg-white text-black text-[10px] font-bold px-2 py-1 rounded-full">Learn More</span>
                                     </div>
-                                    <span className="text-xs text-zinc-600">← This will float on the guest's site.</span>
+                                    <span className="text-xs text-zinc-600">← This will float on the guest&apos;s site.</span>
                                 </div>
                             </div>
 

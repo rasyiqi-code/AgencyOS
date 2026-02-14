@@ -1,8 +1,5 @@
-import { getSnap } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
-import { paymentService } from "@/lib/server/payment-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 /**
@@ -20,7 +17,7 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
  */
 export async function POST(req: Request) {
     try {
-        const { productId, email, name, userId } = await req.json();
+        const { productId, email, name, userId, affiliateCode } = await req.json();
 
         // Validasi input wajib
         if (!productId || !email) {
@@ -62,8 +59,7 @@ export async function POST(req: Request) {
         const orderId = `DIGI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
         // Buat DigitalOrder di database
-        const db = prisma as any;
-        const order = await db.digitalOrder.create({
+        await prisma.digitalOrder.create({
             data: {
                 id: orderId,
                 productId: product.id,
@@ -72,6 +68,8 @@ export async function POST(req: Request) {
                 userName: name || null,
                 amount: product.price,
                 status: "PENDING",
+
+                paymentMetadata: affiliateCode ? { affiliate_code: affiliateCode } : {},
             },
         });
 

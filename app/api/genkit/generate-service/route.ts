@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serviceGeneratorFlow } from "@/app/genkit";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function POST(req: NextRequest) {
     try {
+        // Auth check: hanya admin yang boleh generate service content via AI
+        if (!await isAdmin()) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const body = await req.json();
         const { description } = body;
 

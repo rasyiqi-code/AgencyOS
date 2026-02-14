@@ -24,30 +24,29 @@ export async function POST(req: NextRequest) {
                 });
 
                 if (existingProfile) {
-                    await prisma.squadProfile.update({
-                        where: { userId },
-                        data: {
-                            status: 'active', // Should correspond to 'vetted' or 'active' based on schema
-                            // If schema uses 'vetted', we use that. Checking schema...
-                            // Schema says: status String @default("pending") // pending, vetted, rejected
-                            // Let's use 'vetted' as active state for now, or maybe just 'active' if enum allows string. 
-                            // Schema is String, avoiding enum issues.
-                            // Let's check schema again to be sure.
-                        }
-                    });
-
-                    // Update: Re-reading schema in my head... status is String. 
-                    // Let's use 'vetted' as the "Active Developer" state.
+                    // Update status ke 'vetted' sebagai state aktif developer
                     await prisma.squadProfile.update({
                         where: { userId },
                         data: { status: 'vetted' }
                     });
                 } else {
+                    // Ambil data target user dari Stack Auth (bukan admin yang login)
+                    let targetName = email.split('@')[0];
+                    try {
+                        const targetUser = await stackServerApp.getUser(userId);
+                        if (targetUser?.displayName) {
+                            targetName = targetUser.displayName;
+                        }
+                    } catch {
+                        // Fallback ke email prefix jika gagal fetch target user
+                        console.warn(`[ADMIN_TEAM] Could not fetch user ${userId}, using email as name.`);
+                    }
+
                     await prisma.squadProfile.create({
                         data: {
                             userId,
                             email, // Ensure email is passed
-                            name: user?.displayName || email.split('@')[0],
+                            name: targetName,
                             role: 'engineer', // Default
                             yearsOfExp: 0,
                             skills: [],

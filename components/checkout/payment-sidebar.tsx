@@ -50,15 +50,17 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                     amount: amountToPay, // Calculated based on type
                     title: estimate.title,
                     appliedCoupon: appliedCoupon?.code,
-                    paymentType: paymentType
+                    paymentType: paymentType,
+                    currency: currency
                 }),
             });
 
             if (!response.ok) {
                 const err = await response.json();
                 console.error("Payment Error:", err);
-                alert(`Payment Error: ${err.message || JSON.stringify(err)}`);
-                throw new Error(err.message || "Failed to create order");
+                const errorMessage = err.error || err.message || JSON.stringify(err);
+                alert(`Payment Error: ${errorMessage}`);
+                throw new Error(errorMessage);
             }
             const { orderId } = await response.json();
 

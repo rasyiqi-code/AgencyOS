@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function LicensesPage() {
     // Include digitalOrder untuk info pembeli (email, nama)
-    const licenses = await (prisma as any).license.findMany({
+    const licenses = await prisma.license.findMany({
         orderBy: { createdAt: "desc" },
         include: {
             product: {
@@ -27,7 +27,7 @@ export default async function LicensesPage() {
         orderBy: { name: "asc" }
     });
 
-    const policies = await prisma.product.findMany({ select: { id: true } }); // optimization
+    // const policies = await prisma.product.findMany({ select: { id: true } }); // optimization
 
     const totalLicenses = await prisma.license.count();
     const activeLicenses = await prisma.license.count({ where: { status: 'active' } });

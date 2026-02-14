@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Wallet, User, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, Wallet, LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 
 const items = [

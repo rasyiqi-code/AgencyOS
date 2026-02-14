@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Building, Wallet, CheckCircle2, Store, CreditCard, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -168,12 +168,13 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                 })
             });
 
-            // Safely parse JSON or handle text errors
+            // Safely parse JSON — clone dulu karena body stream hanya bisa dibaca 1x
             let data;
+            const resClone = res.clone();
             try {
                 data = await res.json();
             } catch {
-                const text = await res.text();
+                const text = await resClone.text();
                 throw new Error(text || "Invalid server response");
             }
 

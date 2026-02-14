@@ -8,6 +8,7 @@ import { ExtendedEstimate } from "@/lib/shared/types";
 
 interface PageProps {
     params: Promise<{ id: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 /**
@@ -19,6 +20,8 @@ interface PageProps {
 export default async function CheckoutPage(props: PageProps) {
     const params = await props.params;
     const { id } = params;
+    const searchParams = await props.searchParams;
+    const paymentType = typeof searchParams.paymentType === 'string' ? (searchParams.paymentType as "FULL" | "DP" | "REPAYMENT") : undefined;
 
     // 1. Coba cari sebagai Digital Product
     const product = await prisma.product.findUnique({
@@ -39,12 +42,12 @@ export default async function CheckoutPage(props: PageProps) {
             // Guest mode
         }
 
-        const p = product as any;
+        const p = product;
         const productData = {
             id: p.id,
             name: p.name,
             price: p.price,
-            purchaseType: p.purchaseType || "one_time",
+            purchaseType: (p.purchaseType as "one_time" | "subscription") || "one_time",
             interval: p.interval || undefined,
         };
 
@@ -68,7 +71,7 @@ export default async function CheckoutPage(props: PageProps) {
     // 2. Jika Product tidak ditemukan, cari sebagai Service Estimate (Legacy Flow)
     const estimate = await prisma.estimate.findUnique({
         where: { id },
-        include: { service: true }
+        include: { service: true, project: true }
     });
 
     // Jika Estimate ditemukan, render Service Checkout Flow (Legacy)
@@ -132,6 +135,9 @@ export default async function CheckoutPage(props: PageProps) {
                         user={userData}
                         agencySettings={agencySettings}
                         hasActiveGateway={hasActiveGateway}
+                        defaultPaymentType={paymentType}
+                        projectPaidAmount={estimate.project?.paidAmount || 0}
+                        projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
                     />
                 </div>
             </div>

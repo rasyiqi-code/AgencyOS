@@ -284,10 +284,20 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                             <Button
                                 className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12 text-base cursor-pointer"
                                 onClick={async () => {
-                                    // Call Server Action
+                                    // Call Server Action — kirim selected items agar konsisten dengan UI
                                     try {
+                                        const selectedScreens = initialScreens.filter((_, i) => selectedScreenIndices.has(i));
+                                        const selectedApis = initialApis.filter((_, i) => selectedApiIndices.has(i));
+
                                         const res = await fetch(`/api/estimates/${estimate.id}/finalize`, {
-                                            method: "POST"
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({
+                                                selectedScreens,
+                                                selectedApis,
+                                                totalHours,
+                                                totalCost,
+                                            }),
                                         });
                                         const data = await res.json();
                                         if (res.ok && data.url) {

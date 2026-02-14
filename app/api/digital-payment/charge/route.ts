@@ -2,6 +2,7 @@ import { getCore } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
+import { stackServerApp } from "@/lib/config/stack";
 import type { MidtransChargeParameter } from "@/types/payment";
 
 /**
@@ -10,6 +11,12 @@ import type { MidtransChargeParameter } from "@/types/payment";
  */
 export async function POST(req: Request) {
     try {
+        // Auth check: hanya user login yang boleh initiate charge
+        const user = await stackServerApp.getUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const body = await req.json();
         const { orderId, paymentType, bank } = body;
 
@@ -112,15 +119,16 @@ export async function POST(req: Request) {
                 paymentId: uniqueTransactionId,
                 paymentType: paymentType,
                 paymentMetadata: chargeResponse
-            } as any
+            }
         });
 
         return NextResponse.json(chargeResponse);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[DIGITAL_CORE_CHARGE_ERROR]", error);
+        const message = error instanceof Error ? error.message : "Internal Server Error";
         return NextResponse.json(
-            { message: error.message || "Internal Server Error" },
+            { message },
             { status: 500 }
         );
     }

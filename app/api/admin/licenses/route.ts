@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { randomBytes } from "crypto";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET(req: Request) {
+    // Auth check: hanya admin yang boleh melihat semua license
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { searchParams } = new URL(req.url);
         const productId = searchParams.get('productId');
@@ -27,6 +33,11 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+    // Auth check: hanya admin yang boleh membuat license baru
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
         const { productId, maxActivations, expiresAt, status, userId, metadata } = body;

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Download, CheckCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PaymentSelector } from "@/components/payment/payment-selector";
-import type { BankDetails } from "@/types/payment";
+import type { BankDetails, MidtransPaymentData, PaymentMetadata } from "@/types/payment";
 
 interface DigitalOrder {
     id: string;
@@ -17,7 +17,7 @@ interface DigitalOrder {
     userName: string | null;
     userEmail: string;
     createdAt: Date;
-    paymentMetadata: any;
+    paymentMetadata: PaymentMetadata | null;
     product: {
         name: string;
         price: number;
@@ -359,7 +359,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                     <PaymentSelector
                         orderId={order.id}
                         amount={order.amount}
-                        paymentMetadata={order.paymentMetadata}
+                        paymentMetadata={order.paymentMetadata as unknown as MidtransPaymentData}
                         currency="IDR" // Force IDR for now
                         bankDetails={bankDetails}
                         chargeEndpoint="/api/digital-payment/charge"

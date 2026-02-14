@@ -115,7 +115,7 @@ export default async function AffiliateDashboardPage() {
             </div>
 
 
-            // ... inside component ...
+
 
             {/* Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -162,7 +162,7 @@ export default async function AffiliateDashboardPage() {
 
                 {/* Right Column: Settings */}
                 <div className="space-y-8">
-                    <BankSettingsCard initialData={profile.bankInfo as any} />
+                    <BankSettingsCard initialData={profile.bankInfo as unknown as { bankName?: string; accountNumber?: string; accountHolder?: string }} />
                 </div>
             </div>
         </div>

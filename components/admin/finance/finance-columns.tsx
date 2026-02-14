@@ -7,19 +7,16 @@ import { toast } from "sonner";
 import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
 import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
-import { useCurrency } from "@/components/providers/currency-provider";
+import { CancelOrderButton } from "@/components/admin/orders/cancel-button";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 
-const PriceCell = ({ amount }: { amount: number }) => {
-    const { currency, locale, rate } = useCurrency();
-    let displayAmount = amount;
-    // Basic logic: if base is USD (implied) and target is IDR, convert.
-    // Assuming backend amount is always USD.
-    if (currency === 'IDR') {
-        displayAmount = amount * rate;
-    }
-
+const PriceCell = ({ amount, currency, exchangeRate, isLegacyMismatched }: { amount: number, currency?: string, exchangeRate?: number, isLegacyMismatched?: boolean }) => {
     return (
-        <>{new Intl.NumberFormat(locale, { style: 'currency', currency: currency }).format(displayAmount)}</>
+        <PriceDisplay
+            amount={amount}
+            baseCurrency={(isLegacyMismatched ? 'USD' : currency) as 'USD' | 'IDR'}
+            exchangeRate={exchangeRate}
+        />
     );
 };
 
@@ -30,17 +27,23 @@ export type FinanceData = {
     status: string;
     proofUrl: string | null;
     createdAt: Date;
+    paymentType?: string | null;
+    currency?: string;
+    exchangeRate?: number;
+    transactionAmount?: number;
+    isLegacyMismatched?: boolean;
     project: {
         title: string;
         clientName: string | null;
         userId: string | null;
-        paymentStatus?: string | null; // Added
+        paymentStatus?: string | null;
+        paidAmount?: number | null;
+        totalAmount?: number | null;
         order?: {
             proofUrl: string | null;
             paymentType: string | null;
         } | null;
     } | null;
-    paymentType: string | null;
     screens: { title: string; description: string; hours: number }[];
     apis: { title: string; description: string; hours: number }[];
 };
@@ -108,7 +111,11 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
             return (
                 <div className="flex flex-col overflow-hidden">
                     <span className="font-mono font-medium text-emerald-400 text-[12px] whitespace-nowrap truncate">
-                        <PriceCell amount={amount} />
+                        <PriceCell
+                            amount={amount}
+                            currency="USD"
+                            isLegacyMismatched={row.original.isLegacyMismatched}
+                        />
                     </span>
                 </div>
             );
@@ -122,8 +129,8 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
             const status = row.getValue("status") as string;
             const project = row.original.project;
             const isPaid = status === 'paid' || status === 'settled';
-            const isPending = status === 'pending_payment' || status === 'pending' || status === 'payment_pending';
             const isPartial = project?.paymentStatus === 'PARTIAL';
+            const isCancelled = status === 'cancelled';
 
             return (
                 <div className="flex items-center">
@@ -132,16 +139,18 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
                         className={`py-0 px-2 h-5 text-[10px] w-fit flex items-center gap-1.5
                             ${isPaid ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
                                 isPartial ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                                    isPending ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                                        'text-zinc-400 border-zinc-700'}
+                                    isCancelled ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                        'bg-amber-500/10 text-amber-500 border-amber-500/20'}
                         `}
                     >
                         {isPaid ? <CheckCircle2 className="w-3 h-3" /> : null}
-                        {isPartial ? 'PARTIAL (DP)' : status.replace(/_/g, ' ').toUpperCase()}
+                        {isPartial ? 'PARTIAL (DP)' : isCancelled ? 'CANCELLED' : status.replace(/_/g, ' ').toUpperCase()}
                     </Badge>
                     {row.original.paymentType && (
-                        <Badge variant="secondary" className="text-[9px] h-5 px-1.5 ml-1 bg-zinc-800 text-zinc-400 border border-zinc-700">
-                            {row.original.paymentType}
+                        <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 ml-1 border ${(row.original.paymentType === 'REPAYMENT' && isPaid) ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                'bg-zinc-800 text-zinc-400 border-zinc-700'
+                            }`}>
+                            {(row.original.paymentType === 'REPAYMENT' && isPaid) ? 'FULL' : row.original.paymentType}
                         </Badge>
                     )}
                 </div>
@@ -199,6 +208,11 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
                     {isPaid && (
                         <div className="scale-75 origin-right">
                             <UnpaidButton estimateId={estimate.id} />
+                        </div>
+                    )}
+                    {status !== 'cancelled' && (
+                        <div className="scale-75 origin-right">
+                            <CancelOrderButton estimateId={estimate.id} />
                         </div>
                     )}
                 </div>

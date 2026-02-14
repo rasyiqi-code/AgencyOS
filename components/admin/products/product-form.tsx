@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Product } from "@prisma/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, Pencil } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -41,7 +42,7 @@ interface ProductFormValues {
 }
 
 interface ProductFormProps {
-    product?: any;
+    product?: Product;
     trigger?: React.ReactNode;
     onSuccess?: () => void;
 }
@@ -52,7 +53,7 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
     const router = useRouter();
 
     const form = useForm<ProductFormValues>({
-        resolver: zodResolver(productSchema) as any,
+        resolver: zodResolver(productSchema),
         defaultValues: {
             name: product?.name || "",
             slug: product?.slug || "",
@@ -86,7 +87,7 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
             router.refresh();
             onSuccess?.();
             if (!product) form.reset();
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong");
         } finally {
             setLoading(false);

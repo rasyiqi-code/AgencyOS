@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,12 +16,13 @@ export function QuoteForm({ isAdmin }: { isAdmin?: boolean }) {
     const [loading, setLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);
 
-    useState(() => {
+    // Cek ketersediaan AI saat komponen mount
+    useEffect(() => {
         fetch("/api/system/keys/status")
             .then(res => res.json())
             .then(data => setAiAvailable(data.configured))
             .catch(() => setAiAvailable(false));
-    });
+    }, []);
 
     const handleGenerate = async () => {
         if (!prompt.trim() || !aiAvailable) return;

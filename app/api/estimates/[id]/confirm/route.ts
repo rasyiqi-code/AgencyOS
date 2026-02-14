@@ -1,13 +1,17 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Auth check: konfirmasi pembayaran manual hanya boleh dilakukan admin
+    // Tanpa ini, user biasa bisa mengaktifkan project tanpa membayar
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const estimateId = params.id;
 
@@ -36,10 +40,14 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
 
         if (pendingOrders.length > 0) {
             // Use the type of the pending order
-            // Prefer DP if listed, logic can be adjusted
             const targetOrder = pendingOrders[0];
             paymentType = targetOrder.type;
-            amountPaid = targetOrder.amount;
+
+            // Normalize amountPaid to USD if it was processed in IDR
+            const orderRate = targetOrder.exchangeRate || 1;
+            amountPaid = targetOrder.currency === 'IDR' && targetOrder.amount > 5000
+                ? targetOrder.amount / orderRate
+                : targetOrder.amount;
         }
 
         // 2. Determine New Statuses

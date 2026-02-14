@@ -10,6 +10,12 @@ const config = {
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
+        container: {
+            center: true,
+            screens: {
+                '2xl': '1280px',
+            },
+        },
         extend: {
             colors: {
                 background: 'hsl(var(--background))',

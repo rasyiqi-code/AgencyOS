@@ -371,7 +371,9 @@
         "Finance": {
             "title": "Pesanan & Faktur",
             "revenue": "Pendapatan Real-time",
-            "financials": "Keuangan",
+            "financials": "ARSIP KEUANGAN",
+            "confirmCancel": "Apakah Anda yakin ingin membatalkan transaksi ini? Ini akan menandai proyek dan invoice sebagai dibatalkan.",
+            "successCancel": "Transaksi berhasil dibatalkan",
             "description": "Arsip komprehensif untuk melacak pembayaran, invoice, dan status estimasi proyek secara real-time.",
             "totalProjects": "Total Proyek",
             "autoSync": "Auto-sync aktif",
@@ -379,7 +381,21 @@
             "poweredBy": "Didukung oleh {brand} Financial Core",
             "noOrders": "Pesanan tidak ditemukan.",
             "previous": "Sebelumnya",
-            "next": "Selanjutnya"
+            "next": "Selanjutnya",
+            "Status": {
+                "dp": "PARSIAL (DP)",
+                "full": "LUNAS",
+                "repayment": "PELUNASAN",
+                "pending": "MENUNGGU",
+                "paid": "DIBAYAR",
+                "partial": "PARSIAL",
+                "remaining": "SISA TAGIHAN",
+                "downPayment": "UANG MUKA (DP)",
+                "waitingConfirmation": "Menunggu Konfirmasi",
+                "waitingRepayment": "Menunggu Pelunasan",
+                "paymentVerified": "Pembayaran Terverifikasi",
+                "dpSettled": "DP Lunas"
+            }
         }
     },
     "Missions": {

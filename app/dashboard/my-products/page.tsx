@@ -19,8 +19,8 @@ export default async function MyProductsPage() {
         redirect("/handler/sign-in");
     }
 
-    // Ambil semua lisensi milik user ini
-    const result = await getClientLicenses(user.id);
+    // Ambil semua lisensi milik user yang sedang login (userId diambil dari session secara internal)
+    const result = await getClientLicenses();
     const licenses = result.success ? (result.licenses || []) : [];
 
     return (
@@ -47,12 +47,13 @@ export default async function MyProductsPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {licenses.map((license: any) => (
+                    {licenses.map((license) => (
                         <LicenseCard
                             key={license.id}
                             license={{
                                 ...license,
                                 expiresAt: license.expiresAt ? license.expiresAt.toISOString() : null,
+                                currentActivations: license.activations,
                                 product: {
                                     ...license.product,
                                     // Fallback untuk field yang mungkin belum ada di Prisma client lama

@@ -372,13 +372,30 @@
             "revenue": "Real-time Revenue",
             "financials": "Financials",
             "description": "Comprehensive archive to track payments, invoices, and project estimate statuses in real-time.",
+            "confirmCancel": "Are you sure you want to cancel this transaction? This will mark the project and invoice as cancelled.",
+            "successCancel": "Transaction cancelled successfully",
             "totalProjects": "Total Projects",
             "autoSync": "Auto-sync enabled",
             "pendingUpdates": "Pending Updates",
             "poweredBy": "Powered by {brand} Financial Core",
             "noOrders": "No orders found.",
             "previous": "Previous",
-            "next": "Next"
+            "next": "Next",
+            "Status": {
+                "dp": "PARTIAL (DP)",
+                "full": "FULL PAYMENT",
+                "repayment": "REPAYMENT",
+                "pending": "PENDING",
+                "paid": "PAID",
+                "partial": "PARTIAL",
+                "remaining": "REMAINING",
+                "downPayment": "DOWN PAYMENT",
+                "waitingConfirmation": "Waiting for Confirmation",
+                "waitingRepayment": "Waiting for Repayment",
+                "paymentVerified": "Payment Verified",
+                "dpSettled": "DP Settled",
+                "cancelled": "CANCELLED"
+            }
         }
     },
     "Missions": {

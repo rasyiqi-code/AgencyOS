@@ -19,10 +19,20 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
     const handleCheckStatus = async () => {
         try {
             toast.loading("Checking payment status...", { id: "check-status" });
-            const res = await fetch(`/api/payment/status?orderId=${orderId}&mode=json`);
-            const data = await res.json();
 
-            if (data.status === 'settled' || data.status === 'paid' || data.status === 'waiting_verification') {
+            // Determine which API to use based on orderId prefix
+            const isDigital = orderId.startsWith("DIGI-");
+            const apiUrl = isDigital
+                ? `/api/digital-payment/status?orderId=${orderId}`
+                : `/api/payment/status?orderId=${orderId}&mode=json`;
+
+            const res = await fetch(apiUrl);
+            if (!res.ok) throw new Error("Failed to fetch status");
+
+            const data = await res.json();
+            const status = data.status?.toLowerCase();
+
+            if (['settled', 'paid', 'waiting_verification'].includes(status)) {
                 toast.success("Status Updated!", { id: "check-status" });
                 onClose();
                 router.refresh();

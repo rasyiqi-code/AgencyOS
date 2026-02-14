@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET() {
+    // Auth check: hanya admin yang boleh melihat daftar produk
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const products = await prisma.product.findMany({
             orderBy: { createdAt: 'desc' },
@@ -20,12 +26,26 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    // Auth check: hanya admin yang boleh membuat produk
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
         const { name, slug, description, price, type, isActive, purchaseType, interval, image, fileUrl } = body;
 
-        if (!name || !slug) { // Removed price check or check it properly
-            // Price 0 is allowed for free products
+        // Validasi: name dan slug wajib ada (price 0 diizinkan untuk produk gratis)
+        if (!name || !slug) {
+            return NextResponse.json({ error: "Name and slug are required" }, { status: 400 });
+        }
+
+        // Cek slug unik sebelum create
+        const existingProduct = await prisma.product.findUnique({
+            where: { slug }
+        });
+        if (existingProduct) {
+            return NextResponse.json({ error: "Slug already exists. Please use a different slug." }, { status: 409 });
         }
 
         const product = await prisma.product.create({
@@ -40,7 +60,7 @@ export async function POST(req: Request) {
                 interval,
                 image,
                 fileUrl,
-            } as any,
+            },
         });
 
         return NextResponse.json(product);

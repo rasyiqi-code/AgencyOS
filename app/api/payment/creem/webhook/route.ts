@@ -7,6 +7,32 @@ import { processAffiliateCommission } from "@/lib/affiliate/commission";
 // Helper to update order/subscription status
 const updateOrderStatus = async (orderId: string, status: string, metadata: unknown) => {
     try {
+        const isDigital = orderId.startsWith("DIGI-");
+
+        if (isDigital) {
+            console.log(`[CREEM_WEBHOOK] Updating Digital Order ${orderId} to ${status}`);
+
+            // Activate Digital Order if paid
+            if (status === 'paid') {
+                const { completeDigitalOrder } = await import("@/app/actions/digital-orders");
+                // Midtrans digital route uses paymentId for SDK transaction_id
+                // Checkout completed data usually has checkout id which we stored as transactionId/paymentId
+                const creemData = metadata as any;
+                const transactionId = creemData.id || orderId;
+
+                await completeDigitalOrder(orderId, transactionId);
+            } else {
+                await prisma.digitalOrder.update({
+                    where: { id: orderId },
+                    data: {
+                        status: status.toUpperCase(),
+                        paymentMetadata: metadata as Prisma.InputJsonValue
+                    }
+                });
+            }
+            return;
+        }
+
         // Simpan paymentMetadata asli sebelum di-overwrite (untuk affiliate code)
         const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
         const affiliateMetadata = existingOrder?.paymentMetadata;
@@ -25,11 +51,26 @@ const updateOrderStatus = async (orderId: string, status: string, metadata: unkn
         });
         console.log(`[CREEM_WEBHOOK] Order ${orderId} updated to ${status}`);
 
-        // If paid, activate Project and Estimate
+        // If paid, activate Project and Estimate + update paymentStatus & paidAmount
         if (status === 'paid' && order.project) {
+            // Hitung paidAmount dan status pembayaran
+            const currentPaid = order.project.paidAmount || 0;
+            const newPaid = currentPaid + order.amount;
+
+            let paymentStatus = "UNPAID";
+            if (order.type === "FULL" || order.type === "REPAYMENT") {
+                paymentStatus = "PAID";
+            } else if (order.type === "DP") {
+                paymentStatus = "PARTIAL";
+            }
+
             await prisma.project.update({
                 where: { id: order.project.id },
-                data: { status: 'queue' }
+                data: {
+                    status: 'queue',
+                    paymentStatus: paymentStatus,
+                    paidAmount: newPaid,
+                }
             });
 
             // If Project was created from an Estimate, mark Estimate as Paid too

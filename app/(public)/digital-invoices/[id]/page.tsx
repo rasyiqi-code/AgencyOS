@@ -20,15 +20,16 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
     const order = await prisma.digitalOrder.findUnique({
         where: { id },
         include: { product: true, license: true }
-    }) as any;
+    });
+
+    // Null check HARUS sebelum akses property order
+    if (!order) return notFound();
 
     const orderUser = (order.userId && user && order.userId === user.id) ? {
         name: user.displayName,
         displayName: user.displayName,
         email: user.primaryEmail
     } : null;
-
-    if (!order) return notFound();
 
     if (order.userId && order.userId !== user?.id) {
         return (

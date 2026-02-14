@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, Key } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 interface LicenseGeneratorProps {
     products: Product[];
@@ -47,7 +47,7 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
             setGeneratedKey(data.key);
             toast.success("License generated successfully");
             router.refresh();
-        } catch (error) {
+        } catch {
             toast.error("Failed to generate license");
         } finally {
             setLoading(false);

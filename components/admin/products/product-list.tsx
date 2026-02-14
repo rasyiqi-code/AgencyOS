@@ -15,6 +15,9 @@ import { Pencil, Trash2, Key, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Product } from "@prisma/client";
+
+type ProductWithCount = Product & { _count?: { licenses: number } };
 
 /**
  * Props untuk ProductList component.
@@ -22,7 +25,7 @@ import Image from "next/image";
  * field baru (purchaseType, interval, image, fileUrl).
  */
 interface ProductListProps {
-    products: any[];
+    products: ProductWithCount[];
 }
 
 export function ProductList({ products }: ProductListProps) {
@@ -41,7 +44,7 @@ export function ProductList({ products }: ProductListProps) {
 
             toast.success("Produk berhasil dihapus");
             router.refresh();
-        } catch (error) {
+        } catch {
             toast.error("Gagal menghapus produk");
         }
     };

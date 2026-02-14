@@ -3,7 +3,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { prisma } from "@/lib/config/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const user = await stackServerApp.getUser();
         if (!user) {

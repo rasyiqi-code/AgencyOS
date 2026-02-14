@@ -2,18 +2,17 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Trash, Edit, Copy, Image as ImageIcon, FileText, Code } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Plus, Trash, Edit, Image as ImageIcon, FileText, Code } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { uploadFile } from "@/lib/integrations/storage"; // Assuming this is client-side compatible or we use a separate upload route?
-// Actually uploadFile in lib/integrations/storage.ts is likely server-side (uses aws-sdk). 
+import Image from "next/image";
 // We should check how manual payment uploads. It uses a route handler.
 // We need an upload route for this. Or reuse /api/billing/proof if generic enough? 
 // Better creates a specific upload function/route or use a signed URL.
@@ -35,7 +34,7 @@ interface MarketingAsset {
 
 export function AssetsManager() {
     const [assets, setAssets] = useState<MarketingAsset[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -222,7 +221,7 @@ export function AssetsManager() {
                                         {['copy', 'banner', 'widget', 'banner_widget'].map((type) => (
                                             <button
                                                 key={type}
-                                                onClick={() => setFormData({ ...formData, type: type as any })}
+                                                onClick={() => setFormData({ ...formData, type: type as "banner" | "copy" | "widget" | "banner_widget" })}
                                                 className={`flex-1 min-w-[100px] text-xs font-medium py-1.5 rounded-md transition-all whitespace-nowrap ${formData.type === type
                                                     ? 'bg-zinc-600 text-white shadow-sm'
                                                     : 'text-zinc-400 hover:text-zinc-200'
@@ -310,7 +309,13 @@ export function AssetsManager() {
                                         <div className="space-y-3">
                                             <div className="aspect-video relative rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800 group">
                                                 {previewUrl ? (
-                                                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                                    <Image
+                                                        src={previewUrl}
+                                                        alt="Preview"
+                                                        fill
+                                                        className="object-cover"
+                                                        unoptimized
+                                                    />
                                                 ) : (
                                                     <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-600">
                                                         <ImageIcon className="w-10 h-10 mb-2 opacity-20" />
@@ -391,7 +396,13 @@ export function AssetsManager() {
                                     <CardContent className="p-4 pt-2">
                                         {(asset.type === 'banner' || asset.type === 'banner_widget') && asset.imageUrl && (
                                             <div className="aspect-video relative rounded-md overflow-hidden bg-black/50 border border-zinc-800">
-                                                <img src={asset.imageUrl} alt={asset.title} className="object-cover w-full h-full" />
+                                                <Image
+                                                    src={asset.imageUrl}
+                                                    alt={asset.title}
+                                                    fill
+                                                    className="object-cover"
+                                                    unoptimized
+                                                />
                                             </div>
                                         )}
                                         {asset.type !== 'banner' && asset.type !== 'banner_widget' && asset.content && (

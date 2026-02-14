@@ -2,19 +2,25 @@
 
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
+import { randomBytes } from "crypto";
+import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
 
 // Cast prisma untuk akses model baru (DigitalOrder relation di License)
 // Prisma client telah di-generate, namun TS server mungkin belum mengenali tipe baru
-const db = prisma as any;
+const db = prisma;
 
 /**
  * Custom key generator: AGE-XXXX-XXXX-XXXX
- * Format unik untuk license key produk digital
+ * Format unik untuk license key produk digital.
+ * Menggunakan crypto.randomBytes() untuk keamanan yang lebih baik.
  */
 function generateKey() {
+    // Generate 12 bytes random yang cryptographically secure
+    const bytes = randomBytes(12);
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const segment = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-    return `AGE-${segment()}-${segment()}-${segment()}`;
+    const segment = (offset: number) =>
+        Array.from({ length: 4 }, (_, i) => chars[bytes[offset + i] % chars.length]).join("");
+    return `AGE-${segment(0)}-${segment(4)}-${segment(8)}`;
 }
 
 /**
@@ -64,8 +70,9 @@ export async function generateLicenseForOrder(orderId: string) {
         });
 
         return { success: true, license };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return { success: false, error: message };
     }
 }
 
@@ -75,11 +82,21 @@ export async function generateLicenseForOrder(orderId: string) {
  */
 export async function regenerateLicense(licenseId: string) {
     try {
+        // Auth check: hanya admin atau pemilik license yang boleh regenerate
+        const user = await getCurrentUser();
+        if (!user) throw new Error("Unauthorized");
+
         const license = await prisma.license.findUnique({
             where: { id: licenseId }
         });
 
         if (!license) throw new Error("License not found");
+
+        // Verifikasi ownership: pemilik license atau admin
+        const admin = await isAdmin();
+        if (license.userId !== user.id && !admin) {
+            throw new Error("Forbidden");
+        }
 
         const newKey = generateKey();
 
@@ -94,24 +111,31 @@ export async function regenerateLicense(licenseId: string) {
 
         revalidatePath('/dashboard/my-products');
         return { success: true, license: updated };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return { success: false, error: message };
     }
 }
 
 /**
- * Mengambil semua lisensi milik user tertentu beserta data produk terkait.
+ * Mengambil semua lisensi milik user yang sedang login beserta data produk terkait.
  * Digunakan oleh halaman My Products di client dashboard.
+ * UserId diambil dari session untuk mencegah IDOR.
  */
-export async function getClientLicenses(userId: string) {
+export async function getClientLicenses() {
     try {
+        // Auth check: ambil userId dari session, bukan dari parameter
+        const user = await getCurrentUser();
+        if (!user) throw new Error("Unauthorized");
+
         const licenses = await prisma.license.findMany({
-            where: { userId },
+            where: { userId: user.id },
             include: { product: true },
             orderBy: { createdAt: 'desc' }
         });
         return { success: true, licenses };
-    } catch (error: any) {
-        return { success: false, error: error.message, licenses: [] };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return { success: false, error: message, licenses: [] };
     }
 }

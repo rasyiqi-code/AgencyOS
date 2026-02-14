@@ -4,6 +4,9 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getCurrentUser, isAdmin } from '@/lib/shared/auth-helpers';
 
 export async function GET(req: NextRequest) {
+    // Endpoint publik: hanya menampilkan data ringkasan non-sensitif
+    // (title, totalHours, totalCost, complexity, creatorName)
+    // untuk digunakan oleh komponen RecentEstimates di halaman price-calculator
     try {
         const { searchParams } = new URL(req.url);
         const limit = parseInt(searchParams.get('limit') || '2');

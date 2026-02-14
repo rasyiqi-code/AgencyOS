@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET(
     req: Request,
     { params }: { params: Promise<{ id: string }> } // In Next.js 15+ params is async, assuming 14 or lower based on package.json, but treating safely. Actually package.json showed "next": "16.1.4" which is very new? Wait, likely 14 or 15. Standard is await params in newer versions.
 ) {
+    // Auth check: hanya admin yang boleh mengakses detail produk via admin route
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         if (!id) {
@@ -35,6 +41,11 @@ export async function PATCH(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    // Auth check: hanya admin yang boleh mengupdate produk
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         const body = await req.json();
@@ -50,14 +61,14 @@ export async function PATCH(
                 name,
                 slug,
                 description,
-                price,
+                price: price !== undefined ? Number(price) || 0 : undefined,
                 type,
                 isActive,
                 purchaseType,
                 interval,
                 image,
                 fileUrl,
-            } as any,
+            }
         });
 
         return NextResponse.json(product);
@@ -71,6 +82,11 @@ export async function DELETE(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    // Auth check: hanya admin yang boleh menghapus produk
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         if (!id) {

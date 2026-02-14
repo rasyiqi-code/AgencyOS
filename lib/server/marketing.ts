@@ -44,7 +44,26 @@ export async function validateCoupon(code: string) {
     if (coupon.expiresAt && new Date() > coupon.expiresAt) return { valid: false, message: "Coupon has expired." };
     if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) return { valid: false, message: "Coupon usage limit reached." };
 
+    // Hanya validasi, TIDAK increment usedCount
+    // Gunakan applyCoupon() saat coupon benar-benar digunakan (checkout)
     return { valid: true, coupon };
+}
+
+/**
+ * Gunakan coupon — increment usedCount secara atomik.
+ * Panggil fungsi ini HANYA saat coupon benar-benar digunakan (saat checkout berhasil).
+ */
+export async function applyCoupon(code: string) {
+    const validation = await validateCoupon(code);
+    if (!validation.valid) return validation;
+
+    // Increment usedCount secara atomik
+    const updatedCoupon = await prisma.coupon.update({
+        where: { code: code.toUpperCase() },
+        data: { usedCount: { increment: 1 } },
+    });
+
+    return { valid: true, coupon: updatedCoupon };
 }
 
 // --- Bonuses ---

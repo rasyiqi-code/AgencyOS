@@ -17,12 +17,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export function LicenseIntegrationGuide() {
     const [open, setOpen] = useState(false);
     const [copied, setCopied] = useState<string | null>(null);
-    const [origin, setOrigin] = useState("https://your-domain.com");
+    const [mounted, setMounted] = useState(false);
+    const origin = mounted ? window.location.origin : "https://your-domain.com";
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            setOrigin(window.location.origin);
-        }
+        // Use timeout to avoid "setState in effect" warning (synchronous update)
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
     }, []);
 
     const copyToClipboard = (text: string, id: string) => {

@@ -17,6 +17,8 @@ interface InvoiceClientWrapperProps {
         amount: number;
         status: string;
         type: string; // Added type for DP/Repayment check
+        currency: string;
+        exchangeRate: number;
         projectId: string | null;
         userId: string | null;
         createdAt: Date;
@@ -35,6 +37,7 @@ interface InvoiceClientWrapperProps {
     user: {
         displayName: string;
         email: string;
+        phone?: string;
     };
     isPaid: boolean;
     bankDetails?: BankDetails;
@@ -53,7 +56,8 @@ const thankYouQuotes = [
 export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true }: InvoiceClientWrapperProps) {
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
-    const { currency, rate } = useCurrency();
+    const { currency: contextCurrency, rate: contextRate } = useCurrency();
+
     const quote = useMemo(() => {
         // Deterministic quote based on Order ID
         const index = order.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % thankYouQuotes.length;
@@ -84,8 +88,22 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         documentTitle: `Invoice-${order.id}`,
     });
 
+    // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
+    // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR
+    const isLegacyMismatched = order.currency === 'IDR' && order.amount < 5000;
+
     // Calculate display amount for Total Due showing in sidebar
-    const displayAmount = currency === 'IDR' ? Math.ceil(order.amount * rate) : order.amount;
+    // If paid, show the amount in the currency it was paid in (or locked to)
+    // If not paid, use the user's selected context currency
+    const effectiveCurrency = isPaid ? order.currency : contextCurrency;
+    const effectiveRate = isPaid ? order.exchangeRate : contextRate;
+
+    // Normalize amount to base USD first for reliable conversion
+    const baseAmountUSD = isLegacyMismatched || order.currency === 'USD'
+        ? order.amount
+        : order.amount / (order.exchangeRate || 1);
+
+    const displayAmount = effectiveCurrency === 'IDR' ? Math.ceil(baseAmountUSD * effectiveRate) : baseAmountUSD;
 
     return (
         <div className="flex flex-col xl:flex-row gap-8 items-start">
@@ -106,6 +124,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         isPaid={isPaid}
                         agencySettings={agencySettings}
                         paymentType={order.type}
+                        currency={effectiveCurrency}
+                        exchangeRate={effectiveRate}
                     />
                 </div>
             </div>
@@ -136,7 +156,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             <div className="flex justify-between items-center text-sm p-3 bg-white/5 rounded-lg border border-white/5">
                                 <span className="text-zinc-300">Total Due</span>
                                 <span className="text-xl font-bold text-white">
-                                    {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency }).format(displayAmount)}
+                                    {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
                                 </span>
                             </div>
 
@@ -206,7 +226,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         orderId={order.id}
                         amount={displayAmount}
                         paymentMetadata={order.paymentMetadata}
-                        currency={currency}
+                        currency={effectiveCurrency as 'USD' | 'IDR'}
                         // Allow all groups if IDR, filter if USD (handled inside widget)
                         allowedGroups={undefined}
                         bankDetails={bankDetails}

@@ -53,18 +53,32 @@ export async function POST(req: NextRequest) {
         // Use verified domain or fallback
         const fromAddress = "noreply@update.crediblemark.com";
 
+        // Sanitasi HTML untuk mencegah XSS di email
+        const escapeHtml = (str: string) =>
+            str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        const safeFirstName = escapeHtml(firstName);
+        const safeLastName = escapeHtml(lastName);
+        const safeEmail = escapeHtml(email);
+        const safeSubject = escapeHtml(subject);
+        const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
         const { error } = await resend.emails.send({
             from: `AgencyOS Contact <${fromAddress}>`,
             to: [recipient],
             replyTo: email,
-            subject: `[Contact Form] ${subject} - ${firstName} ${lastName}`,
+            subject: `[Contact Form] ${safeSubject} - ${safeFirstName} ${safeLastName}`,
             html: `
                 <h2>New Contact Form Submission</h2>
-                <p><strong>From:</strong> ${firstName} ${lastName} (${email})</p>
-                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>From:</strong> ${safeFirstName} ${safeLastName} (${safeEmail})</p>
+                <p><strong>Subject:</strong> ${safeSubject}</p>
                 <hr />
                 <h3>Message:</h3>
-                <p>${message.replace(/\n/g, "<br>")}</p>
+                <p>${safeMessage}</p>
             `,
         });
 

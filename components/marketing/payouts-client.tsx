@@ -30,7 +30,7 @@ interface PayoutsClientProps {
  * Client component halaman Payouts.
  * Menampilkan saldo, tombol request payout, dan riwayat request.
  */
-export function PayoutsClient({ initialBalance, affiliateName, totalEarnings, paidEarnings }: PayoutsClientProps) {
+export function PayoutsClient({ initialBalance, totalEarnings, paidEarnings }: PayoutsClientProps) {
     const [requests, setRequests] = useState<PayoutRequestData[]>([]);
     const [balance, setBalance] = useState(initialBalance);
     const [loading, setLoading] = useState(true);

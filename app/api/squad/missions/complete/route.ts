@@ -40,8 +40,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true, project: updatedProject });
 
-        return NextResponse.json({ success: true, project: updatedProject });
-
     } catch (error) {
         console.error("Complete mission error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

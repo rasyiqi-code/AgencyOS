@@ -2,7 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const user = await stackServerApp.getUser();
         if (!user) {

@@ -1,8 +1,14 @@
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function POST(req: Request) {
+    // Auth check: hanya admin yang boleh trigger deployment
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { projectId } = await req.json();
 

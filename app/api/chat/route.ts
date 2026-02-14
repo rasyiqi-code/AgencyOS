@@ -1,9 +1,20 @@
 import { consultantFlow } from '../../genkit';
+import { stackServerApp } from '@/lib/config/stack';
 
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
     try {
+        // Auth check: hanya user login yang boleh menggunakan AI chatbot
+        // Mencegah abuse biaya API LLM oleh pihak tak berwenang
+        const user = await stackServerApp.getUser();
+        if (!user) {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+                status: 401,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
         const body = await req.json();
         const { messages } = body;
 

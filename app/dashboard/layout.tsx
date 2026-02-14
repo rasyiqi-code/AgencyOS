@@ -5,6 +5,8 @@ import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
 import { prisma } from "@/lib/config/db";
+import { stackServerApp } from "@/lib/config/stack";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 
 export default async function DashboardLayout({
@@ -12,6 +14,11 @@ export default async function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
+    // Auth gate: pastikan user login sebelum akses dashboard
+    const user = await stackServerApp.getUser();
+    if (!user) {
+        redirect('/handler/sign-in');
+    }
     const settings = await prisma.systemSetting.findMany({
         where: { key: { in: ["AGENCY_NAME", "LOGO_URL"] } }
     });

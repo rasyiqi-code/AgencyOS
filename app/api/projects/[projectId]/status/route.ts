@@ -1,12 +1,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function PATCH(req: NextRequest, props: { params: Promise<{ projectId: string }> }) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Auth check: hanya admin yang boleh mengubah status project
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     try {
         const body = await req.json();

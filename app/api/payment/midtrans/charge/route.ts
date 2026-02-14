@@ -11,6 +11,11 @@ export async function POST(req: Request) {
         const { orderId, paymentType, bank } = body;
         const user = await stackServerApp.getUser();
 
+        // Auth check: hanya user login yang boleh charge
+        if (!user) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         // 1. Get Order Data
         const order = await prisma.order.findUnique({
             where: { id: orderId },
@@ -19,6 +24,11 @@ export async function POST(req: Request) {
 
         if (!order) {
             return new NextResponse("Order not found", { status: 404 });
+        }
+
+        // Ownership check: pastikan order milik user yang sedang login
+        if (order.userId !== user.id) {
+            return new NextResponse("Forbidden", { status: 403 });
         }
 
         // 2. Prepare Charge Parameter
@@ -95,7 +105,8 @@ export async function POST(req: Request) {
             case 'shopeepay':
                 // ShopeePay Core API usually uses deep link / qr
                 parameter.payment_type = 'shopeepay';
-                parameter.shopeepay = { callback_url: "http://localhost:3000/invoices/" + orderId };
+                const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+                parameter.shopeepay = { callback_url: `${appUrl}/invoices/${orderId}` };
                 break;
 
             case 'bank_transfer':
@@ -142,7 +153,7 @@ export async function POST(req: Request) {
                 paymentMetadata: {
                     ...(order.paymentMetadata as object || {}),
                     ...chargeResponse
-                } as any
+                }
             }
         });
 

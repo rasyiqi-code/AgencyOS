@@ -85,6 +85,8 @@ export async function getCreem(): Promise<CreemSDK> {
             apiKey: config.apiKey,
             webhookSecret: process.env.CREEM_WEBHOOK_SECRET,
             testMode: !config.isProduction,
+            // @ts-ignore - Some versions of SDK might not have this in type but need it
+            storeId: config.storeId
         }) as CreemSDK;
 
         console.log(`[Creem] SDK initialized (${config.isProduction ? 'LIVE' : 'TEST'} mode)`);
@@ -113,15 +115,22 @@ async function manualRequest(endpoint: string, method: string, body?: Record<str
         method,
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": config.apiKey
+            "x-api-key": config.apiKey,
+            "x-store-id": config.storeId
         },
         body: body ? JSON.stringify(body) : undefined,
     });
 
     if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
+        let errorData = {};
+        try {
+            errorData = await res.json();
+        } catch {
+            const text = await res.text();
+            errorData = { message: text };
+        }
         console.error("Creem Manual API Error:", JSON.stringify(errorData, null, 2));
-        throw new Error(errorData.message || `Creem API Error: ${res.status}`);
+        throw new Error((errorData as any).message || `Creem API Error: ${res.status}`);
     }
 
     if (res.status === 204) return {};
@@ -138,6 +147,20 @@ export async function creem(): Promise<ExtendedCreemSDK> {
         ...sdk,
         products: {
             ...sdk.products,
+            // Override create method to use manualRequest (ensures x-store-id is sent)
+            create: async (params: any) => {
+                const payload = {
+                    name: params.name,
+                    description: params.description,
+                    price: params.price,
+                    currency: params.currency,
+                    billing_type: params.billingType || "onetime",
+                    tax_mode: params.taxMode || "inclusive",
+                    tax_category: params.taxCategory || "saas",
+                    image_url: params.imageUrl
+                };
+                return manualRequest("/products", "POST", payload) as any;
+            },
             // Monkey-patch missing update method
             update: async (params: {
                 productId: string;

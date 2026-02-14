@@ -75,13 +75,11 @@ async function handleDigitalOrderWebhook(
     transactionStatus: string,
     transactionId: string
 ) {
-    const db = prisma as any;
-
     // Cari order berdasarkan paymentId, karena order_id dari Midtrans
     // mengandung suffix timestamp (contoh: DIGI-xxx-1739443234567)
     // yang tidak sama dengan ID asli di database (DIGI-xxx).
     // Field paymentId sudah disimpan saat charge di /api/digital-payment/charge.
-    const digitalOrder = await db.digitalOrder.findFirst({
+    const digitalOrder = await prisma.digitalOrder.findFirst({
         where: { paymentId: orderId },
     });
 
@@ -91,6 +89,12 @@ async function handleDigitalOrderWebhook(
             { status: "error", message: "Digital order not found" },
             { status: 404 }
         );
+    }
+
+    // Idempotency: jika order sudah PAID, skip untuk mencegah proses duplikat
+    if (digitalOrder.status === 'PAID') {
+        console.log(`[MIDTRANS_WEBHOOK] Digital order ${digitalOrder.id} already PAID, skipping.`);
+        return NextResponse.json({ status: "ok", message: "Already processed" });
     }
 
     const actualOrderId = digitalOrder.id;
@@ -111,7 +115,7 @@ async function handleDigitalOrderWebhook(
         transactionStatus === "expire"
     ) {
         // Pembayaran gagal/expired → update status
-        await db.digitalOrder.update({
+        await prisma.digitalOrder.update({
             where: { id: actualOrderId },
             data: {
                 status: transactionStatus === "expire" ? "EXPIRED" : "FAILED",
@@ -148,9 +152,36 @@ async function handleProjectOrderWebhook(
         dbStatus = transactionStatus;
     }
 
-    // Update order di database
+    // Cari order di database.
+    // order_id dari Midtrans bisa berupa uniqueTransactionId (orderId-timestamp)
+    // yang dibuat saat charge via Core API. Oleh karena itu, coba cari:
+    // 1. Berdasarkan id langsung (untuk Snap checkout)
+    // 2. Berdasarkan transactionId (untuk Core API charge)
+    let existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
+
+    if (!existingOrder) {
+        existingOrder = await prisma.order.findUnique({
+            where: { transactionId: orderId },
+        });
+    }
+
+    if (!existingOrder) {
+        console.error(`[MIDTRANS_WEBHOOK] Order not found for order_id: ${orderId}`);
+        return NextResponse.json(
+            { status: "error", message: "Order not found" },
+            { status: 404 }
+        );
+    }
+
+    // Idempotency: jika order sudah settled, skip untuk mencegah double-increment paidAmount
+    if (existingOrder.status === 'settled' && (transactionStatus === 'capture' || transactionStatus === 'settlement')) {
+        console.log(`[MIDTRANS_WEBHOOK] Order ${existingOrder.id} already settled, skipping.`);
+        return NextResponse.json({ status: "ok", message: "Already processed" });
+    }
+
+    // Update order di database menggunakan ID asli
     const order = await prisma.order.update({
-        where: { id: orderId },
+        where: { id: existingOrder.id },
         data: {
             status: dbStatus,
             transactionId: transactionId,
@@ -162,7 +193,14 @@ async function handleProjectOrderWebhook(
     // Jika pembayaran settled → aktifkan project
     if (dbStatus === "settled" && order.project) {
         const currentPaid = order.project.paidAmount || 0;
-        const newPaid = currentPaid + order.amount;
+
+        // Normalize order.amount to USD if it was processed in IDR
+        const orderRate = order.exchangeRate || 1;
+        const normalizedOrderAmount = order.currency === 'IDR' && order.amount > 5000
+            ? order.amount / orderRate
+            : order.amount;
+
+        const newPaid = currentPaid + normalizedOrderAmount;
 
         let paymentStatus = "UNPAID";
         if (order.type === "FULL" || order.type === "REPAYMENT") {
@@ -187,8 +225,9 @@ async function handleProjectOrderWebhook(
             });
         }
 
-        // Commission logic
-        await processAffiliateCommission(orderId, order.amount, order.paymentMetadata);
+        // Commission logic — gunakan existingOrder.id (DB ID asli),
+        // bukan orderId dari Midtrans yang bisa berupa uniqueTransactionId
+        await processAffiliateCommission(existingOrder.id, order.amount, order.paymentMetadata);
     }
 
     return NextResponse.json({ status: "ok" });

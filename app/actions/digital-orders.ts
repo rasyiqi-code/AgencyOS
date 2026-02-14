@@ -2,8 +2,10 @@
 
 import { prisma } from "@/lib/config/db";
 import { generateLicenseForOrder } from "./licenses";
+import { isAdmin } from "@/lib/shared/auth-helpers";
+import { processAffiliateCommission } from "@/lib/affiliate/commission";
 
-const db = prisma as any;
+const db = prisma;
 
 /**
  * Membuat DigitalOrder baru di database.
@@ -29,18 +31,25 @@ export async function createDigitalOrder(data: {
         });
 
         return { success: true, order };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
         console.error("[CREATE_DIGITAL_ORDER_ERROR]", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }
 
 /**
  * Mengambil semua DigitalOrder (untuk admin dashboard).
  * Include relasi product dan license.
+ * Auth check: hanya admin yang boleh mengakses.
  */
 export async function getDigitalOrders() {
     try {
+        // Auth check: pastikan hanya admin yang bisa akses semua orders
+        if (!await isAdmin()) {
+            return { success: false, error: "Unauthorized", orders: [] };
+        }
+
         const orders = await db.digitalOrder.findMany({
             orderBy: { createdAt: "desc" },
             include: {
@@ -50,9 +59,10 @@ export async function getDigitalOrders() {
         });
 
         return { success: true, orders };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
         console.error("[GET_DIGITAL_ORDERS_ERROR]", error);
-        return { success: false, error: error.message, orders: [] };
+        return { success: false, error: message, orders: [] };
     }
 }
 
@@ -81,9 +91,14 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string) 
             console.error(`[COMPLETE_ORDER] License generation failed for ${orderId}:`, licenseResult.error);
         }
 
+        // Process Affiliate Commission (jika ada referral)
+        // Order harus sudah PAID agar komisi valid
+        await processAffiliateCommission(orderId, order.amount, order.paymentMetadata);
+
         return { success: true, order, license: licenseResult };
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
         console.error("[COMPLETE_DIGITAL_ORDER_ERROR]", error);
-        return { success: false, error: error.message };
+        return { success: false, error: message };
     }
 }

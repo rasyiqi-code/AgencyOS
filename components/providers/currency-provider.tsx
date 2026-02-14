@@ -99,13 +99,22 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
 export function PriceDisplay({
     amount,
     baseCurrency = 'USD',
-    compact = false
+    compact = false,
+    exchangeRate,
+    forceCurrency
 }: {
     amount: number,
     baseCurrency?: 'USD' | 'IDR',
-    compact?: boolean
+    compact?: boolean,
+    exchangeRate?: number,
+    forceCurrency?: 'USD' | 'IDR'
 }) {
-    const { currency, locale, rate } = useCurrency();
+    const { currency: contextCurrency, locale, rate: contextRate } = useCurrency();
+
+    const currency = forceCurrency || contextCurrency;
+    // Use the provided exchangeRate if available, otherwise use context rate.
+    // NOTE: rate logic implies 1 USD = X IDR.
+    const rate = exchangeRate || contextRate;
 
     let displayAmount = amount;
 
@@ -113,6 +122,7 @@ export function PriceDisplay({
     if (baseCurrency === 'USD' && currency === 'IDR') {
         displayAmount = amount * rate;
     } else if (baseCurrency === 'IDR' && currency === 'USD') {
+        // If we want to convert IDR back to USD using the rate
         displayAmount = amount / rate;
     }
 

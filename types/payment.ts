@@ -291,6 +291,8 @@ export interface InvoiceOrder {
     snapToken: string | null;
     transactionId: string | null;
     paymentType: string | null;
+    currency: string;
+    exchangeRate: number;
     paymentMetadata: MidtransPaymentData | CreemPaymentMetadata | null;
     createdAt: Date;
     updatedAt: Date;

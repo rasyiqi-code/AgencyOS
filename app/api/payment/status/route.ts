@@ -60,9 +60,24 @@ export async function GET(req: Request) {
                         });
 
                         if (updatedOrder?.project) {
+                            // Hitung paidAmount dan paymentStatus
+                            const currentPaid = updatedOrder.project.paidAmount || 0;
+                            const newPaid = currentPaid + updatedOrder.amount;
+
+                            let paymentStatus = "UNPAID";
+                            if (updatedOrder.type === "FULL" || updatedOrder.type === "REPAYMENT") {
+                                paymentStatus = "PAID";
+                            } else if (updatedOrder.type === "DP") {
+                                paymentStatus = "PARTIAL";
+                            }
+
                             await prisma.project.update({
                                 where: { id: updatedOrder.project.id },
-                                data: { status: "queue" }
+                                data: {
+                                    status: "queue",
+                                    paymentStatus: paymentStatus,
+                                    paidAmount: newPaid,
+                                }
                             });
 
                             if (updatedOrder.project.estimateId) {
@@ -118,11 +133,25 @@ export async function GET(req: Request) {
                             include: { project: true }
                         });
 
-                        // Activate Project/Estimate
+                        // Activate Project/Estimate + update paymentStatus & paidAmount
                         if (updatedOrder.project) {
+                            const currentPaid = updatedOrder.project.paidAmount || 0;
+                            const newPaid = currentPaid + updatedOrder.amount;
+
+                            let paymentStatus = "UNPAID";
+                            if (updatedOrder.type === "FULL" || updatedOrder.type === "REPAYMENT") {
+                                paymentStatus = "PAID";
+                            } else if (updatedOrder.type === "DP") {
+                                paymentStatus = "PARTIAL";
+                            }
+
                             await prisma.project.update({
                                 where: { id: updatedOrder.project.id },
-                                data: { status: "queue" }
+                                data: {
+                                    status: "queue",
+                                    paymentStatus: paymentStatus,
+                                    paidAmount: newPaid,
+                                }
                             });
 
                             if (updatedOrder.project.estimateId) {

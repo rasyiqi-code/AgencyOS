@@ -2,9 +2,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
+import { stackServerApp } from "@/lib/config/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function POST(req: Request) {
     try {
+        // Auth check: hanya user login yang boleh membuat feedback
+        const user = await stackServerApp.getUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const formData = await req.formData();
         const projectId = formData.get('projectId') as string; // Required for Revalidation
 
@@ -36,12 +44,16 @@ export async function POST(req: Request) {
 
         if (feedbackId) {
             // Create Comment
+            // Tentukan role berdasarkan apakah user adalah admin
+            const userIsAdmin = await isAdmin();
+            const commentRole = userIsAdmin ? 'admin' : 'client';
+
             const comment = await prisma.feedbackComment.create({
                 data: {
                     feedbackId,
                     content,
                     imageUrl: imageUrl || null,
-                    role: 'admin' // TODO: Dynamic role based on user session (stack auth)
+                    role: commentRole,
                 }
             });
             // Revalidate path
@@ -74,6 +86,11 @@ export async function POST(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+    // Auth check: hanya admin yang boleh mengubah status feedback
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id, status, projectId } = await req.json();
 
