@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
+
+export const dynamic = 'force-dynamic';
 import "./globals.css";
 import { StackTheme, StackProvider } from "@stackframe/stack";
 import { stackServerApp } from "@/lib/config/stack";
