@@ -33,6 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
     const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
     const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "Senior Software House";
+    const favicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
 
     const homepageTitle = `${agencyName} | ${seoTagline}`;
 
@@ -43,6 +44,11 @@ export async function generateMetadata(): Promise<Metadata> {
         template: `%s | ${agencyName}`,
       },
       description: seoDesc,
+      icons: {
+        icon: favicon || '/favicon.ico',
+        shortcut: favicon || '/favicon.ico',
+        apple: favicon || '/apple-touch-icon.png',
+      },
       openGraph: {
         title: homepageTitle,
         description: seoDesc,
