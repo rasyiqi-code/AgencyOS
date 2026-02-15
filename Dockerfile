@@ -60,11 +60,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/start.sh ./start.sh
 
-# Copy missing dependencies for Prisma config (not included in standalone build)
-COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
-COPY --from=builder /app/node_modules/@prisma/config ./node_modules/@prisma/config
+# Install dependencies for Prisma config (dotenv, @prisma/config) to ensure transitive deps like 'effect' are present
+RUN bun add dotenv @prisma/config
 
-# Install Prisma and config dependencies locally with explicit versions matching package.json
 # Install Prisma CLI globally to avoid modifying the standalone node_modules structure
 RUN bun add -g prisma@7.4.0
 
