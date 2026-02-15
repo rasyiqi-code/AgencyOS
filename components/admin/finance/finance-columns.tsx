@@ -32,6 +32,7 @@ export type FinanceData = {
     exchangeRate?: number;
     transactionAmount?: number;
     isLegacyMismatched?: boolean;
+    paymentMethod?: string | null;
     project: {
         title: string;
         clientName: string | null;
@@ -42,8 +43,11 @@ export type FinanceData = {
         order?: {
             proofUrl: string | null;
             paymentType: string | null;
+            paymentMethod?: string | null;
+            paymentMetadata?: Record<string, unknown> | null;
         } | null;
     } | null;
+    paymentMetadata?: Record<string, unknown> | null;
     screens: { title: string; description: string; hours: number }[];
     apis: { title: string; description: string; hours: number }[];
 };
@@ -148,7 +152,7 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
                     </Badge>
                     {row.original.paymentType && (
                         <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 ml-1 border ${(row.original.paymentType === 'REPAYMENT' && isPaid) ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                'bg-zinc-800 text-zinc-400 border-zinc-700'
+                            'bg-zinc-800 text-zinc-400 border-zinc-700'
                             }`}>
                             {(row.original.paymentType === 'REPAYMENT' && isPaid) ? 'FULL' : row.original.paymentType}
                         </Badge>

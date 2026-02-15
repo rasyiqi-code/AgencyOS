@@ -95,7 +95,7 @@ export function InvoiceDocument({
                             width={64}
                             height={64}
                             className="object-contain"
-                            style={{ height: 'auto' }}
+                            style={{ height: 'auto', width: 'auto' }}
                             sizes="64px"
                         />
                     </div>
@@ -150,6 +150,7 @@ export function InvoiceDocument({
                                                 alt={estimate.service.title}
                                                 fill
                                                 className="object-cover"
+                                                sizes="128px"
                                             />
                                         </div>
                                     )}
@@ -224,7 +225,7 @@ export function InvoiceDocument({
                                 width={120}
                                 height={120}
                                 className="object-contain grayscale-[0.2]"
-                                style={{ height: 'auto' }}
+                                style={{ height: 'auto', width: 'auto' }}
                                 sizes="120px"
                             />
                         </div>

@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.sandbox.midtrans.com https://app.midtrans.com https://snap.midtrans.com https://www.googletagmanager.com https://static.cloudflareinsights.com;
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://app.sandbox.midtrans.com https://app.midtrans.com https://snap.midtrans.com https://snap-popup-app.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://www.googletagmanager.com https://static.cloudflareinsights.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
               img-src 'self' blob: data: https://media.crediblemark.com https://*.r2.dev https://avatars.githubusercontent.com https://lh3.googleusercontent.com https://i.pravatar.cc;
               font-src 'self' https://fonts.gstatic.com;

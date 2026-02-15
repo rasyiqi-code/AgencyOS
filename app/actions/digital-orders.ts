@@ -72,8 +72,9 @@ export async function getDigitalOrders() {
  *
  * @param orderId - ID DigitalOrder yang akan diselesaikan
  * @param paymentId - Transaction ID dari Midtrans (opsional)
+ * @param paymentType - Metode pembayaran yang digunakan (opsional)
  */
-export async function completeDigitalOrder(orderId: string, paymentId?: string) {
+export async function completeDigitalOrder(orderId: string, paymentId?: string, paymentType?: string) {
     try {
         // Update status order ke PAID
         const order = await db.digitalOrder.update({
@@ -81,6 +82,7 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string) 
             data: {
                 status: "PAID",
                 paymentId: paymentId || null,
+                paymentType: paymentType || undefined,
             },
         });
 
@@ -99,6 +101,25 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string) 
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Unknown error";
         console.error("[COMPLETE_DIGITAL_ORDER_ERROR]", error);
+        return { success: false, error: message };
+    }
+}
+
+/**
+ * Konfirmasi pembayaran DigitalOrder secara manual oleh Admin.
+ * @param orderId - ID DigitalOrder yang akan dikonfirmasi
+ */
+export async function confirmDigitalOrder(orderId: string) {
+    try {
+        if (!(await isAdmin())) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        const result = await completeDigitalOrder(orderId, `MANUAL-${orderId}`, "manual_transfer");
+        return result;
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("[CONFIRM_DIGITAL_ORDER_ERROR]", error);
         return { success: false, error: message };
     }
 }

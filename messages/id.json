@@ -395,6 +395,12 @@
                 "waitingRepayment": "Menunggu Pelunasan",
                 "paymentVerified": "Pembayaran Terverifikasi",
                 "dpSettled": "DP Lunas"
+            },
+            "DigitalOrders": {
+                "title": "Transaksi Produk Digital",
+                "description": "Pantau semua transaksi untuk produk digital seperti plugin, template, dan aset lainnya.",
+                "noOrders": "Tidak ada transaksi produk digital ditemukan.",
+                "searchPlaceholder": "Cari pembeli, email, atau produk..."
             }
         }
     },

@@ -17,10 +17,10 @@ const updateOrderStatus = async (orderId: string, status: string, metadata: unkn
                 const { completeDigitalOrder } = await import("@/app/actions/digital-orders");
                 // Midtrans digital route uses paymentId for SDK transaction_id
                 // Checkout completed data usually has checkout id which we stored as transactionId/paymentId
-                const creemData = metadata as any;
+                const creemData = metadata as { id?: string };
                 const transactionId = creemData.id || orderId;
 
-                await completeDigitalOrder(orderId, transactionId);
+                await completeDigitalOrder(orderId, transactionId, "credit_card");
             } else {
                 await prisma.digitalOrder.update({
                     where: { id: orderId },

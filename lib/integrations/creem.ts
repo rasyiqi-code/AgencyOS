@@ -85,7 +85,7 @@ export async function getCreem(): Promise<CreemSDK> {
             apiKey: config.apiKey,
             webhookSecret: process.env.CREEM_WEBHOOK_SECRET,
             testMode: !config.isProduction,
-            // @ts-ignore - Some versions of SDK might not have this in type but need it
+            // @ts-expect-error - Some versions of SDK might not have this in type but need it
             storeId: config.storeId
         }) as CreemSDK;
 
@@ -130,7 +130,7 @@ async function manualRequest(endpoint: string, method: string, body?: Record<str
             errorData = { message: text };
         }
         console.error("Creem Manual API Error:", JSON.stringify(errorData, null, 2));
-        throw new Error((errorData as any).message || `Creem API Error: ${res.status}`);
+        throw new Error((errorData as { message?: string }).message || `Creem API Error: ${res.status}`);
     }
 
     if (res.status === 204) return {};
@@ -148,7 +148,16 @@ export async function creem(): Promise<ExtendedCreemSDK> {
         products: {
             ...sdk.products,
             // Override create method to use manualRequest (ensures x-store-id is sent)
-            create: async (params: any) => {
+            create: async (params: {
+                name: string;
+                description?: string;
+                price: number;
+                currency: string;
+                billingType?: "onetime" | "recurring";
+                taxMode?: "inclusive" | "exclusive";
+                taxCategory?: string;
+                imageUrl?: string;
+            }) => {
                 const payload = {
                     name: params.name,
                     description: params.description,
@@ -159,7 +168,7 @@ export async function creem(): Promise<ExtendedCreemSDK> {
                     tax_category: params.taxCategory || "saas",
                     image_url: params.imageUrl
                 };
-                return manualRequest("/products", "POST", payload) as any;
+                return manualRequest("/products", "POST", payload) as unknown as CreemProduct;
             },
             // Monkey-patch missing update method
             update: async (params: {

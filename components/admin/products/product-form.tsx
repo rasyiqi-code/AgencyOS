@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus } from "lucide-react";
+import { ProductImageUpload } from "./product-image-upload";
 
 const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -80,15 +81,19 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
                 body: JSON.stringify(data),
             });
 
-            if (!res.ok) throw new Error("Failed to save product");
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || "Failed to save product");
+            }
 
             toast.success(product ? "Product updated" : "Product created");
             setOpen(false);
             router.refresh();
             onSuccess?.();
             if (!product) form.reset();
-        } catch {
-            toast.error("Something went wrong");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -104,106 +109,125 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
                     </Button>
                 )}
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>{product ? "Edit Product" : "Create Product"}</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label>Name</Label>
-                        <Input {...form.register("name")} placeholder="My Awesome Plugin" />
-                        {form.formState.errors.name && (
-                            <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
-                        )}
-                    </div>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        {/* Kolom Kiri: Informasi Inti */}
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Product Name</Label>
+                                <Input {...form.register("name")} placeholder="e.g. Crediblog Theme" />
+                                {form.formState.errors.name && (
+                                    <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+                                )}
+                            </div>
 
-                    <div className="space-y-2">
-                        <Label>Slug</Label>
-                        <Input {...form.register("slug")} placeholder="my-awesome-plugin" />
-                        {form.formState.errors.slug && (
-                            <p className="text-sm text-red-500">{form.formState.errors.slug.message}</p>
-                        )}
-                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>Slug</Label>
+                                    <Input {...form.register("slug")} placeholder="credibleblog" />
+                                    {form.formState.errors.slug && (
+                                        <p className="text-sm text-red-500">{form.formState.errors.slug.message}</p>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Type</Label>
+                                    <select
+                                        {...form.register("type")}
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <option value="plugin">Plugin</option>
+                                        <option value="template">Template</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div className="space-y-2">
-                        <Label>Type</Label>
-                        <select
-                            {...form.register("type")}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <option value="plugin">Plugin</option>
-                            <option value="template">Template</option>
-                        </select>
-                    </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>Price ($)</Label>
+                                    <Input
+                                        type="number"
+                                        step="0.01"
+                                        {...form.register("price", { valueAsNumber: true })}
+                                    />
+                                    {form.formState.errors.price && (
+                                        <p className="text-sm text-red-500">{form.formState.errors.price.message}</p>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Purchase Type</Label>
+                                    <select
+                                        {...form.register("purchaseType")}
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <option value="one_time">One Time</option>
+                                        <option value="subscription">Subscription</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div className="space-y-2">
-                        <Label>Price ($)</Label>
-                        <Input
-                            type="number"
-                            step="0.01"
-                            {...form.register("price", { valueAsNumber: true })}
-                        />
-                        {form.formState.errors.price && (
-                            <p className="text-sm text-red-500">{form.formState.errors.price.message}</p>
-                        )}
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>Description</Label>
-                        <Textarea {...form.register("description")} />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label>Purchase Type</Label>
-                        <select
-                            {...form.register("purchaseType")}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <option value="one_time">One Time</option>
-                            <option value="subscription">Subscription</option>
-                        </select>
-                    </div>
-
-                    {form.watch("purchaseType") === "subscription" && (
-                        <div className="space-y-2">
-                            <Label>Interval</Label>
-                            <select
-                                {...form.register("interval")}
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                                <option value="">Select Interval</option>
-                                <option value="month">Monthly</option>
-                                <option value="year">Yearly</option>
-                            </select>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className={`space-y-2 ${form.watch("purchaseType") !== "subscription" ? "col-span-2" : ""}`}>
+                                    <Label>Download URL</Label>
+                                    <Input {...form.register("fileUrl")} placeholder="https://..." />
+                                </div>
+                                {form.watch("purchaseType") === "subscription" && (
+                                    <div className="space-y-2">
+                                        <Label>Interval</Label>
+                                        <select
+                                            {...form.register("interval")}
+                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            <option value="">Select Interval</option>
+                                            <option value="month">Monthly</option>
+                                            <option value="year">Yearly</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
 
-                    <div className="space-y-2">
-                        <Label>Download URL</Label>
-                        <Input {...form.register("fileUrl")} placeholder="https://..." />
+                        {/* Kolom Kanan: Media & Deskripsi */}
+                        <div className="space-y-4">
+                            <ProductImageUpload
+                                value={form.watch("image")}
+                                onChange={(url) => form.setValue("image", url)}
+                                onRemove={() => form.setValue("image", "")}
+                            />
+
+                            <div className="space-y-2">
+                                <Label>Description</Label>
+                                <Textarea
+                                    {...form.register("description")}
+                                    className="min-h-[145px] resize-none"
+                                    placeholder="Tell us about this product..."
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label>Image URL</Label>
-                        <Input {...form.register("image")} placeholder="https://..." />
-                    </div>
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                id="product-active"
+                                checked={form.watch("isActive")}
+                                onCheckedChange={(checked) => form.setValue("isActive", checked)}
+                            />
+                            <Label htmlFor="product-active" className="cursor-pointer">Active Status</Label>
+                        </div>
 
-                    <div className="flex items-center space-x-2">
-                        <Switch
-                            checked={form.watch("isActive")}
-                            onCheckedChange={(checked) => form.setValue("isActive", checked)}
-                        />
-                        <Label>Active</Label>
-                    </div>
-
-                    <div className="flex justify-end gap-2">
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button type="submit" disabled={loading}>
-                            {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                            Save
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                                Cancel
+                            </Button>
+                            <Button type="submit" disabled={loading} className="min-w-[120px]">
+                                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                                {product ? "Update Product" : "Create Product"}
+                            </Button>
+                        </div>
                     </div>
                 </form>
             </DialogContent>

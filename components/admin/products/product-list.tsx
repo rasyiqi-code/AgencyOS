@@ -40,12 +40,16 @@ export function ProductList({ products }: ProductListProps) {
                 method: "DELETE",
             });
 
-            if (!res.ok) throw new Error("Failed");
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || "Failed to delete product");
+            }
 
             toast.success("Produk berhasil dihapus");
             router.refresh();
-        } catch {
-            toast.error("Gagal menghapus produk");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Gagal menghapus produk");
         }
     };
 

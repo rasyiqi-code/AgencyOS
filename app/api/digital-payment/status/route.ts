@@ -51,7 +51,7 @@ export async function GET(request: Request) {
                     const creemStatus = await creem.checkouts.get({ checkoutId: order.paymentId });
 
                     if (creemStatus.status === 'completed' || creemStatus.status === 'paid') {
-                        const result = await completeDigitalOrder(orderId, order.paymentId);
+                        const result = await completeDigitalOrder(orderId, order.paymentId, "creem");
                         if (result.success) {
                             currentStatus = 'PAID';
                         }
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
                     if (transactionStatus === "capture" || transactionStatus === "settlement") {
                         // Update database and complete order
                         const transId = (midtransStatus as MidtransPaymentMetadata).transaction_id || order.paymentId;
-                        const result = await completeDigitalOrder(orderId, transId);
+                        const result = await completeDigitalOrder(orderId, transId, midtransStatus.payment_type);
                         if (result.success) {
                             currentStatus = 'PAID';
                         }

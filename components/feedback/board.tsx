@@ -108,7 +108,7 @@ export function FeedbackBoard({ projectId, feedbacks }: FeedbackBoardProps) {
                             <div className="relative inline-flex items-center gap-3 p-2 pr-8 rounded-lg border border-white/10 bg-zinc-800 group/preview">
                                 {file && isImage(file) ? (
                                     <div className="relative w-10 h-10 rounded overflow-hidden border border-white/10 shrink-0">
-                                        <Image src={preview} alt="Preview" fill className="object-cover" />
+                                        <Image src={preview} alt="Preview" fill className="object-cover" sizes="40px" />
                                     </div>
                                 ) : (
                                     <div className="w-10 h-10 rounded border border-white/10 bg-zinc-900 flex items-center justify-center shrink-0">
@@ -254,6 +254,7 @@ export function FeedbackBoard({ projectId, feedbacks }: FeedbackBoardProps) {
                                                         alt="Feedback attachment"
                                                         fill
                                                         className="object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                                        sizes="(max-width: 768px) 100vw, 200px"
                                                     />
                                                     <a href={f.imageUrl} target="_blank" rel="noopener noreferrer" className="absolute inset-0" />
                                                 </div>

@@ -395,6 +395,12 @@
                 "paymentVerified": "Payment Verified",
                 "dpSettled": "DP Settled",
                 "cancelled": "CANCELLED"
+            },
+            "DigitalOrders": {
+                "title": "Digital Product Transactions",
+                "description": "Monitor all transactions for digital products like plugins, templates, and other assets.",
+                "noOrders": "No digital product transactions found.",
+                "searchPlaceholder": "Search buyers, email, or products..."
             }
         }
     },

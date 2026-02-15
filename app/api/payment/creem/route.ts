@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { creem as getCreem } from "@/lib/integrations/creem";
 import { stackServerApp } from "@/lib/config/stack";
-import type { CreemPaymentMetadata } from "@/types/payment";
+
 
 export async function POST(req: NextRequest) {
     try {
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         let amount = 0;
         let title = "";
         let creemProductIdFromService = null;
-        let paymentMetadata: any = {};
+        let paymentMetadata: Record<string, unknown> = {};
         let orderUserId = "";
 
         if (isDigital) {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
             amount = digitalOrder.amount;
             title = digitalOrder.product.name;
-            paymentMetadata = digitalOrder.paymentMetadata || {};
+            paymentMetadata = (digitalOrder.paymentMetadata as unknown as Record<string, unknown>) || {};
             orderUserId = digitalOrder.userId || "";
         } else {
             const order = await prisma.order.findUnique({
@@ -55,8 +55,8 @@ export async function POST(req: NextRequest) {
 
             amount = order.amount;
             title = order.project?.service?.title || order.project?.title || "Project Payment";
-            creemProductIdFromService = (order.project?.service as any)?.creemProductId;
-            paymentMetadata = order.paymentMetadata || {};
+            creemProductIdFromService = (order.project?.service as { creemProductId?: string | null })?.creemProductId;
+            paymentMetadata = (order.paymentMetadata as unknown as Record<string, unknown>) || {};
             orderUserId = order.userId;
         }
 
@@ -68,8 +68,8 @@ export async function POST(req: NextRequest) {
         let productId = "";
 
         // 1. CHECK: Has a dynamic product already been created for this Order? (Use Metadata)
-        if (paymentMetadata.creemProductId) {
-            productId = paymentMetadata.creemProductId;
+        if ((paymentMetadata as Record<string, string>).creemProductId) {
+            productId = (paymentMetadata as Record<string, string>).creemProductId as string;
             console.log("Reusing existing Dynamic Creem Product ID:", productId);
         }
         // 2. CHECK: Use synced Creem Product ID if available (Official Services)
@@ -131,14 +131,10 @@ export async function POST(req: NextRequest) {
         });
 
         // 3. Update Order with Payment Type
-        const updateData = {
-            paymentType: "creem",
-            paymentId: isDigital ? checkout.id : undefined, // Digital order uses paymentId for SDK transaction_id
-            transactionId: !isDigital ? checkout.id : undefined, // Standard order uses transactionId
-        };
+
 
         // Ensure we don't pass undefined to Prisma (even though it's usually fine, let's be explicit)
-        const finalUpdate: any = { paymentType: "creem" };
+        const finalUpdate: { paymentType: string; paymentId?: string; transactionId?: string } = { paymentType: "creem" };
         if (isDigital) finalUpdate.paymentId = checkout.id;
         else finalUpdate.transactionId = checkout.id;
 

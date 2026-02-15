@@ -30,6 +30,7 @@ import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
 import { CancelOrderButton } from "@/components/admin/orders/cancel-button";
 import { useTranslations } from "next-intl";
+import { formatPaymentMethod } from "@/lib/shared/utils";
 
 interface FinanceListProps {
     data: FinanceData[];
@@ -336,6 +337,13 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                                     </span>
                                 )}
                             </div>
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs p-2 rounded bg-zinc-950/50 border border-white/5">
+                            <span className="text-zinc-500">Payment Method</span>
+                            <span className="text-zinc-300 font-medium uppercase text-[10px] tracking-wider">
+                                {formatPaymentMethod(data.paymentMethod, data.paymentMetadata)}
+                            </span>
                         </div>
 
                         {(data.proofUrl || data.project?.order?.proofUrl) && (

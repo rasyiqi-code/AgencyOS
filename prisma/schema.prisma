@@ -461,6 +461,7 @@ model DigitalOrder {
   licenseId     String?  @unique
   license       License? @relation(fields: [licenseId], references: [id]) 
   
+  proofUrl      String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

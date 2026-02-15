@@ -80,6 +80,7 @@ export function SidebarSuperAdmin() {
             <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
             <SidebarLink href="/admin/products" icon={Package} label="DigiProducts" />
             <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
+            <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
 
             <SidebarSectionHeader>System</SidebarSectionHeader>
             <SidebarLink href="/admin/media" icon={Images} label="Media" />
@@ -95,6 +96,7 @@ export function SidebarFinance() {
             <SidebarSectionHeader>{t("financeConsole")}</SidebarSectionHeader>
             <SidebarLink href="/admin/finance" icon={LayoutDashboard} label={t("dashboard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("invoices")} />
+            <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
         </>
     );
 }

@@ -52,24 +52,50 @@ export async function POST(req: NextRequest) {
 
         // Handle Order Proof
         if (orderId) {
-            // Ownership check: verifikasi order milik user
+            // First try updating standard Order
             const order = await prisma.order.findUnique({ where: { id: orderId } });
-            if (!order || order.userId !== user.id) {
-                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+            if (order) {
+                if (order.userId !== user.id) {
+                    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+                }
+
+                const path = `proofs/orders/${orderId}-${Date.now()}-${file.name}`;
+                const url = await uploadFile(file, path);
+
+                await prisma.order.update({
+                    where: { id: orderId },
+                    data: {
+                        proofUrl: url,
+                        status: 'waiting_verification'
+                    }
+                });
+
+                return NextResponse.json({ success: true, url });
             }
 
-            const path = `proofs/orders/${orderId}-${Date.now()}-${file.name}`;
-            const url = await uploadFile(file, path);
-
-            await prisma.order.update({
-                where: { id: orderId },
-                data: {
-                    proofUrl: url,
-                    status: 'waiting_verification'
+            // If not found in Order, try DigitalOrder
+            const digitalOrder = await prisma.digitalOrder.findUnique({ where: { id: orderId } });
+            if (digitalOrder) {
+                if (digitalOrder.userId !== user.id) {
+                    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
                 }
-            });
 
-            return NextResponse.json({ success: true, url });
+                const path = `proofs/digital-orders/${orderId}-${Date.now()}-${file.name}`;
+                const url = await uploadFile(file, path);
+
+                await prisma.digitalOrder.update({
+                    where: { id: orderId },
+                    data: {
+                        proofUrl: url,
+                        status: 'WAITING_VERIFICATION'
+                    } as unknown as Record<string, unknown>
+                });
+
+                return NextResponse.json({ success: true, url });
+            }
+
+            return NextResponse.json({ error: "Not Found" }, { status: 404 });
         }
 
         return NextResponse.json({ error: "Invalid request" }, { status: 400 });

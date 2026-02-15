@@ -36,7 +36,9 @@ export default async function AdminOrdersPage() {
             currency: string;
             exchangeRate: number;
             amount: number;
-            proofUrl: string | null
+            proofUrl: string | null;
+            paymentType: string | null;
+            paymentMetadata: Record<string, unknown> | null;
         } | undefined;
         return {
             ...e,
@@ -50,10 +52,14 @@ export default async function AdminOrdersPage() {
                 // Access array of orders, taking the first one (most recent?) or relevant one
                 order: latestOrder ? {
                     proofUrl: latestOrder.proofUrl,
-                    paymentType: latestOrder.type
+                    paymentType: latestOrder.type,
+                    paymentMethod: latestOrder.paymentType,
+                    paymentMetadata: latestOrder.paymentMetadata
                 } : null
             } : null,
             paymentType: latestOrder?.type || null,
+            paymentMethod: latestOrder?.paymentType || null,
+            paymentMetadata: latestOrder?.paymentMetadata || null,
             currency: latestOrder?.currency || 'USD',
             // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
             // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR

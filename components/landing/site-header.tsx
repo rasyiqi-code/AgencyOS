@@ -54,6 +54,8 @@ export async function SiteHeader() {
                                     height={32}
                                     className="h-8 w-auto object-contain hover:scale-105 transition-transform"
                                     priority
+                                    unoptimized
+                                    style={{ width: 'auto' }}
                                 />
                             ) : (
                                 <div className="w-8 h-8 rounded-full bg-brand-grey flex items-center justify-center shadow-lg shadow-zinc-500/20 group-hover:shadow-zinc-500/30 transition-all duration-300 hover:scale-105">

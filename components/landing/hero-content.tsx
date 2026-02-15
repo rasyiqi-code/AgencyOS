@@ -154,6 +154,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 unoptimized
                                 className="object-contain object-bottom drop-shadow-[0_-20px_50px_rgba(254,215,0,0.1)] relative z-10"
                                 priority
+                                sizes="(max-width: 1024px) 100vw, 800px"
                             />
 
                             {/* Floating AI Model Badges with Authentic Icons - Central Ring */}
@@ -267,7 +268,7 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
                 {isSvg ? (
                     <Image src={icon} alt={name} width={18} height={18} className="object-contain" />
                 ) : (
-                    <Image src={icon} alt={name} fill unoptimized className="object-cover" />
+                    <Image src={icon} alt={name} fill unoptimized className="object-cover" sizes="28px" />
                 )}
             </div>
             <div>

@@ -73,7 +73,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
 
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`/api/digital-payment/status?orderId=${order.id}`);
+                const res = await fetch(`/api/digital-payment/status?orderId=${order.id}&mode=json`);
                 const data = await res.json();
 
                 if (data.status === 'PAID') {
@@ -141,7 +141,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                                         width={64}
                                         height={64}
                                         className="object-contain"
-                                        style={{ height: 'auto' }}
+                                        style={{ height: 'auto', width: 'auto' }}
                                         sizes="64px"
                                     />
                                 </div>
@@ -213,7 +213,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                                             width={120}
                                             height={120}
                                             className="object-contain grayscale-[0.2]"
-                                            style={{ height: 'auto' }}
+                                            style={{ height: 'auto', width: 'auto' }}
                                             sizes="120px"
                                         />
                                     </div>

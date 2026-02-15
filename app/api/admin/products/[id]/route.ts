@@ -90,16 +90,39 @@ export async function DELETE(
     try {
         const { id } = await params;
         if (!id) {
-            return new NextResponse("Product ID required", { status: 400 });
+            return NextResponse.json({ error: "Product ID required" }, { status: 400 });
         }
 
-        const product = await prisma.product.delete({
+        // Check for dependencies (licenses or orders)
+        const product = await prisma.product.findUnique({
+            where: { id },
+            include: {
+                _count: {
+                    select: {
+                        licenses: true,
+                        digitalOrders: true,
+                    }
+                }
+            }
+        });
+
+        if (!product) {
+            return NextResponse.json({ error: "Product not found" }, { status: 404 });
+        }
+
+        if (product._count.licenses > 0 || product._count.digitalOrders > 0) {
+            return NextResponse.json({
+                error: `Cannot delete product. It has ${product._count.licenses} licenses and ${product._count.digitalOrders} orders associated with it.`
+            }, { status: 400 });
+        }
+
+        await prisma.product.delete({
             where: { id },
         });
 
-        return NextResponse.json(product);
+        return NextResponse.json({ success: true });
     } catch (error) {
         console.error("[PRODUCT_DELETE]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json({ error: "Internal Error" }, { status: 500 });
     }
 }

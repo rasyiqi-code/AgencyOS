@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         // DIGITAL ORDER (prefix DIGI-)
         // ============================================
         if (order_id.startsWith("DIGI-")) {
-            return await handleDigitalOrderWebhook(order_id, transaction_status, transaction_id);
+            return await handleDigitalOrderWebhook(order_id, transaction_status, transaction_id, payment_type);
         }
 
         // ============================================
@@ -73,7 +73,8 @@ export async function POST(req: Request) {
 async function handleDigitalOrderWebhook(
     orderId: string,
     transactionStatus: string,
-    transactionId: string
+    transactionId: string,
+    paymentType?: string
 ) {
     // Cari order berdasarkan paymentId, karena order_id dari Midtrans
     // mengandung suffix timestamp (contoh: DIGI-xxx-1739443234567)
@@ -101,7 +102,7 @@ async function handleDigitalOrderWebhook(
 
     if (transactionStatus === "capture" || transactionStatus === "settlement") {
         // Pembayaran berhasil → selesaikan order + generate license
-        const result = await completeDigitalOrder(actualOrderId, transactionId);
+        const result = await completeDigitalOrder(actualOrderId, transactionId, paymentType);
 
         if (!result.success) {
             console.error(`[MIDTRANS_WEBHOOK] Failed to complete digital order ${actualOrderId}:`, result.error);

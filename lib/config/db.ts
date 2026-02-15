@@ -1,7 +1,7 @@
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
-// Force type refresh - Model PayoutRequest added
+// Force type refresh - Model DigitalOrder updated with proofUrl
 
 const connectionString = process.env.DATABASE_URL
 
@@ -15,10 +15,10 @@ const prismaClientSingleton = () => {
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
 
 const globalForPrisma = globalThis as unknown as {
-    prisma_v5: PrismaClientSingleton | undefined
+    prisma_v6: PrismaClientSingleton | undefined
 }
 
-export const prisma = globalForPrisma.prisma_v5 ?? prismaClientSingleton()
+export const prisma = globalForPrisma.prisma_v6 ?? prismaClientSingleton()
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma_v5 = prisma
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma_v6 = prisma
 

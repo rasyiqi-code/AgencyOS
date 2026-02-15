@@ -181,7 +181,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
                             <div className="flex flex-wrap gap-2">
                                 {previews.map((preview, index) => (
                                     <div key={index} className="relative w-16 h-16 rounded-md overflow-hidden border border-white/10 group">
-                                        <Image src={preview} alt="preview" fill className="object-cover" />
+                                        <Image src={preview} alt="preview" fill className="object-cover" sizes="64px" />
                                         <button
                                             type="button"
                                             onClick={() => removeFile(index)}

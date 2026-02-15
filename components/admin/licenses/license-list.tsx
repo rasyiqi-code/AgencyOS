@@ -9,9 +9,11 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Key } from "lucide-react";
+import { Copy, Key, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 /**
  * Tipe License dengan relasi Product dan DigitalOrder.
@@ -39,10 +41,34 @@ interface LicenseListProps {
 }
 
 export function LicenseList({ licenses }: LicenseListProps) {
+    const router = useRouter();
+
     /** Copy license key ke clipboard */
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         toast.success("Disalin ke clipboard");
+    };
+
+    /** Hapus license via API */
+    const handleDelete = async (id: string) => {
+        if (!confirm("Yakin ingin menghapus lisensi ini?")) return;
+
+        try {
+            const res = await fetch(`/api/admin/licenses/${id}`, {
+                method: "DELETE",
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Gagal menghapus lisensi");
+            }
+
+            toast.success("Lisensi berhasil dihapus");
+            router.refresh();
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Gagal menghapus lisensi");
+        }
     };
 
     return (
@@ -57,12 +83,13 @@ export function LicenseList({ licenses }: LicenseListProps) {
                         <TableHead>Status</TableHead>
                         <TableHead>Kadaluarsa</TableHead>
                         <TableHead>Dibuat</TableHead>
+                        <TableHead className="text-right">Aksi</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {licenses.length === 0 ? (
                         <TableRow>
-                            <TableCell colSpan={7} className="h-64 text-center">
+                            <TableCell colSpan={8} className="h-64 text-center">
                                 <div className="flex flex-col items-center justify-center text-muted-foreground space-y-3">
                                     <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
                                         <Key className="w-6 h-6 text-zinc-500" />
@@ -141,6 +168,19 @@ export function LicenseList({ licenses }: LicenseListProps) {
                                 {/* Tanggal Dibuat */}
                                 <TableCell className="text-xs text-muted-foreground">
                                     {format(new Date(license.createdAt), 'PP')}
+                                </TableCell>
+
+                                {/* Aksi */}
+                                <TableCell className="text-right">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-red-500 hover:text-red-400 hover:bg-red-950/20"
+                                        onClick={() => handleDelete(license.id)}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        <span className="sr-only">Delete</span>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))
