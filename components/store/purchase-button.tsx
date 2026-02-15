@@ -13,7 +13,10 @@ interface PurchaseButtonProps {
     customLabel?: string;
 }
 
+import { useTranslations } from "next-intl";
+
 export function PurchaseButton({ serviceId, interval, className, customLabel }: PurchaseButtonProps) {
+    const t = useTranslations("Cards");
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
@@ -31,7 +34,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
             if (res.status === 401) {
                 // Store serviceId in sessionStorage for post-login checkout
                 sessionStorage.setItem('pendingServiceCheckout', serviceId);
-                toast.error("Please sign in to purchase");
+                toast.error(t("signIn"));
                 router.push(`/handler/sign-in?callbackUrl=${encodeURIComponent('/services?action=checkout')}`);
                 return;
             }
@@ -43,7 +46,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
             }
         } catch (error) {
             console.error(error);
-            toast.error("Failed to process purchase. Please try again.");
+            toast.error(t("error"));
             setLoading(false);
         }
     };
@@ -58,7 +61,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
             className={`w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-11 text-sm rounded-xl transition-transform active:scale-[0.98] ${className}`}
         >
             {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-            {customLabel ? customLabel : (interval === 'one_time' ? 'Purchase Package' : 'Purchase Plan')}
+            {customLabel ? customLabel : (interval === 'one_time' ? t("purchasePackage") : t("purchasePlan"))}
         </Button>
     );
 }

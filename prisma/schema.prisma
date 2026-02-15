@@ -221,6 +221,7 @@ model Coupon {
   usedCount     Int       @default(0)
   expiresAt     DateTime?
   isActive      Boolean   @default(true)
+  appliesTo     String[]  @default(["DIGITAL", "SERVICE", "CALCULATOR"])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -232,6 +233,7 @@ model MarketingBonus {
   value       String?
   icon        String?
   isActive    Boolean  @default(true)
+  appliesTo   String[] @default(["DIGITAL", "SERVICE", "CALCULATOR"])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

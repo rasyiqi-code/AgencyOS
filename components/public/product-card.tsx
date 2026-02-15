@@ -28,7 +28,14 @@ interface ProductCardProps {
  * ProductCard — Komponen card produk digital dengan desain premium
  * mengikuti style ServiceCard (glassmorphism, spotlight effect, dll).
  */
+import { useTranslations } from "next-intl";
+
+/**
+ * ProductCard — Komponen card produk digital dengan desain premium
+ * mengikuti style ServiceCard (glassmorphism, spotlight effect, dll).
+ */
 export function ProductCard({ product }: ProductCardProps) {
+    const t = useTranslations("Cards");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
@@ -43,8 +50,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
     /** Label badge berdasarkan tipe pembelian */
     const purchaseLabel = product.purchaseType === "subscription"
-        ? (product.interval || "Monthly")
-        : "One Time";
+        ? (product.interval || t("monthly"))
+        : t("oneTime");
 
     return (
         <Link href={`/products/${product.slug}`}>
@@ -111,7 +118,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     <div className="mt-auto">
                         <div className="p-3 rounded-xl bg-brand-yellow/5 border border-brand-yellow/10 flex items-center justify-between">
                             <div>
-                                <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">Price</div>
+                                <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</div>
                                 <div className="text-lg font-black text-white tracking-tighter">
                                     <PriceDisplay amount={product.price} baseCurrency="USD" compact />
                                     {product.purchaseType === "subscription" && (
@@ -121,7 +128,7 @@ export function ProductCard({ product }: ProductCardProps) {
                             </div>
                             <div className="flex items-center gap-2 text-brand-yellow text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Package className="w-4 h-4" />
-                                Details
+                                {t("details")}
                             </div>
                         </div>
                     </div>

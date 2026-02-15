@@ -53,7 +53,11 @@ const thankYouQuotes = [
     "“Technology is best when it brings people together.” — Matt Mullenweg"
 ];
 
+import { useTranslations } from "next-intl";
+
 export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true }: InvoiceClientWrapperProps) {
+    const t = useTranslations("Invoice");
+    const tc = useTranslations("Checkout");
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency: contextCurrency, rate: contextRate } = useCurrency();
@@ -112,8 +116,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
             <div className="flex-1 w-full order-2 xl:order-1">
                 {/* Header Info Mobile */}
                 <div className="mb-6 flex justify-between items-center xl:hidden">
-                    <h1 className="text-xl font-bold text-white">Invoice #{order.id}</h1>
-                    {isPaid && <span className="text-emerald-400 font-bold border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10">PAID</span>}
+                    <h1 className="text-xl font-bold text-white">{t('invoiceNumber')}{order.id}</h1>
+                    {isPaid && <span className="text-emerald-400 font-bold border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10">{t('paid')}</span>}
                 </div>
 
                 <div className="bg-white text-black rounded-lg shadow-2xl overflow-hidden min-h-[800px]">
@@ -136,16 +140,16 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                 <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <h2 className="text-lg font-bold text-white">Invoice Status</h2>
+                            <h2 className="text-lg font-bold text-white">{t('status')}</h2>
                             <p className="text-zinc-400 text-xs">#{order.id}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
-                                {isPaid ? "PAID" : "UNPAID"}
+                                {isPaid ? t('paid') : t('unpaid')}
                             </div>
                             {(order.type === 'DP' || order.type === 'REPAYMENT') && (
                                 <div className="px-2 py-1 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
-                                    {order.type}
+                                    {order.type === 'DP' ? tc('dp') : tc('repayment')}
                                 </div>
                             )}
                         </div>
@@ -154,7 +158,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                     {!isPaid && (
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm p-3 bg-white/5 rounded-lg border border-white/5">
-                                <span className="text-zinc-300">Total Due</span>
+                                <span className="text-zinc-300">{tc('totalToPay')}</span>
                                 <span className="text-xl font-bold text-white">
                                     {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
                                 </span>
@@ -164,16 +168,16 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
                                     <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
                                         <AlertTriangle className="w-4 h-4" />
-                                        Metode Otomatis Belum Aktif
+                                        {tc('manualPayment')}
                                     </p>
                                     <p className="text-[10px] text-amber-200/70 leading-relaxed">
-                                        Gateway pembayaran belum dikonfigurasi. Mohon gunakan transfer bank manual ke rekening yang tertera di invoice.
+                                        {tc('manualDesc')}
                                     </p>
                                 </div>
                             )}
 
                             <p className="text-xs text-zinc-500">
-                                Please complete payment below to activate project.
+                                {t('completePaymentProject')}
                             </p>
                         </div>
                     )}
@@ -181,15 +185,15 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                     {isPaid && (
                         <div className="text-center py-4 space-y-4">
                             <div>
-                                <div className="text-emerald-400 font-medium mb-2">Payment Received</div>
-                                <p className="text-xs text-zinc-500">Thank you for your business. We are excited to build with you.</p>
+                                <div className="text-emerald-400 font-medium mb-2">{t('paymentReceived')}</div>
+                                <p className="text-xs text-zinc-500">{t('thankYouPaid')}</p>
                             </div>
                         </div>
                     )}
 
                     <div className="mt-4 pt-4 border-t border-white/5 text-center">
                         <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex items-center justify-center gap-1">
-                            Need Help? Contact Support
+                            {t('needHelp')}
                         </a>
                     </div>
                 </div>
@@ -202,7 +206,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold h-12 flex items-center gap-2"
                         >
                             <Download className="w-4 h-4" />
-                            Download / Print Invoice
+                            {t('downloadPrint')}
                         </Button>
 
                         <div className="relative group">
@@ -236,7 +240,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
 
                 {!isPaid && (
                     <p className="text-center text-xs text-zinc-500">
-                        Protected by 256-bit SSL encryption.
+                        {tc('secure')}
                     </p>
                 )}
             </div>

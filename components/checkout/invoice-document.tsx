@@ -1,9 +1,10 @@
 "use client";
 
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
-import { ExtendedEstimate } from "@/lib/shared/types";
+import { ExtendedEstimate, InvoiceItem } from "@/lib/shared/types";
 
 export interface AgencyInvoiceSettings {
     agencyName: string;
@@ -13,13 +14,13 @@ export interface AgencyInvoiceSettings {
 }
 
 export function InvoiceDocument({
-    estimate,
+    estimate: extendedEstimate,
     refAction,
     user,
     isPaid = false,
     agencySettings,
     paymentType,
-    currency,
+    currency: propsCurrency,
     exchangeRate
 }: {
     estimate: ExtendedEstimate,
@@ -31,12 +32,25 @@ export function InvoiceDocument({
     currency?: string,
     exchangeRate?: number
 }) {
-    const today = new Date(); // Hydration safe as long as date doesn't change during render
+    const t = useTranslations("Invoice");
+    const tc = useTranslations("Checkout");
+    const today = new Date();
 
     // Fallback values
     const companyName = agencySettings?.companyName || "Agency OS";
     const address = agencySettings?.address || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000";
     const billingEmail = agencySettings?.email || "billing@crediblemark.com";
+
+    const currency = propsCurrency || 'USD';
+    const formattedDate = format(today, "MMM dd, yyyy");
+
+    const formatCurrency = (val: number) => {
+        return new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', {
+            style: 'currency',
+            currency: currency,
+            maximumFractionDigits: currency === 'IDR' ? 0 : 2
+        }).format(val * (currency === 'IDR' && exchangeRate ? exchangeRate : 1));
+    };
 
     return (
         <div ref={refAction} className="p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
@@ -73,7 +87,7 @@ export function InvoiceDocument({
             {(isPaid || paymentType === 'DP') && (
                 <div className="absolute top-12 right-12 z-0 pointer-events-none opacity-20 transform -rotate-12 watermark-container">
                     <div className="border-[8px] border-[#FED700] text-[#FED700] font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double">
-                        {paymentType === 'DP' ? 'DP' : 'PAID'}
+                        {paymentType === 'DP' ? 'DP' : t('paid')}
                     </div>
                 </div>
             )}
@@ -83,9 +97,9 @@ export function InvoiceDocument({
             <div className="flex justify-between items-start mb-12 relative z-10">
                 <div>
                     <h1 className="text-4xl font-bold text-zinc-900 tracking-tight mb-2 flex items-center gap-3">
-                        INVOICE
+                        {t('title')}
                     </h1>
-                    <p className="text-zinc-500 text-sm">#{estimate.id.slice(-8).toUpperCase()}</p>
+                    <p className="text-zinc-500 text-sm">#{extendedEstimate.id.slice(-8).toUpperCase()}</p>
                 </div>
                 <div className="text-right flex flex-col items-end">
                     <div className="mb-2">
@@ -110,19 +124,19 @@ export function InvoiceDocument({
             {/* Client Info */}
             <div className="mb-12 flex justify-between">
                 <div>
-                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Bill To</h3>
-                    <p className="text-lg font-bold">{user?.displayName || user?.email || "Valued Client"}</p>
+                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">{t('billTo')}</h3>
+                    <p className="text-lg font-bold">{user?.displayName || user?.email || t('valuedClient', { fallback: "Valued Client" })}</p>
                     <p className="text-zinc-500 text-sm">{user?.email}</p>
                 </div>
                 <div className="text-right">
                     <div className="mb-4">
-                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Date</h3>
-                        <p className="font-medium">{format(today, "MMM dd, yyyy")}</p>
+                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('date')}</h3>
+                        <p className="font-medium">{formattedDate}</p>
                     </div>
                     <div>
-                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Total Amount</h3>
+                        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('totalAmount')}</h3>
                         <p className="text-2xl font-bold text-zinc-900">
-                            {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
+                            {formatCurrency(extendedEstimate.totalCost)}
                         </p>
                     </div>
                 </div>
@@ -132,22 +146,22 @@ export function InvoiceDocument({
             <table className="w-full mb-12">
                 <thead>
                     <tr className="border-b-2 border-black">
-                        <th className="text-left py-3 font-bold uppercase text-xs tracking-wider">Description</th>
-                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-24">Hours</th>
-                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-32">Amount</th>
+                        <th className="text-left py-3 font-bold uppercase text-xs tracking-wider">{t('description')}</th>
+                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-24">{t('hours')}</th>
+                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-32">{t('amount')}</th>
                     </tr>
                 </thead>
                 <tbody className="text-sm">
                     {/* Service Specific Details */}
-                    {estimate.service && (
+                    {extendedEstimate.service && (
                         <tr className="border-b border-zinc-100">
                             <td className="py-6 pr-4" colSpan={3}>
                                 <div className="flex gap-6">
-                                    {estimate.service.image && (
+                                    {extendedEstimate.service.image && (
                                         <div className="relative w-32 h-32 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
                                             <Image
-                                                src={estimate.service.image}
-                                                alt={estimate.service.title}
+                                                src={extendedEstimate.service.image}
+                                                alt={extendedEstimate.service.title}
                                                 fill
                                                 className="object-cover"
                                                 sizes="128px"
@@ -155,19 +169,19 @@ export function InvoiceDocument({
                                         </div>
                                     )}
                                     <div className="flex-1">
-                                        <div className="font-bold text-lg mb-1">{estimate.service.title}</div>
-                                        <div className="text-zinc-600 text-sm mb-4 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: estimate.service.description }} />
+                                        <div className="font-bold text-lg mb-1">{extendedEstimate.service.title}</div>
+                                        <div className="text-zinc-600 text-sm mb-4 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: extendedEstimate.service.description }} />
 
-                                        {Array.isArray(estimate.service.features) && estimate.service.features.length > 0 && (
+                                        {Array.isArray(extendedEstimate.service.features) && extendedEstimate.service.features.length > 0 && (
                                             <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                                {(estimate.service.features as unknown[]).map((feature: unknown, idx: number) => {
+                                                {(extendedEstimate.service.features as unknown[]).map((feature: unknown, idx: number) => {
                                                     const text = typeof feature === 'string'
                                                         ? feature
                                                         : (feature as Record<string, string>).text || (feature as Record<string, string>).title || "";
                                                     return (
                                                         <div key={idx} className="flex items-center gap-2 text-xs text-zinc-500">
                                                             <div className="w-1 h-1 rounded-full bg-zinc-300" />
-                                                            <span>{text.replace(/<[^>]*>?/gm, '')}</span>
+                                                            <span>{typeof text === 'string' ? text.replace(/<[^>]*>?/gm, '') : ''}</span>
                                                         </div>
                                                     );
                                                 })}
@@ -179,36 +193,36 @@ export function InvoiceDocument({
                         </tr>
                     )}
 
-                    {estimate.screens.length === 0 && estimate.apis.length === 0 && (
+                    {extendedEstimate.screens.length === 0 && extendedEstimate.apis.length === 0 && (
                         <tr className="border-b border-zinc-100">
                             <td className="py-4 pr-4">
-                                <div className="font-bold">{estimate.title.replace('Invoice for ', '')}</div>
-                                <div className="text-zinc-500 text-xs mt-1">{estimate.summary}</div>
+                                <div className="font-bold">{extendedEstimate.title.replace('Invoice for ', '')}</div>
+                                <div className="text-zinc-500 text-xs mt-1">{extendedEstimate.summary}</div>
                             </td>
                             <td className="py-4 text-right">-</td>
                             <td className="py-4 text-right">
-                                {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
+                                {formatCurrency(extendedEstimate.totalCost)}
                             </td>
                         </tr>
                     )}
-                    {estimate.screens.map((item, i) => (
+                    {extendedEstimate.screens.map((item: InvoiceItem, i: number) => (
                         <tr key={`screen-${i}`} className="border-b border-zinc-100">
                             <td className="py-4 pr-4">
                                 <div className="font-bold">{item.title}</div>
                                 <div className="text-zinc-500 text-xs mt-1">{item.description}</div>
                             </td>
                             <td className="py-4 text-right">{item.hours}</td>
-                            <td className="py-4 text-right">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((item.hours * 12) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</td>
+                            <td className="py-4 text-right">{formatCurrency(item.hours * 12)}</td>
                         </tr>
                     ))}
-                    {estimate.apis.map((item, i) => (
+                    {extendedEstimate.apis.map((item: InvoiceItem, i: number) => (
                         <tr key={`api-${i}`} className="border-b border-zinc-100">
                             <td className="py-4 pr-4">
                                 <div className="font-bold">{item.title} (API)</div>
                                 <div className="text-zinc-500 text-xs mt-1">{item.description}</div>
                             </td>
                             <td className="py-4 text-right">{item.hours}</td>
-                            <td className="py-4 text-right">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((item.hours * 12) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</td>
+                            <td className="py-4 text-right">{formatCurrency(item.hours * 12)}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -233,38 +247,36 @@ export function InvoiceDocument({
                 </div>
                 <div className="w-64">
                     <div className="flex justify-between mb-2">
-                        <span className="text-zinc-500">Subtotal</span>
-                        <span className="font-medium">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</span>
+                        <span className="text-zinc-500">{t('subtotal')}</span>
+                        <span className="font-medium">{formatCurrency(extendedEstimate.totalCost)}</span>
                     </div>
                     {(paymentType === 'DP' || paymentType === 'REPAYMENT') && (
                         <div className="flex justify-between mb-2 text-indigo-600 font-medium">
-                            <span>
-                                Down Payment (50%)
+                            <span className="flex items-center gap-1">
+                                {paymentType === 'DP' ? tc('dp') : tc('repayment')}
                                 {(paymentType === 'REPAYMENT' || (paymentType === 'DP' && isPaid)) && (
-                                    <span className="ml-2 text-[10px] font-bold text-emerald-600 border border-emerald-600 px-1 rounded">PAID</span>
+                                    <span className="ml-1 text-[10px] font-bold text-emerald-600 border border-emerald-600 px-1 rounded">{t('paid')}</span>
                                 )}
                             </span>
-                            <span>-{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format((estimate.totalCost * 0.5) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}</span>
+                            <span>-{formatCurrency(extendedEstimate.totalCost * 0.5)}</span>
                         </div>
                     )}
                     <div className="flex justify-between mb-1">
-                        <span className="text-zinc-500">Tax (0%)</span>
-                        <span className="font-medium">{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(0)}</span>
+                        <span className="text-zinc-500">{t('tax')} (0%)</span>
+                        <span className="font-medium">{formatCurrency(0)}</span>
                     </div>
                     <div className="flex justify-between text-xl font-bold border-t border-zinc-200 pt-4">
-                        <span>{(paymentType === 'DP' || paymentType === 'REPAYMENT') ? 'Total to Pay' : 'Total'}</span>
-                        <span>{new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(
-                            ((paymentType === 'DP' || paymentType === 'REPAYMENT') ? estimate.totalCost * 0.5 : estimate.totalCost) * (currency === 'IDR' && exchangeRate ? exchangeRate : 1)
-                        )}</span>
+                        <span>{(paymentType === 'DP' || paymentType === 'REPAYMENT') ? tc('totalToPay') : t('total')}</span>
+                        <span>{formatCurrency((paymentType === 'DP' || paymentType === 'REPAYMENT') ? extendedEstimate.totalCost * 0.5 : extendedEstimate.totalCost)}</span>
                     </div>
                     <div className="text-[10px] text-zinc-400 mt-2 text-right uppercase tracking-widest">
-                        Grand Total: {new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(estimate.totalCost * (currency === 'IDR' && exchangeRate ? exchangeRate : 1))}
+                        {t('grandTotal')}: {formatCurrency(extendedEstimate.totalCost)}
                     </div>
                 </div>
             </div>
 
             <div className="text-center text-xs text-zinc-400 mt-12 pb-8">
-                Thank you for your business. Please process payment within 7 days.
+                {isPaid ? t('thankYouPaid') : t('thankYou')}
             </div>
         </div>
     );

@@ -15,6 +15,7 @@ export async function createCoupon(data: {
     discountValue: number;
     maxUses?: number;
     expiresAt?: Date;
+    appliesTo?: string[];
 }) {
     const coupon = await prisma.coupon.create({
         data: {
@@ -23,6 +24,7 @@ export async function createCoupon(data: {
             discountValue: data.discountValue,
             maxUses: data.maxUses,
             expiresAt: data.expiresAt,
+            appliesTo: data.appliesTo || ["DIGITAL", "SERVICE", "CALCULATOR"],
         },
     });
     revalidatePath("/admin/marketing");
@@ -34,7 +36,7 @@ export async function deleteCoupon(id: string) {
     revalidatePath("/admin/marketing");
 }
 
-export async function validateCoupon(code: string) {
+export async function validateCoupon(code: string, context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
     const coupon = await prisma.coupon.findUnique({
         where: { code: code.toUpperCase() },
     });
@@ -43,6 +45,10 @@ export async function validateCoupon(code: string) {
     if (!coupon.isActive) return { valid: false, message: "Coupon is inactive." };
     if (coupon.expiresAt && new Date() > coupon.expiresAt) return { valid: false, message: "Coupon has expired." };
     if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) return { valid: false, message: "Coupon usage limit reached." };
+
+    if (context && coupon.appliesTo && !coupon.appliesTo.includes(context)) {
+        return { valid: false, message: `Coupon is not valid for ${context.toLowerCase()}.` };
+    }
 
     // Hanya validasi, TIDAK increment usedCount
     // Gunakan applyCoupon() saat coupon benar-benar digunakan (checkout)
@@ -68,8 +74,12 @@ export async function applyCoupon(code: string) {
 
 // --- Bonuses ---
 
-export async function getBonuses() {
+export async function getBonuses(context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
     return await prisma.marketingBonus.findMany({
+        where: {
+            isActive: true,
+            ...(context ? { appliesTo: { has: context } } : {})
+        },
         orderBy: { createdAt: "desc" },
     });
 }
@@ -79,9 +89,13 @@ export async function createBonus(data: {
     description?: string;
     value?: string;
     icon?: string;
+    appliesTo?: string[];
 }) {
     const bonus = await prisma.marketingBonus.create({
-        data,
+        data: {
+            ...data,
+            appliesTo: data.appliesTo || ["DIGITAL", "SERVICE", "CALCULATOR"]
+        },
     });
     revalidatePath("/admin/marketing");
     return bonus;
@@ -133,10 +147,13 @@ export async function deleteSubscriber(id: string) {
     });
 }
 
-export async function getPromotionCoupon() {
+export async function getPromotionCoupon(context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
     // Ambil kupon aktif terbaru (bisa difilter lebih lanjut jika perlu)
     return await prisma.coupon.findFirst({
-        where: { isActive: true },
+        where: {
+            isActive: true,
+            ...(context ? { appliesTo: { has: context } } : {})
+        },
         orderBy: { createdAt: "desc" },
     });
 }

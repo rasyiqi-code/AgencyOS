@@ -1,10 +1,13 @@
-import { CheckoutForm } from "@/components/checkout/digital-checkout-form";
 import { CheckoutContent } from "@/components/checkout/checkout-content";
+import { DigitalCheckoutContent } from "@/components/checkout/digital-checkout-content";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { notFound } from "next/navigation";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { ExtendedEstimate } from "@/lib/shared/types";
+import { getBonuses } from "@/lib/server/marketing";
+import { Bonus } from "@/lib/shared/types";
+import { SystemSetting } from "@prisma/client";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -23,10 +26,18 @@ export default async function CheckoutPage(props: PageProps) {
     const searchParams = await props.searchParams;
     const paymentType = typeof searchParams.paymentType === 'string' ? (searchParams.paymentType as "FULL" | "DP" | "REPAYMENT") : undefined;
 
-    // 1. Coba cari sebagai Digital Product
     const product = await prisma.product.findUnique({
         where: { id }
     });
+
+    const bonuses = await getBonuses("DIGITAL");
+
+    const bonusesData = bonuses.map((b: Bonus) => ({
+        ...b,
+        icon: b.icon || "Check",
+        value: b.value || "",
+        description: b.description || ""
+    }));
 
     // Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
     if (product && product.isActive) {
@@ -52,14 +63,11 @@ export default async function CheckoutPage(props: PageProps) {
         };
 
         return (
-            <div className="min-h-screen w-full bg-black relative flex items-center justify-center py-24 px-4 overflow-hidden">
-                {/* Background Gradients */}
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-yellow/5 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-lime-500/5 rounded-full blur-3xl pointer-events-none" />
-
-                <div className="relative z-10 w-full flex justify-center">
-                    <CheckoutForm
+            <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
+                <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
+                    <DigitalCheckoutContent
                         product={productData}
+                        bonuses={bonusesData}
                         userId={userId}
                         userEmail={userEmail}
                     />
@@ -81,12 +89,11 @@ export default async function CheckoutPage(props: PageProps) {
         const settings = await prisma.systemSetting.findMany({
             where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'usd_rate', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
         });
-        const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
+        const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
         const activeRate = parseInt(getSetting('usd_rate') || "15000");
 
-        const bonuses = await prisma.marketingBonus.findMany({
-            where: { isActive: true }
-        });
+        const context = estimate.prompt === "Instant Quote Calculator" ? "CALCULATOR" : "SERVICE";
+        const bonuses = await getBonuses(context);
 
         const hasActiveGateway = await paymentGatewayService.hasActiveGateway();
 
@@ -112,7 +119,7 @@ export default async function CheckoutPage(props: PageProps) {
             service: estimate.service
         };
 
-        const bonusesData = bonuses.map(b => ({
+        const bonusesData = bonuses.map((b: Bonus) => ({
             ...b,
             icon: b.icon || "Check",
             value: b.value || "",
@@ -138,6 +145,7 @@ export default async function CheckoutPage(props: PageProps) {
                         defaultPaymentType={paymentType}
                         projectPaidAmount={estimate.project?.paidAmount || 0}
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
+                        context={estimate.prompt === "Instant Quote Calculator" ? "CALCULATOR" : "SERVICE"}
                     />
                 </div>
             </div>

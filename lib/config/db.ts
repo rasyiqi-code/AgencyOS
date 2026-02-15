@@ -1,7 +1,7 @@
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
-// Force type refresh - Model DigitalOrder updated with proofUrl
+// Force type refresh - Added appliesTo to Coupon and MarketingBonus
 
 const connectionString = process.env.DATABASE_URL
 

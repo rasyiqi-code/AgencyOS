@@ -15,8 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Gift, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 
-export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: string) => void }) {
+export function SubscriptionDialog({ onSubscribe, context }: {
+    onSubscribe?: (email: string) => void;
+    context?: "DIGITAL" | "SERVICE" | "CALCULATOR";
+}) {
+    const t = useTranslations("Checkout");
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +32,10 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
 
     const fetchPromoCoupon = async () => {
         try {
-            const response = await fetch('/api/marketing/coupon/promotion');
+            const url = context
+                ? `/api/marketing/coupon/promotion?context=${context}`
+                : '/api/marketing/coupon/promotion';
+            const response = await fetch(url);
             if (response.ok) {
                 const data = await response.json();
                 setPromoCoupon(data);
@@ -48,7 +57,7 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to process subscription");
+                throw new Error(errorData.error || t('failProcess'));
             }
 
             setIsSuccess(true);
@@ -56,7 +65,7 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
             if (onSubscribe) onSubscribe(email);
             toast.success("Subscribed successfully!");
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Failed to process subscription");
+            toast.error(error instanceof Error ? error.message : t('failProcess'));
         } finally {
             setIsLoading(false);
         }
@@ -71,12 +80,12 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
                             <Gift className="w-4 h-4 text-black" />
                         </div>
                         <div>
-                            <div className="font-medium text-white group-hover:text-lime-400 transition-colors">Want a discount?</div>
-                            <div className="text-xs text-zinc-400">Subscribe to get a secret coupon!</div>
+                            <div className="font-medium text-white group-hover:text-lime-400 transition-colors">{t('wantDiscount')}</div>
+                            <div className="text-xs text-zinc-400">{t('subscribeSecret')}</div>
                         </div>
                     </div>
                     <Button size="sm" variant="ghost" className="text-lime-500 hover:text-lime-400">
-                        Get Coupon
+                        {t('getCoupon')}
                     </Button>
                 </div>
             </DialogTrigger>
@@ -87,26 +96,31 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
                             <CheckCircle2 className="w-8 h-8 text-emerald-500" />
                         </div>
                         <div>
-                            <DialogTitle className="text-xl mb-2">You&apos;re on the list!</DialogTitle>
+                            <DialogTitle className="text-xl mb-2">{t('onList')}</DialogTitle>
                             <DialogDescription className="text-zinc-400">
-                                Use code <span className="text-brand-yellow font-mono font-bold bg-white/10 px-2 py-0.5 rounded">{promoCoupon?.code || "WELCOME10"}</span> for {promoCoupon ? (promoCoupon.discountType === 'percentage' ? `${promoCoupon.discountValue}%` : `$${promoCoupon.discountValue}`) : "10%"} off.
+                                {t.rich('useCode', {
+                                    code: promoCoupon?.code || "WELCOME10",
+                                    discount: () => promoCoupon
+                                        ? (promoCoupon.discountType === 'percentage' ? `${promoCoupon.discountValue}%` : <PriceDisplay amount={promoCoupon.discountValue} />)
+                                        : "10%"
+                                })}
                             </DialogDescription>
                         </div>
                         <Button onClick={() => setIsOpen(false)} className="bg-brand-yellow text-black hover:bg-brand-yellow/80">
-                            Got it
+                            {t('gotIt')}
                         </Button>
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <DialogHeader>
-                            <DialogTitle>Unlock Your Bonus</DialogTitle>
+                            <DialogTitle>{t('unlockBonus')}</DialogTitle>
                             <DialogDescription className="text-zinc-400">
-                                Join our newsletter to receive exclusive updates and a special discount code immediately.
+                                {t('newsletterDesc')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="name" className="text-zinc-400">Name</Label>
+                                <Label htmlFor="name" className="text-zinc-400">{t('nameLabel')}</Label>
                                 <Input
                                     id="name"
                                     value={name}
@@ -117,7 +131,7 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="email" className="text-zinc-400">Email</Label>
+                                <Label htmlFor="email" className="text-zinc-400">{t('emailLabel')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -131,7 +145,7 @@ export function SubscriptionDialog({ onSubscribe }: { onSubscribe?: (email: stri
                         </div>
                         <DialogFooter>
                             <Button type="submit" className="bg-brand-yellow text-black hover:bg-brand-yellow/80 w-full" disabled={isLoading}>
-                                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Subscribe & Reveal Code"}
+                                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : t('subscribeReveal')}
                             </Button>
                         </DialogFooter>
                     </form>

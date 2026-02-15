@@ -1,27 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { ExtendedEstimate, Bonus, Coupon } from "@/lib/shared/types";
-import { Gift, Zap, Check, ShieldCheck, Tag, Loader2 } from "lucide-react";
+import { Bonus, Coupon } from "@/lib/shared/types";
+import { Gift, Check, ShieldCheck, Tag, Loader2, Download, Package } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-
 import { useTranslations } from "next-intl";
 
-interface CheckoutSummaryProps {
-    estimate: ExtendedEstimate;
+interface Product {
+    id: string;
+    name: string;
+    price: number;
+    purchaseType: string;
+    interval?: string;
+}
+
+interface DigitalCheckoutSummaryProps {
+    product: Product;
     bonuses: Bonus[];
     onApplyCoupon: (coupon: Coupon | null) => void;
     appliedCoupon: Coupon | null;
-    context?: "SERVICE" | "CALCULATOR";
 }
 
-export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupon, context }: CheckoutSummaryProps) {
+export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, appliedCoupon }: DigitalCheckoutSummaryProps) {
     const t = useTranslations("Checkout");
+    const td = useTranslations("ProductDetail");
     const [couponInput, setCouponInput] = useState("");
     const [isValidating, setIsValidating] = useState(false);
 
@@ -32,7 +39,7 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
             const response = await fetch('/api/marketing/coupon/validate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponInput, context: context })
+                body: JSON.stringify({ code: couponInput, context: "DIGITAL" })
             });
 
             const result = await response.json();
@@ -51,16 +58,21 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
         }
     };
 
-    const salesPoints = [
+    const trustSignals = [
         {
-            icon: ShieldCheck,
-            title: t("riskFree"),
-            description: t("refundable")
+            icon: Download,
+            title: td("instantAccess"),
+            description: td("instantAccessDesc")
         },
         {
-            icon: Zap,
-            title: t("fastDelivery"),
-            description: t("turnaround", { days: Math.ceil(estimate.totalHours / 6) })
+            icon: ShieldCheck,
+            title: td("licenseIncluded"),
+            description: "Commercial use authorized"
+        },
+        {
+            icon: Package,
+            title: td("fullSourceCode"),
+            description: "Access to all files immediately"
         }
     ];
 
@@ -68,18 +80,22 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
         <div className="space-y-8">
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-8 space-y-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">{estimate.title}</h2>
-                    <p className="text-zinc-400">{estimate.summary}</p>
+                    <h2 className="text-2xl font-bold text-white mb-2">{product.name}</h2>
+                    <p className="text-zinc-400 capitalize">
+                        {product.purchaseType === "subscription"
+                            ? `Digital Subscription / ${product.interval || "month"}`
+                            : "One-time Digital License Purchase"}
+                    </p>
                 </div>
 
-                {/* Sales Points */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                    {salesPoints.map((point, i) => (
-                        <div key={i} className="flex gap-3 items-start p-4 bg-white/5 rounded-lg border border-white/5">
-                            <point.icon className="w-5 h-5 text-lime-400 mt-1 shrink-0" />
+                {/* Trust Signals */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                    {trustSignals.map((signal, i) => (
+                        <div key={i} className="flex flex-col gap-2 p-4 bg-white/5 rounded-lg border border-white/5">
+                            <signal.icon className="w-5 h-5 text-lime-400 shrink-0" />
                             <div>
-                                <div className="font-medium text-white">{point.title}</div>
-                                <div className="text-sm text-zinc-500">{point.description}</div>
+                                <div className="font-medium text-white text-sm">{signal.title}</div>
+                                <div className="text-[11px] text-zinc-500">{signal.description}</div>
                             </div>
                         </div>
                     ))}
@@ -94,7 +110,6 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                     <div className="grid gap-3">
                         {bonuses.length > 0 ? (
                             bonuses.map((bonus, i) => {
-                                // Dynamic Bonus Icon
                                 const iconName = (bonus.icon || "Check") as keyof typeof LucideIcons;
                                 const Icon = (LucideIcons[iconName] as unknown as React.ElementType) || Check;
                                 return (
@@ -102,7 +117,7 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                                         <div className="w-5 h-5 rounded-full bg-lime-500/20 flex items-center justify-center shrink-0">
                                             <Icon className="w-3 h-3 text-lime-400" />
                                         </div>
-                                        <span>
+                                        <span className="text-sm">
                                             {bonus.title}
                                             {bonus.value && <span className="text-zinc-500 ml-1">({bonus.value})</span>}
                                         </span>
@@ -158,10 +173,9 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                         })}
                     </div>
                 )}
-
             </div>
 
-            <SubscriptionDialog context={context} />
+            <SubscriptionDialog context="DIGITAL" />
         </div>
     );
 }

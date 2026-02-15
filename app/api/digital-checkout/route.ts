@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { validateCoupon } from "@/lib/server/marketing";
 
 /**
  * API Route: POST /api/digital-checkout
@@ -17,7 +18,7 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
  */
 export async function POST(req: Request) {
     try {
-        const { productId, email, name, userId, affiliateCode } = await req.json();
+        const { productId, email, name, userId, affiliateCode, couponCode } = await req.json();
 
         // Validasi input wajib
         if (!productId || !email) {
@@ -58,6 +59,20 @@ export async function POST(req: Request) {
         // Buat ID order unik dengan prefix DIGI- agar bisa dibedakan di webhook
         const orderId = `DIGI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
+        // Handle Coupon
+        let finalAmount = product.price;
+        if (couponCode) {
+            const couponResult = await validateCoupon(couponCode, "DIGITAL");
+            if (couponResult.valid && couponResult.coupon) {
+                const coupon = couponResult.coupon;
+                if (coupon.discountType === 'percentage') {
+                    finalAmount = product.price * (1 - coupon.discountValue / 100);
+                } else {
+                    finalAmount = Math.max(0, product.price - coupon.discountValue);
+                }
+            }
+        }
+
         // Buat DigitalOrder di database
         await prisma.digitalOrder.create({
             data: {
@@ -66,10 +81,13 @@ export async function POST(req: Request) {
                 userId: userId || null,
                 userEmail: email,
                 userName: name || null,
-                amount: product.price,
+                amount: finalAmount,
                 status: "PENDING",
 
-                paymentMetadata: affiliateCode ? { affiliate_code: affiliateCode } : {},
+                paymentMetadata: {
+                    ...(affiliateCode ? { affiliate_code: affiliateCode } : {}),
+                    ...(couponCode ? { coupon_code: couponCode } : {}),
+                },
             },
         });
 

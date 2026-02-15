@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { getPromotionCoupon } from "@/lib/server/marketing";
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        const coupon = await getPromotionCoupon();
+        const { searchParams } = new URL(req.url);
+        const context = searchParams.get("context") as "DIGITAL" | "SERVICE" | "CALCULATOR" | null;
+        const coupon = await getPromotionCoupon(context || undefined);
         if (!coupon) {
             return NextResponse.json({ error: "No active promotion found" }, { status: 404 });
         }

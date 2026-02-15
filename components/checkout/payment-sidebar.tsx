@@ -7,6 +7,8 @@ import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, Coupon } from "@/lib/shared/types";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
+import { useTranslations } from "next-intl";
+
 export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
@@ -19,6 +21,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     projectPaidAmount?: number,
     projectTotalAmount?: number
 }) {
+    const t = useTranslations("Checkout");
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
 
@@ -78,15 +81,15 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <CheckCircle className="w-8 h-8 text-emerald-500" />
-                        <CardTitle className="text-emerald-400">Payment Confirmed</CardTitle>
+                        <CardTitle className="text-emerald-400">{t("confirmed")}</CardTitle>
                     </div>
                     <CardDescription className="text-emerald-500/80">
-                        Thank you! Your payment has been verified and your mission is now active.
+                        {t("confirmedDesc")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-200">
-                        Transaction ID: #{estimate.id.slice(-8).toUpperCase()}
+                        {t('transactionId')}: #{estimate.id.slice(-8).toUpperCase()}
                     </div>
 
                     <div className="space-y-3">
@@ -96,14 +99,14 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             onClick={onPrint}
                         >
                             <Download className="w-4 h-4 mr-2" />
-                            Download Receipt
+                            {t("downloadReceipt")}
                         </Button>
 
                         <Button
                             className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-12 cursor-pointer"
                             onClick={() => window.location.href = '/dashboard/missions'}
                         >
-                            Access Mission Control
+                            {t("accessMission")}
                         </Button>
                     </div>
                 </CardContent>
@@ -114,8 +117,8 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     return (
         <Card className="bg-zinc-900 border-white/10 text-white sticky top-24">
             <CardHeader>
-                <CardTitle>Payment Options</CardTitle>
-                <CardDescription>Select how you want to pay</CardDescription>
+                <CardTitle>{t("paymentOptions")}</CardTitle>
+                <CardDescription>{t("selectPayment")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
 
@@ -123,7 +126,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                 {/* Hide selection if query param enforces repayment */}
                 {defaultPaymentType === 'REPAYMENT' ? (
                     <div className="p-3 rounded-lg border border-brand-yellow/30 bg-brand-yellow/10 text-brand-yellow text-sm font-medium text-center mb-2">
-                        Project Repayment (Pelunasan)
+                        {t("repayment")}
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-2">
@@ -131,20 +134,20 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             onClick={() => setPaymentType("FULL")}
                             className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "FULL" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
                         >
-                            Full Payment
+                            {t("fullPayment")}
                         </button>
                         <button
                             onClick={() => setPaymentType("DP")}
                             className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "DP" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
                         >
-                            DP (50%)
+                            {t("dp")}
                         </button>
                     </div>
                 )}
 
                 {paymentType === "DP" && (
                     <div className="text-xs text-amber-500 bg-amber-500/10 p-3 rounded border border-amber-500/20">
-                        Pay 50% now to start the project. The remaining 50% will be billed upon completion.
+                        {t("dpDesc")}
                     </div>
                 )}
 
@@ -152,11 +155,11 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                 <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/5">
                     <div className="flex flex-col gap-1 mb-4">
                         <span className="text-zinc-400 text-sm font-medium">
-                            Total to Pay Now
+                            {t("totalToPay")}
                         </span>
                         {appliedCoupon && (
                             <div className="flex justify-between text-sm text-emerald-400 mb-1">
-                                <span>Discount ({appliedCoupon.code})</span>
+                                <span>{t("discount")} ({appliedCoupon.code})</span>
                                 <span>
                                     - <PriceDisplay amount={estimate.totalCost - amount} />
                                 </span>
@@ -167,7 +170,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                         </span>
                         {paymentType === "DP" && (
                             <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
-                                <span>Total Project Value:</span>
+                                <span>{t("totalProjectValue")}:</span>
                                 <span><PriceDisplay amount={amount} baseCurrency={activeCurrency} /></span>
                             </div>
                         )}
@@ -180,7 +183,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
 
                     <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
                         <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
-                        Processed in {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && `(rate: ${formattedRate})`}
+                        {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && `(rate: ${formattedRate})`}
                     </p>
                 </div>
 
@@ -192,7 +195,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                         disabled={isProcessing}
                     >
                         <Download className="w-4 h-4 mr-2" />
-                        Download PDF Invoice
+                        {t("downloadInvoice")}
                     </Button>
 
                     {hasActiveGateway ? (
@@ -204,10 +207,10 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             {isProcessing ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Processing...
+                                    {t("processing")}
                                 </>
                             ) : (
-                                "Proceed to Payment"
+                                t("proceed")
                             )}
                         </Button>
                     ) : (
@@ -215,10 +218,10 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
                                 <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
                                     <AlertTriangle className="w-4 h-4" />
-                                    Pembayaran Otomatis Tidak Tersedia
+                                    {t("manualPayment")}
                                 </p>
                                 <p className="text-[10px] text-amber-200/70 leading-relaxed">
-                                    Mohon lakukan pembayaran manual via transfer bank. Detail rekening tersedia pada invoice PDF atau halaman tagihan.
+                                    {t("manualDesc")}
                                 </p>
                             </div>
                             <Button
@@ -229,12 +232,12 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                 {isProcessing ? (
                                     <>
                                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                        Processing...
+                                        {t("processing")}
                                     </>
                                 ) : (
                                     <>
                                         <Download className="w-4 h-4 mr-2" />
-                                        Continue to Payment
+                                        {t("continue")}
                                     </>
                                 )}
                             </Button>
@@ -243,12 +246,12 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                 </div>
 
                 <p className="text-xs text-zinc-500 text-center">
-                    Secure 256-bit SSL encrypted.
+                    {t("secure")}
                 </p>
 
                 <div className="text-center pt-2">
                     <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 underline decoration-zinc-700 underline-offset-2 hover:decoration-zinc-400 transition-all">
-                        Problem with payment?
+                        {t("problem")}
                     </a>
                 </div>
             </CardContent>

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Trash2, Gift } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 
@@ -16,6 +17,7 @@ interface Bonus {
     value: string | null;
     icon: string | null;
     isActive: boolean;
+    appliesTo: string[];
     createdAt: Date;
 }
 
@@ -27,6 +29,7 @@ export function BonusesManager() {
         description: "",
         value: "",
         icon: "CheckCircle2",
+        appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"],
     });
 
     useEffect(() => {
@@ -61,13 +64,14 @@ export function BonusesManager() {
                     description: newBonus.description || undefined,
                     value: newBonus.value || undefined,
                     icon: newBonus.icon || undefined,
+                    appliesTo: newBonus.appliesTo,
                 })
             });
 
             if (!response.ok) throw new Error("Failed to create");
 
             toast.success("Bonus created successfully");
-            setNewBonus({ title: "", description: "", value: "", icon: "CheckCircle2" });
+            setNewBonus({ title: "", description: "", value: "", icon: "CheckCircle2", appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"] });
             loadBonuses();
         } catch {
             toast.error("Failed to create bonus");
@@ -139,6 +143,29 @@ export function BonusesManager() {
                     value={newBonus.description}
                     onChange={(e) => setNewBonus({ ...newBonus, description: e.target.value })}
                 />
+
+                {/* Scoping badges */}
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                    <span className="text-xs text-zinc-500 mr-2 self-center">Applies To:</span>
+                    {["DIGITAL", "SERVICE", "CALCULATOR"].map((type) => (
+                        <button
+                            key={type}
+                            onClick={() => {
+                                const current = newBonus.appliesTo;
+                                const updated = current.includes(type)
+                                    ? current.filter(t => t !== type)
+                                    : [...current, type];
+                                setNewBonus({ ...newBonus, appliesTo: updated });
+                            }}
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${newBonus.appliesTo.includes(type)
+                                    ? "bg-brand-yellow text-black"
+                                    : "bg-zinc-800 text-zinc-500 hover:text-zinc-400"
+                                }`}
+                        >
+                            {type}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* List */}
@@ -150,6 +177,7 @@ export function BonusesManager() {
                             <TableHead>Icon</TableHead>
                             <TableHead>Details</TableHead>
                             <TableHead>Value</TableHead>
+                            <TableHead>Scope</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -188,6 +216,15 @@ export function BonusesManager() {
                                         </TableCell>
                                         <TableCell className="text-brand-yellow text-sm font-medium">
                                             {bonus.value || "-"}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-wrap gap-1">
+                                                {bonus.appliesTo?.map(t => (
+                                                    <Badge key={t} variant="outline" className="text-[9px] px-1 py-0 h-4 border-zinc-800 text-zinc-400">
+                                                        {t}
+                                                    </Badge>
+                                                ))}
+                                            </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <Button

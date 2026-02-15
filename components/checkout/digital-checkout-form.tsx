@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, CreditCard } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
+import { useTranslations } from "next-intl";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 
 interface Product {
     id: string;
@@ -21,29 +23,19 @@ interface Product {
     interval?: string;
 }
 
-const checkoutSchema = z.object({
-    email: z.string().email("Masukkan email yang valid"),
-    name: z.string().optional(),
-});
+import { Coupon } from "@/lib/shared/types";
 
-type CheckoutFormValues = z.infer<typeof checkoutSchema>;
+type CheckoutFormValues = z.infer<z.ZodObject<{ email: z.ZodString; name: z.ZodOptional<z.ZodString> }>>;
 
-/**
- * Checkout Form untuk pembelian produk digital via Midtrans Snap.
- *
- * Flow:
- * 1. User isi form (email + nama)
- * 2. Submit → POST /api/digital-checkout → dapat snapToken
- * 3. Open Midtrans Snap popup via window.snap.pay(token)
- * 4. Midtrans kirim webhook ke /api/payment/midtrans/webhook
- * 5. Webhook update DigitalOrder status + generate license
- * 6. User redirect ke dashboard/products
- */
-export function CheckoutForm({ product, userId, userEmail }: {
+export function CheckoutForm({ product, userId, userEmail, appliedCoupon, amount }: {
     product: Product;
     userId?: string;
     userEmail?: string;
+    appliedCoupon?: Coupon | null;
+    amount?: number;
 }) {
+    const t = useTranslations("Checkout");
+    const ti = useTranslations("Invoice");
     const [loading, setLoading] = useState(false);
     const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
     const router = useRouter();
@@ -59,7 +51,10 @@ export function CheckoutForm({ product, userId, userEmail }: {
     }, []);
 
     const form = useForm<CheckoutFormValues>({
-        resolver: zodResolver(checkoutSchema),
+        resolver: zodResolver(z.object({
+            email: z.string().email(t('validEmail')),
+            name: z.string().optional(),
+        })),
         defaultValues: {
             email: userEmail || "",
             name: "",
@@ -79,31 +74,30 @@ export function CheckoutForm({ product, userId, userEmail }: {
                     name: data.name,
                     userId: userId,
                     affiliateCode: affiliateCode,
+                    couponCode: appliedCoupon?.code,
                 }),
             });
 
             const result = await res.json();
 
             if (!res.ok) {
-                throw new Error(result.error || "Gagal memproses checkout");
+                throw new Error(result.error || t('failProcess'));
             }
 
             // 2. Redirect ke halaman invoice digital untuk pembayaran
             if (result.redirectUrl) {
-                toast.success("Order berhasil dibuat. Mengarahkan ke pembayaran...");
+                toast.success(t('orderCreated'));
                 router.push(result.redirectUrl);
             } else {
-                throw new Error("Gagal mendapatkan URL redirect invoice.");
+                throw new Error(t('failRedirect'));
             }
 
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : "Terjadi kesalahan";
+            const message = error instanceof Error ? error.message : "Error";
             toast.error(message);
             setLoading(false);
         }
     };
-
-
 
     return (
         <Card className="max-w-md w-full border-zinc-800 bg-zinc-950 text-zinc-100 shadow-2xl relative overflow-hidden">
@@ -116,9 +110,9 @@ export function CheckoutForm({ product, userId, userEmail }: {
                     <span className="font-bold text-white tracking-tight">Agency OS Checkout</span>
                 </div>
                 <div>
-                    <CardTitle className="text-2xl text-white">Selesaikan Pembayaran</CardTitle>
+                    <CardTitle className="text-2xl text-white">{t('finishPayment')}</CardTitle>
                     <CardDescription className="text-zinc-400">
-                        Anda akan membeli <span className="text-zinc-200 font-medium">{product.name}</span>
+                        {t('willBuy')} <span className="text-zinc-200 font-medium">{product.name}</span>
                     </CardDescription>
                 </div>
             </CardHeader>
@@ -131,20 +125,20 @@ export function CheckoutForm({ product, userId, userEmail }: {
                             <div className="text-sm text-zinc-400 capitalize">
                                 {product.purchaseType === "subscription"
                                     ? `Subscription / ${product.interval || "month"}`
-                                    : "One-time purchase"}
+                                    : `${ti('oneTime')} ${ti('license')}`}
                             </div>
                         </div>
                         <div className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-yellow to-white">
-                            ${product.price}
+                            <PriceDisplay amount={amount ?? product.price} />
                         </div>
                     </div>
 
                     {/* Email */}
                     <div className="space-y-2">
-                        <Label>Alamat Email</Label>
+                        <Label>{t('emailLabel')}</Label>
                         <Input
                             {...form.register("email")}
-                            placeholder="email@contoh.com"
+                            placeholder="email@example.com"
                             className="bg-zinc-900 border-zinc-800 focus:ring-brand-yellow/50"
                             disabled={!!userEmail}
                         />
@@ -155,10 +149,10 @@ export function CheckoutForm({ product, userId, userEmail }: {
 
                     {/* Nama (opsional) */}
                     <div className="space-y-2">
-                        <Label>Nama (Opsional)</Label>
+                        <Label>{t('nameLabel')}</Label>
                         <Input
                             {...form.register("name")}
-                            placeholder="Nama Anda"
+                            placeholder={t('namePlaceholder')}
                             className="bg-zinc-900 border-zinc-800"
                         />
                     </div>
@@ -170,7 +164,7 @@ export function CheckoutForm({ product, userId, userEmail }: {
                         disabled={loading}
                     >
                         {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        Bayar ${product.price}
+                        {t('payButton')} <PriceDisplay amount={amount ?? product.price} />
                     </Button>
                 </CardFooter>
             </form>

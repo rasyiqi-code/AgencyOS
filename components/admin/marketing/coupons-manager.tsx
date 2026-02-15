@@ -19,6 +19,7 @@ interface Coupon {
     usedCount: number;
     expiresAt: Date | null;
     isActive: boolean;
+    appliesTo: string[];
     createdAt: Date;
 }
 
@@ -31,6 +32,7 @@ export function CouponsManager() {
         discountValue: "",
         maxUses: "",
         expiresAt: "",
+        appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"],
     });
 
     useEffect(() => {
@@ -66,13 +68,14 @@ export function CouponsManager() {
                     discountValue: parseFloat(newCoupon.discountValue),
                     maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
                     expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
+                    appliesTo: newCoupon.appliesTo,
                 })
             });
 
             if (!response.ok) throw new Error("Failed to create");
 
             toast.success("Coupon created successfully");
-            setNewCoupon({ code: "", discountType: "percentage", discountValue: "", maxUses: "", expiresAt: "" });
+            setNewCoupon({ code: "", discountType: "percentage", discountValue: "", maxUses: "", expiresAt: "", appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"] });
             loadCoupons();
         } catch {
             toast.error("Failed to create coupon");
@@ -140,10 +143,33 @@ export function CouponsManager() {
                             value={newCoupon.expiresAt}
                             onChange={(e) => setNewCoupon({ ...newCoupon, expiresAt: e.target.value })}
                         />
-                        <Button onClick={handleCreate} className="bg-brand-yellow text-black hover:bg-brand-yellow/80">
+                        <Button onClick={handleCreate} className="bg-brand-yellow text-black hover:bg-brand-yellow/80 shrink-0">
                             Create
                         </Button>
                     </div>
+                </div>
+
+                {/* Scoping badges */}
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                    <span className="text-xs text-zinc-500 mr-2 self-center">Applies To:</span>
+                    {["DIGITAL", "SERVICE", "CALCULATOR"].map((type) => (
+                        <button
+                            key={type}
+                            onClick={() => {
+                                const current = newCoupon.appliesTo;
+                                const updated = current.includes(type)
+                                    ? current.filter(t => t !== type)
+                                    : [...current, type];
+                                setNewCoupon({ ...newCoupon, appliesTo: updated });
+                            }}
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${newCoupon.appliesTo.includes(type)
+                                ? "bg-brand-yellow text-black"
+                                : "bg-zinc-800 text-zinc-500 hover:text-zinc-400"
+                                }`}
+                        >
+                            {type}
+                        </button>
+                    ))}
                 </div>
             </div>
 
@@ -155,6 +181,7 @@ export function CouponsManager() {
                             <TableHead>Code</TableHead>
                             <TableHead>Discount</TableHead>
                             <TableHead>Usage</TableHead>
+                            <TableHead>Scope</TableHead>
                             <TableHead>Expiry</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
@@ -187,7 +214,16 @@ export function CouponsManager() {
                                             {coupon.maxUses && <span className="text-zinc-500">of {coupon.maxUses} max</span>}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-zinc-400 text-sm">
+                                    <TableCell>
+                                        <div className="flex flex-wrap gap-1">
+                                            {coupon.appliesTo?.map(t => (
+                                                <Badge key={t} variant="outline" className="text-[9px] px-1 py-0 h-4 border-zinc-800 text-zinc-400">
+                                                    {t}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-zinc-400 text-sm italic">
                                         {coupon.expiresAt ? format(new Date(coupon.expiresAt), 'MMM dd, yyyy') : 'No Expiry'}
                                     </TableCell>
                                     <TableCell>

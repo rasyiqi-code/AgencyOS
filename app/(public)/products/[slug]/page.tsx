@@ -6,6 +6,7 @@ import { Sparkles, ArrowLeft, Package, ShieldCheck, Download, Zap, HeartHandshak
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { ProductRecommendations } from "@/components/public/product-recommendations";
 import { prisma } from "@/lib/config/db";
+import { getTranslations } from "next-intl/server";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -18,6 +19,7 @@ interface PageProps {
 export default async function ProductDetailPage(props: PageProps) {
     const params = await props.params;
     const product = await getDigitalProductBySlug(params.slug);
+    const t = await getTranslations("ProductDetail");
 
     if (!product || !product.isActive) {
         notFound();
@@ -25,7 +27,7 @@ export default async function ProductDetailPage(props: PageProps) {
 
     // Ambil produk lain untuk rekomendasi (exclude produk saat ini)
     const allProducts = await getDigitalProducts(true);
-    const recommendedProducts = allProducts.filter(p => p.id !== product.id);
+    const recommendedProducts = allProducts.filter((p: { id: string }) => p.id !== product.id);
 
     // Ambil services aktif untuk cross-sell
     const services = await prisma.service.findMany({
@@ -43,8 +45,8 @@ export default async function ProductDetailPage(props: PageProps) {
     });
 
     const purchaseLabel = product.purchaseType === "subscription"
-        ? (product.interval || "Monthly")
-        : "One Time";
+        ? (product.interval === "month" ? t("monthly") : product.interval || t("monthly"))
+        : t("oneTime");
 
     return (
         <section className="relative min-h-screen">
@@ -55,7 +57,7 @@ export default async function ProductDetailPage(props: PageProps) {
                     className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-brand-yellow transition-colors mb-8"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Back to Products
+                    {t("back")}
                 </Link>
 
                 {/* ===== MAIN LAYOUT: 2 Kolom ===== */}
@@ -111,15 +113,15 @@ export default async function ProductDetailPage(props: PageProps) {
                                 <div className="grid grid-cols-3 gap-2">
                                     <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
                                         <Download className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
-                                        <span className="text-[11px] text-zinc-400">Instant Download</span>
+                                        <span className="text-[11px] text-zinc-400">{t("instantDownload")}</span>
                                     </div>
                                     <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
                                         <ShieldCheck className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
-                                        <span className="text-[11px] text-zinc-400">License Included</span>
+                                        <span className="text-[11px] text-zinc-400">{t("licenseIncluded")}</span>
                                     </div>
                                     <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
                                         <Package className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
-                                        <span className="text-[11px] text-zinc-400">Full Source Code</span>
+                                        <span className="text-[11px] text-zinc-400">{t("fullSourceCode")}</span>
                                     </div>
                                 </div>
                             </div>
@@ -127,15 +129,15 @@ export default async function ProductDetailPage(props: PageProps) {
 
                         {/* Trust Signals — Why Choose Us */}
                         <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5 mt-5">
-                            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Why Choose Us</h3>
+                            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("whyChooseUs")}</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div className="flex items-start gap-3">
                                     <div className="p-1.5 rounded-lg bg-brand-yellow/10 shrink-0">
                                         <Zap className="w-3.5 h-3.5 text-brand-yellow" />
                                     </div>
                                     <div>
-                                        <div className="text-xs font-semibold text-white">Instant Access</div>
-                                        <div className="text-[11px] text-zinc-500">Download immediately after purchase</div>
+                                        <div className="text-xs font-semibold text-white">{t("instantAccess")}</div>
+                                        <div className="text-[11px] text-zinc-500">{t("instantAccessDesc")}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -143,8 +145,8 @@ export default async function ProductDetailPage(props: PageProps) {
                                         <LifeBuoy className="w-3.5 h-3.5 text-brand-yellow" />
                                     </div>
                                     <div>
-                                        <div className="text-xs font-semibold text-white">Priority Support</div>
-                                        <div className="text-[11px] text-zinc-500">Get help when you need it</div>
+                                        <div className="text-xs font-semibold text-white">{t("prioritySupport")}</div>
+                                        <div className="text-[11px] text-zinc-500">{t("prioritySupportDesc")}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -152,8 +154,8 @@ export default async function ProductDetailPage(props: PageProps) {
                                         <HeartHandshake className="w-3.5 h-3.5 text-brand-yellow" />
                                     </div>
                                     <div>
-                                        <div className="text-xs font-semibold text-white">100% Satisfaction</div>
-                                        <div className="text-[11px] text-zinc-500">Built with care and quality</div>
+                                        <div className="text-xs font-semibold text-white">{t("satisfaction")}</div>
+                                        <div className="text-[11px] text-zinc-500">{t("satisfactionDesc")}</div>
                                     </div>
                                 </div>
                             </div>
@@ -166,21 +168,21 @@ export default async function ProductDetailPage(props: PageProps) {
                         <div className="lg:sticky lg:top-24 space-y-5">
                             {/* Price + CTA Card */}
                             <div className="rounded-2xl border border-brand-yellow/20 bg-zinc-900/60 backdrop-blur-xl p-5 shadow-xl">
-                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Price</div>
+                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
                                 <div className="text-3xl font-black text-white tracking-tighter mb-1">
                                     <PriceDisplay amount={product.price} baseCurrency="USD" compact />
                                     {product.purchaseType === "subscription" && (
-                                        <span className="text-sm font-normal text-zinc-500 ml-1">/{product.interval}</span>
+                                        <span className="text-sm font-normal text-zinc-500 ml-1">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
                                     )}
                                 </div>
                                 <p className="text-[11px] text-zinc-600 mb-5">
-                                    {product.purchaseType === "subscription" ? "Cancel anytime. No hidden fees." : "One-time payment. Lifetime access."}
+                                    {product.purchaseType === "subscription" ? t("subscriptionNotice") : t("oneTimeNotice")}
                                 </p>
                                 <Link
                                     href={`/checkout/${product.id}`}
                                     className="flex items-center justify-center gap-2 w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-12 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
                                 >
-                                    Buy Now
+                                    {t("buyNow")}
                                 </Link>
                             </div>
 
@@ -188,9 +190,9 @@ export default async function ProductDetailPage(props: PageProps) {
                             {/* Cross-sell: Services */}
                             {services.length > 0 && (
                                 <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5">
-                                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Need Custom Work?</h3>
+                                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("needCustom")}</h3>
                                     <div className="space-y-3">
-                                        {services.map(service => (
+                                        {services.map((service: { id: string; title: string; price: number; image: string | null }) => (
                                             <Link
                                                 key={service.id}
                                                 href="/services"
@@ -223,8 +225,8 @@ export default async function ProductDetailPage(props: PageProps) {
                 {/* ===== BOTTOM: Rekomendasi Produk Lain ===== */}
                 <ProductRecommendations
                     products={recommendedProducts}
-                    title="You Might Also Like"
-                    subtitle="Explore more premium digital products"
+                    title={t("youMightLike")}
+                    subtitle={t("exploreMore")}
                 />
             </div>
         </section>

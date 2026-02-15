@@ -32,15 +32,16 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
     const router = useRouter();
 
     useEffect(() => {
-        const timer = setTimeout(() => setMounted(true), 0);
-        // Sync with localStorage on client mount
-        if (typeof window !== 'undefined') {
-            const cached = localStorage.getItem('agency-os-currency');
-            if (cached === 'USD' || cached === 'IDR') {
-                setCurrency(cached as Currency);
-            } else {
-                // Detect currency if not set
-                const detect = () => {
+        const timer = setTimeout(() => {
+            setMounted(true);
+
+            // Sync with localStorage on client mount
+            if (typeof window !== 'undefined') {
+                const cached = localStorage.getItem('agency-os-currency');
+                if (cached === 'USD' || cached === 'IDR') {
+                    setCurrency(cached as Currency);
+                } else {
+                    // Detect currency if not set
                     try {
                         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         if (['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'].includes(timeZone)) {
@@ -53,10 +54,9 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
                     } catch (error) {
                         console.error("Currency detection failed, defaulting to USD", error);
                     }
-                };
-                detect();
+                }
             }
-        }
+        }, 0);
 
         // Fetch Dynamic Rate
         fetch('/api/currency/rates', { cache: 'no-store' })

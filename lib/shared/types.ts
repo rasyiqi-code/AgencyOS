@@ -71,15 +71,28 @@ export type EstimateData = z.infer<typeof EstimateSchema>;
 
 // Basic shared types
 export interface Bonus {
-    icon: string;
-    value?: string;
-    title?: string;
+    id?: string;
+    title: string;
+    description?: string | null;
+    value?: string | null;
+    icon?: string | null;
+    isActive?: boolean;
+    appliesTo?: string[];
 }
 
 export interface Coupon {
+    id?: string;
     code: string;
-    discountType: 'percentage' | 'fixed';
+    discountType: 'percentage' | 'fixed' | string;
     discountValue: number;
+    isActive?: boolean;
+    appliesTo?: string[];
+}
+
+export interface InvoiceItem {
+    title: string;
+    description: string;
+    hours: number;
 }
 
 // Extended Interface for Prisma Result (including sub-items)

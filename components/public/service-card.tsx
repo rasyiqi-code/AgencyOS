@@ -15,7 +15,10 @@ interface ServiceCardProps {
     service: Service;
 }
 
+import { useTranslations } from "next-intl";
+
 export function ServiceCard({ service }: ServiceCardProps) {
+    const t = useTranslations("Cards");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
     const { currency } = useCurrency();
@@ -78,8 +81,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         <div className="flex items-center gap-3 mb-4">
                             <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
                                 {service.interval === 'one_time'
-                                    ? (isId ? 'Sekali Bayar' : 'One Time')
-                                    : (isId ? `${service.interval}` : `${service.interval}`)}
+                                    ? t("oneTime")
+                                    : (isId ? (service.interval === 'monthly' ? t("monthly") : service.interval) : service.interval)}
                             </div>
                         </div>
                         <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
@@ -108,7 +111,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                                         <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
                                         <DialogTrigger asChild>
                                             <button className="text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity">
-                                                +{displayFeatures.length - 3} More <ChevronDown className="w-2.5 h-2.5" />
+                                                +{displayFeatures.length - 3} {t("more")} <ChevronDown className="w-2.5 h-2.5" />
                                             </button>
                                         </DialogTrigger>
                                     </>
@@ -117,7 +120,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
                             {/* Metrics Block */}
                             <div className="p-4 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[110px]">
-                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Price</div>
+                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
                                 <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
                                     <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
                                 </div>

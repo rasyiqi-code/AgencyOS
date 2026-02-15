@@ -5,7 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
-import { ExtendedEstimate, Bonus } from "@/lib/shared/types";
+import { ExtendedEstimate, Bonus, Coupon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 
 export function CheckoutContent({
@@ -18,7 +18,8 @@ export function CheckoutContent({
     hasActiveGateway = true,
     defaultPaymentType,
     projectPaidAmount = 0,
-    projectTotalAmount = 0
+    projectTotalAmount = 0,
+    context
 }: {
     estimate: ExtendedEstimate,
     bankDetails: BankDetails,
@@ -28,11 +29,12 @@ export function CheckoutContent({
     agencySettings?: AgencyInvoiceSettings,
     hasActiveGateway?: boolean,
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
-    projectPaidAmount?: number,
-    projectTotalAmount?: number
+    projectPaidAmount?: number;
+    projectTotalAmount?: number;
+    context?: "SERVICE" | "CALCULATOR";
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
-    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discountType: 'percentage' | 'fixed', discountValue: number } | null>(null);
+    const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
     const handlePrint = useReactToPrint({
         contentRef: invoiceRef,
@@ -54,6 +56,7 @@ export function CheckoutContent({
                     bonuses={bonuses}
                     onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
                     appliedCoupon={appliedCoupon}
+                    context={context}
                 />
             </div>
 

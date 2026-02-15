@@ -30,7 +30,10 @@ interface ServiceModalContentProps {
     isId: boolean;
 }
 
+import { useTranslations } from "next-intl";
+
 export function ServiceModalContent({ service, isId }: ServiceModalContentProps) {
+    const t = useTranslations("Cards");
 
     // Fallback to EN if ID content is missing
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -39,6 +42,8 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
     const displayFeatures = (isId && Array.isArray((service as unknown as Record<string, unknown>).features_id) && ((service as unknown as Record<string, unknown>).features_id as string[]).length > 0)
         ? (service as unknown as Record<string, unknown>).features_id as string[]
         : service.features as string[];
+
+    const intervalLabel = service.interval === 'one_time' ? t("oneTime") : (isId ? (service.interval === 'monthly' ? t("monthly") : service.interval) : service.interval);
 
     return (
         <DialogContent className="max-w-none w-screen h-[100dvh] bg-zinc-950 border-none p-0 overflow-hidden shadow-2xl flex flex-col sm:rounded-none">
@@ -79,16 +84,14 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                                 <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
                             </span>
                             <span className="text-sm font-bold text-zinc-500 uppercase tracking-widest">
-                                {service.interval === 'one_time'
-                                    ? (isId ? '/ Sekali Bayar' : '/ One Time')
-                                    : (isId ? `/ ${service.interval}` : `/ ${service.interval}`)}
+                                / {intervalLabel}
                             </span>
                         </div>
                     </DialogHeader>
 
                     <div className="space-y-12 pb-24">
                         <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">About this service</h4>
+                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">{t("about")}</h4>
                             <div
                                 className="text-zinc-300 leading-relaxed font-light"
                                 dangerouslySetInnerHTML={{ __html: displayDescription }}
@@ -96,7 +99,7 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                         </div>
 
                         <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">What&apos;s Included</h4>
+                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">{t("included")}</h4>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {displayFeatures.map((feature: string, i: number) => (
                                     <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-brand-yellow/20 transition-colors group/feat">
