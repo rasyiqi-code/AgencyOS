@@ -67,6 +67,11 @@ COPY package.json bun.lock ./
 # This replaces the stripped-down standalone node_modules with a full correct set
 RUN bun install --production
 
+# Generate Prisma Client (post-install to ensure binding is present)
+# Using a dummy DATABASE_URL is standard for generation
+ENV DATABASE_URL="postgresql://postgres:password@localhost:5432/agency_os"
+RUN bunx prisma generate
+
 # Install Prisma CLI globally to avoid modifying the local node_modules structure (though now it matters less)
 RUN bun add -g prisma@7.4.0
 
