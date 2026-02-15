@@ -49,8 +49,8 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
     const salesPoints = [
         {
             icon: ShieldCheck,
-            title: "Money Back Guarantee",
-            description: "14-day revisions period included"
+            title: "Risk-Free Briefing",
+            description: "100% Refundable Deposit during Blueprint Phase"
         },
         {
             icon: Zap,

@@ -33,7 +33,7 @@
         "clientTitle": "Transparansi Total",
         "clientDesc": "Tata kelola korporat sebagai inti. Pantau log pengiriman, setujui milestone, dan lacak kesehatan proyek secara real-time.",
         "clientCta": "Dashboard Klien",
-        "squadTitle": "Elite Engineering",
+        "squadTitle": "Expert Development",
         "squadDesc": "Kesuksesan membutuhkan keahlian domain yang dalam. Kami menugaskan Senior Engineer yang telah difilter ketat.",
         "squadCta": "Kenali Ahli Kami",
         "adminTitle": "Kepatuhan Enterprise",
@@ -161,10 +161,10 @@
         "roi": "ROI: Skalabilitas & Efisiensi"
     },
     "Guarantee": {
-        "title": "Kami Menanggung Risiko Untuk Anda.",
-        "subtitle": "100% Money Back Guarantee pada Fase Briefing",
-        "desc": "Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, kami kembalikan deposit Anda 100%.",
-        "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut."
+        "title": "Kami Tanggung Risiko Sepenuhnya.",
+        "subtitle": "Garansi Uang Kembali 100% di Fase Briefing",
+        "desc": "Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, deposit Anda kami kembalikan 100%.",
+        "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut sebagai referensi."
     },
     "Included": {
         "title": "Sudah Terpasang di Setiap Layanan",
@@ -183,10 +183,10 @@
         "f6Desc": "Dokumentasi lengkap dan struktur kode standar industri yang mudah dikembangkan."
     },
     "Expert": {
-        "role": "Pendiri & Principal Engineer",
+        "role": "Pendiri & Fullstack Developer",
         "name": "Rasyiqi",
         "badge": "PENGALAMAN 12+ TAHUN",
-        "quote": "Koding itu mudah. Membangun bisnis berkelanjutan itu sulit. Saya menjembatani keduanya.",
+        "quote": "Fokus solusi, tanpa komplikasi.",
         "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan Crediblemark. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
         "footer": "Keahlian Enterprise. Kecepatan Industri."
     },
@@ -201,7 +201,7 @@
         ],
         "Rasyiqi": {
             "name": "Rasyiqi",
-            "role": "Senior Systems Architect",
+            "role": "Senior Fullstack Developer",
             "specialty": "Next.js, AI Protocols, Cloud Infra",
             "exp": "10+ Tahun",
             "image": "https://github.com/shadcn.png"

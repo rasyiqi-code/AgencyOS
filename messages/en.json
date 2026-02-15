@@ -32,7 +32,7 @@
         "clientTitle": "Total Transparency",
         "clientDesc": "Enterprise governance at its core. Monitor delivery logs, approve milestones, and track project health in real-time.",
         "clientCta": "Client Dashboard",
-        "squadTitle": "Elite Engineering",
+        "squadTitle": "Expert Development",
         "squadDesc": "Success requires deep domain expertise. We deploy strictly vetted Senior Engineers managed by industrial standards.",
         "squadCta": "Meet Our Experts",
         "adminTitle": "Enterprise Compliance",
@@ -160,9 +160,9 @@
         "roi": "ROI: Scalable Growth & Efficiency"
     },
     "Guarantee": {
-        "title": "We Take the Risk for You.",
-        "subtitle": "100% Money Back Guarantee on Briefing Phase",
-        "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving your initial Blueprint you feel our approach isn't a fit, we return your deposit 100%.",
+        "title": "We Take On All The Risk.",
+        "subtitle": "100% Money Back Guarantee during Briefing Phase",
+        "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving the initial Blueprint you feel it doesn't fit our approach, we will refund your deposit 100%.",
         "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
     },
     "Included": {
@@ -182,16 +182,16 @@
         "f6Desc": "Full documentation and industry-standard code structure for easy scaling."
     },
     "Expert": {
-        "role": "Founder & Principal Engineer",
+        "role": "Founder & Fullstack Developer",
         "name": "Rasyiqi",
         "badge": "12+ YEARS EXPERIENCE",
-        "quote": "Code is easy. Building a sustainable business is hard. I bridge that gap.",
+        "quote": "Focus on solutions, no complications.",
         "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of Crediblemark. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
         "footer": "Enterprise Expertise. Industrial Velocity."
     },
     "Experts": {
         "badge": "WORLD-CLASS TALENT",
-        "title": "The <blue>Elite Engineering</blue> Squad",
+        "title": "The <blue>Expert Development</blue> Squad",
         "description": "We don't hire junior developers. Every project is executed by strictly vetted Senior Engineers with extensive industrial experience.",
         "keys": [
             "Rasyiqi",
@@ -200,7 +200,7 @@
         ],
         "Rasyiqi": {
             "name": "Rasyiqi",
-            "role": "Senior Systems Architect",
+            "role": "Senior Fullstack Developer",
             "specialty": "Next.js, AI Protocols, Cloud Infra",
             "exp": "10+ Years",
             "image": "https://github.com/shadcn.png"
