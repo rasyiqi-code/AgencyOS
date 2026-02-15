@@ -15,9 +15,14 @@
 ### B. The Architect (Super Admin)
 *   **Akses**: Admin Panel (`/admin`)
 *   **Status**: Terimplementasi (Advanced).
-*   **Fitur**: Management proyek, manajemen keuangan (invoices/orders), pengaturan sistem (AI keys, payment settings), Ticketing Support.
+*   **Fitur**: Management proyek, manajemen keuangan (invoices/orders), pengaturan sistem (AI keys, payment settings), Ticketing Support, Affiliate Management.
 
-### C. The AI Agent (CredibleBot)
+### C. The Squad Lead (Partner)
+*   **Akses**: Squad Portal (`/squad`)
+*   **Status**: Terimplementasi (Beta).
+*   **Fitur**: Profiling skill, lamaran misi (proyek), portfolio management.
+
+### D. The AI Agent (CredibleBot)
 *   **Engine**: Genkit (Google Gemini)
 *   **Status**: Produksi.
 *   **Fitur**: Rotasi API Key otomatis (Load Balancing), PRD generation, konsultasi estimasi harga.
@@ -46,24 +51,34 @@
 ---
 
 ## ✅ 3. Fitur Terimplementasi (Ready to Use)
+
+### Core Business
 - [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
 - [x] **Automated Payment System**: Konfirmasi pembayaran otomatis via Webhooks & Redirect Checks (Midtrans/Creem).
 - [x] **Admin Project Management**: Full Dashboard with Search, Filtering, Pagination, & Assignment (`app/admin/pm`).
-- [x] **System Key Rotation**: Manajemen LLM API keys dengan redundansi (`app/genkit/ai.ts`).
-- [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
 - [x] **Invoice PDF Generator**: Pembuatan invoice otomatis (`components/checkout/invoice-document.tsx`).
-- [x] **Conditional Floating Chat**: Widget chat pintar yang menyesuaikan konteks halaman.
 - [x] **Digital Orders Management**: Alur lengkap penjualan produk digital dengan lisensi otomatis (`app/admin/finance/digital-orders`).
-- [x] **Manual Payment Verification**: Sistem konfirmasi pembayaran manual oleh Admin dengan bukti transfer.
+
+### Growth & Marketing
+- [x] **Affiliate System**: Portal afliasi lengkap dengan tracking referral, komisi, dan payout request (`app/affiliate`).
+- [x] **Marketing Suite**: Manajemen aset marketing, banner, dan testimonial sistem (`app/admin/marketing`).
+- [x] **Digital Products Engine**: Sistem penjualan produk digital (template/plugin) dengan manajemen lisensi (`app/admin/products`).
+
+### Team & Collaboration
+- [x] **Squad Portal**: Portal khusus untuk freelancer/partner mendaftar dan melamar misi (`app/squad`).
+- [x] **Visual Feedback System**: Komentar & upload gambar pada staging (`components/feedback/board.tsx` & `/api/feedback`).
+- [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
+
+### Infrastructure
+- [x] **System Key Rotation**: Manajemen LLM API keys dengan redundansi (`app/genkit/ai.ts`).
 - [x] **Media Library 2.0**: Manajemen file canggih dengan folder, pencarian, dan toggle view (`components/admin/media`).
 - [x] **Cloudflare R2 Integration**: Penyimpanan aset produksi yang scalable dan hemat biaya.
 - [x] **Enterprise-Grade Security**: Content Security Policy (CSP) headers & Image Optimization (Next.js 16).
-- [x] **Visual Feedback System**: Komentar & upload gambar pada staging (`components/feedback/board.tsx` & `/api/feedback`).
 - [x] **Production Deployment Script**: Docker setup tersedia (`Dockerfile` & `docker-compose.yml`).
 
 ---
 
-## � 4. Quick Start
+## 🚀 4. Quick Start
 
 1.  **Install**: `bun install`
 2.  **Env**: Setup `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
