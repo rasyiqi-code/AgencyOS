@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { currencyService } from "@/lib/server/currency-service";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     const rates = await currencyService.getRates();
 

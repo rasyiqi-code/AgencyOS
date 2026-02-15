@@ -33,7 +33,6 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
 
     useEffect(() => {
         const timer = setTimeout(() => setMounted(true), 0);
-        return () => clearTimeout(timer);
         // Sync with localStorage on client mount
         if (typeof window !== 'undefined') {
             const cached = localStorage.getItem('agency-os-currency');
@@ -60,7 +59,7 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
         }
 
         // Fetch Dynamic Rate
-        fetch('/api/currency/rates')
+        fetch('/api/currency/rates', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
                 if (data.rates && data.rates.IDR) {
@@ -68,6 +67,8 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
                 }
             })
             .catch(err => console.error("Rate fetch failed", err));
+
+        return () => clearTimeout(timer);
     }, []);
 
     if (!mounted) {
