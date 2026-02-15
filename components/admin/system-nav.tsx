@@ -50,11 +50,6 @@ export function SystemNav() {
             icon: Share2
         },
         {
-            href: "/admin/system/ai",
-            label: "Generative AI",
-            icon: Sparkles
-        },
-        {
             href: "/admin/system/seo",
             label: "SEO / Metadata",
             icon: Globe

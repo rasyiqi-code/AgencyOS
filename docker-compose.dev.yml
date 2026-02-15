@@ -11,7 +11,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/agency_os?schema=public
+      - DATABASE_URL=postgresql://postgres:BismillahKayaRaya@01@db:5432/agency_os?schema=public
       - NEXT_PUBLIC_STACK_PROJECT_ID=${NEXT_PUBLIC_STACK_PROJECT_ID}
       - NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=${NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY}
       - STACK_SECRET_SERVER_KEY=${STACK_SECRET_SERVER_KEY}
@@ -26,7 +26,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres_password_change_me
+      POSTGRES_PASSWORD: BismillahKayaRaya@01
       POSTGRES_DB: agency_os
     volumes:
       - postgres_data:/var/lib/postgresql/data
