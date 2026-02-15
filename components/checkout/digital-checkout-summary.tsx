@@ -67,12 +67,12 @@ export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, applie
         {
             icon: ShieldCheck,
             title: td("licenseIncluded"),
-            description: "Commercial use authorized"
+            description: t("licenseDesc")
         },
         {
             icon: Package,
             title: td("fullSourceCode"),
-            description: "Access to all files immediately"
+            description: t("sourceCodeDesc")
         }
     ];
 
@@ -83,8 +83,8 @@ export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, applie
                     <h2 className="text-2xl font-bold text-white mb-2">{product.name}</h2>
                     <p className="text-zinc-400 capitalize">
                         {product.purchaseType === "subscription"
-                            ? `Digital Subscription / ${product.interval || "month"}`
-                            : "One-time Digital License Purchase"}
+                            ? t("digitalSubscription", { interval: product.interval || "month" })
+                            : t("digitalOneTime")}
                     </p>
                 </div>
 

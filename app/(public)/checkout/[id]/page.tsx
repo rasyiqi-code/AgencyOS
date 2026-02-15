@@ -26,6 +26,10 @@ export default async function CheckoutPage(props: PageProps) {
     const searchParams = await props.searchParams;
     const paymentType = typeof searchParams.paymentType === 'string' ? (searchParams.paymentType as "FULL" | "DP" | "REPAYMENT") : undefined;
 
+    const { currencyService } = await import("@/lib/server/currency-service");
+    const exchangeRates = await currencyService.getRates();
+    const activeRate = exchangeRates?.rates.IDR || 15000;
+
     const product = await prisma.product.findUnique({
         where: { id }
     });
@@ -70,6 +74,7 @@ export default async function CheckoutPage(props: PageProps) {
                         bonuses={bonusesData}
                         userId={userId}
                         userEmail={userEmail}
+                        activeRate={activeRate}
                     />
                 </div>
             </div>
@@ -86,13 +91,13 @@ export default async function CheckoutPage(props: PageProps) {
     if (estimate) {
         // Fetch dependencies for Service Checkout
         const user = await stackServerApp.getUser();
+
         const settings = await prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'usd_rate', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
         });
         const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
-        const activeRate = parseInt(getSetting('usd_rate') || "15000");
 
-        const context = estimate.prompt === "Instant Quote Calculator" ? "CALCULATOR" : "SERVICE";
+        const context = (estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE";
         const bonuses = await getBonuses(context);
 
         const hasActiveGateway = await paymentGatewayService.hasActiveGateway();
@@ -145,7 +150,7 @@ export default async function CheckoutPage(props: PageProps) {
                         defaultPaymentType={paymentType}
                         projectPaidAmount={estimate.project?.paidAmount || 0}
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
-                        context={estimate.prompt === "Instant Quote Calculator" ? "CALCULATOR" : "SERVICE"}
+                        context={context}
                     />
                 </div>
             </div>

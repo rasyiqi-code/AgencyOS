@@ -17,12 +17,14 @@ export function DigitalCheckoutContent({
     product,
     bonuses,
     userId,
-    userEmail
+    userEmail,
+    activeRate
 }: {
     product: Product;
     bonuses: Bonus[];
     userId?: string;
     userEmail?: string;
+    activeRate?: number;
 }) {
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
@@ -45,13 +47,14 @@ export function DigitalCheckoutContent({
             </div>
 
             {/* Right: Payment Form */}
-            <div className="w-full lg:w-[450px]">
+            <div className="w-full lg:w-96 sticky top-24">
                 <CheckoutForm
                     product={product}
                     userId={userId}
                     userEmail={userEmail}
                     appliedCoupon={appliedCoupon}
                     amount={discountedAmount}
+                    activeRate={activeRate}
                 />
             </div>
         </div>

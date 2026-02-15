@@ -51,6 +51,7 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
         }
     };
 
+    const estimatedDays = Math.ceil(estimate.totalHours / 6);
     const salesPoints = [
         {
             icon: ShieldCheck,
@@ -60,7 +61,9 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
         {
             icon: Zap,
             title: t("fastDelivery"),
-            description: t("turnaround", { days: Math.ceil(estimate.totalHours / 6) })
+            description: (!estimate.serviceId || context === "CALCULATOR") && estimatedDays > 0
+                ? t("turnaround", { days: estimatedDays })
+                : t("fastTurnaroundDesc")
         }
     ];
 
