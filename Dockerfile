@@ -60,14 +60,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/start.sh ./start.sh
 
-# Copy full @prisma scope (includes client, adapter-pg, config) to ensure all assets/WASM are present
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-# Copy dotenv for config loading
-COPY --from=builder /app/node_modules/dotenv ./node_modules/dotenv
-# Copy effect dependency for @prisma/config
-COPY --from=builder /app/node_modules/effect ./node_modules/effect
+# Copy package.json and bun.lock to ensure we can install full prod dependencies
+COPY package.json bun.lock ./
 
-# Install Prisma CLI globally to avoid modifying the standalone node_modules structure
+# Install ALL production dependencies (includes @prisma/config, dotenv, and their transitive deps like effect)
+# This replaces the stripped-down standalone node_modules with a full correct set
+RUN bun install --production
+
+# Install Prisma CLI globally to avoid modifying the local node_modules structure (though now it matters less)
 RUN bun add -g prisma@7.4.0
 
 # Ensure permissions for nextjs user
