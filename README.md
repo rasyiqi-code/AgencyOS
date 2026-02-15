@@ -1,7 +1,7 @@
 # AgencyOS: The Hybrid Agency Platform
 
 > **Vision**: Menciptakan "Sistem Operasi Bisnis" yang memungkinkan agensi berjalan sebagai Hybrid Agency (AI + Human).
-> **Filosofi**: Async First. AI Augmented. Squad Based. Transparency.
+> **Filosofi**: Async First. AI Augmented. Zero-bloat. Transparency.
 
 ---
 
@@ -9,20 +9,15 @@
 
 ### A. The Client (User)
 *   **Akses**: Dashboard Klien (`/dashboard`)
-*   **Status**: Terimplementasi (Basic). Menggunakan Stack Auth untuk manajemen sesi.
-*   **Fitur**: Project overview, integrasi chatbot, pencatatan feedback.
+*   **Status**: Terimplementasi.
+*   **Fitur**: Project overview, integrasi chatbot, pencatatan feedback, pembayaran termin.
 
 ### B. The Architect (Super Admin)
 *   **Akses**: Admin Panel (`/admin`)
 *   **Status**: Terimplementasi (Advanced).
-*   **Fitur**: Management proyek, manajemen keuangan (invoices/orders), pengaturan sistem (AI keys, payment settings).
+*   **Fitur**: Management proyek, manajemen keuangan (invoices/orders), pengaturan sistem (AI keys, payment settings), Ticketing Support.
 
-### C. The Squad Lead (Developer)
-*   **Akses**: Squad Portal (`/squad`)
-*   **Status**: Tahap Awal (WIP).
-*   **Fitur**: Mission board sederhana, manajemen profil.
-
-### D. The AI Agent (CredibleBot)
+### C. The AI Agent (CredibleBot)
 *   **Engine**: Genkit (Google Gemini)
 *   **Status**: Produksi.
 *   **Fitur**: Rotasi API Key otomatis (Load Balancing), PRD generation, konsultasi estimasi harga.
@@ -38,7 +33,7 @@
 - **Icons**: Lucide React
 
 ### Backend & Database
-- **Auth**: Stack Auth (Migration from NextAuth selesai)
+- **Auth**: Stack Auth
 - **Database**: PostgreSQL with Prisma ORM 7.2.0
 - **Storage**: AWS S3 (via `@aws-sdk/client-s3`) / Cloudflare R2
 - **Payments**: Midtrans / Creem (Fully Automated)
@@ -58,17 +53,17 @@
 - [x] **Support Ticket System**: Sistem tiket support dengan integrasi database (`prisma/schema.prisma`).
 - [x] **Invoice PDF Generator**: Pembuatan invoice otomatis (`components/checkout/invoice-document.tsx`).
 - [x] **Conditional Floating Chat**: Widget chat pintar yang menyesuaikan konteks halaman.
+- [x] **Digital Orders Management**: Alur lengkap penjualan produk digital dengan lisensi otomatis (`app/admin/finance/digital-orders`).
+- [x] **Manual Payment Verification**: Sistem konfirmasi pembayaran manual oleh Admin dengan bukti transfer.
+- [x] **Media Library 2.0**: Manajemen file canggih dengan folder, pencarian, dan toggle view (`components/admin/media`).
+- [x] **Cloudflare R2 Integration**: Penyimpanan aset produksi yang scalable dan hemat biaya.
+- [x] **Enterprise-Grade Security**: Content Security Policy (CSP) headers & Image Optimization (Next.js 16).
+- [x] **Visual Feedback System**: Komentar & upload gambar pada staging (`components/feedback/board.tsx` & `/api/feedback`).
+- [x] **Production Deployment Script**: Docker setup tersedia (`Dockerfile` & `docker-compose.yml`).
 
 ---
 
-## 🚧 4. Apa yang Belum? (Missing/WIP)
-- [ ] **GitHub & Vercel Integrations**: Integrasi baru sebatas UI mockup di halaman admin. API route fungsional untuk OAuth GitHub dan Vercel perlu diimplementasikan secara penuh.
-- [ ] **Squad Wallet & Payout**: Model database sudah ada, namun UI withdrawal dan integrasi payout gateway belum aktif.
-- [ ] **Visual Feedback Pinning**: Fitur mengomentari langsung pada layar staging (mockup di `feedback-board.tsx`).
-- [ ] **Automated Testing Suite**: Kerangka pengujian ada, namun unit test untuk logika pricing & AI flow masih minim.
-- [x] **Production Deployment Script**: Docker setup tersedia (`Dockerfile` & `docker-compose.yml`), panduan lengkap di `DEPLOY_DOKPLOY.md`.
-
----
+## � 4. Quick Start
 
 1.  **Install**: `bun install`
 2.  **Env**: Setup `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
@@ -77,12 +72,16 @@
     *   **Lokal Docker**: `docker compose -f docker-compose.dev.yml up -d db`
 4.  **Dev Server**: `bun dev`
 
-## 🚢 6. Deployment (Dokploy / VPS)
-Lihat panduan lengkap di **`DEPLOY_DOKPLOY.md`**.
+---
+
+## 🚢 5. Deployment (Dokploy / VPS)
+Lihat panduan lengkap di **`DEPLOY.md`**.
 *   **One-Click Deploy**: Gunakan `docker-compose.yml` (App + DB).
 *   **Manual Deploy**: Gunakan `Dockerfile` (App only) + Managed DB.
 
-## 🛠️ 7. Command Cheat Sheet (Useful)
+---
+
+## 🛠️ 6. Command Cheat Sheet (Useful)
 
 ### 🐳 Docker Management
 | Action | Command |
@@ -98,6 +97,7 @@ Lihat panduan lengkap di **`DEPLOY_DOKPLOY.md`**.
 | **Open DB GUI** | `bunx prisma studio` |
 | **Migrate Dev** | `bun prisma migrate dev --name <migration_name>` |
 | **Reset DB** | `bun prisma migrate reset` |
+| **Generate Client** | `bun x prisma generate` |
 | **Seed Data** | `bun prisma db seed` |
 
 ### 🚀 Deployment Prep
