@@ -64,15 +64,15 @@ COPY --from=builder /app/start.sh ./start.sh
 COPY package.json bun.lock ./
 
 # Install ALL production dependencies (includes @prisma/config, dotenv, and their transitive deps like effect)
+# Install ALL production dependencies (includes @prisma/config, dotenv, and their transitive deps like effect)
 # This replaces the stripped-down standalone node_modules with a full correct set
 RUN bun install --production
 
-# Generate Prisma Client (post-install to ensure binding is present)
-# Using a dummy DATABASE_URL is standard for generation
-ENV DATABASE_URL="postgresql://postgres:password@localhost:5432/agency_os"
-RUN bunx prisma generate
+# Copy generated Prisma Client from builder stage
+# This avoids running 'prisma generate' in the runner stage which was failing
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
-# Install Prisma CLI globally to avoid modifying the local node_modules structure (though now it matters less)
+# Install Prisma CLI globally for runtime migrations (db push)
 RUN bun add -g prisma@7.4.0
 
 # Ensure permissions for nextjs user
