@@ -1,6 +1,7 @@
 
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { getAppUrl } from "@/lib/shared/url";
 
 export async function GET() {
     if (!await isAdmin()) {
@@ -8,7 +9,7 @@ export async function GET() {
     }
 
     const clientId = process.env.GITHUB_CLIENT_ID;
-    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/integrations/github/callback`;
+    const redirectUri = `${getAppUrl()}/api/integrations/github/callback`;
 
     if (!clientId) {
         return NextResponse.json({ error: "GITHUB_CLIENT_ID not configured" }, { status: 500 });

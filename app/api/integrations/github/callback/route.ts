@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { getAppUrl } from "@/lib/shared/url";
 import type { PrismaWithIntegration } from "@/types/payment";
 
 export async function GET(req: Request) {
@@ -76,10 +77,11 @@ export async function GET(req: Request) {
         });
 
         // 4. Redirect back to admin integrations page
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/admin/system/integrations?success=github`);
+        // 4. Redirect back to admin integrations page
+        return NextResponse.redirect(`${getAppUrl()}/admin/system/integrations?success=github`);
     } catch (error: unknown) {
         console.error("GitHub OAuth Error:", error);
         const errorMessage = error instanceof Error ? error.message : "GitHub authentication failed";
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/admin/system/integrations?error=${encodeURIComponent(errorMessage)}`);
+        return NextResponse.redirect(`${getAppUrl()}/admin/system/integrations?error=${encodeURIComponent(errorMessage)}`);
     }
 }
