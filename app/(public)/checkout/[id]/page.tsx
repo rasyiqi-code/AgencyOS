@@ -2,7 +2,7 @@ import { CheckoutContent } from "@/components/checkout/checkout-content";
 import { DigitalCheckoutContent } from "@/components/checkout/digital-checkout-content";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { getBonuses } from "@/lib/server/marketing";
@@ -45,17 +45,15 @@ export default async function CheckoutPage(props: PageProps) {
 
     // Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
     if (product && product.isActive) {
-        let userId: string | undefined;
-        let userEmail: string | undefined;
-        try {
-            const user = await stackServerApp.getUser();
-            if (user) {
-                userId = user.id;
-                userEmail = user.primaryEmail || undefined;
-            }
-        } catch {
-            // Guest mode
+        const user = await stackServerApp.getUser().catch(() => null);
+
+        if (!user) {
+            // Enforce Login for Digital Products
+            redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
         }
+
+        const userId = user!.id;
+        const userEmail = user!.primaryEmail || undefined;
 
         const p = product;
         const productData = {

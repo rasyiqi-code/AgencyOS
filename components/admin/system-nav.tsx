@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2, Globe, FileText, Sparkles } from "lucide-react";
+import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2, Globe, FileText } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 
 export function SystemNav() {

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { validateCoupon } from "@/lib/server/marketing";
+import { stackServerApp } from "@/lib/config/stack";
 
 /**
  * API Route: POST /api/digital-checkout
@@ -16,9 +17,19 @@ import { validateCoupon } from "@/lib/server/marketing";
  * 6. Simpan snapToken ke DigitalOrder
  * 7. Return { token, orderId } ke client
  */
+
+
 export async function POST(req: Request) {
     try {
-        const { productId, email, name, userId, affiliateCode, couponCode } = await req.json();
+        // Enforce Auth
+        const user = await stackServerApp.getUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const { productId, email, name, affiliateCode, couponCode } = await req.json();
+        const userId = user.id; // Override userId from session
+
 
         // Validasi input wajib
         if (!productId || !email) {
