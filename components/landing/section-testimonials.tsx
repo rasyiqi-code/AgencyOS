@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import { Quote } from "lucide-react";
 import { prisma } from "@/lib/config/db";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TestimonialCard } from "./testimonial-card";
 
 interface DBTestimonial {
     id: string;
@@ -76,27 +75,3 @@ export async function Testimonials() {
     );
 }
 
-function TestimonialCard({ review }: { review: { name: string; role: string; text: string; image: string } }) {
-    return (
-        <div className="w-[350px] bg-zinc-900/50 border border-white/10 rounded-xl p-6 flex-shrink-0 backdrop-blur-sm hover:border-white/20 transition-colors">
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 border border-white/10 ring-2 ring-white/5">
-                        <AvatarImage src={review.image} className="object-cover" />
-                        <AvatarFallback className="bg-zinc-800 text-white font-bold text-sm">
-                            {review.name.charAt(0)}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <div className="text-white font-semibold text-sm">{review.name}</div>
-                        <div className="text-zinc-500 text-xs">{review.role}</div>
-                    </div>
-                </div>
-                <Quote className="w-5 h-5 text-brand-yellow/40" />
-            </div>
-            <p className="text-zinc-300 text-sm leading-relaxed line-clamp-2">
-                &quot;{review.text}&quot;
-            </p>
-        </div>
-    );
-}
