@@ -26,8 +26,8 @@ export async function POST(request: Request) {
         const ticket = await prisma.ticket.create({
             data: {
                 userId: user?.id,
-                email: body.email,
-                name: body.name,
+                email: body.email || user?.primaryEmail || null,
+                name: body.name || user?.displayName || user?.primaryEmail?.split('@')[0] || "Client",
                 type: body.type,
                 messages: {
                     create: {

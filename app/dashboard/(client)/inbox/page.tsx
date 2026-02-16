@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare } from "lucide-react";
+import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare, Plus } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 // import { sendMessage } from "@/app/actions/support";
 import { useCurrency } from "@/components/providers/currency-provider";
@@ -94,6 +94,27 @@ export default function InboxPage() {
         }
     }, [messages]);
 
+    const handleCreateNewChat = async () => {
+        try {
+            const res = await fetch("/api/support/ticket/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    initialMessage: isId ? "Chat baru dimulai" : "New chat started",
+                    type: "chat"
+                })
+            });
+
+            if (res.ok) {
+                const newTicket = await res.json();
+                setTickets(prev => [newTicket, ...prev]);
+                setSelectedTicketId(newTicket.id);
+            }
+        } catch (e) {
+            console.error("Failed to create chat", e);
+        }
+    };
+
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if ((!input.trim() && !file) || !selectedTicketId) return;
@@ -144,9 +165,14 @@ export default function InboxPage() {
                         <h2 className="font-semibold text-white tracking-tight">{isId ? 'Chat' : 'Chat'}</h2>
                         <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">{isId ? 'Obrolan Langsung' : 'Live Chat'}</p>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={fetchTickets} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8">
-                        <RefreshCcw className="h-3.5 w-3.5" />
-                    </Button>
+                    <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" onClick={handleCreateNewChat} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8" title={isId ? "Buat Chat Baru" : "New Chat"}>
+                            <Plus className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={fetchTickets} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8">
+                            <RefreshCcw className="h-3.5 w-3.5" />
+                        </Button>
+                    </div>
                 </div>
                 <ScrollArea className="flex-1">
                     <div className="flex flex-col p-2 gap-1">

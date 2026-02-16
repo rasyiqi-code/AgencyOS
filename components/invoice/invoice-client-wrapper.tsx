@@ -120,17 +120,19 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                     {isPaid && <span className="text-emerald-400 font-bold border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10">{t('paid')}</span>}
                 </div>
 
-                <div className="bg-white text-black rounded-lg shadow-2xl overflow-hidden min-h-[800px]">
-                    <InvoiceDocument
-                        refAction={componentRef}
-                        estimate={estimate}
-                        user={user}
-                        isPaid={isPaid}
-                        agencySettings={agencySettings}
-                        paymentType={order.type}
-                        currency={effectiveCurrency}
-                        exchangeRate={effectiveRate}
-                    />
+                <div className="bg-white text-black rounded-lg shadow-2xl overflow-x-auto min-h-[800px]">
+                    <div className="min-w-[800px] h-full">
+                        <InvoiceDocument
+                            refAction={componentRef}
+                            estimate={estimate}
+                            user={user}
+                            isPaid={isPaid}
+                            agencySettings={agencySettings}
+                            paymentType={order.type}
+                            currency={effectiveCurrency}
+                            exchangeRate={effectiveRate}
+                        />
+                    </div>
                 </div>
             </div>
 

@@ -128,7 +128,7 @@
                 "cta": "Start Strategy Session"
             }
         },
-        "ctaGeneric": "Schedule a Call"
+        "ctaGeneric": "Choose Package"
     },
     "Workflow": {
         "title": "Strategic Precision. Maximum Velocity.",
@@ -337,7 +337,8 @@
             "financeConsole": "Finance Console",
             "invoices": "Orders & Invoices",
             "projectConsole": "Project Console",
-            "integrations": "System Integrations"
+            "integrations": "System Integrations",
+            "affiliate": "Affiliate Dashboard"
         },
         "Overview": {
             "activeMission": "Active Mission",
@@ -614,5 +615,8 @@
         "thankYouPurchase": "Thank you for your purchase. Enjoy your product!",
         "oneTime": "One-time",
         "license": "License"
+    },
+    "FloatingChat": {
+        "needHelp": "Need Help? 👋"
     }
 }

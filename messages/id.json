@@ -129,7 +129,7 @@
                 "cta": "Mulai Sesi Strategi"
             }
         },
-        "ctaGeneric": "Jadwalkan Konsultasi"
+        "ctaGeneric": "Pilih Paket"
     },
     "Workflow": {
         "title": "Presisi Strategis. Kecepatan Maksimal.",
@@ -408,7 +408,8 @@
             "financeConsole": "Konsol Keuangan",
             "invoices": "Pesanan & Faktur",
             "projectConsole": "Konsol Proyek",
-            "integrations": "Integrasi Sistem"
+            "integrations": "Integrasi Sistem",
+            "affiliate": "Dashboard Afiliasi"
         },
         "Overview": {
             "activeMission": "Misi Aktif",
@@ -554,7 +555,7 @@
         "about": "Tentang layanan ini",
         "included": "Yang Termasuk",
         "purchasePackage": "Beli Paket",
-        "purchasePlan": "Beli Plan",
+        "purchasePlan": "Langganan",
         "signIn": "Silakan masuk untuk membeli",
         "error": "Gagal memproses pembelian. Silakan coba lagi."
     },
@@ -614,5 +615,8 @@
         "thankYouPurchase": "Terima kasih atas pembelian Anda. Selamat menikmati produk Anda!",
         "oneTime": "Sekali bayar",
         "license": "Lisensi"
+    },
+    "FloatingChat": {
+        "needHelp": "Butuh Bantuan? 👋"
     }
 }
