@@ -11,8 +11,11 @@ interface Props {
 export function AdminSidebarNavigation({ pmAccess, financeAccess }: Props) {
     const pathname = usePathname();
 
+    // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
+    const cleanPath = pathname.replace(/^\/(en|id)/, "");
+
     // 1. Finance View
-    if (pathname.startsWith("/admin/finance")) {
+    if (cleanPath.startsWith("/admin/finance")) {
         // Validation: Ensure user actually has access
         if (financeAccess) {
             return <SidebarFinance />;
@@ -20,7 +23,7 @@ export function AdminSidebarNavigation({ pmAccess, financeAccess }: Props) {
     }
 
     // 2. Project View
-    if (pathname.startsWith("/admin/pm")) {
+    if (cleanPath.startsWith("/admin/pm")) {
         // Validation: Ensure user actually has access
         if (pmAccess) {
             return <SidebarPM />;
