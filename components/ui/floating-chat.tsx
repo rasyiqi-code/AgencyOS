@@ -295,6 +295,10 @@ export function FloatingChatWidget() {
         }
     };
 
+    const [isVisible, setIsVisible] = useState(true);
+
+    if (!isVisible) return null;
+
     if (!isOpen) {
         return (
             <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4 group transition-all duration-300 transform animate-in fade-in slide-in-from-bottom-8">
@@ -349,18 +353,28 @@ export function FloatingChatWidget() {
                 </div>
 
                 {/* Main Trigger Pill */}
-                <div className="relative shadow-2xl rounded-full transition-transform duration-300 group-hover:scale-105 cursor-pointer bg-white border border-zinc-100">
-                    {unreadCount > 0 && (
-                        <span className="absolute -top-2 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-md animate-bounce border-2 border-white">
-                            {unreadCount}
-                        </span>
-                    )}
-                    <div className="px-6 py-3 font-bold text-sm flex items-center gap-2 text-black">
-                        <span className="relative flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                        </span>
-                        {t("needHelp")}
+                <div className="relative group/pill">
+                    <button
+                        onClick={() => setIsVisible(false)}
+                        className="absolute -top-2 -left-2 z-30 bg-zinc-800 text-zinc-400 hover:text-white p-1 rounded-full opacity-0 group-hover/pill:opacity-100 transition-opacity shadow-lg border border-white/10"
+                        aria-label="Close chat widget"
+                    >
+                        <X className="w-3 h-3" />
+                    </button>
+
+                    <div className="relative shadow-2xl rounded-full transition-transform duration-300 group-hover:scale-105 cursor-pointer bg-white border border-zinc-100">
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-2 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-md animate-bounce border-2 border-white">
+                                {unreadCount}
+                            </span>
+                        )}
+                        <div className="px-6 py-3 font-bold text-sm flex items-center gap-2 text-black">
+                            <span className="relative flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                            {t("needHelp")}
+                        </div>
                     </div>
                 </div>
             </div>

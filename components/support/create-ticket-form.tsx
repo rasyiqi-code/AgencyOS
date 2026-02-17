@@ -68,19 +68,19 @@ export function CreateTicketForm() {
                 />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3">
                 <Button
                     type="button"
                     variant="ghost"
                     onClick={() => router.back()}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-zinc-400 hover:text-white w-full sm:w-auto"
                 >
                     Cancel
                 </Button>
                 <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-white text-black hover:bg-zinc-200"
+                    className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto"
                 >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
                     Submit Ticket

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare, Plus } from "lucide-react";
+import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare, Plus, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 // import { sendMessage } from "@/app/actions/support";
 import { useCurrency } from "@/components/providers/currency-provider";
@@ -159,7 +159,10 @@ export default function InboxPage() {
     return (
         <div className="flex h-[calc(100vh-140px)] rounded-2xl border border-white/5 bg-zinc-950/50 backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/50">
             {/* Sidebar List */}
-            <div className="w-80 border-r border-white/5 bg-zinc-900/30 flex flex-col">
+            <div className={cn(
+                "w-full md:w-80 border-r border-white/5 bg-zinc-900/30 flex flex-col transition-all duration-300",
+                selectedTicketId ? "hidden md:flex" : "flex"
+            )}>
                 <div className="p-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/50">
                     <div>
                         <h2 className="font-semibold text-white tracking-tight">{isId ? 'Chat' : 'Chat'}</h2>
@@ -220,7 +223,10 @@ export default function InboxPage() {
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 flex flex-col bg-zinc-950/20 relative">
+            <div className={cn(
+                "flex-1 flex flex-col bg-zinc-950/20 relative transition-all duration-300",
+                !selectedTicketId ? "hidden md:flex" : "flex"
+            )}>
                 {!selectedTicketId ? (
                     <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 space-y-4">
                         <div className="w-16 h-16 rounded-2xl bg-zinc-900/50 border border-white/5 flex items-center justify-center">
@@ -231,28 +237,38 @@ export default function InboxPage() {
                 ) : (
                     <>
                         {/* Header */}
-                        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-zinc-900/20 backdrop-blur-sm z-10">
-                            <div className="flex items-center gap-3">
-                                <Avatar className="h-9 w-9 border border-white/10">
-                                    <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-800 text-white text-xs">
-                                        CS
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <h3 className="font-medium text-white text-sm">{isId ? 'Layanan Pelanggan' : 'Customer Support'}</h3>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        <p className="text-[10px] text-emerald-400">Online</p>
-                                    </div>
+                        <div className="px-4 py-3 md:px-6 md:py-4 border-b border-white/5 flex items-center gap-3 bg-zinc-900/20 backdrop-blur-sm z-10">
+                            {/* Back Button for Mobile */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="md:hidden text-zinc-400 hover:text-white -ml-2 h-8 w-8"
+                                onClick={() => setSelectedTicketId(null)}
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </Button>
+
+                            <Avatar className="h-8 w-8 md:h-9 md:w-9 border border-white/10">
+                                <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-800 text-white text-xs">
+                                    CS
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1">
+                                <h3 className="font-medium text-white text-sm leading-tight">
+                                    {isId ? 'Layanan Pelanggan' : 'Customer Support'}
+                                </h3>
+                                <div className="flex items-center gap-1.5 mt-0.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <p className="text-[10px] text-emerald-400 font-medium">Online</p>
                                 </div>
                             </div>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/5 uppercase tracking-wide">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/5 uppercase tracking-wide hidden xs:inline-block">
                                 {isId ? 'Chat #' : 'Chat #'} {selectedTicketId.substring(0, 6)}
                             </span>
                         </div>
 
                         {/* Messages */}
-                        <ScrollArea className="flex-1 p-6" ref={scrollRef}>
+                        <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollRef}>
                             <div className="flex flex-col space-y-6">
                                 {messages.map((m, idx) => {
                                     const isAgent = m.sender === "agent" || m.sender === "admin";
@@ -261,11 +277,11 @@ export default function InboxPage() {
                                         <div
                                             key={m.id || idx}
                                             className={cn(
-                                                "flex gap-4 max-w-[85%]",
+                                                "flex gap-3 md:gap-4 max-w-[90%] md:max-w-[85%]",
                                                 !isAgent ? "ml-auto flex-row-reverse" : ""
                                             )}
                                         >
-                                            <Avatar className="h-8 w-8 mt-1 border border-white/10 shrink-0">
+                                            <Avatar className="h-7 w-7 md:h-8 md:w-8 mt-1 border border-white/10 shrink-0">
                                                 <AvatarFallback className={cn(
                                                     "text-[10px]",
                                                     isAgent ? "bg-zinc-800 text-zinc-300" : "bg-blue-600 text-white"
@@ -274,7 +290,7 @@ export default function InboxPage() {
                                                 </AvatarFallback>
                                             </Avatar>
 
-                                            <div className="space-y-1">
+                                            <div className="space-y-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className={cn("text-xs font-medium", !isAgent ? "text-zinc-400 text-right w-full" : "text-blue-400")}>
                                                         {isAgent ? (isId ? "Agen Dukungan" : "Support Agent") : (isId ? "Anda" : "You")}
@@ -282,7 +298,7 @@ export default function InboxPage() {
                                                 </div>
 
                                                 <div className={cn(
-                                                    "p-3.5 rounded-2xl text-sm leading-relaxed shadow-lg",
+                                                    "p-3 rounded-2xl text-sm leading-relaxed shadow-lg break-words",
                                                     !isAgent
                                                         ? "bg-blue-600 text-white rounded-tr-sm shadow-blue-900/20"
                                                         : "bg-zinc-800 text-white rounded-tl-sm border border-white/5"
@@ -296,10 +312,10 @@ export default function InboxPage() {
                                                             target="_blank"
                                                             className="flex items-center gap-3 p-2.5 rounded-lg bg-black/20 text-xs mt-2 hover:bg-black/40 transition-colors border border-white/5"
                                                         >
-                                                            <div className="p-1.5 rounded bg-white/10">
+                                                            <div className="p-1.5 rounded bg-white/10 shrink-0">
                                                                 <FileText className="w-3.5 h-3.5" />
                                                             </div>
-                                                            <span className="opacity-90 underline underline-offset-2">{att.name}</span>
+                                                            <span className="opacity-90 underline underline-offset-2 truncate block max-w-[150px]">{att.name}</span>
                                                         </a>
                                                     ))}
                                                 </div>
@@ -315,23 +331,23 @@ export default function InboxPage() {
                         </ScrollArea>
 
                         {/* Input Area */}
-                        <div className="p-4 border-t border-white/5 bg-zinc-900/30 backdrop-blur-md">
+                        <div className="p-3 md:p-4 border-t border-white/5 bg-zinc-900/30 backdrop-blur-md">
                             {file && (
-                                <div className="flex items-center gap-2 text-xs bg-blue-500/10 text-blue-400 p-2 rounded-lg border border-blue-500/20 w-fit mb-3">
-                                    <Paperclip className="w-3 h-3" />
-                                    <span className="font-medium">{file.name}</span>
-                                    <button onClick={() => setFile(null)} className="ml-2 hover:text-white transition-colors">
+                                <div className="flex items-center gap-2 text-xs bg-blue-500/10 text-blue-400 p-2 rounded-lg border border-blue-500/20 w-fit mb-3 max-w-full">
+                                    <Paperclip className="w-3 h-3 shrink-0" />
+                                    <span className="font-medium truncate block flex-1">{file.name}</span>
+                                    <button onClick={() => setFile(null)} className="ml-2 hover:text-white transition-colors shrink-0">
                                         <X className="w-3 h-3" />
                                     </button>
                                 </div>
                             )}
-                            <form onSubmit={handleSendMessage} className="flex gap-3 relative">
+                            <form onSubmit={handleSendMessage} className="flex gap-2 relative items-end">
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => document.getElementById('chat-file-upload')?.click()}
-                                    className="text-zinc-400 hover:text-white hover:bg-white/10 h-11 w-11 shrink-0 rounded-xl"
+                                    className="text-zinc-400 hover:text-white hover:bg-white/10 h-10 w-10 shrink-0 rounded-xl"
                                 >
                                     <Paperclip className="h-5 w-5" />
                                 </Button>
@@ -345,21 +361,21 @@ export default function InboxPage() {
                                     <Input
                                         value={input}
                                         onChange={e => setInput(e.target.value)}
-                                        placeholder={isId ? 'Ketik pesan Anda...' : 'Type your message...'}
-                                        className="w-full bg-black/40 border-white/10 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-blue-500/30 h-11 rounded-xl pl-4 pr-4"
+                                        placeholder={isId ? 'Ketik pesan...' : 'Type message...'}
+                                        className="w-full bg-black/40 border-white/10 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-blue-500/30 h-10 rounded-xl pl-3 pr-3 text-sm"
                                     />
                                 </div>
                                 <Button
                                     type="submit"
                                     size="icon"
                                     disabled={!input.trim() && !file}
-                                    className="h-11 w-11 shrink-0 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 transition-all hover:scale-105"
+                                    className="h-10 w-10 shrink-0 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 transition-all active:scale-95"
                                     onClick={(e) => { if (loading) e.preventDefault(); }}
                                 >
                                     {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                                 </Button>
                             </form>
-                            <div className="text-center mt-2">
+                            <div className="text-center mt-2 hidden md:block">
                                 <span className="text-[10px] text-zinc-600">Press Enter to send</span>
                             </div>
                         </div>

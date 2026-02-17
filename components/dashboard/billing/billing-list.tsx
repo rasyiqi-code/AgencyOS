@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Calendar, FileText, CreditCard, Copy } from "lucide-react";
+import { Search, Filter, ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Calendar, FileText, CreditCard, Copy, LayoutGrid, Hourglass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -103,12 +103,14 @@ export function BillingList({ orders }: BillingListProps) {
                 <div className="flex items-center bg-zinc-900 rounded-full p-1 border border-white/5 overflow-x-auto max-w-full no-scrollbar">
                     <FilterButton
                         label="All"
+                        icon={<LayoutGrid className="w-3.5 h-3.5" />}
                         active={statusFilter === 'ALL'}
                         count={getCount('ALL')}
                         onClick={() => handleFilterChange('ALL')}
                     />
                     <FilterButton
                         label="Pending"
+                        icon={<Clock className="w-3.5 h-3.5" />}
                         active={statusFilter === 'PENDING'}
                         count={getCount('PENDING')}
                         onClick={() => handleFilterChange('PENDING')}
@@ -116,6 +118,7 @@ export function BillingList({ orders }: BillingListProps) {
                     />
                     <FilterButton
                         label="Waiting Verification"
+                        icon={<Hourglass className="w-3.5 h-3.5" />}
                         active={statusFilter === 'WAITING_VERIFICATION'}
                         count={getCount('WAITING_VERIFICATION')}
                         onClick={() => handleFilterChange('WAITING_VERIFICATION')}
@@ -123,6 +126,7 @@ export function BillingList({ orders }: BillingListProps) {
                     />
                     <FilterButton
                         label="Paid"
+                        icon={<CheckCircle2 className="w-3.5 h-3.5" />}
                         active={statusFilter === 'PAID'}
                         count={getCount('PAID')}
                         onClick={() => handleFilterChange('PAID')}
@@ -258,7 +262,7 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                     </div>
 
                     {/* Right: Status & Amount */}
-                    <div className="flex items-center justify-between sm:justify-end gap-4 sm:mr-2 w-full sm:w-auto border-t border-white/5 sm:border-0 pt-3 sm:pt-0 mt-1 sm:mt-0">
+                    <div className="flex items-center justify-between sm:justify-end gap-4 sm:mr-2 w-full sm:w-auto border-t border-white/5 sm:border-0 pt-3 sm:pt-0 mt-3 sm:mt-0">
                         <Badge variant="outline" className={`py-0.5 px-2 text-[10px] h-6 flex items-center gap-1.5 whitespace-nowrap ${statusClass}`}>
                             {statusIcon}
                             {isPartial ? 'PARTIAL (DP)' : order.status.replace(/_/g, ' ').toUpperCase()}
@@ -329,7 +333,7 @@ function BillingListItem({ order }: { order: BillingOrder }) {
 }
 
 
-function FilterButton({ label, active, onClick, count, color }: { label: string, active: boolean, onClick: () => void, count: number, color?: string }) {
+function FilterButton({ label, icon, active, onClick, count, color }: { label: string, icon: React.ReactNode, active: boolean, onClick: () => void, count: number, color?: string }) {
     return (
         <button
             onClick={onClick}
@@ -337,8 +341,10 @@ function FilterButton({ label, active, onClick, count, color }: { label: string,
                 px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2
                 ${active ? 'bg-zinc-800 text-white shadow-sm ring-1 ring-white/10' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'}
             `}
+            title={label}
         >
-            <span className={active && color ? color : ''}>{label}</span>
+            <span className={`block sm:hidden ${active && color ? color : ''}`}>{icon}</span>
+            <span className={`hidden sm:block ${active && color ? color : ''}`}>{label}</span>
             <span className={`px-1.5 py-0.5 rounded-full bg-zinc-950 text-[10px] min-w-[20px] text-center ${active ? 'text-white' : 'text-zinc-600'}`}>
                 {count}
             </span>

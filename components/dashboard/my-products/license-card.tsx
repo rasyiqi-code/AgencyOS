@@ -123,14 +123,14 @@ export function LicenseCard({ license }: LicenseCardProps) {
                     <div className="text-right text-zinc-300 capitalize">{license.product.type}</div>
                 </div>
             </CardContent>
-            <CardFooter className="flex gap-2 pt-3 border-t border-zinc-800">
+            <CardFooter className="flex flex-col sm:flex-row gap-2 pt-3 border-t border-zinc-800">
                 {/* Regenerate Button */}
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={handleRegenerate}
                     disabled={regenerating}
-                    className="border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500"
+                    className="w-full sm:w-auto border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 order-2 sm:order-1"
                 >
                     <RefreshCw className={`w-4 h-4 mr-1.5 ${regenerating ? 'animate-spin' : ''}`} />
                     Regenerasi Key
@@ -142,7 +142,7 @@ export function LicenseCard({ license }: LicenseCardProps) {
                         variant="outline"
                         size="sm"
                         asChild
-                        className="border-brand-yellow/30 text-brand-yellow hover:bg-brand-yellow/10"
+                        className="w-full sm:w-auto border-brand-yellow/30 text-brand-yellow hover:bg-brand-yellow/10 order-1 sm:order-2"
                     >
                         <a href={license.product.fileUrl} target="_blank" rel="noopener noreferrer">
                             <Download className="w-4 h-4 mr-1.5" />

@@ -37,7 +37,49 @@ export function TicketList({ tickets }: TicketListProps) {
                 </Link>
             </div>
 
-            <div className="rounded-xl border border-white/5 bg-zinc-900/50 overflow-hidden">
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col gap-3">
+                {tickets.length === 0 ? (
+                    <div className="p-8 text-center text-zinc-500 text-sm border border-white/5 rounded-xl bg-zinc-900/50">
+                        No tickets found. Need help? Create a new ticket.
+                    </div>
+                ) : tickets.map((ticket) => (
+                    <div
+                        key={ticket.id}
+                        onClick={() => router.push(`/dashboard/support/${ticket.id}`)}
+                        className="p-4 rounded-xl border border-white/5 bg-zinc-900/50 active:bg-zinc-800 transition-colors space-y-3 cursor-pointer"
+                    >
+                        <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-2">
+                                <Badge className={
+                                    ticket.status === 'open' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                        ticket.status === 'closed' ? 'bg-zinc-800 text-zinc-500 border-zinc-700' :
+                                            'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                }>
+                                    {ticket.status.toUpperCase()}
+                                </Badge>
+                                <span className="font-mono text-xs text-zinc-500">
+                                    #{ticket.id.slice(-6).toUpperCase()}
+                                </span>
+                            </div>
+                            <span className="text-[10px] text-zinc-600">
+                                {new Date(ticket.createdAt).toLocaleDateString()}
+                            </span>
+                        </div>
+                        <p className="text-sm text-zinc-300 line-clamp-2 leading-relaxed">
+                            {ticket.messages[0]?.content || "No messages"}
+                        </p>
+                        <div className="flex items-center justify-end">
+                            <Button size="sm" variant="ghost" className="h-7 text-xs text-zinc-400 hover:text-white -mr-2">
+                                View Details <MessageCircle className="w-3 h-3 ml-1.5" />
+                            </Button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block rounded-xl border border-white/5 bg-zinc-900/50 overflow-hidden">
                 <Table>
                     <TableHeader className="bg-white/5">
                         <TableRow className="hover:bg-transparent border-white/5">
