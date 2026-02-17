@@ -9,13 +9,17 @@ import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
+    const debugSteps: string[] = [];
     try {
+        debugSteps.push("Starting checkout");
         const user = await stackServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+        debugSteps.push("User authenticated: " + user.id);
 
         const { projectId, estimateId, title, paymentType = "FULL", appliedCoupon, currency = "USD" } = await req.json();
+        debugSteps.push(`Request parsed. Project: ${projectId}, Estimate: ${estimateId}, Type: ${paymentType}`);
 
         if (!projectId && !estimateId) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -27,6 +31,7 @@ export async function POST(req: Request) {
 
         // If no projectId but we have estimateId, find or create the project
         if (!finalProjectId && estimateId) {
+            debugSteps.push("Looking up estimate");
             const estimate = await prisma.estimate.findUnique({
                 where: { id: estimateId },
                 include: { project: true, service: true }
@@ -35,6 +40,7 @@ export async function POST(req: Request) {
             if (!estimate) {
                 return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
             }
+            debugSteps.push("Estimate found");
 
             dbAmount = estimate.totalCost;
 
@@ -49,6 +55,7 @@ export async function POST(req: Request) {
             if (estimate.project) {
                 finalProjectId = estimate.project.id;
             } else {
+                debugSteps.push("Creating new project");
                 // Create new project from estimate
                 const newProject = await prisma.project.create({
                     data: {
@@ -65,6 +72,7 @@ export async function POST(req: Request) {
                 finalProjectId = newProject.id;
             }
         } else if (finalProjectId) {
+            debugSteps.push("Looking up existing project");
             // Existing project - find the price from estimate or service
             const project = await prisma.project.findUnique({
                 where: { id: finalProjectId },
@@ -74,6 +82,7 @@ export async function POST(req: Request) {
             if (!project) {
                 return NextResponse.json({ error: "Project not found" }, { status: 404 });
             }
+            debugSteps.push("Project found");
 
             if (project.estimate) {
                 dbAmount = project.estimate.totalCost;
@@ -106,6 +115,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid payment amount calculation" }, { status: 400 });
         }
 
+        debugSteps.push("Calculating amount to pay");
         // Calculate amount based on payment type
         let amountToPay = dbAmount;
         let itemName = title ? title.substring(0, 50) : "Project Payment";
@@ -153,6 +163,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid payment amount after discount" }, { status: 400 });
         }
 
+        debugSteps.push("Converting currency");
         // Convert to IDR and ensure integer for Midtrans
         // Determine Rate and IDR Amount based on requested currency
         let finalRate = 1;
@@ -168,6 +179,7 @@ export async function POST(req: Request) {
 
         console.log(`[CHECKOUT] Type: ${paymentType}, Currency: ${currency}, Amount: ${amountToPay} USD -> ${finalIdrAmount} IDR (Rate: ${finalRate})`);
 
+        debugSteps.push("Checking gateway availability");
         // Detect gateway availability
         const hasGateway = await paymentGatewayService.hasActiveGateway();
 
@@ -182,10 +194,12 @@ export async function POST(req: Request) {
 
         // Reuse existing order logic
         if (existingOrder && existingOrder.amount === amountToPay) {
+            debugSteps.push("Reusing existing order: " + existingOrder.id);
             const orderId = existingOrder.id;
             let snapToken = existingOrder.snapToken;
 
             if (hasGateway && !snapToken) {
+                debugSteps.push("Generating new snap token for existing order");
                 const parameter = {
                     transaction_details: {
                         order_id: orderId,
@@ -226,12 +240,14 @@ export async function POST(req: Request) {
             await prisma.order.delete({ where: { id: existingOrder.id } });
         }
 
+        debugSteps.push("Creating new order ID");
         // Create a unique order ID
         const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
         let snapToken = null;
 
         if (hasGateway) {
+            debugSteps.push("Initializing Midtrans transaction");
             // Prepare Midtrans transaction details
             const parameter = {
                 transaction_details: {
@@ -259,12 +275,14 @@ export async function POST(req: Request) {
             const snap = await getSnap();
             const transaction = await snap.createTransaction(parameter);
             snapToken = transaction.token;
+            debugSteps.push("Snap token generated");
         }
 
         // Check for affiliate cookie
         const cookieStore = await cookies();
         const affiliateCode = cookieStore.get('agencyos_affiliate_id')?.value;
 
+        debugSteps.push("Saving order to DB");
         // Save order to database
         await prisma.order.create({
             data: {
@@ -311,10 +329,15 @@ export async function POST(req: Request) {
             data: updateData
         });
 
+        debugSteps.push("Success");
         return NextResponse.json({ token: snapToken, orderId });
     } catch (error) {
         console.error("[MIDTRANS_CHECKOUT_ERROR]", error);
-        return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+        return NextResponse.json({
+            error: error instanceof Error ? error.message : "Internal Error",
+            debugSteps,
+            details: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+        }, { status: 500 });
     }
 }
 
