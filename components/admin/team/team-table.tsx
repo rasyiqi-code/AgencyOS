@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import {
-    Table,
     TableBody,
     TableCell,
     TableHead,
@@ -85,68 +84,70 @@ export function TeamTable({ data, currentUserId }: TeamTableProps) {
             </div>
 
             <div className="rounded-md border border-zinc-800 bg-zinc-900/50">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="border-zinc-800 hover:bg-transparent">
-                            <TableHead className="w-[300px]">User</TableHead>
-                            <TableHead className="text-center w-[150px]">Project Manager</TableHead>
-                            <TableHead className="text-center w-[150px]">Finance</TableHead>
-                            <TableHead className="text-center w-[150px]">Developer</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredData.map((user) => (
-                            <TableRow key={user.id} className="border-zinc-800 hover:bg-zinc-900/50">
-                                <TableCell>
-                                    <div className="flex items-center gap-3">
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarImage src={user.profileImageUrl || ''} />
-                                            <AvatarFallback>{user.displayName.substring(0, 2).toUpperCase()}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex flex-col">
-                                            <span className="font-medium text-white">{user.displayName}</span>
-                                            <span className="text-xs text-zinc-500">{user.email}</span>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="flex justify-center">
-                                        <Switch
-                                            checked={user.isPm}
-                                            disabled={loading === `${user.id}-manage_projects` || user.id === currentUserId}
-                                            onCheckedChange={() => handleToggle(user.id, user.email, 'manage_projects', user.isPm)}
-                                            className="data-[state=checked]:bg-indigo-600"
-                                        />
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="flex justify-center">
-                                        <Switch
-                                            checked={user.isFinance}
-                                            disabled={loading === `${user.id}-manage_billing` || user.id === currentUserId}
-                                            onCheckedChange={() => handleToggle(user.id, user.email, 'manage_billing', user.isFinance)}
-                                            className="data-[state=checked]:bg-emerald-600"
-                                        />
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    <div className="flex justify-center">
-                                        <Switch
-                                            checked={user.isDeveloper}
-                                            disabled={loading === `${user.id}-developer` || user.id === currentUserId}
-                                            onCheckedChange={() => handleToggle(user.id, user.email, 'developer', user.isDeveloper)}
-                                            className="data-[state=checked]:bg-amber-500"
-                                        />
-                                    </div>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {/* Placeholder for future actions like Delete */}
-                                </TableCell>
+                <div className="w-full overflow-x-auto max-w-[85vw] md:max-w-full">
+                    <table className="w-full caption-bottom text-sm whitespace-nowrap" style={{ minWidth: '800px' }}>
+                        <TableHeader>
+                            <TableRow className="border-zinc-800 hover:bg-transparent">
+                                <TableHead className="w-[300px]">User</TableHead>
+                                <TableHead className="text-center w-[150px]">Project Manager</TableHead>
+                                <TableHead className="text-center w-[150px]">Finance</TableHead>
+                                <TableHead className="text-center w-[150px]">Developer</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredData.map((user) => (
+                                <TableRow key={user.id} className="border-zinc-800 hover:bg-zinc-900/50">
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-9 w-9">
+                                                <AvatarImage src={user.profileImageUrl || ''} />
+                                                <AvatarFallback>{user.displayName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-white">{user.displayName}</span>
+                                                <span className="text-xs text-zinc-500">{user.email}</span>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Switch
+                                                checked={user.isPm}
+                                                disabled={loading === `${user.id}-manage_projects` || user.id === currentUserId}
+                                                onCheckedChange={() => handleToggle(user.id, user.email, 'manage_projects', user.isPm)}
+                                                className="data-[state=checked]:bg-indigo-600"
+                                            />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Switch
+                                                checked={user.isFinance}
+                                                disabled={loading === `${user.id}-manage_billing` || user.id === currentUserId}
+                                                onCheckedChange={() => handleToggle(user.id, user.email, 'manage_billing', user.isFinance)}
+                                                className="data-[state=checked]:bg-emerald-600"
+                                            />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Switch
+                                                checked={user.isDeveloper}
+                                                disabled={loading === `${user.id}-developer` || user.id === currentUserId}
+                                                onCheckedChange={() => handleToggle(user.id, user.email, 'developer', user.isDeveloper)}
+                                                className="data-[state=checked]:bg-amber-500"
+                                            />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        {/* Placeholder for future actions like Delete */}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </table>
+                </div>
             </div>
             <p className="text-xs text-zinc-500 mt-2">
                 * Toggling a role saves immediately. Ensure you grant roles to trusted users only.

@@ -40,7 +40,7 @@ export function FinanceTable({ data }: FinanceTableProps) {
                     hover:[&::-webkit-scrollbar-thumb]:bg-white/20
                     transition-colors"
                 >
-                    <table className="border-separate border-spacing-0 table-fixed w-full text-sm relative">
+                    <table className="border-separate border-spacing-0 table-fixed w-full min-w-[1000px] text-sm relative">
                         <thead>
                             {table.getHeaderGroups().map((headerGroup: HeaderGroup<FinanceData>) => (
                                 <tr key={headerGroup.id}>

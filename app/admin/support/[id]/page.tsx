@@ -34,20 +34,20 @@ export default async function AdminTicketChatPage({ params }: { params: Promise<
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-100px)] py-6">
-            <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Link href="/admin/support">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400">
-                            <ArrowLeft className="w-4 h-4" />
+        <div className="flex flex-col h-[calc(100vh-100px)] md:h-[calc(100vh-80px)] py-2 md:py-4">
+            <div className="mb-3 md:mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
+                    <Link href="/admin/support" className="shrink-0">
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400">
+                            <ArrowLeft className="w-3.5 h-3.5" />
                         </Button>
                     </Link>
-                    <div>
-                        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
-                            Ticket #{ticket.id.slice(-6).toUpperCase()}
-                            <Badge variant="outline" className="ml-2 font-mono text-xs">{ticket.status}</Badge>
+                    <div className="min-w-0">
+                        <h1 className="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2 truncate">
+                            <span className="truncate">Ticket #{ticket.id.slice(-6).toUpperCase()}</span>
+                            <Badge variant="outline" className="shrink-0 font-mono text-[9px] h-4 px-1">{ticket.status}</Badge>
                         </h1>
-                        <p className="text-zinc-400 text-sm">Client: {ticket.email}</p>
+                        <p className="text-zinc-500 text-[10px] md:text-xs truncate">Client: {ticket.email}</p>
                     </div>
                 </div>
             </div>

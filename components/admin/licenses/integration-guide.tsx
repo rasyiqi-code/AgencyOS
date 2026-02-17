@@ -158,16 +158,16 @@ function my_theme_premium_feature() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="h-9 md:h-10 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl px-4 md:px-5 border-white/5 bg-white/5 hover:bg-white/10 gap-2">
                     <BookOpen className="w-4 h-4" />
                     Integration Guide
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0 bg-zinc-950 border-zinc-800 text-zinc-100">
-                <DialogHeader className="p-6 pb-2 border-b border-zinc-800">
-                    <DialogTitle className="text-xl">WordPress Integration Guide</DialogTitle>
-                    <DialogDescription className="text-zinc-400">
-                        How to connect your WordPress themes/plugins to the AgencyOS License Server.
+            <DialogContent className="max-w-4xl h-[85vh] flex flex-col p-0 bg-zinc-950 border-white/5 text-zinc-100 shadow-2xl overflow-hidden rounded-2xl">
+                <DialogHeader className="p-6 pb-4 border-b border-white/5 bg-white/[0.02]">
+                    <DialogTitle className="text-xl md:text-2xl font-black uppercase tracking-tighter text-white">WordPress Integration</DialogTitle>
+                    <DialogDescription className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mt-1">
+                        Connect your themes and plugins to the AgencyOS License Server.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -175,13 +175,13 @@ function my_theme_premium_feature() {
                     <div className="space-y-8">
                         {/* Section 1 */}
                         <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-brand-yellow">1. API Endpoint</h3>
-                            <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800 font-mono text-sm relative group">
-                                <div className="flex items-center gap-2 mb-2 text-zinc-500 text-xs uppercase tracking-wider">
-                                    <span className="bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded">POST</span>
+                            <h3 className="text-xs font-black uppercase tracking-widest text-brand-yellow px-1 border-l-2 border-brand-yellow">1. API Endpoint</h3>
+                            <div className="bg-black/40 p-5 rounded-2xl border border-white/5 font-mono text-[11px] relative group shadow-inner">
+                                <div className="flex items-center gap-2 mb-3 text-zinc-600 text-[10px] font-black uppercase tracking-widest">
+                                    <span className="bg-green-500/10 text-green-500 px-2 py-0.5 rounded-lg border border-green-500/10">POST</span>
                                     <span>verify-license</span>
                                 </div>
-                                <div className="text-zinc-300">
+                                <div className="text-zinc-400 select-all font-bold">
                                     {origin}/api/public/verify-license
                                 </div>
                             </div>
@@ -190,22 +190,22 @@ function my_theme_premium_feature() {
                         {/* Section 2 */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-brand-yellow">2. PHP Helper Class</h3>
+                                <h3 className="text-xs font-black uppercase tracking-widest text-brand-yellow px-1 border-l-2 border-brand-yellow">2. PHP Helper Class</h3>
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 gap-2 text-zinc-400 hover:text-white"
+                                    className="h-8 gap-2 text-zinc-500 hover:text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/5 rounded-lg"
                                     onClick={() => copyToClipboard(phpCode, 'php')}
                                 >
-                                    {copied === 'php' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                    {copied === 'php' ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
                                     {copied === 'php' ? 'Copied' : 'Copy Code'}
                                 </Button>
                             </div>
-                            <p className="text-sm text-zinc-400 mb-2">
-                                Save this as <code>includes/class-agencyos-license.php</code> in your theme/plugin.
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 mb-2">
+                                Save this as <code className="text-zinc-300 bg-white/5 px-1.5 py-0.5 rounded">includes/class-agencyos-license.php</code> in your theme/plugin.
                             </p>
-                            <div className="relative">
-                                <pre className="bg-zinc-900 p-4 rounded-lg border border-zinc-800 overflow-x-auto text-sm font-mono leading-relaxed text-zinc-300">
+                            <div className="relative group">
+                                <pre className="bg-black/40 p-6 rounded-2xl border border-white/5 overflow-x-auto text-[11px] font-mono leading-relaxed text-zinc-400 custom-scrollbar shadow-inner">
                                     {phpCode}
                                 </pre>
                             </div>
@@ -214,22 +214,22 @@ function my_theme_premium_feature() {
                         {/* Section 3 */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-brand-yellow">3. Implementation</h3>
+                                <h3 className="text-xs font-black uppercase tracking-widest text-brand-yellow px-1 border-l-2 border-brand-yellow">3. Implementation</h3>
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-8 gap-2 text-zinc-400 hover:text-white"
+                                    className="h-8 gap-2 text-zinc-500 hover:text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/5 rounded-lg"
                                     onClick={() => copyToClipboard(usageCode, 'usage')}
                                 >
-                                    {copied === 'usage' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                    {copied === 'usage' ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
                                     {copied === 'usage' ? 'Copied' : 'Copy Code'}
                                 </Button>
                             </div>
-                            <p className="text-sm text-zinc-400 mb-2">
-                                Add this to your <code>functions.php</code> to initialize the checker.
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-500 mb-2">
+                                Add this to your <code className="text-zinc-300 bg-white/5 px-1.5 py-0.5 rounded">functions.php</code> to initialize the checker.
                             </p>
-                            <div className="relative">
-                                <pre className="bg-zinc-900 p-4 rounded-lg border border-zinc-800 overflow-x-auto text-sm font-mono leading-relaxed text-zinc-300">
+                            <div className="relative group">
+                                <pre className="bg-black/40 p-6 rounded-2xl border border-white/5 overflow-x-auto text-[11px] font-mono leading-relaxed text-zinc-400 custom-scrollbar shadow-inner">
                                     {usageCode}
                                 </pre>
                             </div>

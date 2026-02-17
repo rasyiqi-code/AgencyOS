@@ -45,10 +45,10 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
 
             const data = await res.json();
             setGeneratedKey(data.key);
-            toast.success("License generated successfully");
+            toast.success("Lisensi berhasil dibuat");
             router.refresh();
         } catch {
-            toast.error("Failed to generate license");
+            toast.error("Gagal membuat lisensi");
         } finally {
             setLoading(false);
         }
@@ -65,73 +65,89 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
     return (
         <Dialog open={open} onOpenChange={(val) => !val && handleClose()}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Generate License
+                <Button className="h-9 md:h-10 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl px-4 md:px-5 bg-brand-yellow text-black hover:bg-brand-yellow/90 shadow-lg shadow-brand-yellow/10">
+                    <Plus className="w-4 h-4 mr-1.5" />
+                    Generate Lisensi
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Generate License Key</DialogTitle>
+            <DialogContent className="sm:max-w-md bg-zinc-950 border-white/5 p-4 md:p-6 shadow-2xl">
+                <DialogHeader className="mb-4">
+                    <DialogTitle className="text-lg md:text-xl font-black uppercase tracking-tighter text-white">Generate Lisensi</DialogTitle>
                 </DialogHeader>
 
                 {generatedKey ? (
-                    <div className="space-y-4 py-4">
-                        <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-lg text-center">
-                            <p className="text-sm text-green-500 mb-1">License Key Generated!</p>
-                            <p className="text-2xl font-mono font-bold tracking-wider text-green-400 select-all">
+                    <div className="space-y-4 py-2">
+                        <div className="bg-green-500/5 border border-green-500/10 p-6 rounded-2xl text-center shadow-inner shadow-green-500/5 transition-all animate-in fade-in zoom-in duration-300">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-green-500/70 mb-2">Kunci Lisensi Berhasil Dibuat</p>
+                            <p className="text-xl md:text-2xl font-mono font-black tracking-widest text-green-400 select-all">
                                 {generatedKey}
                             </p>
                         </div>
-                        <Button className="w-full" onClick={handleClose}>
-                            Done
+                        <Button
+                            className="w-full h-11 rounded-xl bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 text-[10px] font-black uppercase tracking-widest"
+                            onClick={handleClose}
+                        >
+                            Selesai
                         </Button>
                     </div>
                 ) : (
-                    <form onSubmit={handleGenerate} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>Product</Label>
+                    <form onSubmit={handleGenerate} className="space-y-5">
+                        <div className="space-y-1.5">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Produk Target</Label>
                             <Select value={productId} onValueChange={setProductId} required>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a product" />
+                                <SelectTrigger className="h-10 bg-black/50 border-white/5 rounded-xl text-xs focus:ring-brand-yellow/30">
+                                    <SelectValue placeholder="Pilih produk" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="bg-zinc-900 border-white/5">
                                     {products.map((p) => (
-                                        <SelectItem key={p.id} value={p.id}>
-                                            {p.name} ({p.type})
+                                        <SelectItem key={p.id} value={p.id} className="text-xs uppercase font-bold tracking-tight py-2">
+                                            {p.name} <span className="text-[9px] opacity-40 ml-1">[{p.type}]</span>
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label>Max Activations</Label>
-                            <Input
-                                type="number"
-                                min="1"
-                                value={maxActivations}
-                                onChange={(e) => setMaxActivations(e.target.valueAsNumber)}
-                                required
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Slot Aktivasi</Label>
+                                <Input
+                                    type="number"
+                                    min="1"
+                                    value={maxActivations}
+                                    onChange={(e) => setMaxActivations(e.target.valueAsNumber)}
+                                    className="h-10 bg-black/50 border-white/5 rounded-xl text-xs focus:border-brand-yellow/30"
+                                    required
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Kadaluarsa (Opsional)</Label>
+                                <Input
+                                    type="date"
+                                    value={expiresAt}
+                                    onChange={(e) => setExpiresAt(e.target.value)}
+                                    className="h-10 bg-black/50 border-white/5 rounded-xl text-xs focus:border-brand-yellow/30 appearance-none"
+                                />
+                            </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label>Expiration Date (Optional)</Label>
-                            <Input
-                                type="date"
-                                value={expiresAt}
-                                onChange={(e) => setExpiresAt(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="flex justify-end gap-2 pt-2">
-                            <Button type="button" variant="outline" onClick={handleClose}>
-                                Cancel
+                        <div className="flex flex-col md:flex-row gap-2 pt-4 border-t border-white/5">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleClose}
+                                className="flex-1 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest border-white/5 bg-white/5 hover:bg-white/10"
+                            >
+                                Batal
                             </Button>
-                            <Button type="submit" disabled={loading || !productId}>
-                                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                                Generate
+                            <Button
+                                type="submit"
+                                disabled={loading || !productId}
+                                className="flex-1 h-10 rounded-xl bg-brand-yellow text-black hover:bg-brand-yellow/90 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand-yellow/10"
+                            >
+                                {loading && <Loader2 className="w-3 h-3 mr-2 animate-spin" />}
+                                Generate Key
                             </Button>
                         </div>
                     </form>

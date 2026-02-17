@@ -104,7 +104,7 @@ export function FinanceList({ data }: FinanceListProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between sticky top-0 z-20 bg-black/80 backdrop-blur-md py-4 px-1 border-b border-white/5">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-4 items-center justify-between sticky top-0 z-20 bg-black/80 backdrop-blur-md py-3 md:py-4 border-b border-white/5 -mx-4 sm:-mx-6 px-4 sm:px-6">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                     <Input
@@ -115,7 +115,7 @@ export function FinanceList({ data }: FinanceListProps) {
                     />
                 </div>
 
-                <div className="flex items-center bg-zinc-900 rounded-full p-1 border border-white/5 overflow-x-auto max-w-full no-scrollbar">
+                <div className="flex items-center bg-zinc-900 rounded-full p-1 border border-white/5 overflow-x-auto max-w-[85vw] md:max-w-full no-scrollbar">
                     <FilterButton
                         label="All"
                         active={statusFilter === 'ALL'}
@@ -235,80 +235,79 @@ function FinanceListItem({ data }: { data: FinanceData }) {
 
     return (
         <AccordionItem value={data.id} className="border border-white/5 rounded-xl bg-zinc-900/50 overflow-hidden px-0">
-            <AccordionTrigger className="px-4 py-3 hover:bg-zinc-800/50 hover:no-underline [&[data-state=open]]:bg-zinc-800/30 transition-all group">
-                <div className="flex items-center justify-between w-full gap-4 text-left">
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
-                        <div className={`w-1 h-8 rounded-full ${isPaid ? 'bg-emerald-500' : isPartial ? 'bg-indigo-500' : data.status === 'cancelled' ? 'bg-red-500' : 'bg-amber-500'} shrink-0`} />
+            <AccordionTrigger className="px-3 sm:px-4 py-3 hover:bg-zinc-800/50 hover:no-underline [&[data-state=open]]:bg-zinc-800/30 transition-all group">
+                <div className="flex items-stretch gap-3 w-full text-left relative">
+                    {/* Status Bar Indicator */}
+                    <div className={`w-1 rounded-full ${isPaid ? 'bg-emerald-500' : isPartial ? 'bg-indigo-500' : data.status === 'cancelled' ? 'bg-red-500' : 'bg-amber-500'} shrink-0 my-0.5`} />
 
-                        <div className="flex flex-col min-w-0">
-                            <div className="flex items-center gap-2 mb-0.5">
-                                <h4 className="font-semibold text-white truncate text-sm">
+                    {/* Main Content Container */}
+                    <div className="flex flex-col flex-1 min-w-0 gap-1.5">
+
+                        {/* Top Row: Title & Price */}
+                        <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0 pr-1">
+                                <h4 className="font-semibold text-white truncate text-sm leading-tight max-w-[140px] sm:max-w-none">
                                     {data.project?.title || data.title || "Untitled Project"}
                                 </h4>
-                                <span className="text-zinc-600">/</span>
-                                <span className="text-xs text-zinc-400 flex items-center gap-1.5 truncate">
+                                <span className="text-zinc-600 hidden sm:inline">/</span>
+                                <span className="text-xs text-zinc-400 hidden sm:flex items-center gap-1.5 truncate">
                                     <User className="w-3 h-3" />
                                     {data.project?.clientName || "Direct Order"}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] text-zinc-500">
-                                <span
-                                    className="font-mono hover:text-zinc-300 cursor-pointer flex items-center gap-1 transition-colors hover:underline"
-                                    onClick={copyId}
-                                    title="Copy ID"
-                                >
-                                    #{data.id.slice(-8).toUpperCase()}
+
+                            <div className="flex flex-col items-end shrink-0">
+                                <div className="font-bold text-white text-sm tabular-nums text-right">
+                                    <PriceDisplay
+                                        amount={
+                                            data.paymentType === 'DP'
+                                                ? (data.transactionAmount || (data.project?.totalAmount || 0) * 0.5)
+                                                : data.paymentType === 'REPAYMENT' && !isPaid
+                                                    ? Math.max(0, (data.project?.totalAmount || 0) - (data.project?.paidAmount || 0))
+                                                    : (data.transactionAmount || data.project?.totalAmount || data.totalCost)
+                                        }
+                                        baseCurrency={(data.paymentType === 'REPAYMENT' && !isPaid) ? 'USD' : (data.isLegacyMismatched ? 'USD' : data.currency) as 'USD' | 'IDR'}
+                                        exchangeRate={data.exchangeRate || undefined}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bottom Row: Mobile Client Info & Status Badges */}
+                        <div className="flex items-center justify-between gap-2 mt-0.5">
+                            <div className="flex items-center gap-2 text-[10px] sm:text-xs text-zinc-500 min-w-0">
+                                <span className="sm:hidden flex items-center gap-1 truncate">
+                                    <User className="w-3 h-3" />
+                                    <span className="truncate max-w-[80px]">{data.project?.clientName?.split(' ')[0] || "Client"}</span>
+                                </span>
+                                <span className="hidden sm:inline">•</span>
+                                <span className="font-mono hover:text-zinc-300 cursor-pointer transition-colors" onClick={copyId}>
+                                    #{data.id.slice(-4).toUpperCase()}
                                 </span>
                                 <span>•</span>
-                                <span>{new Date(data.createdAt).toLocaleDateString()}</span>
+                                <span>{new Date(data.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                             </div>
-                        </div>
-                    </div>
 
-                    <div className="flex items-center gap-4 mr-2">
-                        <div className="flex items-center gap-1.5">
-                            {data.paymentType && (
-                                <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 border ${(data.paymentType === 'REPAYMENT' && isPaid) ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                                    data.paymentType === 'DP' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                                        data.paymentType === 'REPAYMENT' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                                            'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-                                    }`}>
-                                    {(data.paymentType === 'REPAYMENT' && isPaid) ? t('full') :
-                                        data.paymentType === 'DP' ? t('dp') :
-                                            data.paymentType === 'REPAYMENT' ? t('repayment') :
-                                                t('full')}
+                            <div className="flex items-center gap-1.5 shrink-0">
+                                {data.paymentType && (
+                                    <Badge variant="secondary" className={`text-[9px] h-5 px-1.5 border ${(data.paymentType === 'REPAYMENT' && isPaid) ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                        data.paymentType === 'DP' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                            data.paymentType === 'REPAYMENT' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                                'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                                        }`}>
+                                        {(data.paymentType === 'REPAYMENT' && isPaid) ? t('full') :
+                                            data.paymentType === 'DP' ? t('dp') :
+                                                data.paymentType === 'REPAYMENT' ? t('repayment') :
+                                                    t('full')}
+                                    </Badge>
+                                )}
+                                <Badge variant="outline" className={`py-0.5 px-2 text-[10px] h-5 sm:h-6 flex items-center gap-1.5 whitespace-nowrap ${statusClass}`}>
+                                    {statusIcon}
+                                    <span className="hidden sm:inline max-w-[80px] sm:max-w-none truncate">
+                                        {isPending && data.paymentType === 'REPAYMENT' ? t('pending') : isPartial ? t('partial') : data.status.replace(/_/g, ' ').toUpperCase()}
+                                    </span>
                                 </Badge>
-                            )}
-                            <Badge variant="outline" className={`py-0.5 px-2 text-[10px] h-6 flex items-center gap-1.5 whitespace-nowrap ${statusClass}`}>
-                                {statusIcon}
-                                {isPending && data.paymentType === 'REPAYMENT' ? t('pending') : isPartial ? t('partial') : data.status.replace(/_/g, ' ').toUpperCase()}
-                            </Badge>
-                        </div>
-
-                        <div className="flex flex-col items-end">
-                            <div className="font-bold text-white text-sm tabular-nums text-right min-w-[80px]">
-                                <PriceDisplay
-                                    amount={
-                                        data.paymentType === 'DP'
-                                            ? (data.transactionAmount || (data.project?.totalAmount || 0) * 0.5)
-                                            : data.paymentType === 'REPAYMENT' && !isPaid
-                                                ? Math.max(0, (data.project?.totalAmount || 0) - (data.project?.paidAmount || 0))
-                                                : (data.transactionAmount || data.project?.totalAmount || data.totalCost)
-                                    }
-                                    baseCurrency={(data.paymentType === 'REPAYMENT' && !isPaid) ? 'USD' : (data.isLegacyMismatched ? 'USD' : data.currency) as 'USD' | 'IDR'}
-                                    exchangeRate={data.exchangeRate || undefined}
-                                />
                             </div>
-                            {data.paymentType === 'REPAYMENT' && !isPaid && (
-                                <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-medium">
-                                    {t("remaining")}
-                                </span>
-                            )}
-                            {data.paymentType === 'DP' && (
-                                <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-medium">
-                                    {t("downPayment")}
-                                </span>
-                            )}
                         </div>
                     </div>
                 </div>

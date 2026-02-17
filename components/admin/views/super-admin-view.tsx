@@ -36,12 +36,12 @@ export async function SuperAdminDashboardView() {
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-white">Command Center</h1>
                     <p className="text-zinc-400 mt-1">Agency performance at a glance.</p>
                 </div>
-                <Button className="bg-white text-black hover:bg-zinc-200">
+                <Button className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto">
                     <Zap className="w-4 h-4 mr-2" />
                     Quick Action
                 </Button>

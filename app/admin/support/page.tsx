@@ -33,28 +33,28 @@ export default async function AdminSupportInbox() {
     const supportTickets = allTickets.filter(t => t.type === 'ticket');
 
     return (
-        <div className="w-full py-6 h-screen flex flex-col">
-            <div className="flex items-center justify-between mb-6 shrink-0">
+        <div className="w-full py-2 md:py-4 min-h-screen flex flex-col">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 shrink-0 gap-3 md:gap-4">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">Support</Badge>
+                    <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[9px] h-4 px-1.5">Support</Badge>
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2 md:gap-3">
                         Support Inbox
-                        <Mail className="w-6 h-6 text-zinc-600" />
+                        <Mail className="w-4 h-4 md:w-5 md:h-5 text-zinc-600" />
                     </h1>
                 </div>
             </div>
 
             <Tabs defaultValue="chat" className="flex-1 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                    <TabsList className="bg-zinc-900 border border-white/5">
-                        <TabsTrigger value="chat" className="data-[state=active]:bg-zinc-800">
-                            <MessageSquare className="w-4 h-4 mr-2" />
+                <div className="flex items-center justify-between mb-3 overflow-x-auto pb-1 md:pb-0">
+                    <TabsList className="bg-zinc-900/50 border border-white/5 w-full md:w-auto justify-start md:justify-center h-9">
+                        <TabsTrigger value="chat" className="flex-1 md:flex-none data-[state=active]:bg-zinc-800 text-xs py-1.5 h-7">
+                            <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
                             Live Chat
                         </TabsTrigger>
-                        <TabsTrigger value="table" className="data-[state=active]:bg-zinc-800">
-                            <List className="w-4 h-4 mr-2" />
+                        <TabsTrigger value="table" className="flex-1 md:flex-none data-[state=active]:bg-zinc-800 text-xs py-1.5 h-7">
+                            <List className="w-3.5 h-3.5 mr-1.5" />
                             All Tickets
                         </TabsTrigger>
                     </TabsList>

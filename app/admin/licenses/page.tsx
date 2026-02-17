@@ -36,18 +36,18 @@ export default async function LicensesPage() {
     });
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="w-full py-1 md:py-4 space-y-4 md:space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shrink-0">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-2">
-                        <Key className="w-8 h-8 text-brand-yellow" />
-                        License Management
+                    <h1 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-2">
+                        <Key className="w-5 h-5 md:w-6 md:h-6 text-brand-yellow" />
+                        Licenses
                     </h1>
-                    <p className="text-zinc-400 mt-2">
-                        Generate and manage API keys for your products.
+                    <p className="text-zinc-500 font-medium text-[10px] md:text-sm">
+                        Manage API keys and product activations.
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                     <LicenseIntegrationGuide />
                     <LicenseGenerator products={products} />
                 </div>

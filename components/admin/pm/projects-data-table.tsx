@@ -85,7 +85,7 @@ export function ProjectsDataTable<TData, TValue>({
                     transition-colors"
                 >
                     <table
-                        className="border-separate border-spacing-0 table-fixed w-full text-sm"
+                        className="border-separate border-spacing-0 table-fixed w-full min-w-[1000px] text-sm"
                     >
                         <thead>
                             {table.getHeaderGroups().map((headerGroup) => (

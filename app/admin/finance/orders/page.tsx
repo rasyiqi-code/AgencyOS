@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { type StackUser } from "@/lib/shared/types";
-import { ShoppingCart, LayoutDashboard } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { FinanceList } from "@/components/admin/finance/finance-list";
 import { FinanceData } from "@/components/admin/finance/finance-columns";
@@ -24,10 +24,10 @@ export default async function AdminOrdersPage() {
         }
     });
 
-    const agencySetting = await prisma.systemSetting.findUnique({
-        where: { key: "AGENCY_NAME" }
-    });
-    const agencyName = agencySetting?.value || "Agency OS";
+    // const agencySetting = await prisma.systemSetting.findUnique({
+    //     where: { key: "AGENCY_NAME" }
+    // });
+    // const agencyName = agencySetting?.value || "Agency OS";
 
     // 1. Initial Mapping
     const financeData: FinanceData[] = estimates.map(e => {
@@ -110,33 +110,31 @@ export default async function AdminOrdersPage() {
     });
 
     return (
-        <div className="w-full py-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="p-1 px-2 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase tracking-wider">
+                        <div className="p-1 px-2 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] font-bold uppercase tracking-wider">
                             {t("revenue")}
                         </div>
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px] font-medium px-2 py-0">
+                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[9px] font-medium px-2 py-0">
                             {t("financials")}
                         </Badge>
                     </div>
                     <h1 className="text-4xl font-extrabold tracking-tight text-white flex items-center gap-4 group">
                         {t("title")}
-                        <div className="p-2 rounded-xl bg-zinc-900 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
+                        <div className="relative p-2 rounded-xl bg-zinc-900 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
                             <ShoppingCart className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+                            {estimates.length > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white ring-2 ring-black">
+                                    {estimates.length}
+                                </span>
+                            )}
                         </div>
                     </h1>
                     <p className="text-zinc-400 mt-2 text-sm max-w-xl leading-relaxed">
                         {t("description")}
                     </p>
-                </div>
-
-                <div className="flex gap-3">
-                    <div className="flex flex-col items-end px-4 py-2 rounded-2xl bg-zinc-900/50 border border-white/5 backdrop-blur-sm">
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">{t("totalProjects")}</span>
-                        <span className="text-xl font-bold text-white tabular-nums">{estimates.length}</span>
-                    </div>
                 </div>
             </div>
 
@@ -147,10 +145,6 @@ export default async function AdminOrdersPage() {
                 <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("autoSync")}</span>
                     <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-amber-500" /> {t("pendingUpdates")}</span>
-                </div>
-                <div className="flex items-center gap-2 italic">
-                    <LayoutDashboard className="w-3 h-3" />
-                    {t("poweredBy", { brand: agencyName })}
                 </div>
             </div>
         </div>

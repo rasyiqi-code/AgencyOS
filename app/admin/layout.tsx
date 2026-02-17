@@ -101,7 +101,21 @@ export default async function AdminLayout({
             </SidebarContainer>
 
             <SidebarContentWrapper>
-                <DashboardHeader allowedToSwitchViews={pmAccess && financeAccess} />
+                <DashboardHeader
+                    allowedToSwitchViews={pmAccess && financeAccess}
+                    agencyName={agencyName}
+                    logoUrl={logoUrl ?? undefined}
+                    navChildren={<AdminSidebarNavigation pmAccess={pmAccess} financeAccess={financeAccess} />}
+                    navFooter={
+                        <Link
+                            href="/dashboard"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-zinc-400 transition-all hover:text-white hover:bg-white/5"
+                        >
+                            <LogOut className="h-4 w-4 shrink-0" />
+                            <span className="truncate">Exit to Client View</span>
+                        </Link>
+                    }
+                />
                 <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
                     {children}
                 </main>

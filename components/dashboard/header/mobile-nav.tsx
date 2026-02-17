@@ -13,12 +13,16 @@ import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/n
 import Link from "next/link";
 import Image from "next/image";
 
+import { UserButton } from "@stackframe/stack";
+
 interface MobileNavProps {
     agencyName: string;
     logoUrl?: string;
+    children?: React.ReactNode;
+    footer?: React.ReactNode;
 }
 
-export function MobileNav({ agencyName, logoUrl }: MobileNavProps) {
+export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavProps) {
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -28,7 +32,7 @@ export function MobileNav({ agencyName, logoUrl }: MobileNavProps) {
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] bg-zinc-950 border-white/10 p-0 flex flex-col">
-                <SheetHeader className="p-6 border-b border-white/5">
+                <SheetHeader className="p-6 border-b border-white/5 flex flex-row items-center justify-between gap-2 space-y-0">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-semibold">
                             {logoUrl ? (
@@ -45,19 +49,20 @@ export function MobileNav({ agencyName, logoUrl }: MobileNavProps) {
                                     <Check className="h-5 w-5 text-brand-yellow stroke-[3]" />
                                 </div>
                             )}
-                            <span className="text-lg tracking-tight text-white truncate">
+                            <span className="text-lg tracking-tight text-white truncate max-w-[140px]">
                                 {agencyName}
                             </span>
                         </Link>
                     </SheetTitle>
+                    <UserButton />
                 </SheetHeader>
 
                 <div className="flex-1 overflow-y-auto py-6 px-3">
-                    <DashboardSidebarNavigation />
+                    {children || <DashboardSidebarNavigation />}
                 </div>
 
                 <div className="p-4 border-t border-white/5">
-                    <DashboardSidebarFooter />
+                    {footer || <DashboardSidebarFooter />}
                 </div>
             </SheetContent>
         </Sheet>
