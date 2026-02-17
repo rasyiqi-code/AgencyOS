@@ -18,11 +18,11 @@
         "startProject": "Start Project"
     },
     "Hero": {
-        "statusBadge": "Strategic Development Partner: Enterprise-Grade Execution",
+        "statusBadge": "Strategic Partner",
         "title1": "Build to Scale.",
         "title2": "Design to Prevail.",
         "description": "Engineered for excellence. {brand} delivers <white>high-performance software</white> with a hybrid expert-AI approach designed to scale your enterprise and prevail in competitive markets.",
-        "launchDashboard": "Get Enterprise Quote",
+        "launchDashboard": "Get Quote",
         "viewServices": "Business Solutions",
         "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE"
     },

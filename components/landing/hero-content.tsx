@@ -63,10 +63,10 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="space-y-8 text-left max-w-2xl"
+                        className="space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1"
                     >
                         {/* Status Widget */}
-                        <motion.div variants={itemVariants}>
+                        <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
                             <Link href="/price-calculator">
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium mb-4 hover:bg-brand-yellow/20 transition-colors cursor-pointer w-fit">
                                     <span className="relative flex h-2 w-2">
@@ -100,33 +100,50 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
                         <motion.div
                             variants={itemVariants}
-                            className="flex flex-col sm:flex-row items-center lg:items-start lg:justify-start gap-4 pt-4"
+                            className="flex flex-row items-center justify-center lg:justify-start gap-3 pt-4"
                         >
                             <Link href="/price-calculator">
-                                <Button size="lg" className="h-14 px-8 text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all">
+                                <Button size="lg" className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all">
                                     {t("launchDashboard")}
-                                    <ArrowRight className="ml-2 w-5 h-5" />
+                                    <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
                                 </Button>
                             </Link>
                             <Link href="/services">
-                                <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-brand-yellow/10 hover:text-brand-yellow hover:border-brand-yellow/50 rounded-full transition-all backdrop-blur-sm">
-                                    <Zap className="w-4 h-4 mr-2 text-brand-yellow" />
+                                <Button variant="outline" size="lg" className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-brand-yellow/10 hover:text-brand-yellow hover:border-brand-yellow/50 rounded-full transition-all backdrop-blur-sm">
+                                    <Zap className="w-4 h-4 mr-1.5 text-brand-yellow" />
                                     {t("viewServices")}
                                 </Button>
                             </Link>
                         </motion.div>
 
-                        {/* Tech Stack Hints */}
+                        {/* Tech Stack Hints - Marquee */}
                         <motion.div
                             variants={itemVariants}
-                            className="pt-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700 flex lg:justify-start"
+                            className="pt-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700 flex justify-center lg:justify-start w-full overflow-hidden"
                         >
-                            <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">{t("poweredBy")}</span>
+                            <div className="relative flex overflow-x-hidden w-full max-w-[300px] lg:max-w-none [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+                                <motion.div
+                                    className="flex whitespace-nowrap gap-8"
+                                    animate={{ x: "-50%" }}
+                                    transition={{
+                                        repeat: Infinity,
+                                        ease: "linear",
+                                        duration: 20,
+                                    }}
+                                >
+                                    {[...Array(4)].map((_, i) => (
+                                        <span key={i} className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase flex-shrink-0">
+                                            {t("poweredBy")}
+                                        </span>
+                                    ))}
+                                </motion.div>
+                            </div>
                         </motion.div>
                     </motion.div>
 
                     {/* Right Column: Expert Asset */}
-                    <div className="relative hidden lg:block">
+                    {/* Right Column: Expert Asset */}
+                    <div className="relative mt-0 lg:mt-0 order-1 lg:order-2">
                         {/* Background Glows for the Model */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
@@ -139,7 +156,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
-                            className="relative w-full h-[600px] xl:h-[800px] z-10 flex items-end justify-center"
+                            className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[800px] z-10 flex items-end justify-center"
                         >
                             {/* Improved fade/blur from waist down */}
                             <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none" />
@@ -158,52 +175,58 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             />
 
                             {/* Floating AI Model Badges with Authentic Icons - Central Ring */}
-                            <BadgeWrapper delay={1.4} duration={5} top="15%" left="-4px" className="xl:block">
-                                <BadgeContent name="OpenAI" model="GPT-4o" icon="/brands/openai.png" />
+                            <BadgeWrapper delay={1.4} duration={5} top="15%" className="left-2 lg:-left-1">
+                                <BadgeContent name="OpenAI" model="GPT" icon="/brands/openai.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={1.6} duration={7} top="42%" left="-12px" className="xl:block">
-                                <BadgeContent name="Google" model="Gemini 1.5" icon="/brands/gemini.png" />
+                            <BadgeWrapper delay={1.6} duration={7} top="42%" className="left-2 lg:-left-3">
+                                <BadgeContent name="Google" model="Gemini" icon="/brands/gemini.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={1.8} duration={6} top="8%" right="4px" className="xl:block">
-                                <BadgeContent name="Anthropic" model="Claude 3.5" icon="/brands/claude.png" />
+                            <BadgeWrapper delay={1.8} duration={6} top="8%" className="right-2 lg:right-1">
+                                <BadgeContent name="Anthropic" model="Claude" icon="/brands/claude.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={1.5} duration={8} bottom="45%" right="-8px" className="xl:block">
-                                <BadgeContent name="DeepSeek" model="V3 Architecture" icon="/brands/deepseek.png" />
+                            <BadgeWrapper delay={1.5} duration={8} bottom="45%" className="right-2 lg:-right-2">
+                                <BadgeContent name="DeepSeek" model="DeepSeek-V3" icon="/brands/deepseek.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.0} duration={9} top="25%" right="-12px" className="xl:block">
-                                <BadgeContent name="Meta" model="Llama 3.1" icon="/brands/llama.png" />
+                            <BadgeWrapper delay={2.0} duration={9} top="25%" className="right-2 lg:-right-3">
+                                <BadgeContent name="Meta" model="Llama" icon="/brands/llama.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={1.7} duration={6.5} bottom="25%" right="-4px" className="xl:block">
-                                <BadgeContent name="Mistral" model="Mistral Large" icon="/brands/mistral.png" />
+                            <BadgeWrapper delay={1.7} duration={6.5} bottom="25%" className="right-2 lg:-right-1">
+                                <BadgeContent name="Mistral" model="Mistral" icon="/brands/mistral.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.2} duration={11} top="65%" left="-16px" className="xl:block">
-                                <BadgeContent name="Perplexity" model="Sonar Large" icon="/brands/perplexityai.png" />
+                            <BadgeWrapper delay={2.2} duration={11} top="65%" className="left-2 lg:-left-4">
+                                <BadgeContent name="Perplexity" model="Sonar" icon="/brands/perplexityai.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={1.9} duration={9.5} bottom="10%" left="-6px" className="xl:block">
-                                <BadgeContent name="HuggingFace" model="Open Models" icon="/brands/huggingface.png" />
+                            <BadgeWrapper delay={1.9} duration={9.5} bottom="10%" className="left-2 lg:-left-1.5">
+                                <BadgeContent name="HuggingFace" model="Open Source" icon="/brands/huggingface.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.4} duration={12} top="2%" left="50%" transformX="-50%" className="xl:block">
-                                <BadgeContent name="xAI" model="Grok-2" icon="/brands/grok.png" />
+                            {/* Grok Mobile - Top Left */}
+                            <BadgeWrapper delay={2.4} duration={12} top="5%" className="lg:hidden left-2">
+                                <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.1} duration={8.5} bottom="15%" right="10%" className="xl:block">
-                                <BadgeContent name="Groq" model="LPU Inference" icon="/brands/groq.svg" isSvg />
+                            {/* Grok Desktop - Original */}
+                            <BadgeWrapper delay={2.4} duration={12} top="2%" left="50%" transformX="-50%" className="hidden lg:block">
+                                <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.3} duration={7.5} top="30%" right="-4px" className="xl:block">
-                                <BadgeContent name="Cohere" model="Command R+" icon="/brands/cohere.png" />
+                            <BadgeWrapper delay={2.1} duration={8.5} bottom="15%" className="right-4 lg:right-[10%]">
+                                <BadgeContent name="Groq" model="LPU Engine" icon="/brands/groq.svg" isSvg />
                             </BadgeWrapper>
 
-                            <BadgeWrapper delay={2.5} duration={10.5} bottom="60%" left="-8px" className="xl:block">
-                                <BadgeContent name="Aya" model="Multi-lingual" icon="/brands/aya.svg" isSvg />
+                            <BadgeWrapper delay={2.3} duration={7.5} top="30%" className="right-2 lg:-right-1">
+                                <BadgeContent name="Cohere" model="Command R" icon="/brands/cohere.png" />
+                            </BadgeWrapper>
+
+                            <BadgeWrapper delay={2.5} duration={10.5} bottom="60%" className="left-2 lg:-left-2">
+                                <BadgeContent name="Aya" model="Multilingual" icon="/brands/aya.svg" isSvg />
                             </BadgeWrapper>
 
                         </motion.div>
@@ -249,7 +272,7 @@ function BadgeWrapper({ children, delay, duration, top, left, right, bottom, cla
                 translateX: transformX,
                 zIndex: 50
             }}
-            className={`hidden bg-white/5 backdrop-blur-xl border border-white/10 p-2.5 rounded-xl shadow-2xl group/badge transition-transform hover:scale-110 ${className}`}
+            className={`bg-white/5 backdrop-blur-xl border border-white/10 p-1.5 rounded-lg shadow-2xl group/badge transition-transform hover:scale-110 ${className}`}
         >
             {children}
         </motion.div>
@@ -263,17 +286,17 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
     isSvg?: boolean;
 }) {
     return (
-        <div className="flex items-center gap-2">
-            <div className={`w-7 h-7 rounded-lg overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800' : ''}`}>
+        <div className="flex items-center gap-1.5">
+            <div className={`w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800' : ''}`}>
                 {isSvg ? (
-                    <Image src={icon} alt={name} width={18} height={18} className="object-contain" />
+                    <Image src={icon} alt={name} width={12} height={12} className="object-contain" />
                 ) : (
-                    <Image src={icon} alt={name} fill unoptimized className="object-cover" sizes="28px" />
+                    <Image src={icon} alt={name} fill unoptimized className="object-cover" sizes="20px" />
                 )}
             </div>
             <div>
-                <div className="text-[9px] text-zinc-500 uppercase tracking-tighter font-bold font-mono leading-none">{name}</div>
-                <div className="text-[11px] font-bold text-white leading-none mt-0.5">{model}</div>
+                <div className="text-[7px] text-zinc-500 uppercase tracking-tighter font-bold font-mono leading-none">{name}</div>
+                <div className="text-[9px] font-bold text-white leading-none mt-0.5">{model}</div>
             </div>
         </div>
     );
