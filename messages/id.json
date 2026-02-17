@@ -527,6 +527,7 @@
         "analyzing": "Sedang menganalisis ide Anda...",
         "success": "Estimasi berhasil dibuat!",
         "error": "Gagal membuat estimasi. Silakan coba lagi.",
+        "loading": "Memuat...",
         "recentEstimates": "Estimasi Terkini",
         "by": "oleh",
         "anonymous": "Anonim",

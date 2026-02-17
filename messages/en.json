@@ -457,6 +457,7 @@
         "analyzing": "Analyzing your idea...",
         "success": "Estimate generated!",
         "error": "Failed to generate estimate. Please try again.",
+        "loading": "Loading...",
         "recentEstimates": "Recent Estimates",
         "by": "by",
         "anonymous": "Anonymous",
