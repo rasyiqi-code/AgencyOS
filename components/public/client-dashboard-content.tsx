@@ -14,7 +14,11 @@ import {
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
-export function ClientDashboardContent() {
+export interface ClientDashboardContentProps {
+    agencyName: string;
+}
+
+export function ClientDashboardContent({ agencyName }: ClientDashboardContentProps) {
     const t = useTranslations("ClientDashboard");
 
     const platformFeatures = [
@@ -69,7 +73,8 @@ export function ClientDashboardContent() {
                         className="text-4xl md:text-6xl font-bold tracking-tight mb-6 whitespace-pre-line"
                     >
                         {t.rich("title", {
-                            yellow: (chunks) => <span className="text-brand-yellow">{chunks}</span>
+                            yellow: (chunks) => <span className="text-brand-yellow">{chunks}</span>,
+                            brand: agencyName
                         })}
                     </motion.h1>
                     <motion.p
@@ -78,7 +83,7 @@ export function ClientDashboardContent() {
                         transition={{ delay: 0.2 }}
                         className="text-zinc-400 text-lg leading-relaxed max-w-2xl mx-auto"
                     >
-                        {t("description")}
+                        {t("description", { brand: agencyName })}
                     </motion.p>
                 </div>
 
@@ -115,11 +120,12 @@ export function ClientDashboardContent() {
                             </div>
                             <h2 className="text-3xl md:text-5xl font-bold mb-6">
                                 {t.rich("Philosophy.title", {
-                                    red: (chunks) => <span className="text-red-500">{chunks}</span>
+                                    red: (chunks) => <span className="text-red-500">{chunks}</span>,
+                                    brand: agencyName
                                 })}
                             </h2>
                             <p className="text-zinc-400 text-lg leading-relaxed mb-8">
-                                {t("Philosophy.desc")}
+                                {t("Philosophy.desc", { brand: agencyName })}
                             </p>
 
                             <div className="grid grid-cols-2 gap-6">
@@ -144,7 +150,7 @@ export function ClientDashboardContent() {
 
                         <div className="bg-black/50 border border-white/10 rounded-2xl p-8 backdrop-blur-sm h-full flex flex-col justify-center">
                             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                <CheckCircle2 className="text-brand-yellow w-5 h-5" /> {t("Philosophy.wayTitle")}
+                                <CheckCircle2 className="text-brand-yellow w-5 h-5" /> {t("Philosophy.wayTitle", { brand: agencyName })}
                             </h3>
                             <ul className="space-y-4">
                                 <li className="flex gap-3 text-zinc-300 text-sm">

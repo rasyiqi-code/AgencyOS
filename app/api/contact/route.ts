@@ -1,9 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import { z } from "zod";
-import { prisma } from "@/lib/config/db";
-// import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
+import { getResendClient, getAdminEmailTarget } from "@/lib/email/client";
 
 // Reusing schema definition
 const contactSchema = z.object({
@@ -28,27 +26,15 @@ export async function POST(req: NextRequest) {
 
         const { firstName, lastName, email, subject, message } = validatedFields.data;
 
-        // 1. Try to get key from DB
-        const settings = await prisma.systemSetting.findMany({
-            where: { key: { in: ["RESEND_API_KEY", "ADMIN_EMAIL_TARGET"] } }
-        });
+        // 1. Get Resend Client
+        const resend = await getResendClient();
 
-        let apiKey = settings.find(s => s.key === "RESEND_API_KEY")?.value || null;
-
-        // 2. Fallback to Env if DB is empty
-        if (!apiKey) {
-            apiKey = process.env.RESEND_API_KEY || null;
-        }
-
-        if (!apiKey) {
+        if (!resend) {
             return NextResponse.json({ error: "System configuration error: Email service not active." }, { status: 503 });
         }
 
-        // 3. Fetch target email
-        const targetEmail = settings.find(s => s.key === "ADMIN_EMAIL_TARGET")?.value || null;
-        const recipient = targetEmail || process.env.ADMIN_EMAIL || "support@crediblemark.com";
-
-        const resend = new Resend(apiKey);
+        // 2. Get Target Email
+        const recipient = await getAdminEmailTarget();
 
         // Use verified domain or fallback
         const fromAddress = "noreply@update.crediblemark.com";

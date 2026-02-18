@@ -61,7 +61,8 @@
 
     // 3. Click Handler
     badge.onclick = function () {
-        window.open('https://agencyos.com?ref=' + refCode, '_blank');
+        var origin = new URL(currentScript.src).origin;
+        window.open(origin + '?ref=' + refCode, '_blank');
     };
 
     // 4. Inject into body

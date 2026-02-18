@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
 import { completeDigitalOrder } from "@/app/actions/digital-orders";
+import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 
 /**
  * Midtrans Webhook Handler
@@ -229,6 +230,14 @@ async function handleProjectOrderWebhook(
         // Commission logic — gunakan existingOrder.id (DB ID asli),
         // bukan orderId dari Midtrans yang bisa berupa uniqueTransactionId
         await processAffiliateCommission(existingOrder.id, order.amount, order.paymentMetadata);
+
+        // Notify Admin
+        notifyPaymentSuccess({
+            orderId: order.id,
+            amount: order.amount,
+            customerName: "Client", // TODO: Fetch from Project if needed
+            type: "SERVICE"
+        }).catch(err => console.error("Failed to send admin notification:", err));
     }
 
     return NextResponse.json({ status: "ok" });

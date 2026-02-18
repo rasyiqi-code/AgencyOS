@@ -108,6 +108,7 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
                         <label className="cursor-pointer">
                             <input
                                 type="file"
+                                name="preview-replace"
                                 className="hidden"
                                 accept="image/*"
                                 onChange={handleUpload}
@@ -124,6 +125,7 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
                 <label className="block">
                     <input
                         type="file"
+                        name="preview-upload"
                         className="hidden"
                         accept="image/*"
                         onChange={handleUpload}

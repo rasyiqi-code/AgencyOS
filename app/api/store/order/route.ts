@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
+import { notifyNewServiceOrder } from "@/lib/email/admin-notifications";
 
 export async function POST(req: NextRequest) {
     const user = await stackServerApp.getUser();
@@ -57,6 +58,14 @@ export async function POST(req: NextRequest) {
             where: { id: project.id },
             data: { estimateId: estimate.id }
         });
+
+        // Notify Admin
+        notifyNewServiceOrder({
+            clientName: user.displayName || user.primaryEmail || "Client",
+            serviceTitle: service.title,
+            estimateId: estimate.id,
+            price: service.price
+        }).catch(err => console.error("Failed to send admin notification:", err));
 
         return NextResponse.json({ url: `/checkout/${estimate.id}` });
     } catch (error) {

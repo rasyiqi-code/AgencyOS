@@ -1,7 +1,7 @@
 import { stackServerApp } from "@/lib/config/stack";
 import { prisma } from "@/lib/config/db";
 import { redirect } from "next/navigation";
-import { CopyLink } from "@/components/marketing/copy-link";
+import { AffiliateLinksManager } from "@/components/affiliate/affiliate-links-manager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, MousePointerClick, TrendingUp, Users } from "lucide-react";
 import { BankSettingsCard } from "@/components/affiliate/bank-settings-card";
@@ -43,7 +43,16 @@ export default async function AffiliateDashboardPage() {
         redirect('/affiliate/join');
     }
 
-    const referralLink = `${process.env.NEXT_PUBLIC_APP_URL || "https://agencyos.dev"}/?ref=${profile.referralCode}`;
+    // Fetch available products and services for deep linking
+    const activeProducts = await prisma.product.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true, slug: true, price: true, type: true, description: true }
+    });
+
+    const activeServices = await prisma.service.findMany({
+        where: { isActive: true },
+        select: { id: true, title: true, price: true, description: true }
+    });
 
     return (
         <div className="flex flex-col gap-8 pb-10 w-full animate-in fade-in duration-500">
@@ -56,19 +65,12 @@ export default async function AffiliateDashboardPage() {
             </div>
 
             {/* Referral Link Section */}
-            <Card className="bg-zinc-900/50 border-zinc-800 backdrop-blur">
-                <CardHeader>
-                    <CardTitle className="text-base font-medium text-zinc-200">Your Referral Link</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-                        <div className="text-sm text-zinc-400 max-w-lg">
-                            Share this link with potential clients. When they book a project, you earn {profile.commissionRate}% commission.
-                        </div>
-                        <CopyLink url={referralLink} />
-                    </div>
-                </CardContent>
-            </Card>
+            <AffiliateLinksManager
+                referralCode={profile.referralCode}
+                products={activeProducts}
+                services={activeServices}
+                baseUrl={process.env.NEXT_PUBLIC_APP_URL}
+            />
 
             {/* Stats Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

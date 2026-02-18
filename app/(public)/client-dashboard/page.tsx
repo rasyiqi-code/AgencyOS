@@ -32,6 +32,11 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default function ClientDashboardPage() {
-    return <ClientDashboardContent />;
+export default async function ClientDashboardPage() {
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+
+    return <ClientDashboardContent agencyName={agencyName} />;
 }

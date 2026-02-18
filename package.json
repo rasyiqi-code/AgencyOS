@@ -44,6 +44,8 @@
     "creem_io": "^0.4.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.30.0",
     "genkit": "^1.27.0",
     "lucide-react": "^0.562.0",

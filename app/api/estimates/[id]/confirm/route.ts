@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
+import { stackServerApp } from "@/lib/config/stack";
+import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
+import { sendPaymentSuccessEmail } from "@/lib/email/client-notifications";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -99,6 +102,36 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                 for (const order of pendingOrders) {
                     await processAffiliateCommission(order.id, order.amount, order.paymentMetadata);
                 }
+            }
+
+            // --- Notifications ---
+            try {
+                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                if (stackUser) {
+                    const customerEmail = stackUser.primaryEmail || "";
+                    const customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";
+
+                    if (customerEmail) {
+                        // Client Notification
+                        sendPaymentSuccessEmail({
+                            to: customerEmail,
+                            customerName,
+                            orderId: estimateId,
+                            amount: amountPaid,
+                            productName: estimate.title
+                        }).catch(err => console.error("Client notification error:", err));
+                    }
+
+                    // Admin Notification (Finalized)
+                    notifyPaymentSuccess({
+                        orderId: estimateId,
+                        amount: amountPaid,
+                        customerName,
+                        type: "SERVICE"
+                    }).catch(err => console.error("Admin notification error:", err));
+                }
+            } catch (err) {
+                console.error("Failed to fetch user for notifications:", err);
             }
         }
 

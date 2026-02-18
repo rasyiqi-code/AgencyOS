@@ -69,9 +69,9 @@ export function DeveloperSelector({
 
     return (
         <div className="space-y-1.5">
-            <label className="text-[9px] font-bold text-zinc-500 uppercase flex items-center gap-1">
+            <span className="text-[9px] font-bold text-zinc-500 uppercase flex items-center gap-1">
                 <UserCheck className="w-2.5 h-2.5" /> Assigned Developer
-            </label>
+            </span>
             <Select
                 defaultValue={initialDeveloperId || "none"}
                 onValueChange={onValueChange}

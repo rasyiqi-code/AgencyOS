@@ -201,7 +201,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                         </div>
                         <div className="p-3 space-y-3">
                             <div>
-                                <label className="text-[9px] font-bold text-zinc-500 uppercase block mb-1.5">Current Status</label>
+                                <span className="text-[9px] font-bold text-zinc-500 uppercase block mb-1.5">Current Status</span>
                                 <StatusSelector projectId={project.id} initialStatus={project.status} />
                             </div>
                             <div className="pt-3 border-t border-white/5 grid grid-cols-2 gap-3">

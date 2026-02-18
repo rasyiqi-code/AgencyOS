@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
+import { notifyNewAffiliate } from "@/lib/email/admin-notifications";
 
 export async function POST() {
     try {
@@ -60,6 +61,13 @@ export async function POST() {
                 commissionRate: defaultRate,
             }
         });
+
+        // Notify Admin
+        notifyNewAffiliate({
+            name: profile.name,
+            email: profile.email,
+            code: profile.referralCode
+        }).catch(err => console.error("Failed to send admin notification:", err));
 
         return NextResponse.json(profile);
 

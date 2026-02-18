@@ -106,6 +106,7 @@ export function FileManager({ projectId, files, readonly = false }: FileManagerP
                     <label className="cursor-pointer">
                         <input
                             type="file"
+                            name="document-upload"
                             className="hidden"
                             onChange={handleUpload}
                             disabled={isLoading}

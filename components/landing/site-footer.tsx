@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
 
+import { cookies } from "next/headers";
 import Image from "next/image";
 
 export async function SiteFooter() {
@@ -19,6 +20,21 @@ export async function SiteFooter() {
 
     const showLogo = logoDisplayMode === "both" || logoDisplayMode === "logo";
     const showText = logoDisplayMode === "both" || logoDisplayMode === "text";
+
+    // Check for affiliate cookie
+    const cookieStore = await cookies();
+    const affiliateCode = cookieStore.get("agencyos_affiliate_id")?.value;
+    let affiliateName = null;
+
+    if (affiliateCode) {
+        const affiliate = await prisma.affiliateProfile.findUnique({
+            where: { referralCode: affiliateCode },
+            select: { name: true }
+        });
+        if (affiliate) {
+            affiliateName = affiliate.name;
+        }
+    }
 
     return (
         <footer className="border-t border-white/5 bg-black py-8 md:py-6 text-zinc-400">
@@ -47,9 +63,14 @@ export async function SiteFooter() {
 
                 <div className="text-[10px] order-3 md:order-2">
                     © {new Date().getFullYear()} {companyName}. {t("copyright")}
+                    {affiliateName && (
+                        <span className="ml-1 text-zinc-500">
+                            • Affiliate by {affiliateName}
+                        </span>
+                    )}
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
+                <div className="flex flex-wrap justify-center gap-x-3 md:gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
                     <Link href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" className="hover:text-white transition-colors">Changelog</Link>
                     <Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</Link>
                     <Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</Link>

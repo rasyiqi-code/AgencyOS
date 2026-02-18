@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { Prisma } from "@prisma/client";
+import { stackServerApp } from "@/lib/config/stack";
+import { sendOrderCancelledEmail } from "@/lib/email/client-notifications";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -63,6 +65,23 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         }
 
         await prisma.$transaction(updates);
+
+        // --- Notifications ---
+        if (estimate.project) {
+            try {
+                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                if (stackUser && stackUser.primaryEmail) {
+                    sendOrderCancelledEmail({
+                        to: stackUser.primaryEmail,
+                        customerName: stackUser.displayName || stackUser.primaryEmail.split('@')[0] || "Client",
+                        orderId: estimateId,
+                        productName: estimate.title
+                    }).catch(err => console.error("Cancellation notification error:", err));
+                }
+            } catch (err) {
+                console.error("Failed to fetch user for cancellation notification:", err);
+            }
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

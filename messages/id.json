@@ -55,12 +55,12 @@
     },
     "Testimonials": {
         "title": "Dipercaya oleh Para Pendiri",
-        "subtitle": "Bergabung dengan klien puas yang membangun bersama Crediblemark.",
+        "subtitle": "Bergabung dengan klien puas yang membangun bersama {brand}.",
         "reviews": [
             {
                 "name": "Alex Chen",
                 "role": "CTO, InnovateLabs",
-                "text": "Crediblemark mempercepat siklus pengembangan kami secara signifikan. Mereka membangun MVP kami dalam waktu singkat."
+                "text": "{brand} mempercepat siklus pengembangan kami secara signifikan. Mereka membangun MVP kami dalam waktu singkat."
             },
             {
                 "name": "Sarah Davis",
@@ -75,7 +75,7 @@
             {
                 "name": "Jessica Lee",
                 "role": "Product Manager, Apex Digital",
-                "text": "Crediblemark memberikan stabilitas dan kecepatan untuk meluncurkan MVP hanya dalam 4 minggu."
+                "text": "{brand} memberikan stabilitas dan kecepatan untuk meluncurkan MVP hanya dalam 4 minggu."
             },
             {
                 "name": "David Wilson",
@@ -85,14 +85,14 @@
         ]
     },
     "Comparison": {
-        "title": "Outsourcing Tradisional vs. Crediblemark",
+        "title": "Outsourcing Tradisional vs. {brand}",
         "subtitle": "Mengapa perusahaan memilih Model Engineering Strategis kami.",
         "oldTitle": "Outsourcing Standar",
         "old1": "Kickoff 3-6 Bulan",
         "old2": "Penagihan bervariasi (risiko anggaran)",
         "old3": "Siklus pengiriman tertutup",
         "old4": "Tim didominasi Junior",
-        "newTitle": "Crediblemark Hybrid",
+        "newTitle": "{brand} Hybrid",
         "recommended": "PILIHAN ENTERPRISE",
         "new1": "Akselerasi Peluncuran",
         "new1Sub": "Dari strategi ke eksekusi dalam 48 jam.",
@@ -168,7 +168,7 @@
     },
     "Included": {
         "title": "Sudah Terpasang di Setiap Layanan",
-        "subtitle": "Apapun paket yang Anda pilih, standar kualitas Crediblemark sudah termasuk di dalamnya.",
+        "subtitle": "Apapun paket yang Anda pilih, standar kualitas {brand} sudah termasuk di dalamnya.",
         "f1": "100% Hak Milik Penuh",
         "f1Desc": "Seluruh source code dan aset desain menjadi milik Anda sepenuhnya selamanya.",
         "f2": "Sesi Strategi 1-on-1",
@@ -257,7 +257,7 @@
         "name": "Rasyiqi",
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",
-        "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan Crediblemark. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
+        "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan {brand}. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
         "footer": "Keahlian Enterprise. Kecepatan Industri."
     },
     "Experts": {
@@ -311,6 +311,11 @@
         "empty": "Tidak ada expert yang tersedia saat ini.",
         "experience": "Pengalaman"
     },
+    "Stats": {
+        "experience": "Tahun Pengalaman",
+        "web": "Proyek Web",
+        "client": "Klien Puas"
+    },
     "ClientDashboard": {
         "badge": "DASHBOARD KLIEN",
         "title": "Transparansi Total via \n<yellow>Dashboard Strategis</yellow>",
@@ -349,7 +354,7 @@
             "stat2": "Rapat sering tidak produktif",
             "stat3": "Waktu untuk kembali fokus setelah gangguan",
             "stat4": "Orang multitasking saat rapat",
-            "wayTitle": "Cara Crediblemark",
+            "wayTitle": "Cara {brand}",
             "way1": "<strong>Keputusan Terdokumentasi.</strong> Tidak ada \"katanya, katanya\". Semua tertulis permanen.",
             "way2": "<strong>Async secara Default.</strong> Respon saat fokus, bukan saat kalender memaksa.",
             "way3": "<strong>Update Visual.</strong> Jangan tanya status layout, lihat langsung di dashboard.",
@@ -664,6 +669,16 @@
             "notFound": "Lisensi tidak ditemukan",
             "manual": "Manual Issue"
         }
+    },
+    "Portfolio": {
+        "titlePart1": "Estetika Tiada Dua,",
+        "titlePart2": "Dirancang untuk Tumbuh.",
+        "description": "Ubah pengunjung jadi pelanggan dengan desain web performa tinggi.",
+        "empty": "Belum ada portfolio yang ditambahkan.",
+        "readyToScale": "Siap untuk berkembang?",
+        "getQuote": "Dapatkan Penawaran",
+        "instantSolution": "Solusi Instan",
+        "showcase": "Showcase"
     },
     "Missions": {
         "inOrbit": "Dalam Orbit",

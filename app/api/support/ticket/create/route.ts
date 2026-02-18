@@ -41,12 +41,21 @@ export async function POST(request: Request) {
             }
         });
 
+        // --- Notifications ---
+        const { notifyNewSupportTicket } = await import("@/lib/email/admin-notifications");
+        notifyNewSupportTicket({
+            id: ticket.id,
+            type: ticket.type as "chat" | "ticket",
+            name: ticket.name || "Client",
+            email: ticket.email || "No Email",
+            message: body.initialMessage
+        }).catch(err => console.error("Support notification error:", err));
+
         return NextResponse.json(ticket, { status: 201 });
-    } catch (error: unknown) { // Changed 'error' to 'error: unknown' for explicit type safety
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return NextResponse.json({ error: error.issues }, { status: 400 });
         }
-        // Safely handle other errors
         const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
         console.error("Create Ticket Error:", error);
         return NextResponse.json({ error: errorMessage }, { status: 500 });

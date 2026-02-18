@@ -1,8 +1,13 @@
 import { ShieldCheck, MessageSquare, UserCheck, HeartHandshake, Gauge, Code2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/config/db";
 
-export function SectionIncluded() {
-    const t = useTranslations("Included");
+export async function SectionIncluded() {
+    const t = await getTranslations("Included");
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     const features = [
         { icon: ShieldCheck, title: t("f1"), desc: t("f1Desc") },
@@ -22,7 +27,7 @@ export function SectionIncluded() {
                         {t("title")}
                     </h2>
                     <p className="text-zinc-400 text-lg">
-                        {t("subtitle")}
+                        {t("subtitle", { brand: agencyName })}
                     </p>
                 </div>
 

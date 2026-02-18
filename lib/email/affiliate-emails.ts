@@ -1,5 +1,4 @@
-import { Resend } from "resend";
-import { prisma } from "@/lib/config/db";
+import { getResendClient } from "./client";
 
 /**
  * Escape karakter HTML untuk mencegah XSS di email templates.
@@ -12,30 +11,6 @@ function escapeHtml(text: string): string {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-}
-
-/**
- * Helper untuk mendapatkan Resend client.
- * Prioritas: DB setting → environment variable.
- */
-async function getResendClient(): Promise<Resend | null> {
-    try {
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "RESEND_API_KEY" }
-        });
-
-        const apiKey = setting?.value || process.env.RESEND_API_KEY;
-
-        if (!apiKey) {
-            console.warn("Resend API key not configured. Email will not be sent.");
-            return null;
-        }
-
-        return new Resend(apiKey);
-    } catch {
-        console.error("Failed to initialize Resend client");
-        return null;
-    }
 }
 
 /** Alamat pengirim default */

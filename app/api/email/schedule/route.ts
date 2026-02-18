@@ -1,5 +1,5 @@
-import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { getResendClient, getAdminEmailTarget } from '@/lib/email/client';
 import { stackServerApp } from '@/lib/config/stack';
 
 /**
@@ -25,18 +25,17 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { name, email, phone, notes, estimateTitle, totalCost, totalHours, link } = body;
 
-        const apiKey = process.env.RESEND_API_KEY;
+        const resendClient = await getResendClient();
+        const adminEmail = await getAdminEmailTarget();
 
-        if (!apiKey) {
-            console.error("RESEND_API_KEY is missing");
+        if (!resendClient) {
+            console.error("Resend API key missing in DB and Env");
             return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
         }
 
-        const resendClient = new Resend(apiKey);
-
         // Sanitasi semua input user sebelum masuk ke HTML email
-        const safeName = escapeHtml(name || "");
-        const safeEmail = escapeHtml(email || "");
+        const safeName = escapeHtml(name || user.displayName || "Client");
+        const safeEmail = escapeHtml(email || user.primaryEmail || "");
         const safePhone = escapeHtml(phone || "");
         const safeNotes = escapeHtml(notes || "No notes provided.");
         const safeTitle = escapeHtml(estimateTitle || "");
@@ -44,7 +43,7 @@ export async function POST(req: Request) {
 
         const { data, error } = await resendClient.emails.send({
             from: 'AgencyOS <onboarding@resend.dev>',
-            to: ['hello@crediblemark.com', 'crediblemarkofficial@gmail.com'],
+            to: [adminEmail],
             subject: `New Lead: ${safeName} - ${safeTitle}`,
             html: `
                 <h1>New Consultation Request</h1>

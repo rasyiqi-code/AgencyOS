@@ -2,6 +2,7 @@ import { estimateFlow } from '@/app/genkit';
 import { prisma } from '@/lib/config/db';
 import { NextResponse, NextRequest } from 'next/server';
 import { getCurrentUser, isAdmin } from '@/lib/shared/auth-helpers';
+import { notifyNewEstimate } from '@/lib/email/admin-notifications';
 
 export async function GET(req: NextRequest) {
     // Endpoint publik: hanya menampilkan data ringkasan non-sensitif
@@ -117,6 +118,14 @@ export async function POST(req: Request) {
                 creatorName
             }
         });
+
+        // Fire & Forget Notification
+        notifyNewEstimate({
+            id: estimate.id,
+            title: estimate.title,
+            totalCost: estimate.totalCost,
+            creatorName: estimate.creatorName || "Anonymous"
+        }).catch(err => console.error("Failed to send admin notification:", err));
 
         return NextResponse.json({ id: estimate.id });
     } catch (error: unknown) {

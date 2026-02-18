@@ -107,6 +107,9 @@ export async function SiteHeader() {
                             <Link href={`/${locale}/products`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                                 {t("products")}
                             </Link>
+                            <Link href={`/portfolio`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                                Portfolio
+                            </Link>
                             <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
                                 Blog
                             </a>
@@ -155,6 +158,9 @@ export async function SiteHeader() {
                     </Link>
                     <Link href={`/${locale}/products`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("products")}
+                    </Link>
+                    <Link href={`/portfolio`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                        Portfolio
                     </Link>
                     <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         Blog

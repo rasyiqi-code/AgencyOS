@@ -9,9 +9,11 @@ import { ProductCatalog } from "@/components/landing/section-products";
 import { Workflow } from "@/components/landing/section-workflow";
 import { ExpertProfile } from "@/components/landing/section-expert";
 import { FinancialLogic } from "@/components/landing/section-financial";
+import { SectionStats } from "@/components/landing/section-stats";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/section-faq";
 import { Testimonials } from "@/components/landing/section-testimonials";
+import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Organization } from "schema-dts";
 import { prisma } from "@/lib/config/db";
@@ -59,17 +61,54 @@ export default async function Home() {
       />
       <SiteHeader />
       <LandingHero />
-      <SocialProof />
-      <Comparison />
-      <FinancialLogic />
-      <SectionEcosystem />
-      <Workflow />
-      <ProductCatalog />
-      <Testimonials />
-      <ExpertProfile />
-      <SectionGuarantee />
-      <FAQSection />
-      <SectionCTA />
+
+      <ScrollAnimationWrapper>
+        <SectionStats />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper delay={0.1}>
+        <SocialProof />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper delay={0.2}>
+        <Comparison />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <FinancialLogic />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <SectionEcosystem />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <Workflow />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <ProductCatalog />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <Testimonials />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <ExpertProfile />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <SectionGuarantee />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <FAQSection />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper>
+        <SectionCTA />
+      </ScrollAnimationWrapper>
       <SiteFooter />
     </main>
   );

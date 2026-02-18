@@ -4,6 +4,8 @@ import { prisma } from "@/lib/config/db";
 import { generateLicenseForOrder } from "./licenses";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
+import { notifyNewDigitalOrder, notifyPaymentSuccess } from "@/lib/email/admin-notifications";
+import { sendPaymentSuccessEmail } from "@/lib/email/client-notifications";
 
 const db = prisma;
 
@@ -29,6 +31,19 @@ export async function createDigitalOrder(data: {
                 status: "PENDING",
             },
         });
+
+        // Get product name for notification
+        const product = await db.product.findUnique({
+            where: { id: data.productId },
+            select: { name: true }
+        });
+
+        notifyNewDigitalOrder({
+            orderId: order.id,
+            productName: product?.name || "Digital Product",
+            customerEmail: data.userEmail,
+            amount: data.amount
+        }).catch(err => console.error("Failed to send admin notification:", err));
 
         return { success: true, order };
     } catch (error: unknown) {
@@ -96,6 +111,28 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string, 
         // Process Affiliate Commission (jika ada referral)
         // Order harus sudah PAID agar komisi valid
         await processAffiliateCommission(orderId, order.amount, order.paymentMetadata);
+
+        // Notify Admin
+        notifyPaymentSuccess({
+            orderId: order.id,
+            amount: order.amount,
+            customerName: order.userName || order.userEmail,
+            type: "DIGITAL"
+        }).catch(err => console.error("Failed to send admin notification:", err));
+
+        // Notify Client
+        const product = await db.product.findUnique({
+            where: { id: order.productId },
+            select: { name: true }
+        });
+
+        sendPaymentSuccessEmail({
+            to: order.userEmail,
+            customerName: order.userName || order.userEmail.split('@')[0] || "Customer",
+            orderId: order.id,
+            amount: order.amount,
+            productName: product?.name || "Digital Product"
+        }).catch(err => console.error("Failed to send client notification:", err));
 
         return { success: true, order, license: licenseResult };
     } catch (error: unknown) {

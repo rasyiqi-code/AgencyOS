@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { stackServerApp } from "@/lib/config/stack";
 
 export async function PATCH(req: Request) {
     if (!await isAdmin()) {
@@ -38,6 +39,24 @@ export async function PATCH(req: Request) {
                 })
             ] : [])
         ]);
+
+        // --- Notifications ---
+        if (estimate.project && status === "pending_payment") {
+            try {
+                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                if (stackUser && stackUser.primaryEmail) {
+                    const { sendPaymentRevertedEmail } = await import("@/lib/email/client-notifications");
+                    sendPaymentRevertedEmail({
+                        to: stackUser.primaryEmail,
+                        customerName: stackUser.displayName || stackUser.primaryEmail.split('@')[0] || "Client",
+                        orderId: estimateId,
+                        productName: estimate.title
+                    }).catch(err => console.error("Revert notification error:", err));
+                }
+            } catch (err) {
+                console.error("Failed to fetch user for revert notification:", err);
+            }
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

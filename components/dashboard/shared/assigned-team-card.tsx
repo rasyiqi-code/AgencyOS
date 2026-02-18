@@ -45,7 +45,7 @@ export function AssignedTeamCard({
                             {/* Show full team list in admin/editable mode too */}
                             {effectiveTeam.length > 0 && (
                                 <div className="space-y-1.5">
-                                    <label className="text-[9px] font-bold text-zinc-500 uppercase block">Current Team Members</label>
+                                    <span className="text-[9px] font-bold text-zinc-500 uppercase block">Current Team Members</span>
                                     <div className="space-y-2">
                                         {effectiveTeam.map((profile) => (
                                             <div key={profile.id} className="flex items-center gap-2 p-2 rounded bg-black/20 border border-white/5 group relative">
@@ -80,9 +80,9 @@ export function AssignedTeamCard({
                         </div>
                     ) : (
                         <div className="space-y-1.5">
-                            <label className="text-[9px] font-bold text-zinc-500 uppercase flex items-center gap-1 mb-2">
+                            <span className="text-[9px] font-bold text-zinc-500 uppercase flex items-center gap-1 mb-2">
                                 <UserCheck className="w-2.5 h-2.5" /> Assigned Developers
-                            </label>
+                            </span>
 
                             {effectiveTeam.length > 0 ? (
                                 <div className="space-y-2">
@@ -115,7 +115,7 @@ export function AssignedTeamCard({
 
                 {/* Repository Section */}
                 <div>
-                    <label className="text-[9px] font-bold text-zinc-500 uppercase block mb-1">Repository</label>
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase block mb-1">Repository</span>
                     {repoOwner && repoName ? (
                         <a
                             href={repoUrl || `https://github.com/${repoOwner}/${repoName}`}

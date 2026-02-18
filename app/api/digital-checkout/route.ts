@@ -29,10 +29,12 @@ export async function POST(req: Request) {
 
         const { productId, email, name, affiliateCode, couponCode } = await req.json();
         const userId = user.id; // Override userId from session
+        const userEmail = user.primaryEmail || email; // Prioritize Stack Auth email
+        const userName = user.displayName || name;
 
 
         // Validasi input wajib
-        if (!productId || !email) {
+        if (!productId || !userEmail) {
             return NextResponse.json(
                 { error: "productId dan email wajib diisi" },
                 { status: 400 }
@@ -90,8 +92,8 @@ export async function POST(req: Request) {
                 id: orderId,
                 productId: product.id,
                 userId: userId || null,
-                userEmail: email,
-                userName: name || null,
+                userEmail: userEmail,
+                userName: userName || null,
                 amount: finalAmount,
                 status: "PENDING",
 

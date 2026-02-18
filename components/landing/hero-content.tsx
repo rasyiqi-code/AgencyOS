@@ -159,10 +159,10 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[800px] z-10 flex items-end justify-center"
                         >
                             {/* Improved fade/blur from waist down */}
-                            <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none" />
+                            <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none" />
 
                             {/* Secondary sharp fade at the very bottom */}
-                            <div className="absolute inset-x-0 bottom-0 h-10 bg-black z-30 pointer-events-none" />
+                            <div className="absolute inset-x-0 bottom-0 h-20 bg-black z-30 pointer-events-none" />
 
                             <Image
                                 src="/expert.png"

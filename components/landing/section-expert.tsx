@@ -1,15 +1,20 @@
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
+import { prisma } from "@/lib/config/db";
 
 export async function ExpertProfile() {
     const t = await getTranslations("Expert");
+    const settings = await prisma.systemSetting.findMany({
+        where: { key: { in: ["AGENCY_NAME"] } }
+    });
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (
         <section className="py-24 bg-black">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto rounded-3xl bg-zinc-900/30 border border-white/5 p-8 md:p-12">
                     <div className="shrink-0 text-center">
-                        <div className="w-48 h-48 rounded-2xl overflow-hidden border-2 border-white/10 mx-auto mb-4 bg-zinc-800 relative shadow-2xl">
+                        <div className="w-48 h-48 rounded-2xl overflow-hidden mx-auto mb-4 bg-zinc-800 relative shadow-2xl [mask-image:linear-gradient(to_bottom,black_50%,transparent_100%)]">
                             <Image
                                 src="/expert-photo.png"
                                 alt="Rasyiqi"
@@ -31,7 +36,7 @@ export async function ExpertProfile() {
                         </h2>
                         <div className="space-y-4 text-zinc-400 leading-relaxed text-sm md:text-base">
                             <p>
-                                {t("description")}
+                                {t("description", { brand: agencyName })}
                             </p>
                             <p className="text-white font-medium pt-2 border-t border-white/5 mt-4">
                                 {t("footer")}

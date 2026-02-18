@@ -54,12 +54,12 @@
     },
     "Testimonials": {
         "title": "Trusted by Founders",
-        "subtitle": "Join satisfied clients building with Crediblemark.",
+        "subtitle": "Join satisfied clients building with {brand}.",
         "reviews": [
             {
                 "name": "Alex Chen",
                 "role": "CTO, InnovateLabs",
-                "text": "Crediblemark accelerated our development cycle significantly. They built our MVP in record time."
+                "text": "{brand} accelerated our development cycle significantly. They built our MVP in record time."
             },
             {
                 "name": "Sarah Davis",
@@ -74,7 +74,7 @@
             {
                 "name": "Jessica Lee",
                 "role": "Product Manager, Apex Digital",
-                "text": "Crediblemark provided the stability and speed we needed to launch our MVP in just 4 weeks."
+                "text": "{brand} provided the stability and speed we needed to launch our MVP in just 4 weeks."
             },
             {
                 "name": "David Wilson",
@@ -84,14 +84,14 @@
         ]
     },
     "Comparison": {
-        "title": "Legacy Outsourcing vs. Crediblemark",
+        "title": "Legacy Outsourcing vs. {brand}",
         "subtitle": "Why enterprises choose our Strategic Engineering model.",
         "oldTitle": "Standard Outsourcing",
         "old1": "3-6 Month Kickoff",
         "old2": "Variable billing (budget risk)",
         "old3": "Opaque delivery cycles",
         "old4": "Junior-heavy teams",
-        "newTitle": "Crediblemark Hybrid",
+        "newTitle": "{brand} Hybrid",
         "recommended": "ENTERPRISE CHOICE",
         "new1": "Accelerated Launch",
         "new1Sub": "Strategy to execution in 48h.",
@@ -167,7 +167,7 @@
     },
     "Included": {
         "title": "Included with Every Service",
-        "subtitle": "No matter which package you choose, Crediblemark quality standards are included.",
+        "subtitle": "No matter which package you choose, {brand} quality standards are included.",
         "f1": "100% Full Ownership",
         "f1Desc": "All source code and design assets are fully yours, forever.",
         "f2": "1-on-1 Strategy Session",
@@ -186,7 +186,7 @@
         "name": "Rasyiqi",
         "badge": "12+ YEARS EXPERIENCE",
         "quote": "Focus on solutions, no complications.",
-        "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of Crediblemark. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
+        "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of {brand}. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
         "footer": "Enterprise Expertise. Industrial Velocity."
     },
     "Experts": {
@@ -240,6 +240,11 @@
         "empty": "No experts are currently available for deployment.",
         "experience": "Experience"
     },
+    "Stats": {
+        "experience": "Years Experience",
+        "web": "Web Projects",
+        "client": "Happy Clients"
+    },
     "ClientDashboard": {
         "badge": "CLIENT DASHBOARD",
         "title": "Absolute Transparency via \n<yellow>Strategic Dashboard</yellow>",
@@ -278,7 +283,7 @@
             "stat2": "Meetings are unproductive",
             "stat3": "To regain focus after distraction",
             "stat4": "People multitask during meetings",
-            "wayTitle": "The Crediblemark Way",
+            "wayTitle": "The {brand} Way",
             "way1": "<strong>Documented Decisions.</strong> No \"he said, she said\". Written in stone.",
             "way2": "<strong>Async by Default.</strong> Respond when ready, not when calendar dictates.",
             "way3": "<strong>Visual Updates.</strong> Don't ask layout status, just look at the dashboard.",
@@ -593,6 +598,16 @@
             "notFound": "No licenses found",
             "manual": "Manual Issue"
         }
+    },
+    "Portfolio": {
+        "titlePart1": "One-of-a-Kind Aesthetics,",
+        "titlePart2": "Engineered for Growth.",
+        "description": "Turning your visitors into customers with high-performance web design.",
+        "empty": "No portfolio items added yet.",
+        "readyToScale": "Ready to scale?",
+        "getQuote": "Get Quote",
+        "instantSolution": "Instant Solution",
+        "showcase": "Showcase"
     },
     "Missions": {
         "inOrbit": "In Orbit",
