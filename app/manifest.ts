@@ -2,6 +2,12 @@ import type { MetadataRoute } from "next";
 import { getSystemSettings } from "@/lib/server/settings";
 
 /**
+ * Force dynamic rendering — manifest membaca dari database,
+ * yang tidak tersedia saat build time (Docker build).
+ */
+export const dynamic = "force-dynamic";
+
+/**
  * Dynamic Web App Manifest menggunakan Next.js Metadata API.
  * Membaca nama dan deskripsi dari system settings database.
  *
