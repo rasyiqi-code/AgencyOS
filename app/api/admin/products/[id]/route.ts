@@ -49,7 +49,7 @@ export async function PATCH(
     try {
         const { id } = await params;
         const body = await req.json();
-        const { name, slug, description, price, type, isActive, purchaseType, interval, image, fileUrl } = body;
+        const { name, slug, description, price, type, isActive, purchaseType, interval, image, fileUrl, name_id, description_id } = body;
 
         if (!id) {
             return new NextResponse("Product ID required", { status: 400 });
@@ -68,6 +68,8 @@ export async function PATCH(
                 interval,
                 image,
                 fileUrl,
+                name_id,
+                description_id,
             }
         });
 

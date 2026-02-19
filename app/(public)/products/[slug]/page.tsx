@@ -8,8 +8,41 @@ import { ProductRecommendations } from "@/components/public/product-recommendati
 import { prisma } from "@/lib/config/db";
 import { getTranslations } from "next-intl/server";
 
+import { Metadata } from "next";
+import { getLocale } from "next-intl/server";
+
 interface PageProps {
     params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+    const params = await props.params;
+    const product = await getDigitalProductBySlug(params.slug);
+    const locale = await getLocale();
+
+    if (!product || !product.isActive) {
+        return { title: "Product Not Found" };
+    }
+
+    const isId = locale === 'id';
+    const name = (isId ? product.name_id : null) || product.name;
+    const description = (isId ? product.description_id : null) || product.description || "";
+
+    // Clean description for meta tag (remove HTML tags if any, though digital products usually use plain text)
+    const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
+
+    return {
+        title: name,
+        description: cleanDescription,
+        openGraph: {
+            title: name,
+            description: cleanDescription,
+            images: product.image ? [{ url: product.image }] : undefined,
+        },
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_APP_URL}/products/${params.slug}`
+        }
+    };
 }
 
 /**
@@ -20,10 +53,15 @@ export default async function ProductDetailPage(props: PageProps) {
     const params = await props.params;
     const product = await getDigitalProductBySlug(params.slug);
     const t = await getTranslations("ProductDetail");
+    const locale = await getLocale();
+    const isId = locale === 'id';
 
     if (!product || !product.isActive) {
         notFound();
     }
+
+    const name = (isId ? product.name_id : null) || product.name;
+    const description = (isId ? product.description_id : null) || product.description;
 
     // Ambil produk lain untuk rekomendasi (exclude produk saat ini)
     const allProducts = await getDigitalProducts(true);
@@ -99,13 +137,13 @@ export default async function ProductDetailPage(props: PageProps) {
 
                                 {/* Title */}
                                 <h1 className="text-2xl md:text-3xl font-black text-white mb-3">
-                                    {product.name}
+                                    {name}
                                 </h1>
 
                                 {/* Description */}
-                                {product.description && (
+                                {description && (
                                     <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                                        {product.description}
+                                        {description}
                                     </p>
                                 )}
 

@@ -20,6 +20,8 @@ const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with dashes"),
     description: z.string().optional(),
+    name_id: z.string().optional(),
+    description_id: z.string().optional(),
     price: z.number().min(0, "Price must be positive"),
     type: z.enum(["plugin", "template"]),
     isActive: z.boolean().default(true),
@@ -33,6 +35,8 @@ interface ProductFormValues {
     name: string;
     slug: string;
     description?: string;
+    name_id?: string;
+    description_id?: string;
     price: number;
     type: "plugin" | "template";
     isActive?: boolean;
@@ -59,6 +63,8 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
             name: product?.name || "",
             slug: product?.slug || "",
             description: product?.description || "",
+            name_id: (product as Product & { name_id?: string })?.name_id || "",
+            description_id: (product as Product & { description_id?: string })?.description_id || "",
             price: product?.price ? Number(product.price) : 0,
             type: (product?.type as "plugin" | "template") || "plugin",
             isActive: product?.isActive ?? true,
@@ -120,7 +126,7 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
                         {/* Kolom Kiri: Informasi Inti */}
                         <div className="space-y-4">
                             <div className="space-y-1.5">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Product Name</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Product Name (EN)</Label>
                                 <Input
                                     {...form.register("name")}
                                     placeholder="e.g. Crediblog Theme"
@@ -129,6 +135,15 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
                                 {form.formState.errors.name && (
                                     <p className="text-[10px] font-bold text-red-500 uppercase tracking-tight">{form.formState.errors.name.message}</p>
                                 )}
+                            </div>
+
+                            <div className="space-y-1.5 pt-1">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-brand-yellow/60">Product Name (ID)</Label>
+                                <Input
+                                    {...form.register("name_id")}
+                                    placeholder="e.g. Tema Crediblog"
+                                    className="bg-brand-yellow/5 border-brand-yellow/10 rounded-xl h-10 text-xs focus:border-brand-yellow/30 transition-colors"
+                                />
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
@@ -214,11 +229,20 @@ export function ProductForm({ product, trigger, onSuccess }: ProductFormProps) {
                             />
 
                             <div className="space-y-1.5">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description (EN)</Label>
                                 <Textarea
                                     {...form.register("description")}
-                                    className="min-h-[145px] bg-black/50 border-white/5 rounded-2xl text-xs resize-none focus:border-brand-yellow/30 transition-colors"
+                                    className="min-h-[80px] bg-black/50 border-white/5 rounded-2xl text-xs resize-none focus:border-brand-yellow/30 transition-colors"
                                     placeholder="Tell us about this product..."
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-brand-yellow/60">Description (ID)</Label>
+                                <Textarea
+                                    {...form.register("description_id")}
+                                    className="min-h-[80px] bg-brand-yellow/5 border-brand-yellow/10 rounded-2xl text-xs resize-none focus:border-brand-yellow/30 transition-colors"
+                                    placeholder="Beritahu kami tentang produk ini..."
                                 />
                             </div>
                         </div>

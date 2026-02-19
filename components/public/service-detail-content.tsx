@@ -71,68 +71,73 @@ export function ServiceDetailContent({ service, isId, showBack = false, trustedA
                         </Link>
                     )}
 
-                    {/* HERO SECTION: More Compact */}
-                    <div className="relative rounded-[32px] border border-white/5 bg-zinc-900/20 backdrop-blur-3xl overflow-hidden p-6 md:p-10 lg:p-12 mb-12 shadow-2xl">
+                    {/* HERO SECTION: Balanced Compact Scroll Shape */}
+                    <div className="relative rounded-[20px] md:rounded-[32px] border border-white/5 bg-zinc-900/20 backdrop-blur-3xl mb-6 md:mb-12 shadow-2xl overflow-hidden">
                         {/* Decorative internal glow */}
                         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-yellow/[0.03] to-transparent pointer-events-none" />
 
-                        <div className="relative z-10 flex flex-col lg:flex-row gap-8 lg:items-center">
-                            <div className="flex-1 space-y-6">
-                                <div className="space-y-3">
-                                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[9px] font-bold text-brand-yellow uppercase tracking-[0.2em]">
-                                        <Sparkles className="w-3 h-3" />
-                                        Premium Service
+                        {/* Scroll Container */}
+                        <div className="overflow-x-auto scrollbar-hide">
+                            <div className="relative z-10 flex flex-row items-center gap-8 md:gap-16 p-4 md:p-10 lg:p-12 min-w-[520px] md:min-w-0">
+                                {/* Left Content: Info */}
+                                <div className="flex-1 space-y-4 md:space-y-6">
+                                    <div className="space-y-1.5 md:space-y-3">
+                                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[7px] md:text-[9px] font-bold text-brand-yellow uppercase tracking-[0.2em]">
+                                            <Sparkles className="w-2 md:w-3 h-2 md:h-3" />
+                                            Premium Service
+                                        </div>
+                                        <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-tight break-words max-w-sm md:max-w-xl">
+                                            {displayTitle}
+                                        </h1>
                                     </div>
-                                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-[1.1] break-words max-w-2xl">
-                                        {displayTitle}
-                                    </h1>
-                                </div>
 
-                                <div className="flex flex-wrap items-center gap-6 md:gap-8">
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</span>
-                                        <div className="flex items-baseline gap-2">
-                                            <div className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-2">
-                                                <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    <div className="flex items-center gap-6 md:gap-12">
+                                        <div className="flex flex-col">
+                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</span>
+                                            <div className="flex items-baseline gap-1.5 md:gap-2">
+                                                <div className="text-2xl md:text-6xl font-black text-white tracking-tighter">
+                                                    <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                                </div>
+                                                <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                                                    / {intervalLabel}
+                                                </span>
                                             </div>
-                                            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
-                                                / {intervalLabel}
-                                            </span>
+                                        </div>
+
+                                        <div className="h-8 md:h-10 w-px bg-white/10" />
+
+                                        <div className="flex flex-col">
+                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">Timeline</span>
+                                            <span className="text-base md:text-xl font-bold text-white tracking-tight">Rapid Delivery</span>
                                         </div>
                                     </div>
-
-                                    <div className="h-10 w-px bg-white/10 hidden md:block" />
-
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">Timeline</span>
-                                        <span className="text-lg md:text-xl font-bold text-white tracking-tight">Rapid Delivery</span>
-                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="lg:w-[320px] shrink-0 space-y-4">
-                                {service.image ? (
-                                    <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
-                                        <Image
-                                            src={service.image}
-                                            alt={displayTitle}
-                                            fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                            unoptimized={true}
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </div>
-                                ) : (
-                                    <div className="aspect-square rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
-                                        <Sparkles className="w-16 h-16 text-zinc-800" />
-                                    </div>
-                                )}
+                                {/* Right Content: Visual & CTA */}
+                                <div className="w-[200px] md:w-[320px] lg:w-[380px] shrink-0 space-y-3 md:space-y-4">
+                                    {service.image ? (
+                                        <div className="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
+                                            <Image
+                                                src={service.image}
+                                                alt={displayTitle}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                unoptimized={true}
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </div>
+                                    ) : (
+                                        <div className="aspect-square rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
+                                            <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-zinc-800" />
+                                        </div>
+                                    )}
 
-                                <PurchaseButton
-                                    serviceId={service.id}
-                                    interval={service.interval}
-                                    className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-10 py-4 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
-                                />
+                                    <PurchaseButton
+                                        serviceId={service.id}
+                                        interval={service.interval}
+                                        className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -417,6 +417,8 @@ model Product {
   price       Float     @default(0)
   type        String    @default("plugin") // plugin, template, etc.
   isActive    Boolean   @default(true)
+  name_id     String?
+  description_id String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   licenses     License[]

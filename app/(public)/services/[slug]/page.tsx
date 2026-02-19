@@ -34,10 +34,10 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
 
     return {
-        title: `${title} | Services`,
+        title: title,
         description: cleanDescription,
         openGraph: {
-            title: `${title} | Services`,
+            title: title,
             description: cleanDescription,
             images: service.image ? [{ url: service.image }] : undefined,
         },
