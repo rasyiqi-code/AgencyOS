@@ -71,7 +71,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 />
 
                 {/* Visual Block — Thumbnail / Placeholder */}
-                <div className="relative aspect-[16/9] overflow-hidden shrink-0">
+                <div className="relative aspect-square overflow-hidden shrink-0">
                     {product.image ? (
                         <Image
                             src={product.image}
@@ -107,11 +107,6 @@ export function ProductCard({ product }: ProductCardProps) {
                         <h3 className="text-lg font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-1">
                             {product.name}
                         </h3>
-                        {product.description && (
-                            <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2 font-light">
-                                {product.description}
-                            </p>
-                        )}
                     </div>
 
                     {/* Bottom: Price Block */}

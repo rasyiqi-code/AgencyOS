@@ -9,7 +9,8 @@ import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 import { Button } from "@/components/ui/button";
-import { FileText, ListChecks, CreditCard } from "lucide-react";
+import { FileText, ListChecks, CreditCard, Link as LinkIcon } from "lucide-react";
+import { slugify } from "@/lib/shared/utils";
 
 // ... imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +36,8 @@ export function CreateServiceForm() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generationKey, setGenerationKey] = useState(0); // Force re-render on generation
     const [generatedData, setGeneratedData] = useState<DraftServiceData | null>(null);
+    const [slug, setSlug] = useState("");
+    const [isCustomSlug, setIsCustomSlug] = useState(false);
 
     async function handleGenerate() {
         if (!prompt.trim()) return;
@@ -205,8 +208,43 @@ export function CreateServiceForm() {
                                             defaultValue={generatedData?.title ?? undefined}
                                             placeholder="e.g. Enterprise Web Development"
                                             required
+                                            onChange={(e) => {
+                                                if (!isCustomSlug) {
+                                                    setSlug(slugify(e.target.value));
+                                                }
+                                            }}
                                             className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-blue-500/20 h-10"
                                         />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Custom URL Slug</label>
+                                        <div className="flex gap-2">
+                                            <div className="flex-1 relative">
+                                                <Input
+                                                    name="slug"
+                                                    value={slug}
+                                                    onChange={(e) => {
+                                                        setSlug(slugify(e.target.value));
+                                                        setIsCustomSlug(true);
+                                                    }}
+                                                    placeholder="custom-url-slug"
+                                                    className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-blue-500/20 h-10 pl-9"
+                                                />
+                                                <LinkIcon className="w-4 h-4 absolute left-3 top-3 text-zinc-500" />
+                                            </div>
+                                            {isCustomSlug && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setIsCustomSlug(false)}
+                                                    className="text-[10px] text-zinc-500 hover:text-white"
+                                                >
+                                                    Reset
+                                                </Button>
+                                            )}
+                                        </div>
+                                        <p className="text-[10px] text-zinc-500 italic">URL will be: /services/{slug || "..."}</p>
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Description</label>

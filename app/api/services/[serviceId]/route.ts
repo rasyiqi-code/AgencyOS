@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
+import { slugify } from "@/lib/shared/utils";
 
 const billingPeriodMap: Record<string, string> = {
     'monthly': 'every-month',
@@ -54,6 +55,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         const featuresRaw = formData.get("features")?.toString() || "";
         const featuresIdRaw = formData.get("features_id")?.toString() || "";
         const imageFile = formData.get("image") as File;
+        const slugInput = formData.get("slug")?.toString();
 
         // Validation
         if (!title || !description || !title_id || !description_id || !priceRaw) {
@@ -78,7 +80,8 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             currency,
             interval,
             features,
-            features_id
+            features_id,
+            slug: slugInput ? slugify(slugInput) : slugify(title)
         };
 
         if (imageFile && imageFile.size > 0 && imageFile.name !== 'undefined') {

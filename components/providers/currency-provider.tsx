@@ -127,9 +127,14 @@ export function PriceDisplay({
         displayAmount = amount / rate;
     }
 
-    // Custom compact formatting for IDR (jt/rb) - Only for Indonesian locale
-    const isIdLocale = locale.startsWith('id');
-    if (compact && currency === 'IDR' && isIdLocale) {
+    // Custom compact formatting for IDR (jt/rb/m)
+    if (compact && currency === 'IDR') {
+        if (displayAmount >= 1000000000) {
+            const formatted = (displayAmount / 1000000000).toLocaleString(locale, {
+                maximumFractionDigits: displayAmount % 1000000000 === 0 ? 0 : 1
+            });
+            return <span>Rp {formatted}m</span>;
+        }
         if (displayAmount >= 1000000) {
             const formatted = (displayAmount / 1000000).toLocaleString(locale, {
                 maximumFractionDigits: displayAmount % 1000000 === 0 ? 0 : 1

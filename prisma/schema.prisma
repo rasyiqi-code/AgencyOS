@@ -155,6 +155,7 @@ model SystemSetting {
 model Service {
   id             String     @id @default(cuid())
   title          String
+  slug           String?    @unique
   description    String
   price          Float
   interval       String     @default("one_time")

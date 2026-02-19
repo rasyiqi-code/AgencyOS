@@ -161,10 +161,10 @@
         "roi": "ROI: Skalabilitas & Efisiensi"
     },
     "Guarantee": {
-        "title": "Kami Tanggung Risiko Sepenuhnya.",
-        "subtitle": "Garansi Uang Kembali 100% di Fase Briefing",
-        "desc": "Kami sangat yakin dengan sistem hybrid kami. Jika setelah sesi briefing AI dan menerima Blueprint awal Anda merasa tidak cocok dengan pendekatan kami, deposit Anda kami kembalikan 100%.",
-        "footer": "Tanpa pertanyaan. Tanpa drama. Anda tetap boleh menyimpan Blueprint hasil analisis AI tersebut sebagai referensi."
+        "title": "Aman dan Transparan.",
+        "subtitle": "Garansi Uang Kembali 100%",
+        "desc": "Jika Blueprint awal tidak cocok setelah sesi briefing AI, deposit kami kembalikan 100%. Tanpa syarat. Anda tetap boleh mengamankan Blueprint tersebut selama belum masuk tahap development.",
+        "footer": ""
     },
     "Included": {
         "title": "Sudah Terpasang di Setiap Layanan",
@@ -367,7 +367,7 @@
         }
     },
     "FAQ": {
-        "title": "FAQ: Kerangka Kerja & Tata Kelola",
+        "title": "Frequently Asked Questions",
         "q1": "Apakah kami bisa berkomunikasi secara langsung?",
         "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk kordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
         "q2": "Bagaimana manajemen bug setelah fase deployment?",
@@ -821,5 +821,10 @@
     },
     "FloatingChat": {
         "needHelp": "Butuh Bantuan? 👋"
+    },
+    "Services": {
+        "title": "Layanan Premium",
+        "subtitle": "Tingkatkan bisnis Anda dengan layanan tersistem kami. Hasil berkualitas tinggi, harga transparan, dan waktu pengerjaan cepat.",
+        "backToHome": "Kembali ke Beranda"
     }
 }

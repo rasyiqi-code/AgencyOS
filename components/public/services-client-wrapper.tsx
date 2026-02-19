@@ -6,6 +6,7 @@ import { ServiceCard } from "@/components/public/service-card";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface Service {
     id: string;
@@ -69,6 +70,8 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
         }
     }, [searchParams, router]);
 
+    const st = useTranslations("Services");
+
     return (
         <div className="relative bg-black overflow-hidden">
             {/* Landing Style Background */}
@@ -80,18 +83,18 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                 <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-brand-yellow/10 blur-[100px]" />
             </div>
 
-            <div className="container mx-auto px-4 py-12 sm:py-24 relative z-10">
-                <div className="mb-12 text-center max-w-2xl mx-auto">
-                    <Link href="/" className="inline-flex items-center text-sm text-zinc-500 hover:text-white mb-6 transition-colors gap-1">
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Home
+            <div className="container mx-auto px-4 py-8 sm:py-24 relative z-10">
+                <div className="mb-8 sm:mb-12 text-center max-w-2xl mx-auto">
+                    <Link href="/" className="inline-flex items-center text-[10px] sm:text-sm text-zinc-500 hover:text-white mb-4 sm:mb-6 transition-colors gap-1">
+                        <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+                        {st("backToHome")}
                     </Link>
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 flex items-center justify-center gap-3">
-                        <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-brand-yellow" />
-                        {pageTitle || "Premium Services"}
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 sm:mb-6 flex items-center justify-center gap-2 sm:gap-3">
+                        <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-brand-yellow" />
+                        {pageTitle || st("title")}
                     </h1>
-                    <p className="text-lg text-zinc-400 leading-relaxed">
-                        {pageSubtitle || "Scale your business with our productized services. High-quality deliverables, transparent pricing, and rapid turnaround times."}
+                    <p className="text-sm sm:text-lg text-zinc-400 leading-relaxed px-4 sm:px-0">
+                        {pageSubtitle || st("subtitle")}
                     </p>
                 </div>
 

@@ -32,6 +32,25 @@ export async function FAQSection() {
                         </AccordionItem>
                     ))}
                 </Accordion>
+
+                {/* FAQ Structured Data for SEO */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+                                "@type": "Question",
+                                "name": t(`q${i}`),
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": (t.raw("a" + i) as string).replace(/<\/?[^>]+(>|$)/g, "")
+                                }
+                            }))
+                        })
+                    }}
+                />
             </div>
         </section>
     )

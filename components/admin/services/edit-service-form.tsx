@@ -9,7 +9,8 @@ import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 import { Button } from "@/components/ui/button";
-import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2, Link as LinkIcon } from "lucide-react";
+import { slugify } from "@/lib/shared/utils";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag } from "lucide-react";
@@ -30,6 +31,7 @@ export interface ServiceData {
     features: string[];
     features_id?: string[] | null;
     image: string | null;
+    slug?: string | null;
 }
 
 interface DraftServiceData extends Partial<ServiceData> {
@@ -45,6 +47,7 @@ export function EditServiceForm({ service, features, features_id }: { service: S
     const [isGenerating, setIsGenerating] = useState(false);
     const [generationKey, setGenerationKey] = useState(0);
     const [generatedData, setGeneratedData] = useState<DraftServiceData | null>(null);
+    const [slug, setSlug] = useState(service.slug || "");
 
     async function handleGenerate() {
         if (!prompt.trim()) return;
@@ -215,6 +218,20 @@ export function EditServiceForm({ service, features, features_id }: { service: S
                                             required
                                             className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-blue-500/20 h-10"
                                         />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Custom URL Slug</label>
+                                        <div className="relative">
+                                            <Input
+                                                name="slug"
+                                                value={slug}
+                                                onChange={(e) => setSlug(slugify(e.target.value))}
+                                                placeholder="custom-url-slug"
+                                                className="bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-blue-500/20 h-10 pl-9"
+                                            />
+                                            <LinkIcon className="w-4 h-4 absolute left-3 top-3 text-zinc-500" />
+                                        </div>
+                                        <p className="text-[10px] text-zinc-500 italic">URL will be: /services/{slug || "..."}</p>
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Description</label>

@@ -820,5 +820,10 @@
     },
     "FloatingChat": {
         "needHelp": "Need Help? 👋"
+    },
+    "Services": {
+        "title": "Premium Services",
+        "subtitle": "Scale your business with our productized services. High-quality deliverables, transparent pricing, and rapid turnaround times.",
+        "backToHome": "Back to Home"
     }
 }
