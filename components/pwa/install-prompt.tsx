@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, X } from "lucide-react";
 
@@ -14,6 +14,9 @@ const DISMISS_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 hari
 /**
  * Interface untuk event beforeinstallprompt.
  * Event ini dikirim browser saat aplikasi memenuhi kriteria PWA installable.
+ *
+ * NOTE: Di Chrome modern, prompt() mengembalikan {outcome, platform} langsung.
+ * Property userChoice sudah deprecated.
  */
 interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
@@ -21,7 +24,7 @@ interface BeforeInstallPromptEvent extends Event {
         outcome: "accepted" | "dismissed";
         platform: string;
     }>;
-    prompt(): Promise<void>;
+    prompt(): Promise<{ outcome: "accepted" | "dismissed"; platform: string } | void>;
 }
 
 /**
@@ -36,8 +39,12 @@ interface BeforeInstallPromptEvent extends Event {
  * - Auto-hide setelah instalasi berhasil
  */
 export function InstallPrompt() {
-    const [deferredPrompt, setDeferredPrompt] =
-        useState<BeforeInstallPromptEvent | null>(null);
+    /**
+     * useRef untuk menyimpan deferredPrompt — BUKAN useState.
+     * useState menyebabkan re-render yang bisa menghilangkan referensi
+     * event asli. useRef menjaga referensi tetap stabil antar render.
+     */
+    const deferredPromptRef = useRef<BeforeInstallPromptEvent | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const [isInstalled, setIsInstalled] = useState(false);
 
@@ -75,7 +82,8 @@ export function InstallPrompt() {
          */
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
-            setDeferredPrompt(e as BeforeInstallPromptEvent);
+            deferredPromptRef.current = e as BeforeInstallPromptEvent;
+            console.log("[PWA] beforeinstallprompt event captured");
             // Tampilkan banner setelah delay singkat (UX lebih baik)
             setTimeout(() => setIsVisible(true), 2000);
         };
@@ -87,7 +95,7 @@ export function InstallPrompt() {
         const handleAppInstalled = () => {
             setIsInstalled(true);
             setIsVisible(false);
-            setDeferredPrompt(null);
+            deferredPromptRef.current = null;
             console.log("[PWA] Aplikasi berhasil diinstall!");
         };
 
@@ -105,15 +113,22 @@ export function InstallPrompt() {
 
     /**
      * Trigger native install prompt saat user klik tombol Install.
+     * Kompatibel dengan Chrome lama (userChoice) dan baru (prompt() return).
      */
     const handleInstall = async () => {
-        if (!deferredPrompt) return;
+        const prompt = deferredPromptRef.current;
+        if (!prompt) {
+            console.error("[PWA] deferredPrompt is null — event belum di-capture");
+            return;
+        }
 
         try {
-            await deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
+            // Chrome modern: prompt() langsung return {outcome, platform}
+            // Chrome lama: prompt() return void, pakai userChoice
+            const result = await prompt.prompt();
+            const choice = result ?? (await prompt.userChoice);
 
-            if (outcome === "accepted") {
+            if (choice.outcome === "accepted") {
                 console.log("[PWA] User menerima install prompt");
             } else {
                 console.log("[PWA] User menolak install prompt");
@@ -121,7 +136,7 @@ export function InstallPrompt() {
         } catch (error) {
             console.error("[PWA] Error saat menampilkan prompt:", error);
         } finally {
-            setDeferredPrompt(null);
+            deferredPromptRef.current = null;
             setIsVisible(false);
         }
     };
