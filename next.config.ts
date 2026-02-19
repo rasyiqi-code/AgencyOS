@@ -47,12 +47,12 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.midtrans.com https://*.sandbox.midtrans.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://cdn.jsdelivr.net https://cdn.tailwindcss.com;
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.midtrans.com https://*.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://snap-popup-app.sandbox.midtrans.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://cdn.jsdelivr.net https://cdn.tailwindcss.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.midtrans.com https://cdn.tailwindcss.com;
               img-src 'self' blob: data: https://media.crediblemark.com https://*.r2.dev https://avatars.githubusercontent.com https://lh3.googleusercontent.com https://i.pravatar.cc https://*.midtrans.com;
               font-src 'self' https://fonts.gstatic.com;
-              connect-src 'self' https://*.midtrans.com https://*.sandbox.midtrans.com https://*.google-analytics.com https://api.stack-auth.com https://app.stack-auth.com https://1.1.1.1 https://static.cloudflareinsights.com https://cloudflare.com https://*.cloudflare.com;
-              frame-src 'self' https://*.midtrans.com https://*.sandbox.midtrans.com;
+              connect-src 'self' https://*.midtrans.com https://*.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://snap-popup-app.sandbox.midtrans.com https://*.google-analytics.com https://api.stack-auth.com https://app.stack-auth.com https://1.1.1.1 https://static.cloudflareinsights.com https://cloudflare.com https://*.cloudflare.com;
+              frame-src 'self' https://*.midtrans.com https://*.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://snap-popup-app.sandbox.midtrans.com;
               worker-src 'self' blob:;
             `.replace(/\s{2,}/g, ' ').trim()
           }

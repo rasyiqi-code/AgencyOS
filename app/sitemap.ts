@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // 2. Dynamic Routes: Portfolios
-    let portfolioRoutes: any[] = [];
+    let portfolioRoutes: MetadataRoute.Sitemap = [];
     try {
         const portfolios = await getPortfolios();
         portfolioRoutes = portfolios.map((portfolio) => ({
@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     // 3. Dynamic Routes: Products
-    let productRoutes: any[] = [];
+    let productRoutes: MetadataRoute.Sitemap = [];
     try {
         const products = await getDigitalProducts(true);
         productRoutes = products.map((product) => ({

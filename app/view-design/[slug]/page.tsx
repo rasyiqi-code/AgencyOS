@@ -13,12 +13,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     if (!portfolio) {
         return {
-            title: `Design Not Found | ${agencyName}`,
+            title: `Design Not Found`,
         };
     }
 
     return {
-        title: `Preview ${portfolio.title} | ${agencyName}`,
+        title: `Preview ${portfolio.title}`,
         description: `Live preview of ${portfolio.title} by ${agencyName}.`,
     };
 }
