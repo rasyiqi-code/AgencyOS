@@ -18,6 +18,8 @@ import Script from 'next/script';
 import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
 import { ReferralTracker } from "@/components/marketing/referral-tracker";
+import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
+import { InstallPrompt } from "@/components/pwa/install-prompt";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -82,6 +84,13 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className="dark">
+      <head>
+        {/* Meta tags PWA untuk Apple/iOS */}
+        <meta name="theme-color" content="#FFB800" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+      </head>
       <body className={cn(inter.className, "bg-black text-white")}>
         <NextTopLoader
           color="#FFB800"
@@ -128,6 +137,8 @@ export default async function RootLayout({
                   <ConditionalFloatingChat />
                 </Suspense>
                 <Toaster />
+                <ServiceWorkerRegistrar />
+                <InstallPrompt />
               </StackTheme>
             </StackProvider>
           </CurrencyProvider>
