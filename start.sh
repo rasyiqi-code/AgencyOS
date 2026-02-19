@@ -7,7 +7,7 @@ set -e
 
 # Run migrations
 echo "Running database migrations..."
-bunx prisma db push
+bunx prisma db push --accept-data-loss
 
 # Start the application
 echo "Starting application..."
