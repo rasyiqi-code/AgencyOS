@@ -25,22 +25,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // 2. Dynamic Routes: Portfolios
-    const portfolios = await getPortfolios();
-    const portfolioRoutes = portfolios.map((portfolio) => ({
-        url: `${baseUrl}/view-design/${portfolio.slug}`,
-        lastModified: portfolio.createdAt,
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-    }));
+    let portfolioRoutes: any[] = [];
+    try {
+        const portfolios = await getPortfolios();
+        portfolioRoutes = portfolios.map((portfolio) => ({
+            url: `${baseUrl}/view-design/${portfolio.slug}`,
+            lastModified: portfolio.createdAt,
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+        }));
+    } catch (error) {
+        console.error("Failed to fetch portfolios for sitemap:", error);
+    }
 
     // 3. Dynamic Routes: Products
-    const products = await getDigitalProducts(true);
-    const productRoutes = products.map((product) => ({
-        url: `${baseUrl}/products/${product.slug}`,
-        lastModified: product.updatedAt || new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.9,
-    }));
+    let productRoutes: any[] = [];
+    try {
+        const products = await getDigitalProducts(true);
+        productRoutes = products.map((product) => ({
+            url: `${baseUrl}/products/${product.slug}`,
+            lastModified: product.updatedAt || new Date(),
+            changeFrequency: "weekly" as const,
+            priority: 0.9,
+        }));
+    } catch (error) {
+        console.error("Failed to fetch products for sitemap:", error);
+    }
 
     return [...staticRoutes, ...portfolioRoutes, ...productRoutes];
 }
