@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { prisma } from './lib/config/db';
+import { prisma } from '../lib/config/db';
 
 async function checkSeo() {
     try {
