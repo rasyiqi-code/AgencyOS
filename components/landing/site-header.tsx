@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { stackServerApp } from "@/lib/config/stack";
-import { Check } from "lucide-react";
+import { Check, User, LogIn, Rocket } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
 
@@ -116,30 +116,36 @@ export async function SiteHeader() {
                         </nav>
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-0.5 mr-2 border-r border-white/5 pr-4 hidden md:flex">
+                    <div className="flex items-center gap-2 md:gap-6">
+                        {/* Switcher Bahasa & Mata Uang - tampil di semua ukuran layar */}
+                        <div className="flex items-center gap-0.5 md:mr-2 md:border-r md:border-white/5 md:pr-4">
                             <DashboardLanguageSwitcher />
                             <DashboardCurrencySwitcher />
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 md:gap-3">
+                            {/* Tombol My Account / Login - ikon di mobile, teks di desktop */}
                             {user ? (
                                 <Link href={`/${locale}/dashboard`}>
-                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-3 h-8 text-xs">
-                                        {t("myAccount")}
+                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={t("myAccount")}>
+                                        <User className="w-4 h-4 sm:hidden" />
+                                        <span className="hidden sm:inline">{t("myAccount")}</span>
                                     </Button>
                                 </Link>
                             ) : (
                                 <Link href="/handler/sign-in">
-                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-3 h-8 text-xs">
-                                        {tc("login")}
+                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={tc("login")}>
+                                        <LogIn className="w-4 h-4 sm:hidden" />
+                                        <span className="hidden sm:inline">{tc("login")}</span>
                                     </Button>
                                 </Link>
                             )}
 
+                            {/* Tombol Start Project - ikon roket di mobile, teks di desktop */}
                             <Link href={`/${locale}/price-calculator`}>
-                                <Button className="h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0">
-                                    {t("startProject")}
+                                <Button className="h-8 sm:h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-3 sm:px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0" aria-label={t("startProject")}>
+                                    <Rocket className="w-4 h-4 sm:hidden" />
+                                    <span className="hidden sm:inline">{t("startProject")}</span>
                                 </Button>
                             </Link>
                         </div>
