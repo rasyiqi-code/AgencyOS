@@ -85,8 +85,9 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="dark">
       <head>
-        {/* Meta tags PWA untuk Apple/iOS */}
+        {/* Meta tags PWA */}
         <meta name="theme-color" content="#FFB800" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />

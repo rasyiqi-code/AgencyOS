@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Product } from "@prisma/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,15 +16,22 @@ interface LicenseGeneratorProps {
 }
 
 export function LicenseGenerator({ products }: LicenseGeneratorProps) {
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     // Form state
     const [productId, setProductId] = useState("");
     const [maxActivations, setMaxActivations] = useState(1);
     const [expiresAt, setExpiresAt] = useState("");
-    const [generatedKey, setGeneratedKey] = useState("");
+    const [generatedKey, setGeneratedKey] = useState<string | null>(null);
+
+    // Bug Preventer: Radix Dialog on Next.js HMR sometimes leaves body unclickable
+    React.useEffect(() => {
+        document.body.style.pointerEvents = "";
+        return () => {
+            document.body.style.pointerEvents = "";
+        };
+    }, []);
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,25 +61,28 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
         }
     };
 
-    const handleClose = () => {
-        setOpen(false);
-        setGeneratedKey("");
-        setProductId("");
-        setMaxActivations(1);
-        setExpiresAt("");
-    };
+    const resetForm = () => {
+        // Tunda sesaat agar animasi tutup tak canggung
+        setTimeout(() => {
+            setGeneratedKey("");
+            setProductId("");
+            setMaxActivations(1);
+            setExpiresAt("");
+        }, 300);
+    }
 
     return (
-        <Dialog open={open} onOpenChange={(val) => !val && handleClose()}>
-            <DialogTrigger asChild>
-                <Button className="h-9 md:h-10 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl px-4 md:px-5 bg-brand-yellow text-black hover:bg-brand-yellow/90 shadow-lg shadow-brand-yellow/10">
-                    <Plus className="w-4 h-4 mr-1.5" />
-                    Generate Lisensi
-                </Button>
+        <Dialog modal={false}>
+            <DialogTrigger className="h-9 md:h-10 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl px-4 md:px-5 bg-brand-yellow text-black hover:bg-brand-yellow/90 shadow-lg shadow-brand-yellow/10 flex items-center justify-center">
+                <Plus className="w-4 h-4 mr-1.5" />
+                Generate Lisensi
             </DialogTrigger>
             <DialogContent className="sm:max-w-md bg-zinc-950 border-white/5 p-4 md:p-6 shadow-2xl">
                 <DialogHeader className="mb-4">
                     <DialogTitle className="text-lg md:text-xl font-black uppercase tracking-tighter text-white">Generate Lisensi</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Isi form ini untuk membuat kunci lisensi baru untuk produk.
+                    </DialogDescription>
                 </DialogHeader>
 
                 {generatedKey ? (
@@ -83,12 +93,14 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
                                 {generatedKey}
                             </p>
                         </div>
-                        <Button
-                            className="w-full h-11 rounded-xl bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 text-[10px] font-black uppercase tracking-widest"
-                            onClick={handleClose}
-                        >
-                            Selesai
-                        </Button>
+                        <DialogClose asChild>
+                            <Button
+                                className="w-full h-11 rounded-xl bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 text-[10px] font-black uppercase tracking-widest"
+                                onClick={resetForm}
+                            >
+                                Selesai
+                            </Button>
+                        </DialogClose>
                     </div>
                 ) : (
                     <form onSubmit={handleGenerate} className="space-y-5">
@@ -133,14 +145,16 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
                         </div>
 
                         <div className="flex flex-col md:flex-row gap-2 pt-4 border-t border-white/5">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={handleClose}
-                                className="flex-1 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest border-white/5 bg-white/5 hover:bg-white/10"
-                            >
-                                Batal
-                            </Button>
+                            <DialogClose asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={resetForm}
+                                    className="flex-1 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest border-white/5 bg-white/5 hover:bg-white/10"
+                                >
+                                    Batal
+                                </Button>
+                            </DialogClose>
                             <Button
                                 type="submit"
                                 disabled={loading || !productId}
@@ -153,6 +167,6 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
                     </form>
                 )}
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }
