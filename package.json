@@ -34,6 +34,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@stackframe/init-stack": "^2.8.70",
     "@stackframe/stack": "^2.8.70",
+    "@stackframe/stack-shared": "^2.8.70",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/react": "^3.20.0",
     "@tiptap/starter-kit": "^3.20.0",
