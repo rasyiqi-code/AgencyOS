@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 export const dynamic = 'force-dynamic';
 import "./globals.css";
-import { StackTheme, StackProvider } from "@stackframe/stack";
+import { ResilientStackProvider } from "@/components/providers/stack-auth-provider";
 import { stackServerApp } from "@/lib/config/stack";
 import { Toaster } from "@/components/ui/sonner";
 import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
@@ -129,19 +129,17 @@ export default async function RootLayout({
         )}
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>
-            <StackProvider app={stackServerApp}>
-              <StackTheme>
-                {children}
-                <ReferralTracker />
-                <PendingCheckoutRedirect />
-                <Suspense fallback={null}>
-                  <ConditionalFloatingChat />
-                </Suspense>
-                <Toaster />
-                <ServiceWorkerRegistrar />
-                <InstallPrompt />
-              </StackTheme>
-            </StackProvider>
+            <ResilientStackProvider app={stackServerApp}>
+              {children}
+              <ReferralTracker />
+              <PendingCheckoutRedirect />
+              <Suspense fallback={null}>
+                <ConditionalFloatingChat />
+              </Suspense>
+              <Toaster />
+              <ServiceWorkerRegistrar />
+              <InstallPrompt />
+            </ResilientStackProvider>
           </CurrencyProvider>
         </NextIntlClientProvider>
       </body>
