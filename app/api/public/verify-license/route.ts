@@ -38,7 +38,13 @@ export async function POST(req: Request) {
         const currentActivations = metadata as { devices?: string[] };
 
         const devices: string[] = Array.isArray(currentActivations.devices) ? currentActivations.devices : [];
-        const deviceId = machineId || domain || 'unknown';
+
+        // Kombinasi domain dan machineId untuk mendukung produk berbasis web maupun desktop
+        const identifierParts = [];
+        if (domain) identifierParts.push(domain);
+        if (machineId) identifierParts.push(machineId);
+
+        const deviceId = identifierParts.length > 0 ? identifierParts.join('|') : 'unknown';
 
         const isAlreadyActivated = devices.includes(deviceId);
 

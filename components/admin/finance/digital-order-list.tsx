@@ -27,7 +27,8 @@ import {
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { formatPaymentMethod } from "@/lib/shared/utils";
-import { confirmDigitalOrder } from "@/app/actions/digital-orders";
+import { confirmDigitalOrder, cancelDigitalOrder } from "@/app/actions/digital-orders";
+import { XCircle } from "lucide-react";
 
 export interface DigitalOrderWithRelations {
     id: string;
@@ -50,7 +51,7 @@ interface DigitalOrderListProps {
     orders: DigitalOrderWithRelations[];
 }
 
-type FilterStatus = 'ALL' | 'PAID' | 'PENDING' | 'WAITING_VERIFICATION';
+type FilterStatus = 'ALL' | 'PAID' | 'PENDING' | 'WAITING_VERIFICATION' | 'CANCELLED';
 
 export function DigitalOrderList({ orders }: DigitalOrderListProps) {
     const t = useTranslations("Admin.Finance.DigitalOrders");
@@ -72,6 +73,7 @@ export function DigitalOrderList({ orders }: DigitalOrderListProps) {
         if (statusFilter === 'PAID') matchesFilter = item.status === 'PAID';
         if (statusFilter === 'PENDING') matchesFilter = item.status === 'PENDING';
         if (statusFilter === 'WAITING_VERIFICATION') matchesFilter = item.status === 'WAITING_VERIFICATION';
+        if (statusFilter === 'CANCELLED') matchesFilter = item.status === 'CANCELLED';
 
         return matchesSearch && matchesFilter;
     });
@@ -139,6 +141,13 @@ export function DigitalOrderList({ orders }: DigitalOrderListProps) {
                             onClick={() => handleFilterChange('WAITING_VERIFICATION')}
                             color="text-blue-500"
                         />
+                        <FilterButton
+                            label="Cancelled"
+                            active={statusFilter === 'CANCELLED'}
+                            count={getCount('CANCELLED')}
+                            onClick={() => handleFilterChange('CANCELLED')}
+                            color="text-red-500"
+                        />
                     </div>
                 </div>
             </div>
@@ -201,6 +210,7 @@ export function DigitalOrderList({ orders }: DigitalOrderListProps) {
 
 function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations, ts: (path: string) => string }) {
     const isPaid = order.status === "PAID";
+    const isCancelled = order.status === "CANCELLED";
 
     const copyToClipboard = (text: string, label: string) => {
         navigator.clipboard.writeText(text);
@@ -214,7 +224,7 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
             <AccordionTrigger className="px-3 md:px-4 py-3 hover:bg-zinc-800/50 hover:no-underline [&[data-state=open]]:bg-zinc-800/30 transition-all group">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full gap-3 md:gap-4 text-left">
                     <div className="flex items-start md:items-center gap-3 md:gap-4 min-w-0 flex-1 w-full">
-                        <div className={`w-1 h-10 md:h-8 rounded-full ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'} shrink-0 mt-1 md:mt-0`} />
+                        <div className={`w-1 h-10 md:h-8 rounded-full ${isPaid ? 'bg-emerald-500' : isCancelled ? 'bg-red-500' : 'bg-amber-500'} shrink-0 mt-1 md:mt-0`} />
 
                         <div className="flex flex-col min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-1">
@@ -249,11 +259,13 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
                     <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-4 md:mr-2 border-t md:border-t-0 border-white/5 pt-2 md:pt-0">
                         <Badge
                             variant="outline"
-                            className={`py-0.5 px-2 text-[9px] md:text-[10px] h-6 flex items-center gap-1.5 whitespace-nowrap rounded-md ${isPaid ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                            className={`py-0.5 px-2 text-[9px] md:text-[10px] h-6 flex items-center gap-1.5 whitespace-nowrap rounded-md ${isPaid ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" :
+                                isCancelled ? "bg-red-500/10 text-red-500 border-red-500/20" :
+                                    "bg-amber-500/10 text-amber-500 border-amber-500/20"
                                 }`}
                         >
-                            {isPaid ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
-                            <span className="hidden md:inline">{isPaid ? ts("paid") : ts("pending")}</span>
+                            {isPaid ? <CheckCircle2 className="w-3 h-3" /> : isCancelled ? <XCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                            <span className="hidden md:inline">{isPaid ? ts("paid") : isCancelled ? "Cancelled" : ts("pending")}</span>
                         </Badge>
 
                         <div className="font-bold text-white text-sm md:text-base tabular-nums flex items-center">
@@ -296,8 +308,11 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
                                 </Button>
                             )}
 
-                            {!isPaid && (
-                                <ConfirmPaymentButton orderId={order.id} />
+                            {!isPaid && !isCancelled && (
+                                <>
+                                    <CancelOrderButton orderId={order.id} />
+                                    <ConfirmPaymentButton orderId={order.id} />
+                                </>
                             )}
                         </div>
                     </div>
@@ -375,6 +390,43 @@ function ConfirmPaymentButton({ orderId }: { orderId: string }) {
         >
             {loading ? <Clock className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
             Confirm Payment
+        </Button>
+    );
+}
+
+function CancelOrderButton({ orderId }: { orderId: string }) {
+    const [loading, setLoading] = useState(false);
+
+    const handleCancel = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!confirm("Are you sure you want to cancel this order? This action cannot be undone.")) return;
+
+        setLoading(true);
+        try {
+            const res = await cancelDigitalOrder(orderId);
+            if (res.success) {
+                toast.success("Order cancelled successfully!");
+                window.location.reload();
+            } else {
+                toast.error(res.error || "Failed to cancel order");
+            }
+        } catch {
+            toast.error("An error occurred");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleCancel}
+            disabled={loading}
+            className="w-full sm:w-auto text-xs gap-2 h-9 border-none rounded-lg"
+        >
+            {loading ? <Clock className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+            Cancel Order
         </Button>
     );
 }

@@ -160,3 +160,27 @@ export async function confirmDigitalOrder(orderId: string) {
         return { success: false, error: message };
     }
 }
+
+/**
+ * Batalkan DigitalOrder oleh Admin.
+ * Update status ke CANCELLED.
+ * @param orderId - ID DigitalOrder yang akan dibatalkan
+ */
+export async function cancelDigitalOrder(orderId: string) {
+    try {
+        if (!(await isAdmin())) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        const order = await db.digitalOrder.update({
+            where: { id: orderId },
+            data: { status: "CANCELLED" },
+        });
+
+        return { success: true, order };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("[CANCEL_DIGITAL_ORDER_ERROR]", error);
+        return { success: false, error: message };
+    }
+}
