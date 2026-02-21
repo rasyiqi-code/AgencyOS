@@ -274,23 +274,23 @@ export default async function ProductDetailPage(props: PageProps) {
                 </div>
 
                 {/* ===== MOBILE STICKY BOTTOM CTA ===== */}
-                <div className="fixed bottom-0 inset-x-0 z-50 p-4 lg:hidden">
-                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/10 -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]" />
-                    <div className="relative flex items-center justify-between gap-4 p-4 rounded-[2rem] bg-zinc-900/80 border border-brand-yellow/20 backdrop-blur-3xl shadow-2xl shadow-black/50">
+                <div className="fixed bottom-0 inset-x-0 z-50 p-3 lg:hidden">
+                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/10 -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_15px)]" />
+                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-900/80 border border-brand-yellow/20 backdrop-blur-3xl shadow-2xl shadow-black/50">
                         {/* Price Area */}
                         <div className="flex-1 min-w-0">
-                            <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-0.5">{t("price")}</div>
+                            <div className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">{t("price")}</div>
                             <div className="flex items-baseline text-white">
-                                <span className="text-2xl font-black tracking-tighter leading-none"><PriceDisplay amount={product.price} baseCurrency="USD" compact /></span>
+                                <span className="text-[1.35rem] font-black tracking-tighter leading-none"><PriceDisplay amount={product.price} baseCurrency="USD" compact /></span>
                                 {product.purchaseType === "subscription" && (
-                                    <span className="text-[10px] text-zinc-500 ml-1 font-normal">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
+                                    <span className="text-[9px] text-zinc-500 ml-1 font-medium">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
                                 )}
                             </div>
                         </div>
                         {/* Buy Now Button */}
                         <Link
                             href={`/checkout/${product.id}`}
-                            className="shrink-0 px-8 py-3.5 bg-brand-yellow text-zinc-950 font-black rounded-full text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(254,215,0,0.3)] hover:scale-105 active:scale-95 transition-all"
+                            className="shrink-0 px-6 py-2.5 bg-brand-yellow text-zinc-950 font-extrabold rounded-full text-[11px] uppercase tracking-widest shadow-lg shadow-brand-yellow/20 hover:scale-105 active:scale-95 transition-all"
                         >
                             {t("buyNow")}
                         </Link>
