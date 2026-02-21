@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Sparkles, ArrowLeft } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -31,7 +31,6 @@ interface ServiceDetailContentProps {
 
 export function ServiceDetailContent({ service, isId, showBack = false, trustedAvatars = [] }: ServiceDetailContentProps) {
     const t = useTranslations("Cards");
-    const st = useTranslations("Services");
 
     // Fallback to EN if ID content is missing
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -59,17 +58,9 @@ export function ServiceDetailContent({ service, isId, showBack = false, trustedA
                 )}
             </div>
 
-            <div className="flex-grow z-10 pt-10 md:pt-20 pb-16">
+            <div className="flex-grow z-10 pt-0 pb-16">
                 <div className="max-w-7xl mx-auto px-6 md:px-8">
-                    {showBack && (
-                        <Link
-                            href="/services"
-                            className="inline-flex items-center text-xs font-medium text-zinc-500 hover:text-white mb-6 transition-all gap-2 group hover:translate-x-[-4px]"
-                        >
-                            <ArrowLeft className="w-4 h-4 transition-transform" />
-                            {st("backToHome")}
-                        </Link>
-                    )}
+
 
                     {/* HERO SECTION: Balanced Compact Scroll Shape */}
                     <div className="relative rounded-[20px] md:rounded-[32px] border border-white/5 bg-zinc-900/20 backdrop-blur-3xl mb-6 md:mb-12 shadow-2xl overflow-hidden">
@@ -132,11 +123,13 @@ export function ServiceDetailContent({ service, isId, showBack = false, trustedA
                                         </div>
                                     )}
 
-                                    <PurchaseButton
-                                        serviceId={service.id}
-                                        interval={service.interval}
-                                        className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
-                                    />
+                                    <div className="hidden lg:block">
+                                        <PurchaseButton
+                                            serviceId={service.id}
+                                            interval={service.interval}
+                                            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,6 +195,26 @@ export function ServiceDetailContent({ service, isId, showBack = false, trustedA
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ===== MOBILE STICKY CTA ===== */}
+            <div className="fixed bottom-0 left-0 right-0 py-2 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-[100]">
+                <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+                    <div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">{t("price")}</div>
+                        <div className="text-xl font-black text-white tracking-tighter flex items-end gap-1">
+                            <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                            <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                        </div>
+                    </div>
+                    <div className="flex-1 max-w-[160px]">
+                        <PurchaseButton
+                            serviceId={service.id}
+                            interval={service.interval}
+                            className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
+                        />
                     </div>
                 </div>
             </div>

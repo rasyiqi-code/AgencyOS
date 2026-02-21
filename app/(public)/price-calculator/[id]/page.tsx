@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/config/db";
 import { notFound } from "next/navigation";
-import { SiteHeader } from "@/components/landing/site-header";
 import { EstimateViewer } from "@/components/estimate/estimate-viewer";
 import { getCurrentUser } from "@/lib/shared/auth-helpers";
 import Link from "next/link";
@@ -46,8 +45,7 @@ export default async function EstimateResultPage({ params }: { params: Promise<{
 
     return (
         <main className="min-h-screen bg-black selection:bg-blue-500/30 pb-24">
-            <SiteHeader />
-            <div className="container mx-auto px-4 py-24">
+            <div className="container mx-auto px-4 pt-4 pb-20">
                 <EstimateViewer estimate={sanitizedEstimate} />
             </div>
         </main>

@@ -13,6 +13,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 interface Message {
     id: string;
@@ -30,6 +31,7 @@ export function FloatingChatWidget() {
     const { isOpen, mode, openChat, closeChat } = useFloatingChat();
     // Local state for expanded/collapsed only, visibility is global
     const [isExpanded, setIsExpanded] = useState(false);
+    const pathname = usePathname();
 
     // Helper handlers to replace local setters
     const setMode = (newMode: ChatMode) => openChat(newMode);
@@ -297,7 +299,12 @@ export function FloatingChatWidget() {
 
     const [isVisible, setIsVisible] = useState(true);
 
-    if (!isVisible) return null;
+    // Hide floating chat on specific pages to prevent overlapping with mobile sticky CTA
+    const isProductPage = pathname?.match(/^\/[a-z]{2}\/products\/[^/]+$/) || pathname?.match(/^\/products\/[^/]+$/);
+    const isCalcResultPage = pathname?.match(/^\/[a-z]{2}\/price-calculator\/[^/]+$/) || pathname?.match(/^\/price-calculator\/[^/]+$/);
+    const isServicePage = pathname?.match(/^\/[a-z]{2}\/services\/[^/]+$/) || pathname?.match(/^\/services\/[^/]+$/);
+
+    if (!isVisible || isProductPage || isCalcResultPage || isServicePage) return null;
 
     if (!isOpen) {
         return (

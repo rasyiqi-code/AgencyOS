@@ -282,7 +282,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                             </Button>
 
                             <Button
-                                className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12 text-base cursor-pointer"
+                                className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12 text-base cursor-pointer hidden lg:flex"
                                 onClick={async () => {
                                     // Call Server Action — kirim selected items agar konsisten dengan UI
                                     try {
@@ -318,6 +318,54 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ===== MOBILE STICKY CTA ===== */}
+            {!isRefining && (
+                <div className="fixed bottom-0 left-0 right-0 py-3 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-50">
+                    <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+                        <div className="flex-1">
+                            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">Est. Total Cost</div>
+                            <div className="text-xl font-black text-white tracking-tighter">
+                                <PriceDisplay amount={totalCost} />
+                            </div>
+                        </div>
+                        <Button
+                            className="bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-11 px-4 rounded-xl text-xs uppercase tracking-wide shadow-lg shadow-brand-yellow/20"
+                            onClick={async () => {
+                                try {
+                                    const selectedScreens = initialScreens.filter((_, i) => selectedScreenIndices.has(i));
+                                    const selectedApis = initialApis.filter((_, i) => selectedApiIndices.has(i));
+
+                                    const res = await fetch(`/api/estimates/${estimate.id}/finalize`, {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            selectedScreens,
+                                            selectedApis,
+                                            totalHours,
+                                            totalCost,
+                                        }),
+                                    });
+                                    const data = await res.json();
+                                    if (res.ok && data.url) {
+                                        window.location.href = data.url;
+                                    } else if (res.status === 401) {
+                                        window.location.href = `/handler/sign-in?after_auth_return_to=${encodeURIComponent(window.location.pathname)}`;
+                                    } else {
+                                        throw new Error(data.error || "Failed to finalize");
+                                    }
+                                } catch (e) {
+                                    console.error(e);
+                                    alert("Failed to finalize. Please try again.");
+                                }
+                            }}
+                        >
+                            Finalize & Start
+                            <ArrowRight className="w-3 h-3 ml-2" />
+                        </Button>
                     </div>
                 </div>
             )}

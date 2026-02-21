@@ -2,7 +2,7 @@ import { getDigitalProductBySlug, getDigitalProducts } from "@/app/actions/digit
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, ArrowLeft, Package, ShieldCheck, Download, Zap, HeartHandshake, LifeBuoy } from "lucide-react";
+import { Sparkles, Package, ShieldCheck, Download, Zap, HeartHandshake, LifeBuoy } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { ProductRecommendations } from "@/components/public/product-recommendations";
 import { prisma } from "@/lib/config/db";
@@ -87,28 +87,14 @@ export default async function ProductDetailPage(props: PageProps) {
         : t("oneTime");
 
     return (
-        <section className="relative min-h-screen overflow-hidden">
-            {/* Ambient Background Glow */}
-            <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden">
-                <div className="absolute w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-brand-yellow/5 rounded-full blur-[120px] mix-blend-screen -top-20 -right-20"></div>
-                <div className="absolute w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-zinc-600/10 rounded-full blur-[100px] mix-blend-screen bottom-10 -left-10"></div>
-            </div>
-
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-32 lg:pb-20">
-                {/* Back Link */}
-                <Link
-                    href="/products"
-                    className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-brand-yellow transition-colors mb-8"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    {t("back")}
-                </Link>
+        <section className="relative min-h-screen">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-24 md:pb-20">
 
                 {/* ===== MAIN LAYOUT: 2 Kolom ===== */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-8">
                     {/* Kolom Kiri — Info Produk (3/5) */}
-                    <div className="lg:col-span-2 relative z-10">
-                        <div className="rounded-[2rem] border border-white/10 bg-zinc-900/60 backdrop-blur-3xl overflow-hidden shadow-2xl">
+                    <div className="lg:col-span-2">
+                        <div className="rounded-3xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl overflow-hidden shadow-2xl">
                             {/* Thumbnail */}
                             <div className="relative aspect-[16/9] overflow-hidden">
                                 {product.image ? (
@@ -130,7 +116,7 @@ export default async function ProductDetailPage(props: PageProps) {
                             </div>
 
                             {/* Content */}
-                            <div className="p-6 md:p-8">
+                            <div className="p-5 lg:p-8">
                                 {/* Badges */}
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
@@ -154,7 +140,7 @@ export default async function ProductDetailPage(props: PageProps) {
                                 )}
 
                                 {/* Highlights */}
-                                <div className="grid grid-cols-3 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-3">
                                     <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
                                         <Download className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
                                         <span className="text-[11px] text-zinc-400">{t("instantDownload")}</span>
@@ -172,7 +158,7 @@ export default async function ProductDetailPage(props: PageProps) {
                         </div>
 
                         {/* Trust Signals — Why Choose Us */}
-                        <div className="rounded-3xl border border-white/10 bg-zinc-900/60 backdrop-blur-2xl p-6 mt-6 shadow-xl">
+                        <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5 mt-5">
                             <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("whyChooseUs")}</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div className="flex items-start gap-3">
@@ -209,38 +195,31 @@ export default async function ProductDetailPage(props: PageProps) {
                     {/* Kolom Kanan — Sidebar (2/5) */}
                     <div className="lg:col-span-1 space-y-5">
                         {/* Sticky Price Card */}
-                        <div className="lg:sticky lg:top-24 space-y-5 z-20">
-                            {/* Price + CTA Card (Glassmorphism + Brand Yellow) */}
-                            <div className="relative rounded-[2rem] border border-brand-yellow/30 bg-gradient-to-b from-zinc-900/80 to-zinc-900/95 backdrop-blur-3xl p-6 lg:p-8 shadow-2xl shadow-brand-yellow/10 overflow-hidden">
-                                {/* Inner Glow & Accents */}
-                                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-yellow/50 to-transparent"></div>
-                                <div className="absolute inset-0 bg-brand-yellow/[0.02] pointer-events-none"></div>
-
-                                <div className="relative z-10">
-                                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">{t("price")}</div>
-                                    <div className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2">
-                                        <PriceDisplay amount={product.price} baseCurrency="USD" compact />
-                                        {product.purchaseType === "subscription" && (
-                                            <span className="text-sm md:text-base font-normal text-zinc-500 ml-1">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
-                                        )}
-                                    </div>
-                                    <p className="text-xs text-zinc-500 mb-6 font-medium">
-                                        {product.purchaseType === "subscription" ? t("subscriptionNotice") : t("oneTimeNotice")}
-                                    </p>
-                                    <Link
-                                        href={`/checkout/${product.id}`}
-                                        className="group relative flex items-center justify-center w-full bg-brand-yellow text-zinc-950 hover:bg-[#ffdf1a] font-black h-14 rounded-full text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(254,215,0,0.3)] transition-all overflow-hidden"
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                                        <span className="relative z-10">{t("buyNow")}</span>
-                                    </Link>
+                        <div className="lg:sticky lg:top-24 space-y-5">
+                            {/* Price + CTA Card */}
+                            <div className="hidden lg:block rounded-2xl border border-brand-yellow/20 bg-zinc-900/60 backdrop-blur-xl p-5 shadow-xl">
+                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
+                                <div className="text-3xl font-black text-white tracking-tighter mb-1">
+                                    <PriceDisplay amount={product.price} baseCurrency="USD" compact />
+                                    {product.purchaseType === "subscription" && (
+                                        <span className="text-sm font-normal text-zinc-500 ml-1">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
+                                    )}
                                 </div>
+                                <p className="text-[11px] text-zinc-600 mb-5">
+                                    {product.purchaseType === "subscription" ? t("subscriptionNotice") : t("oneTimeNotice")}
+                                </p>
+                                <Link
+                                    href={`/checkout/${product.id}`}
+                                    className="flex items-center justify-center gap-2 w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-12 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
+                                >
+                                    {t("buyNow")}
+                                </Link>
                             </div>
 
 
                             {/* Cross-sell: Services */}
                             {services.length > 0 && (
-                                <div className="rounded-3xl border border-white/10 bg-zinc-900/60 backdrop-blur-2xl p-6 shadow-xl">
+                                <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5">
                                     <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("needCustom")}</h3>
                                     <div className="space-y-3">
                                         {services.map((service: { id: string; title: string; price: number; image: string | null }) => (
@@ -273,36 +252,33 @@ export default async function ProductDetailPage(props: PageProps) {
                     </div>
                 </div>
 
-                {/* ===== MOBILE STICKY BOTTOM CTA ===== */}
-                <div className="fixed bottom-0 inset-x-0 z-50 p-3 lg:hidden">
-                    <div className="absolute inset-0 bg-transparent" />
-                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-950/95 border border-brand-yellow/30 shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
-                        {/* Price Area */}
-                        <div className="flex-1 min-w-0">
-                            <div className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">{t("price")}</div>
-                            <div className="flex items-baseline text-white">
-                                <span className="text-[1.35rem] font-black tracking-tighter leading-none"><PriceDisplay amount={product.price} baseCurrency="USD" compact /></span>
-                                {product.purchaseType === "subscription" && (
-                                    <span className="text-[9px] text-zinc-500 ml-1 font-medium">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
-                                )}
-                            </div>
-                        </div>
-                        {/* Buy Now Button */}
-                        <Link
-                            href={`/checkout/${product.id}`}
-                            className="shrink-0 px-6 py-2.5 bg-brand-yellow text-black font-black rounded-full text-[12px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
-                        >
-                            {t("buyNow")}
-                        </Link>
-                    </div>
-                </div>
-
                 {/* ===== BOTTOM: Rekomendasi Produk Lain ===== */}
                 <ProductRecommendations
                     products={recommendedProducts}
                     title={t("youMightLike")}
                     subtitle={t("exploreMore")}
                 />
+            </div>
+
+            {/* ===== MOBILE STICKY CTA ===== */}
+            <div className="fixed bottom-0 left-0 right-0 py-2 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-[100]">
+                <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+                    <div>
+                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">{t("price")}</div>
+                        <div className="text-xl font-black text-white tracking-tighter flex items-end gap-1">
+                            <PriceDisplay amount={product.price} baseCurrency="USD" compact />
+                            {product.purchaseType === "subscription" && (
+                                <span className="text-xs font-normal text-zinc-500 pb-0.5">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
+                            )}
+                        </div>
+                    </div>
+                    <Link
+                        href={`/checkout/${product.id}`}
+                        className="flex-1 max-w-[160px] flex items-center justify-center gap-2 bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
+                    >
+                        {t("buyNow")}
+                    </Link>
+                </div>
             </div>
         </section>
     );
