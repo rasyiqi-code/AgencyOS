@@ -35,14 +35,13 @@ RUN bunx prisma generate
 RUN bun run build
 
 # Production image, copy all the files and run next
+# Production image, copy all the files and run next
+# Production image, copy all the files and run next
 FROM oven/bun:1 AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-
-# Install curl untuk debug konektivitas Stack Auth dari dalam container
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --system --gid 1001 nodejs
 RUN useradd --system --uid 1001 --gid nodejs --no-create-home --shell /bin/false nextjs

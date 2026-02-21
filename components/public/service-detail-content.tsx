@@ -4,7 +4,7 @@ import { Check, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import Link from "next/link";
+
 import { useTranslations } from "next-intl";
 
 export interface Service {
@@ -29,7 +29,7 @@ interface ServiceDetailContentProps {
     trustedAvatars?: string[];
 }
 
-export function ServiceDetailContent({ service, isId, showBack = false, trustedAvatars = [] }: ServiceDetailContentProps) {
+export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: ServiceDetailContentProps) {
     const t = useTranslations("Cards");
 
     // Fallback to EN if ID content is missing
