@@ -87,8 +87,14 @@ export default async function ProductDetailPage(props: PageProps) {
         : t("oneTime");
 
     return (
-        <section className="relative min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
+        <section className="relative min-h-screen overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden">
+                <div className="absolute w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-brand-yellow/5 rounded-full blur-[120px] mix-blend-screen -top-20 -right-20"></div>
+                <div className="absolute w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-zinc-600/10 rounded-full blur-[100px] mix-blend-screen bottom-10 -left-10"></div>
+            </div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-32 lg:pb-20">
                 {/* Back Link */}
                 <Link
                     href="/products"
@@ -101,8 +107,8 @@ export default async function ProductDetailPage(props: PageProps) {
                 {/* ===== MAIN LAYOUT: 2 Kolom ===== */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Kolom Kiri — Info Produk (3/5) */}
-                    <div className="lg:col-span-2">
-                        <div className="rounded-3xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl overflow-hidden shadow-2xl">
+                    <div className="lg:col-span-2 relative z-10">
+                        <div className="rounded-[2rem] border border-white/10 bg-zinc-900/60 backdrop-blur-3xl overflow-hidden shadow-2xl">
                             {/* Thumbnail */}
                             <div className="relative aspect-[16/9] overflow-hidden">
                                 {product.image ? (
@@ -166,7 +172,7 @@ export default async function ProductDetailPage(props: PageProps) {
                         </div>
 
                         {/* Trust Signals — Why Choose Us */}
-                        <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5 mt-5">
+                        <div className="rounded-3xl border border-white/10 bg-zinc-900/60 backdrop-blur-2xl p-6 mt-6 shadow-xl">
                             <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("whyChooseUs")}</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div className="flex items-start gap-3">
@@ -203,31 +209,38 @@ export default async function ProductDetailPage(props: PageProps) {
                     {/* Kolom Kanan — Sidebar (2/5) */}
                     <div className="lg:col-span-1 space-y-5">
                         {/* Sticky Price Card */}
-                        <div className="lg:sticky lg:top-24 space-y-5">
-                            {/* Price + CTA Card */}
-                            <div className="rounded-2xl border border-brand-yellow/20 bg-zinc-900/60 backdrop-blur-xl p-5 shadow-xl">
-                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
-                                <div className="text-3xl font-black text-white tracking-tighter mb-1">
-                                    <PriceDisplay amount={product.price} baseCurrency="USD" compact />
-                                    {product.purchaseType === "subscription" && (
-                                        <span className="text-sm font-normal text-zinc-500 ml-1">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
-                                    )}
+                        <div className="lg:sticky lg:top-24 space-y-5 z-20">
+                            {/* Price + CTA Card (Glassmorphism + Brand Yellow) */}
+                            <div className="relative rounded-[2rem] border border-brand-yellow/30 bg-gradient-to-b from-zinc-900/80 to-zinc-900/95 backdrop-blur-3xl p-6 lg:p-8 shadow-2xl shadow-brand-yellow/10 overflow-hidden">
+                                {/* Inner Glow & Accents */}
+                                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-yellow/50 to-transparent"></div>
+                                <div className="absolute inset-0 bg-brand-yellow/[0.02] pointer-events-none"></div>
+
+                                <div className="relative z-10">
+                                    <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">{t("price")}</div>
+                                    <div className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2">
+                                        <PriceDisplay amount={product.price} baseCurrency="USD" compact />
+                                        {product.purchaseType === "subscription" && (
+                                            <span className="text-sm md:text-base font-normal text-zinc-500 ml-1">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mb-6 font-medium">
+                                        {product.purchaseType === "subscription" ? t("subscriptionNotice") : t("oneTimeNotice")}
+                                    </p>
+                                    <Link
+                                        href={`/checkout/${product.id}`}
+                                        className="group relative flex items-center justify-center w-full bg-brand-yellow text-zinc-950 hover:bg-[#ffdf1a] font-black h-14 rounded-full text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(254,215,0,0.3)] transition-all overflow-hidden"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                                        <span className="relative z-10">{t("buyNow")}</span>
+                                    </Link>
                                 </div>
-                                <p className="text-[11px] text-zinc-600 mb-5">
-                                    {product.purchaseType === "subscription" ? t("subscriptionNotice") : t("oneTimeNotice")}
-                                </p>
-                                <Link
-                                    href={`/checkout/${product.id}`}
-                                    className="flex items-center justify-center gap-2 w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-12 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
-                                >
-                                    {t("buyNow")}
-                                </Link>
                             </div>
 
 
                             {/* Cross-sell: Services */}
                             {services.length > 0 && (
-                                <div className="rounded-2xl border border-white/10 bg-zinc-900/40 p-5">
+                                <div className="rounded-3xl border border-white/10 bg-zinc-900/60 backdrop-blur-2xl p-6 shadow-xl">
                                     <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t("needCustom")}</h3>
                                     <div className="space-y-3">
                                         {services.map((service: { id: string; title: string; price: number; image: string | null }) => (
@@ -257,6 +270,30 @@ export default async function ProductDetailPage(props: PageProps) {
                                 </div>
                             )}
                         </div>
+                    </div>
+                </div>
+
+                {/* ===== MOBILE STICKY BOTTOM CTA ===== */}
+                <div className="fixed bottom-0 inset-x-0 z-50 p-4 lg:hidden">
+                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/10 -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_20px)]" />
+                    <div className="relative flex items-center justify-between gap-4 p-4 rounded-[2rem] bg-zinc-900/80 border border-brand-yellow/20 backdrop-blur-3xl shadow-2xl shadow-black/50">
+                        {/* Price Area */}
+                        <div className="flex-1 min-w-0">
+                            <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-0.5">{t("price")}</div>
+                            <div className="flex items-baseline text-white">
+                                <span className="text-2xl font-black tracking-tighter leading-none"><PriceDisplay amount={product.price} baseCurrency="USD" compact /></span>
+                                {product.purchaseType === "subscription" && (
+                                    <span className="text-[10px] text-zinc-500 ml-1 font-normal">/{product.interval === 'month' ? t("monthly") : product.interval}</span>
+                                )}
+                            </div>
+                        </div>
+                        {/* Buy Now Button */}
+                        <Link
+                            href={`/checkout/${product.id}`}
+                            className="shrink-0 px-8 py-3.5 bg-brand-yellow text-zinc-950 font-black rounded-full text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(254,215,0,0.3)] hover:scale-105 active:scale-95 transition-all"
+                        >
+                            {t("buyNow")}
+                        </Link>
                     </div>
                 </div>
 
