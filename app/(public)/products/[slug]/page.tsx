@@ -275,8 +275,8 @@ export default async function ProductDetailPage(props: PageProps) {
 
                 {/* ===== MOBILE STICKY BOTTOM CTA ===== */}
                 <div className="fixed bottom-0 inset-x-0 z-50 p-3 lg:hidden">
-                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/10 -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_15px)]" />
-                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-900/80 border border-brand-yellow/20 backdrop-blur-3xl shadow-2xl shadow-black/50">
+                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_15px)]" />
+                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-900/80 backdrop-blur-3xl shadow-2xl shadow-black/50">
                         {/* Price Area */}
                         <div className="flex-1 min-w-0">
                             <div className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">{t("price")}</div>
