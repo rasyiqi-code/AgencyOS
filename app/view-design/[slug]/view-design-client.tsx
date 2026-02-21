@@ -22,22 +22,22 @@ export function ViewDesignClient({ slug, title, agencyName }: ViewDesignClientPr
     return (
         <div className="h-screen flex flex-col bg-zinc-950 overflow-hidden">
             {/* Branding Frame / Header */}
-            <header className="h-16 border-b border-white/10 bg-black/50 backdrop-blur-md flex items-center justify-between px-6 shrink-0 relative z-50">
-                <div className="flex items-center gap-4">
+            <header className="h-12 md:h-16 border-b border-white/10 bg-black/50 backdrop-blur-md flex items-center justify-between px-3 md:px-6 shrink-0 relative z-50">
+                <div className="flex items-center gap-2 md:gap-4 min-w-0">
                     <Link href="/portfolio">
-                        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full">
-                            <ArrowLeft className="w-5 h-5" />
+                        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full w-8 h-8 md:w-10 md:h-10 shrink-0">
+                            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                         </Button>
                     </Link>
-                    <div className="h-6 w-px bg-white/10 mx-2" />
-                    <div className="flex flex-col">
-                        <span className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
-                            {agencyName}
-                            <Badge variant="outline" className="text-[10px] h-5 px-1.5 border-brand-yellow/30 text-brand-yellow bg-brand-yellow/5">
+                    <div className="hidden md:block h-6 w-px bg-white/10 mx-1" />
+                    <div className="flex flex-col min-w-0">
+                        <span className="text-xs md:text-sm font-bold text-white tracking-tight flex items-center gap-2 truncate">
+                            <span className="truncate">{agencyName}</span>
+                            <Badge variant="outline" className="text-[8px] md:text-[10px] h-4 md:h-5 px-1 md:px-1.5 border-brand-yellow/30 text-brand-yellow bg-brand-yellow/5 shrink-0">
                                 PREVIEW MODE
                             </Badge>
                         </span>
-                        <span className="text-xs text-zinc-500">{title}</span>
+                        <span className="text-[10px] md:text-xs text-zinc-500 truncate">{title}</span>
                     </div>
                 </div>
 
@@ -75,10 +75,11 @@ export function ViewDesignClient({ slug, title, agencyName }: ViewDesignClientPr
                     </button>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center shrink-0">
                     <Link href={`/contact?ref=${slug}`}>
-                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold rounded-full text-xs px-4">
-                            Inquire Design
+                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold rounded-full text-[10px] md:text-xs px-3 md:px-4 h-7 md:h-8">
+                            <span className="hidden sm:inline">Inquire Design</span>
+                            <span className="sm:hidden">Inquire</span>
                         </Button>
                     </Link>
                 </div>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Kos-Kosan Credibel | Find Your Safe & Verified Boarding House</title>
+
+    <!-- Tailwind CSS with Plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "md": "0.375rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .sidebar-active {
+            background-color: rgba(19, 127, 236, 0.1);
+            color: #137fec;
+            border-right: 3px solid #137fec;
+        }
+
+        .sticky-card {
+            position: sticky;
+            top: 24px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+    <div id="root"></div>
+
+    <!-- React and Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Common Components ---
+
+        const Navbar = () => {
+            const navigate = useNavigate();
+            return (
+                <nav class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center h-16">
+                            <Link to="/" class="flex items-center gap-2">
+                                <div class="bg-primary p-1.5 rounded-lg">
+                                    <span class="material-icons text-white">home_work</span>
+                                </div>
+                                <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Kos<span class="text-primary text-2xl">.</span>Credibel</span>
+                            </Link>
+                            <div class="hidden md:flex items-center space-x-8">
+                                <Link to="/search" class="text-sm font-medium hover:text-primary transition-colors">Find a Room</Link>
+                                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">How it Works</a>
+                                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Testimonials</a>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button class="text-sm font-medium border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary/5 transition-all">List Your Property</button>
+                                <button onClick={() => navigate('/dashboard')} class="bg-primary text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">Sign In</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Footer = () => (
+            <footer class="bg-slate-900 text-slate-300 py-16 border-t border-slate-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                        <div class="col-span-1 md:col-span-1">
+                            <div class="flex items-center gap-2 mb-6">
+                                <div class="bg-primary p-1.5 rounded-lg">
+                                    <span class="material-icons text-white">home_work</span>
+                                </div>
+                                <span class="text-xl font-bold tracking-tight text-white">Kos<span class="text-primary text-2xl">.</span>Credibel</span>
+                            </div>
+                            <p class="text-sm leading-relaxed mb-6">The most trusted platform for finding high-quality boarding houses with verified listings and secure payments.</p>
+                            <div class="flex gap-4">
+                                <a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#"><span class="material-icons text-sm">facebook</span></a>
+                                <a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#"><span class="material-icons text-sm">alternate_email</span></a>
+                                <a class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#"><span class="material-icons text-sm">camera_alt</span></a>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-6">Company</h4>
+                            <ul class="space-y-4 text-sm">
+                                <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Blog</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-6">Support</h4>
+                            <ul class="space-y-4 text-sm">
+                                <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Safety Center</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+                                <li><a class="hover:text-primary transition-colors" href="#">Owner Community</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-6">Newsletter</h4>
+                            <p class="text-sm mb-4">Subscribe to get the latest listings and exclusive offers.</p>
+                            <div class="flex">
+                                <input class="bg-slate-800 border-none rounded-l-lg text-sm px-4 py-2 w-full focus:ring-1 focus:ring-primary" placeholder="Email address" type="email" />
+                                <button class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary/90 transition-colors">
+                                    <span class="material-icons text-base">send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+                        <p>© 2024 Kos-Kosan Credibel. All rights reserved.</p>
+                        <div class="flex gap-6">
+                            <a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+                            <a class="hover:text-white transition-colors" href="#">Cookie Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        // --- Screen 1: Home ---
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Navbar />
+                    <header class="relative py-20 lg:py-32 overflow-hidden bg-white dark:bg-background-dark">
+                        <div class="absolute inset-0 z-0">
+                            <img alt="Modern Interior" class="w-full h-full object-cover opacity-10 dark:opacity-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6DjVO9fCINSdK9q69tp7g-0RsW24-hl7He4cHSPWvXdCMM3Q4dipexKGFVD1BQJt6g-Wp9oCida2UFlxNqULo7g1mQcB8Cb4DYwcttLdEQWjV8fkMSKtIzeTr3kucZaVF97c7M7DNuPDhCWydFXEAPVZ6j4vBA35b-QpMQqu8gYawELI5unK3e3LjmHyuNvfq0oyrk6_w5QZ8pjJ0489zwgvDLLIOkxikq7RAEonFyG8PKxAh5feZdYTrAp-IoHkLD8eR7fmIn4pR" />
+                            <div class="absolute inset-0 bg-gradient-to-b from-background-light via-transparent to-background-light dark:from-background-dark dark:to-background-dark"></div>
+                        </div>
+                        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
+                                Find Your Safe & <span class="text-primary">Verified</span><br />Home Away From Home
+                            </h1>
+                            <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-12">
+                                Join 50,000+ students and professionals who found their perfect stay with zero hidden fees and 100% verified owners.
+                            </p>
+                            <div class="max-w-4xl mx-auto bg-white dark:bg-slate-900 p-2 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center gap-2">
+                                <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-3 gap-2">
+                                    <div class="flex items-center px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent focus-within:border-primary/30 transition-all">
+                                        <span class="material-icons text-slate-400 mr-2 text-xl">location_on</span>
+                                        <input class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium" placeholder="Location (e.g. South Jakarta)" type="text" />
+                                    </div>
+                                    <div class="flex items-center px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent focus-within:border-primary/30 transition-all">
+                                        <span class="material-icons text-slate-400 mr-2 text-xl">payments</span>
+                                        <select class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium appearance-none">
+                                            <option>Price Range</option>
+                                            <option>$100 - $300</option>
+                                            <option>$300 - $600</option>
+                                            <option>$600+</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-center px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent focus-within:border-primary/30 transition-all">
+                                        <span class="material-icons text-slate-400 mr-2 text-xl">person_search</span>
+                                        <select class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium appearance-none">
+                                            <option>Room Type</option>
+                                            <option>Male Only</option>
+                                            <option>Female Only</option>
+                                            <option>Mixed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button onClick={() => navigate('/search')} class="w-full md:w-auto bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-primary/90 flex items-center justify-center gap-2 transition-transform active:scale-95">
+                                    <span class="material-icons">search</span>
+                                    Search Now
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <section class="py-20 bg-white dark:bg-slate-900/50">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                                <div class="flex flex-col items-center text-center group">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                        <span class="material-icons text-primary group-hover:text-white text-3xl">verified_user</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Verified Owners</h3>
+                                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed">Every listing is physically inspected by our team to ensure the highest safety and quality standards.</p>
+                                </div>
+                                <div class="flex flex-col items-center text-center group">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                        <span class="material-icons text-primary group-hover:text-white text-3xl">security</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Safe Payments</h3>
+                                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed">Your money is held in escrow until you move in. We protect your deposit from any potential scams.</p>
+                                </div>
+                                <div class="flex flex-col items-center text-center group">
+                                    <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                        <span class="material-icons text-primary group-hover:text-white text-3xl">rate_review</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Real Reviews</h3>
+                                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed">Read authentic experiences from previous tenants. Only verified residents can leave reviews.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="py-24 bg-background-light dark:bg-background-dark">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex justify-between items-end mb-12">
+                                <div>
+                                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Verified Recommendations</h2>
+                                    <p class="text-slate-500 dark:text-slate-400">Hand-picked premium rooms for your comfort</p>
+                                </div>
+                                <Link to="/search" class="text-primary font-semibold flex items-center gap-1 hover:underline">
+                                    View all listings <span class="material-icons">arrow_forward</span>
+                                </Link>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                {[
+                                    { id: 1, title: 'Tebet Luxury Studio', price: '$450', loc: 'South Jakarta', gender: 'Female Only', rating: '4.9', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBIpshhoMFhlt_g0LQDWnharm34k7mFp4bFv4I6fbyJohZiu1u4T37cEMUrP8fw5Q6h_mKgedmNVbqSIk74lw3Y4XXizfm9_SNKaH1-A6-UAOq8lR9OpEmGArqpUJEkoqV1fQpLLwdkiPuT5ReEFy4jaGTeyDoeZJsCcq58PWtT8iQJO8QOfspV6Oks5COhmbesXDhz86wthmJ-1QDitqyaH1f9BVilu8G4up3JNi9QVTd2BYUjMjcO3CRGcInuCRX_DfDDBif3_3Cy' },
+                                    { id: 2, title: 'Setiabudi Executive', price: '$320', loc: 'Kuningan, Jakarta', gender: 'Male Only', rating: '4.7', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkuOxyghjBRbcE_OWiZ5t1L2m9CKQgcGCrAquXy3HbDNhvu-SaM6OMDAsyUGx9CP5OEWZ9Memu2BUcsxC3LHhAKDwlho6f-NeqwhAVrmXWI9NuzOdC8x-bxXNNwUlzCBikQetEWRqGaF7PURzSR81nwE5DMnbmd-4vjGVjWoTidCuKiMU4FuSYmo8xhNUT-QQVCW8_mOnD3ihfTgPpDAu7J7EcMgkH688GxNOl8peD2GITxTzIlFXVgbvcd1tKAPWpv1h4ovgdZIKf' },
+                                    { id: 3, title: 'Kemang Cozy Loft', price: '$550', loc: 'Kemang, Jakarta', gender: 'Mixed', rating: '4.8', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRbAsNevEzMY1XFZSIrZIQ6gxF4YJpxQtd0Ik4bhGubx0hgjGR1hEK7mAAom5whiEHWHTWG6DwneQfT06AWYL8aYxdoBlj5W6PKhmLy2E9Eb_Q_MLK5tfVYrqBY-WXH5BuCXcZr6G7KUrizWt-NKAKZwaBK5863-tWsAXRLgnEvaPO4RLJj4uPpzXnJGh_j_zLxO5jF_Zxm36DkMp0zqv5F78jL8ekQAQOemG5hKUbxA1UNPXwkMvBbblSYUJVV0WLXg5-99XvtFWq' },
+                                    { id: 4, title: 'Green Serpong Suites', price: '$280', loc: 'BSD City, Tangerang', gender: 'Female Only', rating: '4.6', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCFoNBk3qUztX1HEEPDK_Bs5YGvRYpHiFrbWVZqzMGBeAotk6exsPtCiRZdj0GwTP9q7aQJxfdw2wHF9SlEnGPlg8Xdwg6Ixs-k7AJkeTC0EHzoV5SYYGqLntbWrKwItGLizHD7A6lOk1OvP5ThVptBGCW7AVjgkSAZYWkpXkuM555fF8gNDfzv3vVfrh9tkAZNftFyiAdtQsUZeWEZJNAWMP3KhZJEAGluRt75tSM9ISkko2KgBXnqYV4w692ZCWVQkICEoO7NC2kd' }
+                                ].map(item => (
+                                    <div key={item.id} onClick={() => navigate('/detail')} class="cursor-pointer group bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-200 dark:border-slate-800 flex flex-col">
+                                        <div class="relative aspect-[4/3]">
+                                            <img alt="Room Photo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={item.img} />
+                                            <div class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded flex items-center gap-1">
+                                                <span class="material-icons text-xs">verified</span> Verified
+                                            </div>
+                                            <div class="absolute bottom-3 right-3 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white text-xs font-bold px-2 py-1 rounded">
+                                                {item.gender}
+                                            </div>
+                                        </div>
+                                        <div class="p-5 flex-1 flex flex-col">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">{item.title}</h3>
+                                                <div class="flex items-center text-orange-500">
+                                                    <span class="material-icons text-sm">star</span>
+                                                    <span class="text-xs font-bold ml-0.5">{item.rating}</span>
+                                                </div>
+                                            </div>
+                                            <p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1 mb-4">
+                                                <span class="material-icons text-base">location_on</span> {item.loc}
+                                            </p>
+                                            <div class="flex items-center gap-4 mb-6">
+                                                <span class="material-icons text-lg text-slate-400">wifi</span>
+                                                <span class="material-icons text-lg text-slate-400">ac_unit</span>
+                                                <span class="material-icons text-lg text-slate-400">bathtub</span>
+                                            </div>
+                                            <div class="mt-auto flex justify-between items-center">
+                                                <div>
+                                                    <span class="text-primary font-bold text-xl">{item.price}</span>
+                                                    <span class="text-slate-400 text-xs font-medium">/ month</span>
+                                                </div>
+                                                <button class="bg-slate-100 dark:bg-slate-800 p-2 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                                    <span class="material-icons">favorite_border</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                    <Footer />
+                </div>
+            );
+        };
+
+        // --- Screen 2: Search ---
+        const SearchPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex h-screen flex-col overflow-hidden bg-white dark:bg-background-dark">
+                    <header class="flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-6 dark:border-slate-800 dark:bg-slate-900 z-50">
+                        <div class="flex items-center gap-8">
+                            <Link to="/" class="flex items-center gap-2">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+                                    <span class="material-symbols-outlined text-xl">home_work</span>
+                                </div>
+                                <span class="text-xl font-bold tracking-tight text-primary">KosKosan</span>
+                            </Link>
+                            <div class="hidden md:flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-1 dark:border-slate-700 dark:bg-slate-800">
+                                <div class="flex items-center gap-2 px-3 py-1 border-r border-slate-200 dark:border-slate-700">
+                                    <span class="material-symbols-outlined text-slate-400 text-sm">location_on</span>
+                                    <input class="border-none bg-transparent text-sm focus:ring-0 w-32 placeholder:text-slate-400" placeholder="Bandung, Indonesia" type="text" />
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-1 border-r border-slate-200 dark:border-slate-700">
+                                    <span class="material-symbols-outlined text-slate-400 text-sm">calendar_today</span>
+                                    <span class="text-sm text-slate-600 dark:text-slate-400">Monthly</span>
+                                </div>
+                                <button class="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white shadow-sm hover:bg-primary/90">
+                                    <span class="material-symbols-outlined text-lg">search</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <nav class="hidden lg:flex items-center gap-6">
+                                <Link to="/detail" class="text-sm font-medium hover:text-primary transition-colors">List Property</Link>
+                                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Favorites</a>
+                                <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Help</a>
+                            </nav>
+                            <div class="flex items-center gap-3 border-l border-slate-200 pl-6 dark:border-slate-800">
+                                <button class="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                                    <span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+                                    <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-slate-800"></span>
+                                </button>
+                                <div class="h-10 w-10 overflow-hidden rounded-full border-2 border-primary/20 cursor-pointer" onClick={() => navigate('/dashboard')}>
+                                    <img class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjsjOcDXtRYEGImQ6lkmQ5sPfGhWb1IEnr9aUkUJdPY0lvBiOxsIe5-uS0cCjGZXd3JY_6_jUY-_NPdRqVVawB4wZ_B8wyNeUb4QBe6ssyVhIeLUPr8vMFXHUMwUfXdbuMceLemMszkoCjSWRAe4RrFU3W48OQ1aVjWJNeaCWutcX-wnB48HiBRu4zH88Bzg8U9aY9gXf9tTy8FNMGsXO7dkvRvhwCts8THf1_VZnMizcIIWho22lvp7RirAXmr_batJpaE05XLwit" />
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <main class="flex flex-1 overflow-hidden">
+                        <aside class="w-72 flex-shrink-0 overflow-y-auto border-r border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 custom-scrollbar">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-bold">Filters</h2>
+                                <button class="text-xs font-semibold text-primary hover:underline">Clear all</button>
+                            </div>
+                            <div class="space-y-8">
+                                <div>
+                                    <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">Occupancy</h3>
+                                    <div class="space-y-3">
+                                        <label class="flex items-center gap-3 group cursor-pointer"><input class="h-4 w-4 text-primary focus:ring-primary/20 border-slate-300" name="gender" type="radio" /><span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Male Only</span></label>
+                                        <label class="flex items-center gap-3 group cursor-pointer"><input class="h-4 w-4 text-primary focus:ring-primary/20 border-slate-300" name="gender" type="radio" /><span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Female Only</span></label>
+                                        <label class="flex items-center gap-3 group cursor-pointer"><input checked="" class="h-4 w-4 text-primary focus:ring-primary/20 border-slate-300" name="gender" type="radio" /><span class="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Mixed / Campur</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">Price Range (IDR)</h3>
+                                    <div class="px-2">
+                                        <div class="relative mb-6 h-1 w-full bg-slate-200 rounded-full dark:bg-slate-700">
+                                            <div class="absolute h-full bg-primary rounded-full left-[20%] right-[30%]"></div>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div class="flex-1 rounded border border-slate-200 p-2 dark:border-slate-700"><p class="text-[10px] text-slate-400">Min</p><p class="text-xs font-medium">800k</p></div>
+                                            <div class="flex-1 rounded border border-slate-200 p-2 dark:border-slate-700"><p class="text-[10px] text-slate-400">Max</p><p class="text-xs font-medium">5M</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">Facilities</h3>
+                                    <div class="space-y-3">
+                                        {['wifi', 'ac_unit', 'local_laundry_service', 'directions_car', 'bathtub'].map(icon => (
+                                            <label key={icon} class="flex items-center gap-3 group cursor-pointer">
+                                                <input checked={icon === 'wifi' || icon === 'ac_unit'} class="h-4 w-4 rounded text-primary focus:ring-primary/20 border-slate-300" type="checkbox" />
+                                                <span class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 capitalize">
+                                                    <span class="material-symbols-outlined text-lg text-slate-400">{icon}</span> {icon.replace('_', ' ')}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                        <section class="flex-1 flex flex-col min-w-0 bg-white dark:bg-background-dark">
+                            <div class="flex items-center justify-between border-b border-slate-200 px-8 py-4 dark:border-slate-800">
+                                <div>
+                                    <h1 class="text-xl font-bold">128 Properties in Bandung</h1>
+                                    <p class="text-sm text-slate-500">Showing 1 - 12 results</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 dark:border-slate-700">
+                                        <span class="text-xs text-slate-500 font-medium">Sort by:</span>
+                                        <select class="border-none bg-transparent p-0 text-xs font-semibold focus:ring-0"><option>Recommended</option><option>Price: Low to High</option></select>
+                                    </div>
+                                    <div class="flex rounded-lg border border-slate-200 overflow-hidden dark:border-slate-700">
+                                        <button class="bg-slate-100 p-2 dark:bg-slate-800"><span class="material-symbols-outlined text-primary">grid_view</span></button>
+                                        <button class="p-2 border-l border-slate-200 dark:border-slate-700"><span class="material-symbols-outlined text-slate-400">view_list</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+                                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 2xl:grid-cols-3">
+                                    {[
+                                        { title: 'Urban Sanctuary Studio B', loc: 'Coblong, Bandung', price: '2.100.000', rating: '4.9', type: 'Female', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg1V1i9xLwZbf8XcNgu076imNoF32V8ZcQQlNK8QlAajzwGjy1EdyPPXGmESY6O_KLegb3HHB_FICOXsNd3CFkmtBQ8Fmd3RrkUhynXwqd4WZR0uSnkknqrFSuvxjGj-6CC5e_BeaB4Ej-8gbrNJYkCIEyWr14P9Vx4wSeEQCZlB4_eSIK6-cdgftuNahmEAlZQIhrUN5WFPAURSq7bsCJl2E_pws5TBlRLPb-yBKX7erTh0HhhA4k5T0XZVYGl0rHV3s-8bk_dQPh' },
+                                        { title: 'Wisma Mahasiswa ITB', loc: 'Dago, Bandung', price: '1.250.000', rating: '4.7', type: 'Male', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkclIxr-eyy3G2AmhfkjdZFyV9rJuKX5Td4UDGVIYqvWd50BvmchEAI0YwiOllc11VCmeUcnEOacFcu5NwInruw0tImMY1GFjl2WFpGxgC6Rli2NH7WDe1f9pU-j88FNuXATUe2-TlayuAAlqCS9RKBztV2KoFrBoFPZmtGu939Z5EDBrBsXyAbxMUXG9JQ4eqpYyANGJJ5hGakaZQohkk6YxLxDYSDqWAWH4pCgKQZFgmCeBRarYhOgbHx654BdCnSlTjd918CpyF' },
+                                        { title: 'Green Residence Luxury', loc: 'Cibeunying, Bandung', price: '3.500.000', rating: '4.8', type: 'Mixed', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC3wapGM9Zhm9R-vg5YUbPTmgcNLgXfolzTPSbXEhMuHm5YcZhLKaH3cZYnzqfIFUO5B-YMFFhi9kTefbCndQ3OWmDDSg5QDMkIhpic6Xo6SRXIEifBju_P6EQCOKH2ueq8kqUmF7Aa6LodmjEKrS34Y9D6mmYdoP5BVkvj6Es5S2IBGyasBfK-NPJLABINNli3L3D7jkn7rrHr5-4m2req4CHvGSubVOXSwBSxmxnRKXM_m2uaHRj_BrT-hGkMbcoHFS85-okfxn5I' }
+                                    ].map((prop, idx) => (
+                                        <div key={idx} class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:shadow-xl dark:border-slate-800 dark:bg-slate-900">
+                                            <div class="relative h-48 w-full">
+                                                <img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src={prop.img} />
+                                                <div class="absolute top-3 left-3 flex gap-2">
+                                                    <span class="flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+                                                        <span class="material-symbols-outlined text-xs">verified</span> Verified
+                                                    </span>
+                                                    <span class="rounded-full bg-slate-900/60 backdrop-blur-md px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider">{prop.type}</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col p-5">
+                                                <div class="mb-1 flex items-center justify-between"><span class="text-xs font-medium text-slate-500">{prop.loc}</span><div class="flex items-center gap-1 text-xs font-bold text-amber-500"><span class="material-symbols-outlined text-sm">star</span> {prop.rating}</div></div>
+                                                <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100 line-clamp-1">{prop.title}</h3>
+                                                <div class="flex items-end justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
+                                                    <div class="flex flex-col"><span class="text-[10px] text-slate-400">Starting from</span><span class="text-lg font-bold text-primary">Rp {prop.price}<span class="text-xs text-slate-500">/mo</span></span></div>
+                                                    <button onClick={() => navigate('/detail')} class="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary/90">Details</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                        <section class="hidden lg:block w-[400px] xl:w-[500px] flex-shrink-0 relative border-l border-slate-200 dark:border-slate-800">
+                            <div class="h-full w-full bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
+                                <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                                <div class="absolute top-4 right-4 flex flex-col gap-2">
+                                    <button class="flex h-10 w-10 items-center justify-center rounded bg-white shadow-lg dark:bg-slate-900"><span class="material-symbols-outlined">add</span></button>
+                                    <button class="flex h-10 w-10 items-center justify-center rounded bg-white shadow-lg dark:bg-slate-900"><span class="material-symbols-outlined">remove</span></button>
+                                </div>
+                                <div class="absolute top-[25%] left-[40%] group cursor-pointer z-10">
+                                    <div class="relative">
+                                        <div class="bg-primary text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white transform transition-transform group-hover:scale-110">2.1M</div>
+                                        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rotate-45"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            );
+        };
+
+        // --- Screen 3: Detail ---
+        const DetailPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="min-h-screen bg-background-light dark:bg-background-dark">
+                    <header class="sticky top-0 z-50 w-full bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                            <Link to="/" class="flex items-center gap-2 text-primary">
+                                <span class="material-symbols-outlined text-3xl font-bold">domain</span>
+                                <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">StayHub</h2>
+                            </Link>
+                            <nav class="hidden md:flex items-center gap-6">
+                                <Link to="/search" class="text-sm font-medium hover:text-primary transition-colors">Browse</Link>
+                                <button onClick={() => navigate('/dashboard')} class="bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/90">Sign In</button>
+                            </nav>
+                        </div>
+                    </header>
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <section class="grid grid-cols-4 grid-rows-2 gap-3 h-[500px] mb-8 rounded-xl overflow-hidden">
+                            <div class="col-span-2 row-span-2 relative group cursor-pointer">
+                                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0tzzTEnXtVi9OD327YTZY2QwjVMfWlvaHS8fruDDwhUoE4VWUMQFyH9fKYyhKX8gLGLEBYVSm4FdqHNyxhAzxJ0yoXmOK9hpJNSJ9Xj2u8lanlJYtt4jmCo6JG00EKR1_mIriHSRoLSqEgducebkorUlR8Y3QmH20tD_5Yd5fHivsrjRf17Zm9SrkHwxp8U2iTnJoSJOROY_Ra7Q_R53gOU2zlt9Zj1nDcGVl_ojnp4um-h7vP9CX6tsGhm_3aSDL3hqcqqCUaM1f" />
+                            </div>
+                            <div class="col-span-1 row-span-1"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl0kvVMWcIfHfQYstg4k8yCKRu9QkpuE9m6UMgq5xf1Eu5u8-Y5Vm1lGoO7FQJFQZyNq4LOLQxegKlnl7k_dL9yrdW09E4wbBu0ecSRYcEFqbe8QvNLakFGWuAehLHjpuo__JcGg1BAF6-ELwxn87wuxEhxg7FUCNjNvCfCD-U_jygqZTze93psKM22TJTxIPdLh7kd-uqnTTJAK0IwU6zjuqbR52kE_uq8B08sCGIx97ZyATyVV0lod6jelwl-qKUT_0vfrOQIdsS" /></div>
+                            <div class="col-span-1 row-span-1"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFHGtjblq8jJ_MZ9WrKYGjFbFXmfy8mBu--AbAXpNnQlGXLJwXFQO9EVP8oFDelmpYVklsGJzLB7WmLi0iLXE-jSIENrF9oTlORIOwY0k3huKc1gq1AVpAxUaJ01ehCeRcanNZz4Lhc7_BhmK2cz1IXbRd-ta-7zFhTcMVerBXfITFVeBKudeTv-gJsPK15q5gX2kfBzKOkLWxCPEEkWIFW9ZWAjXu01Lndk48EyfYx7XUA6LZ1VkE3Uk4qLpCtBV8cWkK20YNqJy_" /></div>
+                            <div class="col-span-1 row-span-1"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBur53-WdKAvXtpbbmp9wRzmIocT0_Fzx-bNQAatHJZE-K0MbeyY5RLmISiJfUJ9K5__sD1TK9HtaGmEE4KCRASKHT_ucNOcfE5EXyMs8HwHNRO6-R8iZm2FNeaoo1CsMU9NyclsON-P4tVvKykLyfJClq54KyopDDtNIPF6hRvlZYN9z3oYQuSslDgqN3yiJ03Ix0ZW4y1exa5s6TQINdYfB6wkIOBZtSefbQZtBKt-bi_BVrJd1Tjxe9CQCT0deQUjUxZuZCeClEX" /></div>
+                            <div class="col-span-1 row-span-1 relative"><div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold">+12</div><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIKxCaNTGM7oRtqKVK_Xdy3tiaa341R_N6mGbt2GZJoi6cPWQ05Np1B2lIvyHhQMJySQkGblDVFLOESX0hcfBulzCCoEhjeaC_xkItjVs2x5FzbWkWqu6_dVY6etg18MEuGx1ko1rZasM9KbWj4e6RxI9ZBGP6Ao9aJGq1_s64VCOdlIMyFLYPO_hUyn-Vnw9PlNPJefDaa-6GksburLi2uQwY4BGM3_Kf7QlUR_Hw9J_c-FvR4ypctLJAhYwtVADxgi2uBfuoRqgM" /></div>
+                        </section>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                            <div class="lg:col-span-2 space-y-10">
+                                <div class="border-b border-slate-200 pb-8">
+                                    <div class="flex items-center gap-2 mb-2"><span class="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider"><span class="material-symbols-outlined text-[14px]">verified</span> Verified Listing</span><span class="flex items-center text-amber-500 gap-1 text-sm font-bold"><span class="material-symbols-outlined text-sm">star</span> 4.9 (124 reviews)</span></div>
+                                    <h1 class="text-4xl font-black text-slate-900 dark:text-white mb-2 leading-tight">Exclusive Residence Kebayoran</h1>
+                                    <p class="text-slate-500 flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan</p>
+                                </div>
+                                <section><h3 class="text-xl font-bold mb-4">About this property</h3><p class="text-slate-600 leading-relaxed">Experience premium living in the heart of Kebayoran Baru. Our residence offers a blend of modern luxury and comfort, tailored specifically for young professionals and university students.</p></section>
+                                <section><h3 class="text-xl font-bold mb-6">Amenities</h3><div class="grid grid-cols-2 sm:grid-cols-3 gap-6">{['wifi', 'ac_unit', 'bathroom', 'countertops', 'local_laundry_service', 'security'].map(a => <div key={a} class="flex items-center gap-3"><div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><span class="material-symbols-outlined">{a}</span></div><span class="text-sm font-medium capitalize">{a.replace('_', ' ')}</span></div>)}</div></section>
+                            </div>
+                            <div class="lg:col-span-1">
+                                <div class="sticky-card space-y-4">
+                                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xl">
+                                        <div class="flex items-baseline gap-1 mb-6"><span class="text-3xl font-black text-slate-900 dark:text-white">Rp 4.500.000</span><span class="text-slate-500 font-medium">/ month</span></div>
+                                        <button class="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 mb-3">Check Availability</button>
+                                        <button onClick={() => navigate('/dashboard')} class="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold py-4 rounded-lg hover:bg-slate-200 transition-all flex items-center justify-center gap-2"><span class="material-symbols-outlined text-xl">chat</span> Chat with Owner</button>
+                                    </div>
+                                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 flex items-center gap-4">
+                                        <div class="size-14 rounded-full overflow-hidden border-2 border-primary/20"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPi0nFQqcYO9ZMXRDvzWTvqhWfg42GgYWhhXJQ0Wcw_YkDXBK87Fta9Yg2vD_736LptSYm4TIrhKbPjx15BIkQEXV-G8QMx8ZLV4rAJzt4N1105LWGHrCnahg2MTeg15FbgCNwK_mz7RY8BgGo3DeXKdYkvRJHlxnhKhyPrkQfEucITHrcdpEOfoJd5V-O_9KLQ_PIF6CJmrEn51-8AmlT3sV3SgMBU4XX669ZSyZl9t_BEcH7eK2Kbx3zDUQrGIYlitDDAhHYt87N" /></div>
+                                        <div><h4 class="font-bold">Budi Santoso</h4><p class="text-xs text-slate-500">Verified Owner</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        // --- Screen 4: Dashboard ---
+        const DashboardPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
+                    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
+                        <div class="p-6 flex items-center gap-3">
+                            <div class="size-8 bg-primary rounded flex items-center justify-center text-white"><span class="material-symbols-outlined">apartment</span></div>
+                            <h2 class="text-lg font-bold tracking-tight">Kos-Kosan Pro</h2>
+                        </div>
+                        <nav class="flex-1 px-4 space-y-1 mt-4">
+                            <a class="flex items-center gap-3 px-3 py-2.5 sidebar-active rounded-lg transition-colors" href="#"><span class="material-symbols-outlined">dashboard</span><span class="text-sm font-semibold">Dashboard</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#"><span class="material-symbols-outlined">hotel</span><span class="text-sm font-medium">My Bookings</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#"><span class="material-symbols-outlined">payments</span><span class="text-sm font-medium">Payments</span></a>
+                            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors relative" href="#"><span class="material-symbols-outlined">chat_bubble</span><span class="text-sm font-medium">Messages</span><span class="absolute right-3 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-primary"></span></a>
+                        </nav>
+                        <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+                            <button onClick={() => navigate('/')} class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold"><span class="material-symbols-outlined text-[18px]">logout</span> Logout</button>
+                        </div>
+                    </aside>
+                    <main class="flex-1 flex flex-col overflow-y-auto">
+                        <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-primary/10 p-1.5 rounded-full"><span class="material-symbols-outlined text-primary text-xl">waving_hand</span></div>
+                                <div><h1 class="text-base font-semibold">Welcome back, Alex Turner</h1><p class="text-xs text-slate-500">Tenant ID: #KKP-88219</p></div>
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <button class="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"><span class="material-symbols-outlined">notifications</span></button>
+                                <div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsA947mMJ-GbWTSUzLiLvxfqNxt0ViCvNs06FNSJOJDkzOrijZIuDYrvePDm2eaK1I1EuWHmpexYkdMdyXIt7FgwExK2-9vT9LypypAm4mW-aElIdvKJmBBRgOPmvtsQurzaS07ZwAtACwXNGLfUeos8gZN4VtIe5qHwl0bJsMaEdoUQhNS3zeFCgFUpB7KeO7ZbNNJAfT5dHi7vs8Tt2hkd0P5uxmBPUvRKXtrYr5z6BwikTkORFYkDfUD9e_XFLUo5ii-yE3lk5V" /></div>
+                            </div>
+                        </header>
+                        <div class="p-8 max-w-7xl mx-auto w-full space-y-8">
+                            <section class="bg-primary/5 border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="size-12 bg-primary text-white rounded-lg flex items-center justify-center shrink-0 shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-3xl">priority_high</span></div>
+                                    <div><p class="text-primary font-bold text-sm uppercase tracking-wider">Urgent Payment Due</p><h3 class="text-2xl font-black text-slate-900 dark:text-slate-100 mt-1">Rp 2.500.000</h3><p class="text-slate-600 dark:text-slate-400 text-sm mt-1">Rent for October 2023 • Due by Oct 05, 2023</p></div>
+                                </div>
+                                <button class="px-8 py-3 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-[20px]">account_balance_wallet</span> Pay Now</button>
+                            </section>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <div class="flex items-center justify-between"><p class="text-slate-500 text-sm font-medium">Active Bookings</p><span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">home</span></div>
+                                    <p class="text-3xl font-bold mt-2">1</p>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <div class="flex items-center justify-between"><p class="text-slate-500 text-sm font-medium">Messages</p><span class="material-symbols-outlined text-orange-500 bg-orange-100 p-2 rounded-lg">mail</span></div>
+                                    <p class="text-3xl font-bold mt-2">2</p>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                    <div class="flex items-center justify-between"><p class="text-slate-500 text-sm font-medium">Annual Spending</p><span class="material-symbols-outlined text-emerald-500 bg-emerald-100 p-2 rounded-lg">analytics</span></div>
+                                    <p class="text-3xl font-bold mt-2">Rp 15.0M</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div class="lg:col-span-2 space-y-8">
+                                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                                        <div class="p-6 border-b border-slate-100 flex justify-between items-center"><h4 class="font-bold text-lg">Active Booking</h4></div>
+                                        <div class="p-6 flex flex-col sm:flex-row gap-6">
+                                            <div class="w-full sm:w-48 h-32 bg-slate-100 rounded-lg overflow-hidden shrink-0"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_776_cuOV3ZSa_Z6B4wW0Tj-sGfXXbvUZU1nIIcGxguIJzTCEwAJM_F6XD-04VupqPSc4LkQ9GjRg5bvBayhgyfocBv3yHsdH5kni4-_TJvgArf26_L-mkSQWOusfi01Pr3w73iU6HRUZXcgTbEGjRRMZvWYi9P7tn4F_dG5FPFiCg2WGYwlDiSIzqrvoNwUzt-00phzQtQEEJneUnEHerwfQ-Oi90-6R71AaFsD9dWKOS2uhtbidHHo4z-kYZgEzbP97gJbvRWkY" /></div>
+                                            <div class="flex-1 space-y-3">
+                                                <div><h5 class="text-xl font-bold">Room 204 - Menteng Residence</h5><p class="text-slate-500 text-sm">Jl. Teuku Umar No. 12, Jakarta Pusat</p></div>
+                                                <div class="grid grid-cols-2 gap-4"><div><p class="text-xs text-slate-400 uppercase">Stay Period</p><p class="text-sm font-medium">May 2023 - Oct 2023</p></div><div><p class="text-xs text-slate-400 uppercase">Status</p><span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Verified Tenant</span></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm flex flex-col h-[400px]">
+                                    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900"><h4 class="font-bold text-lg">Quick Messages</h4></div>
+                                    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                                        <div class="flex gap-3 max-w-[85%]"><div class="h-8 w-8 rounded-full bg-slate-200 shrink-0 flex items-center justify-center"><span class="material-symbols-outlined text-slate-500 text-lg">support_agent</span></div><div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none"><p class="text-sm text-slate-800 dark:text-slate-200">Hi Alex, the Wi-Fi maintenance is scheduled for tomorrow at 10 AM.</p></div></div>
+                                    </div>
+                                    <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2"><input class="bg-slate-100 dark:bg-slate-800 border-none rounded-full px-4 py-2 text-sm flex-1" placeholder="Type a reply..." /><button class="text-primary"><span class="material-symbols-outlined">send</span></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        // --- Main App & Router ---
+        const App = () => {
+            return (
+                <MemoryRouter>
+                    <ScrollToTop />
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/search" element={<SearchPage />} />
+                        <Route path="/detail" element={<DetailPage />} />
+                        <Route path="/dashboard" element={<DashboardPage />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        };
+
+        const ScrollToTop = () => {
+            const { pathname } = useLocation();
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [pathname]);
+            return null;
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+</body>
+
+</html>

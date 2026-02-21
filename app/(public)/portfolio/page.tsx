@@ -1,6 +1,6 @@
 import { getPortfolios, getPortfolioHtml } from "@/lib/portfolios/actions";
 import { getTranslations } from "next-intl/server";
-import { PortfolioCard } from "@/components/public/portfolio-card";
+import { PortfolioGrid } from "@/components/public/portfolio-grid";
 import { Badge } from "@/components/ui/badge";
 import { getSettingValue } from "@/lib/server/settings";
 import Link from "next/link";
@@ -76,24 +76,7 @@ export default async function PortfolioPage() {
                     </div>
                 </ScrollAnimationWrapper>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                    {portfolioWithHtml.map((item, index) => (
-                        <ScrollAnimationWrapper key={item.id} delay={index * 0.1}>
-                            <PortfolioCard
-                                title={item.title}
-                                slug={item.slug}
-                                category={item.category}
-                                html={item.html}
-                            />
-                        </ScrollAnimationWrapper>
-                    ))}
-                </div>
-
-                {portfolios.length === 0 && (
-                    <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl mb-24">
-                        <p className="text-zinc-500">{t('empty')}</p>
-                    </div>
-                )}
+                <PortfolioGrid items={portfolioWithHtml} />
 
                 {/* CTA Section - Compact & Inline */}
                 <ScrollAnimationWrapper>

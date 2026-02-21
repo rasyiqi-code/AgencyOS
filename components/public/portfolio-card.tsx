@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ExternalLink, Maximize2, Sparkles } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface PortfolioCardProps {
     title: string;
@@ -11,37 +10,56 @@ interface PortfolioCardProps {
     category?: string;
 }
 
-export function PortfolioCard({ title, slug, html, category }: PortfolioCardProps) {
+// Style CSS untuk menyembunyikan scrollbar di preview iframe
+const PREVIEW_HIDE_SCROLLBAR = `<style>body { scrollbar-width: none; -ms-overflow-style: none; } body::-webkit-scrollbar { display: none; }</style>`;
+
+/**
+ * Membangun srcDoc untuk iframe preview.
+ * Jika konten sudah merupakan dokumen HTML lengkap (memiliki <html> atau <!DOCTYPE>),
+ * sisipkan style scrollbar-hiding ke dalam <head> yang sudah ada agar
+ * external resources (CDN stylesheet, script) tetap bisa dimuat.
+ * Jika konten hanya fragment HTML, bungkus dalam dokumen HTML baru.
+ */
+function buildSrcDoc(content: string): string {
+    if (!content) return "<html><body style='background: #f8fafc'></body></html>";
+
+    const trimmed = content.trim();
+    const isFullDocument = /^<!doctype\s+html|^<html[\s>]/i.test(trimmed);
+
+    if (isFullDocument) {
+        if (/<head[\s>]/i.test(trimmed)) {
+            return trimmed.replace(/<head([^>]*)>/i, `<head$1>${PREVIEW_HIDE_SCROLLBAR}`);
+        }
+        return trimmed.replace(/<html([^>]*)>/i, `<html$1><head>${PREVIEW_HIDE_SCROLLBAR}</head>`);
+    }
+
+    return `<html><head>${PREVIEW_HIDE_SCROLLBAR}</head><body>${content}</body></html>`;
+}
+
+export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
     return (
         <div className="group bg-white border border-zinc-200 rounded-3xl flex flex-col overflow-hidden hover:border-brand-yellow/50 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-brand-yellow/5 relative">
-            {/* Card Header - White Gold Style */}
-            <div className="px-5 py-4 flex items-center justify-between border-b border-zinc-100 bg-white/50 backdrop-blur-sm">
-                <div className="space-y-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[9px] px-2.5 py-0.5 tracking-wide border-brand-yellow/30 bg-brand-yellow/5 text-brand-yellow font-bold rounded-full">
-                            {category || "Design"}
-                        </Badge>
-                    </div>
-                    <h4 className="font-bold text-zinc-900 text-base tracking-tight truncate pr-4 group-hover:text-brand-yellow transition-colors">
-                        {title}
-                    </h4>
-                </div>
+            {/* Card Header - Gold */}
+            <div className="px-5 py-3.5 flex items-center justify-between border-b border-white/10" style={{ backgroundColor: '#a67c00' }}>
+                <h4 className="font-bold text-white text-base tracking-tight truncate pr-4">
+                    {title}
+                </h4>
                 <Link
                     href={`/view-design/${slug}`}
                     target="_blank"
-                    className="p-2 rounded-xl bg-zinc-50 text-zinc-400 group-hover:text-brand-yellow group-hover:bg-brand-yellow/10 transition-all hover:scale-110 active:scale-95 shrink-0 border border-zinc-200"
+                    className="p-2 rounded-xl bg-white/15 text-white hover:bg-white/25 transition-all hover:scale-110 active:scale-95 shrink-0 border border-white/20"
                     title="Fullscreen Preview"
                 >
                     <Maximize2 className="w-3.5 h-3.5" />
                 </Link>
             </div>
 
-            {/* Card Body (Live Render Space) - Neutral Background with Depth */}
+            {/* Card Body (Live Render Space) */}
             <div className="p-3">
                 <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
                     <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
                         <iframe
-                            srcDoc={html ? `<html><head><style>body { scrollbar-width: none; -ms-overflow-style: none; } body::-webkit-scrollbar { display: none; }</style></head><body>${html}</body></html>` : "<html><body style='background: #f8fafc'></body></html>"}
+                            srcDoc={buildSrcDoc(html)}
                             className="w-full h-full border-none overflow-hidden"
                             title={title}
                             scrolling="no"
@@ -79,3 +97,4 @@ export function PortfolioCard({ title, slug, html, category }: PortfolioCardProp
         </div>
     );
 }
+
