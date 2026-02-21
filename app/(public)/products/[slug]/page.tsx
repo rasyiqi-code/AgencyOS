@@ -275,8 +275,8 @@ export default async function ProductDetailPage(props: PageProps) {
 
                 {/* ===== MOBILE STICKY BOTTOM CTA ===== */}
                 <div className="fixed bottom-0 inset-x-0 z-50 p-3 lg:hidden">
-                    <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,transparent,black_15px)]" />
-                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-900/80 backdrop-blur-3xl shadow-2xl shadow-black/50">
+                    <div className="absolute inset-0 bg-transparent" />
+                    <div className="relative flex items-center justify-between gap-3 p-3.5 rounded-3xl bg-zinc-950/95 border border-brand-yellow/30 shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
                         {/* Price Area */}
                         <div className="flex-1 min-w-0">
                             <div className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest mb-0.5">{t("price")}</div>
@@ -290,7 +290,7 @@ export default async function ProductDetailPage(props: PageProps) {
                         {/* Buy Now Button */}
                         <Link
                             href={`/checkout/${product.id}`}
-                            className="shrink-0 px-6 py-2.5 bg-brand-yellow text-zinc-950 font-extrabold rounded-full text-[11px] uppercase tracking-widest shadow-lg shadow-brand-yellow/20 hover:scale-105 active:scale-95 transition-all"
+                            className="shrink-0 px-6 py-2.5 bg-brand-yellow text-black font-black rounded-full text-[12px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
                         >
                             {t("buyNow")}
                         </Link>
