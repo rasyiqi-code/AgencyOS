@@ -22,6 +22,12 @@ export async function ExpertProfile() {
                                 className="object-cover"
                                 unoptimized
                             />
+                            {/* Decorative Mask Text */}
+                            <div className="absolute inset-x-0 bottom-0 top-1/2 flex items-center justify-center pointer-events-none opacity-20 select-none">
+                                <span className="text-3xl font-black italic tracking-tighter text-white whitespace-nowrap translate-y-4">
+                                    DESIGN TO PREVAIL.
+                                </span>
+                            </div>
                         </div>
                         <h3 className="text-white font-bold text-lg">{t("name")}</h3>
                         <p className="text-indigo-400 text-sm mb-2">{t("role")}</p>

@@ -19,10 +19,28 @@
         "startProject": "Mulai Proyek"
     },
     "Hero": {
-        "statusBadge": "Partner Strategis Pengembangan: Eksekusi Kelas Enterprise",
-        "title1": "Bangun untuk Tumbuh.",
-        "title2": "Rancang untuk Tangguh.",
-        "description": "Arsitektur performa tinggi untuk masa depan. {brand} menghadirkan solusi software <white>kelas enterprise</white> dengan pendekatan hybrid pakar-AI yang dirancang untuk mendukung skalabilitas bisnis dan mendominasi kompetisi pasar.",
+        "statusBadge": "Partner Strategis",
+        "title1": "We Build",
+        "forYour": "untuk",
+        "typing": {
+            "build": [
+                "Web",
+                "App",
+                "SaaS",
+                "Systems",
+                "Products",
+                "Platforms",
+                "Solutions",
+                "Growth",
+                "Presence"
+            ],
+            "audience": [
+                "Bisnis",
+                "Organisasi",
+                "Individual"
+            ]
+        },
+        "description": "Dari infrastruktur SaaS hingga <white>aset digital siap pakai</white>. {brand} membangun ekosistem teknologi yang skalabel, cepat, dan teroptimasi untuk pertumbuhan bisnis Anda.",
         "launchDashboard": "Dapatkan Quote",
         "viewServices": "Solusi Bisnis",
         "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL"
@@ -258,7 +276,8 @@
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",
         "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan {brand}. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
-        "footer": "Keahlian Enterprise. Kecepatan Industri."
+        "footer": "Bangun untuk Tumbuh. Rancang untuk Tangguh.",
+        "tagline": "Build to Scale. Design to Prevail."
     },
     "Experts": {
         "badge": "TALENTA KELAS DUNIA",

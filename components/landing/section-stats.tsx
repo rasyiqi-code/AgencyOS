@@ -58,7 +58,7 @@ export function SectionStats() {
 
 function CounterItem({ from, to, duration }: { from: number; to: number; duration: number }) {
     const nodeRef = useRef<HTMLSpanElement>(null);
-    const inView = useInView(nodeRef, { once: true, margin: "-100px" });
+    const inView = useInView(nodeRef, { once: true, margin: "-20px" });
 
     useEffect(() => {
         const node = nodeRef.current;

@@ -19,9 +19,27 @@
     },
     "Hero": {
         "statusBadge": "Strategic Partner",
-        "title1": "Build to Scale.",
-        "title2": "Design to Prevail.",
-        "description": "Engineered for excellence. {brand} delivers <white>high-performance software</white> with a hybrid expert-AI approach designed to scale your enterprise and prevail in competitive markets.",
+        "title1": "We Build",
+        "forYour": "for your",
+        "typing": {
+            "build": [
+                "Web",
+                "App",
+                "SaaS",
+                "Systems",
+                "Products",
+                "Platforms",
+                "Solutions",
+                "Growth",
+                "Presence"
+            ],
+            "audience": [
+                "Business",
+                "Organization",
+                "Individual"
+            ]
+        },
+        "description": "From SaaS infrastructure to <white>ready-to-use digital assets</white>. {brand} builds a scalable, fast, and optimized technology ecosystem for your business growth.",
         "launchDashboard": "Get Quote",
         "viewServices": "Business Solutions",
         "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE"
@@ -187,7 +205,8 @@
         "badge": "12+ YEARS EXPERIENCE",
         "quote": "Focus on solutions, no complications.",
         "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of {brand}. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
-        "footer": "Enterprise Expertise. Industrial Velocity."
+        "footer": "Build to Scale. Design to Prevail.",
+        "tagline": "Build to Scale. Design to Prevail."
     },
     "Experts": {
         "badge": "WORLD-CLASS TALENT",
