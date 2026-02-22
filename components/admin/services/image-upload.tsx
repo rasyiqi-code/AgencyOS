@@ -3,9 +3,11 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { X, Image as ImageIcon, AlertCircle, RefreshCw } from "lucide-react";
+import { MediaLibraryPicker } from "@/components/admin/shared/media-library-picker";
 
 export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | null }) {
     const [preview, setPreview] = useState<string | null>(defaultValue || null);
+    const [libraryUrl, setLibraryUrl] = useState<string | null>(null);
     const [hasError, setHasError] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -14,13 +16,24 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
         if (file) {
             const objectUrl = URL.createObjectURL(file);
             setPreview(objectUrl);
+            setLibraryUrl(null); // Clear library URL if new file chosen
             setHasError(false); // Reset error state on new file
+        }
+    };
+
+    const handleLibrarySelect = (url: string) => {
+        setPreview(url);
+        setLibraryUrl(url);
+        setHasError(false);
+        if (inputRef.current) {
+            inputRef.current.value = ""; // Clear file input if library image chosen
         }
     };
 
     const handleRemove = (e: React.MouseEvent) => {
         e.stopPropagation(); // Prevent triggering upload click
         setPreview(null);
+        setLibraryUrl(null);
         setHasError(false);
         if (inputRef.current) {
             inputRef.current.value = "";
@@ -30,7 +43,11 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
     return (
         <div className="space-y-3">
             <div className="flex items-center justify-between">
-                <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Cover Image</label>
+                <div className="flex items-center gap-3">
+                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Cover Image</label>
+                    <div className="h-3 w-px bg-white/10" />
+                    <MediaLibraryPicker onSelect={handleLibrarySelect} />
+                </div>
                 {preview && (
                     <button
                         type="button"
@@ -93,6 +110,7 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
                     className="hidden"
                     onChange={handleFileChange}
                 />
+                <input type="hidden" name="image_url" value={libraryUrl || ""} />
             </div>
         </div>
     );

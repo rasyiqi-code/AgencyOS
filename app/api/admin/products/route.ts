@@ -62,6 +62,7 @@ export async function POST(req: Request) {
                 fileUrl,
                 name_id,
                 description_id,
+                currency: body.currency || 'USD',
             },
         });
 

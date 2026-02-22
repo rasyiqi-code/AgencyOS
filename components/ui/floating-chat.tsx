@@ -391,12 +391,13 @@ export function FloatingChatWidget() {
     return (
         <div
             className={cn(
-                "fixed bottom-6 right-6 bg-black/90 border border-white/10 backdrop-blur-xl rounded-2xl shadow-2xl transition-all duration-300 z-50 flex flex-col overflow-hidden",
-                isExpanded ? "w-[800px] h-[600px]" : "w-[380px] h-[600px]"
+                "fixed inset-0 z-[100] flex flex-col overflow-hidden bg-zinc-950 transition-all duration-300",
+                "md:inset-auto md:bottom-6 md:right-6 md:bg-black/90 md:border md:border-white/10 md:backdrop-blur-xl md:rounded-2xl md:shadow-2xl md:z-50",
+                isExpanded ? "md:w-[800px] md:h-[600px]" : "md:w-[380px] md:h-[600px]"
             )}
         >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-brand-yellow/10 to-transparent">
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-brand-yellow/10 to-transparent shrink-0">
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <Avatar className="h-10 w-10 border border-brand-yellow/30">
@@ -431,7 +432,7 @@ export function FloatingChatWidget() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-zinc-400 hover:text-brand-yellow hover:bg-white/5 cursor-pointer"
+                        className="h-8 w-8 text-zinc-400 hover:text-brand-yellow hover:bg-white/5 cursor-pointer hidden md:flex"
                         onClick={() => setIsExpanded(!isExpanded)}
                     >
                         {isExpanded ? <MinusCircle className="h-5 w-5" /> : <div className="h-4 w-4 border-2 border-current rounded-sm" />}
@@ -509,7 +510,7 @@ export function FloatingChatWidget() {
                                     </Avatar>
                                     <div
                                         className={cn(
-                                            "p-3 rounded-2xl max-w-[80%]",
+                                            "p-3 rounded-2xl max-w-[85%] md:max-w-[75%]",
                                             m.role === "user"
                                                 ? "bg-brand-yellow text-black rounded-tr-sm font-medium"
                                                 : "bg-zinc-900 border border-white/10 text-zinc-300 rounded-tl-sm"
@@ -556,7 +557,7 @@ export function FloatingChatWidget() {
                     </ScrollArea>
 
                     {/* Input */}
-                    <div className="p-4 border-t border-white/10 bg-black/40">
+                    <div className="p-4 md:p-6 border-t border-white/10 bg-black/40 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 shrink-0">
                         <form onSubmit={mode === "ai" ? handleAiSubmit : handleHumanSubmit} className="flex gap-2">
                             <Input
                                 value={input}

@@ -70,6 +70,7 @@ export async function PATCH(
                 fileUrl,
                 name_id,
                 description_id,
+                currency: body.currency,
             }
         });
 

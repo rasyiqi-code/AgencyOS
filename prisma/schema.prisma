@@ -428,6 +428,7 @@ model Product {
   interval     String?   // month, year (if subscription)
   image        String?
   fileUrl      String?   // Link to download the product
+  currency     String    @default("USD")
 }
 
 model License {

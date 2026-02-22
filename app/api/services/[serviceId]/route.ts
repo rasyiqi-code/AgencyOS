@@ -55,6 +55,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         const featuresRaw = formData.get("features")?.toString() || "";
         const featuresIdRaw = formData.get("features_id")?.toString() || "";
         const imageFile = formData.get("image") as File;
+        const imageUrlInput = formData.get("image_url")?.toString();
         const slugInput = formData.get("slug")?.toString();
 
         // Validation
@@ -91,6 +92,8 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             } catch (storageError) {
                 console.error("Storage upload failed during update:", storageError);
             }
+        } else if (imageUrlInput) {
+            data.image = imageUrlInput;
         }
 
         // Creem Sync Logic

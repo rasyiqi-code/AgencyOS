@@ -2,8 +2,9 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { X, Image as ImageIcon, AlertCircle, RefreshCw, Loader2 } from "lucide-react";
+import { X, Image as ImageIcon, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { MediaLibraryPicker } from "@/components/admin/shared/media-library-picker";
 
 interface ProductImageUploadProps {
     value?: string;
@@ -70,9 +71,20 @@ export function ProductImageUpload({ value, onChange, onRemove }: ProductImageUp
     };
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-2">
             <div className="flex items-center justify-between">
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Product Image</label>
+                <div className="flex items-center gap-3">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Product Image</label>
+                    <div className="h-3 w-px bg-white/10" />
+                    <MediaLibraryPicker
+                        onSelect={(url) => {
+                            setPreview(url);
+                            setHasError(false);
+                            onChange(url);
+                        }}
+                        prefix="products/"
+                    />
+                </div>
                 {preview && (
                     <button
                         type="button"
@@ -94,7 +106,7 @@ export function ProductImageUpload({ value, onChange, onRemove }: ProductImageUp
                     }
                     ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
-                style={{ aspectRatio: '16/9' }}
+                style={{ aspectRatio: '16 / 9' }}
                 onClick={() => !isUploading && inputRef.current?.click()}
             >
                 {preview && !hasError ? (
@@ -109,29 +121,24 @@ export function ProductImageUpload({ value, onChange, onRemove }: ProductImageUp
                         />
                         {isUploading && (
                             <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                                <Loader2 className="w-6 h-6 text-brand-yellow animate-spin" />
+                                <Loader2 className="w-8 h-8 text-brand-yellow animate-spin" />
                             </div>
                         )}
                     </>
                 ) : hasError ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <div className="w-12 h-12 rounded-3xl bg-red-500/10 flex items-center justify-center mb-3 border border-red-500/20">
-                            <AlertCircle className="w-5 h-5 text-red-400" />
+                        <div className="w-14 h-14 rounded-3xl bg-red-500/10 flex items-center justify-center mb-3 border border-red-500/20">
+                            <AlertCircle className="w-6 h-6 text-red-400" />
                         </div>
-                        <p className="text-[11px] font-black text-red-400 uppercase tracking-tight">Upload Failed</p>
-                        <p className="text-[9px] text-zinc-500 mt-1 mb-3 font-medium uppercase tracking-widest">Check Storage Settings</p>
-                        <div className="px-3 py-1.5 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-zinc-300 flex items-center gap-2 border border-white/5 group-hover:border-white/10 transition-colors">
-                            <RefreshCw className="w-3 h-3" />
-                            Click to retry
-                        </div>
+                        <p className="text-sm font-black text-red-400 uppercase tracking-tight">Sync Failed</p>
                     </div>
                 ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                        <div className="w-12 h-12 rounded-3xl bg-white/5 flex items-center justify-center mb-3 border border-white/5 group-hover:border-brand-yellow/20 transition-all">
-                            <ImageIcon className="w-5 h-5 text-zinc-500 group-hover:text-brand-yellow transition-colors" />
+                        <div className="w-14 h-14 rounded-[1.5rem] bg-white/5 flex items-center justify-center mb-3 border border-white/10 group-hover:border-brand-yellow/30 transition-all shadow-2xl">
+                            <ImageIcon className="w-7 h-7 text-zinc-500 group-hover:text-brand-yellow transition-colors" />
                         </div>
-                        <p className="text-[11px] font-black text-zinc-300 uppercase tracking-tight">Post visuals here</p>
-                        <p className="text-[9px] text-zinc-600 mt-1 font-bold uppercase tracking-widest leading-none">Recommended for R2 storage</p>
+                        <p className="text-sm font-black text-zinc-300 uppercase tracking-widest leading-none">Post visuals here</p>
+                        <p className="text-[10px] text-zinc-600 mt-2 font-bold uppercase tracking-widest opacity-60">High Resolution Recommended</p>
                     </div>
                 )}
 

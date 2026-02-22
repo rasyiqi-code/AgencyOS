@@ -88,17 +88,34 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Pr
     }
 }
 
-export async function uploadFile(file: File, path: string): Promise<string> {
+export async function uploadFile(
+    fileOrBuffer: File | Buffer | Uint8Array,
+    path: string,
+    contentType?: string
+): Promise<string> {
     const { client, bucketName } = await getClient();
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+
+    let buffer: Buffer | Uint8Array;
+    let finalContentType = contentType;
+
+    if (fileOrBuffer instanceof File) {
+        const arrayBuffer = await fileOrBuffer.arrayBuffer();
+        buffer = Buffer.from(arrayBuffer);
+        if (!finalContentType) finalContentType = fileOrBuffer.type;
+    } else {
+        buffer = fileOrBuffer;
+    }
+
+    if (!finalContentType) {
+        finalContentType = 'application/octet-stream';
+    }
 
     return withRetry(async () => {
         await client.send(new PutObjectCommand({
             Bucket: bucketName,
             Key: path,
             Body: buffer,
-            ContentType: file.type,
+            ContentType: finalContentType,
         }));
 
         const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
