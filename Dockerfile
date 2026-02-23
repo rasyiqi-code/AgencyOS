@@ -73,7 +73,7 @@ RUN bun install --production
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 # Install Prisma CLI globally for runtime migrations (db push)
-RUN bun add -g prisma@7.4.0
+RUN bun add -g prisma@7.4.1
 
 # Ensure permissions for nextjs user
 RUN chown -R nextjs:nodejs /app/node_modules

@@ -465,6 +465,7 @@ CREATE TABLE "Product" (
     "interval" TEXT,
     "image" TEXT,
     "fileUrl" TEXT,
+    "currency" TEXT NOT NULL DEFAULT 'USD',
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );

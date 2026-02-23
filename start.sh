@@ -5,15 +5,10 @@ set -e
 # echo "Generating Prisma Client..."
 # bunx prisma generate
 
-# Baseline: Tandai migrasi init sebagai sudah diterapkan
-# (karena database production sudah punya tabel dari db push sebelumnya).
-# Perintah ini aman dijalankan berulang — jika sudah di-resolve, akan diabaikan.
-echo "Resolving baseline migration..."
-bunx prisma migrate resolve --applied 0_init 2>/dev/null || true
-
-# Jalankan migrasi yang belum diterapkan (production-safe)
-echo "Running database migrations..."
-bunx prisma migrate deploy
+# Sinkronisasi database menggunakan db push (lebih rapi untuk 1 file schema)
+# Ini akan menjaga data tetap ada selama tidak ada perubahan yang menghapus kolom/tabel.
+echo "Pushing database schema..."
+bunx prisma db push --skip-generate
 
 # Start the application
 echo "Starting application..."
