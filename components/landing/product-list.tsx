@@ -171,7 +171,7 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
 
             <div className="flex flex-col h-full">
                 {/* Visual Block */}
-                <Link href={`/services/${service.slug}`} className="relative overflow-hidden shrink-0 aspect-square block">
+                <Link href={`/services/${service.slug}`} className="relative overflow-hidden shrink-0 aspect-[16/9] block">
                     {service.image ? (
                         <Image
                             src={service.image}
