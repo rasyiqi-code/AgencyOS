@@ -6,7 +6,7 @@ import { googleAI } from '@genkit-ai/googleai';
  * Fetch the active key and model from DB dynamically.
  */
 export const ai = genkit({
-    plugins: [googleAI()], // Rely on GOOGLE_GENAI_API_KEY set at runtime
+    plugins: [googleAI({ apiKey: false })], // Expect apiKey at call time
 });
 
 /**

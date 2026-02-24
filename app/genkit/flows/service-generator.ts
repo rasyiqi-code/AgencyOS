@@ -18,11 +18,9 @@ export const serviceGeneratorFlow = ai.defineFlow(
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
 
-        // Set dynamic API key for this request execution
-        process.env.GOOGLE_GENAI_API_KEY = apiKey;
-
         const { output } = await ai.generate({
             model: `googleai/${model}`,
+            config: { apiKey },
             prompt: `
             You are an expert product manager and copywriter for a software development agency.
             Your task is to generate a comprehensive service offering based on a rough description.

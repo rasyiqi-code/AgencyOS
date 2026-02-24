@@ -27,15 +27,13 @@ export const estimateFlow = ai.defineFlow(
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
 
-        // Set dynamic API key for this request execution
-        process.env.GOOGLE_GENAI_API_KEY = apiKey;
-
         // Fetch Dynamic Pricing Config
         const pricing = await pricingService.getConfig();
         const { baseRate, multipliers } = pricing;
 
         const { output } = await ai.generate({
             model: `googleai/${model}`,
+            config: { apiKey },
             prompt: `
             You are an expert software estimator.
             Analyze this project requirement and generate a detailed cost estimate.

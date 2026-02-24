@@ -68,11 +68,9 @@ export const supportFlow = ai.defineFlow(
             content: [{ text: m.content }],
         }));
 
-        // Set dynamic API key for this request execution
-        process.env.GOOGLE_GENAI_API_KEY = apiKey;
-
         const { stream } = await ai.generateStream({
             model: `googleai/${model}`,
+            config: { apiKey },
             messages: [
                 { role: 'system', content: [{ text: systemPrompt }] },
                 ...historyMessages,

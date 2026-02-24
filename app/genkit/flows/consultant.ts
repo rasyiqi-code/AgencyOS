@@ -83,11 +83,9 @@ export const consultantFlow = ai.defineFlow(
             historyMessages.shift();
         }
 
-        // Set dynamic API key for this request execution
-        process.env.GOOGLE_GENAI_API_KEY = apiKey;
-
         const { stream } = await ai.generateStream({
             model: `googleai/${model}`,
+            config: { apiKey },
             messages: [
                 { role: 'system', content: [{ text: systemPrompt }] },
                 ...historyMessages,
