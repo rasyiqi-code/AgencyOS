@@ -20,27 +20,27 @@
     },
     "Hero": {
         "statusBadge": "Partner Strategis",
-        "title1": "We Build",
+        "title1": "Butuh",
         "forYour": "untuk",
         "typing": {
             "build": [
-                "Web",
-                "App",
-                "SaaS",
-                "Systems",
-                "Products",
-                "Platforms",
-                "Solutions",
-                "Growth",
-                "Presence"
+                "Web?",
+                "Aplikasi?",
+                "SaaS?",
+                "Sistem?",
+                "Produk?",
+                "Platform?",
+                "Solusi?",
+                "Growth?",
+                "Presence?"
             ],
             "audience": [
-                "Bisnis",
-                "Organisasi",
-                "Individual"
+                "Bisnismu",
+                "Organisasimu",
+                "Dirimu Sendiri"
             ]
         },
-        "description": "Dari infrastruktur SaaS hingga <white>aset digital siap pakai</white>. {brand} membangun ekosistem teknologi yang skalabel, cepat, dan teroptimasi untuk pertumbuhan bisnis Anda.",
+        "description": "Dari situs yang sederhana hingga <white>skala enterprise</white>. {brand} membangun ekosistem teknologi yang skalabel, cepat, dan teroptimasi untuk pertumbuhan bisnis Anda.",
         "launchDashboard": "Dapatkan Quote",
         "viewServices": "Solusi Bisnis",
         "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL"
