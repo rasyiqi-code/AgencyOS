@@ -77,7 +77,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             <Sparkles className="w-2 md:w-3 h-2 md:h-3" />
                                             Premium Service
                                         </div>
-                                        <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-tight break-words max-w-sm md:max-w-xl">
+                                        <h1 className="text-xl md:text-2xl lg:text-4xl font-black text-brand-yellow tracking-tighter leading-tight break-words max-w-sm md:max-w-xl">
                                             {displayTitle}
                                         </h1>
                                     </div>
@@ -86,7 +86,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                         <div className="flex flex-col">
                                             <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</span>
                                             <div className="flex items-baseline gap-1.5 md:gap-2">
-                                                <div className="text-2xl md:text-6xl font-black text-white tracking-tighter">
+                                                <div className="text-xl md:text-4xl font-black text-brand-yellow tracking-tighter">
                                                     <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                                                 </div>
                                                 <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-widest">
@@ -107,7 +107,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                 {/* Right Content: Visual & CTA */}
                                 <div className="w-[200px] md:w-[320px] lg:w-[380px] shrink-0 space-y-3 md:space-y-4">
                                     {service.image ? (
-                                        <div className="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
+                                        <div className="relative aspect-video rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
                                             <Image
                                                 src={service.image}
                                                 alt={displayTitle}
@@ -118,7 +118,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
                                     ) : (
-                                        <div className="aspect-square rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
+                                        <div className="aspect-video rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
                                             <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-zinc-800" />
                                         </div>
                                     )}
