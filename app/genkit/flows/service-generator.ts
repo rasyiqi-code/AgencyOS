@@ -16,24 +16,33 @@ export const serviceGeneratorFlow = ai.defineFlow(
         }),
     },
     async (prompt) => {
-        const { apiKey, model } = await getActiveAIConfig();
+        let { apiKey, model } = await getActiveAIConfig();
 
         // Set dynamic API key for this request execution
         process.env.GOOGLE_GENAI_API_KEY = apiKey;
 
+        console.log(`Executing serviceGeneratorFlow with model: ${model}`);
+
         // Step 1: Market Research with Grounding
         // We do this separately because grounding doesn't support JSON output mode yet
-        const { text: marketResearch } = await ai.generate({
-            model: `googleai/${model}`,
-            config: {
-                googleSearchRetrieval: true,
-            },
-            prompt: `
-            Perform a quick market research to find the latest pricing for agency services related to: "${prompt}".
-            Find typical rates for small, medium, and large agencies in 2024-2025.
-            Focus on USD prices.
-            `
-        });
+        let marketResearch = "No specific market research data available (Grounding skipped or failed).";
+
+        try {
+            const researchResult = await ai.generate({
+                model: `googleai/${model}`,
+                config: {
+                    googleSearchRetrieval: true,
+                },
+                prompt: `
+                Perform a quick market research to find the latest pricing for agency services related to: "${prompt}".
+                Find typical rates for small, medium, and large agencies in 2024-2025.
+                Focus on USD prices.
+                `
+            });
+            marketResearch = researchResult.text;
+        } catch (error: any) {
+            console.warn("Market Research Grounding failed. Continuing with internal knowledge.", error?.message);
+        }
 
         // Step 2: Structured Generation
         const { output } = await ai.generate({
