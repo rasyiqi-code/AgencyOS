@@ -18,18 +18,10 @@ export async function POST(req: NextRequest) {
 
         const result = await serviceGeneratorFlow(description);
         return NextResponse.json({ success: true, data: result });
-    } catch (error: any) {
-        console.error("Service Generation Error Detail:", {
-            message: error.message,
-            stack: error.stack,
-            cause: error.cause
-        });
+    } catch (error) {
+        console.error("Service Generation Error:", error);
         return NextResponse.json(
-            {
-                success: false,
-                error: "Failed to generate service content",
-                debug: process.env.NODE_ENV === 'development' ? error.message : undefined
-            },
+            { success: false, error: "Failed to generate service content" },
             { status: 500 }
         );
     }
