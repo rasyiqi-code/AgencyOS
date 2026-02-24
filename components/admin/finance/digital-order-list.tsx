@@ -13,7 +13,10 @@ import {
     ChevronRight,
     Calendar,
     DollarSign,
-    ExternalLink
+    ExternalLink,
+    XCircle,
+    Layers,
+    ShieldCheck
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,7 +31,7 @@ import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { formatPaymentMethod } from "@/lib/shared/utils";
 import { confirmDigitalOrder, cancelDigitalOrder } from "@/app/actions/digital-orders";
-import { XCircle } from "lucide-react";
+
 
 export interface DigitalOrderWithRelations {
     id: string;
@@ -116,37 +119,42 @@ export function DigitalOrderList({ orders }: DigitalOrderListProps) {
                     <div className="flex items-center bg-zinc-900/50 rounded-full p-1 border border-white/5 w-full md:w-auto overflow-x-auto no-scrollbar">
                         <FilterButton
                             label="All"
+                            icon={<Layers className="w-3.5 h-3.5" />}
                             active={statusFilter === 'ALL'}
                             count={getCount('ALL')}
                             onClick={() => handleFilterChange('ALL')}
                         />
                         <FilterButton
                             label="Paid"
+                            icon={<CheckCircle2 className="w-3.5 h-3.5" />}
                             active={statusFilter === 'PAID'}
                             count={getCount('PAID')}
                             onClick={() => handleFilterChange('PAID')}
-                            color="text-emerald-500"
+                            color="text-emerald-400"
                         />
                         <FilterButton
                             label="Pending"
+                            icon={<Clock className="w-3.5 h-3.5" />}
                             active={statusFilter === 'PENDING'}
                             count={getCount('PENDING')}
                             onClick={() => handleFilterChange('PENDING')}
-                            color="text-amber-500"
+                            color="text-amber-400"
                         />
                         <FilterButton
                             label="Verify"
+                            icon={<ShieldCheck className="w-3.5 h-3.5" />}
                             active={statusFilter === 'WAITING_VERIFICATION'}
                             count={getCount('WAITING_VERIFICATION')}
                             onClick={() => handleFilterChange('WAITING_VERIFICATION')}
-                            color="text-blue-500"
+                            color="text-blue-400"
                         />
                         <FilterButton
                             label="Cancelled"
+                            icon={<XCircle className="w-3.5 h-3.5" />}
                             active={statusFilter === 'CANCELLED'}
                             count={getCount('CANCELLED')}
                             onClick={() => handleFilterChange('CANCELLED')}
-                            color="text-red-500"
+                            color="text-red-400"
                         />
                     </div>
                 </div>
@@ -228,7 +236,7 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
 
                         <div className="flex flex-col min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-1">
-                                <h4 className="font-bold text-white truncate text-sm md:text-base leading-none max-w-[140px] md:max-w-none">
+                                <h4 className="font-bold text-white truncate text-sm md:text-base leading-none w-full">
                                     {order.product.name}
                                 </h4>
                                 <span className="text-zinc-700 hidden md:inline">/</span>
@@ -431,7 +439,7 @@ function CancelOrderButton({ orderId }: { orderId: string }) {
     );
 }
 
-function FilterButton({ label, active, onClick, count, color }: { label: string, active: boolean, onClick: () => void, count: number, color?: string }) {
+function FilterButton({ label, icon, active, onClick, count, color }: { label: string, icon: React.ReactNode, active: boolean, onClick: () => void, count: number, color?: string }) {
     return (
         <button
             onClick={onClick}
@@ -440,7 +448,10 @@ function FilterButton({ label, active, onClick, count, color }: { label: string,
                 ${active ? 'bg-zinc-800 text-white shadow-md ring-1 ring-white/10' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'}
             `}
         >
-            <span className={active && color ? color : ''}>{label}</span>
+            <div className={`shrink-0 ${active && color ? color : ''}`}>
+                {icon}
+            </div>
+            <span className="hidden md:inline">{label}</span>
             <span className={`px-1.5 py-0.5 rounded-full bg-zinc-950 text-[9px] md:text-[10px] min-w-[18px] text-center ${active ? 'text-white' : 'text-zinc-600'}`}>
                 {count}
             </span>

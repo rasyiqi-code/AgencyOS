@@ -424,10 +424,10 @@
                 "cancelled": "CANCELLED"
             },
             "DigitalOrders": {
-                "title": "Digital Product Transactions",
-                "description": "Monitor all transactions for digital products like plugins, templates, and other assets.",
-                "noOrders": "No digital product transactions found.",
-                "searchPlaceholder": "Search buyers, email, or products..."
+                "title": "Digital Orders",
+                "description": "Monitor and manage your digital product sales.",
+                "noOrders": "No orders found.",
+                "searchPlaceholder": "Order ID, email, or product..."
             }
         },
         "Marketing": {

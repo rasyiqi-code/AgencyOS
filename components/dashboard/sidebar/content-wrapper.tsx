@@ -17,7 +17,7 @@ export function SidebarContentWrapper({ children }: { children: React.ReactNode 
     return (
         <div
             className={cn(
-                "flex flex-col sm:gap-4 transition-all duration-300 ease-in-out min-h-screen",
+                "flex flex-col sm:gap-4 transition-all duration-300 ease-in-out min-h-screen min-w-0 overflow-hidden",
                 collapsed ? "sm:pl-14" : "sm:pl-64"
             )}
         >

@@ -495,10 +495,10 @@
                 "cancelled": "DIBATALKAN"
             },
             "DigitalOrders": {
-                "title": "Produk Digital",
-                "description": "Pantau semua transaksi untuk produk digital",
-                "noOrders": "Tidak ada transaksi produk digital ditemukan.",
-                "searchPlaceholder": "Cari pembeli, email, atau produk..."
+                "title": "Pesanan Digital",
+                "description": "Pantau dan kelola penjualan produk digital Anda.",
+                "noOrders": "Pesanan tidak ditemukan.",
+                "searchPlaceholder": "ID Pesanan, email, atau produk..."
             }
         },
         "Marketing": {
