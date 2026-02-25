@@ -32,13 +32,27 @@ export default async function proxy(request: NextRequest) {
 
     // 3. Logic for paths WITHOUT locale (e.g. /, /squad)
     if (!pathnameHasLocale) {
-        // Detect preference: Cookie > Geo > Default
+        // Detect preference: Cookie > Browser > Geo > Default
         const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
+        const acceptLanguage = request.headers.get('accept-language');
         const geoCountry = (request as NextRequest & { geo?: { country?: string } }).geo?.country || request.headers.get('x-vercel-ip-country');
 
         let targetLocale = 'en';
+        let browserLocale = null;
+
+        if (acceptLanguage) {
+            // Extract code: en-US,en;q=0.9,id;q=0.8
+            const preferredLocales = acceptLanguage
+                .split(',')
+                .map(lang => lang.split(';')[0].trim().slice(0, 2).toLowerCase());
+
+            browserLocale = preferredLocales.find(lang => locales.includes(lang));
+        }
+
         if (cookieLocale && locales.includes(cookieLocale)) {
             targetLocale = cookieLocale;
+        } else if (browserLocale) {
+            targetLocale = browserLocale;
         } else if (geoCountry === 'ID') {
             targetLocale = 'id';
         }
