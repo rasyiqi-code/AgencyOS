@@ -36,6 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
     const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "Senior Software House";
     const favicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
+    const seoOgImage = settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
 
     const homepageTitle = `${agencyName} | ${seoTagline}`;
 
@@ -55,6 +56,13 @@ export async function generateMetadata(): Promise<Metadata> {
         title: homepageTitle,
         description: seoDesc,
         type: 'website',
+        images: seoOgImage ? [seoOgImage] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: homepageTitle,
+        description: seoDesc,
+        images: seoOgImage ? [seoOgImage] : undefined,
       }
     };
   } catch (error) {

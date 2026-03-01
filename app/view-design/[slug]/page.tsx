@@ -4,8 +4,13 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ViewDesignClient } from "./view-design-client";
 
+import { ResolvingMetadata } from "next";
+
 // Hardcoded SEO as requested: Preview {Nama Porto} | {AGENCY_NAME}
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata(
+    { params }: { params: Promise<{ slug: string }> },
+    parent: ResolvingMetadata
+): Promise<Metadata> {
     const { slug } = await params;
     const portfolios = await getPortfolios();
     const portfolio = portfolios.find((p) => p.slug === slug);
@@ -17,9 +22,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     }
 
+    const previousImages = (await parent).openGraph?.images || [];
+    const title = `Preview ${portfolio.title}`;
+    const description = `Live preview of ${portfolio.title} by ${agencyName}.`;
+
     return {
-        title: `Preview ${portfolio.title}`,
-        description: `Live preview of ${portfolio.title} by ${agencyName}.`,
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: previousImages,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: previousImages,
+        }
     };
 }
 

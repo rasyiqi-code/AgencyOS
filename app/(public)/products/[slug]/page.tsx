@@ -15,7 +15,12 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata(props: PageProps): Promise<Metadata> {
+import { ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+    props: PageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
     const params = await props.params;
     const product = await getDigitalProductBySlug(params.slug);
     const locale = await getLocale();
@@ -31,13 +36,16 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     // Clean description for meta tag (remove HTML tags if any, though digital products usually use plain text)
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
 
+    const previousImages = (await parent).openGraph?.images || [];
+    const ogImages = product.image ? [{ url: product.image }] : previousImages;
+
     return {
         title: name,
         description: cleanDescription,
         openGraph: {
             title: name,
             description: cleanDescription,
-            images: product.image ? [{ url: product.image }] : undefined,
+            images: ogImages,
         },
         alternates: {
             canonical: `${process.env.NEXT_PUBLIC_APP_URL}/products/${params.slug}`

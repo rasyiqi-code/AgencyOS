@@ -6,7 +6,12 @@ import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
+import { ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+    _props: { params: Promise<Record<string, string>> },
+    parent: ResolvingMetadata
+): Promise<Metadata> {
     const locale = await getLocale();
     const pageSeo = await prisma.pageSeo.findUnique({
         where: { path: "/contact" }
@@ -14,20 +19,48 @@ export async function generateMetadata(): Promise<Metadata> {
 
     const isId = locale === 'id';
 
+    const previousImages = (await parent).openGraph?.images || [];
+    const ogImages = pageSeo?.ogImage ? [{ url: pageSeo.ogImage }] : previousImages;
+
     if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
         return {
             title: "Contact Us",
-            description: "Get in touch with us for your software development needs."
+            description: "Get in touch with us for your software development needs.",
+            openGraph: {
+                title: "Contact Us",
+                description: "Get in touch with us for your software development needs.",
+                images: ogImages,
+                type: "website",
+            },
+            twitter: {
+                card: "summary_large_image",
+                title: "Contact Us",
+                description: "Get in touch with us for your software development needs.",
+                images: ogImages,
+            }
         };
     }
 
+    const title = (isId ? pageSeo.title_id : null) || pageSeo.title || "Contact Us";
+    const description = (isId ? pageSeo.description_id : null) || pageSeo.description || undefined;
+    const keywords = ((isId ? pageSeo.keywords_id : null) || pageSeo.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean);
+
     return {
-        title: (isId ? pageSeo.title_id : null) || pageSeo.title || "Contact Us",
-        description: (isId ? pageSeo.description_id : null) || pageSeo.description || undefined,
-        keywords: ((isId ? pageSeo.keywords_id : null) || pageSeo.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean),
-        openGraph: pageSeo.ogImage ? {
-            images: [{ url: pageSeo.ogImage }]
-        } : undefined,
+        title,
+        description,
+        keywords,
+        openGraph: {
+            title,
+            description,
+            images: ogImages,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ogImages,
+        }
     };
 }
 

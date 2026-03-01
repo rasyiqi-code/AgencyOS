@@ -11,7 +11,12 @@ import { Metadata } from "next";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { TextTypewriter } from "@/components/ui/text-typewriter";
 
-export async function generateMetadata(): Promise<Metadata> {
+import { ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+    _props: { params: Promise<Record<string, string>> },
+    parent: ResolvingMetadata
+): Promise<Metadata> {
     const pageSeo = await prisma.pageSeo.findUnique({
         where: { path: "/portfolio" }
     });
@@ -19,12 +24,24 @@ export async function generateMetadata(): Promise<Metadata> {
     const title = pageSeo?.title || `Portofolio`;
     const description = pageSeo?.description || "Our premium portfolio leveraging high-performance web design.";
 
+    const previousImages = (await parent).openGraph?.images || [];
+    const ogImages = pageSeo?.ogImage ? [pageSeo.ogImage] : previousImages;
+
     return {
         title,
         description,
         keywords: pageSeo?.keywords ? pageSeo.keywords.split(",") : undefined,
         openGraph: {
-            images: pageSeo?.ogImage ? [pageSeo.ogImage] : undefined,
+            title,
+            description,
+            images: ogImages,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ogImages,
         }
     };
 }

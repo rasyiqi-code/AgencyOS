@@ -20,7 +20,12 @@ import { prisma } from "@/lib/config/db";
 import { Metadata } from "next";
 import { SystemSetting } from "@prisma/client";
 
-export async function generateMetadata(): Promise<Metadata> {
+import { ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+  _props: { params: Promise<Record<string, string>> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const pageSeo = await prisma.pageSeo.findUnique({
     where: {
       path: "/",
@@ -31,9 +36,27 @@ export async function generateMetadata(): Promise<Metadata> {
     return {};
   }
 
+  const title = pageSeo.title || undefined;
+  const description = pageSeo.description || undefined;
+
+  const previousImages = (await parent).openGraph?.images || [];
+  const ogImages = pageSeo.ogImage ? [pageSeo.ogImage] : previousImages;
+
   return {
-    title: pageSeo.title || undefined,
-    description: pageSeo.description || undefined,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: ogImages,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImages,
+    }
   };
 }
 
