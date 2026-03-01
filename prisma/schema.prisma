@@ -288,6 +288,7 @@ model PageSeo {
   description String?
   description_id String?
   ogImage     String?
+  ogImage_id  String?
   keywords    String?
   keywords_id String?
   createdAt   DateTime @default(now())

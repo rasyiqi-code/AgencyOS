@@ -28,7 +28,8 @@ export async function generateMetadata(
     const keywords = ((isId ? pageSeo?.keywords_id : null) || pageSeo?.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean);
 
     const previousImages = (await parent).openGraph?.images || [];
-    const ogImages = pageSeo?.ogImage ? [pageSeo.ogImage] : previousImages;
+    const ogImage = (isId ? pageSeo?.ogImage_id : null) || pageSeo?.ogImage;
+    const ogImages = ogImage ? [ogImage] : previousImages;
 
     return {
         title,

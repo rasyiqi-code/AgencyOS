@@ -22,6 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: route === "" ? 1 : 0.8,
+        languages: {
+            id: `${baseUrl}${route}`,
+            en: `${baseUrl}${route}`,
+        },
     }));
 
     // 2. Dynamic Routes: Portfolios

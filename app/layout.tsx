@@ -36,17 +36,29 @@ export async function generateMetadata(): Promise<Metadata> {
     const seoTagline = (isId ? settings.find(s => s.key === "SEO_TITLE_ID")?.value : null) || settings.find(s => s.key === "SEO_TITLE")?.value || "Digital Solutions";
     const seoDesc = (isId ? settings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || settings.find(s => s.key === "SEO_DESCRIPTION")?.value || "Senior Software House";
     const favicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
-    const seoOgImage = settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
+    const seoOgImage = (isId ? settings.find(s => s.key === "SEO_OG_IMAGE_ID")?.value : null) || settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
+    const googleVerification = settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value;
 
     const homepageTitle = `${agencyName} | ${seoTagline}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return {
-      metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+      metadataBase: new URL(baseUrl),
       title: {
         default: homepageTitle,
         template: `%s | ${agencyName}`,
       },
       description: seoDesc,
+      verification: {
+        google: googleVerification,
+      },
+      alternates: {
+        canonical: baseUrl,
+        languages: {
+          'en-US': baseUrl,
+          'id-ID': baseUrl,
+        },
+      },
       icons: {
         icon: favicon || '/favicon.ico',
         shortcut: favicon || '/favicon.ico',
@@ -55,8 +67,18 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: homepageTitle,
         description: seoDesc,
+        url: baseUrl,
+        siteName: agencyName,
+        locale: isId ? 'id_ID' : 'en_US',
         type: 'website',
-        images: seoOgImage ? [seoOgImage] : undefined,
+        images: seoOgImage ? [
+          {
+            url: seoOgImage,
+            width: 1200,
+            height: 630,
+            alt: homepageTitle,
+          }
+        ] : undefined,
       },
       twitter: {
         card: "summary_large_image",

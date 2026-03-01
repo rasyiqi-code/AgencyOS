@@ -19,6 +19,7 @@ import { Organization } from "schema-dts";
 import { prisma } from "@/lib/config/db";
 import { Metadata } from "next";
 import { SystemSetting } from "@prisma/client";
+import { getLocale } from "next-intl/server";
 
 import { ResolvingMetadata } from "next";
 
@@ -26,6 +27,7 @@ export async function generateMetadata(
   _props: { params: Promise<Record<string, string>> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const locale = await getLocale();
   const pageSeo = await prisma.pageSeo.findUnique({
     where: {
       path: "/",
@@ -36,11 +38,13 @@ export async function generateMetadata(
     return {};
   }
 
-  const title = pageSeo.title || undefined;
-  const description = pageSeo.description || undefined;
+  const isId = locale === 'id';
+  const title = (isId ? pageSeo.title_id : null) || pageSeo.title || undefined;
+  const description = (isId ? pageSeo.description_id : null) || pageSeo.description || undefined;
 
   const previousImages = (await parent).openGraph?.images || [];
-  const ogImages = pageSeo.ogImage ? [pageSeo.ogImage] : previousImages;
+  const ogImage = (isId ? pageSeo.ogImage_id : null) || pageSeo.ogImage;
+  const ogImages = ogImage ? [ogImage] : previousImages;
 
   return {
     title,

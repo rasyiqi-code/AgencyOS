@@ -1,5 +1,5 @@
 import { getPortfolios, getPortfolioHtml } from "@/lib/portfolios/actions";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { PortfolioGrid } from "@/components/public/portfolio-grid";
 import { Badge } from "@/components/ui/badge";
 import { getSettingValue } from "@/lib/server/settings";
@@ -17,20 +17,25 @@ export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
+    const locale = await getLocale();
     const pageSeo = await prisma.pageSeo.findUnique({
         where: { path: "/portfolio" }
     });
 
-    const title = pageSeo?.title || `Portofolio`;
-    const description = pageSeo?.description || "Our premium portfolio leveraging high-performance web design.";
+    const isId = locale === 'id';
+
+    const title = (isId ? pageSeo?.title_id : null) || pageSeo?.title || "Portfolio";
+    const description = (isId ? pageSeo?.description_id : null) || pageSeo?.description || "Our premium portfolio leveraging high-performance web design.";
+    const keywords = ((isId ? pageSeo?.keywords_id : null) || pageSeo?.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean);
 
     const previousImages = (await parent).openGraph?.images || [];
-    const ogImages = pageSeo?.ogImage ? [pageSeo.ogImage] : previousImages;
+    const ogImage = (isId ? pageSeo?.ogImage_id : null) || pageSeo?.ogImage;
+    const ogImages = ogImage ? [ogImage] : previousImages;
 
     return {
         title,
         description,
-        keywords: pageSeo?.keywords ? pageSeo.keywords.split(",") : undefined,
+        keywords: keywords.length > 0 ? keywords : undefined,
         openGraph: {
             title,
             description,
