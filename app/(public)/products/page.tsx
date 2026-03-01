@@ -62,6 +62,35 @@ export default async function ProductsPage() {
 
     return (
         <section className="relative min-h-screen">
+            {/* Product ItemList JSON-LD Schema for AI/GEO */}
+            {products.length > 0 && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "ItemList",
+                            itemListElement: products.map((product: { name: string; slug: string; description: string | null; price: number; image: string | null; type: string }, index: number) => ({
+                                "@type": "ListItem",
+                                position: index + 1,
+                                item: {
+                                    "@type": "Product",
+                                    name: product.name,
+                                    description: product.description || undefined,
+                                    image: product.image || undefined,
+                                    url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${product.slug}`,
+                                    offers: {
+                                        "@type": "Offer",
+                                        price: product.price,
+                                        priceCurrency: "USD",
+                                        availability: "https://schema.org/InStock",
+                                    },
+                                },
+                            })),
+                        }),
+                    }}
+                />
+            )}
             {/* Hero Section — mengikuti style Services page */}
             <div className="relative z-10 text-center pt-20 pb-12 px-4">
                 <Link

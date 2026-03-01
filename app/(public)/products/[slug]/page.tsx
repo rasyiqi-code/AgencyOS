@@ -96,6 +96,28 @@ export default async function ProductDetailPage(props: PageProps) {
 
     return (
         <section className="relative min-h-screen">
+            {/* Individual Product JSON-LD Schema for AI/GEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Product",
+                        name: name,
+                        description: description || undefined,
+                        image: product.image || undefined,
+                        url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${product.slug}`,
+                        category: product.type,
+                        offers: {
+                            "@type": "Offer",
+                            price: product.price,
+                            priceCurrency: product.currency || "USD",
+                            availability: "https://schema.org/InStock",
+                            priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
+                        },
+                    }),
+                }}
+            />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-24 md:pb-20">
 
                 {/* ===== MAIN LAYOUT: 2 Kolom ===== */}

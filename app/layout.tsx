@@ -93,6 +93,23 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="dark">
       <head>
+        {/* WebSite JSON-LD Schema for AI & Search Engine Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Crediblemark",
+              url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/products?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
         {/* Meta tags PWA */}
         <meta name="theme-color" content="#FFB800" />
         <meta name="mobile-web-app-capable" content="yes" />

@@ -75,6 +75,31 @@ export default async function PublicServicesPage() {
 
     return (
         <div className="flex flex-col">
+            {/* ProfessionalService JSON-LD Schema for AI/GEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ItemList",
+                        itemListElement: services.map((s: Service, index: number) => ({
+                            "@type": "ListItem",
+                            position: index + 1,
+                            item: {
+                                "@type": "Service",
+                                name: s.title,
+                                description: s.description,
+                                offers: {
+                                    "@type": "Offer",
+                                    price: s.price,
+                                    priceCurrency: s.currency,
+                                },
+                                url: `${process.env.NEXT_PUBLIC_APP_URL}/services${s.slug ? `#${s.slug}` : ""}`,
+                            },
+                        })),
+                    }),
+                }}
+            />
             <ServicesClientWrapper
                 services={processedServices}
             />
