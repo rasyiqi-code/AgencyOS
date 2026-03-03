@@ -15,13 +15,15 @@ interface HeroContentProps {
 
 export function HeroContent({ agencyName }: HeroContentProps) {
     const t = useTranslations("Hero");
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.3
+                staggerChildren: isMobile ? 0.05 : 0.15,
+                delayChildren: isMobile ? 0.1 : 0.3
             }
         }
     };
@@ -125,7 +127,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     className="flex whitespace-nowrap gap-8"
                                     animate={{ x: "-50%" }}
                                     transition={{
-                                        repeat: Infinity,
+                                        repeat: isMobile ? 0 : Infinity,
                                         ease: "linear",
                                         duration: 20,
                                     }}
@@ -147,7 +149,11 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+                            transition={{
+                                duration: isMobile ? 0.8 : 1.2,
+                                delay: isMobile ? 0.2 : 0.6,
+                                ease: "easeOut"
+                            }}
                             className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[700px] z-10 flex items-end justify-center"
                         >
 
@@ -169,31 +175,39 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     <BadgeContent name="Anthropic" model="Claude" icon="/brands/claude.png" />
                                 </BadgeWrapper>
 
-                                <BadgeWrapper delay={1.5} duration={8} bottom="45%" className="right-2 lg:-right-2">
-                                    <BadgeContent name="DeepSeek" model="DeepSeek-V3" icon="/brands/deepseek.png" />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={1.5} duration={8} bottom="45%" className="hidden lg:flex right-2 lg:-right-2">
+                                        <BadgeContent name="DeepSeek" model="DeepSeek-V3" icon="/brands/deepseek.png" />
+                                    </BadgeWrapper>
+                                )}
 
                                 <BadgeWrapper delay={2.0} duration={9} top="25%" className="right-2 lg:-right-3">
                                     <BadgeContent name="Meta" model="Llama" icon="/brands/llama.png" />
                                 </BadgeWrapper>
 
-                                <BadgeWrapper delay={1.7} duration={6.5} bottom="25%" className="right-2 lg:-right-1">
-                                    <BadgeContent name="Mistral" model="Mistral" icon="/brands/mistral.png" />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={1.7} duration={6.5} bottom="25%" className="right-2 lg:-right-1">
+                                        <BadgeContent name="Mistral" model="Mistral" icon="/brands/mistral.png" />
+                                    </BadgeWrapper>
+                                )}
 
                                 <BadgeWrapper delay={2.2} duration={11} top="65%" className="left-2 lg:-left-4">
                                     <BadgeContent name="Perplexity" model="Sonar" icon="/brands/perplexityai.png" />
                                 </BadgeWrapper>
 
-                                <BadgeWrapper delay={1.9} duration={9.5} bottom="10%" className="left-2 lg:-left-1.5">
-                                    <BadgeContent name="HuggingFace" model="Open Source" icon="/brands/huggingface.png" />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={1.9} duration={9.5} bottom="10%" className="hidden lg:flex left-2 lg:-left-1.5">
+                                        <BadgeContent name="HuggingFace" model="Open Source" icon="/brands/huggingface.png" />
+                                    </BadgeWrapper>
+                                )}
 
-                                <BadgeWrapper delay={2.4} duration={12} top="5%" className="lg:hidden left-2">
-                                    <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={2.4} duration={12} top="5%" className="lg:hidden left-2 opacity-50">
+                                        <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
+                                    </BadgeWrapper>
+                                )}
 
-                                <BadgeWrapper delay={2.4} duration={12} top="2%" left="50%" transformX="-50%" className="hidden lg:block">
+                                <BadgeWrapper delay={2.4} duration={12} top="2%" left="50%" transformX="-50%" className="hidden lg:flex">
                                     <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
                                 </BadgeWrapper>
 
@@ -201,23 +215,27 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     <BadgeContent name="Groq" model="LPU Engine" icon="/brands/groq.svg" isSvg />
                                 </BadgeWrapper>
 
-                                <BadgeWrapper delay={2.3} duration={7.5} top="30%" className="right-2 lg:-right-1">
-                                    <BadgeContent name="Cohere" model="Command R" icon="/brands/cohere.png" />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={2.3} duration={7.5} top="30%" className="hidden lg:flex right-2 lg:-right-1">
+                                        <BadgeContent name="Cohere" model="Command R" icon="/brands/cohere.png" />
+                                    </BadgeWrapper>
+                                )}
 
-                                <BadgeWrapper delay={2.5} duration={10.5} bottom="60%" className="left-2 lg:-left-2">
-                                    <BadgeContent name="Aya" model="Multilingual" icon="/brands/aya.svg" isSvg />
-                                </BadgeWrapper>
+                                {!isMobile && (
+                                    <BadgeWrapper delay={2.5} duration={10.5} bottom="60%" className="hidden lg:flex left-2 lg:-left-2">
+                                        <BadgeContent name="Aya" model="Multilingual" icon="/brands/aya.svg" isSvg />
+                                    </BadgeWrapper>
+                                )}
                             </div>
 
                             <Image
                                 src="/expert.png"
-                                alt="Expert Model"
+                                alt="Expert Digital Agency Model"
                                 fill
-                                unoptimized
                                 className="object-contain object-bottom relative z-10"
                                 priority
-                                sizes="(max-width: 1024px) 100vw, 800px"
+                                fetchPriority="high"
+                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 800px"
                             />
 
                             {/* Accent Tagline Layer (Top) */}
@@ -230,7 +248,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     transition={{
                                         y: { duration: 1.2, delay: 1.2 },
-                                        opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                                        opacity: { duration: 2, repeat: isMobile ? 0 : Infinity, ease: "easeInOut" }
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none"
                                 >
@@ -244,7 +262,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     transition={{
                                         y: { duration: 1.2, delay: 1.4 },
-                                        opacity: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }
+                                        opacity: { duration: 2.5, repeat: isMobile ? 0 : Infinity, ease: "easeInOut", delay: 0.2 }
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none mt-2"
                                 >
@@ -276,14 +294,14 @@ function BadgeWrapper({ children, delay, duration, top, left, right, bottom, cla
             animate={{
                 opacity: 1,
                 scale: 1,
-                y: [0, -10, 0]
+                y: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : [0, -10, 0]
             }}
             transition={{
                 opacity: { duration: 0.5, delay },
                 scale: { duration: 0.5, delay },
                 y: {
-                    duration,
-                    repeat: Infinity,
+                    duration: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : duration,
+                    repeat: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : Infinity,
                     ease: "easeInOut"
                 }
             }}
@@ -293,7 +311,7 @@ function BadgeWrapper({ children, delay, duration, top, left, right, bottom, cla
                 translateX: transformX,
                 zIndex: 0
             }}
-            className={`bg-white/5 backdrop-blur-xl border border-white/10 p-1.5 rounded-lg shadow-2xl group/badge transition-transform hover:scale-110 ${className}`}
+            className={`bg-white/5 md:backdrop-blur-xl border border-white/10 p-1.5 rounded-lg shadow-2xl group/badge transition-transform hover:scale-110 ${className}`}
         >
             {children}
         </motion.div>
@@ -310,9 +328,9 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
         <div className="flex items-center gap-1.5">
             <div className={`w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800' : ''}`}>
                 {isSvg ? (
-                    <Image src={icon} alt={name} width={12} height={12} className="object-contain" />
+                    <Image src={icon} alt={`${name} model icon`} width={12} height={12} className="object-contain" style={{ height: 'auto' }} />
                 ) : (
-                    <Image src={icon} alt={name} fill unoptimized className="object-cover" sizes="20px" />
+                    <Image src={icon} alt={`${name} model logo`} fill className="object-cover" sizes="20px" />
                 )}
             </div>
             <div>
@@ -324,6 +342,8 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
 }
 
 const BusinessVisuals = () => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
     return (
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
             {/* Growth Graph SVG */}
@@ -340,7 +360,7 @@ const BusinessVisuals = () => {
                     </linearGradient>
                 </defs>
 
-                {/* Grid Lines */}
+                {/* Grid Lines - Optimized on Mobile (Static) */}
                 {[...Array(6)].map((_, i) => (
                     <line
                         key={`grid-v-${i}`}
@@ -364,7 +384,7 @@ const BusinessVisuals = () => {
                     />
                 ))}
 
-                {/* Growth Path */}
+                {/* Growth Path - Slower/Disabled on Mobile to save CPU if needed, but pathLength is lightweight */}
                 <motion.path
                     d="M 0 350 Q 150 330 300 250 T 600 150 T 800 50"
                     fill="none"
@@ -372,10 +392,16 @@ const BusinessVisuals = () => {
                     strokeWidth="4"
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatType: "loop", repeatDelay: 1 }}
+                    transition={{
+                        duration: isMobile ? 5 : 3,
+                        ease: "easeInOut",
+                        repeat: isMobile ? 0 : Infinity, // Don't repeat on mobile to save power
+                        repeatType: "loop",
+                        repeatDelay: 1
+                    }}
                 />
 
-                {/* Secondary Path */}
+                {/* Secondary Path - Optimized on Mobile (Static) */}
                 <motion.path
                     d="M 0 380 Q 200 360 400 320 T 700 220 T 800 180"
                     fill="none"
@@ -383,18 +409,27 @@ const BusinessVisuals = () => {
                     strokeWidth="2"
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+                    transition={{
+                        duration: isMobile ? 6 : 4,
+                        ease: "easeInOut",
+                        repeat: isMobile ? 0 : Infinity,
+                        repeatType: "loop"
+                    }}
                 />
             </svg>
 
-            {/* Floating Business Icons/Nodes */}
+            {/* Floating Business Icons/Nodes - Optimized on Mobile (Static) */}
             <div className="absolute inset-0">
                 <motion.div
                     animate={{
-                        y: [-10, 10, -10],
-                        opacity: [0.1, 0.3, 0.1]
+                        y: isMobile ? 0 : [-10, 10, -10],
+                        opacity: isMobile ? 0.15 : [0.1, 0.3, 0.1]
                     }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                        duration: 4,
+                        repeat: isMobile ? 0 : Infinity,
+                        ease: "easeInOut"
+                    }}
                     className="absolute top-[20%] left-[10%] text-brand-yellow"
                 >
                     <TrendingUp size={48} strokeWidth={1} />
@@ -402,10 +437,14 @@ const BusinessVisuals = () => {
 
                 <motion.div
                     animate={{
-                        y: [10, -10, 10],
-                        opacity: [0.05, 0.2, 0.05]
+                        y: isMobile ? 0 : [10, -10, 10],
+                        opacity: isMobile ? 0.1 : [0.05, 0.2, 0.05]
                     }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                        duration: 6,
+                        repeat: isMobile ? 0 : Infinity,
+                        ease: "easeInOut"
+                    }}
                     className="absolute bottom-[30%] right-[15%] text-brand-yellow"
                 >
                     <BarChart3 size={64} strokeWidth={1} />
@@ -413,10 +452,14 @@ const BusinessVisuals = () => {
 
                 <motion.div
                     animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.1, 0.2, 0.1]
+                        scale: isMobile ? 1 : [1, 1.1, 1],
+                        opacity: isMobile ? 0.15 : [0.1, 0.2, 0.1]
                     }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                        duration: 5,
+                        repeat: isMobile ? 0 : Infinity,
+                        ease: "easeInOut"
+                    }}
                     className="absolute top-[40%] right-[10%] text-brand-yellow"
                 >
                     <Activity size={40} strokeWidth={1} />

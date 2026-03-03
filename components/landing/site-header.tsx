@@ -74,12 +74,11 @@ export async function SiteHeader() {
                                 logoUrl ? (
                                     <Image
                                         src={logoUrl!}
-                                        alt="Logo"
+                                        alt={`${agencyName} Logo`}
                                         width={120}
                                         height={32}
                                         className="h-8 w-auto object-contain hover:scale-105 transition-transform"
                                         priority
-                                        unoptimized
                                         style={{ width: 'auto' }}
                                     />
                                 ) : (

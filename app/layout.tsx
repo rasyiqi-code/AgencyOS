@@ -21,7 +21,11 @@ import { ReferralTracker } from "@/components/marketing/referral-tracker";
 import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 
 
@@ -53,16 +57,16 @@ export async function generateMetadata(): Promise<Metadata> {
         google: googleVerification,
       },
       alternates: {
-        canonical: baseUrl,
+        canonical: locale === 'en' ? `${baseUrl}/en` : `${baseUrl}/id`,
         languages: {
-          'en-US': baseUrl,
-          'id-ID': baseUrl,
+          'en': `${baseUrl}/en`,
+          'id': `${baseUrl}/id`,
         },
       },
       icons: {
-        icon: favicon || '/favicon.ico',
-        shortcut: favicon || '/favicon.ico',
-        apple: favicon || '/apple-touch-icon.png',
+        icon: favicon || '/logo.png',
+        shortcut: favicon || '/logo.png',
+        apple: favicon || '/logo.png',
       },
       openGraph: {
         title: homepageTitle,
@@ -138,8 +142,16 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        {/* Preconnect to critical origins */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        {midtransConfig.clientKey && (
+          <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />
+        )}
       </head>
-      <body className={cn(inter.className, "bg-black text-white")}>
+      <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative")}>
         <NextTopLoader
           color="#FFB800"
           initialPosition={0.08}
@@ -155,24 +167,24 @@ export default async function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${gaId}');
+                gtag('config', '${gaId}', { 'send_page_view': true });
               `}
             </Script>
           </>
         )}
         {midtransConfig.clientKey && (
-          <script
+          <Script
             src={snapUrl}
             data-client-key={midtransConfig.clientKey}
-            defer
-          ></script>
+            strategy="lazyOnload"
+          />
         )}
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>

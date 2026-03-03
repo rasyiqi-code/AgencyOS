@@ -5,6 +5,7 @@ import { useReactToPrint } from "react-to-print";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
+import { useCurrency } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, Coupon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 
@@ -34,6 +35,7 @@ export function CheckoutContent({
     context?: "SERVICE" | "CALCULATOR";
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
+    const { currency, rate } = useCurrency();
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
     const handlePrint = useReactToPrint({
@@ -84,6 +86,8 @@ export function CheckoutContent({
                         estimate={estimate}
                         user={user}
                         agencySettings={agencySettings}
+                        currency={currency}
+                        exchangeRate={rate || activeRate}
                     />
                 </div>
             </div>

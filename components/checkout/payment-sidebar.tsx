@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, Coupon } from "@/lib/shared/types";
-import { PriceDisplay } from "@/components/providers/currency-provider";
+import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
 import { useTranslations } from "next-intl";
 
@@ -25,8 +25,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
 
-    // const { currency, formattedRate } = useCurrency(); // If implemented globally
-    const currency = activeRate && activeRate > 0 ? "IDR" : "USD"; // Simplistic fallback
+    const { currency, rate } = useCurrency();
 
     // Explicitly cast or access currency 
     const activeCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
@@ -182,8 +181,8 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
 
                     <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
                         <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
-                        {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && activeRate && (
-                            `(rate: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(activeRate)})`
+                        {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && (rate || activeRate) && (
+                            `(rate: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rate || activeRate || 0)})`
                         )}
                     </p>
                 </div>

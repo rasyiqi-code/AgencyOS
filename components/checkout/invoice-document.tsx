@@ -45,11 +45,12 @@ export function InvoiceDocument({
     const formattedDate = format(today, "MMM dd, yyyy");
 
     const formatCurrency = (val: number) => {
-        return new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', {
+        const isIDR = currency === 'IDR';
+        return new Intl.NumberFormat(isIDR ? 'id-ID' : 'en-US', {
             style: 'currency',
             currency: currency,
-            maximumFractionDigits: currency === 'IDR' ? 0 : 2
-        }).format(val * (currency === 'IDR' && exchangeRate ? exchangeRate : 1));
+            maximumFractionDigits: isIDR ? 0 : 2
+        }).format(val * (isIDR && (exchangeRate || 1) ? (exchangeRate || 1) : 1));
     };
 
     return (

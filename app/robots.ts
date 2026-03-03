@@ -6,13 +6,11 @@ export default function robots(): MetadataRoute.Robots {
 
     return {
         rules: [
-            // Default rule for all crawlers
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/admin/', '/dashboard/', '/api/'],
+                disallow: ['/admin', '/dashboard', '/api'],
             },
-            // Explicit allow for AI search engine crawlers (GEO)
             { userAgent: 'GPTBot', allow: '/' },
             { userAgent: 'ChatGPT-User', allow: '/' },
             { userAgent: 'Google-Extended', allow: '/' },
