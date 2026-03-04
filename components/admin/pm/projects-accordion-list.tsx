@@ -53,9 +53,9 @@ function ProjectAccordionItem({ project }: { project: ExtendedProject }) {
             >
                 {/* Status indicator dot */}
                 <div className={`w-2 h-2 rounded-full shrink-0 ${status === 'done' ? 'bg-emerald-500' :
-                        status === 'dev' ? 'bg-blue-500' :
-                            status === 'review' ? 'bg-purple-400' :
-                                'bg-zinc-600'
+                    status === 'dev' ? 'bg-blue-500' :
+                        status === 'review' ? 'bg-purple-400' :
+                            'bg-zinc-600'
                     }`} />
 
                 {/* Project title + client name */}
@@ -78,11 +78,11 @@ function ProjectAccordionItem({ project }: { project: ExtendedProject }) {
                 </div>
 
                 {/* Meta: Status badge + Date */}
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex flex-col items-end gap-1 shrink-0">
                     <Badge variant={config.variant} className={`py-0 px-2 h-5 text-[10px] ${config.color}`}>
                         {config.label}
                     </Badge>
-                    <span className="text-zinc-600 text-[11px] hidden sm:inline-block whitespace-nowrap">
+                    <span className="text-zinc-600 text-[11px] whitespace-nowrap">
                         {date.toLocaleDateString()}
                     </span>
                 </div>
