@@ -9,7 +9,6 @@ interface TypingHeroTitleProps {
 }
 
 export function TypingHeroTitle({ prefix, targets }: TypingHeroTitleProps) {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
     const initialTarget = targets && targets.length > 0 ? targets[0] : "Solutions";
     const [targetIndex, setTargetIndex] = useState(0);
     const [displayText, setDisplayText] = useState(initialTarget);

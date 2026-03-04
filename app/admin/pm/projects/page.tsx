@@ -5,8 +5,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { Badge } from "@/components/ui/badge";
 import { Layers } from "lucide-react";
 import { Prisma } from "@prisma/client";
-import { ProjectsDataTable } from "@/components/admin/pm/projects-data-table";
-import { columns } from "@/components/admin/pm/project-columns";
+import { ProjectAccordionList } from "@/components/admin/pm/projects-accordion-list";
 import { type ExtendedProject } from "@/lib/shared/types";
 import type { EnrichedProjectInput } from "@/types/payment";
 
@@ -146,8 +145,7 @@ export default async function AdminProjectsPage({
                 {/* Search and Filter moved to DashboardHeader */}
             </div>
 
-            <ProjectsDataTable
-                columns={columns}
+            <ProjectAccordionList
                 data={enrichedProjects as unknown as ExtendedProject[]}
                 totalCount={totalProjects}
                 query={query}

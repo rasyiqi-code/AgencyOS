@@ -132,20 +132,23 @@ export const columns: ColumnDef<ExtendedProject>[] = [
         size: calculateHeaderSize("Status"),
         minSize: 20,
         cell: ({ row }) => {
-            const status = String(row.getValue("status"));
+            const status = String(row.getValue("status")).toLowerCase();
+
+            const statusMap: Record<string, { label: string, color: string }> = {
+                'queue': { label: 'Queue', color: 'text-zinc-400 border-zinc-700' },
+                'dev': { label: 'In Development', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+                'review': { label: 'In Review', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+                'done': { label: 'Done', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+            };
+
+            const config = statusMap[status] || { label: status.toUpperCase(), color: 'text-zinc-400 border-zinc-700' };
+
             return (
                 <Badge
-                    variant={
-                        status === 'done' ? 'default' :
-                            status === 'dev' ? 'secondary' :
-                                'outline'
-                    }
-                    className={`py-0 px-2 h-5 text-[10px] ${status === 'done' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                        status === 'dev' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
-                            'text-zinc-400 border-zinc-700'
-                        }`}
+                    variant={status === 'done' ? 'default' : status === 'dev' ? 'secondary' : 'outline'}
+                    className={`py-0 px-2 h-5 text-[10px] ${config.color}`}
                 >
-                    {status.toUpperCase()}
+                    {config.label}
                 </Badge>
             );
         },
