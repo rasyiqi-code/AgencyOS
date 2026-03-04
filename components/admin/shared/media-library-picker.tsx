@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger
@@ -68,6 +69,9 @@ export function MediaLibraryPicker({ onSelect, prefix = "services/" }: { onSelec
                         <ImageIcon className="w-5 h-5 text-brand-yellow" />
                         Media Library / {prefix}
                     </DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Browse and select images from the media library
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="relative mb-4">

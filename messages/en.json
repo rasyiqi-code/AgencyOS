@@ -674,7 +674,7 @@
         "placeholder": "I want to build a marketplace for vintage watches where users can bid...",
         "poweredBy": "Powered by Gemini",
         "generate": "Generate Estimate",
-        "analyzing": "Analyzing your idea...",
+        "analyzing": "Analyzing",
         "success": "Estimate generated!",
         "error": "Failed to generate estimate. Please try again.",
         "loading": "Loading...",

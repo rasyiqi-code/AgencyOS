@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -213,6 +213,9 @@ export function AssetsManager() {
                     <DialogContent className="bg-zinc-950 border-white/5 text-white sm:max-w-4xl p-0 overflow-hidden">
                         <DialogHeader className="p-4 border-b border-white/5 bg-zinc-900/50">
                             <DialogTitle className="text-sm font-black uppercase tracking-widest">{editingAsset ? "Edit Aset" : "Aset Marketing Baru"}</DialogTitle>
+                            <DialogDescription className="sr-only">
+                                {editingAsset ? "Form untuk mengedit aset marketing" : "Form untuk membuat aset marketing baru"}
+                            </DialogDescription>
                         </DialogHeader>
                         <div className="grid md:grid-cols-2 gap-0 overflow-y-auto max-h-[80vh]">
                             <div className="p-4 md:p-6 space-y-4 border-b md:border-b-0 md:border-r border-white/5">

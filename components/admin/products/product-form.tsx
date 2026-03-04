@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Product } from "@prisma/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
     Popover,
     PopoverContent,
@@ -196,7 +196,7 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
                             <Plus className={`w-5 h-5 ${product ? 'rotate-45' : ''} text-brand-yellow`} />
                             {product ? "Update Product" : "Launch New Product"}
                         </DialogTitle>
-                        <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">Product Management System</p>
+                        <DialogDescription className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">Product Management System</DialogDescription>
                     </div>
 
                     <Popover>

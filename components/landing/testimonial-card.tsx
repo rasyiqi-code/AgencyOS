@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
@@ -68,7 +69,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                             </Avatar>
                             <div>
                                 <DialogTitle className="text-white font-semibold text-base">{review.name}</DialogTitle>
-                                <div className="text-zinc-500 text-sm">{review.role}</div>
+                                <DialogDescription className="text-zinc-500 text-sm">{review.role}</DialogDescription>
                             </div>
                         </div>
                     </div>

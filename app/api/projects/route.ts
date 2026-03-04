@@ -42,8 +42,10 @@ export async function GET(request: Request) {
         }
     }
 
+    // Hanya tampilkan proyek yang sudah PAID (konsisten dengan page.tsx)
     const where = {
         AND: [
+            { paymentStatus: "PAID" },
             query ? {
                 OR: [
                     { title: { contains: query, mode: 'insensitive' as const } },

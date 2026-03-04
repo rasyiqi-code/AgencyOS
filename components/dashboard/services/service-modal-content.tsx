@@ -6,6 +6,7 @@ import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import {
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogClose,
@@ -74,6 +75,9 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                         <DialogTitle className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">
                             {displayTitle}
                         </DialogTitle>
+                        <DialogDescription className="sr-only">
+                            {displayDescription.replace(/<[^>]*>?/gm, '').slice(0, 150) || 'Service details'}
+                        </DialogDescription>
                         <div className="flex items-baseline gap-3">
                             <span className="text-3xl font-black text-brand-yellow">
                                 <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />

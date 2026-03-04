@@ -62,8 +62,11 @@ export default async function AdminProjectsPage({
     }
 
     // Construct Prisma Where Input
+    // Hanya tampilkan proyek yang sudah PAID (sudah bayar)
     const where: Prisma.ProjectWhereInput = {
         AND: [
+            // Filter utama: hanya proyek yang sudah dibayar
+            { paymentStatus: "PAID" },
             query ? {
                 OR: [
                     { title: { contains: query, mode: 'insensitive' } },

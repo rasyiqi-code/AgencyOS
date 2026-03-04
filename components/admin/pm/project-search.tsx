@@ -27,6 +27,8 @@ export function ProjectSearch() {
         <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
             <Input
+                id="project-search"
+                name="project-search"
                 placeholder="Search projects..."
                 className="pl-9 bg-zinc-900/50 border-white/10 text-white placeholder:text-zinc-500 focus-visible:ring-zinc-700"
                 onChange={(e) => handleSearch(e.target.value)}
