@@ -49,6 +49,10 @@ RUN useradd --system --uid 1001 --gid nodejs --no-create-home --shell /bin/false
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 
+# Copy data directory (portfolios, payment-info, etc.)
+# Initial seed — will be overridden by volume mount in docker-compose
+COPY --from=builder --chown=nextjs:nodejs /app/data ./data
+
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
