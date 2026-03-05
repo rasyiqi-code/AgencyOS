@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, RefreshCcw, Paperclip, FileText, X, Loader2, MessageSquare, Plus, ChevronLeft } from "lucide-react";
+import { Send, Paperclip, FileText, X, Loader2, MessageSquare, Plus, ChevronLeft, Search, User } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 // import { sendMessage } from "@/app/actions/support";
 import { useCurrency } from "@/components/providers/currency-provider";
@@ -35,6 +35,7 @@ export default function InboxPage() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
+    const [search, setSearch] = useState("");
 
     const { locale } = useCurrency();
     const isId = locale === 'id-ID' || locale === 'id';
@@ -49,6 +50,12 @@ export default function InboxPage() {
             console.error(e);
         }
     };
+
+    const filteredTickets = tickets.filter(t =>
+    (t.name?.toLowerCase().includes(search.toLowerCase()) ||
+        t.email?.toLowerCase().includes(search.toLowerCase()) ||
+        t.id.includes(search))
+    );
 
     const fetchMessages = async (id: string) => {
         try {
@@ -163,18 +170,21 @@ export default function InboxPage() {
                 "w-full md:w-80 border-r border-white/5 bg-zinc-900/30 flex flex-col transition-all duration-300",
                 selectedTicketId ? "hidden md:flex" : "flex"
             )}>
-                <div className="p-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/50">
-                    <div>
-                        <h2 className="font-semibold text-white tracking-tight">{isId ? 'Chat' : 'Chat'}</h2>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium mt-0.5">{isId ? 'Obrolan Langsung' : 'Live Chat'}</p>
-                    </div>
-                    <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" onClick={handleCreateNewChat} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8" title={isId ? "Buat Chat Baru" : "New Chat"}>
+                <div className="p-3 border-b border-white/5 space-y-3 bg-zinc-950/20">
+                    <div className="flex justify-between items-center px-1">
+                        <h3 className="font-semibold text-white text-sm">Live Chats</h3>
+                        <Button variant="ghost" size="icon" onClick={handleCreateNewChat} className="text-zinc-500 hover:text-white hover:bg-white/5 h-7 w-7" title={isId ? "Buat Chat Baru" : "New Chat"}>
                             <Plus className="h-3.5 w-3.5" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={fetchTickets} className="text-zinc-400 hover:text-white hover:bg-white/5 h-8 w-8">
-                            <RefreshCcw className="h-3.5 w-3.5" />
-                        </Button>
+                    </div>
+                    <div className="relative">
+                        <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-zinc-500" />
+                        <Input
+                            placeholder={isId ? "Cari pesan..." : "Search client..."}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="pl-8 bg-zinc-900/50 border-white/5 h-8 text-xs focus-visible:ring-1 focus-visible:ring-white/10"
+                        />
                     </div>
                 </div>
                 <ScrollArea className="flex-1">
@@ -184,37 +194,45 @@ export default function InboxPage() {
                                 {isId ? 'Tidak ada tiket aktif.' : 'No active tickets.'}
                             </div>
                         )}
-                        {tickets.map(ticket => (
+                        {filteredTickets.map(ticket => (
                             <button
                                 key={ticket.id}
                                 onClick={() => setSelectedTicketId(ticket.id)}
                                 className={cn(
-                                    "flex flex-col gap-1.5 p-3 text-left transition-all rounded-lg border border-transparent mx-1",
-                                    selectedTicketId === ticket.id
-                                        ? "bg-blue-500/10 border-blue-500/20 shadow-sm"
-                                        : "hover:bg-white/5 hover:border-white/5"
+                                    "w-full text-left px-3 py-2.5 flex gap-2.5 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 group relative",
+                                    selectedTicketId === ticket.id ? "bg-white/5" : ""
                                 )}
                             >
-                                <div className="flex justify-between items-start">
-                                    <span className={cn(
-                                        "font-medium text-sm truncate max-w-[120px]",
-                                        selectedTicketId === ticket.id ? "text-blue-100" : "text-zinc-300"
+                                <Avatar className="h-8 w-8 border border-white/10">
+                                    <AvatarFallback className={cn(
+                                        "bg-zinc-800 text-zinc-300 group-hover:text-white transition-colors text-[10px]",
+                                        selectedTicketId === ticket.id ? "bg-zinc-700 text-white" : ""
                                     )}>
-                                        {ticket.name || ticket.email || (isId ? "Chat #" : "Chat #") + ticket.id.substring(0, 4)}
-                                    </span>
-                                    <span className={cn(
-                                        "text-[10px]",
-                                        selectedTicketId === ticket.id ? "text-blue-400" : "text-zinc-600"
+                                        <User className="h-3.5 w-3.5" />
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-start mb-0.5">
+                                        <span className={cn(
+                                            "font-medium text-xs truncate",
+                                            selectedTicketId === ticket.id ? "text-white" : "text-zinc-200"
+                                        )}>
+                                            {ticket.name || ticket.email || (isId ? "Chat #" : "Chat #") + ticket.id.substring(0, 4)}
+                                        </span>
+                                        <span className="text-[9px] text-zinc-600">
+                                            {new Date(ticket.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                    <p className={cn(
+                                        "text-[10px] truncate transition-colors",
+                                        selectedTicketId === ticket.id ? "text-zinc-300" : "text-zinc-500 group-hover:text-zinc-400"
                                     )}>
-                                        {new Date(ticket.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
+                                        {ticket.messages[ticket.messages.length - 1]?.content || (isId ? "Tidak ada catatan" : "No records")}
+                                    </p>
                                 </div>
-                                <p className={cn(
-                                    "text-xs line-clamp-1",
-                                    selectedTicketId === ticket.id ? "text-blue-200/60" : "text-zinc-500"
-                                )}>
-                                    {ticket.messages[0]?.content || (isId ? "Tidak ada catatan" : "No records")}
-                                </p>
+                                {selectedTicketId === ticket.id && (
+                                    <div className="absolute left-0 top-1.5 bottom-1.5 w-0.5 bg-blue-500 rounded-full" />
+                                )}
                             </button>
                         ))}
                     </div>

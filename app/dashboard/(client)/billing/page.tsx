@@ -18,7 +18,12 @@ export default async function ClientBillingPage() {
     const isId = locale === 'id-ID' || locale === 'id';
 
     const orders = await prisma.order.findMany({
-        where: { userId: user.id },
+        where: {
+            userId: user.id,
+            project: {
+                status: { notIn: ['draft', 'pending', 'pending_offer'] }
+            }
+        },
         orderBy: { createdAt: 'desc' },
         include: {
             project: {

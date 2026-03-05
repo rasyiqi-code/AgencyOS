@@ -119,7 +119,10 @@ export default async function CheckoutPage(props: PageProps) {
             ...estimate,
             screens: (estimate.screens as unknown) as ExtendedEstimate['screens'],
             apis: (estimate.apis as unknown) as ExtendedEstimate['apis'],
-            service: estimate.service
+            service: estimate.service ? {
+                ...estimate.service,
+                priceType: estimate.title.includes("Draft Quote") ? "STARTING_AT" : (estimate.service as Record<string, unknown>).priceType as string
+            } : null
         };
 
         const bonusesData = bonuses.map((b: Bonus) => ({

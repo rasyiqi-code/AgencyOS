@@ -22,14 +22,18 @@ export async function POST(req: NextRequest) {
         const service = await prisma.service.findUnique({ where: { id: serviceId } });
         if (!service) return NextResponse.json({ error: "Service not found" }, { status: 404 });
 
-        // Create Project Placeholder (Hidden until paid)
+        const isQuoteOnly = (service as Record<string, unknown>).priceType === "STARTING_AT";
+
+        // Create Project Placeholder
         const project = await prisma.project.create({
             data: {
                 userId: user.id,
                 clientName: user.displayName || user.primaryEmail || "Unnamed Client",
-                title: `Order: ${service.title}`,
-                description: `Purchase of ${service.title} (${service.interval})`,
-                status: 'payment_pending',
+                title: isQuoteOnly ? `Quote Request: ${service.title}` : `Order: ${service.title}`,
+                description: isQuoteOnly
+                    ? `Requesting a custom quote for ${service.title}`
+                    : `Purchase of ${service.title} (${service.interval})`,
+                status: isQuoteOnly ? 'draft' : 'payment_pending',
                 serviceId: service.id,
             }
         });
@@ -37,15 +41,15 @@ export async function POST(req: NextRequest) {
         // Create Invoice (Estimate)
         const estimate = await prisma.estimate.create({
             data: {
-                title: `Invoice for ${service.title}`,
-                prompt: "Productized Service Purchase",
-                summary: `Automated invoice for ${service.title}`,
+                title: isQuoteOnly ? `Draft Quote for ${service.title}` : `Invoice for ${service.title}`,
+                prompt: isQuoteOnly ? "Custom Quote Request" : "Productized Service Purchase",
+                summary: isQuoteOnly ? `Awaiting final pricing for ${service.title}` : `Automated invoice for ${service.title}`,
                 screens: [],
                 apis: [],
                 totalHours: 0,
                 totalCost: service.price,
                 complexity: service.interval === 'one_time' ? 'Fixed' : 'Subscription',
-                status: 'pending_payment',
+                status: isQuoteOnly ? 'draft' : 'pending_payment',
                 serviceId: service.id,
                 project: {
                     connect: { id: project.id }

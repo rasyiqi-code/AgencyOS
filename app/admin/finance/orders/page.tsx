@@ -11,72 +11,75 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminOrdersPage() {
     const t = await getTranslations("Admin.Finance");
-    const estimates = await prisma.estimate.findMany({
+
+    // Ambil data langsung dari ORDER sebagai sumber kebenaran utama
+    const orders = await prisma.order.findMany({
         orderBy: { createdAt: 'desc' },
         include: {
             project: {
                 include: {
-                    orders: {
-                        orderBy: { createdAt: 'desc' }
-                    }
+                    estimate: {
+                        include: {
+                            service: true
+                        }
+                    },
+                    service: true
                 }
             }
         }
     });
 
-    // const agencySetting = await prisma.systemSetting.findUnique({
-    //     where: { key: "AGENCY_NAME" }
-    // });
-    // const agencyName = agencySetting?.value || "Agency OS";
+    // 1. Initial Mapping dari Order
+    const financeData: FinanceData[] = orders.map(o => {
+        // Prisma includes project with estimate & service
+        const project = o.project;
+        const estimate = (project as Record<string, unknown>)?.estimate as Record<string, unknown> | null;
+        const service = ((project as Record<string, unknown>)?.service || estimate?.service) as Record<string, unknown> | null;
 
-    // 1. Initial Mapping
-    const financeData: FinanceData[] = estimates.map(e => {
-        const latestOrder = e.project?.orders?.[0] as {
-            type: string;
-            currency: string;
-            exchangeRate: number;
-            amount: number;
-            proofUrl: string | null;
-            paymentType: string | null;
-            paymentMetadata: Record<string, unknown> | null;
-        } | undefined;
         return {
-            ...e,
-            project: e.project ? {
-                title: e.project.title,
-                clientName: e.project.clientName,
-                userId: e.project.userId,
-                paymentStatus: e.project.paymentStatus,
-                paidAmount: e.project.paidAmount,
-                totalAmount: e.project.totalAmount,
-                // Access array of orders, taking the first one (most recent?) or relevant one
-                order: latestOrder ? {
-                    proofUrl: latestOrder.proofUrl,
-                    paymentType: latestOrder.type,
-                    paymentMethod: latestOrder.paymentType,
-                    paymentMetadata: latestOrder.paymentMetadata
-                } : null
+            id: o.id,
+            createdAt: o.createdAt,
+            status: o.status as FinanceData['status'],
+            title: (project?.title || (estimate?.title as string) || (service?.title as string) || "Untitled Transaction") as string,
+            totalCost: o.amount,
+            proofUrl: o.proofUrl || null,
+            service: service ? {
+                id: service.id as string,
+                title: service.title as string,
+                currency: (service.currency as string) || 'USD'
             } : null,
-            paymentType: latestOrder?.type || null,
-            paymentMethod: latestOrder?.paymentType || null,
-            paymentMetadata: latestOrder?.paymentMetadata || null,
-            currency: latestOrder?.currency || 'USD',
-            // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
-            // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR
-            isLegacyMismatched: latestOrder?.currency === 'IDR' && (latestOrder?.amount || 0) < 5000,
-            exchangeRate: latestOrder?.exchangeRate && latestOrder.exchangeRate !== 1 ? latestOrder.exchangeRate : undefined,
-            transactionAmount: latestOrder?.amount,
-            screens: e.screens as FinanceData['screens'],
-            apis: e.apis as FinanceData['apis']
-        };
+            project: project ? {
+                id: project.id,
+                title: project.title,
+                clientName: project.clientName,
+                userId: project.userId,
+                paymentStatus: project.paymentStatus,
+                paidAmount: project.paidAmount,
+                totalAmount: project.totalAmount,
+                order: {
+                    proofUrl: o.proofUrl,
+                    paymentType: o.type,
+                    paymentMethod: o.paymentType,
+                    paymentMetadata: (o.paymentMetadata as Record<string, unknown>) || null
+                }
+            } : null,
+            paymentType: o.type || null,
+            paymentMethod: o.paymentType || null,
+            paymentMetadata: (o.paymentMetadata as Record<string, unknown>) || null,
+            currency: o.currency || 'USD',
+            isLegacyMismatched: o.currency === 'IDR' && o.amount < 5000,
+            exchangeRate: o.exchangeRate && o.exchangeRate !== 1 ? o.exchangeRate : undefined,
+            transactionAmount: o.amount,
+            screens: (estimate?.screens || []) as FinanceData['screens'],
+            apis: (estimate?.apis || []) as FinanceData['apis'],
+            estimateId: estimate?.id || null
+        } as FinanceData;
     });
 
     // 2. Stack Auth User Resolution
-    // Collect specific IDs from project relations
+    // Collect specific IDs dari orders
     const uniqueUserIds = Array.from(new Set(
-        estimates
-            .map(e => e.project?.userId)
-            .filter(Boolean) as string[]
+        orders.map(o => o.userId).filter(Boolean) as string[]
     ));
 
     const stackUsers = await Promise.all(
@@ -94,7 +97,7 @@ export default async function AdminOrdersPage() {
     // 3. Enrich Data
     const enrichedData = financeData.map(item => {
         // If project exists and has userId but missing clientName, enrich it
-        if (item.project && item.project.userId && !item.project.clientName) {
+        if (item.project && item.project.userId && (item.project.clientName === "Client" || !item.project.clientName)) {
             const u = userMap.get(item.project.userId);
             if (u) {
                 return {
@@ -125,9 +128,9 @@ export default async function AdminOrdersPage() {
                         {t("title")}
                         <div className="relative p-2 rounded-xl bg-zinc-900 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
                             <ShoppingCart className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
-                            {estimates.length > 0 && (
+                            {orders.length > 0 && (
                                 <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white ring-2 ring-black">
-                                    {estimates.length}
+                                    {orders.length}
                                 </span>
                             )}
                         </div>

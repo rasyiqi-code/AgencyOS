@@ -65,6 +65,7 @@ export function SidebarSuperAdmin() {
             <SidebarSectionHeader>Operations</SidebarSectionHeader>
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
 
             <SidebarSectionHeader>CRM & Team</SidebarSectionHeader>
@@ -97,6 +98,7 @@ export function SidebarFinance() {
             <SidebarSectionHeader>{t("financeConsole")}</SidebarSectionHeader>
             <SidebarLink href="/admin/finance" icon={LayoutDashboard} label={t("dashboard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("invoices")} />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
         </>
     );

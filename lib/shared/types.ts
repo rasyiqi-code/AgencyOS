@@ -117,6 +117,7 @@ export interface ExtendedEstimate {
         features: unknown;
         image: string | null;
         interval: string;
+        priceType: string;
     } | null;
     project?: {
         id: string;

@@ -70,6 +70,16 @@ export async function BillingDashboardView() {
                         <p className="text-sm text-zinc-500">Monitor transactions for plugins, templates, and digital downloads.</p>
                     </div>
                 </Link>
+
+                <Link href="/admin/finance/quotes" className="group">
+                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-white group-hover:text-brand-yellow transition-colors">Penawaran Harga (Quotes)</h3>
+                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <p className="text-sm text-zinc-500">Review dan negosiasi penawaran harga dari calon klien atas layanan Anda.</p>
+                    </div>
+                </Link>
             </div>
         </div>
     );

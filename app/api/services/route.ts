@@ -103,6 +103,7 @@ export async function POST(req: NextRequest) {
                 description,
                 description_id,
                 price,
+                priceType: formData.get("priceType")?.toString() || "FIXED",
                 currency,
                 interval,
                 features,

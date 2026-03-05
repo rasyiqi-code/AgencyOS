@@ -50,6 +50,7 @@ export type FinanceData = {
     paymentMetadata?: Record<string, unknown> | null;
     screens: { title: string; description: string; hours: number }[];
     apis: { title: string; description: string; hours: number }[];
+    estimateId?: string | null;
 };
 
 export const financeColumns: ColumnDef<FinanceData>[] = [
@@ -200,23 +201,23 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
 
             const status = estimate.status;
             const isPaid = status === 'paid' || status === 'settled';
-            const isPending = status === 'pending_payment' || status === 'payment_pending';
+            const isPending = status === 'pending_payment' || status === 'payment_pending' || status === 'pending';
 
             return (
                 <div className="flex items-center justify-end gap-0">
                     {isPending && (
                         <div className="scale-75 origin-right">
-                            <ConfirmPaymentButton estimateId={estimate.id} />
+                            <ConfirmPaymentButton estimateId={estimate.estimateId || estimate.id} />
                         </div>
                     )}
                     {isPaid && (
                         <div className="scale-75 origin-right">
-                            <UnpaidButton estimateId={estimate.id} />
+                            <UnpaidButton estimateId={estimate.estimateId || estimate.id} />
                         </div>
                     )}
                     {status !== 'cancelled' && (
                         <div className="scale-75 origin-right">
-                            <CancelOrderButton estimateId={estimate.id} />
+                            <CancelOrderButton estimateId={estimate.estimateId || estimate.id} />
                         </div>
                     )}
                 </div>

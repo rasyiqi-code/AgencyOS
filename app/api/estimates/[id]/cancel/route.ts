@@ -13,35 +13,61 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const estimateId = params.id;
+    const targetId = params.id;
+    const isOrderId = targetId.startsWith('ORDER-');
 
     try {
-        const estimate = await prisma.estimate.findUnique({
+        let estimateId = isOrderId ? null : targetId;
+        let orderFromId = null;
+
+        // 1. Resolve the actual estimate and project
+        if (isOrderId) {
+            orderFromId = await prisma.order.findUnique({
+                where: { id: targetId },
+                include: {
+                    project: {
+                        include: {
+                            estimate: true,
+                            orders: true
+                        }
+                    }
+                }
+            });
+            estimateId = orderFromId?.project?.estimate?.id || null;
+        }
+
+        const estimate = estimateId ? await prisma.estimate.findUnique({
             where: { id: estimateId },
             include: {
                 project: {
                     include: { orders: true }
                 }
             }
-        });
+        }) : null;
 
-        if (!estimate) {
-            return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+        const project = estimate?.project || orderFromId?.project;
+
+        if (!project && !estimate) {
+            return NextResponse.json({ error: "Transaction/Invoice not found" }, { status: 404 });
         }
 
-        const updates: Prisma.PrismaPromise<unknown>[] = [
-            // 1. Update Estimate Status
-            prisma.estimate.update({
-                where: { id: estimateId },
-                data: { status: 'cancelled' }
-            })
-        ];
+        const updates: Prisma.PrismaPromise<unknown>[] = [];
+
+        // 1. Update Estimate Status
+        if (estimateId) {
+            updates.push(
+                prisma.estimate.update({
+                    where: { id: estimateId },
+                    data: { status: 'cancelled' }
+                })
+            );
+        }
 
         // 2. Update Project Status (if exists)
-        if (estimate.project) {
+        if (project) {
             updates.push(
                 prisma.project.update({
-                    where: { id: estimate.project.id },
+                    where: { id: project.id },
                     data: {
                         status: 'cancelled',
                         paymentStatus: 'UNPAID' // Reset payment status if cancelled
@@ -50,7 +76,8 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
             );
 
             // 3. Cancel associated pending/waiting orders
-            const pendingOrderIds = estimate.project.orders
+            const projectOrders = (project as Record<string, unknown>).orders as { id: string; status: string }[] || [];
+            const pendingOrderIds = projectOrders
                 .filter(o => o.status === 'pending' || o.status === 'waiting_verification')
                 .map(o => o.id);
 
@@ -67,15 +94,15 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         await prisma.$transaction(updates);
 
         // --- Notifications ---
-        if (estimate.project) {
+        if (project) {
             try {
-                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                const stackUser = await stackServerApp.getUser(project.userId);
                 if (stackUser && stackUser.primaryEmail) {
                     sendOrderCancelledEmail({
                         to: stackUser.primaryEmail,
                         customerName: stackUser.displayName || stackUser.primaryEmail.split('@')[0] || "Client",
-                        orderId: estimateId,
-                        productName: estimate.title
+                        orderId: targetId,
+                        productName: project.title || estimate?.title || "Service"
                     }).catch(err => console.error("Cancellation notification error:", err));
                 }
             } catch (err) {

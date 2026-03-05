@@ -11,6 +11,7 @@ export function DashboardSidebarNavigation() {
             <SidebarSectionHeader>{t("platform")}</SidebarSectionHeader>
             <SidebarLink href="/dashboard" icon={LayoutDashboard} label={t("dashboard")} />
             <SidebarLink href="/dashboard/missions" icon={Rocket} label={t("missions")} />
+            <SidebarLink href="/dashboard/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/dashboard/inbox" icon={Inbox} label={t("inbox")} />
             <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />
             <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />

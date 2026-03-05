@@ -50,6 +50,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         const description = formData.get("description")?.toString();
         const description_id = formData.get("description_id")?.toString();
         const priceRaw = formData.get("price")?.toString();
+        const priceType = formData.get("priceType")?.toString() || "FIXED";
         const currency = formData.get("currency")?.toString() || "USD";
         const interval = formData.get("interval")?.toString() || "one_time";
         const featuresRaw = formData.get("features")?.toString() || "";
@@ -78,6 +79,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             description,
             description_id,
             price,
+            priceType,
             currency,
             interval,
             features,

@@ -26,6 +26,7 @@ export interface ServiceData {
     description: string;
     description_id?: string | null;
     price: number;
+    priceType?: string;
     currency?: string;
     interval: string;
     features: string[];
@@ -330,6 +331,19 @@ export function EditServiceForm({ service, features, features_id }: { service: S
                                 <h3 className="text-sm font-semibold text-white">Pricing Model</h3>
                             </div>
                             <div className="p-6 space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Pricing Type</label>
+                                    <Select name="priceType" defaultValue={service.priceType || 'FIXED'}>
+                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="FIXED">Fixed Price (Beli Langsung)</SelectItem>
+                                            <SelectItem value="STARTING_AT">Starting At (Minta Penawaran)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Price</label>
                                     <div className="flex gap-2">

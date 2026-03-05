@@ -16,42 +16,67 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const estimateId = params.id;
+    const targetId = params.id;
+    const isOrderId = targetId.startsWith('ORDER-');
 
     try {
-        const estimate = await prisma.estimate.findUnique({
+        let estimateId = isOrderId ? null : targetId;
+        let orderFromId = null;
+
+        // 1. Resolve the actual estimate and project
+        if (isOrderId) {
+            orderFromId = await prisma.order.findUnique({
+                where: { id: targetId },
+                include: {
+                    project: {
+                        include: {
+                            estimate: true
+                        }
+                    }
+                }
+            });
+            estimateId = orderFromId?.project?.estimate?.id || null;
+        }
+
+        // Fetch estimate (existing logic but flexible)
+        const estimate = estimateId ? await prisma.estimate.findUnique({
             where: { id: estimateId },
             include: {
                 project: {
                     include: { orders: true }
                 }
             }
-        });
+        }) : null;
 
-        if (!estimate) {
-            return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+        // If no estimate and it was an order, try to work with project directly
+        const project = estimate?.project || orderFromId?.project;
+
+        if (!project && !estimate) {
+            return NextResponse.json({ error: "Transaction/Invoice not found" }, { status: 404 });
         }
 
-        // 1. Identify Pending/Waiting Orders
-        const pendingOrders = estimate.project?.orders?.filter(o =>
-            o.status === 'pending' || o.status === 'waiting_verification'
-        ) || [];
+        // 2. Identify Pending/Waiting Orders
+        // If we came from an order ID, that specific order is our target
+        const pendingOrders = isOrderId && orderFromId
+            ? [orderFromId]
+            : ((project as Record<string, unknown>)?.orders as { id: string; status: string; type: string; amount: number; currency: string; exchangeRate: number | null; paymentMetadata: unknown }[] || []).filter((o) =>
+                o.status === 'pending' || o.status === 'waiting_verification'
+            );
 
         // Default to FULL payment assumption if no specific order found
-        let paymentType = 'FULL';
-        let amountPaid = estimate.project?.totalAmount || 0;
+        let paymentType = isOrderId && orderFromId ? (orderFromId.type || 'FULL') : 'FULL';
+        let amountPaid = isOrderId && orderFromId ? orderFromId.amount : (project?.totalAmount || 0);
 
-        if (pendingOrders.length > 0) {
-            // Use the type of the pending order
+        if (!isOrderId && pendingOrders.length > 0) {
             const targetOrder = pendingOrders[0];
             paymentType = targetOrder.type;
-
-            // Normalize amountPaid to USD if it was processed in IDR
             const orderRate = targetOrder.exchangeRate || 1;
             amountPaid = targetOrder.currency === 'IDR' && targetOrder.amount > 5000
                 ? targetOrder.amount / orderRate
                 : targetOrder.amount;
         }
+
+        const totalAmount = project?.totalAmount || estimate?.totalCost || 0;
 
         // 2. Determine New Statuses
         let newProjectPaymentStatus = 'PAID';
@@ -66,7 +91,7 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
 
         // 3. Mark Estimate
         // Only mark estimate as 'paid' if it's full or repayment completion
-        if (paymentType !== 'DP') {
+        if (paymentType !== 'DP' && estimateId) {
             await prisma.estimate.update({
                 where: { id: estimateId },
                 data: { status: 'paid' }
@@ -74,14 +99,14 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         }
 
         // 4. Activate Project (if linked) and Sync Order
-        if (estimate.project) {
+        if (project) {
             // Calculate total paid including this confirmation
-            const currentPaid = estimate.project.paidAmount || 0;
-            const finalPaidAmount = paymentType === 'DP' ? currentPaid + amountPaid : estimate.project.totalAmount;
+            const currentPaid = project.paidAmount || 0;
+            const finalPaidAmount = paymentType === 'DP' ? currentPaid + amountPaid : totalAmount;
 
             // Update Project
             await prisma.project.update({
-                where: { id: estimate.project.id },
+                where: { id: project.id },
                 data: {
                     status: newProjectStatus,
                     paymentStatus: newProjectPaymentStatus,
@@ -93,7 +118,7 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
             if (pendingOrders.length > 0) {
                 await prisma.order.updateMany({
                     where: {
-                        id: { in: pendingOrders.map(o => o.id) }
+                        id: { in: pendingOrders.map((o) => o.id) }
                     },
                     data: { status: 'paid' }
                 });
@@ -106,7 +131,7 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
 
             // --- Notifications ---
             try {
-                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                const stackUser = await stackServerApp.getUser(project.userId);
                 if (stackUser) {
                     const customerEmail = stackUser.primaryEmail || "";
                     const customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";
@@ -116,15 +141,15 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                         sendPaymentSuccessEmail({
                             to: customerEmail,
                             customerName,
-                            orderId: estimateId,
+                            orderId: targetId,
                             amount: amountPaid,
-                            productName: estimate.title
+                            productName: project.title || (estimate?.title) || "Service"
                         }).catch(err => console.error("Client notification error:", err));
                     }
 
                     // Admin Notification (Finalized)
                     notifyPaymentSuccess({
-                        orderId: estimateId,
+                        orderId: targetId,
                         amount: amountPaid,
                         customerName,
                         type: "SERVICE"

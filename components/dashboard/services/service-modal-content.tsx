@@ -62,6 +62,7 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                 <PurchaseButton
                     serviceId={service.id}
                     interval={service.interval}
+                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
                     className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-tighter shadow-xl shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95"
                 />
                 <DialogClose className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-all">
@@ -79,7 +80,12 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                             {displayDescription.replace(/<[^>]*>?/gm, '').slice(0, 150) || 'Service details'}
                         </DialogDescription>
                         <div className="flex items-baseline gap-3">
-                            <span className="text-3xl font-black text-brand-yellow">
+                            <span className="text-3xl font-black text-brand-yellow flex flex-col sm:flex-row sm:items-end gap-1">
+                                {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
+                                    <span className="text-sm font-bold text-zinc-400 leading-none mb-1 sm:mb-0 sm:pb-1 tracking-normal">
+                                        {isId ? 'Mulai dari ' : 'Starts at '}
+                                    </span>
+                                )}
                                 <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
                             </span>
                             <span className="text-sm font-bold text-zinc-500 uppercase tracking-widest">

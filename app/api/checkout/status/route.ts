@@ -10,48 +10,68 @@ export async function PATCH(req: Request) {
 
     try {
         const body = await req.json();
-        const { estimateId, status } = body;
+        const { estimateId: targetId, status } = body;
 
-        if (!estimateId || !status) {
+        if (!targetId || !status) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Find project associated with this estimate
-        const estimate = await prisma.estimate.findUnique({
-            where: { id: estimateId },
-            include: { project: true }
-        });
+        const isOrderId = targetId.startsWith('ORDER-');
+        let actualEstimateId = isOrderId ? null : targetId;
+        let orderFromId = null;
 
-        if (!estimate) {
-            return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
+        // Resolve IDs
+        if (isOrderId) {
+            orderFromId = await prisma.order.findUnique({
+                where: { id: targetId },
+                include: {
+                    project: {
+                        include: { estimate: true }
+                    }
+                }
+            });
+            actualEstimateId = orderFromId?.project?.estimate?.id || null;
+        }
+
+        // Find estimate/project
+        const estimate = actualEstimateId ? await prisma.estimate.findUnique({
+            where: { id: actualEstimateId },
+            include: { project: true }
+        }) : null;
+
+        const project = estimate?.project || orderFromId?.project;
+
+        if (!project && !estimate) {
+            return NextResponse.json({ error: "Transaction/Invoice not found" }, { status: 404 });
         }
 
         // Update Estimate status
-        // Project mungkin belum ada jika user baru finalize tapi belum checkout
-        await prisma.estimate.update({
-            where: { id: estimateId },
-            data: { status }
-        });
+        if (actualEstimateId) {
+            await prisma.estimate.update({
+                where: { id: actualEstimateId },
+                data: { status }
+            });
+        }
 
-        // Update Project status hanya jika Project sudah ada
-        if (estimate.project) {
+        // Update Project status
+        if (project) {
             await prisma.project.update({
-                where: { id: estimate.project.id },
+                where: { id: project.id },
                 data: { status }
             });
         }
 
         // --- Notifications ---
-        if (estimate.project && status === "pending_payment") {
+        if (project && status === "pending_payment") {
             try {
-                const stackUser = await stackServerApp.getUser(estimate.project.userId);
+                const stackUser = await stackServerApp.getUser(project.userId);
                 if (stackUser && stackUser.primaryEmail) {
                     const { sendPaymentRevertedEmail } = await import("@/lib/email/client-notifications");
                     sendPaymentRevertedEmail({
                         to: stackUser.primaryEmail,
                         customerName: stackUser.displayName || stackUser.primaryEmail.split('@')[0] || "Client",
-                        orderId: estimateId,
-                        productName: estimate.title
+                        orderId: targetId,
+                        productName: project.title || estimate?.title || "Service"
                     }).catch(err => console.error("Revert notification error:", err));
                 }
             } catch (err) {

@@ -21,7 +21,7 @@ export default async function MissionsPage({ searchParams }: { searchParams: Pro
     const allProjects = await prisma.project.findMany({
         where: {
             userId: user?.id,
-            status: { not: 'payment_pending' },
+            status: { in: ['queue', 'dev', 'review', 'done'] },
             ...(q ? {
                 OR: [
                     { title: { contains: q, mode: 'insensitive' } },

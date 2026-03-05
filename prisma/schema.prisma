@@ -7,20 +7,20 @@ datasource db {
 }
 
 model Project {
-  id                 String     @id @default(cuid())
+  id                 String               @id @default(cuid())
   userId             String
   title              String
   description        String?
-  status             String     @default("queue")
+  status             String               @default("queue")
   repoUrl            String?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
   repoName           String?
   repoOwner          String?
   deployUrl          String?
   developerId        String?
   spec               String?
-  estimateId         String?    @unique
+  estimateId         String?              @unique
   files              Json?
   serviceId          String?
   clientName         String?
@@ -28,17 +28,17 @@ model Project {
   previewUrl         String?
   subscriptionEndsAt DateTime?
   subscriptionStatus String?
-  paymentStatus      String     @default("UNPAID") // UNPAID, PARTIAL, PAID
-  paidAmount         Float      @default(0)
-  totalAmount        Float      @default(0)
-  bounty             Float?     // Budget for Squad (Net)
+  paymentStatus      String               @default("UNPAID")
+  paidAmount         Float                @default(0)
+  totalAmount        Float                @default(0)
+  bounty             Float?
   briefs             Brief[]
   dailyLogs          DailyLog[]
   feedback           Feedback[]
   applications       MissionApplication[]
   orders             Order[]
-  estimate           Estimate?  @relation(fields: [estimateId], references: [id])
-  service            Service?   @relation(fields: [serviceId], references: [id])
+  estimate           Estimate?            @relation(fields: [estimateId], references: [id])
+  service            Service?             @relation(fields: [serviceId], references: [id])
 }
 
 model Order {
@@ -48,7 +48,7 @@ model Order {
   snapToken       String?
   transactionId   String?  @unique
   paymentType     String?
-  type            String   @default("FULL") // FULL, DP, REPAYMENT
+  type            String   @default("FULL")
   currency        String   @default("USD")
   exchangeRate    Float    @default(1)
   userId          String
@@ -169,6 +169,7 @@ model Service {
   description_id String?
   features_id    Json?
   title_id       String?
+  priceType      String     @default("FIXED")
   estimates      Estimate[]
   projects       Project[]
 }
@@ -281,27 +282,27 @@ model Testimonial {
 }
 
 model PageSeo {
-  id          String   @id @default(cuid())
-  path        String   @unique
-  title       String?
-  title_id    String?
-  description String?
+  id             String   @id @default(cuid())
+  path           String   @unique
+  title          String?
+  title_id       String?
+  description    String?
   description_id String?
-  ogImage     String?
-  ogImage_id  String?
-  keywords    String?
-  keywords_id String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  ogImage        String?
+  keywords       String?
+  keywords_id    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ogImage_id     String?
 }
 
 model SquadProfile {
   id           String               @id @default(cuid())
-  userId       String               @unique // Link to Auth User
+  userId       String               @unique
   name         String
   email        String
-  role         String               @default("engineer") // Engineer, Designer, PM
-  skills       String[]             // e.g. ["React", "Node.js", "Solidity"]
+  role         String               @default("engineer")
+  skills       String[]
   yearsOfExp   Int
   bio          String?
   linkedin     String?
@@ -309,165 +310,151 @@ model SquadProfile {
   portfolio    String?
   avatar       String?
   specialty    String?
-  status       String               @default("pending") // pending, vetted, rejected
-  availability String               @default("available") // available, busy
+  status       String               @default("pending")
+  availability String               @default("available")
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
-  applications  MissionApplication[]
+  applications MissionApplication[]
 }
 
 model MissionApplication {
-  id             String       @id @default(cuid())
-  missionId      String
-  squadId        String
-  status         String       @default("pending") // pending, interviewing, accepted, rejected
+  id        String       @id @default(cuid())
+  missionId String
+  squadId   String
+  status    String       @default("pending")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  mission   Project      @relation(fields: [missionId], references: [id])
+  squad     SquadProfile @relation(fields: [squadId], references: [id])
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  
-  mission        Project      @relation(fields: [missionId], references: [id])
-  squad          SquadProfile @relation(fields: [squadId], references: [id])
-
-  @@unique([missionId, squadId]) // Prevent double applying
+  @@unique([missionId, squadId])
 }
 
-
-
-
 model AffiliateProfile {
-  id              String          @id @default(cuid())
-  userId          String          @unique
-  name            String
-  email           String          @unique
-  referralCode    String          @unique
-  status          String          @default("pending") // pending, active, suspended
-  commissionRate  Float           @default(10) // Percentage
-  totalEarnings   Float           @default(0)
-  paidEarnings    Float           @default(0)
-  bankInfo        Json?           // Bank Name, Account Number, etc.
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  referrals       ReferralUsage[]
-  commissions     CommissionLog[]
-  payoutRequests  PayoutRequest[]
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  name           String
+  email          String          @unique
+  referralCode   String          @unique
+  status         String          @default("pending")
+  commissionRate Float           @default(10)
+  totalEarnings  Float           @default(0)
+  paidEarnings   Float           @default(0)
+  bankInfo       Json?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  commissions    CommissionLog[]
+  payoutRequests PayoutRequest[]
+  referrals      ReferralUsage[]
 }
 
 model PayoutRequest {
-  id              String          @id @default(cuid())
-  affiliateId     String
-  amount          Float
-  status          String          @default("pending") // pending, approved, rejected
-  bankInfo        Json?           // Snapshot info bank saat request
-  notes           String?         // Catatan dari admin
-  processedAt     DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  id          String           @id @default(cuid())
+  affiliateId String
+  amount      Float
+  status      String           @default("pending")
+  bankInfo    Json?
+  notes       String?
+  processedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id])
 }
 
 model ReferralUsage {
-  id              String          @id @default(cuid())
-  affiliateId     String
-  referredUserId  String?         // The user who used the code (can be null if just a click)
-  visitorId       String?         // Fingerprint/Cookie ID for non-logged in users
-  source          String?         // e.g., "twitter", "facebook" (from query param)
-  converted       Boolean         @default(false)
-  convertedAt     DateTime?
-  metadata        Json?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  id             String           @id @default(cuid())
+  affiliateId    String
+  referredUserId String?
+  visitorId      String?
+  source         String?
+  converted      Boolean          @default(false)
+  convertedAt    DateTime?
+  metadata       Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  affiliate      AffiliateProfile @relation(fields: [affiliateId], references: [id])
 }
 
 model CommissionLog {
-  id              String          @id @default(cuid())
-  affiliateId     String
-  amount          Float
-  status          String          @default("pending") // pending, paid, rejected
-  orderId         String?
-  description     String?
-  paidAt          DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  affiliate       AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  id          String           @id @default(cuid())
+  affiliateId String
+  amount      Float
+  status      String           @default("pending")
+  orderId     String?
+  description String?
+  paidAt      DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id])
 }
 
 model MarketingAsset {
   id           String   @id @default(cuid())
-  type         String   // 'banner', 'copy', 'widget'
+  type         String
   title        String
-  content      String?  // Text content or HTML/JS code
-  imageUrl     String?  // R2 URL for banners
-  thumbnailUrl String?  // Optional preview
-  category     String?  // e.g. 'Social Media', 'Email', 'Blog'
+  content      String?
+  imageUrl     String?
+  thumbnailUrl String?
+  category     String?
   isActive     Boolean  @default(true)
-  metadata     Json?    // Dimensions, etc.
+  metadata     Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String?
-  price       Float     @default(0)
-  type        String    @default("plugin") // plugin, template, etc.
-  isActive    Boolean   @default(true)
-  name_id     String?
+  id             String         @id @default(cuid())
+  name           String
+  slug           String         @unique
+  description    String?
+  price          Float          @default(0)
+  type           String         @default("plugin")
+  isActive       Boolean        @default(true)
+  name_id        String?
   description_id String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  licenses     License[]
-  digitalOrders DigitalOrder[]
-
-  purchaseType String    @default("one_time") // one_time, subscription
-  interval     String?   // month, year (if subscription)
-  image        String?
-  fileUrl      String?   // Link to download the product
-  currency     String    @default("USD")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  purchaseType   String         @default("one_time")
+  interval       String?
+  image          String?
+  fileUrl        String?
+  currency       String         @default("USD")
+  digitalOrders  DigitalOrder[]
+  licenses       License[]
 }
 
 model License {
-  id             String    @id @default(cuid())
-  key            String    @unique
+  id             String        @id @default(cuid())
+  key            String        @unique
   productId      String
-  product        Product   @relation(fields: [productId], references: [id])
-  userId         String?   // Optional: Link to a user if purchase is tracked
-  status         String    @default("active") // active, revoked, expired
-  maxActivations Int       @default(1)
-  activations    Int       @default(0)
+  userId         String?
+  status         String        @default("active")
+  maxActivations Int           @default(1)
+  activations    Int           @default(0)
   expiresAt      DateTime?
-  metadata       Json?     // Stores domain, IP, machine ID of activations
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   digitalOrder   DigitalOrder?
+  product        Product       @relation(fields: [productId], references: [id])
 }
 
 model DigitalOrder {
-  id            String   @id @default(cuid())
-  userId        String?
-  userEmail     String
-  userName      String?
-  
-  productId     String
-  product       Product  @relation(fields: [productId], references: [id])
-  
-  amount        Float
-  status        String   @default("PENDING")
-  snapToken     String?
-  paymentId     String?
-  paymentType   String?
+  id              String   @id @default(cuid())
+  userId          String?
+  userEmail       String
+  userName        String?
+  productId       String
+  amount          Float
+  status          String   @default("PENDING")
+  snapToken       String?
+  paymentId       String?
+  paymentType     String?
   paymentMetadata Json?
-
-  licenseId     String?  @unique
-  license       License? @relation(fields: [licenseId], references: [id]) 
-  
-  proofUrl      String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  licenseId       String?  @unique
+  proofUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  license         License? @relation(fields: [licenseId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id])
 }

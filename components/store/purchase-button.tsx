@@ -41,6 +41,10 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
 
             if (!res.ok) throw new Error(data.error || "Failed to create order");
 
+            if (data.message) {
+                toast.success(data.message);
+            }
+
             if (data.url) {
                 router.push(data.url);
             }

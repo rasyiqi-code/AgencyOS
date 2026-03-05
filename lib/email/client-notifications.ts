@@ -181,3 +181,112 @@ export async function sendProjectStatusUpdateEmail(data: {
         `
     });
 }
+
+/**
+ * Send invoice email to client with quote details and payment link.
+ */
+export async function sendInvoiceEmail(data: {
+    to: string;
+    customerName: string;
+    invoiceId: string;
+    serviceName: string;
+    amount: number;
+    currency: string;
+    paymentLink?: string;
+    screens?: { title: string; description: string; hours: number }[];
+    apis?: { title: string; description: string; hours: number }[];
+}) {
+    const resend = await getResendClient();
+    if (!resend) return { success: false, error: "Resend not configured" };
+
+    const safeName = escapeHtml(data.customerName);
+    const safeService = escapeHtml(data.serviceName);
+    const currencySymbol = data.currency === 'IDR' ? 'Rp' : 'US$';
+    const formattedAmount = data.currency === 'IDR'
+        ? data.amount.toLocaleString('id-ID')
+        : data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+    // Build line items HTML from screens & APIs
+    const lineItems = [
+        ...(data.screens || []).map(s => `
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7;">${escapeHtml(s.title)}</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; color: #71717a;">${escapeHtml(s.description)}</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; text-align: right;">${s.hours}h</td>
+            </tr>
+        `),
+        ...(data.apis || []).map(a => `
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7;">${escapeHtml(a.title)}</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; color: #71717a;">${escapeHtml(a.description)}</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; text-align: right;">${a.hours}h</td>
+            </tr>
+        `)
+    ].join('');
+
+    const lineItemsSection = lineItems ? `
+        <table style="width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px;">
+            <thead>
+                <tr style="background: #f4f4f5;">
+                    <th style="padding: 8px 12px; text-align: left; font-weight: 600;">Item</th>
+                    <th style="padding: 8px 12px; text-align: left; font-weight: 600;">Description</th>
+                    <th style="padding: 8px 12px; text-align: right; font-weight: 600;">Hours</th>
+                </tr>
+            </thead>
+            <tbody>${lineItems}</tbody>
+        </table>
+    ` : '';
+
+    const paymentButton = data.paymentLink ? `
+        <div style="text-align: center; margin: 24px 0;">
+            <a href="${data.paymentLink}" style="display: inline-block; background: #10b981; color: white; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Proceed to Payment →
+            </a>
+        </div>
+    ` : '';
+
+    try {
+        await resend.emails.send({
+            from: `AgencyOS <${FROM_ADDRESS}>`,
+            to: [data.to],
+            subject: `📋 Invoice: ${safeService} — ${currencySymbol}${formattedAmount}`,
+            html: `
+                <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #ffffff;">
+                    <div style="border-bottom: 3px solid #10b981; padding-bottom: 16px; margin-bottom: 24px;">
+                        <h1 style="margin: 0; font-size: 24px; color: #18181b;">Invoice</h1>
+                        <p style="margin: 4px 0 0; color: #71717a; font-size: 13px;">Invoice ID: ${data.invoiceId}</p>
+                    </div>
+
+                    <p>Hi ${safeName},</p>
+                    <p>Thank you for your interest! Here are the details of your quote for <strong>${safeService}</strong>:</p>
+
+                    ${lineItemsSection}
+
+                    <div style="background: #f4f4f5; border-radius: 8px; padding: 16px; margin: 16px 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="font-weight: 600; color: #18181b;">Service</td>
+                                <td style="text-align: right;">${safeService}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600; color: #18181b; padding-top: 8px; font-size: 18px;">Total</td>
+                                <td style="text-align: right; font-weight: bold; font-size: 18px; color: #10b981;">${currencySymbol}${formattedAmount}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    ${paymentButton}
+
+                    <p style="color: #71717a; font-size: 12px; margin-top: 32px; border-top: 1px solid #e4e4e7; padding-top: 16px;">
+                        This invoice was generated automatically. If you have any questions, please reply to this email or contact our support team.
+                        <br>— The AgencyOS Team
+                    </p>
+                </div>
+            `
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send invoice email:", error);
+        return { success: false, error: String(error) };
+    }
+}

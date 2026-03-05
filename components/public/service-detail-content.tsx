@@ -14,6 +14,7 @@ export interface Service {
     description: string;
     description_id?: string | null;
     price: number;
+    priceType?: string;
     currency?: string | null;
     interval: string;
     features: unknown; // Prisma Json
@@ -86,6 +87,11 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                         <div className="flex flex-col">
                                             <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</span>
                                             <div className="flex items-baseline gap-1.5 md:gap-2">
+                                                {service.priceType === 'STARTING_AT' && (
+                                                    <span className="text-[10px] md:text-sm font-bold text-zinc-400">
+                                                        {isId ? 'Mulai dari' : 'Starts at'}
+                                                    </span>
+                                                )}
                                                 <div className="text-xl md:text-4xl font-black text-brand-yellow tracking-tighter">
                                                     <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                                                 </div>
@@ -127,6 +133,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                         <PurchaseButton
                                             serviceId={service.id}
                                             interval={service.interval}
+                                            customLabel={service.priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
                                             className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
                                         />
                                     </div>
@@ -204,15 +211,23 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                 <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
                     <div>
                         <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">{t("price")}</div>
-                        <div className="text-xl font-black text-white tracking-tighter flex items-end gap-1">
-                            <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
-                            <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                        <div className="text-xl font-black text-white tracking-tighter flex flex-col sm:flex-row sm:items-end gap-1">
+                            {service.priceType === 'STARTING_AT' && (
+                                <span className="text-[10px] font-normal text-zinc-400 leading-none mb-1 sm:mb-0 sm:pb-1">
+                                    {isId ? 'Mulai dari ' : 'Starts at '}
+                                </span>
+                            )}
+                            <div className="flex items-end gap-1">
+                                <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="flex-1 max-w-[160px]">
                         <PurchaseButton
                             serviceId={service.id}
                             interval={service.interval}
+                            customLabel={service.priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
                             className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
                         />
                     </div>
