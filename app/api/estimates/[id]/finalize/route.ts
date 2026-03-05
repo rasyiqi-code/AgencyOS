@@ -43,6 +43,10 @@ export async function POST(
         }
 
         // Update Estimate dengan data yang dipilih user + status
+        // NOTE: Project TIDAK dibuat di sini.
+        // Project dibuat di checkout/route.ts saat user benar-benar masuk
+        // ke halaman checkout, agar entry tidak muncul di admin orders
+        // sebelum ada transaksi nyata.
         await prisma.estimate.update({
             where: { id: estimateId },
             data: {
@@ -51,22 +55,6 @@ export async function POST(
                 apis: selectedApis as unknown as Prisma.InputJsonValue,
                 totalHours: finalTotalHours,
                 totalCost: finalTotalCost,
-            }
-        });
-
-        // Create Project if not exists (upsert) — gunakan data yang sudah difilter
-        await prisma.project.upsert({
-            where: { estimateId: estimateId },
-            update: {},
-            create: {
-                userId: user.id || "unknown-user",
-                clientName: user.displayName || user.primaryEmail || "Client",
-                title: estimate.title,
-                description: estimate.summary,
-                spec: JSON.stringify({ screens: selectedScreens, apis: selectedApis }, null, 2),
-                status: "pending_payment",
-                estimateId: estimateId,
-                developerId: null,
             }
         });
 

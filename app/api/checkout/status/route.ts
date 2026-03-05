@@ -26,19 +26,20 @@ export async function PATCH(req: Request) {
             return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
         }
 
-        // Update Estimate and Project status
-        await prisma.$transaction([
-            prisma.estimate.update({
-                where: { id: estimateId },
+        // Update Estimate status
+        // Project mungkin belum ada jika user baru finalize tapi belum checkout
+        await prisma.estimate.update({
+            where: { id: estimateId },
+            data: { status }
+        });
+
+        // Update Project status hanya jika Project sudah ada
+        if (estimate.project) {
+            await prisma.project.update({
+                where: { id: estimate.project.id },
                 data: { status }
-            }),
-            ...(estimate.project ? [
-                prisma.project.update({
-                    where: { id: estimate.project.id },
-                    data: { status }
-                })
-            ] : [])
-        ]);
+            });
+        }
 
         // --- Notifications ---
         if (estimate.project && status === "pending_payment") {
