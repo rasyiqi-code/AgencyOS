@@ -102,11 +102,11 @@ export function InvoiceActions({
     }
 
     return (
-        <div className="flex items-center gap-1 -ml-2">
+        <div className="flex items-center gap-1.5">
             <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-brand-yellow hover:bg-brand-yellow/10"
+                className="h-8 w-8 p-0 flex items-center justify-center text-zinc-500 hover:text-brand-yellow hover:bg-brand-yellow/10 rounded-full transition-all active:scale-90"
                 onClick={handleCopyScript}
                 title={t('copyScriptLabel')}
             >
@@ -115,7 +115,7 @@ export function InvoiceActions({
             <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 w-7 p-0 flex items-center justify-center text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10"
+                className="h-8 w-8 p-0 flex items-center justify-center text-zinc-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-full transition-all active:scale-90"
                 onClick={handleSendEmail}
                 disabled={isSending || !hasEmail}
                 title={hasEmail ? "Kirim Invoice ke Email" : "Email klien tidak tersedia"}
@@ -129,7 +129,7 @@ export function InvoiceActions({
             <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 w-7 p-0 flex items-center justify-center text-zinc-400 hover:text-blue-400 hover:bg-blue-500/10"
+                className="h-8 w-8 p-0 flex items-center justify-center text-zinc-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-full transition-all active:scale-90"
                 onClick={handlePreview}
                 title="Preview Invoice"
             >
