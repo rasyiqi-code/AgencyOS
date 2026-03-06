@@ -14,7 +14,7 @@ services:
     expose:
       - "3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-postgres_password_change_me}@db:5432/agency_os?schema=public
+      - DATABASE_URL=${DATABASE_URL}
       - NEXT_PUBLIC_STACK_PROJECT_ID=${NEXT_PUBLIC_STACK_PROJECT_ID}
       - NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=${NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY}
       - STACK_SECRET_SERVER_KEY=${STACK_SECRET_SERVER_KEY}
@@ -36,29 +36,13 @@ services:
     volumes:
       # Persist data directory (portfolios, payment-info) across redeployments
       - app_data_prod:/app/data
-    depends_on:
-      - db
     networks:
       - agency-network-prod
 
-  db:
-    image: postgres:17-alpine
-    container_name: agency-os-db-prod
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password_change_me}
-      POSTGRES_DB: agency_os
-    volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
-    # Tidak mengekspos port 5432 ke host demi keamanan produksi
-    networks:
-      - agency-network-prod
 
 networks:
   agency-network-prod:
     driver: bridge
 
 volumes:
-  postgres_data_prod:
   app_data_prod:
