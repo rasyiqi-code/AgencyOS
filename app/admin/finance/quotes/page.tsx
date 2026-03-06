@@ -99,17 +99,17 @@ export default async function AdminQuotesPage() {
 
 
     return (
-        <div className="container mx-auto py-10 max-w-6xl">
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-brand-yellow">Quote Generator</h1>
-            <p className="text-zinc-400 mb-8">Buat penawaran harga manual atau kelola request dari klien.</p>
+        <div className="w-full px-3 sm:px-6 py-6 sm:py-10 max-w-6xl mx-auto">
+            <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-white mb-1 sm:mb-2 text-brand-yellow">Quote Generator</h1>
+            <p className="text-zinc-400 mb-6 sm:mb-8 text-xs sm:text-base">Buat penawaran harga manual atau kelola request dari klien.</p>
 
-            <Card className="bg-zinc-900 border-zinc-800 mb-8 overflow-hidden">
-                <div className="bg-brand-yellow/10 px-6 py-3 border-b border-brand-yellow/20 flex items-center gap-2">
+            <Card className="bg-zinc-900 border-zinc-800 mb-6 sm:mb-8 overflow-hidden">
+                <div className="bg-brand-yellow/10 px-4 sm:px-6 py-2.5 sm:py-3 border-b border-brand-yellow/20 flex items-center gap-2">
                     <Plus className="w-4 h-4 text-brand-yellow" />
-                    <span className="text-sm font-bold text-brand-yellow uppercase tracking-wider">Generator Penawaran Baru</span>
+                    <span className="text-xs sm:text-sm font-bold text-brand-yellow uppercase tracking-wider">Generator Penawaran Baru</span>
                 </div>
-                <CardContent className="pt-6">
-                    <form action={async (formData) => { "use server"; await createManualQuote(formData); }} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <CardContent className="p-4 sm:pt-6">
+                    <form action={async (formData) => { "use server"; await createManualQuote(formData); }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-end">
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Pilih Layanan</label>
                             <select
@@ -146,7 +146,7 @@ export default async function AdminQuotesPage() {
                                 required
                             />
                         </div>
-                        <Button type="submit" className="bg-brand-yellow hover:bg-yellow-400 text-black font-bold h-[38px]">
+                        <Button type="submit" className="bg-brand-yellow hover:bg-yellow-400 text-black font-bold h-[38px] sm:col-span-2 lg:col-span-1">
                             Generate Quote
                         </Button>
                     </form>
@@ -154,63 +154,66 @@ export default async function AdminQuotesPage() {
             </Card>
 
             <Card className="bg-zinc-900 border-zinc-800">
-                <CardHeader>
-                    <CardTitle className="text-white">Daftar Penawaran</CardTitle>
-                    <CardDescription className="text-zinc-400">Silakan review harga yang ditawarkan oleh klien.</CardDescription>
+                <CardHeader className="px-4 sm:px-6">
+                    <CardTitle className="text-white text-base sm:text-lg">Daftar Penawaran</CardTitle>
+                    <CardDescription className="text-zinc-400 text-xs sm:text-sm">Silakan review harga yang ditawarkan oleh klien.</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader className="border-zinc-800">
-                            <TableRow className="border-zinc-800 hover:bg-transparent">
-                                <TableHead className="text-zinc-400">Order ID</TableHead>
-                                <TableHead className="text-zinc-400">Client</TableHead>
-                                <TableHead className="text-zinc-400">Service</TableHead>
-                                <TableHead className="text-right text-zinc-400">Total Price (Editable)</TableHead>
-                                <TableHead className="text-right text-zinc-400">Invoice</TableHead>
-                                <TableHead className="text-center text-zinc-400">Aksi</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {estimates.length === 0 && (
-                                <TableRow className="border-zinc-800">
-                                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
-                                        Belum ada history/request penawaran harga.
-                                    </TableCell>
+                <CardContent className="p-0 sm:p-6 sm:pt-0">
+                    {/* Horizontal scroll wrapper untuk mobile */}
+                    <div className="overflow-x-auto">
+                        <Table className="min-w-[640px]">
+                            <TableHeader className="border-zinc-800">
+                                <TableRow className="border-zinc-800 hover:bg-transparent">
+                                    <TableHead className="text-zinc-400 text-xs">Order ID</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs">Client</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs hidden sm:table-cell">Service</TableHead>
+                                    <TableHead className="text-right text-zinc-400 text-xs">Total Price</TableHead>
+                                    <TableHead className="text-right text-zinc-400 text-xs">Invoice</TableHead>
+                                    <TableHead className="text-center text-zinc-400 text-xs">Aksi</TableHead>
                                 </TableRow>
-                            )}
-                            {estimates.map((est) => {
-                                const clientProfile = est.project?.userId ? userMap.get(est.project.userId) : null;
-                                const displayName = est.project?.clientName && est.project.clientName !== "Client"
-                                    ? est.project.clientName
-                                    : (clientProfile?.name || est.project?.clientName || "Unknown Client");
-
-                                return (
-                                    <TableRow key={est.id} className="border-zinc-800 hover:bg-white/5">
-                                        <TableCell className="font-mono text-xs text-zinc-300">#{est.id.slice(-8).toUpperCase()}</TableCell>
-                                        <TableCell className="font-medium text-white">{displayName}</TableCell>
-                                        <TableCell className="text-zinc-300">{est.service?.title}</TableCell>
-                                        <TableCell className="text-right">
-                                            <PriceEditor
-                                                estimateId={est.id}
-                                                projectId={est.project?.id || null}
-                                                initialPrice={est.totalCost}
-                                                currency={est.service?.currency || 'IDR'}
-                                            />
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <InvoiceActions
-                                                estimateId={est.id}
-                                                hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
-                                            />
-                                        </TableCell>
-                                        <TableCell className="text-center">
-                                            <DeleteQuoteButton estimateId={est.id} />
+                            </TableHeader>
+                            <TableBody>
+                                {estimates.length === 0 && (
+                                    <TableRow className="border-zinc-800">
+                                        <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                                            Belum ada history/request penawaran harga.
                                         </TableCell>
                                     </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                                )}
+                                {estimates.map((est) => {
+                                    const clientProfile = est.project?.userId ? userMap.get(est.project.userId) : null;
+                                    const displayName = est.project?.clientName && est.project.clientName !== "Client"
+                                        ? est.project.clientName
+                                        : (clientProfile?.name || est.project?.clientName || "Unknown Client");
+
+                                    return (
+                                        <TableRow key={est.id} className="border-zinc-800 hover:bg-white/5">
+                                            <TableCell className="font-mono text-xs text-zinc-300 whitespace-nowrap">#{est.id.slice(-8).toUpperCase()}</TableCell>
+                                            <TableCell className="font-medium text-white text-sm whitespace-nowrap">{displayName}</TableCell>
+                                            <TableCell className="text-zinc-300 text-sm hidden sm:table-cell">{est.service?.title}</TableCell>
+                                            <TableCell className="text-right">
+                                                <PriceEditor
+                                                    estimateId={est.id}
+                                                    projectId={est.project?.id || null}
+                                                    initialPrice={est.totalCost}
+                                                    currency={est.service?.currency || 'IDR'}
+                                                />
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <InvoiceActions
+                                                    estimateId={est.id}
+                                                    hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
+                                                />
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                <DeleteQuoteButton estimateId={est.id} />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
             </Card>
         </div>

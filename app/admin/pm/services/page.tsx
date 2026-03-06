@@ -111,11 +111,11 @@ export default async function ServicesPage() {
                                         </div>
                                     </div>
                                 </AccordionTrigger>
-                                <AccordionContent className="px-4 pb-4 pt-1 border-t border-zinc-800/40">
-                                    <div className="flex flex-col md:flex-row gap-6 mt-3">
-                                        {/* Service Image */}
+                                <AccordionContent className="px-4 pb-4 pt-1 border-t border-zinc-800/40 overflow-hidden min-w-0">
+                                    <div className="flex flex-col sm:flex-row gap-4 mt-3">
+                                        {/* Service Image — ukuran dibatasi agar responsive di mobile */}
                                         {service.image && (
-                                            <div className="relative rounded-lg overflow-hidden border border-white/5 w-full md:w-40 aspect-square shrink-0 bg-black/30">
+                                            <div className="relative rounded-lg overflow-hidden border border-white/5 w-full sm:w-56 md:w-64 aspect-video shrink-0 bg-black/30">
                                                 <Image
                                                     src={service.image}
                                                     alt={displayTitle}
