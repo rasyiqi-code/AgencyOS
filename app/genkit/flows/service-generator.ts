@@ -28,11 +28,18 @@ export const serviceGeneratorFlow = ai.defineFlow(
             Input Description: "${prompt}"
 
             REQUIREMENTS:
-            1. Generate content in TWO languages: English (en) and Indonesian (id).
-            2. Title: Professional, catchy, enterprise-grade.
-            3. Description: minimal 2 paragraphs, HTML format (use <p>, <ul>, <li>, <strong>). Persuasive copy.
-            4. Features: 4-6 key selling points. Short and impactful.
-            5. Recommended Price: A realistic base price in USD for this service (assuming agency quality).
+            1. Generate content in TWO languages: English and Indonesian (Bahasa Indonesia).
+            2. The "title" field must contain the English title. The "title_id" field must contain the ACTUAL Indonesian translation of the title (real Indonesian words, NOT a key name or camelCase identifier).
+            3. The "description" field must contain the English description. The "description_id" field must contain the ACTUAL Indonesian translation (real Indonesian sentences in proper Bahasa Indonesia, NOT a key name or camelCase identifier).
+            4. The "features" array must contain English feature strings. The "features_id" array must contain the ACTUAL Indonesian translation of each feature (real Indonesian words, NOT key names).
+            5. Title: Professional, catchy, enterprise-grade.
+            6. Description: minimal 2 paragraphs, HTML format (use <p>, <ul>, <li>, <strong>). Persuasive copy.
+            7. Features: 4-6 key selling points. Short and impactful.
+            8. Recommended Price: A realistic base price in USD for this service (assuming agency quality).
+
+            CRITICAL: All "_id" fields must contain human-readable Indonesian text, NOT variable names, key identifiers, or camelCase strings.
+            Example of WRONG output: { "title_id": "boardingHouseWebsite_title_id" }
+            Example of CORRECT output: { "title_id": "Website Manajemen Rumah Kos Premium" }
 
             Return strictly valid JSON matching the schema.
             `,

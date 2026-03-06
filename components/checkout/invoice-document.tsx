@@ -1,7 +1,9 @@
 "use client";
 
 import { format } from "date-fns";
-import { useTranslations } from "next-intl";
+import { id as localeId } from "date-fns/locale/id";
+import { enUS as localeEn } from "date-fns/locale/en-US";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 
 import { ExtendedEstimate, InvoiceItem } from "@/lib/shared/types";
@@ -41,8 +43,10 @@ export function InvoiceDocument({
     const address = agencySettings?.address || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000";
     const billingEmail = agencySettings?.email || "billing@crediblemark.com";
 
+    const locale = useLocale();
     const currency = propsCurrency || 'USD';
-    const formattedDate = format(today, "MMM dd, yyyy");
+    const dateLocale = locale === 'id' ? localeId : localeEn;
+    const formattedDate = format(today, locale === 'id' ? "d MMMM yyyy" : "MMM dd, yyyy", { locale: dateLocale });
 
     const formatCurrency = (val: number) => {
         const isIDR = currency === 'IDR';
@@ -84,14 +88,33 @@ export function InvoiceDocument({
                     }
                 }
             `}</style>
-            {/* Watermark */}
-            {(isPaid || paymentType === 'DP') && (
-                <div className="absolute top-12 right-12 z-0 pointer-events-none opacity-20 transform -rotate-12 watermark-container">
-                    <div className="border-[8px] border-[#FED700] text-[#FED700] font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double">
-                        {paymentType === 'DP' ? 'DP' : t('paid')}
+            {/* Watermark - shows status label for all invoice states */}
+            {(() => {
+                let label = '';
+                let color = '#999';
+
+                if (isPaid) {
+                    label = 'PAID';
+                    color = '#FED700'; // Gold for paid
+                } else if (paymentType === 'DP') {
+                    label = 'DP';
+                    color = '#FED700';
+                } else {
+                    label = 'UNPAID';
+                    color = '#EF4444'; // Red for unpaid
+                }
+
+                return (
+                    <div className="absolute top-32 right-12 z-0 pointer-events-none opacity-20 transform -rotate-12 watermark-container">
+                        <div
+                            className="font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double"
+                            style={{ border: `8px double ${color}`, color }}
+                        >
+                            {label}
+                        </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
 
             {/* Header */}
 
@@ -156,7 +179,7 @@ export function InvoiceDocument({
                     {/* Service Specific Details */}
                     {extendedEstimate.service && (
                         <tr className="border-b border-zinc-100">
-                            <td className="py-6 pr-4" colSpan={3}>
+                            <td className="py-6 pr-4">
                                 <div className="flex gap-6">
                                     {extendedEstimate.service.image && (
                                         <div className="relative w-32 h-32 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
@@ -191,13 +214,18 @@ export function InvoiceDocument({
                                     </div>
                                 </div>
                             </td>
+                            <td className="py-6 text-right align-top">-</td>
+                            <td className="py-6 text-right align-top">
+                                {formatCurrency(extendedEstimate.totalCost)}
+                            </td>
                         </tr>
                     )}
 
-                    {extendedEstimate.screens.length === 0 && extendedEstimate.apis.length === 0 && (
+                    {/* Fallback line item - only when no service detail block */}
+                    {!extendedEstimate.service && extendedEstimate.screens.length === 0 && extendedEstimate.apis.length === 0 && (
                         <tr className="border-b border-zinc-100">
                             <td className="py-4 pr-4">
-                                <div className="font-bold">{extendedEstimate.title.replace('Invoice for ', '')}</div>
+                                <div className="font-bold">{extendedEstimate.title.replace(/^(Invoice: |Invoice for |Draft Quote for |Quote: |Quote Request: )/i, '')}</div>
                                 <div className="text-zinc-500 text-xs mt-1">{extendedEstimate.summary}</div>
                             </td>
                             <td className="py-4 text-right">-</td>

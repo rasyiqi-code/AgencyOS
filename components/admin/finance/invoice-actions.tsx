@@ -2,21 +2,36 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Mail, FileText, Loader2 } from "lucide-react";
+import { Mail, FileText, Loader2, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useCurrency } from "@/components/providers/currency-provider";
 
 interface InvoiceActionsProps {
     /** ID Estimate untuk referensi API dan preview */
     estimateId: string;
     /** Apakah user terkait memiliki email yang valid */
     hasEmail: boolean;
+    clientName?: string;
+    serviceTitle?: string;
+    amount?: number;
+    currency?: string;
 }
 
 /**
- * Komponen aksi invoice admin: Kirim Email dan Preview Invoice.
+ * Komponen aksi invoice admin: Kirim Email, Preview Invoice, dan Copy Follow-up Script.
  * Preview menggunakan halaman checkout yang sudah me-render InvoiceDocument.
  */
-export function InvoiceActions({ estimateId, hasEmail }: InvoiceActionsProps) {
+export function InvoiceActions({
+    estimateId,
+    hasEmail,
+    clientName = "Client",
+    serviceTitle = "Service",
+    amount = 0,
+    currency = "IDR"
+}: InvoiceActionsProps) {
+    const t = useTranslations("Admin.Finance.Quotes");
+    const { currency: contextCurrency, rate, locale: contextLocale } = useCurrency();
     const [isSending, setIsSending] = useState(false);
 
     /** Kirim invoice via email ke klien */
@@ -53,12 +68,54 @@ export function InvoiceActions({ estimateId, hasEmail }: InvoiceActionsProps) {
         window.open(`/checkout/${estimateId}`, '_blank');
     }
 
+    /** Copy follow-up script untuk dikirim via chat */
+    function handleCopyScript() {
+        const checkoutLink = `${window.location.origin}/checkout/${estimateId}`;
+
+        let displayAmount = amount;
+        const displayCurrency = contextCurrency;
+
+        // Logic konversi sesuai dengan CurrencyProvider
+        if (currency === 'USD' && displayCurrency === 'IDR') {
+            displayAmount = amount * rate;
+        } else if (currency === 'IDR' && displayCurrency === 'USD') {
+            displayAmount = amount / rate;
+        }
+
+        const priceString = new Intl.NumberFormat(contextLocale, {
+            style: 'currency',
+            currency: displayCurrency,
+            currencyDisplay: 'narrowSymbol',
+            maximumFractionDigits: displayCurrency === 'IDR' ? 0 : 2,
+            minimumFractionDigits: displayCurrency === 'IDR' ? 0 : 2,
+        }).format(displayAmount);
+
+        const script = t('followUpScript', {
+            name: clientName,
+            service: serviceTitle,
+            price: priceString,
+            link: checkoutLink
+        });
+
+        navigator.clipboard.writeText(script);
+        toast.success("Script follow-up berhasil disalin!");
+    }
+
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 -ml-2">
             <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10"
+                className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-brand-yellow hover:bg-brand-yellow/10"
+                onClick={handleCopyScript}
+                title={t('copyScriptLabel')}
+            >
+                <Copy className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 w-7 p-0 flex items-center justify-center text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10"
                 onClick={handleSendEmail}
                 disabled={isSending || !hasEmail}
                 title={hasEmail ? "Kirim Invoice ke Email" : "Email klien tidak tersedia"}
@@ -68,17 +125,15 @@ export function InvoiceActions({ estimateId, hasEmail }: InvoiceActionsProps) {
                 ) : (
                     <Mail className="h-3.5 w-3.5" />
                 )}
-                Email
             </Button>
             <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-blue-400 hover:bg-blue-500/10"
+                className="h-7 w-7 p-0 flex items-center justify-center text-zinc-400 hover:text-blue-400 hover:bg-blue-500/10"
                 onClick={handlePreview}
                 title="Preview Invoice"
             >
                 <FileText className="h-3.5 w-3.5" />
-                Invoice
             </Button>
         </div>
     );

@@ -121,7 +121,7 @@ export default async function CheckoutPage(props: PageProps) {
             apis: (estimate.apis as unknown) as ExtendedEstimate['apis'],
             service: estimate.service ? {
                 ...estimate.service,
-                priceType: estimate.title.includes("Draft Quote") ? "STARTING_AT" : (estimate.service as Record<string, unknown>).priceType as string
+                priceType: (estimate.title.includes("Draft Quote") || estimate.title.startsWith("Quote:")) ? "STARTING_AT" : (estimate.service as Record<string, unknown>).priceType as string
             } : null
         };
 

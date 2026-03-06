@@ -207,6 +207,7 @@
         "fastDelivery": "Pengiriman Cepat",
         "fastTurnaroundDesc": "Jaminan pengerjaan cepat",
         "turnaround": "Estimasi pengerjaan {days} hari",
+        "deliverables": "Fitur & Deliverables",
         "bonuses": "Bonus Termasuk",
         "noBonuses": "Tidak ada bonus pemasaran yang aktif.",
         "haveCoupon": "Punya kode kupon?",
@@ -268,7 +269,21 @@
         "confirmed": "Pembayaran Dikonfirmasi",
         "confirmedDesc": "Terima kasih! Pembayaran Anda telah diverifikasi dan misi Anda sekarang aktif.",
         "downloadReceipt": "Unduh Tanda Terima",
-        "accessMission": "Akses Mission Control"
+        "accessMission": "Akses Mission Control",
+        "submitOffer": "Ajukan Penawaran",
+        "submitOfferDesc": "Layanan ini dapat dinegosiasikan. Silakan masukkan penawaran harga Anda berdasarkan detail layanan di atas.",
+        "yourOfferPrice": "Harga Penawaran Anda ({currency})",
+        "basePriceFrom": "Harga dasar mulai dari:",
+        "belowStartingPrice": "Penawaran di bawah harga mulai memiliki kemungkinan tinggi untuk ditolak. Pertimbangkan untuk menyesuaikan dengan kebutuhan spesifik Anda.",
+        "enterOfferFirst": "Masukkan harga penawaran terlebih dahulu",
+        "sendOfferContact": "Kirim Penawaran & Hubungi",
+        "chooseChannel": "Pilih Channel Negosiasi",
+        "liveChat": "Live Chat (Inbox)",
+        "offerAutoSaved": "Status penawaran akan tersimpan otomatis di sistem saat Anda memilih channel.",
+        "invalidOffer": "Silakan masukkan penawaran harga yang valid.",
+        "offerSubmitError": "Gagal mengirim penawaran. Silakan coba lagi.",
+        "discussPrice": "Harga Diskusi",
+        "quoteSummaryMessage": "Halo, saya tertarik dengan layanan \"{service}\" (ID: {id}). Penawaran harga saya: {price}. Mohon reviewnya, terima kasih."
     },
     "Expert": {
         "role": "Pendiri & Fullstack Developer",
@@ -445,6 +460,18 @@
             "aiHelperDesc": "AI Systems Engineer kami sedang online dan siap membantu Anda menyusun spesifikasi misi berikutnya.",
             "openComms": "Buka Saluran Komunikasi"
         },
+        "ClientQuotes": {
+            "title": "Penawaran Harga",
+            "subtitle": "Pantau status negosiasi harga untuk layanan kustom Anda.",
+            "historyTitle": "Riwayat Penawaran",
+            "historyDesc": "Daftar permintaan harga yang sedang diproses.",
+            "colService": "Layanan",
+            "colOfferedPrice": "Harga Penawaran",
+            "colAction": "Aksi",
+            "empty": "Belum ada permintaan penawaran harga.",
+            "pay": "Bayar",
+            "detail": "Detail"
+        },
         "Workbench": {
             "title": "Workbench Proyek",
             "status": "Status Sistem",
@@ -499,6 +526,32 @@
                 "description": "Pantau dan kelola penjualan produk digital Anda.",
                 "noOrders": "Pesanan tidak ditemukan.",
                 "searchPlaceholder": "ID Pesanan, email, atau produk..."
+            },
+            "Quotes": {
+                "title": "Penawaran Baru",
+                "subtitle": "Kirim estimasi harga",
+                "generatorTitle": "GENERATOR PENAWARAN BARU",
+                "selectService": "Pilih Layanan...",
+                "selectServiceLabel": "PILIH LAYANAN",
+                "selectClientLabel": "PILIH KLIEN (USER)",
+                "selectClient": "Pilih User Akun Klien...",
+                "displayNameLabel": "DISPLAY NAME (LABEL)",
+                "priceLabel": "HARGA PENAWARAN",
+                "emailLabel": "EMAIL KLIEN",
+                "generateButton": "Generate Quote",
+                "listTitle": "Daftar Penawaran",
+                "listSubtitle": "Silakan review harga yang ditawarkan oleh klien.",
+                "colOrderId": "Order ID",
+                "colClient": "Client",
+                "colService": "Service",
+                "colTotalPrice": "Total Price",
+                "colInvoice": "Invoice",
+                "colAction": "Aksi",
+                "empty": "Belum ada history/request penawaran harga.",
+                "followUpScript": "Halo {name}, ini adalah invoice untuk layanan {service}. Total: {price}. Cek di sini: {link}. Terima kasih!",
+                "copyScriptLabel": "Copy Script Follow-up",
+                "statusPaid": "Lunas",
+                "statusPending": "Menunggu"
             }
         },
         "Marketing": {

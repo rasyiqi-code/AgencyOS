@@ -115,7 +115,7 @@ export default async function ServicesPage() {
                                     <div className="flex flex-col sm:flex-row gap-4 mt-3">
                                         {/* Service Image — ukuran dibatasi agar responsive di mobile */}
                                         {service.image && (
-                                            <div className="relative rounded-lg overflow-hidden border border-white/5 w-full sm:w-56 md:w-64 aspect-video shrink-0 bg-black/30">
+                                            <div className="relative rounded-lg overflow-hidden border border-white/5 max-w-[200px] sm:w-56 md:w-64 aspect-video shrink-0 bg-black/30">
                                                 <Image
                                                     src={service.image}
                                                     alt={displayTitle}

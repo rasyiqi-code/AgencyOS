@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
-import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
+
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { useTranslations } from "next-intl";
 
@@ -174,8 +174,6 @@ export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, applie
                     </div>
                 )}
             </div>
-
-            <SubscriptionDialog context="DIGITAL" />
         </div>
     );
 }

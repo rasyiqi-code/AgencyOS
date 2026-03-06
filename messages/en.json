@@ -374,6 +374,18 @@
             "aiHelperDesc": "Our AI Systems Engineer is online and ready to help you scope your next mission.",
             "openComms": "Open Comms Channel"
         },
+        "ClientQuotes": {
+            "title": "My Quotes",
+            "subtitle": "Track the status of your price negotiations for custom services.",
+            "historyTitle": "Quote History",
+            "historyDesc": "List of your price requests currently in progress.",
+            "colService": "Service",
+            "colOfferedPrice": "Offered Price",
+            "colAction": "Action",
+            "empty": "No quote requests found.",
+            "pay": "Pay",
+            "detail": "Detail"
+        },
         "Workbench": {
             "title": "Project Workbench",
             "status": "System Status",
@@ -428,6 +440,32 @@
                 "description": "Monitor and manage your digital product sales.",
                 "noOrders": "No orders found.",
                 "searchPlaceholder": "Order ID, email, or product..."
+            },
+            "Quotes": {
+                "title": "New Quote",
+                "subtitle": "Send price estimate",
+                "generatorTitle": "NEW QUOTE GENERATOR",
+                "selectService": "Select Service...",
+                "selectServiceLabel": "SELECT SERVICE",
+                "selectClientLabel": "SELECT CLIENT (USER)",
+                "selectClient": "Select Client User Account...",
+                "displayNameLabel": "DISPLAY NAME (LABEL)",
+                "priceLabel": "QUOTE PRICE",
+                "emailLabel": "CLIENT EMAIL",
+                "generateButton": "Generate Quote",
+                "listTitle": "Quote List",
+                "listSubtitle": "Please review the prices offered to clients.",
+                "colOrderId": "Order ID",
+                "colClient": "Client",
+                "colService": "Service",
+                "colTotalPrice": "Total Price",
+                "colInvoice": "Invoice",
+                "colAction": "Action",
+                "empty": "No quote request/history yet.",
+                "followUpScript": "Hi {name}, here is the invoice for {service}. Total: {price}. Check here: {link}. Thank you!",
+                "copyScriptLabel": "Copy Follow-up Script",
+                "statusPaid": "Paid",
+                "statusPending": "Pending"
             }
         },
         "Marketing": {
@@ -717,6 +755,7 @@
         "fastDelivery": "Fast Delivery",
         "fastTurnaroundDesc": "Fast turnaround guaranteed",
         "turnaround": "Estimated {days} days turnaround",
+        "deliverables": "Deliverables & Features",
         "bonuses": "Included Bonuses",
         "noBonuses": "No marketing bonuses active.",
         "haveCoupon": "Have a coupon code?",
@@ -778,7 +817,21 @@
         "confirmed": "Payment Confirmed",
         "confirmedDesc": "Thank you! Your payment has been verified and your mission is now active.",
         "downloadReceipt": "Download Receipt",
-        "accessMission": "Access Mission Control"
+        "accessMission": "Access Mission Control",
+        "submitOffer": "Submit Offer",
+        "submitOfferDesc": "This service is negotiable. Please enter your offer price based on the service details above.",
+        "yourOfferPrice": "Your Offer Price ({currency})",
+        "basePriceFrom": "Base price starting from:",
+        "belowStartingPrice": "Offers below the starting price have a high chance of being rejected. Consider adjusting based on your specific requirements.",
+        "enterOfferFirst": "Enter an offer price first",
+        "sendOfferContact": "Send Offer & Contact",
+        "chooseChannel": "Choose Negotiation Channel",
+        "liveChat": "Live Chat (Inbox)",
+        "offerAutoSaved": "Your offer will be automatically saved when you select a channel.",
+        "invalidOffer": "Please enter a valid offer price.",
+        "offerSubmitError": "Failed to submit offer. Please try again.",
+        "discussPrice": "Price TBD",
+        "quoteSummaryMessage": "Hi, I'm interested in the \"{service}\" service (ID: {id}). My offer: {price}. Please review, thanks."
     },
     "ProductDetail": {
         "back": "Back to Products",

@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
         // Create Invoice (Estimate)
         const estimate = await prisma.estimate.create({
             data: {
-                title: isQuoteOnly ? `Draft Quote for ${service.title}` : `Invoice for ${service.title}`,
+                title: isQuoteOnly ? `Quote: ${service.title}` : `Invoice: ${service.title}`,
                 prompt: isQuoteOnly ? "Custom Quote Request" : "Productized Service Purchase",
-                summary: isQuoteOnly ? `Awaiting final pricing for ${service.title}` : `Automated invoice for ${service.title}`,
+                summary: isQuoteOnly ? `Custom quote request for ${service.title}` : `${service.title}`,
                 screens: [],
                 apis: [],
                 totalHours: 0,

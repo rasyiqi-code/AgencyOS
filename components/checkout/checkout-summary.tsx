@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
-import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
+
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface CheckoutSummaryProps {
     estimate: ExtendedEstimate;
@@ -22,8 +22,15 @@ interface CheckoutSummaryProps {
 
 export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupon, context }: CheckoutSummaryProps) {
     const t = useTranslations("Checkout");
+    const locale = useLocale();
+    const isId = locale === 'id';
     const [couponInput, setCouponInput] = useState("");
     const [isValidating, setIsValidating] = useState(false);
+
+    // Get features based on locale
+    const serviceFeatures = isId
+        ? (estimate.service?.features_id as string[]) || (estimate.service?.features as string[])
+        : (estimate.service?.features as string[]);
 
     const handleApplyCoupon = async () => {
         if (!couponInput) return;
@@ -68,11 +75,11 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
     ];
 
     return (
-        <div className="space-y-8">
-            <div className="bg-zinc-900 border border-white/10 rounded-xl p-8 space-y-6">
+        <div className="space-y-6 sm:space-y-8">
+            <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-white mb-2">{estimate.title}</h2>
-                    <p className="text-zinc-400">{estimate.summary}</p>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">{estimate.title}</h2>
+                    <p className="text-sm sm:text-base text-zinc-400 break-words">{estimate.summary}</p>
                 </div>
 
                 {/* Sales Points */}
@@ -87,6 +94,24 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                         </div>
                     ))}
                 </div>
+
+                {/* Deliverables & Features */}
+                {serviceFeatures && serviceFeatures.length > 0 && (
+                    <div className="pt-6 border-t border-white/5">
+                        <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <LucideIcons.Layers className="w-4 h-4 text-lime-400" />
+                            {t("deliverables")}
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                            {serviceFeatures.map((feature, i) => (
+                                <div key={i} className="flex items-start gap-3 text-zinc-300">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-lime-500 shrink-0" />
+                                    <span className="text-sm leading-relaxed">{feature}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Bonuses */}
                 <div className="pt-6 border-t border-white/5">
@@ -119,52 +144,52 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                 </div>
             </div>
 
-            {/* Coupon Section */}
-            <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-4 text-white">
-                    <Tag className="w-4 h-4 text-brand-yellow" />
-                    <span className="font-medium">{t("haveCoupon")}</span>
-                </div>
-                <div className="flex gap-4">
-                    <Input
-                        value={couponInput}
-                        onChange={(e) => setCouponInput(e.target.value)}
-                        placeholder={t("enterCode")}
-                        className="bg-zinc-950 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase"
-                        disabled={!!appliedCoupon}
-                    />
-                    {appliedCoupon ? (
-                        <Button variant="secondary" className="bg-white/10 hover:bg-white/20 text-white" onClick={() => {
-                            setCouponInput("");
-                            onApplyCoupon(null);
-                        }}>
-                            {t("change")}
-                        </Button>
-                    ) : (
-                        <Button
-                            className="bg-brand-yellow text-black hover:bg-brand-yellow/80"
-                            onClick={handleApplyCoupon}
-                            disabled={isValidating || !couponInput}
-                        >
-                            {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
-                        </Button>
-                    )}
-                </div>
-                {appliedCoupon && (
-                    <div className="mt-2 text-sm text-emerald-400 flex items-center gap-2">
-                        <Check className="w-4 h-4" />
-                        {t("applied")}: {t.rich("appliedCouponDesc", {
-                            code: appliedCoupon.code,
-                            discount: () => appliedCoupon.discountType === 'percentage'
-                                ? `${appliedCoupon.discountValue}%`
-                                : <PriceDisplay amount={appliedCoupon.discountValue} />
-                        })}
+            {/* Coupon Section - hidden when payment is confirmed */}
+            {estimate.status !== 'paid' && (
+                <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 sm:p-6">
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4 text-white">
+                        <Tag className="w-4 h-4 text-brand-yellow" />
+                        <span className="font-medium text-sm sm:text-base">{t("haveCoupon")}</span>
                     </div>
-                )}
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <Input
+                            value={couponInput}
+                            onChange={(e) => setCouponInput(e.target.value)}
+                            placeholder={t("enterCode")}
+                            className="w-full bg-zinc-950 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase"
+                            disabled={!!appliedCoupon}
+                        />
+                        {appliedCoupon ? (
+                            <Button variant="secondary" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white" onClick={() => {
+                                setCouponInput("");
+                                onApplyCoupon(null);
+                            }}>
+                                {t("change")}
+                            </Button>
+                        ) : (
+                            <Button
+                                className="w-full sm:w-auto bg-brand-yellow text-black hover:bg-brand-yellow/80"
+                                onClick={handleApplyCoupon}
+                                disabled={isValidating || !couponInput}
+                            >
+                                {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
+                            </Button>
+                        )}
+                    </div>
+                    {appliedCoupon && (
+                        <div className="mt-2 text-sm text-emerald-400 flex items-center gap-2">
+                            <Check className="w-4 h-4" />
+                            {t("applied")}: {t.rich("appliedCouponDesc", {
+                                code: appliedCoupon.code,
+                                discount: () => appliedCoupon.discountType === 'percentage'
+                                    ? `${appliedCoupon.discountValue}%`
+                                    : <PriceDisplay amount={appliedCoupon.discountValue} />
+                            })}
+                        </div>
+                    )}
 
-            </div>
-
-            <SubscriptionDialog context={context} />
+                </div>
+            )}
         </div>
     );
 }

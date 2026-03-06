@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/config/db";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus } from "lucide-react";
@@ -7,13 +6,15 @@ import { canManageBilling } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
 import { stackServerApp } from "@/lib/config/stack";
 import { PriceEditor } from "@/components/admin/finance/price-editor";
-import { UserSelector } from "@/components/admin/finance/user-selector";
 import { InvoiceActions } from "@/components/admin/finance/invoice-actions";
-import { createManualQuote } from "@/app/actions/quotes";
 import { DeleteQuoteButton } from "@/components/shared/delete-quote-button";
 import type { StackUser } from "@/lib/shared/types";
+import { getTranslations } from "next-intl/server";
+import { QuoteGeneratorForm } from "@/components/admin/finance/quote-generator-form";
+import { CheckCircle2 } from "lucide-react";
 
 export default async function AdminQuotesPage() {
+    const t = await getTranslations("Admin.Finance.Quotes");
     const hasAccess = await canManageBilling();
     if (!hasAccess) {
         redirect("/admin");
@@ -99,84 +100,55 @@ export default async function AdminQuotesPage() {
 
 
     return (
-        <div className="w-full px-3 sm:px-6 py-6 sm:py-10 max-w-6xl mx-auto">
-            <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-white mb-1 sm:mb-2 text-brand-yellow">Quote Generator</h1>
-            <p className="text-zinc-400 mb-6 sm:mb-8 text-xs sm:text-base">Buat penawaran harga manual atau kelola request dari klien.</p>
+        <div className="w-full py-4 sm:py-6">
+            <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-white mb-1 sm:mb-2 text-brand-yellow">{t('title')}</h1>
+            <p className="text-zinc-400 mb-6 sm:mb-8 text-xs sm:text-base break-words">{t('subtitle')}</p>
 
             <Card className="bg-zinc-900 border-zinc-800 mb-6 sm:mb-8 overflow-hidden">
                 <div className="bg-brand-yellow/10 px-4 sm:px-6 py-2.5 sm:py-3 border-b border-brand-yellow/20 flex items-center gap-2">
                     <Plus className="w-4 h-4 text-brand-yellow" />
-                    <span className="text-xs sm:text-sm font-bold text-brand-yellow uppercase tracking-wider">Generator Penawaran Baru</span>
+                    <span className="text-xs sm:text-sm font-bold text-brand-yellow uppercase tracking-wider">{t('generatorTitle')}</span>
                 </div>
-                <CardContent className="p-4 sm:pt-6">
-                    <form action={async (formData) => { "use server"; await createManualQuote(formData); }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-end">
-                        <div className="space-y-2">
-                            <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Pilih Layanan</label>
-                            <select
-                                name="serviceId"
-                                defaultValue=""
-                                className="w-full bg-black/40 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-yellow"
-                                required
-                            >
-                                <option value="" disabled>Pilih Layanan...</option>
-                                {services.map(s => (
-                                    <option key={s.id} value={s.id}>{s.title}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Pilih Klien (User)</label>
-                            <UserSelector users={availableUsers} />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Display Name (Label)</label>
-                            <input
-                                name="clientName"
-                                placeholder="E.g. John Doe"
-                                className="w-full bg-black/40 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-yellow"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Harga Penawaran</label>
-                            <input
-                                name="amount"
-                                type="number"
-                                placeholder="E.g. 500"
-                                className="w-full bg-black/40 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-yellow font-mono"
-                                required
-                            />
-                        </div>
-                        <Button type="submit" className="bg-brand-yellow hover:bg-yellow-400 text-black font-bold h-[38px] sm:col-span-2 lg:col-span-1">
-                            Generate Quote
-                        </Button>
-                    </form>
+                <CardContent className="p-3 sm:p-6">
+                    <QuoteGeneratorForm
+                        services={services}
+                        availableUsers={availableUsers}
+                        translations={{
+                            selectServiceLabel: t('selectServiceLabel'),
+                            selectService: t('selectService'),
+                            selectClientLabel: t('selectClientLabel'),
+                            displayNameLabel: t('displayNameLabel'),
+                            emailLabel: t('emailLabel'),
+                            priceLabel: t('priceLabel'),
+                            generateButton: t('generateButton')
+                        }}
+                    />
                 </CardContent>
             </Card>
 
             <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader className="px-4 sm:px-6">
-                    <CardTitle className="text-white text-base sm:text-lg">Daftar Penawaran</CardTitle>
-                    <CardDescription className="text-zinc-400 text-xs sm:text-sm">Silakan review harga yang ditawarkan oleh klien.</CardDescription>
+                    <CardTitle className="text-white text-base sm:text-lg">{t('listTitle')}</CardTitle>
+                    <CardDescription className="text-zinc-400 text-xs sm:text-sm">{t('listSubtitle')}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6 sm:pt-0">
-                    {/* Horizontal scroll wrapper untuk mobile */}
                     <div className="overflow-x-auto">
                         <Table className="min-w-[640px]">
                             <TableHeader className="border-zinc-800">
                                 <TableRow className="border-zinc-800 hover:bg-transparent">
-                                    <TableHead className="text-zinc-400 text-xs">Order ID</TableHead>
-                                    <TableHead className="text-zinc-400 text-xs">Client</TableHead>
-                                    <TableHead className="text-zinc-400 text-xs hidden sm:table-cell">Service</TableHead>
-                                    <TableHead className="text-right text-zinc-400 text-xs">Total Price</TableHead>
-                                    <TableHead className="text-right text-zinc-400 text-xs">Invoice</TableHead>
-                                    <TableHead className="text-center text-zinc-400 text-xs">Aksi</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs">{t('colOrderId')}</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs">{t('colClient')}</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs hidden sm:table-cell">{t('colService')}</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs text-left sm:text-right">{t('colTotalPrice')}</TableHead>
+                                    <TableHead className="text-zinc-400 text-xs">{t('colInvoice')}</TableHead>
+                                    <TableHead className="text-center text-zinc-400 text-xs">{t('colAction')}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {estimates.length === 0 && (
                                     <TableRow className="border-zinc-800">
                                         <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
-                                            Belum ada history/request penawaran harga.
+                                            {t('empty')}
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -191,7 +163,7 @@ export default async function AdminQuotesPage() {
                                             <TableCell className="font-mono text-xs text-zinc-300 whitespace-nowrap">#{est.id.slice(-8).toUpperCase()}</TableCell>
                                             <TableCell className="font-medium text-white text-sm whitespace-nowrap">{displayName}</TableCell>
                                             <TableCell className="text-zinc-300 text-sm hidden sm:table-cell">{est.service?.title}</TableCell>
-                                            <TableCell className="text-right">
+                                            <TableCell className="text-left sm:text-right">
                                                 <PriceEditor
                                                     estimateId={est.id}
                                                     projectId={est.project?.id || null}
@@ -199,11 +171,23 @@ export default async function AdminQuotesPage() {
                                                     currency={est.service?.currency || 'IDR'}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-right">
-                                                <InvoiceActions
-                                                    estimateId={est.id}
-                                                    hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
-                                                />
+                                            <TableCell>
+                                                <div className="flex items-center gap-2">
+                                                    <InvoiceActions
+                                                        estimateId={est.id}
+                                                        hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
+                                                        clientName={displayName}
+                                                        serviceTitle={est.service?.title}
+                                                        amount={est.totalCost}
+                                                        currency={est.service?.currency || 'IDR'}
+                                                    />
+                                                    {est.status === 'paid' && (
+                                                        <div className="flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded w-fit uppercase shrink-0">
+                                                            <CheckCircle2 className="w-3 h-3" />
+                                                            {t('statusPaid')}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 <DeleteQuoteButton estimateId={est.id} />

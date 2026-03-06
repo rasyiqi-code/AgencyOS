@@ -21,12 +21,20 @@ interface User {
 interface UserSelectorProps {
     users: User[]
     defaultValue?: string
+    onValueChange?: (value: string) => void
 }
 
-export function UserSelector({ users, defaultValue = "" }: UserSelectorProps) {
+export function UserSelector({ users, defaultValue = "", onValueChange }: UserSelectorProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState(defaultValue)
     const [searchQuery, setSearchQuery] = React.useState("")
+
+    const handleSelect = (newValue: string) => {
+        setValue(newValue)
+        setOpen(false)
+        setSearchQuery("")
+        onValueChange?.(newValue)
+    }
 
     const filteredUsers = users.filter((user) =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -75,11 +83,7 @@ export function UserSelector({ users, defaultValue = "" }: UserSelectorProps) {
                                         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-zinc-800 hover:text-white",
                                         value === user.id ? "bg-brand-yellow/10 text-brand-yellow" : "text-zinc-400"
                                     )}
-                                    onClick={() => {
-                                        setValue(user.id)
-                                        setOpen(false)
-                                        setSearchQuery("")
-                                    }}
+                                    onClick={() => handleSelect(user.id)}
                                 >
                                     <Check
                                         className={cn(

@@ -156,6 +156,7 @@ export function PriceDisplay({
             {new Intl.NumberFormat(locale, {
                 style: 'currency',
                 currency: currency,
+                currencyDisplay: 'narrowSymbol',
                 notation: compact ? 'compact' : 'standard',
                 maximumFractionDigits: (compact && currency === 'USD') ? 1 : (currency === 'IDR' ? 0 : 2),
                 minimumFractionDigits: (currency === 'IDR' || compact) ? 0 : 2,
