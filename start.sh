@@ -8,7 +8,7 @@ set -e
 # Sinkronisasi database menggunakan db push (lebih rapi untuk 1 file schema)
 # Ini akan menjaga data tetap ada selama tidak ada perubahan yang menghapus kolom/tabel.
 echo "Pushing database schema..."
-bunx prisma db push
+bunx prisma db push --accept-data-loss
 
 # Start the application
 echo "Starting application..."
