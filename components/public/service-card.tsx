@@ -16,6 +16,7 @@ import { useTranslations } from "next-intl";
 
 export function ServiceCard({ service }: ServiceCardProps) {
     const t = useTranslations("Cards");
+    const tService = useTranslations("Service");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
     const { currency } = useCurrency();
@@ -77,8 +78,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     <div className="flex items-center gap-3 mb-4">
                         <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
                             {service.interval === 'one_time'
-                                ? t("oneTime")
-                                : (isId ? (service.interval === 'monthly' ? t("monthly") : service.interval) : service.interval)}
+                                ? tService("oneTime")
+                                : service.interval}
                         </div>
                     </div>
                     <Link href={`/services/${service.slug || service.id}`}>
@@ -122,7 +123,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                             <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
                             {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
                                 <span className="text-[9px] font-normal text-zinc-400 leading-none mb-0.5">
-                                    {isId ? 'Mulai dari' : 'Starts at'}
+                                    {tService("startsAt")}
                                 </span>
                             )}
                             <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
@@ -131,7 +132,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                             <PurchaseButton
                                 serviceId={service.id}
                                 interval={service.interval}
-                                customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
+                                customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
                                 className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-9 px-4 rounded-xl w-full text-[10px] uppercase mt-4 tracking-tighter shadow-lg shadow-brand-yellow/20 shrink-0"
                             />
                         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -32,6 +33,8 @@ interface ServiceModalContentProps {
 }
 
 export function ServiceModalContent({ service, isId }: ServiceModalContentProps) {
+    const t = useTranslations("Service");
+    const tCards = useTranslations("Cards");
 
     // Fallback to EN if ID content is missing
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -62,7 +65,7 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                 <PurchaseButton
                     serviceId={service.id}
                     interval={service.interval}
-                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
+                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? t("requestQuote") : undefined}
                     className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-tighter shadow-xl shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95"
                 />
                 <DialogClose className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-all">
@@ -83,22 +86,22 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                             <span className="text-3xl font-black text-brand-yellow flex flex-col sm:flex-row sm:items-end gap-1">
                                 {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
                                     <span className="text-sm font-bold text-zinc-400 leading-none mb-1 sm:mb-0 sm:pb-1 tracking-normal">
-                                        {isId ? 'Mulai dari ' : 'Starts at '}
+                                        {t("startsAt")}{" "}
                                     </span>
                                 )}
                                 <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
                             </span>
                             <span className="text-sm font-bold text-zinc-500 uppercase tracking-widest">
                                 {service.interval === 'one_time'
-                                    ? (isId ? '/ Sekali Bayar' : '/ One Time')
-                                    : (isId ? `/ ${service.interval}` : `/ ${service.interval}`)}
+                                    ? `/ ${t("oneTime")}`
+                                    : `/ ${service.interval}`}
                             </span>
                         </div>
                     </DialogHeader>
 
                     <div className="space-y-12 pb-24">
                         <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">About this service</h4>
+                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">{tCards("about")}</h4>
                             <div
                                 className="text-zinc-300 leading-relaxed font-light"
                                 dangerouslySetInnerHTML={{ __html: displayDescription }}
@@ -106,7 +109,7 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                         </div>
 
                         <div>
-                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">What&apos;s Included</h4>
+                            <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">{tCards("included")}</h4>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {displayFeatures.map((feature: string, i: number) => (
                                     <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-brand-yellow/20 transition-colors group/feat">

@@ -1,4 +1,4 @@
-import { ShieldCheck, MessageSquare, UserCheck, HeartHandshake, Gauge, Code2 } from "lucide-react";
+import { Smartphone, Search, ShieldCheck, Layout, FileText, RefreshCcw } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
@@ -12,12 +12,12 @@ export async function SectionIncluded() {
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     const features = [
-        { icon: ShieldCheck, title: t("f1"), desc: t("f1Desc") },
-        { icon: MessageSquare, title: t("f2"), desc: t("f2Desc") },
-        { icon: UserCheck, title: t("f3"), desc: t("f3Desc") },
-        { icon: HeartHandshake, title: t("f4"), desc: t("f4Desc") },
-        { icon: Gauge, title: t("f5"), desc: t("f5Desc") },
-        { icon: Code2, title: t("f6"), desc: t("f6Desc") },
+        { icon: Smartphone, title: t("f1"), desc: t("f1Desc") },
+        { icon: Search, title: t("f2"), desc: t("f2Desc") },
+        { icon: ShieldCheck, title: t("f3"), desc: t("f3Desc") },
+        { icon: Layout, title: t("f4"), desc: t("f4Desc") },
+        { icon: FileText, title: t("f5"), desc: t("f5Desc") },
+        { icon: RefreshCcw, title: t("f6"), desc: t("f6Desc") },
     ];
 
     return (

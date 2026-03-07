@@ -32,6 +32,7 @@ interface ServiceDetailContentProps {
 
 export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: ServiceDetailContentProps) {
     const t = useTranslations("Cards");
+    const tService = useTranslations("Service");
 
     // Fallback to EN if ID content is missing
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -41,7 +42,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
         ? (service as unknown as Record<string, unknown>).features_id as string[]
         : service.features as string[];
 
-    const intervalLabel = service.interval === 'one_time' ? t("oneTime") : (isId ? (service.interval === 'monthly' ? t("monthly") : service.interval) : service.interval);
+    const intervalLabel = service.interval === 'one_time' ? tService("oneTime") : service.interval;
 
     return (
         <div className="relative min-h-screen bg-black overflow-hidden flex flex-col">
@@ -76,7 +77,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                     <div className="space-y-1.5 md:space-y-3">
                                         <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[7px] md:text-[9px] font-bold text-brand-yellow uppercase tracking-[0.2em]">
                                             <Sparkles className="w-2 md:w-3 h-2 md:h-3" />
-                                            Premium Service
+                                            {tService("premiumService")}
                                         </div>
                                         <h1 className="text-xl md:text-2xl lg:text-4xl font-black text-brand-yellow tracking-tighter leading-tight break-words max-w-sm md:max-w-xl">
                                             {displayTitle}
@@ -89,7 +90,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             <div className="flex items-baseline gap-1.5 md:gap-2">
                                                 {service.priceType === 'STARTING_AT' && (
                                                     <span className="text-[10px] md:text-sm font-bold text-zinc-400">
-                                                        {isId ? 'Mulai dari' : 'Starts at'}
+                                                        {tService("startsAt")}
                                                     </span>
                                                 )}
                                                 <div className="text-xl md:text-4xl font-black text-brand-yellow tracking-tighter">
@@ -104,8 +105,8 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                         <div className="h-8 md:h-10 w-px bg-white/10" />
 
                                         <div className="flex flex-col">
-                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">Timeline</span>
-                                            <span className="text-base md:text-xl font-bold text-white tracking-tight">Rapid Delivery</span>
+                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{tService("timeline")}</span>
+                                            <span className="text-base md:text-xl font-bold text-white tracking-tight">{tService("rapidDelivery")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +134,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                         <PurchaseButton
                                             serviceId={service.id}
                                             interval={service.interval}
-                                            customLabel={service.priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
+                                            customLabel={service.priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
                                             className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
                                         />
                                     </div>
@@ -162,7 +163,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                     <div className="w-1 h-3 bg-brand-yellow rounded-full" />
                                     {t("included")}
                                 </h4>
-                                <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Everything you need to succeed</h2>
+                                <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">{tService("everythingToSucceed")}</h2>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -175,7 +176,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             <span className="text-sm md:text-base text-zinc-200 font-bold leading-tight group-hover/feat:text-white transition-colors block">
                                                 {feature.replace(/<[^>]*>?/gm, '')}
                                             </span>
-                                            <p className="text-xs text-zinc-500 leading-normal">Premium quality deliverable included as standard in this package.</p>
+                                            <p className="text-xs text-zinc-500 leading-normal">{tService("premiumStandard")}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -214,7 +215,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                         <div className="text-xl font-black text-white tracking-tighter flex flex-col sm:flex-row sm:items-end gap-1">
                             {service.priceType === 'STARTING_AT' && (
                                 <span className="text-[10px] font-normal text-zinc-400 leading-none mb-1 sm:mb-0 sm:pb-1">
-                                    {isId ? 'Mulai dari ' : 'Starts at '}
+                                    {tService("startsAt")}{" "}
                                 </span>
                             )}
                             <div className="flex items-end gap-1">
@@ -227,7 +228,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                         <PurchaseButton
                             serviceId={service.id}
                             interval={service.interval}
-                            customLabel={service.priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
+                            customLabel={service.priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
                             className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
                         />
                     </div>

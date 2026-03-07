@@ -10,6 +10,7 @@ import { prisma } from "@/lib/config/db";
 import { Metadata } from "next";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { TextTypewriter } from "@/components/ui/text-typewriter";
+import { MessageCircle } from "lucide-react";
 
 import { ResolvingMetadata } from "next";
 
@@ -64,6 +65,13 @@ export default async function PortfolioPage() {
         }))
     );
 
+    const contactPhone = await getSettingValue("CONTACT_PHONE", "6285183131249");
+    const waMessage = await getTranslations("Portfolio");
+    const locale = await getLocale();
+    const isId = locale === 'id';
+
+    const waLink = `https://wa.me/${contactPhone.replace(/\D/g, '')}?text=${encodeURIComponent(isId ? 'Halo, saya ingin minta contoh desain gratis.' : 'Hi, I would like to request a free design sample.')}`;
+
     return (
         <div className="min-h-screen bg-black relative overflow-hidden selection:bg-brand-yellow/30">
             {/* Background Effects - Dark Theme with Gold & Silver Glows */}
@@ -92,9 +100,18 @@ export default async function PortfolioPage() {
                                 delay={500}
                             />
                         </h1>
-                        <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-light">
+                        <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-light mb-8">
                             {t('description')}
                         </p>
+
+                        <div className="flex justify-center">
+                            <Link href={waLink} target="_blank">
+                                <Button size="lg" className="bg-brand-yellow hover:bg-brand-yellow/90 text-black font-black rounded-full px-8 h-12 text-sm shadow-[0_0_30px_rgba(254,215,0,0.2)] transition-all hover:scale-105 active:scale-95 border-2 border-black/10">
+                                    <MessageCircle className="mr-2 w-5 h-5" />
+                                    {t('freeDesignSample')}
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </ScrollAnimationWrapper>
 

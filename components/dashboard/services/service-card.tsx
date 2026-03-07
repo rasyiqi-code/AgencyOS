@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Sparkles, ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
@@ -19,6 +20,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
     const { currency } = useCurrency();
+    const t = useTranslations("Service");
+    const tCards = useTranslations("Cards");
     const isId = currency === 'IDR';
 
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -78,8 +81,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         <div className="flex items-center gap-3 mb-4">
                             <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
                                 {service.interval === 'one_time'
-                                    ? (isId ? 'Sekali Bayar' : 'One Time')
-                                    : (isId ? `${service.interval}` : `${service.interval}`)}
+                                    ? t("oneTime")
+                                    : service.interval}
                             </div>
                         </div>
                         <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
@@ -108,7 +111,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                                         <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
                                         <DialogTrigger asChild>
                                             <button className="text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity">
-                                                +{displayFeatures.length - 3} More <ChevronDown className="w-2.5 h-2.5" />
+                                                +{displayFeatures.length - 3} {tCards("more")} <ChevronDown className="w-2.5 h-2.5" />
                                             </button>
                                         </DialogTrigger>
                                     </>
@@ -117,10 +120,10 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
                             {/* Metrics Block */}
                             <div className="p-4 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[110px]">
-                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Price</div>
+                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{tCards("price")}</div>
                                 {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
                                     <span className="text-[9px] font-normal text-zinc-400 leading-none mb-0.5">
-                                        {isId ? 'Mulai dari' : 'Starts at'}
+                                        {t("startsAt")}
                                     </span>
                                 )}
                                 <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
@@ -129,7 +132,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                                 <PurchaseButton
                                     serviceId={service.id}
                                     interval={service.interval}
-                                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? (isId ? 'Minta Penawaran' : 'Request Quote') : undefined}
+                                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? t("requestQuote") : undefined}
                                     className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-9 px-4 rounded-xl w-full text-[10px] uppercase mt-4 tracking-tighter shadow-lg shadow-brand-yellow/20 shrink-0"
                                 />
                             </div>
