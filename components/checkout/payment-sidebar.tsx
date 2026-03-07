@@ -291,22 +291,22 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                     <div className="flex justify-between text-sm text-emerald-400 mb-1">
                                         <span>{t("discount")} ({appliedCoupon.code})</span>
                                         <span>
-                                            - <PriceDisplay amount={estimate.totalCost - amount} />
+                                            - <PriceDisplay amount={estimate.totalCost - amount} baseCurrency={baseCurrency} />
                                         </span>
                                     </div>
                                 )}
                                 <span className="text-3xl font-bold text-white tracking-tight">
-                                    <PriceDisplay amount={amountToPay} baseCurrency={activeCurrency} />
+                                    <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
                                 </span>
                                 {paymentType === "DP" && (
                                     <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
                                         <span>{t("totalProjectValue")}:</span>
-                                        <span><PriceDisplay amount={amount} baseCurrency={activeCurrency} /></span>
+                                        <span><PriceDisplay amount={amount} baseCurrency={baseCurrency} /></span>
                                     </div>
                                 )}
                                 {appliedCoupon && paymentType === "FULL" && (
                                     <span className="text-xs text-zinc-500 line-through">
-                                        <PriceDisplay amount={estimate.totalCost} baseCurrency={activeCurrency} />
+                                        <PriceDisplay amount={estimate.totalCost} baseCurrency={baseCurrency} />
                                     </span>
                                 )}
                             </div>
