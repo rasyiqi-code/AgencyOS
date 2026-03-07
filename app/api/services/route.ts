@@ -106,6 +106,8 @@ export async function POST(req: NextRequest) {
                 priceType: formData.get("priceType")?.toString() || "FIXED",
                 currency,
                 interval,
+                category: formData.get("category")?.toString() || "Uncategorized",
+                visibility: formData.get("visibility")?.toString() || "PUBLIC",
                 features,
                 features_id,
                 image: imageUrl,

@@ -72,6 +72,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
 
         const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
         const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
+        const category = formData.get("category")?.toString() || "Uncategorized";
 
         const data: Record<string, unknown> = {
             title,
@@ -82,6 +83,8 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             priceType,
             currency,
             interval,
+            category,
+            visibility: formData.get("visibility")?.toString() || "PUBLIC",
             features,
             features_id,
             slug: slugInput ? slugify(slugInput) : slugify(title)

@@ -12,12 +12,9 @@ import { Button } from "@/components/ui/button";
 import { FileText, ListChecks, CreditCard, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/shared/utils";
 
-// ... imports
+import { CreatableCategorySelect } from "./creatable-category-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Flag } from "lucide-react";
-
-// import { generateServiceAction } from '@/app/actions/genkit';
-import { Sparkles, Loader2, ArrowLeft, Package } from "lucide-react";
+import { Flag, Sparkles, Loader2, ArrowLeft, Package } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Link from "next/link";
@@ -27,7 +24,7 @@ interface DraftServiceData extends Partial<ServiceData> {
     recommended_price?: number;
 }
 
-export function CreateServiceForm() {
+export function CreateServiceForm({ categories = [] }: { categories?: string[] }) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -340,9 +337,32 @@ export function CreateServiceForm() {
                         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
                             <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
                                 <CreditCard className="w-4 h-4 text-violet-400" />
-                                <h3 className="text-sm font-semibold text-white">Pricing Model</h3>
+                                <h3 className="text-sm font-semibold text-white">Pricing & Configuration</h3>
                             </div>
                             <div className="p-6 space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Category / Group</label>
+                                    <CreatableCategorySelect
+                                        categories={categories}
+                                        defaultValue={generatedData?.category ?? "Uncategorized"}
+                                        name="category"
+                                        placeholder="Select or type category..."
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Visibility</label>
+                                    <Select name="visibility" defaultValue="PUBLIC">
+                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="PUBLIC">Public (Visible to everyone)</SelectItem>
+                                            <SelectItem value="PRIVATE">Private (Only visible to admin)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Pricing Type</label>
                                     <Select name="priceType" defaultValue="FIXED">

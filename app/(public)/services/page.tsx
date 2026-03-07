@@ -62,7 +62,10 @@ export default async function PublicServicesPage() {
     // Parallel data fetching for performance
     const [services] = await Promise.all([
         prisma.service.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                visibility: 'PUBLIC'
+            },
             orderBy: { updatedAt: 'desc' }
         })
     ]);

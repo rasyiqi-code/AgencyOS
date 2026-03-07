@@ -162,9 +162,11 @@ model Service {
   features       Json
   image          String?
   isActive       Boolean    @default(true)
+  category       String?    @default("Uncategorized")
+  visibility     String     @default("PUBLIC")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
-  creemProductId String?
+  creemProductId String?    @unique
   currency       String     @default("USD")
   description_id String?
   features_id    Json?

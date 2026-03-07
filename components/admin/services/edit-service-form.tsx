@@ -33,13 +33,27 @@ export interface ServiceData {
     features_id?: string[] | null;
     image: string | null;
     slug?: string | null;
+    category?: string | null;
+    visibility?: string;
 }
 
 interface DraftServiceData extends Partial<ServiceData> {
     recommended_price?: number;
 }
 
-export function EditServiceForm({ service, features, features_id }: { service: ServiceData, features: string[], features_id: string[] }) {
+import { CreatableCategorySelect } from "./creatable-category-select";
+
+export function EditServiceForm({
+    service,
+    features,
+    features_id,
+    categories = []
+}: {
+    service: ServiceData,
+    features: string[],
+    features_id: string[],
+    categories?: string[]
+}) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -328,9 +342,32 @@ export function EditServiceForm({ service, features, features_id }: { service: S
                         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
                             <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
                                 <CreditCard className="w-4 h-4 text-violet-400" />
-                                <h3 className="text-sm font-semibold text-white">Pricing Model</h3>
+                                <h3 className="text-sm font-semibold text-white">Pricing & Configuration</h3>
                             </div>
                             <div className="p-6 space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Category / Group</label>
+                                    <CreatableCategorySelect
+                                        categories={categories}
+                                        defaultValue={generatedData?.category ?? service.category ?? "Uncategorized"}
+                                        name="category"
+                                        placeholder="Select or type category..."
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Visibility</label>
+                                    <Select name="visibility" defaultValue={service.visibility || "PUBLIC"}>
+                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="PUBLIC">Public (Visible to everyone)</SelectItem>
+                                            <SelectItem value="PRIVATE">Private (Only visible to admin)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Pricing Type</label>
                                     <Select name="priceType" defaultValue={service.priceType || 'FIXED'}>

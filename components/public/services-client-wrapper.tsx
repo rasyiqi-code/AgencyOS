@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Service {
     id: string;
@@ -18,6 +19,7 @@ interface Service {
     currency?: string | null;
     interval: string;
     features: unknown;
+    category?: string | null;
     features_id?: unknown;
     image: string | null;
 }
@@ -98,18 +100,59 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                     </p>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
-                    {services.map((service) => (
-                        <ServiceCard key={service.id} service={service} />
-                    ))}
+                {services.length > 0 && (() => {
+                    const groupedServices = services.reduce((acc, curr) => {
+                        const cat = curr.category || 'Uncategorized';
+                        if (!acc[cat]) acc[cat] = [];
+                        acc[cat].push(curr);
+                        return acc;
+                    }, {} as Record<string, typeof services>);
 
-                    {services.length === 0 && (
-                        <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5">
-                            <p className="text-zinc-500 text-lg">No services available publicly at the moment.</p>
-                            <p className="text-zinc-600 text-sm mt-2">Check back soon for updates.</p>
-                        </div>
-                    )}
-                </div>
+                    const categories = Object.keys(groupedServices).sort((a, b) => {
+                        if (a === 'Uncategorized') return 1;
+                        if (b === 'Uncategorized') return -1;
+                        return a.localeCompare(b);
+                    });
+
+                    const defaultTab = categories[0] || 'Uncategorized';
+
+                    return (
+                        <Tabs defaultValue={defaultTab} className="w-full">
+                            <div className="flex justify-center mb-12">
+                                <div className="w-full max-w-full overflow-x-auto scrollbar-hide pb-2">
+                                    <TabsList className="bg-zinc-900/50 border border-white/5 p-1 flex w-max min-w-full sm:min-w-0 sm:w-auto mx-auto">
+                                        {categories.map((category) => (
+                                            <TabsTrigger
+                                                key={category}
+                                                value={category}
+                                                className="px-4 py-2 text-sm font-medium rounded-lg data-[state=active]:bg-brand-yellow data-[state=active]:text-black transition-all whitespace-nowrap"
+                                            >
+                                                {category}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </div>
+                            </div>
+
+                            {categories.map((category) => (
+                                <TabsContent key={category} value={category} className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+                                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mx-auto">
+                                        {groupedServices[category].map((service) => (
+                                            <ServiceCard key={service.id} service={service} />
+                                        ))}
+                                    </div>
+                                </TabsContent>
+                            ))}
+                        </Tabs>
+                    );
+                })()}
+
+                {services.length === 0 && (
+                    <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5 max-w-7xl mx-auto">
+                        <p className="text-zinc-500 text-lg">{st("noServices") || "No services available publicly at the moment."}</p>
+                        <p className="text-zinc-600 text-sm mt-2">{st("checkBack") || "Check back soon for updates."}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
