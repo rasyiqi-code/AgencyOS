@@ -51,9 +51,12 @@ export const estimateFlow = ai.defineFlow(
             1. Determine Complexity first (Low, Medium, High).
             2. Use the corresponding Hourly Rate for Total Cost calculation.
             3. Break down into Screens (UI) and APIs (Backend).
+               - DILARANG MENGHAPUS (CRITICAL): You MUST include every single feature or screen mentioned by the user in the Current Requirement. Do not omit anything they asked for.
+               - If the user's requirement is vague, brainstorm necessary standard screens and APIs for that type of project.
             4. Be realistic. Simple pages = 4-8 hours. Complex CRUD = 12-20 hours.
             5. Return strictly valid JSON matching the schema.
             6. DETECT LANGUAGE: If the prompt is in Indonesian, the output (Title, Summary, Descriptions) MUST be in Indonesian. If English, use English. Match the user's language.
+            7. User Pricing Constraints: If the user mentions a specific budget or desired total cost, adjust the \`totalHours\` and/or complexity to approximate that cost if reasonably possible.
             `,
             output: {
                 schema: z.object({

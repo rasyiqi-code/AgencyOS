@@ -23,23 +23,31 @@ export const serviceGeneratorFlow = ai.defineFlow(
             config: { apiKey },
             prompt: `
             You are an expert product manager and copywriter for a software development agency.
-            Your task is to generate a comprehensive service offering based on a rough description.
+            Your task is to generate a comprehensive service offering based on a rough description provided by the user.
 
             Input Description: "${prompt}"
 
             REQUIREMENTS:
-            1. Generate content in TWO languages: English and Indonesian (Bahasa Indonesia).
-            2. The "title" field must contain the English title. The "title_id" field must contain the ACTUAL Indonesian translation of the title (real Indonesian words, NOT a key name or camelCase identifier).
-            3. The "description" field must contain the English description. The "description_id" field must contain the ACTUAL Indonesian translation (real Indonesian sentences in proper Bahasa Indonesia, NOT a key name or camelCase identifier).
-            4. The "features" array must contain English feature strings. The "features_id" array must contain the ACTUAL Indonesian translation of each feature (real Indonesian words, NOT key names).
-            5. Title: Professional, catchy, enterprise-grade.
-            6. Description: minimal 2 paragraphs, HTML format (use <p>, <ul>, <li>, <strong>). Persuasive copy.
-            7. Features: 4-6 key selling points. Short and impactful.
-            8. Recommended Price: A realistic base price in USD for this service (assuming agency quality).
+            1. Language: Generate content in TWO languages: English and Indonesian (Bahasa Indonesia).
+            2. Title Field ("title" & "title_id"): 
+               - The title MUST represent the Package Name.
+               - IMPORTANT: The name MUST explicitly mention the type of website/service (e.g., "Company Profile Website Package", "Enterprise E-Commerce Website", "Dealer Website Starter", "Website Toko Online").
+               - Ensure "title_id" is the ACTUAL Indonesian translation (real words, NOT a key name like "title_id").
+            3. Description Field ("description" & "description_id"): 
+               - Must be highly engaging, persuasive, and SEO-Friendly. 
+               - Write a minimum of 2 paragraphs. 
+               - Use HTML formatting (<p>, <ul>, <li>, <strong>) to make it easy to read. 
+               - Ensure "description_id" is the ACTUAL Indonesian translation (proper Bahasa Indonesia sentences, NOT a key name).
+            4. Features & Deliverables Field ("features" & "features_id"):
+               - DILARANG MENGHAPUS (CRITICAL): You MUST include and retain every single feature or deliverable mentioned by the user in the Input Description. Do not omit anything they asked for.
+               - DETAILED & COMPLETE: Expand on the user's points professionally to make them sound like high-value deliverables.
+               - BRAINSTORMING: If the user's input is very short or lacks detail (e.g., "bikin web dealer"), you MUST brainstorm and add standard, comprehensive features expected for that type of service (e.g., "Mobile Responsive Design, SEO Setup, WhatsApp Integration, Admin Dashboard, Contact Form, 1 Year Domain & Hosting").
+               - The "features_id" array must contain the ACTUAL Indonesian translation of each feature.
+            5. Recommended Price: If the user provides a price in their input, YOU MUST use that exact price (converted to a clean number). If they do not provide a price, generate a realistic base price in USD for this service (assuming high-quality agency work).
 
             CRITICAL: All "_id" fields must contain human-readable Indonesian text, NOT variable names, key identifiers, or camelCase strings.
             Example of WRONG output: { "title_id": "boardingHouseWebsite_title_id" }
-            Example of CORRECT output: { "title_id": "Website Manajemen Rumah Kos Premium" }
+            Example of CORRECT output: { "title_id": "Website Manajemen Kos Premium" }
 
             Return strictly valid JSON matching the schema.
             `,
