@@ -90,14 +90,14 @@ export default async function ServicesPage() {
                                         key={service.id}
                                         className="border border-zinc-800/60 rounded-xl overflow-hidden transition-all duration-200 hover:border-zinc-700/80 bg-zinc-950/50 data-[state=open]:border-zinc-700/80 w-full max-w-full"
                                     >
-                                        <AccordionTrigger className="hover:no-underline px-4 py-3.5 cursor-pointer hover:bg-zinc-900/40 group overflow-hidden w-full text-left">
-                                            <div className="flex w-full items-start gap-2 sm:gap-3 overflow-hidden">
+                                        <AccordionTrigger className="hover:no-underline px-4 py-3.5 cursor-pointer hover:bg-zinc-900/40 group">
+                                            <div className="flex flex-1 min-w-0 items-start gap-2 sm:gap-3">
                                                 {/* Status indicator dot — green if synced, amber if not */}
                                                 <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${isSynced ? 'bg-emerald-500' : 'bg-amber-500'}`} />
 
                                                 {/* Title + price + date + badges */}
-                                                <div className="flex-1 min-w-0 pr-2 overflow-hidden">
-                                                    <span className="font-medium text-white text-sm truncate w-full block">{displayTitle}</span>
+                                                <div className="flex-1 min-w-0 pr-2">
+                                                    <span className="font-medium text-white text-sm truncate block">{displayTitle}</span>
                                                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[11px] text-zinc-500 mt-1">
                                                         <span className="truncate">
                                                             <PriceDisplay amount={service.price} baseCurrency={((service as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
