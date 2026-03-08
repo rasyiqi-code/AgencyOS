@@ -50,13 +50,27 @@ export function InvoiceDocument({
     const dateLocale = locale === 'id' ? localeId : localeEn;
     const formattedDate = format(today, locale === 'id' ? "d MMMM yyyy" : "MMM dd, yyyy", { locale: dateLocale });
 
+    const baseCurrency = (extendedEstimate.service as any)?.currency || 'USD';
     const formatCurrency = (val: number) => {
-        const isIDR = currency === 'IDR';
-        return new Intl.NumberFormat(isIDR ? 'id-ID' : 'en-US', {
+        const targetCurrency = currency;
+        const isTargetIDR = targetCurrency === 'IDR';
+        const isBaseIDR = baseCurrency === 'IDR';
+
+        let convertedVal = val;
+        // Logic: Only convert if base and target are different
+        if (isBaseIDR && !isTargetIDR) {
+            // IDR Base -> USD View: Divide by rate
+            convertedVal = val / (exchangeRate || 15000);
+        } else if (!isBaseIDR && isTargetIDR) {
+            // USD Base -> IDR View: Multiply by rate
+            convertedVal = val * (exchangeRate || 15000);
+        }
+
+        return new Intl.NumberFormat(isTargetIDR ? 'id-ID' : 'en-US', {
             style: 'currency',
-            currency: currency,
-            maximumFractionDigits: isIDR ? 0 : 2
-        }).format(val * (isIDR && (exchangeRate || 1) ? (exchangeRate || 1) : 1));
+            currency: targetCurrency,
+            maximumFractionDigits: isTargetIDR ? 0 : 2
+        }).format(convertedVal);
     };
 
     return (
@@ -85,9 +99,9 @@ export function InvoiceDocument({
                     }
                     .watermark-container {
                         position: fixed !important;
-                        top: 12px;
+                        top: 50%;
                         right: 12px;
-                    }
+                    } 
                 }
             `}</style>
             {/* Watermark - shows status label for all invoice states */}
