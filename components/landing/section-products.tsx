@@ -2,6 +2,9 @@
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
 import { ProductList } from "./product-list";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export async function ProductCatalog() {
     const t = await getTranslations("ProductCatalog");
@@ -25,6 +28,15 @@ export async function ProductCatalog() {
 
                 <div className="w-full">
                     <ProductList initialServices={services} />
+                </div>
+
+                <div className="mt-16 text-center">
+                    <Link href="https://crediblemark.com/en/services" target="_blank">
+                        <Button variant="outline" size="lg" className="rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-sm text-white hover:bg-brand-yellow hover:text-black transition-all group px-8 py-6 text-base font-bold shadow-xl">
+                            {t("viewAllServices")}
+                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    </Link>
                 </div>
             </div >
         </section >

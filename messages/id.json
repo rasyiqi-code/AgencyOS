@@ -147,7 +147,8 @@
                 "cta": "Mulai Sesi Strategi"
             }
         },
-        "ctaGeneric": "Pilih Paket"
+        "ctaGeneric": "Pilih Paket",
+        "viewAllServices": "Lihat Semua Layanan"
     },
     "Workflow": {
         "title": "Presisi Strategis. Kecepatan Maksimal.",
