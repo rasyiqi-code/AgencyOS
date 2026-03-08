@@ -10,6 +10,19 @@
         "back": "Kembali",
         "updated": "Diperbarui"
     },
+    "ViewDesign": {
+        "previewMode": "MODE PRATINJAU",
+        "inquireDesign": "Pesan Desain",
+        "inquireShort": "Pesan",
+        "modalTitle": "Miliki Desain Seperti Ini",
+        "modalDescription": "Wujudkan visi bisnis Anda dengan desain profesional kelas dunia. Kami siap membantu Anda membangun identitas digital yang memukau dan efektif.",
+        "whatsappCTA": "Hubungi via WhatsApp",
+        "telegramCTA": "Diskusi via Telegram",
+        "contactFormCTA": "Gunakan Formulir Kontak",
+        "modalFooter": "Mari bangun sesuatu yang luar biasa bersama",
+        "seoTitle": "Pratinjau {title}",
+        "seoDescription": "Pratinjau langsung desain {title} oleh {agencyName}."
+    },
     "Navigation": {
         "forTalent": "Squad",
         "priceCalculator": "Kalkulator Harga",

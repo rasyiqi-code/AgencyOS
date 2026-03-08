@@ -10,6 +10,7 @@ import { FAQSection } from "@/components/landing/section-faq";
 
 
 import { getLocale } from "next-intl/server";
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 export const dynamic = "force-dynamic";
 
@@ -70,15 +71,24 @@ export default async function PublicServicesPage() {
         })
     ]);
 
-    // Transform to match interface (handle potential type mismatches safely)
     const processedServices = services.map((s: Service) => ({
         ...s,
         features: s.features as unknown,
         features_id: s.features_id as unknown
     }));
 
+    const locale = await getLocale();
+    const isId = locale === 'id';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
     return (
         <div className="flex flex-col">
+            <BreadcrumbSchema
+                items={[
+                    { name: isId ? 'Beranda' : 'Home', item: `${baseUrl}/${locale}` },
+                    { name: isId ? 'Layanan' : 'Services', item: `${baseUrl}/${locale}/services` },
+                ]}
+            />
             {/* ProfessionalService JSON-LD Schema for AI/GEO */}
             <script
                 type="application/ld+json"

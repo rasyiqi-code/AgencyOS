@@ -32,20 +32,48 @@ export default async function proxy(request: NextRequest) {
 
     // 3. Logic for paths WITHOUT locale (e.g. /, /squad)
     if (!pathnameHasLocale) {
-        // Detect preference: Cookie > Browser > Geo > Default
+        // Detect preference: Cookie > Browser > Geo > IP-API Fallback > Default
         const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
         const acceptLanguage = request.headers.get('accept-language');
-        const geoCountry = (request as NextRequest & { geo?: { country?: string } }).geo?.country || request.headers.get('x-vercel-ip-country');
+        let geoCountry = (request as NextRequest & { geo?: { country?: string } }).geo?.country || request.headers.get('x-vercel-ip-country');
+
+        // Fallback to IP-API if geo info is missing (for non-Vercel environments)
+        if (!geoCountry) {
+            try {
+                const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || (request as NextRequest & { ip?: string }).ip;
+                if (ip && ip !== '127.0.0.1' && ip !== '::1') {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 500);
+
+                    const ipRes = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (ipRes.ok) {
+                        const data = await ipRes.json();
+                        if (data.countryCode) {
+                            geoCountry = data.countryCode;
+                            console.log(`[Middleware] IP-API detected: ${geoCountry} for IP: ${ip}`);
+                        }
+                    }
+                }
+            } catch (err) {
+                if (err instanceof Error && err.name === 'AbortError') {
+                    console.warn('[Middleware] IP-API request timed out (500ms)');
+                } else {
+                    console.error('[Middleware] IP-API error:', err instanceof Error ? err.message : String(err));
+                }
+            }
+        }
 
         let targetLocale = 'en';
         let browserLocale = null;
 
         if (acceptLanguage) {
-            // Extract code: en-US,en;q=0.9,id;q=0.8
             const preferredLocales = acceptLanguage
                 .split(',')
                 .map(lang => lang.split(';')[0].trim().slice(0, 2).toLowerCase());
-
             browserLocale = preferredLocales.find(lang => locales.includes(lang));
         }
 

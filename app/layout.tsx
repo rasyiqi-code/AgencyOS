@@ -124,6 +124,7 @@ export default async function RootLayout({
         {/* WebSite JSON-LD Schema for AI & Search Engine Structured Data */}
         <script
           type="application/ld+json"
+          id="structured-data-website"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -135,6 +136,32 @@ export default async function RootLayout({
                 target: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/products?q={search_term_string}`,
                 "query-input": "required name=search_term_string",
               },
+            }),
+          }}
+        />
+        {/* Organization & LocalBusiness JSON-LD Schema */}
+        <script
+          type="application/ld+json"
+          id="structured-data-org"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": ["Organization", "LocalBusiness"],
+              "@id": `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/#organization`,
+              name: "Crediblemark",
+              url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+              logo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
+              image: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
+              description: "Senior Software House & Professional Digital Solutions",
+              address: {
+                "@type": "PostalAddress",
+                "addressCountry": "ID"
+              },
+              contactPoint: {
+                "@type": "ContactPoint",
+                "telephone": "+628123456789", // Placeholder, will fetch real one if needed later
+                "contactType": "customer service"
+              }
             }),
           }}
         />

@@ -50,7 +50,7 @@ export function InvoiceDocument({
     const dateLocale = locale === 'id' ? localeId : localeEn;
     const formattedDate = format(today, locale === 'id' ? "d MMMM yyyy" : "MMM dd, yyyy", { locale: dateLocale });
 
-    const baseCurrency = (extendedEstimate.service as any)?.currency || 'USD';
+    const baseCurrency = extendedEstimate.service?.currency || 'USD';
     const formatCurrency = (val: number) => {
         const targetCurrency = currency;
         const isTargetIDR = targetCurrency === 'IDR';

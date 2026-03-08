@@ -11,6 +11,7 @@ import { Metadata } from "next";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { TextTypewriter } from "@/components/ui/text-typewriter";
 import { MessageCircle } from "lucide-react";
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 import { ResolvingMetadata } from "next";
 
@@ -70,9 +71,36 @@ export default async function PortfolioPage() {
     const isId = locale === 'id';
 
     const waLink = `https://wa.me/${contactPhone.replace(/\D/g, '')}?text=${encodeURIComponent(isId ? 'Halo, saya ingin minta contoh desain gratis.' : 'Hi, I would like to request a free design sample.')}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return (
         <div className="min-h-screen bg-black relative overflow-hidden selection:bg-brand-yellow/30">
+            {/* Breadcrumb Structured Data */}
+            <BreadcrumbSchema
+                items={[
+                    { name: isId ? 'Beranda' : 'Home', item: `${baseUrl}/${locale}` },
+                    { name: 'Portfolio', item: `${baseUrl}/${locale}/portfolio` },
+                ]}
+            />
+
+            {/* Portfolio List Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ItemList",
+                        "name": t('titlePart1') + " " + t('titlePart2'),
+                        "description": t('description'),
+                        "itemListElement": portfolios.map((p, index) => ({
+                            "@type": "ListItem",
+                            "position": index + 1,
+                            "url": `${baseUrl}/${locale}/view-design/${p.slug}`,
+                            "name": p.title
+                        }))
+                    }),
+                }}
+            />
             {/* Background Effects - Dark Theme with Gold & Silver Glows */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-brand-yellow/5 rounded-full blur-[150px] animate-pulse" />

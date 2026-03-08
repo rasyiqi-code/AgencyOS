@@ -9,6 +9,19 @@
         "back": "Back",
         "updated": "Updated"
     },
+    "ViewDesign": {
+        "previewMode": "PREVIEW MODE",
+        "inquireDesign": "Inquire Design",
+        "inquireShort": "Inquire",
+        "modalTitle": "Own a Design Like This",
+        "modalDescription": "Realize your business vision with world-class professional design. We are ready to help you build a stunning and effective digital identity.",
+        "whatsappCTA": "Contact via WhatsApp",
+        "telegramCTA": "Discuss via Telegram",
+        "contactFormCTA": "Use Contact Form",
+        "modalFooter": "Let's build something great together",
+        "seoTitle": "Preview {title}",
+        "seoDescription": "Live preview of {title} by {agencyName}."
+    },
     "Navigation": {
         "forTalent": "Squad",
         "priceCalculator": "Price Calculator",
@@ -146,7 +159,8 @@
                 "cta": "Start Strategy Session"
             }
         },
-        "ctaGeneric": "Choose Package"
+        "ctaGeneric": "Choose Package",
+        "viewAllServices": "View All Services"
     },
     "Workflow": {
         "title": "Strategic Precision. Maximum Velocity.",

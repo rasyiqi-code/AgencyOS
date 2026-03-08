@@ -8,56 +8,65 @@ export const revalidate = 3600; // Opsional: tetap cache selama 1 jam di runtime
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    // 1. Static Routes
-    const staticRoutes = [
-        "",
-        "/services",
-        "/portfolio",
-        "/products",
-        "/contact",
-        "/experts",
-        "/price-calculator",
-        "/submit-testimonial",
-        "/privacy",
-        "/terms",
-    ].map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: route === "" ? 1 : 0.8,
-        languages: {
-            id: `${baseUrl}${route}`,
-            en: `${baseUrl}${route}`,
-        },
-    }));
+    const locales = ["id", "en"];
+    const allRoutes: MetadataRoute.Sitemap = [];
 
-    // 2. Dynamic Routes: Portfolios
-    let portfolioRoutes: MetadataRoute.Sitemap = [];
-    try {
-        const portfolios = await getPortfolios();
-        portfolioRoutes = portfolios.map((portfolio) => ({
-            url: `${baseUrl}/view-design/${portfolio.slug}`,
+    // Pre-fetch dynamic data
+    const [portfolios, products] = await Promise.all([
+        getPortfolios(),
+        getDigitalProducts(true)
+    ]);
+
+    for (const locale of locales) {
+        // 1. Static Routes for this locale
+        const staticRoutes = [
+            "",
+            "/services",
+            "/portfolio",
+            "/products",
+            "/contact",
+            "/experts",
+            "/price-calculator",
+            "/submit-testimonial",
+            "/privacy",
+            "/terms",
+        ].map((route) => ({
+            url: `${baseUrl}/${locale}${route}`,
+            lastModified: new Date(),
+            changeFrequency: "weekly" as const,
+            priority: route === "" ? 1 : 0.8,
+            languages: {
+                id: `${baseUrl}/id${route}`,
+                en: `${baseUrl}/en${route}`,
+            },
+        }));
+
+        // 2. Dynamic Routes: Portfolios for this locale
+        const portfolioRoutes = portfolios.map((portfolio) => ({
+            url: `${baseUrl}/${locale}/view-design/${portfolio.slug}`,
             lastModified: portfolio.createdAt,
             changeFrequency: "monthly" as const,
             priority: 0.7,
+            languages: {
+                id: `${baseUrl}/id/view-design/${portfolio.slug}`,
+                en: `${baseUrl}/en/view-design/${portfolio.slug}`,
+            },
         }));
-    } catch (error) {
-        console.error("Failed to fetch portfolios for sitemap:", error);
-    }
 
-    // 3. Dynamic Routes: Products
-    let productRoutes: MetadataRoute.Sitemap = [];
-    try {
-        const products = await getDigitalProducts(true);
-        productRoutes = products.map((product) => ({
-            url: `${baseUrl}/products/${product.slug}`,
+        // 3. Dynamic Routes: Products for this locale
+        const productRoutes = products.map((product) => ({
+            url: `${baseUrl}/${locale}/products/${product.slug}`,
             lastModified: product.updatedAt || new Date(),
             changeFrequency: "weekly" as const,
             priority: 0.9,
+            languages: {
+                id: `${baseUrl}/id/products/${product.slug}`,
+                en: `${baseUrl}/en/products/${product.slug}`,
+            },
         }));
-    } catch (error) {
-        console.error("Failed to fetch products for sitemap:", error);
+
+        allRoutes.push(...staticRoutes, ...portfolioRoutes, ...productRoutes);
     }
 
-    return [...staticRoutes, ...portfolioRoutes, ...productRoutes];
+    return allRoutes;
 }

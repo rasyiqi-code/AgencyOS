@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml } from "@/lib/portfolios/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,7 +54,13 @@ function PortfolioPreview({ slug, html: directHtml, externalUrl, imageUrl }: { s
     return (
         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
             {imageUrl ? (
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <Image
+                    src={imageUrl}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                />
             ) : (
                 <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
                     <iframe

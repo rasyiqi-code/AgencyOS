@@ -3,10 +3,11 @@ import { getSettingValue } from "@/lib/server/settings";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ViewDesignClient } from "./view-design-client";
+import { getTranslations } from "next-intl/server";
 
 import { ResolvingMetadata } from "next";
 
-// Hardcoded SEO as requested: Preview {Nama Porto} | {AGENCY_NAME}
+// Localized SEO: Preview {Nama Porto} | {AGENCY_NAME}
 export async function generateMetadata(
     { params }: { params: Promise<{ slug: string }> },
     parent: ResolvingMetadata
@@ -15,6 +16,7 @@ export async function generateMetadata(
     const portfolios = await getPortfolios();
     const portfolio = portfolios.find((p) => p.slug === slug);
     const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
+    const t = await getTranslations("ViewDesign");
 
     if (!portfolio) {
         return {
@@ -23,8 +25,8 @@ export async function generateMetadata(
     }
 
     const previousImages = (await parent).openGraph?.images || [];
-    const title = `Preview ${portfolio.title}`;
-    const description = `Live preview of ${portfolio.title} by ${agencyName}.`;
+    const title = t("seoTitle", { title: portfolio.title });
+    const description = t("seoDescription", { title: portfolio.title, agencyName });
 
     return {
         title,
@@ -46,9 +48,11 @@ export async function generateMetadata(
 
 export default async function ViewDesignPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const [portfolios, agencyName] = await Promise.all([
+    const [portfolios, agencyName, contactPhone, contactTelegram] = await Promise.all([
         getPortfolios(),
-        getSettingValue("AGENCY_NAME", "Agency OS")
+        getSettingValue("AGENCY_NAME", "Agency OS"),
+        getSettingValue("CONTACT_PHONE", ""),
+        getSettingValue("CONTACT_TELEGRAM", "")
     ]);
 
     const portfolio = portfolios.find((p) => p.slug === slug);
@@ -62,6 +66,9 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
             slug={portfolio.slug}
             title={portfolio.title}
             agencyName={agencyName}
+            externalUrl={portfolio.externalUrl}
+            contactPhone={contactPhone}
+            contactTelegram={contactTelegram}
         />
     );
 }

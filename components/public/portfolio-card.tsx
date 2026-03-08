@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ExternalLink, Maximize2, Sparkles } from "lucide-react";
 
 interface PortfolioCardProps {
@@ -39,7 +40,7 @@ function buildSrcDoc(content: string): string {
 }
 
 export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: PortfolioCardProps) {
-    const previewUrl = externalUrl ? externalUrl : `/view-design/${slug}`;
+    const previewUrl = `/view-design/${slug}`;
     return (
         <div className="group bg-white border border-zinc-200 rounded-3xl flex flex-col overflow-hidden hover:border-brand-yellow/50 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-brand-yellow/5 relative">
             {/* Card Header - Gold */}
@@ -49,9 +50,8 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: Port
                 </h4>
                 <Link
                     href={previewUrl}
-                    target="_blank"
                     className="p-2 rounded-xl bg-white/15 text-white hover:bg-white/25 transition-all hover:scale-110 active:scale-95 shrink-0 border border-white/20"
-                    title={externalUrl ? "Visit Website" : "Fullscreen Preview"}
+                    title="Fullscreen Preview"
                 >
                     <Maximize2 className="w-3.5 h-3.5" />
                 </Link>
@@ -61,10 +61,12 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: Port
             <div className="p-3">
                 <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
                     {imageUrl ? (
-                        <img
+                        <Image
                             src={imageUrl}
                             alt={title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     ) : (
                         <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
@@ -101,10 +103,9 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: Port
                 </div>
                 <Link
                     href={previewUrl}
-                    target={externalUrl ? "_blank" : "_self"}
                     className="flex items-center gap-1.5 px-4 py-1.5 bg-zinc-900 text-white rounded-full text-[10px] font-black hover:bg-brand-yellow hover:text-black transition-all duration-300 group/link border border-white/10 hover:border-black/10 shadow-lg shadow-black/5"
                 >
-                    {externalUrl ? "VISIT SITE" : "PREVIEW"}
+                    PREVIEW
                     <ExternalLink className="w-3 h-3" />
                 </Link>
             </div>
