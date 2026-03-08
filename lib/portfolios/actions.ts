@@ -14,6 +14,8 @@ export interface PortfolioItem {
     slug: string;
     category: string;
     description?: string;
+    externalUrl?: string;
+    imageUrl?: string;
     createdAt: string;
 }
 

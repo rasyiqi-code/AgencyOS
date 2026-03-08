@@ -39,7 +39,7 @@ function buildSrcDoc(content: string): string {
 }
 
 // === Live Preview Component untuk Card ===
-function PortfolioPreview({ slug, html: directHtml }: { slug?: string; html?: string }) {
+function PortfolioPreview({ slug, html: directHtml, externalUrl, imageUrl }: { slug?: string; html?: string; externalUrl?: string; imageUrl?: string }) {
     const [fetchedContent, setFetchedContent] = useState("");
 
     useEffect(() => {
@@ -52,14 +52,19 @@ function PortfolioPreview({ slug, html: directHtml }: { slug?: string; html?: st
 
     return (
         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
-            <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
-                <iframe
-                    srcDoc={buildSrcDoc(content)}
-                    className="w-full h-full border-none overflow-hidden"
-                    title="Admin Preview"
-                    scrolling="no"
-                />
-            </div>
+            {imageUrl ? (
+                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+            ) : (
+                <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
+                    <iframe
+                        src={externalUrl || undefined}
+                        srcDoc={!externalUrl ? buildSrcDoc(content) : undefined}
+                        className="w-full h-full border-none overflow-hidden"
+                        title="Admin Preview"
+                        scrolling="no"
+                    />
+                </div>
+            )}
             <div className="absolute inset-0 bg-white/5 group-hover/preview:bg-transparent transition-colors pointer-events-none" />
         </div>
     );
@@ -77,19 +82,21 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
     const [category, setCategory] = useState("");
+    const [externalUrl, setExternalUrl] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
     const [html, setHtml] = useState("");
     const [isSaving, setIsSaving] = useState(false);
 
     // === Handler: Simpan portfolio baru ===
     async function handleSave() {
-        if (!title || !slug || !html) {
-            toast.error("Please fill in all required fields");
+        if (!title || !slug || (!html && !externalUrl)) {
+            toast.error("Please fill in title, slug, and either an external URL or HTML file.");
             return;
         }
 
         setIsSaving(true);
         try {
-            const newItem = await savePortfolio({ title, slug, category, description: "" }, html);
+            const newItem = await savePortfolio({ title, slug, category, externalUrl, imageUrl, description: "" }, html);
             setItems([...items, newItem]);
             setIsModalOpen(false);
             // Reset form setelah berhasil
@@ -161,6 +168,8 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                     setTitle("");
                     setSlug("");
                     setCategory("");
+                    setExternalUrl("");
+                    setImageUrl("");
                     setHtml("");
                 }
             }}>
@@ -173,7 +182,7 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                     </DialogHeader>
 
                     {/* Row 1: 4 kolom — Title, Slug, Industry, Launch */}
-                    <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-end">
+                    <div className="grid grid-cols-[1.5fr_1fr_1.5fr_1.5fr_1fr_auto] gap-2 items-end">
                         <div>
                             <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Title</label>
                             <Input
@@ -190,6 +199,24 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                 onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
                                 placeholder="banking-pro"
                                 className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 font-mono text-[10px]"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">External URL</label>
+                            <Input
+                                value={externalUrl}
+                                onChange={e => setExternalUrl(e.target.value)}
+                                placeholder="https://..."
+                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 text-xs font-mono"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Image URL / OG</label>
+                            <Input
+                                value={imageUrl}
+                                onChange={e => setImageUrl(e.target.value)}
+                                placeholder="https://.../og.png"
+                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 text-xs font-mono"
                             />
                         </div>
                         <div>
@@ -226,8 +253,15 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                         </Button>
                     </div>
 
-                    {/* Row 2: Upload compact inline */}
-                    <HtmlFileUploader onFileLoad={setHtml} currentHtml={html} compact />
+                    {/* Row 2: Upload compact inline — Only show if no externalUrl */}
+                    {!externalUrl ? (
+                        <HtmlFileUploader onFileLoad={setHtml} currentHtml={html} compact />
+                    ) : (
+                        <div className="px-3 py-2 rounded-lg bg-brand-yellow/5 border border-brand-yellow/20 flex items-center gap-2">
+                            <ExternalLink className="w-3.5 h-3.5 text-brand-yellow" />
+                            <span className="text-[10px] text-zinc-400 font-medium">Using external URL for preview and redirect.</span>
+                        </div>
+                    )}
                 </DialogContent>
             </Dialog>
 
@@ -250,7 +284,7 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
                         {/* Card Body (Live Render) */}
                         <div className="p-3">
-                            <PortfolioPreview slug={item.slug} />
+                            <PortfolioPreview slug={item.slug} externalUrl={item.externalUrl} imageUrl={item.imageUrl} />
                         </div>
 
                         {/* Card Footer */}

@@ -8,6 +8,8 @@ interface PortfolioCardProps {
     slug: string;
     html: string;
     category?: string;
+    externalUrl?: string;
+    imageUrl?: string;
 }
 
 // Style CSS untuk menyembunyikan scrollbar di preview iframe
@@ -36,7 +38,8 @@ function buildSrcDoc(content: string): string {
     return `<html><head>${PREVIEW_HIDE_SCROLLBAR}</head><body>${content}</body></html>`;
 }
 
-export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
+export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: PortfolioCardProps) {
+    const previewUrl = externalUrl ? externalUrl : `/view-design/${slug}`;
     return (
         <div className="group bg-white border border-zinc-200 rounded-3xl flex flex-col overflow-hidden hover:border-brand-yellow/50 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-brand-yellow/5 relative">
             {/* Card Header - Gold */}
@@ -45,10 +48,10 @@ export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
                     {title}
                 </h4>
                 <Link
-                    href={`/view-design/${slug}`}
+                    href={previewUrl}
                     target="_blank"
                     className="p-2 rounded-xl bg-white/15 text-white hover:bg-white/25 transition-all hover:scale-110 active:scale-95 shrink-0 border border-white/20"
-                    title="Fullscreen Preview"
+                    title={externalUrl ? "Visit Website" : "Fullscreen Preview"}
                 >
                     <Maximize2 className="w-3.5 h-3.5" />
                 </Link>
@@ -57,14 +60,23 @@ export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
             {/* Card Body (Live Render Space) */}
             <div className="p-3">
                 <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
-                    <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
-                        <iframe
-                            srcDoc={buildSrcDoc(html)}
-                            className="w-full h-full border-none overflow-hidden"
-                            title={title}
-                            scrolling="no"
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt={title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                    </div>
+                    ) : (
+                        <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
+                            <iframe
+                                src={externalUrl || undefined}
+                                srcDoc={!externalUrl ? buildSrcDoc(html) : undefined}
+                                className="w-full h-full border-none overflow-hidden"
+                                title={title}
+                                scrolling="no"
+                            />
+                        </div>
+                    )}
                     {/* Soft Overlay */}
                     <div className="absolute inset-0 bg-white/5 group-hover/preview:bg-transparent transition-colors duration-500 pointer-events-none" />
 
@@ -72,7 +84,9 @@ export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
                     <div className="absolute bottom-3 right-3 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-500 pointer-events-none">
                         <div className="px-2 py-1 bg-white/80 backdrop-blur-md rounded-md border border-zinc-200 flex items-center gap-1.5 shadow-sm">
                             <Sparkles className="w-2.5 h-2.5 text-brand-yellow" />
-                            <span className="text-[8px] text-zinc-600 font-bold uppercase tracking-tighter">Live Preview</span>
+                            <span className="text-[8px] text-zinc-600 font-bold uppercase tracking-tighter">
+                                {externalUrl ? "Live Website" : "Live Preview"}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -81,13 +95,16 @@ export function PortfolioCard({ title, slug, html }: PortfolioCardProps) {
             {/* Card Footer - Silver Accents */}
             <div className="px-5 py-3.5 flex items-center justify-between bg-zinc-50/50 border-t border-zinc-100">
                 <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-zinc-500 font-mono tracking-tighter italic">Live Rendered</span>
+                    <span className="text-[10px] text-zinc-500 font-mono tracking-tighter italic">
+                        {externalUrl ? "Live Website" : "Live Rendered"}
+                    </span>
                 </div>
                 <Link
-                    href={`/view-design/${slug}`}
+                    href={previewUrl}
+                    target={externalUrl ? "_blank" : "_self"}
                     className="flex items-center gap-1.5 px-4 py-1.5 bg-zinc-900 text-white rounded-full text-[10px] font-black hover:bg-brand-yellow hover:text-black transition-all duration-300 group/link border border-white/10 hover:border-black/10 shadow-lg shadow-black/5"
                 >
-                    PREVIEW
+                    {externalUrl ? "VISIT SITE" : "PREVIEW"}
                     <ExternalLink className="w-3 h-3" />
                 </Link>
             </div>

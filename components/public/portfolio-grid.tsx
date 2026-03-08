@@ -10,6 +10,8 @@ interface PortfolioItem {
     slug: string;
     category?: string;
     html: string;
+    externalUrl?: string;
+    imageUrl?: string;
 }
 
 interface PortfolioGridProps {
@@ -77,6 +79,8 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
                             slug={item.slug}
                             category={item.category}
                             html={item.html}
+                            externalUrl={item.externalUrl}
+                            imageUrl={item.imageUrl}
                         />
                     </ScrollAnimationWrapper>
                 ))}
