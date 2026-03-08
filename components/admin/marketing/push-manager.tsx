@@ -29,7 +29,7 @@ export function PushManager() {
             if (res.ok) {
                 setStats(data);
             }
-        } catch (error) {
+        } catch {
             console.error("Failed to fetch notification stats");
         }
     };
@@ -61,7 +61,7 @@ export function PushManager() {
             } else {
                 toast.error(data.error || "Gagal mengirim broadcast");
             }
-        } catch (error) {
+        } catch {
             toast.error("Terjadi kesalahan jaringan");
         } finally {
             setIsPending(false);

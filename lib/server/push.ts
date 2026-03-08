@@ -20,7 +20,7 @@ export interface PushMessagePayload {
     icon?: string;
     badge?: string;
     url?: string;
-    data?: any;
+    data?: Record<string, unknown>;
 }
 
 export async function sendPushNotification(
@@ -36,8 +36,9 @@ export async function sendPushNotification(
 
         await webpush.sendNotification(subscription, pushPayload);
         return { success: true };
-    } catch (error: any) {
-        if (error.statusCode === 404 || error.statusCode === 410) {
+    } catch (error: unknown) {
+        const pushError = error as { statusCode?: number };
+        if (pushError.statusCode === 404 || pushError.statusCode === 410) {
             // Subscription has expired or is no longer valid
             return { success: false, expired: true, error };
         }

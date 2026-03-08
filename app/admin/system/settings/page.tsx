@@ -1,7 +1,6 @@
 
 import { Settings2 } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
-import { Badge } from "@/components/ui/badge";
 import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
 import { prisma } from "@/lib/config/db";
 

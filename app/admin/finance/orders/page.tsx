@@ -2,7 +2,6 @@ import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { type StackUser } from "@/lib/shared/types";
 import { ShoppingCart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { FinanceList } from "@/components/admin/finance/finance-list";
 import { FinanceData } from "@/components/admin/finance/finance-columns";
 import { getTranslations } from "next-intl/server";

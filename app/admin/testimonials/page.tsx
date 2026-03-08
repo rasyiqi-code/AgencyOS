@@ -22,7 +22,6 @@ import {
     Loader2
 } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
-import { Badge } from "@/components/ui/badge";
 
 interface Testimonial {
     id: string;

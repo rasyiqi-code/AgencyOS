@@ -73,7 +73,7 @@ export async function POST(req: Request) {
             title: "Produk Baru Rilis! 🔥",
             body: `${name} kini tersedia di AgencyOS. Cek detail dan fiturnya sekarang!`,
             url: `${appUrl}/products/${slug}`,
-        }).catch((err: any) => console.error("Auto Push Product Error:", err));
+        }).catch((err: unknown) => console.error("Auto Push Product Error:", err));
 
         return NextResponse.json(product);
     } catch (error) {

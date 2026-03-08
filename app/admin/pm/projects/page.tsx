@@ -2,7 +2,6 @@
 
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
-import { Badge } from "@/components/ui/badge";
 import { Layers } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ProjectAccordionList } from "@/components/admin/pm/projects-accordion-list";

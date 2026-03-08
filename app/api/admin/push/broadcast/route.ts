@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         }
 
         // Convert DB models to web-push format
-        const pushSubs = subscriptions.map((s: any) => ({
+        const pushSubs = subscriptions.map((s: { endpoint: string; p256dh: string; auth: string }) => ({
             endpoint: s.endpoint,
             keys: {
                 p256dh: s.p256dh,

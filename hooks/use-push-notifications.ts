@@ -5,16 +5,17 @@ import { useState, useEffect, useCallback } from 'react';
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
 export function usePushNotifications() {
-    const [permission, setPermission] = useState<NotificationPermission>('default');
-    const [isSupported, setIsSupported] = useState(false);
+    const [permission, setPermission] = useState<NotificationPermission>(() =>
+        typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'default'
+    );
+    const [isSupported] = useState(() =>
+        typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window
+    );
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window) {
-            setIsSupported(true);
-            setPermission(Notification.permission);
-
+        if (isSupported) {
             // Check for existing registration
             navigator.serviceWorker.ready.then((reg) => {
                 setRegistration(reg);
@@ -23,7 +24,7 @@ export function usePushNotifications() {
                 });
             });
         }
-    }, []);
+    }, [isSupported]);
 
     const subscribe = useCallback(async () => {
         if (!registration || !VAPID_PUBLIC_KEY) return null;

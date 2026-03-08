@@ -3,7 +3,6 @@ import { canManageBilling } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
 import { DigitalOrderList, type DigitalOrderWithRelations } from "@/components/admin/finance/digital-order-list";
 import { ShoppingCart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { getTranslations } from "next-intl/server";
 
 export const dynamic = 'force-dynamic';

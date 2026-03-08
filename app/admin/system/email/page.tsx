@@ -1,6 +1,5 @@
 import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
-import { Badge } from "@/components/ui/badge";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
 import { prisma } from "@/lib/config/db";
 // import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
