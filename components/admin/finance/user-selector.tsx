@@ -51,17 +51,21 @@ export function UserSelector({ users, defaultValue = "", onValueChange }: UserSe
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full justify-between bg-black/40 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 px-3 font-normal overflow-hidden"
+                        className="w-full justify-between bg-transparent hover:bg-transparent border-0 text-white hover:text-white h-8 px-4 font-normal overflow-hidden shadow-none"
                     >
                         <span className="truncate">
                             {value
                                 ? users.find((user) => user.id === value)?.name
-                                : "Pilih User Akun Klien..."}
+                                : <span className="text-zinc-500">Pilih User Akun Klien...</span>}
                         </span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-zinc-500 group-focus-within:text-brand-yellow transition-colors" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0 border-zinc-800 bg-zinc-950 w-full min-w-[300px]" align="start">
+                <PopoverContent
+                    className="p-0 border-zinc-800 bg-zinc-950"
+                    align="start"
+                    style={{ width: 'var(--radix-popover-trigger-width)' }}
+                >
                     <div className="flex items-center border-b border-zinc-800 px-3 py-1">
                         <Search className="mr-2 h-4 w-4 shrink-0 opacity-50 text-zinc-400" />
                         <Input
@@ -72,7 +76,7 @@ export function UserSelector({ users, defaultValue = "", onValueChange }: UserSe
                         />
                     </div>
                     <ScrollArea className="h-[250px]">
-                        <div className="p-1">
+                        <div className="p-1 w-full overflow-hidden">
                             {filteredUsers.length === 0 && (
                                 <div className="py-6 text-center text-sm text-zinc-500">User tidak ditemukan.</div>
                             )}
@@ -80,7 +84,7 @@ export function UserSelector({ users, defaultValue = "", onValueChange }: UserSe
                                 <div
                                     key={user.id}
                                     className={cn(
-                                        "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-zinc-800 hover:text-white",
+                                        "relative w-full overflow-hidden flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-zinc-800 hover:text-white",
                                         value === user.id ? "bg-brand-yellow/10 text-brand-yellow" : "text-zinc-400"
                                     )}
                                     onClick={() => handleSelect(user.id)}
@@ -91,11 +95,11 @@ export function UserSelector({ users, defaultValue = "", onValueChange }: UserSe
                                             value === user.id ? "opacity-100" : "opacity-0"
                                         )}
                                     />
-                                    <div className="flex flex-col min-w-0 pr-2">
-                                        <span className="font-medium truncate">{user.name}</span>
-                                        <span className="text-[10px] text-zinc-500 truncate">
+                                    <div className="flex-1 min-w-0 pr-2">
+                                        <div className="font-medium truncate max-w-full">{user.name}</div>
+                                        <div className="text-[10px] text-zinc-500 truncate max-w-full">
                                             {user.email || user.id}
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

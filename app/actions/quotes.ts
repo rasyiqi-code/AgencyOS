@@ -7,11 +7,29 @@ import { stackServerApp } from "@/lib/config/stack";
 export async function setQuotePrice(formData: FormData) {
     const id = formData.get("estimateId") as string;
     const projectId = formData.get("projectId") as string;
-    const newPrice = parseFloat(formData.get("newPrice") as string);
+    let newPrice = parseFloat(formData.get("newPrice") as string);
+    const contextCurrency = formData.get("contextCurrency") as string;
+    const activeRateStr = formData.get("activeRate") as string;
+    const activeRate = activeRateStr ? parseFloat(activeRateStr) : 15000;
 
     if (!id || isNaN(newPrice)) return { error: "Invalid data" };
 
     try {
+        const estimate = await prisma.estimate.findUnique({
+            where: { id },
+            include: { service: true }
+        });
+
+        if (!estimate) return { error: "Quote not found" };
+
+        // Apply Currency Conversion from Context Currency to Base Currency
+        if (contextCurrency && activeRate && estimate.service && contextCurrency !== estimate.service.currency) {
+            if (contextCurrency === 'USD' && estimate.service.currency === 'IDR') {
+                newPrice = newPrice * activeRate;
+            } else if (contextCurrency === 'IDR' && estimate.service.currency === 'USD') {
+                newPrice = newPrice / activeRate;
+            }
+        }
         await prisma.estimate.update({
             where: { id },
             data: {
@@ -23,7 +41,10 @@ export async function setQuotePrice(formData: FormData) {
         if (projectId) {
             await prisma.project.update({
                 where: { id: projectId },
-                data: { status: "pending_payment" }
+                data: {
+                    status: "pending_payment",
+                    totalAmount: newPrice
+                }
             });
         }
         revalidatePath("/admin/finance/quotes");
@@ -39,7 +60,10 @@ export async function createManualQuote(formData: FormData) {
     const userId = formData.get("userId") as string;
     const clientName = formData.get("clientName") as string;
     const clientEmail = (formData.get("clientEmail") as string) || "";
-    const amount = parseFloat(formData.get("amount") as string);
+    let amount = parseFloat(formData.get("amount") as string);
+    const contextCurrency = formData.get("contextCurrency") as string;
+    const activeRateStr = formData.get("activeRate") as string;
+    const activeRate = activeRateStr ? parseFloat(activeRateStr) : 15000;
 
     if (!serviceId || !userId || isNaN(amount)) return { error: "Missing required fields" };
 
@@ -58,6 +82,15 @@ export async function createManualQuote(formData: FormData) {
                 if (fetchedName) finalClientName = fetchedName;
             } catch (e) {
                 console.error("Failed to fetch user profile from Stack Auth:", e);
+            }
+        }
+
+        // Apply Currency Conversion from Context Currency to Base Currency
+        if (contextCurrency && activeRate && contextCurrency !== service.currency) {
+            if (contextCurrency === 'USD' && service.currency === 'IDR') {
+                amount = amount * activeRate;
+            } else if (contextCurrency === 'IDR' && service.currency === 'USD') {
+                amount = amount / activeRate;
             }
         }
 

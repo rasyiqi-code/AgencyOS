@@ -97,36 +97,38 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                     <div className="flex-1 flex flex-col justify-center space-y-4">
                         <div className="space-y-2">
                             <label className="text-xs uppercase text-zinc-500 font-bold tracking-wider">Payment Verification</label>
-                            <div className={`border border-dashed border-zinc-700 rounded-lg p-6 flex flex-col items-center justify-center gap-3 transition-all h-[220px] ${proofUploaded ? 'bg-emerald-950/20 border-emerald-500/50' : 'bg-black hover:bg-zinc-900 cursor-pointer group'}`}>
+                            <div className={`w-full relative flex items-center p-3 rounded-xl transition-all ${proofUploaded ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-black/40 border border-zinc-800 focus-within:border-brand-yellow/50 focus-within:ring-1 focus-within:ring-brand-yellow/20 hover:bg-black/60 group'}`}>
                                 {!proofUploaded ? (
-                                    <>
-                                        <div className="relative w-full h-full flex flex-col items-center justify-center">
-                                            <input
-                                                type="file"
-                                                accept="image/*,application/pdf"
-                                                onChange={handleFileUpload}
-                                                disabled={isUploading}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
-                                            />
-                                            <div className="flex flex-col items-center gap-3 pointer-events-none group-hover:scale-105 transition-transform duration-200">
-                                                {isUploading ? <Loader2 className="w-8 h-8 animate-spin text-lime-500" /> : <Upload className="w-8 h-8 text-zinc-400 group-hover:text-lime-400 transition-colors" />}
-                                                <div className="text-center">
-                                                    <span className="block text-sm font-bold text-zinc-200 group-hover:text-white mb-1">
-                                                        {isUploading ? "Uploading Proof..." : "Upload Transfer Proof"}
-                                                    </span>
-                                                    <span className="text-xs text-zinc-500 group-hover:text-zinc-400">Values JPG, PNG or PDF</span>
-                                                </div>
+                                    <div className="w-full">
+                                        <input
+                                            type="file"
+                                            accept="image/*,application/pdf"
+                                            onChange={handleFileUpload}
+                                            disabled={isUploading}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+                                        />
+                                        <div className="flex items-center gap-3 w-full pointer-events-none">
+                                            <div className="shrink-0 w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-zinc-800 transition-colors">
+                                                {isUploading ? <Loader2 className="w-4 h-4 animate-spin text-brand-yellow" /> : <Upload className="w-4 h-4 text-zinc-400 group-hover:text-brand-yellow transition-colors" />}
+                                            </div>
+                                            <div className="flex flex-col min-w-0 flex-1 pr-2">
+                                                <span className="text-sm font-medium text-white truncate max-w-full">
+                                                    {isUploading ? "Uploading Proof..." : "Upload Transfer Proof"}
+                                                </span>
+                                                <span className="text-[10px] text-zinc-500 truncate max-w-full">
+                                                    JPG, PNG or PDF
+                                                </span>
                                             </div>
                                         </div>
-                                    </>
+                                    </div>
                                 ) : (
-                                    <div className="flex flex-col items-center gap-3 text-emerald-500 animate-in zoom-in duration-300">
-                                        <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                                            <CheckCircle2 className="w-6 h-6" />
+                                    <div className="flex items-center gap-3 w-full animate-in fade-in duration-300">
+                                        <div className="shrink-0 w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                                            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                                         </div>
-                                        <div className="text-center">
-                                            <span className="block font-bold text-lg">Proof Uploaded</span>
-                                            <span className="text-xs text-emerald-400/70">We will verify this shortly</span>
+                                        <div className="flex flex-col min-w-0 flex-1 pr-2">
+                                            <span className="text-sm font-medium text-emerald-500 truncate max-w-full">Proof Uploaded</span>
+                                            <span className="text-[10px] text-zinc-500 truncate max-w-full">We will verify this shortly</span>
                                         </div>
                                     </div>
                                 )}

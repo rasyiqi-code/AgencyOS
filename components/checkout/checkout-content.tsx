@@ -75,7 +75,6 @@ export function CheckoutContent({
                     projectPaidAmount={projectPaidAmount}
                     projectTotalAmount={projectTotalAmount}
                     context={context}
-                    agencySettings={agencySettings}
                 />
             </div>
 
