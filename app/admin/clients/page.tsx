@@ -3,6 +3,7 @@ import { prisma } from "@/lib/config/db";
 import { ClientsDataTable } from "@/components/admin/clients/clients-data-table";
 import { clientColumns } from "@/components/admin/clients/client-columns";
 import { type StackUser } from "@/lib/shared/types";
+import { User } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -50,10 +51,11 @@ export default async function AdminClientsPage() {
         <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
+                    <h1 className="text-3xl font-bold tracking-tight text-white mb-1 flex items-center gap-3">
                         Client Management
+                        <User className="w-6 h-6 text-zinc-600" />
                     </h1>
-                    <p className="text-zinc-400">
+                    <p className="text-zinc-400 mt-1.5 text-sm">
                         View and manage registered client accounts.
                     </p>
                 </div>

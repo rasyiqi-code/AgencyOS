@@ -37,12 +37,15 @@ export default async function AdminSupportInbox() {
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 shrink-0 gap-3 md:gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[9px] h-4 px-1.5">Support</Badge>
+                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 tracking-widest text-[10px] uppercase">Support</Badge>
                     </div>
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2 md:gap-3">
+                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
                         Support Inbox
-                        <Mail className="w-4 h-4 md:w-5 md:h-5 text-zinc-600" />
+                        <Mail className="w-6 h-6 text-zinc-600" />
                     </h1>
+                    <p className="text-zinc-400 mt-1.5 text-sm">
+                        Kelola tiket dukungan dan obrolan langsung dengan klien.
+                    </p>
                 </div>
             </div>
 

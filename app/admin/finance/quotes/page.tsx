@@ -101,11 +101,11 @@ export default async function AdminQuotesPage() {
 
     return (
         <div className="w-full py-6 sm:py-10 space-y-8 animate-in fade-in duration-700">
-            <header className="space-y-2">
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-white mb-2 uppercase">
+            <header className="space-y-1">
+                <h1 className="text-3xl font-bold tracking-tight text-white">
                     {t('title')}
                 </h1>
-                <p className="text-zinc-400 text-sm sm:text-lg max-w-2xl leading-relaxed">
+                <p className="text-zinc-400 mt-1 text-sm max-w-2xl leading-relaxed">
                     {t('subtitle')}
                 </p>
             </header>

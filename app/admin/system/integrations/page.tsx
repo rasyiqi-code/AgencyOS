@@ -26,11 +26,12 @@ export default async function AdminIntegrationsPage() {
     return (
         <div className="w-full py-6">
             <div className="mb-8">
-                <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px] mb-2">System Control</Badge>
-                <h1 className="text-3xl font-bold tracking-tight text-white">System Integrations</h1>
-                <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                    Connect GitHub and Vercel to enable automated workflows,
-                    deployment monitoring, and source code synchronization.
+                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                    System Integrations
+                    <Link2 className="w-6 h-6 text-zinc-600" />
+                </h1>
+                <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
+                    Connect GitHub and Vercel to enable automated workflows and deployment monitoring.
                 </p>
             </div>
 

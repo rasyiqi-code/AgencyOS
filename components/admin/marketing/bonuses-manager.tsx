@@ -162,7 +162,7 @@ export function BonusesManager() {
                     <div className="sm:col-span-2 lg:col-span-12 space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500 ml-1">Deskripsi (Opsional)</label>
                         <Input
-                            placeholder="Jelaskan secara singkat apa yang termasuk dalam bonus ini..."
+                            placeholder="Jelaskan singkat yang termasuk dalam bonus ini..."
                             value={newBonus.description}
                             onChange={(e) => setNewBonus({ ...newBonus, description: e.target.value })}
                             className="h-9 text-xs font-bold bg-black/50 border-white/10"

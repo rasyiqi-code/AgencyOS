@@ -9,59 +9,66 @@ import { PayoutRequests } from "@/components/admin/marketing/payout-requests";
 import { AssetsManager } from "@/components/admin/marketing/assets-manager";
 import { PopUpsManager } from "@/components/admin/marketing/popups-manager";
 import { LeadsManager } from "@/components/admin/marketing/leads-manager";
-import { Megaphone, Tag, Gift, Users, DollarSign, Mail, FolderOpen, LayoutTemplate, UserPlus } from "lucide-react";
+import { Megaphone, Tag, Gift, Users, DollarSign, Mail, FolderOpen, LayoutTemplate, UserPlus, Bell } from "lucide-react";
+import { PushManager } from "@/components/admin/marketing/push-manager";
 
 export default function MarketingPage() {
     return (
-        <div className="w-full py-1 md:py-4">
+        <div className="w-full min-w-0 max-w-full py-1 md:py-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 shrink-0 gap-2">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-2">
-                        <Megaphone className="w-5 h-5 md:w-6 md:h-6 text-brand-yellow" />
+                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+                        <Megaphone className="w-6 h-6 text-brand-yellow" />
                         Marketing Center
                     </h1>
-                    <p className="text-zinc-500 font-medium text-[10px] md:text-sm">
-                        Manage discount coupons, promotional popups, and lead capture.
+                    <p className="text-zinc-400 mt-1">
+                        Discount coupons, popups, and lead.
                     </p>
                 </div>
             </div>
 
-            <Tabs defaultValue="popups" className="flex-1 flex flex-col">
-                <div className="mb-4 overflow-x-auto no-scrollbar">
-                    <TabsList className="bg-zinc-900/50 border border-white/5 w-max md:w-auto h-11 md:h-12 p-1 rounded-xl shadow-2xl shadow-black/20 flex items-center gap-1">
-                        <TabsTrigger value="popups" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <LayoutTemplate className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">PopUps</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="leads" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <UserPlus className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Leads</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="coupons" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <Tag className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Coupons</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="bonuses" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <Gift className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Bonuses</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="affiliates" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <Users className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Partners</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="payouts" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <DollarSign className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Payouts</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="subscribers" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <Mail className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Subs</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="assets" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
-                            <FolderOpen className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
-                            <span className="hidden md:inline">Assets</span>
-                        </TabsTrigger>
-                    </TabsList>
+            <Tabs defaultValue="popups" className="flex-1 flex flex-col min-w-0">
+                <div className="mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+                    <div className="overflow-x-auto no-scrollbar pb-2">
+                        <TabsList className="bg-zinc-900/50 border border-white/5 inline-flex w-max min-w-full sm:min-w-0 h-11 md:h-12 p-1 rounded-xl shadow-2xl shadow-black/20 items-center justify-start gap-1">
+                            <TabsTrigger value="popups" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <LayoutTemplate className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">PopUps</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="leads" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <UserPlus className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Leads</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="coupons" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Tag className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Coupons</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="bonuses" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Gift className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Bonuses</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="affiliates" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Users className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Partners</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="payouts" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <DollarSign className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Payouts</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="subscribers" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Mail className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Emails</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="push" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Bell className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Push</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="assets" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <FolderOpen className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Assets</span>
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
                 </div>
 
                 <TabsContent value="popups" className="mt-0 outline-none focus-visible:outline-none">
@@ -82,6 +89,10 @@ export default function MarketingPage() {
 
                 <TabsContent value="subscribers" className="mt-0 outline-none focus-visible:outline-none">
                     <SubscribersManager />
+                </TabsContent>
+
+                <TabsContent value="push" className="mt-0 outline-none focus-visible:outline-none">
+                    <PushManager />
                 </TabsContent>
 
                 <TabsContent value="affiliates" className="mt-0 outline-none focus-visible:outline-none">

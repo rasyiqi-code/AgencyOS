@@ -139,13 +139,13 @@ export function PopUpsManager() {
 
     return (
         <div className="grid gap-4 md:gap-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="space-y-1">
                     <h2 className="text-lg font-black text-white uppercase tracking-tight flex items-center gap-2">
                         <LayoutTemplate className="w-5 h-5 text-brand-yellow" />
-                        Promotional PopUps
+                        PopUps
                     </h2>
-                    <p className="text-zinc-500 text-xs font-medium">Create and manage targeted promotional modals.</p>
+                    <p className="text-zinc-500 text-xs font-medium">Manage promotional modals.</p>
                 </div>
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
@@ -258,8 +258,8 @@ export function PopUpsManager() {
                 </Dialog>
             </div>
 
-            <div className="rounded-2xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                <Table>
+            <div className="rounded-2xl border border-white/5 bg-zinc-900/40 overflow-hidden overflow-x-auto custom-scrollbar">
+                <Table className="min-w-[800px]">
                     <TableHeader className="bg-zinc-950/50">
                         <TableRow className="border-white/5 hover:bg-transparent">
                             <TableHead className="text-xs h-12 pl-6">Popup Info</TableHead>

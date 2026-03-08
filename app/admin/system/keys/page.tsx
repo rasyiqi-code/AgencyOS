@@ -61,16 +61,12 @@ export default async function AdminKeysPage() {
         <div className="w-full py-6">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">Admin Access</Badge>
-                    </div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
                         Secure Vault
                         <Key className="w-6 h-6 text-zinc-600" />
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
+                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
                         Manage API Keys for Google Gemini and other AI providers.
-                        Keys are encrypted and rotated automatically based on usage.
                     </p>
                 </div>
             </div>

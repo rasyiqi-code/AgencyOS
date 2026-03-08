@@ -39,11 +39,11 @@ export default async function LicensesPage() {
         <div className="w-full py-1 md:py-4 space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shrink-0">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-2">
-                        <Key className="w-5 h-5 md:w-6 md:h-6 text-brand-yellow" />
+                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+                        <Key className="w-6 h-6 text-brand-yellow" />
                         Licenses
                     </h1>
-                    <p className="text-zinc-500 font-medium text-[10px] md:text-sm">
+                    <p className="text-zinc-400 mt-1.5 text-sm">
                         Manage API keys and product activations.
                     </p>
                 </div>

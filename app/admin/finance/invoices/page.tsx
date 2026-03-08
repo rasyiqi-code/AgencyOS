@@ -23,8 +23,8 @@ export default async function AdminInvoicesPage() {
     }
 
     return (
-        <div className="container mx-auto py-10 max-w-6xl">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 mb-8">Invoices & Payments</h1>
+        <div className="w-full py-6">
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-8">Invoices & Payments</h1>
 
             <Card>
                 <CardHeader>

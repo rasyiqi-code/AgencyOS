@@ -16,11 +16,11 @@ export default async function DigitalSalesPage() {
     return (
         <div className="space-y-6 py-6">
             <div>
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
                     <ShoppingCart className="w-6 h-6 text-brand-yellow" />
                     Digital Product Sales
                 </h1>
-                <p className="text-zinc-400 mt-1">
+                <p className="text-zinc-400 mt-1.5 text-sm">
                     Monitor semua transaksi pembelian produk digital.
                 </p>
             </div>

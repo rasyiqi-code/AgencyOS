@@ -151,7 +151,7 @@ export function SubscribersManager() {
                                             <User className="w-3.5 h-3.5" />
                                         </div>
                                         <div className="min-w-0">
-                                            <div className="font-black text-white text-[13px] uppercase tracking-tight truncate">{subscriber.name || "Anonymous"}</div>
+                                            <div className="font-bold text-white text-[13px] tracking-tight truncate">{subscriber.name || "Anonymous"}</div>
                                             <div className="flex items-center gap-1 text-zinc-500">
                                                 <Mail className="w-2.5 h-2.5 opacity-40" />
                                                 <span className="text-[10px] font-medium truncate">{subscriber.email}</span>
@@ -168,7 +168,7 @@ export function SubscribersManager() {
                                     </Button>
                                 </div>
                                 <div className="flex justify-between items-center bg-black/40 px-3 py-2 rounded-lg border border-white/5">
-                                    <span className="text-[8px] text-zinc-600 font-black uppercase tracking-widest">Tanggal Bergabung</span>
+                                    <span className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Tanggal Bergabung</span>
                                     <span className="text-[10px] text-zinc-400 font-bold font-mono uppercase">{format(new Date(subscriber.createdAt), 'MMM dd, yyyy')}</span>
                                 </div>
                             </div>

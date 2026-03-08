@@ -35,14 +35,11 @@ export default async function ServicesPage() {
         <div className="w-full py-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">{isId ? 'Manajemen' : 'Management'}</Badge>
-                    </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
                         {isId ? 'Katalog Layanan' : 'Service Catalog'}
-                        <Package className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-600" />
+                        <Package className="w-6 h-6 text-zinc-600" />
                     </h1>
-                    <p className="text-zinc-400 mt-1.5 text-xs sm:text-sm max-w-lg">
+                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
                         {isId ? 'Kelola layanan terproduk dan paket berlangganan.' : 'Manage productized services and subscription plans.'}
                     </p>
                 </div>

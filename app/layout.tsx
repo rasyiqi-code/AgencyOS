@@ -100,6 +100,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import { MarketingPopup } from "@/components/public/marketing-popup";
+import { PushNotificationBanner } from "@/components/public/push-notification-banner";
 
 export default async function RootLayout({
   children,
@@ -229,6 +230,7 @@ export default async function RootLayout({
                 <ServiceWorkerRegistrar />
                 <InstallPrompt />
                 <MarketingPopup />
+                <PushNotificationBanner />
               </StackTheme>
             </StackProvider>
           </CurrencyProvider>

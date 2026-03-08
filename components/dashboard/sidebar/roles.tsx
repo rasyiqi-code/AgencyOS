@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -76,6 +76,7 @@ export function SidebarSuperAdmin() {
 
             <SidebarSectionHeader>Growth</SidebarSectionHeader>
             <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
+            <SidebarLink href="/admin/marketing/push" icon={Bell} label="Push Center" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
 
             <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>

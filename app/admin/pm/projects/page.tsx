@@ -131,14 +131,11 @@ export default async function AdminProjectsPage({
         <div className="w-full py-6 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-zinc-500 border-zinc-800 uppercase tracking-widest text-[10px]">{isId ? 'Manajemen' : 'Management'}</Badge>
-                    </div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
                         {isId ? 'Papan Misi' : 'Mission Board'}
                         <Layers className="w-6 h-6 text-zinc-600" />
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
+                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
                         {isId ? 'Ringkasan semua proyek klien, status pengembangan, dan penugasan.' : 'Overview of all client projects, development status, and assignments.'}
                     </p>
                 </div>

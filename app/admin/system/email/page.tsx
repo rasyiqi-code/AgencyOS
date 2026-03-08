@@ -1,5 +1,6 @@
 import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
+import { Badge } from "@/components/ui/badge";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
 import { prisma } from "@/lib/config/db";
 // import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
@@ -15,14 +16,11 @@ export default async function AdminEmailPage() {
         <div className="w-full py-6">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] font-semibold tracking-widest text-zinc-500 uppercase">System Configuration</span>
-                    </div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
                         Email Service
                         <Mail className="w-6 h-6 text-zinc-600" />
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
+                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
                         Configure email delivery settings and provider integrations.
                     </p>
                 </div>

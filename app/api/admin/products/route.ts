@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { broadcastPushNotification } from "@/lib/server/push";
 
 export async function GET() {
     // Auth check: hanya admin yang boleh melihat daftar produk
@@ -65,6 +66,14 @@ export async function POST(req: Request) {
                 currency: body.currency || 'USD',
             },
         });
+
+        // Trigger Push Notification for new product
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        await broadcastPushNotification([], {
+            title: "Produk Baru Rilis! 🔥",
+            body: `${name} kini tersedia di AgencyOS. Cek detail dan fiturnya sekarang!`,
+            url: `${appUrl}/products/${slug}`,
+        }).catch((err: any) => console.error("Auto Push Product Error:", err));
 
         return NextResponse.json(product);
     } catch (error) {

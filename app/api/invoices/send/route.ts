@@ -4,6 +4,7 @@ import { isAdmin } from "@/lib/shared/auth-helpers";
 import { stackServerApp } from "@/lib/config/stack";
 import { sendInvoiceEmail } from "@/lib/email/client-notifications";
 import { ScreenItem, ApiItem } from "@/lib/shared/types";
+import { broadcastPushNotification } from "@/lib/server/push";
 
 /**
  * POST /api/invoices/send
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
             ? `${appUrl}/dashboard/quotes`
             : undefined;
 
+
         const result = await sendInvoiceEmail({
             to: stackUser.primaryEmail,
             customerName,
@@ -75,6 +77,14 @@ export async function POST(req: NextRequest) {
         if (!result.success) {
             return NextResponse.json({ error: result.error || "Failed to send email" }, { status: 500 });
         }
+
+        // Trigger Push Notification (Tujuannya follow-up invoice)
+        // Kita kirim ke semua subscribers karena targetnya guest/pendaftar umum yang mungkin lupa checkout
+        await broadcastPushNotification([], {
+            title: "Invoice Baru Terbit! 📄",
+            body: `Invoice #${estimateId.slice(-8).toUpperCase()} untuk ${estimate.service?.title || "layanan kami"} telah dikirim ke email Anda.`,
+            url: paymentLink || `${appUrl}/products`
+        }).catch(err => console.error("Auto Push Invoice Error:", err));
 
         return NextResponse.json({ success: true, message: `Invoice sent to ${stackUser.primaryEmail}` });
     } catch (error) {
