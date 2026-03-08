@@ -41,7 +41,6 @@ export function DigitalCheckoutContent({
                 <DigitalCheckoutSummary
                     product={product}
                     bonuses={bonuses}
-                    onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
                     appliedCoupon={appliedCoupon}
                 />
             </div>
@@ -53,6 +52,7 @@ export function DigitalCheckoutContent({
                     userId={userId}
                     userEmail={userEmail}
                     appliedCoupon={appliedCoupon}
+                    onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
                     amount={discountedAmount}
                     activeRate={activeRate}
                 />

@@ -7,7 +7,9 @@ import { SubscribersManager } from "@/components/admin/marketing/subscribers-man
 import { AffiliateManager } from "@/components/admin/marketing/affiliate-manager";
 import { PayoutRequests } from "@/components/admin/marketing/payout-requests";
 import { AssetsManager } from "@/components/admin/marketing/assets-manager";
-import { Megaphone, Tag, Gift, Users, DollarSign, Mail, FolderOpen } from "lucide-react";
+import { PopUpsManager } from "@/components/admin/marketing/popups-manager";
+import { LeadsManager } from "@/components/admin/marketing/leads-manager";
+import { Megaphone, Tag, Gift, Users, DollarSign, Mail, FolderOpen, LayoutTemplate, UserPlus } from "lucide-react";
 
 export default function MarketingPage() {
     return (
@@ -19,14 +21,22 @@ export default function MarketingPage() {
                         Marketing Center
                     </h1>
                     <p className="text-zinc-500 font-medium text-[10px] md:text-sm">
-                        Manage discount coupons, included bonuses, and subscribers.
+                        Manage discount coupons, promotional popups, and lead capture.
                     </p>
                 </div>
             </div>
 
-            <Tabs defaultValue="coupons" className="flex-1 flex flex-col">
+            <Tabs defaultValue="popups" className="flex-1 flex flex-col">
                 <div className="mb-4 overflow-x-auto no-scrollbar">
                     <TabsList className="bg-zinc-900/50 border border-white/5 w-max md:w-auto h-11 md:h-12 p-1 rounded-xl shadow-2xl shadow-black/20 flex items-center gap-1">
+                        <TabsTrigger value="popups" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                            <LayoutTemplate className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                            <span className="hidden md:inline">PopUps</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="leads" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                            <UserPlus className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                            <span className="hidden md:inline">Leads</span>
+                        </TabsTrigger>
                         <TabsTrigger value="coupons" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
                             <Tag className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
                             <span className="hidden md:inline">Coupons</span>
@@ -53,6 +63,14 @@ export default function MarketingPage() {
                         </TabsTrigger>
                     </TabsList>
                 </div>
+
+                <TabsContent value="popups" className="mt-0 outline-none focus-visible:outline-none">
+                    <PopUpsManager />
+                </TabsContent>
+
+                <TabsContent value="leads" className="mt-0 outline-none focus-visible:outline-none">
+                    <LeadsManager />
+                </TabsContent>
 
                 <TabsContent value="coupons" className="mt-0 outline-none focus-visible:outline-none">
                     <CouponsManager />

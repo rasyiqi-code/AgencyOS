@@ -237,6 +237,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         allowedGroups={undefined}
                         bankDetails={bankDetails}
                         orderStatus={order.status}
+                        contactWA={agencySettings?.phone}
+                        contactTele={agencySettings?.telegram}
                     />
                 )}
 

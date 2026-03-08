@@ -56,8 +56,6 @@ export function CheckoutContent({
                 <CheckoutSummary
                     estimate={estimate}
                     bonuses={bonuses}
-                    onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
-                    appliedCoupon={appliedCoupon}
                     context={context}
                 />
             </div>
@@ -68,6 +66,7 @@ export function CheckoutContent({
                     estimate={estimate}
                     amount={discountedAmount}
                     onPrint={() => handlePrint && handlePrint()}
+                    onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
                     bankDetails={bankDetails}
                     activeRate={activeRate}
                     appliedCoupon={appliedCoupon}
@@ -75,6 +74,8 @@ export function CheckoutContent({
                     defaultPaymentType={defaultPaymentType}
                     projectPaidAmount={projectPaidAmount}
                     projectTotalAmount={projectTotalAmount}
+                    context={context}
+                    agencySettings={agencySettings}
                 />
             </div>
 

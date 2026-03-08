@@ -53,7 +53,7 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
             key: {
                 in: [
                     'bank_name', 'bank_account', 'bank_holder',
-                    'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'
+                    'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'
                 ]
             }
         }
@@ -69,7 +69,9 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
         agencyName: getSetting('AGENCY_NAME') || "Agency OS",
         companyName: getSetting('COMPANY_NAME') || "Agency OS",
         address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
-        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com"
+        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com",
+        phone: getSetting('CONTACT_PHONE'),
+        telegram: getSetting('CONTACT_TELEGRAM')
     };
 
     return (

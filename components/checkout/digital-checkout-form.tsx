@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, CreditCard } from "lucide-react";
+import { Loader2, CreditCard, Tag, Check } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
 import { useTranslations } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -27,17 +27,20 @@ import { Coupon } from "@/lib/shared/types";
 
 type CheckoutFormValues = z.infer<z.ZodObject<{ email: z.ZodString; name: z.ZodOptional<z.ZodString> }>>;
 
-export function CheckoutForm({ product, userId, userEmail, appliedCoupon, amount, activeRate }: {
+export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onApplyCoupon, amount, activeRate }: {
     product: Product;
     userId?: string;
     userEmail?: string;
     appliedCoupon?: Coupon | null;
+    onApplyCoupon: (coupon: Coupon | null) => void;
     amount?: number;
     activeRate?: number;
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
     const [loading, setLoading] = useState(false);
+    const [couponInput, setCouponInput] = useState("");
+    const [isValidating, setIsValidating] = useState(false);
     const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
     const router = useRouter();
 
@@ -50,6 +53,32 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, amount
             }
         }
     }, []);
+
+    const handleApplyCoupon = async () => {
+        if (!couponInput) return;
+        setIsValidating(true);
+        try {
+            const response = await fetch('/api/marketing/coupon/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponInput, context: 'DIGITAL_PRODUCT' }) // Assuming DIGITAL_PRODUCT context
+            });
+
+            const result = await response.json();
+
+            if (result.valid) {
+                onApplyCoupon((result.coupon as Coupon) || null);
+                toast.success(t("couponApplied"));
+            } else {
+                toast.error(result.message || t("invalidCoupon"));
+                onApplyCoupon(null);
+            }
+        } catch {
+            toast.error(t("validateError"));
+        } finally {
+            setIsValidating(false);
+        }
+    };
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(z.object({
@@ -144,6 +173,53 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, amount
                         </p>
                     </div>
 
+                    {/* Kupon */}
+                    <div className="pt-6 border-t border-white/5">
+                        <div className="flex items-center gap-2 mb-3 text-white">
+                            <Tag className="w-3.5 h-3.5 text-brand-yellow" />
+                            <span className="font-medium text-[10px] uppercase tracking-wider text-zinc-400">{t("haveCoupon")}</span>
+                        </div>
+                        <div className="flex gap-2">
+                            <Input
+                                value={couponInput}
+                                onChange={(e) => setCouponInput(e.target.value)}
+                                placeholder={t("enterCode")}
+                                className="h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs"
+                                disabled={!!appliedCoupon}
+                            />
+                            {appliedCoupon ? (
+                                <Button
+                                    variant="secondary"
+                                    type="button"
+                                    size="sm"
+                                    className="bg-white/5 hover:bg-white/10 text-white h-10 px-4 text-xs"
+                                    onClick={() => {
+                                        setCouponInput("");
+                                        onApplyCoupon(null);
+                                    }}
+                                >
+                                    {t("change")}
+                                </Button>
+                            ) : (
+                                <Button
+                                    size="sm"
+                                    type="button"
+                                    className="bg-brand-yellow text-black hover:bg-brand-yellow/80 h-10 px-4 font-bold text-xs"
+                                    onClick={handleApplyCoupon}
+                                    disabled={isValidating || !couponInput}
+                                >
+                                    {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
+                                </Button>
+                            )}
+                        </div>
+                        {appliedCoupon && (
+                            <div className="mt-2 text-[10px] text-emerald-400 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                                <Check className="w-3 h-3" />
+                                {t("applied")}: {appliedCoupon.code}
+                            </div>
+                        )}
+                    </div>
+
                     {/* Email */}
                     <div className="space-y-2">
                         <Label className="text-zinc-400 font-medium text-sm">{t('emailLabel')}</Label>
@@ -185,6 +261,6 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, amount
                     </div>
                 </CardFooter>
             </form>
-        </Card>
+        </Card >
     );
 }

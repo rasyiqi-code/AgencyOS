@@ -1,14 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Bonus, Coupon } from "@/lib/shared/types";
-import { Gift, Check, ShieldCheck, Tag, Loader2, Download, Package } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Gift, Check, ShieldCheck, Download, Package } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
-import { PriceDisplay } from "@/components/providers/currency-provider";
 import { useTranslations } from "next-intl";
 
 interface Product {
@@ -17,46 +12,19 @@ interface Product {
     price: number;
     purchaseType: string;
     interval?: string;
+    description?: string | null;
+    description_id?: string | null;
 }
 
 interface DigitalCheckoutSummaryProps {
     product: Product;
     bonuses: Bonus[];
-    onApplyCoupon: (coupon: Coupon | null) => void;
     appliedCoupon: Coupon | null;
 }
 
-export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, appliedCoupon }: DigitalCheckoutSummaryProps) {
+export function DigitalCheckoutSummary({ product, bonuses }: DigitalCheckoutSummaryProps) {
     const t = useTranslations("Checkout");
     const td = useTranslations("ProductDetail");
-    const [couponInput, setCouponInput] = useState("");
-    const [isValidating, setIsValidating] = useState(false);
-
-    const handleApplyCoupon = async () => {
-        if (!couponInput) return;
-        setIsValidating(true);
-        try {
-            const response = await fetch('/api/marketing/coupon/validate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponInput, context: "DIGITAL" })
-            });
-
-            const result = await response.json();
-
-            if (result.valid) {
-                onApplyCoupon((result.coupon as Coupon) || null);
-                toast.success(t("couponApplied"));
-            } else {
-                toast.error(result.message || t("invalidCoupon"));
-                onApplyCoupon(null);
-            }
-        } catch {
-            toast.error(t("validateError"));
-        } finally {
-            setIsValidating(false);
-        }
-    };
 
     const trustSignals = [
         {
@@ -129,51 +97,11 @@ export function DigitalCheckoutSummary({ product, bonuses, onApplyCoupon, applie
                         )}
                     </div>
                 </div>
-            </div>
 
-            {/* Coupon Section */}
-            <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-6">
-                <div className="flex items-center gap-2 mb-4 text-white">
-                    <Tag className="w-4 h-4 text-brand-yellow" />
-                    <span className="font-medium">{t("haveCoupon")}</span>
-                </div>
-                <div className="flex gap-4">
-                    <Input
-                        value={couponInput}
-                        onChange={(e) => setCouponInput(e.target.value)}
-                        placeholder={t("enterCode")}
-                        className="bg-zinc-950 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase"
-                        disabled={!!appliedCoupon}
-                    />
-                    {appliedCoupon ? (
-                        <Button variant="secondary" className="bg-white/10 hover:bg-white/20 text-white" onClick={() => {
-                            setCouponInput("");
-                            onApplyCoupon(null);
-                        }}>
-                            {t("change")}
-                        </Button>
-                    ) : (
-                        <Button
-                            className="bg-brand-yellow text-black hover:bg-brand-yellow/80"
-                            onClick={handleApplyCoupon}
-                            disabled={isValidating || !couponInput}
-                        >
-                            {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
-                        </Button>
-                    )}
-                </div>
-                {appliedCoupon && (
-                    <div className="mt-2 text-sm text-emerald-400 flex items-center gap-2">
-                        <Check className="w-4 h-4" />
-                        {t("applied")}: {t.rich("appliedCouponDesc", {
-                            code: appliedCoupon.code,
-                            discount: () => appliedCoupon.discountType === 'percentage'
-                                ? `${appliedCoupon.discountValue}%`
-                                : <PriceDisplay amount={appliedCoupon.discountValue} />
-                        })}
-                    </div>
-                )}
+                <SubscriptionDialog context="DIGITAL" />
             </div>
         </div>
     );
 }
+
+import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";

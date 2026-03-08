@@ -283,7 +283,9 @@
         "invalidOffer": "Silakan masukkan penawaran harga yang valid.",
         "offerSubmitError": "Gagal mengirim penawaran. Silakan coba lagi.",
         "discussPrice": "Harga Diskusi",
-        "quoteSummaryMessage": "Halo, saya tertarik dengan layanan \"{service}\" (ID: {id}). Penawaran harga saya: {price}. Mohon reviewnya, terima kasih."
+        "quoteSummaryMessage": "Halo, saya tertarik dengan layanan \"{service}\" (ID: {id}). Penawaran harga saya: {price}. Mohon reviewnya, terima kasih.",
+        "manualWaitTime": "Harap tunggu hingga 24 jam untuk verifikasi manual.",
+        "fastConfirmation": "Konfirmasi Cepat"
     },
     "Expert": {
         "role": "Pendiri & Fullstack Developer",

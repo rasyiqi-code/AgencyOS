@@ -6,6 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 
 const CONTACT_EMAIL_KEY = "CONTACT_EMAIL";
 const CONTACT_PHONE_KEY = "CONTACT_PHONE";
+const CONTACT_TELEGRAM_KEY = "CONTACT_TELEGRAM";
 const CONTACT_ADDRESS_KEY = "CONTACT_ADDRESS";
 const AGENCY_NAME_KEY = "AGENCY_NAME";
 const COMPANY_NAME_KEY = "COMPANY_NAME";
@@ -18,7 +19,7 @@ const CONTACT_HOURS_KEY = "CONTACT_HOURS";
 export async function GET() {
     const settings = await prisma.systemSetting.findMany({
         where: {
-            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] }
+            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_TELEGRAM_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] }
         }
     });
 
@@ -27,6 +28,7 @@ export async function GET() {
     return NextResponse.json({
         email: getVal(CONTACT_EMAIL_KEY),
         phone: getVal(CONTACT_PHONE_KEY),
+        telegram: getVal(CONTACT_TELEGRAM_KEY),
         address: getVal(CONTACT_ADDRESS_KEY),
         agencyName: getVal(AGENCY_NAME_KEY),
         companyName: getVal(COMPANY_NAME_KEY),
@@ -44,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { email, phone, address, agencyName, companyName, logoUrl, logoDisplayMode, servicesTitle, servicesSubtitle, hours } = body;
+        const { email, phone, telegram, address, agencyName, companyName, logoUrl, logoDisplayMode, servicesTitle, servicesSubtitle, hours } = body;
 
         const updates = [
             prisma.systemSetting.upsert({
@@ -54,8 +56,13 @@ export async function POST(req: NextRequest) {
             }),
             prisma.systemSetting.upsert({
                 where: { key: CONTACT_PHONE_KEY },
-                update: { value: phone || "", description: "Public Phone Number" },
-                create: { key: CONTACT_PHONE_KEY, value: phone || "", description: "Public Phone Number" }
+                update: { value: phone || "", description: "Public Phone Number (WhatsApp)" },
+                create: { key: CONTACT_PHONE_KEY, value: phone || "", description: "Public Phone Number (WhatsApp)" }
+            }),
+            prisma.systemSetting.upsert({
+                where: { key: CONTACT_TELEGRAM_KEY },
+                update: { value: telegram || "", description: "Telegram Handle" },
+                create: { key: CONTACT_TELEGRAM_KEY, value: telegram || "", description: "Telegram Handle" }
             }),
             prisma.systemSetting.upsert({
                 where: { key: CONTACT_ADDRESS_KEY },

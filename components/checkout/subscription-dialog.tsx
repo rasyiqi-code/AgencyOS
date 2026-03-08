@@ -74,19 +74,21 @@ export function SubscriptionDialog({ onSubscribe, context }: {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <div className="mt-4 p-4 bg-lime-500/10 border border-lime-500/20 rounded-lg cursor-pointer hover:bg-lime-500/20 transition-colors flex items-center justify-between group">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-lime-500 flex items-center justify-center shrink-0">
-                            <Gift className="w-4 h-4 text-black" />
+                <div className="pt-6 border-t border-white/5 cursor-pointer group transition-colors">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-lime-500/10 border border-lime-500/20 flex items-center justify-center shrink-0 group-hover:bg-lime-500/20 transition-colors">
+                                <Gift className="w-4 h-4 text-lime-400" />
+                            </div>
+                            <div>
+                                <div className="font-medium text-white group-hover:text-lime-400 transition-colors text-sm">{t('wantDiscount')}</div>
+                                <div className="text-[11px] text-zinc-500">{t('subscribeSecret')}</div>
+                            </div>
                         </div>
-                        <div>
-                            <div className="font-medium text-white group-hover:text-lime-400 transition-colors">{t('wantDiscount')}</div>
-                            <div className="text-xs text-zinc-400">{t('subscribeSecret')}</div>
-                        </div>
+                        <Button size="sm" variant="ghost" className="text-lime-500 hover:text-lime-400 h-8 text-xs font-bold">
+                            {t('getCoupon')}
+                        </Button>
                     </div>
-                    <Button size="sm" variant="ghost" className="text-lime-500 hover:text-lime-400">
-                        {t('getCoupon')}
-                    </Button>
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-white/10 text-white">

@@ -40,6 +40,8 @@ interface DigitalInvoiceClientWrapperProps {
         companyName: string;
         address: string;
         email: string;
+        phone?: string | null;
+        telegram?: string | null;
     };
     hasActiveGateway?: boolean;
     userMethod?: { name?: string | null; displayName?: string | null; email?: string | null } | null;
@@ -367,6 +369,8 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                         paymentMetadata={order.paymentMetadata as unknown as MidtransPaymentData}
                         chargeEndpoint="/api/digital-payment/charge"
                         bankDetails={bankDetails}
+                        contactWA={agencySettings?.phone}
+                        contactTele={agencySettings?.telegram}
                     />
                 )}
 

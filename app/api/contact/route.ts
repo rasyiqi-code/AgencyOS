@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getResendClient, getAdminEmailTarget } from "@/lib/email/client";
+import { createLead } from "@/lib/server/leads";
 
 // Reusing schema definition
 const contactSchema = z.object({
@@ -26,7 +27,22 @@ export async function POST(req: NextRequest) {
 
         const { firstName, lastName, email, subject, message } = validatedFields.data;
 
-        // 1. Get Resend Client
+        // 1. Create Lead in Database
+        try {
+            await createLead({
+                firstName,
+                lastName,
+                email,
+                subject,
+                message,
+                source: "contact_form"
+            });
+        } catch (leadError) {
+            console.error("Failed to create lead from contact form:", leadError);
+            // Non-blocking error, proceed with email sending
+        }
+
+        // 2. Get Resend Client
         const resend = await getResendClient();
 
         if (!resend) {

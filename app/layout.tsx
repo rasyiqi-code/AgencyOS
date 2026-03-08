@@ -99,6 +99,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+import { MarketingPopup } from "@/components/public/marketing-popup";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -199,6 +201,7 @@ export default async function RootLayout({
                 <Toaster />
                 <ServiceWorkerRegistrar />
                 <InstallPrompt />
+                <MarketingPopup />
               </StackTheme>
             </StackProvider>
           </CurrencyProvider>

@@ -896,7 +896,9 @@
         "invalidOffer": "Please enter a valid offer price.",
         "offerSubmitError": "Failed to submit offer. Please try again.",
         "discussPrice": "Price TBD",
-        "quoteSummaryMessage": "Hi, I'm interested in the \"{service}\" service (ID: {id}). My offer: {price}. Please review, thanks."
+        "quoteSummaryMessage": "Hi, I'm interested in the \"{service}\" service (ID: {id}). My offer: {price}. Please review, thanks.",
+        "manualWaitTime": "Please allow up to 24 hours for manual verification.",
+        "fastConfirmation": "Fast Confirmation"
     },
     "ProductDetail": {
         "back": "Back to Products",

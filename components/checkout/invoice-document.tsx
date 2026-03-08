@@ -13,6 +13,8 @@ export interface AgencyInvoiceSettings {
     companyName: string;
     address: string;
     email: string;
+    phone?: string | null;
+    telegram?: string | null;
 }
 
 export function InvoiceDocument({

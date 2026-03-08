@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export interface ContactInfo {
     email: string | null;
     phone: string | null;
+    telegram: string | null;
     address: string | null;
     logoUrl: string | null;
     agencyName: string | null;
@@ -189,14 +190,25 @@ export function GeneralSettingsForm({ initialData }: Props) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-zinc-300">Phone Number</Label>
+                        <Label className="text-zinc-300">WhatsApp Number</Label>
                         <Input
-                            placeholder="+65 6688 8868"
+                            placeholder="+62 812 3456 7890"
                             value={data.phone || ""}
                             onChange={(e) => setData({ ...data, phone: e.target.value })}
                             className="bg-black/50 border-white/10 text-white"
                         />
-                        <p className="text-xs text-zinc-500">Includes format (e.g. Mon-Fri details).</p>
+                        <p className="text-xs text-zinc-500">Includes country code (e.g. 628...). For direct WA link.</p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Telegram Handle</Label>
+                        <Input
+                            placeholder="@agencyos"
+                            value={data.telegram || ""}
+                            onChange={(e) => setData({ ...data, telegram: e.target.value })}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">Your Telegram username (with or without @).</p>
                     </div>
 
                     <div className="space-y-2">

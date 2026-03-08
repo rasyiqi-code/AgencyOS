@@ -8,12 +8,13 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
     const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"] } }
+        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_TELEGRAM", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"] } }
     });
 
     const contactData = {
         email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,
         phone: settings.find(s => s.key === "CONTACT_PHONE")?.value || null,
+        telegram: settings.find(s => s.key === "CONTACT_TELEGRAM")?.value || null,
         address: settings.find(s => s.key === "CONTACT_ADDRESS")?.value || null,
         agencyName: settings.find(s => s.key === "AGENCY_NAME")?.value || null,
         companyName: settings.find(s => s.key === "COMPANY_NAME")?.value || null,

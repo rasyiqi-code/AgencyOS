@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, CheckCircle, Loader2, AlertTriangle, MessageSquare, Inbox, Send, ChevronUp } from "lucide-react";
+import { Download, CheckCircle, Loader2, AlertTriangle, MessageSquare, Inbox, Send, ChevronUp, Tag, Check } from "lucide-react";
 import { ExtendedEstimate, Coupon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 import { useTranslations } from "next-intl";
-import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
-export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount }: {
+
+export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
+    onApplyCoupon: (coupon: Coupon | null) => void,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
@@ -20,7 +23,8 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     hasActiveGateway?: boolean,
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number,
-    projectTotalAmount?: number
+    projectTotalAmount?: number,
+    context?: "SERVICE" | "CALCULATOR"
 }) {
     console.log("DEBUG CHECKOUT - priceType:", estimate.service?.priceType);
     console.log("DEBUG CHECKOUT - status:", estimate.status);
@@ -30,6 +34,8 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
     const [offeredPrice, setOfferedPrice] = useState<string>("");
     console.log("DEBUG SIDEBAR - priceType:", estimate.service?.priceType);
     console.log("DEBUG SIDEBAR - status:", estimate.status);
+    const [couponInput, setCouponInput] = useState("");
+    const [isValidating, setIsValidating] = useState(false);
 
     // Identify if this is a quote negotiation step
     const isQuoteNegotiation = (estimate.service?.priceType === "STARTING_AT") && (estimate.status === "draft" || estimate.status === "pending");
@@ -63,6 +69,32 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
         const paid = projectPaidAmount || 0;
         amountToPay = Math.max(0, total - paid);
     }
+
+    const handleApplyCoupon = async () => {
+        if (!couponInput) return;
+        setIsValidating(true);
+        try {
+            const response = await fetch('/api/marketing/coupon/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponInput, context: context })
+            });
+
+            const result = await response.json();
+
+            if (result.valid) {
+                onApplyCoupon((result.coupon as Coupon) || null);
+                toast.success(t("couponApplied"));
+            } else {
+                toast.error(result.message || t("invalidCoupon"));
+                onApplyCoupon(null);
+            }
+        } catch {
+            toast.error(t("validateError"));
+        } finally {
+            setIsValidating(false);
+        }
+    };
 
     const handleCheckout = async () => {
         setIsProcessing(true);
@@ -244,6 +276,53 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                                 </div>
                             )}
                         </>
+                    )}
+
+                    {/* Pricing Display or Input Box */}
+                    {estimate.status !== 'paid' && !isQuoteNegotiation && (
+                        <div className="pt-6 border-t border-white/5">
+                            <div className="flex items-center gap-2 mb-3 text-white">
+                                <Tag className="w-3.5 h-3.5 text-brand-yellow" />
+                                <span className="font-medium text-[10px] uppercase tracking-wider text-zinc-400">{t("haveCoupon")}</span>
+                            </div>
+                            <div className="flex gap-2">
+                                <Input
+                                    value={couponInput}
+                                    onChange={(e) => setCouponInput(e.target.value)}
+                                    placeholder={t("enterCode")}
+                                    className="h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs"
+                                    disabled={!!appliedCoupon}
+                                />
+                                {appliedCoupon ? (
+                                    <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        className="bg-white/5 hover:bg-white/10 text-white h-10 px-4 text-xs"
+                                        onClick={() => {
+                                            setCouponInput("");
+                                            onApplyCoupon(null);
+                                        }}
+                                    >
+                                        {t("change")}
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        size="sm"
+                                        className="bg-brand-yellow text-black hover:bg-brand-yellow/80 h-10 px-4 font-bold text-xs"
+                                        onClick={handleApplyCoupon}
+                                        disabled={isValidating || !couponInput}
+                                    >
+                                        {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
+                                    </Button>
+                                )}
+                            </div>
+                            {appliedCoupon && (
+                                <div className="mt-2 text-[10px] text-emerald-400 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
+                                    <Check className="w-3 h-3" />
+                                    {t("applied")}: {appliedCoupon.code}
+                                </div>
+                            )}
+                        </div>
                     )}
 
                     {/* Pricing Display or Input Box */}
@@ -451,7 +530,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, appliedC
                     </div>
                 </CardContent>
             </Card>
-            <SubscriptionDialog />
         </div>
     );
 }

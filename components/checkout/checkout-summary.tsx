@@ -1,62 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { ExtendedEstimate, Bonus, Coupon } from "@/lib/shared/types";
-import { Gift, Zap, Check, ShieldCheck, Tag, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { ExtendedEstimate, Bonus } from "@/lib/shared/types";
+import { Gift, Zap, Check, ShieldCheck } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
-import { PriceDisplay } from "@/components/providers/currency-provider";
 
 import { useTranslations, useLocale } from "next-intl";
 
 interface CheckoutSummaryProps {
     estimate: ExtendedEstimate;
     bonuses: Bonus[];
-    onApplyCoupon: (coupon: Coupon | null) => void;
-    appliedCoupon: Coupon | null;
     context?: "SERVICE" | "CALCULATOR";
 }
 
-export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupon, context }: CheckoutSummaryProps) {
+export function CheckoutSummary({ estimate, bonuses, context }: CheckoutSummaryProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
-    const [couponInput, setCouponInput] = useState("");
-    const [isValidating, setIsValidating] = useState(false);
 
     // Get features based on locale
     const serviceFeatures = isId
         ? (estimate.service?.features_id as string[]) || (estimate.service?.features as string[])
         : (estimate.service?.features as string[]);
-
-    const handleApplyCoupon = async () => {
-        if (!couponInput) return;
-        setIsValidating(true);
-        try {
-            const response = await fetch('/api/marketing/coupon/validate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponInput, context: context })
-            });
-
-            const result = await response.json();
-
-            if (result.valid) {
-                onApplyCoupon((result.coupon as Coupon) || null);
-                toast.success(t("couponApplied"));
-            } else {
-                toast.error(result.message || t("invalidCoupon"));
-                onApplyCoupon(null);
-            }
-        } catch {
-            toast.error(t("validateError"));
-        } finally {
-            setIsValidating(false);
-        }
-    };
 
     const estimatedDays = Math.ceil(estimate.totalHours / 6);
     const salesPoints = [
@@ -142,54 +107,11 @@ export function CheckoutSummary({ estimate, bonuses, onApplyCoupon, appliedCoupo
                         )}
                     </div>
                 </div>
+
+                <SubscriptionDialog context={context === "CALCULATOR" ? "CALCULATOR" : "SERVICE"} />
             </div>
-
-            {/* Coupon Section - hidden when payment is confirmed */}
-            {estimate.status !== 'paid' && (
-                <div className="bg-zinc-900/50 border border-white/5 rounded-xl p-4 sm:p-6">
-                    <div className="flex items-center gap-2 mb-3 sm:mb-4 text-white">
-                        <Tag className="w-4 h-4 text-brand-yellow" />
-                        <span className="font-medium text-sm sm:text-base">{t("haveCoupon")}</span>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                        <Input
-                            value={couponInput}
-                            onChange={(e) => setCouponInput(e.target.value)}
-                            placeholder={t("enterCode")}
-                            className="w-full bg-zinc-950 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase"
-                            disabled={!!appliedCoupon}
-                        />
-                        {appliedCoupon ? (
-                            <Button variant="secondary" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white" onClick={() => {
-                                setCouponInput("");
-                                onApplyCoupon(null);
-                            }}>
-                                {t("change")}
-                            </Button>
-                        ) : (
-                            <Button
-                                className="w-full sm:w-auto bg-brand-yellow text-black hover:bg-brand-yellow/80"
-                                onClick={handleApplyCoupon}
-                                disabled={isValidating || !couponInput}
-                            >
-                                {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
-                            </Button>
-                        )}
-                    </div>
-                    {appliedCoupon && (
-                        <div className="mt-2 text-sm text-emerald-400 flex items-center gap-2">
-                            <Check className="w-4 h-4" />
-                            {t("applied")}: {t.rich("appliedCouponDesc", {
-                                code: appliedCoupon.code,
-                                discount: () => appliedCoupon.discountType === 'percentage'
-                                    ? `${appliedCoupon.discountValue}%`
-                                    : <PriceDisplay amount={appliedCoupon.discountValue} />
-                            })}
-                        </div>
-                    )}
-
-                </div>
-            )}
         </div>
     );
 }
+
+import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";

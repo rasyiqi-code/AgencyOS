@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Loader2, Building, Copy, Upload, CheckCircle2 } from "lucide-react";
+import { Loader2, Building, Copy, Upload, CheckCircle2, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { uploadOrderProof } from "@/app/actions/billing";
 import { useRouter } from "next/navigation";
@@ -15,9 +16,12 @@ interface ManualPaymentProps {
         bank_holder?: string;
     };
     onClose: () => void;
+    contactWA?: string | null;
+    contactTele?: string | null;
 }
 
-export function ManualPayment({ orderId, bankDetails, onClose }: ManualPaymentProps) {
+export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contactTele }: ManualPaymentProps) {
+    const t = useTranslations("Checkout"); // Using Checkout context for simplicity or add ManualPayment context
     const router = useRouter();
     const [isUploading, setIsUploading] = useState(false);
     const [proofUploaded, setProofUploaded] = useState(false);
@@ -132,9 +136,46 @@ export function ManualPayment({ orderId, bankDetails, onClose }: ManualPaymentPr
                         <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg flex gap-3 items-start">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 shrink-0" />
                             <p className="text-xs text-amber-200/80 leading-relaxed">
-                                Please allow up to 24 hours for manual verification.
+                                {t("manualWaitTime") || "Please allow up to 24 hours for manual verification."}
                             </p>
                         </div>
+
+                        {/* WA - Tele Contact Buttons (Only if settings provided) */}
+                        {(contactWA || contactTele) && (
+                            <div className="space-y-3 pt-4 border-t border-zinc-800/50 animate-in fade-in slide-in-from-top-2 duration-500 delay-150">
+                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold text-center mb-1">
+                                    {t("fastConfirmation") || "Fast Confirmation"}
+                                </p>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {contactWA && (
+                                        <Button
+                                            variant="outline"
+                                            className="h-11 border-emerald-500/20 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 transition-all font-semibold"
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Halo, saya ingin konfirmasi pembayaran untuk Order #${orderId.slice(-8).toUpperCase()}`);
+                                                window.open(`https://wa.me/${contactWA.replace(/\D/g, '')}?text=${message}`, '_blank');
+                                            }}
+                                        >
+                                            <MessageCircle className="w-4 h-4 mr-2" />
+                                            WhatsApp
+                                        </Button>
+                                    )}
+                                    {contactTele && (
+                                        <Button
+                                            variant="outline"
+                                            className="h-11 border-blue-500/20 bg-blue-500/5 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all font-semibold"
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Halo, saya ingin konfirmasi pembayaran untuk Order #${orderId.slice(-8).toUpperCase()}`);
+                                                window.open(`https://t.me/${contactTele.replace('@', '')}?text=${message}`, '_blank');
+                                            }}
+                                        >
+                                            <Send className="w-4 h-4 mr-2" />
+                                            Telegram
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

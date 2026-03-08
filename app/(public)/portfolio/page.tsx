@@ -66,7 +66,6 @@ export default async function PortfolioPage() {
     );
 
     const contactPhone = await getSettingValue("CONTACT_PHONE", "6285183131249");
-    const waMessage = await getTranslations("Portfolio");
     const locale = await getLocale();
     const isId = locale === 'id';
 

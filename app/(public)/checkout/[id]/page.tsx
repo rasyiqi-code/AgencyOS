@@ -62,6 +62,8 @@ export default async function CheckoutPage(props: PageProps) {
             price: p.price,
             purchaseType: (p.purchaseType as "one_time" | "subscription") || "one_time",
             interval: p.interval || undefined,
+            description: p.description,
+            description_id: p.description_id,
         };
 
         return (
@@ -91,7 +93,7 @@ export default async function CheckoutPage(props: PageProps) {
         const user = await stackServerApp.getUser();
 
         const settings = await prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'] } }
         });
         const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
 
@@ -111,7 +113,9 @@ export default async function CheckoutPage(props: PageProps) {
             agencyName: getSetting('AGENCY_NAME') || "Agency OS",
             companyName: getSetting('COMPANY_NAME') || "Agency OS",
             address: getSetting('CONTACT_ADDRESS') || "Tech Valley\nCyberjaya, Malaysia",
-            email: getSetting('CONTACT_EMAIL') || "billing@agencyos.com"
+            email: getSetting('CONTACT_EMAIL') || "billing@agencyos.com",
+            phone: getSetting('CONTACT_PHONE'),
+            telegram: getSetting('CONTACT_TELEGRAM')
         };
 
         // Construct ExtendedEstimate

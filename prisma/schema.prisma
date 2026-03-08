@@ -162,8 +162,6 @@ model Service {
   features       Json
   image          String?
   isActive       Boolean    @default(true)
-  category       String?    @default("Uncategorized")
-  visibility     String     @default("PUBLIC")
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   creemProductId String?    @unique
@@ -172,6 +170,8 @@ model Service {
   features_id    Json?
   title_id       String?
   priceType      String     @default("FIXED")
+  category       String?    @default("Uncategorized")
+  visibility     String     @default("PUBLIC")
   estimates      Estimate[]
   projects       Project[]
 }
@@ -459,4 +459,40 @@ model DigitalOrder {
   updatedAt       DateTime @updatedAt
   license         License? @relation(fields: [licenseId], references: [id])
   product         Product  @relation(fields: [productId], references: [id])
+}
+
+model PopUp {
+  id               String   @id @default(cuid())
+  headline         String
+  headline_id      String?
+  description      String
+  description_id   String?
+  ctaText          String?
+  ctaText_id       String?
+  ctaUrl           String?
+  isActive         Boolean  @default(true)
+  targetingType    String   @default("ALL")
+  targetingPaths   Json     @default("[]")
+  targetingLocales Json     @default("[]")
+  showFormLead     Boolean  @default(false)
+  formHeadline     String?
+  formHeadline_id  String?
+  delay            Int      @default(3)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String?
+  email       String
+  phoneNumber String?
+  subject     String?
+  message     String?
+  source      String   @default("direct")
+  path        String?
+  locale      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

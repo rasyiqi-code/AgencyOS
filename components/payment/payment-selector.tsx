@@ -20,6 +20,8 @@ export interface PaymentSelectorProps {
     bankDetails?: BankDetails;
     orderStatus?: string;
     chargeEndpoint?: string; // NEW PROP
+    contactWA?: string | null;
+    contactTele?: string | null;
 }
 
 interface PaymentMethod {
@@ -83,7 +85,7 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
     },
 ];
 
-export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint }: PaymentSelectorProps) {
+export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
         if (!paymentMetadata) return null;
@@ -330,6 +332,8 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                                 orderId={orderId}
                                 bankDetails={bankDetails}
                                 onClose={() => setIsDialogOpen(false)}
+                                contactWA={contactWA}
+                                contactTele={contactTele}
                             />
                         ) : (
                             <MidtransPayment

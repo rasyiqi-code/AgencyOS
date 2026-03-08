@@ -93,7 +93,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     // Fetch System Settings for Bank and Agency
     const [settings, hasActiveGateway] = await Promise.all([
         prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL'] } }
+            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'] } }
         }),
         paymentGatewayService.hasActiveGateway()
     ]);
@@ -109,7 +109,9 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         agencyName: getSetting('AGENCY_NAME') || "Agency OS",
         companyName: getSetting('COMPANY_NAME') || "Agency OS",
         address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
-        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com"
+        email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com",
+        phone: getSetting('CONTACT_PHONE'),
+        telegram: getSetting('CONTACT_TELEGRAM')
     };
 
     return (

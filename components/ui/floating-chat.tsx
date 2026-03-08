@@ -50,8 +50,12 @@ export function FloatingChatWidget() {
     ]);
     const [isLoading, setIsLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);
+    const [contactSettings, setContactSettings] = useState({
+        phone: "6285183131249",
+        telegram: "crediblemark"
+    });
 
-    // Initial check for AI status
+    // Initial check for AI status and contact settings
     useEffect(() => {
         fetch("/api/system/keys/status")
             .then(res => res.json())
@@ -68,6 +72,16 @@ export function FloatingChatWidget() {
                 }
             })
             .catch(() => setAiAvailable(false));
+
+        fetch("/api/system/contact")
+            .then(res => res.json())
+            .then(data => {
+                setContactSettings({
+                    phone: data.phone?.replace(/\\D/g, '') || "6285183131249",
+                    telegram: data.telegram?.replace('@', '') || "crediblemark"
+                });
+            })
+            .catch(e => console.error("Failed to fetch contact settings", e));
     }, []);
 
     // Notification State
@@ -318,7 +332,7 @@ export function FloatingChatWidget() {
                             Telegram
                         </span>
                         <Button
-                            onClick={() => window.open("https://t.me/crediblemark", "_blank")}
+                            onClick={() => window.open(`https://t.me/${contactSettings.telegram}`, "_blank")}
                             className="h-12 w-12 rounded-full shadow-xl bg-[#0088cc] hover:bg-[#0077b5] text-white transition-all duration-300 hover:scale-110"
                         >
                             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg">
@@ -333,7 +347,7 @@ export function FloatingChatWidget() {
                             WhatsApp
                         </span>
                         <Button
-                            onClick={() => window.open("https://wa.me/6285183131249", "_blank")}
+                            onClick={() => window.open(`https://wa.me/${contactSettings.phone}`, "_blank")}
                             className="h-12 w-12 rounded-full shadow-xl bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 hover:scale-110"
                         >
                             <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg">
