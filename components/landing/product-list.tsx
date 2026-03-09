@@ -1,16 +1,18 @@
 "use client";
+// HMR Trigger: Cleaning up zombie imports
+
 
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, ArrowLeft, ArrowRight, ChevronDown, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Sparkles, ChevronDown, Check } from "lucide-react";
+
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { useTranslations, useLocale } from "next-intl";
 import { type Service } from "@/components/public/service-detail-content";
 import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ProductListProps {
     initialServices: Service[];
@@ -21,34 +23,14 @@ export function ProductList({ initialServices }: ProductListProps) {
     const locale = useLocale();
     const isId = locale === 'id';
 
-    const [emblaRef, emblaApi] = useEmblaCarousel({
+    const [emblaRef] = useEmblaCarousel({
         align: 'start',
         loop: false,
         dragFree: true,
         containScroll: 'trimSnaps'
     });
 
-    const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
-    const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
-    const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-    const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
-
-    const onSelect = useCallback(() => {
-        if (!emblaApi) return;
-        setPrevBtnEnabled(emblaApi.canScrollPrev());
-        setNextBtnEnabled(emblaApi.canScrollNext());
-    }, [emblaApi]);
-
-    useEffect(() => {
-        if (!emblaApi) return;
-
-        // Defer initial state sync to avoid cascading renders lint warning
-        Promise.resolve().then(onSelect);
-
-        emblaApi.on('select', onSelect);
-        emblaApi.on('reInit', onSelect);
-    }, [emblaApi, onSelect]);
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -71,27 +53,7 @@ export function ProductList({ initialServices }: ProductListProps) {
 
     return (
         <div className="relative w-full group/carousel">
-            {/* Navigation Buttons */}
-            <div className="flex justify-end gap-2 mb-6 px-4">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={scrollPrev}
-                    disabled={!prevBtnEnabled}
-                    className="rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-sm text-white hover:bg-brand-yellow hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900/50 disabled:hover:text-white transition-all shadow-xl"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={scrollNext}
-                    disabled={!nextBtnEnabled}
-                    className="rounded-full border-white/10 bg-zinc-900/50 backdrop-blur-sm text-white hover:bg-brand-yellow hover:text-black disabled:opacity-30 disabled:hover:bg-zinc-900/50 disabled:hover:text-white transition-all shadow-xl"
-                >
-                    <ArrowRight className="w-5 h-5" />
-                </Button>
-            </div>
+
 
             <div className="overflow-hidden" ref={emblaRef}>
                 <motion.div

@@ -326,9 +326,9 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
 }) {
     return (
         <div className="flex items-center gap-1.5">
-            <div className={`w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800' : ''}`}>
+            <div className={`w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800/50' : ''}`}>
                 {isSvg ? (
-                    <Image src={icon} alt={`${name} model icon`} width={12} height={12} className="object-contain" style={{ height: 'auto' }} />
+                    <Image src={icon} alt={`${name} model icon`} width={14} height={14} className="object-contain w-auto h-auto shrink-0" priority />
                 ) : (
                     <Image src={icon} alt={`${name} model logo`} fill className="object-cover" sizes="20px" />
                 )}

@@ -177,7 +177,7 @@
         "subtitle": "Strategic financial logic for modern enterprise growth.",
         "comparison": "FINANCIAL LOGIC",
         "hireSenior": "TYPICAL FULL-TIME HIRE",
-        "hybrid": "{brand} (STRATEGIC PARTNER)",
+        "hybrid": "{brand}",
         "salary": "Capital Expenditure",
         "salaryOld": "Annual Salary + Fixed Overhead",
         "salaryNew": "Project-Based Investment",
@@ -193,7 +193,7 @@
     },
     "Guarantee": {
         "title": "We Take On All The Risk.",
-        "subtitle": "100% Money Back Guarantee during Briefing Phase",
+        "subtitle": "100% Money Back Guarantee\nDuring Briefing Phase",
         "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving the initial Blueprint you feel it doesn't fit our approach, we will refund your deposit 100%.",
         "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
     },
@@ -329,7 +329,7 @@
         }
     },
     "FAQ": {
-        "title": "FAQ: Framework & Governance",
+        "title": "Frequently Asked Questions",
         "q1": "Is direct synchronous communication available?",
         "a1": "Our platform is optimized for <strong>Asynchronous Communication</strong> to ensure precision and absolute documentation. However, for critical coordination or deep strategic consulting, scheduled Premium Call sessions are available.",
         "q2": "How is post-deployment stability managed?",

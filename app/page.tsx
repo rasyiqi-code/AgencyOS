@@ -71,7 +71,7 @@ export default async function Home() {
   const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
   return (
-    <main className="min-h-screen bg-black selection:bg-blue-500/30">
+    <main className="relative min-h-screen bg-black selection:bg-blue-500/30 overflow-x-hidden">
       <JsonLd<Organization>
         data={{
           "@context": "https://schema.org",
@@ -93,45 +93,29 @@ export default async function Home() {
         <SectionStats />
       </ScrollAnimationWrapper>
 
+      <ScrollAnimationWrapper>
+        <ExpertProfile />
+      </ScrollAnimationWrapper>
+
       <ScrollAnimationWrapper delay={0.1}>
         <SocialProof />
       </ScrollAnimationWrapper>
 
-      <ScrollAnimationWrapper delay={0.2}>
-        <Comparison />
-      </ScrollAnimationWrapper>
-
-      <ScrollAnimationWrapper>
-        <FinancialLogic />
-      </ScrollAnimationWrapper>
-
-      <ScrollAnimationWrapper>
-        <SectionEcosystem />
-      </ScrollAnimationWrapper>
-
-      <ScrollAnimationWrapper>
-        <Workflow />
-      </ScrollAnimationWrapper>
-
-      <ScrollAnimationWrapper>
-        <ProductCatalog />
-      </ScrollAnimationWrapper>
+      <Comparison />
+      <SectionEcosystem />
+      <FinancialLogic />
+      <ProductCatalog />
+      <Workflow />
 
       <ScrollAnimationWrapper>
         <Testimonials />
       </ScrollAnimationWrapper>
 
       <ScrollAnimationWrapper>
-        <ExpertProfile />
-      </ScrollAnimationWrapper>
-
-      <ScrollAnimationWrapper>
         <SectionGuarantee />
       </ScrollAnimationWrapper>
 
-      <ScrollAnimationWrapper>
-        <FAQSection />
-      </ScrollAnimationWrapper>
+      <FAQSection />
 
       <ScrollAnimationWrapper>
         <SectionCTA />

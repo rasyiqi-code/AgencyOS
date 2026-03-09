@@ -14,6 +14,12 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
 
 interface Message {
     id: string;
@@ -22,6 +28,11 @@ interface Message {
 }
 
 type ChatMode = "ai" | "human_onboarding" | "human_chat";
+
+interface ContactSettings {
+    phone: string;
+    telegram: string;
+}
 
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 
@@ -50,7 +61,7 @@ export function FloatingChatWidget() {
     ]);
     const [isLoading, setIsLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);
-    const [contactSettings, setContactSettings] = useState({
+    const [contactSettings, setContactSettings] = useState<ContactSettings>({
         phone: "6285183131249",
         telegram: "crediblemark"
     });
@@ -311,6 +322,7 @@ export function FloatingChatWidget() {
         }
     };
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
 
     // Hide floating chat on specific pages to prevent overlapping with mobile sticky CTA
@@ -322,56 +334,54 @@ export function FloatingChatWidget() {
 
     if (!isOpen) {
         return (
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4 group transition-all duration-300 transform animate-in fade-in slide-in-from-bottom-8">
-                {/* Options Container - Reveals on hover */}
-                <div className="flex flex-col items-end gap-3 mb-2 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 ease-out">
-
-                    {/* Telegram */}
-                    <div className="flex items-center gap-3">
-                        <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity delay-150 whitespace-nowrap">
-                            Telegram
-                        </span>
-                        <Button
-                            onClick={() => window.open(`https://t.me/${contactSettings.telegram}`, "_blank")}
-                            className="h-12 w-12 rounded-full shadow-xl bg-[#0088cc] hover:bg-[#0077b5] text-white transition-all duration-300 hover:scale-110"
-                        >
-                            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                            </svg>
-                        </Button>
-                    </div>
-
-                    {/* WhatsApp */}
-                    <div className="flex items-center gap-3">
-                        <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity delay-100 whitespace-nowrap">
-                            WhatsApp
-                        </span>
-                        <Button
-                            onClick={() => window.open(`https://wa.me/${contactSettings.phone}`, "_blank")}
-                            className="h-12 w-12 rounded-full shadow-xl bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 hover:scale-110"
-                        >
-                            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                            </svg>
-                        </Button>
-                    </div>
-
-                    {/* Live Chat */}
-                    <div className="flex items-center gap-3">
-                        <span className="bg-white text-black text-xs font-bold px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity delay-75 whitespace-nowrap">
-                            Live Chat
-                        </span>
-                        <Button
-                            onClick={() => {
-                                setIsOpen(true);
-                                setUnreadCount(0);
-                            }}
-                            className="h-12 w-12 rounded-full shadow-xl bg-brand-yellow hover:bg-brand-yellow/80 text-black transition-all duration-300 hover:scale-110"
-                        >
-                            <MessageCircle className="h-6 w-6" />
-                        </Button>
-                    </div>
+            <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4">
+                {/* Desktop Menu - Vertical Stack (Controlled by Click) */}
+                <div className={cn(
+                    "hidden lg:flex flex-col items-end gap-3 mb-2 transition-all duration-300 ease-out",
+                    isMenuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+                )}>
+                    <ContactButtons
+                        contactSettings={contactSettings}
+                        setIsOpen={setIsOpen}
+                        setUnreadCount={setUnreadCount}
+                        setIsMenuOpen={setIsMenuOpen}
+                    />
                 </div>
+
+                {/* Mobile Menu - Bottom Sheet Wrapper */}
+                <Sheet open={isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={setIsMenuOpen}>
+                    <SheetContent side="bottom" className="rounded-t-[2rem] border-zinc-800 bg-zinc-950 p-6 pb-10 lg:hidden">
+                        <SheetHeader className="mb-4">
+                            <SheetTitle className="text-white text-xl font-black text-center flex items-center justify-center gap-2">
+                                <span className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                </span>
+                                {t("needHelp")}
+                            </SheetTitle>
+                        </SheetHeader>
+                        <div className="flex flex-col gap-3 max-w-sm mx-auto">
+                            <MobileContactOption
+                                icon={<MessageCircle className="w-5 h-5" />}
+                                label="Live Chat"
+                                color="bg-brand-yellow text-black"
+                                onClick={() => { setIsOpen(true); setUnreadCount(0); setIsMenuOpen(false); }}
+                            />
+                            <MobileContactOption
+                                icon={<svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>}
+                                label="WhatsApp"
+                                color="bg-[#25D366] text-white"
+                                onClick={() => { window.open(`https://wa.me/${contactSettings.phone}`, "_blank"); setIsMenuOpen(false); }}
+                            />
+                            <MobileContactOption
+                                icon={<svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" /></svg>}
+                                label="Telegram"
+                                color="bg-[#0088cc] text-white"
+                                onClick={() => { window.open(`https://t.me/${contactSettings.telegram}`, "_blank"); setIsMenuOpen(false); }}
+                            />
+                        </div>
+                    </SheetContent>
+                </Sheet>
 
                 {/* Main Trigger Pill */}
                 <div className="relative group/pill">
@@ -383,7 +393,13 @@ export function FloatingChatWidget() {
                         <X className="w-3 h-3" />
                     </button>
 
-                    <div className="relative shadow-2xl rounded-full transition-transform duration-300 group-hover:scale-105 cursor-pointer bg-white border border-zinc-100">
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className={cn(
+                            "relative shadow-2xl rounded-full transition-all duration-300 cursor-pointer border border-zinc-100/10",
+                            isMenuOpen ? "bg-zinc-100 scale-95" : "bg-white hover:scale-105"
+                        )}
+                    >
                         {unreadCount > 0 && (
                             <span className="absolute -top-2 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-md animate-bounce border-2 border-white">
                                 {unreadCount}
@@ -394,9 +410,13 @@ export function FloatingChatWidget() {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                             </span>
-                            {t("needHelp")}
+                            {isMenuOpen ? (
+                                <span className="flex items-center gap-2">
+                                    {t("needHelp")} <X className="w-4 h-4 opacity-50" />
+                                </span>
+                            ) : t("needHelp")}
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
         );
@@ -592,5 +612,90 @@ export function FloatingChatWidget() {
                 </>
             )}
         </div>
+    );
+}
+
+function ContactButtons({ contactSettings, setIsOpen, setUnreadCount, setIsMenuOpen }: {
+    contactSettings: ContactSettings,
+    setIsOpen: (o: boolean) => void,
+    setUnreadCount: (c: number | ((prev: number) => number)) => void,
+    setIsMenuOpen: (o: boolean) => void
+}) {
+    return (
+        <>
+            {/* Telegram */}
+            <div className="flex items-center gap-3">
+                <span className="bg-white text-black text-[10px] font-bold px-2 py-1 rounded shadow whitespace-nowrap">
+                    Telegram
+                </span>
+                <Button
+                    onClick={() => { window.open(`https://t.me/${contactSettings.telegram}`, "_blank"); setIsMenuOpen(false); }}
+                    className="h-12 w-12 rounded-full shadow-xl bg-[#0088cc] hover:bg-[#0077b5] text-white transition-all duration-300 hover:scale-110"
+                >
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                    </svg>
+                </Button>
+            </div>
+
+            {/* WhatsApp */}
+            <div className="flex items-center gap-3">
+                <span className="bg-white text-black text-[10px] font-bold px-2 py-1 rounded shadow whitespace-nowrap">
+                    WhatsApp
+                </span>
+                <Button
+                    onClick={() => { window.open(`https://wa.me/${contactSettings.phone}`, "_blank"); setIsMenuOpen(false); }}
+                    className="h-12 w-12 rounded-full shadow-xl bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 hover:scale-110"
+                >
+                    <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                </Button>
+            </div>
+
+            {/* Live Chat */}
+            <div className="flex items-center gap-3">
+                <span className="bg-white text-black text-[10px] font-bold px-2 py-1 rounded shadow whitespace-nowrap">
+                    Live Chat
+                </span>
+                <Button
+                    onClick={() => {
+                        setIsOpen(true);
+                        setUnreadCount(0);
+                        setIsMenuOpen(false);
+                    }}
+                    className="h-12 w-12 rounded-full shadow-xl bg-brand-yellow hover:bg-brand-yellow/80 text-black transition-all duration-300 hover:scale-110"
+                >
+                    <MessageCircle className="h-6 w-6" />
+                </Button>
+            </div>
+        </>
+    );
+}
+
+function MobileContactOption({ icon, label, color, onClick }: {
+    icon: React.ReactNode,
+    label: string,
+    color: string,
+    onClick: () => void
+}) {
+    return (
+        <Button
+            onClick={onClick}
+            className={cn(
+                "w-full h-14 rounded-xl flex items-center justify-between px-5 font-bold text-base transition-all active:scale-[0.98]",
+                color
+            )}
+        >
+            <span className="flex items-center gap-4">
+                <div className="p-2 bg-black/10 rounded-xl">
+                    {icon}
+                </div>
+                {label}
+            </span>
+            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <Send className="w-4 h-4" />
+            </div>
+        </Button>
     );
 }

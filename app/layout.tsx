@@ -181,7 +181,7 @@ export default async function RootLayout({
           <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />
         )}
       </head>
-      <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative")}>
+      <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative overflow-x-hidden")}>
         <NextTopLoader
           color="#FFB800"
           initialPosition={0.08}
