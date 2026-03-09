@@ -9,13 +9,18 @@ import { ArrowRight, Zap, TrendingUp, Activity, BarChart3 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { TypingHeroTitle } from "./typing-hero-title";
 
+import { useFloatingChat } from "@/lib/store/floating-chat-store";
+
 interface HeroContentProps {
     agencyName: string;
 }
 
 export function HeroContent({ agencyName }: HeroContentProps) {
     const t = useTranslations("Hero");
+    const { setIsMenuOpen } = useFloatingChat();
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -102,12 +107,15 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             className="flex flex-col gap-4 pt-4"
                         >
                             <div className="flex flex-row items-center justify-center lg:justify-start gap-3">
-                                <Link href="/price-calculator">
-                                    <Button size="lg" className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all">
-                                        {t("launchDashboard")}
-                                        <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
-                                    </Button>
-                                </Link>
+                                <Button
+                                    onClick={() => setIsMenuOpen(true)}
+                                    size="lg"
+                                    className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all cursor-pointer"
+                                >
+                                    {t("launchDashboard")}
+                                    <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
+                                </Button>
+
                                 <Link href="/services">
                                     <Button variant="outline" size="lg" className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-brand-yellow/10 hover:text-brand-yellow hover:border-brand-yellow/50 rounded-full transition-all backdrop-blur-sm">
                                         <Zap className="w-4 h-4 mr-1.5 text-brand-yellow" />

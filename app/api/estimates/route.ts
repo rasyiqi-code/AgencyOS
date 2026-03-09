@@ -14,6 +14,9 @@ export async function GET(req: NextRequest) {
         const cursor = searchParams.get('cursor');
 
         const estimates = await prisma.estimate.findMany({
+            where: {
+                prompt: "Instant Quote Calculator"
+            },
             take: limit,
             skip: cursor ? 1 : 0,
             cursor: cursor ? { id: cursor } : undefined,
@@ -28,6 +31,7 @@ export async function GET(req: NextRequest) {
                 creatorName: true
             }
         });
+
 
         // Determine next cursor
         const nextCursor = estimates.length === limit ? estimates[estimates.length - 1].id : undefined;

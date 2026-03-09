@@ -37,21 +37,37 @@ export async function Comparison() {
                     <div className="p-8 rounded-2xl border border-black/10 bg-white shadow-xl transform hover:scale-[1.01] transition-all duration-500">
                         <h3 className="text-xl font-bold text-black/50 mb-8 border-b border-black/5 pb-4 uppercase tracking-widest">{t("oldTitle")}</h3>
                         <ul className="space-y-6">
-                            <li className="flex gap-4 items-start text-zinc-900 font-bold">
+                            <li className="flex gap-4 items-start text-zinc-900">
                                 <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight">{t("old1")}</span>
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old1")}</strong> {t("old1Sub")}</span>
                             </li>
-                            <li className="flex gap-4 items-start text-zinc-900 font-bold">
+                            <li className="flex gap-4 items-start text-zinc-900">
                                 <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight">{t("old2")}</span>
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old2")}</strong> {t("old2Sub")}</span>
                             </li>
-                            <li className="flex gap-4 items-start text-zinc-900 font-bold">
+                            <li className="flex gap-4 items-start text-zinc-900">
                                 <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight">{t("old3")}</span>
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old3")}</strong> {t("old3Sub")}</span>
                             </li>
-                            <li className="flex gap-4 items-start text-zinc-900 font-bold">
+                            <li className="flex gap-4 items-start text-zinc-900">
                                 <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight">{t("old4")}</span>
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old4")}</strong> {t("old4Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start text-zinc-900">
+                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old5")}</strong> {t("old5Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start text-zinc-900">
+                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old6")}</strong> {t("old6Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start text-zinc-900">
+                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old7")}</strong> {t("old7Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start text-zinc-900">
+                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
+                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old8")}</strong> {t("old8Sub")}</span>
                             </li>
                         </ul>
                     </div>
@@ -80,6 +96,22 @@ export async function Comparison() {
                             <li className="flex gap-4 items-start">
                                 <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
                                 <span className="font-medium"><strong className="text-brand-yellow">{t("new4")}</strong> {t("new4Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
+                                <span className="font-medium"><strong className="text-brand-yellow">{t("new5")}</strong> {t("new5Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
+                                <span className="font-medium"><strong className="text-brand-yellow">{t("new6")}</strong> {t("new6Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
+                                <span className="font-medium"><strong className="text-brand-yellow">{t("new7")}</strong> {t("new7Sub")}</span>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
+                                <span className="font-medium"><strong className="text-brand-yellow">{t("new8")}</strong> {t("new8Sub")}</span>
                             </li>
                         </ul>
                     </div>

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 import {
     DialogContent,
     DialogDescription,
@@ -104,7 +105,7 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                             <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">{tCards("about")}</h4>
                             <div
                                 className="text-zinc-300 leading-relaxed font-light"
-                                dangerouslySetInnerHTML={{ __html: displayDescription }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
                             />
                         </div>
 

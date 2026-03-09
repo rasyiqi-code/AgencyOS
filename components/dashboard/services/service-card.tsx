@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 import { useState } from "react";
 import {
     Dialog,
@@ -90,7 +91,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         </h3>
                         <div
                             className="text-zinc-400 text-sm leading-relaxed line-clamp-2 font-light"
-                            dangerouslySetInnerHTML={{ __html: displayDescription }}
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
                         />
                     </div>
 

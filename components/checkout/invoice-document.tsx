@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 
 import { ExtendedEstimate, InvoiceItem } from "@/lib/shared/types";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 export interface AgencyInvoiceSettings {
     agencyName: string;
@@ -210,7 +211,7 @@ export function InvoiceDocument({
                                     )}
                                     <div className="flex-1">
                                         <div className="font-bold text-lg mb-1">{extendedEstimate.service.title}</div>
-                                        <div className="text-zinc-600 text-sm mb-4 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: extendedEstimate.service.description }} />
+                                        <div className="text-zinc-600 text-sm mb-4 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: sanitizeHtml(extendedEstimate.service.description) }} />
 
                                         {Array.isArray(extendedEstimate.service.features) && extendedEstimate.service.features.length > 0 && (
                                             <div className="grid grid-cols-2 gap-x-4 gap-y-1">

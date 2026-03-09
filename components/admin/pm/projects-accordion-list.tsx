@@ -101,41 +101,44 @@ function ProjectAccordionItem({ project }: { project: ExtendedProject }) {
                         </p>
                     )}
 
-                    {/* Detail grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
-                        {/* Client ID */}
-                        <DetailItem
-                            icon={<User className="w-3.5 h-3.5" />}
-                            label="Client ID"
-                            value={project.userId}
-                            copyable
-                        />
+                    {/* Detail grid & Action button */}
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mt-2">
+                        {/* Detail grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 flex-1 lg:pr-8">
+                            {/* Client ID */}
+                            <DetailItem
+                                icon={<User className="w-3.5 h-3.5" />}
+                                label="Client ID"
+                                value={project.userId}
+                                copyable
+                            />
 
-                        {/* Invoice ID */}
-                        <DetailItem
-                            icon={<FileText className="w-3.5 h-3.5" />}
-                            label="Invoice ID"
-                            value={project.invoiceId || undefined}
-                            placeholder="No Invoice"
-                            copyable
-                        />
+                            {/* Invoice ID */}
+                            <DetailItem
+                                icon={<FileText className="w-3.5 h-3.5" />}
+                                label="Invoice ID"
+                                value={project.invoiceId || undefined}
+                                placeholder="No Invoice"
+                                copyable
+                            />
 
-                        {/* Created date */}
-                        <DetailItem
-                            icon={<Calendar className="w-3.5 h-3.5" />}
-                            label="Created"
-                            value={date.toLocaleDateString("id-ID", { year: 'numeric', month: 'long', day: 'numeric' })}
-                        />
-                    </div>
+                            {/* Created date */}
+                            <DetailItem
+                                icon={<Calendar className="w-3.5 h-3.5" />}
+                                label="Created"
+                                value={date.toLocaleDateString("id-ID", { year: 'numeric', month: 'long', day: 'numeric' })}
+                            />
+                        </div>
 
-                    {/* Action button */}
-                    <div className="flex justify-end pt-1">
-                        <Button variant="outline" size="sm" asChild className="h-8 px-4 text-xs border-zinc-700 hover:bg-zinc-800 hover:text-white text-zinc-400 gap-2">
-                            <Link href={`/admin/pm/${project.id}`}>
-                                <Settings2 className="w-3.5 h-3.5" />
-                                Manage Project
-                            </Link>
-                        </Button>
+                        {/* Action button */}
+                        <div className="flex justify-start lg:justify-end shrink-0 pt-2 lg:pt-0">
+                            <Button variant="outline" size="sm" asChild className="h-8 px-4 text-xs border-zinc-700 hover:bg-zinc-800 hover:text-white text-zinc-400 gap-2 w-full lg:w-auto">
+                                <Link href={`/admin/pm/${project.id}`}>
+                                    <Settings2 className="w-3.5 h-3.5" />
+                                    Manage Project
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             )}

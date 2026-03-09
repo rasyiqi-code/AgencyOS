@@ -4,6 +4,7 @@ import { Check, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 import { useTranslations } from "next-intl";
 
@@ -152,7 +153,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                             </h4>
                             <div
                                 className="text-zinc-300 leading-relaxed font-light text-md md:text-xl prose prose-invert max-w-none prose-p:mb-4 prose-strong:text-white prose-strong:font-black"
-                                dangerouslySetInnerHTML={{ __html: displayDescription }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
                             />
                         </div>
 

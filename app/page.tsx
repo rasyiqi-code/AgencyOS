@@ -5,6 +5,7 @@ import { SectionCTA } from "@/components/landing/section-cta";
 import { SectionEcosystem } from "@/components/landing/section-ecosystem";
 import { SocialProof } from "@/components/landing/section-social-proof";
 import { Comparison } from "@/components/landing/section-comparison";
+import { SectionMissionControl } from "@/components/landing/section-mission-control";
 import { ProductCatalog } from "@/components/landing/section-products";
 import { Workflow } from "@/components/landing/section-workflow";
 import { ExpertProfile } from "@/components/landing/section-expert";
@@ -102,6 +103,7 @@ export default async function Home() {
       </ScrollAnimationWrapper>
 
       <Comparison />
+      <SectionMissionControl />
       <SectionEcosystem />
       <FinancialLogic />
       <ProductCatalog />

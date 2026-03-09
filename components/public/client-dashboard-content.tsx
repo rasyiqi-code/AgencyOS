@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 export interface ClientDashboardContentProps {
     agencyName: string;
@@ -155,19 +156,19 @@ export function ClientDashboardContent({ agencyName }: ClientDashboardContentPro
                             <ul className="space-y-4">
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: t.raw("Philosophy.way1") }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way1")) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: t.raw("Philosophy.way2") }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way2")) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: t.raw("Philosophy.way3") }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way3")) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: t.raw("Philosophy.way4") }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way4")) }} />
                                 </li>
                             </ul>
                         </div>

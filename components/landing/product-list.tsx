@@ -12,7 +12,7 @@ import { PriceDisplay } from "@/components/providers/currency-provider";
 import { useTranslations, useLocale } from "next-intl";
 import { type Service } from "@/components/public/service-detail-content";
 import useEmblaCarousel from 'embla-carousel-react';
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface ProductListProps {
     initialServices: Service[];
@@ -103,31 +103,35 @@ interface BentoServiceCardProps {
 }
 
 function BentoServiceCard({ service, title, displayFeatures, intervalLabel, variants, ctaLabel }: BentoServiceCardProps) {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setMousePosition({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-        });
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${y}px`);
     };
 
     return (
         <motion.div
+            ref={cardRef}
             variants={variants}
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className="group relative rounded-3xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl transition-all duration-500 hover:border-brand-yellow/30 overflow-hidden flex flex-col h-full"
+            // Ensure valid CSS custom properties types by casting
+            style={{ '--mouse-x': '0px', '--mouse-y': '0px' } as React.CSSProperties}
         >
             {/* Interactive Glow Effect */}
             <div
                 className="absolute inset-0 pointer-events-none transition-opacity duration-500"
                 style={{
                     opacity: isHovered ? 1 : 0,
-                    background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(254, 215, 0, 0.15), transparent 40%)`,
+                    background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(254, 215, 0, 0.15), transparent 40%)`,
                 }}
             />
 

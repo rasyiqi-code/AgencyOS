@@ -7,6 +7,7 @@ import { PriceDisplay, useCurrency } from "@/components/providers/currency-provi
 import { useState } from "react";
 import Link from "next/link";
 import { type Service } from "./service-detail-content";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface ServiceCardProps {
     service: Service;
@@ -89,7 +90,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     </Link>
                     <div
                         className="text-zinc-400 text-sm leading-relaxed line-clamp-2 font-light"
-                        dangerouslySetInnerHTML={{ __html: displayDescription }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
                     />
                 </div>
 

@@ -39,9 +39,10 @@ import { useFloatingChat } from "@/lib/store/floating-chat-store";
 export function FloatingChatWidget() {
     const user = useUser();
     const t = useTranslations("FloatingChat");
-    const { isOpen, mode, openChat, closeChat } = useFloatingChat();
+    const { isOpen, mode, openChat, closeChat, isMenuOpen, setIsMenuOpen } = useFloatingChat();
     // Local state for expanded/collapsed only, visibility is global
     const [isExpanded, setIsExpanded] = useState(false);
+
     const pathname = usePathname();
 
     // Helper handlers to replace local setters
@@ -147,7 +148,7 @@ export function FloatingChatWidget() {
             } catch (e) {
                 console.error("Polling error", e);
             }
-        }, 1000);
+        }, 5000); // Dirubah dari 1000ms ke 5000ms agar efisien RAM & CPU
 
         return () => clearInterval(interval);
     }, [mode, ticketId, isOpen]);
@@ -322,7 +323,6 @@ export function FloatingChatWidget() {
         }
     };
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
 
     // Hide floating chat on specific pages to prevent overlapping with mobile sticky CTA
@@ -350,6 +350,7 @@ export function FloatingChatWidget() {
 
                 {/* Mobile Menu - Bottom Sheet Wrapper */}
                 <Sheet open={isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={setIsMenuOpen}>
+
                     <SheetContent side="bottom" className="rounded-t-[2rem] border-zinc-800 bg-zinc-950 p-6 pb-10 lg:hidden">
                         <SheetHeader className="mb-4">
                             <SheetTitle className="text-white text-xl font-black text-center flex items-center justify-center gap-2">
