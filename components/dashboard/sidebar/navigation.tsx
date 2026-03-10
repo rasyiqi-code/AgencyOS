@@ -10,13 +10,19 @@ export function DashboardSidebarNavigation() {
         <>
             <SidebarSectionHeader>{t("platform")}</SidebarSectionHeader>
             <SidebarLink href="/dashboard" icon={LayoutDashboard} label={t("dashboard")} />
+
+            <SidebarSectionHeader>Operations</SidebarSectionHeader>
             <SidebarLink href="/dashboard/missions" icon={Rocket} label={t("missions")} />
             <SidebarLink href="/dashboard/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/dashboard/inbox" icon={Inbox} label={t("inbox")} />
-            <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />
-            <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />
             <SidebarLink href="/dashboard/billing" icon={Receipt} label={t("billing")} />
+
+            <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
+            <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />
             <SidebarLink href="/dashboard/my-products" icon={Package} label="My Products" />
+
+            <SidebarSectionHeader>Support & Growth</SidebarSectionHeader>
+            <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />
             <SidebarLink href="/affiliate/dashboard" icon={Users} label={t("affiliate")} />
             <SidebarLink href="/submit-testimonial" icon={MessageSquare} label="Give Feedback" />
         </>

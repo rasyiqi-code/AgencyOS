@@ -76,7 +76,7 @@ export function SidebarSuperAdmin() {
 
             <SidebarSectionHeader>Growth</SidebarSectionHeader>
             <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
-            <SidebarLink href="/admin/marketing/push" icon={Bell} label="Push Center" iconClass="text-brand-yellow" />
+            <SidebarLink href="/admin/marketing?tab=push" icon={Bell} label="Push Center" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
 
             <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
