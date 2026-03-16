@@ -37,8 +37,12 @@ export default async function proxy(request: NextRequest) {
         const acceptLanguage = request.headers.get('accept-language');
         let geoCountry = (request as NextRequest & { geo?: { country?: string } }).geo?.country || request.headers.get('x-vercel-ip-country');
 
+        // Skip IP-API in development or for localhost to speed up rendering
+        const isDev = process.env.NODE_ENV === 'development';
+        const isLocalhost = request.headers.get('host')?.includes('localhost');
+
         // Fallback to IP-API if geo info is missing (for non-Vercel environments)
-        if (!geoCountry) {
+        if (!geoCountry && !isDev && !isLocalhost) {
             try {
                 const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || (request as NextRequest & { ip?: string }).ip;
                 if (ip && ip !== '127.0.0.1' && ip !== '::1') {

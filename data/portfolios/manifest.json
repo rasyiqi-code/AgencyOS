@@ -24,12 +24,33 @@
     "createdAt": "2026-02-21T16:56:34.876Z"
   },
   {
-    "title": "PenerbitKBM",
-    "slug": "penerbitkbm",
-    "category": "Lainnya",
-    "externalUrl": "https://penerbitkbm.com/",
+    "title": "Jailangkung",
+    "slug": "jailangkung",
+    "category": "Media",
+    "externalUrl": "https://jailangkung.com/",
+    "imageUrl": "",
     "description": "",
-    "id": "hmkyrl9",
-    "createdAt": "2026-03-08T16:57:48.991Z"
+    "id": "21k9rbc",
+    "createdAt": "2026-03-16T15:33:47.043Z"
+  },
+  {
+    "title": "Jurnal Faktual",
+    "slug": "jfid",
+    "category": "Media",
+    "externalUrl": "https://jurnalfaktual.id/",
+    "imageUrl": "",
+    "description": "",
+    "id": "ivetzwv",
+    "createdAt": "2026-03-16T16:09:27.610Z"
+  },
+  {
+    "title": "Penerbit KBM",
+    "slug": "penerbitkbm",
+    "category": "Media",
+    "externalUrl": "https://penerbitkbm.com/",
+    "imageUrl": "",
+    "description": "",
+    "id": "hqddd0x",
+    "createdAt": "2026-03-16T16:11:04.758Z"
   }
 ]

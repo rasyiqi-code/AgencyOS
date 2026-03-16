@@ -8,6 +8,7 @@ import { fetchRenderedHtml } from "@/lib/server/cloudflare-rendering";
 const DATA_DIR = path.join(process.cwd(), "data/portfolios");
 const MANIFEST_PATH = path.join(DATA_DIR, "manifest.json");
 const HTML_DIR = path.join(DATA_DIR, "html");
+const CACHE_DIR = path.join(DATA_DIR, "cache");
 
 export interface PortfolioItem {
     id: string;
@@ -22,6 +23,7 @@ export interface PortfolioItem {
 
 async function ensureDirs() {
     await fs.mkdir(HTML_DIR, { recursive: true });
+    await fs.mkdir(CACHE_DIR, { recursive: true });
     try {
         await fs.access(MANIFEST_PATH);
     } catch {
@@ -89,11 +91,64 @@ export async function deletePortfolio(id: string) {
     revalidatePath("/admin/portfolio");
 }
 
-export async function getRenderedHtml(url: string) {
-    try {
-        return await fetchRenderedHtml(url);
-    } catch (error: any) {
-        console.error("Server Action Error (v2):", error);
-        return `[Proxy Error v2] Failed to render: ${error.message || "Unknown error"}`;
+// In-memory cache for ultra-fast access
+const proxyMap = new Map<string, { html: string; timestamp: number }>();
+// Pending promise map to handle parallel requests for the same URL
+const pendingRequests = new Map<string, Promise<string>>();
+const CACHE_TTL = 60 * 60 * 1000; // 1 Hour
+
+function getCacheKey(url: string) {
+    // Basic alphanumeric sanitization for filename
+    return Buffer.from(url).toString('base64').replace(/[/+=]/g, '_').substring(0, 100);
+}
+
+export async function getRenderedHtml(url: string, localBaseUrl?: string): Promise<string> {
+    const cacheKey = getCacheKey(url);
+    const cachePath = path.join(CACHE_DIR, `${cacheKey}.cache.html`);
+
+    // 1. Memory Cache Hit
+    const memoryCached = proxyMap.get(url);
+    if (memoryCached && Date.now() - memoryCached.timestamp < CACHE_TTL) {
+        return memoryCached.html;
     }
+
+    // 2. Persistent Disk Cache Discovery
+    try {
+        const stats = await fs.stat(cachePath);
+        if (Date.now() - stats.mtimeMs < CACHE_TTL) {
+            const html = await fs.readFile(cachePath, "utf-8");
+            proxyMap.set(url, { html, timestamp: stats.mtimeMs });
+            return html;
+        }
+    } catch {
+        // Disk cache miss or invalid, proceed to fetch
+    }
+
+    // 3. Parallel Request Deduplication (Debounce)
+    if (pendingRequests.has(url)) {
+        console.log(`[ProxyCache] deduplicating parallel request: ${url}`);
+        return pendingRequests.get(url)!;
+    }
+
+    // 4. Actual Content Fetch
+    const fetchPromise = (async () => {
+        try {
+            const html = await fetchRenderedHtml(url, localBaseUrl);
+            
+            // Background storage
+            await fs.mkdir(CACHE_DIR, { recursive: true });
+            await fs.writeFile(cachePath, html);
+            proxyMap.set(url, { html, timestamp: Date.now() });
+
+            return html;
+        } catch (_error) {
+            console.error("[ProxyCache] Fatal Error:", _error);
+            return `[Proxy Error] Full render failed.`;
+        } finally {
+            pendingRequests.delete(url);
+        }
+    })();
+
+    pendingRequests.set(url, fetchPromise);
+    return fetchPromise;
 }

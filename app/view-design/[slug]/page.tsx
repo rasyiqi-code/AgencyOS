@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ViewDesignClient } from "./view-design-client";
 import { getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 
 import { ResolvingMetadata } from "next";
 
@@ -48,11 +49,13 @@ export async function generateMetadata(
 
 export default async function ViewDesignPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const [portfolios, agencyName, contactPhone, contactTelegram] = await Promise.all([
+    const [portfolios, agencyName, contactPhone, contactTelegram, headerList, logoUrl] = await Promise.all([
         getPortfolios(),
         getSettingValue("AGENCY_NAME", "Agency OS"),
         getSettingValue("CONTACT_PHONE", ""),
-        getSettingValue("CONTACT_TELEGRAM", "")
+        getSettingValue("CONTACT_TELEGRAM", ""),
+        headers(),
+        getSettingValue("AGENCY_LOGO", ""),
     ]);
 
     const portfolio = portfolios.find((p) => p.slug === slug);
@@ -61,15 +64,13 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
         notFound();
     }
 
+    const host = headerList.get("host");
+    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+    const localBaseUrl = `${protocol}://${host}`;
+
     let html = "";
     if (portfolio.externalUrl) {
-        const renderedHtml = await getRenderedHtml(portfolio.externalUrl);
-        const baseTag = `<base href="${portfolio.externalUrl}">`;
-        if (renderedHtml.includes('<head>')) {
-            html = renderedHtml.replace('<head>', `<head>${baseTag}`);
-        } else {
-            html = baseTag + renderedHtml;
-        }
+        html = await getRenderedHtml(portfolio.externalUrl, localBaseUrl);
     } else {
         html = await getPortfolioHtml(portfolio.slug);
     }
@@ -83,6 +84,8 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
             externalUrl={portfolio.externalUrl}
             contactPhone={contactPhone}
             contactTelegram={contactTelegram}
+            logoUrl={logoUrl}
+            logoDisplayMode="logo"
         />
     );
 }

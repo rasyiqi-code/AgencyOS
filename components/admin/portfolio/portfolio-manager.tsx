@@ -40,7 +40,7 @@ function buildSrcDoc(content: string): string {
 }
 
 // === Live Preview Component untuk Card ===
-function PortfolioPreview({ slug, html: directHtml, externalUrl, imageUrl }: { slug?: string; html?: string; externalUrl?: string; imageUrl?: string }) {
+function PortfolioPreview({ slug, html: directHtml, imageUrl }: { slug?: string; html?: string; imageUrl?: string }) {
     const [fetchedContent, setFetchedContent] = useState("");
 
     useEffect(() => {
@@ -290,7 +290,7 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
                         {/* Card Body (Live Render) */}
                         <div className="p-3">
-                            <PortfolioPreview slug={item.slug} externalUrl={item.externalUrl} imageUrl={item.imageUrl} />
+                            <PortfolioPreview slug={item.slug} imageUrl={item.imageUrl} />
                         </div>
 
                         {/* Card Footer */}
