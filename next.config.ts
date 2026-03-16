@@ -40,15 +40,20 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      // CSP permisif untuk API view-design — konten portfolio HTML bisa memuat berbagai CDN
+      // CSP permisif untuk halaman dan API preview portfolio — agar konten bisa memuat berbagai CDN
       // Keamanan tetap terjaga karena iframe di client sudah di-sandbox
       {
-        source: '/api/view-design/:path*',
+        source: '/((?:api/)?view-design/:path*|portfolio)',
         headers: [
           {
             key: 'Content-Security-Policy',
             value: `
               default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
+              img-src * data: blob:;
+              media-src * data: blob:;
+              font-src * data:;
+              frame-src *;
+              connect-src *;
             `.replace(/\s{2,}/g, ' ').trim()
           }
         ],
