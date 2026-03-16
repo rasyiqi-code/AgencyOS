@@ -11,7 +11,7 @@ export async function fetchRenderedHtml(url: string): Promise<string> {
         throw new Error("Missing Cloudflare credentials (cloudflare_account_id, cloudflare_api_token) in system settings.");
     }
 
-    const endpoint = `https://api.cloudflare.com/client/v4/accounts/${accountId}/browser-rendering/v1/content`;
+    const endpoint = `https://api.cloudflare.com/client/v4/accounts/${accountId}/browser-rendering/content`;
 
     try {
         const response = await fetch(endpoint, {
