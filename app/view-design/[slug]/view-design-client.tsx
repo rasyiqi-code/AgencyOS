@@ -22,14 +22,30 @@ interface ViewDesignClientProps {
     slug: string;
     title: string;
     agencyName: string;
+    html: string;
     externalUrl?: string;
     contactPhone?: string;
     contactTelegram?: string;
 }
 
+const PREVIEW_HIDE_SCROLLBAR = `<style>body { scrollbar-width: none; -ms-overflow-style: none; } body::-webkit-scrollbar { display: none; }</style>`;
+
+function buildSrcDoc(content: string): string {
+    if (!content) return "<html><body style='background: #f8fafc'></body></html>";
+    const trimmed = content.trim();
+    const isFullDocument = /^<!doctype\s+html|^<html[\s>]/i.test(trimmed);
+    if (isFullDocument) {
+        if (/<head[\s>]/i.test(trimmed)) {
+            return trimmed.replace(/<head([^>]*)>/i, `<head$1>${PREVIEW_HIDE_SCROLLBAR}`);
+        }
+        return trimmed.replace(/<html([^>]*)>/i, `<html$1><head>${PREVIEW_HIDE_SCROLLBAR}</head>`);
+    }
+    return `<html><head>${PREVIEW_HIDE_SCROLLBAR}</head><body>${content}</body></html>`;
+}
+
 type DeviceType = "desktop" | "tablet" | "mobile";
 
-export function ViewDesignClient({ slug, title, agencyName, externalUrl, contactPhone, contactTelegram }: ViewDesignClientProps) {
+export function ViewDesignClient({ slug, title, agencyName, html, externalUrl, contactPhone, contactTelegram }: ViewDesignClientProps) {
     const [device, setDevice] = useState<DeviceType>("desktop");
     const t = useTranslations("ViewDesign");
 
@@ -172,7 +188,7 @@ export function ViewDesignClient({ slug, title, agencyName, externalUrl, contact
                     >
                         {/* The Design Iframe */}
                         <iframe
-                            src={externalUrl || `/api/view-design/${slug}`}
+                            srcDoc={buildSrcDoc(html)}
                             className="w-full h-full border-0 bg-white"
                             title={`${title} Preview`}
                             sandbox="allow-scripts allow-same-origin allow-popups allow-forms"

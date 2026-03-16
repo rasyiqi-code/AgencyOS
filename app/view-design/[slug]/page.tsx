@@ -1,4 +1,4 @@
-import { getPortfolios } from "@/lib/portfolios/actions";
+import { getPortfolios, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
 import { getSettingValue } from "@/lib/server/settings";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -61,11 +61,25 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
         notFound();
     }
 
+    let html = "";
+    if (portfolio.externalUrl) {
+        const renderedHtml = await getRenderedHtml(portfolio.externalUrl);
+        const baseTag = `<base href="${portfolio.externalUrl}">`;
+        if (renderedHtml.includes('<head>')) {
+            html = renderedHtml.replace('<head>', `<head>${baseTag}`);
+        } else {
+            html = baseTag + renderedHtml;
+        }
+    } else {
+        html = await getPortfolioHtml(portfolio.slug);
+    }
+
     return (
         <ViewDesignClient
             slug={portfolio.slug}
             title={portfolio.title}
             agencyName={agencyName}
+            html={html}
             externalUrl={portfolio.externalUrl}
             contactPhone={contactPhone}
             contactTelegram={contactTelegram}
