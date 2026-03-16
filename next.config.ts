@@ -40,24 +40,6 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      // CSP permisif untuk halaman dan API preview portfolio — agar konten bisa memuat berbagai CDN
-      // Keamanan tetap terjaga karena iframe di client sudah di-sandbox
-      {
-        source: '/((?:api/)?view-design/:path*|portfolio)',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: `
-              default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
-              img-src * data: blob:;
-              media-src * data: blob:;
-              font-src * data:;
-              frame-src *;
-              connect-src *;
-            `.replace(/\s{2,}/g, ' ').trim()
-          }
-        ],
-      },
       {
         source: '/(.*)',
         headers: [
@@ -72,6 +54,42 @@ const nextConfig: NextConfig = {
               connect-src 'self' https://*.midtrans.com https://*.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://snap-popup-app.sandbox.midtrans.com https://*.google-analytics.com https://api.stack-auth.com https://app.stack-auth.com https://1.1.1.1 https://static.cloudflareinsights.com https://cloudflare.com https://*.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net;
               frame-src 'self' * https://*.midtrans.com https://*.sandbox.midtrans.com https://snap-popup-app.midtrans.com https://snap-popup-app.sandbox.midtrans.com;
               worker-src 'self' blob:;
+            `.replace(/\s{2,}/g, ' ').trim()
+          }
+        ],
+      },
+      // CSP permisif untuk halaman dan API preview portfolio — agar konten bisa memuat berbagai CDN
+      // Dimasukkan di bawah agar meng-overwrite default CSP di atas
+      // Mendukung path dengan atau tanpa locale (id/en)
+      {
+        source: '/:path*(portfolio|view-design)/:slug*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: `
+              default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
+              img-src * data: blob:;
+              media-src * data: blob:;
+              font-src * data:;
+              frame-src *;
+              connect-src *;
+            `.replace(/\s{2,}/g, ' ').trim()
+          }
+        ],
+      },
+      // Alias khusus untuk API route agar tetap kena permissive CSP
+      {
+        source: '/api/view-design/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: `
+              default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
+              img-src * data: blob:;
+              media-src * data: blob:;
+              font-src * data:;
+              frame-src *;
+              connect-src *;
             `.replace(/\s{2,}/g, ' ').trim()
           }
         ],
