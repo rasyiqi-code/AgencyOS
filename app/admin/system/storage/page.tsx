@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { Input } from "@/components/ui/input";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { Cloud } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 
@@ -34,7 +34,8 @@ export default async function AdminStoragePage() {
         if (r2PublicDomain) await prisma.systemSetting.upsert({ where: { key: "r2_public_domain" }, update: { value: r2PublicDomain }, create: { key: "r2_public_domain", value: r2PublicDomain } });
         if (cfAccountId) await prisma.systemSetting.upsert({ where: { key: "cloudflare_account_id" }, update: { value: cfAccountId }, create: { key: "cloudflare_account_id", value: cfAccountId } });
         if (cfApiToken) await prisma.systemSetting.upsert({ where: { key: "cloudflare_api_token" }, update: { value: cfApiToken }, create: { key: "cloudflare_api_token", value: cfApiToken } });
-
+        
+        (revalidateTag as unknown as (tag: string) => void)("system-settings");
         revalidatePath("/admin/system/storage");
     }
 

@@ -89,11 +89,11 @@ export async function deletePortfolio(id: string) {
     revalidatePath("/admin/portfolio");
 }
 
-export async function getRenderedHtml(url: string): Promise<string> {
+export async function getRenderedHtml(url: string) {
     try {
         return await fetchRenderedHtml(url);
-    } catch (error) {
-        console.error("Failed to fetch rendered HTML:", error);
-        return "<h1>Failed to render page preview</h1>";
+    } catch (error: any) {
+        console.error("Server Action Error (v2):", error);
+        return `[Proxy Error v2] Failed to render: ${error.message || "Unknown error"}`;
     }
 }
