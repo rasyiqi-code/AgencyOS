@@ -71,8 +71,7 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl }: Port
                     ) : (
                         <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
                             <iframe
-                                src={externalUrl || undefined}
-                                srcDoc={!externalUrl ? buildSrcDoc(html) : undefined}
+                                srcDoc={buildSrcDoc(html)}
                                 className="w-full h-full border-none overflow-hidden"
                                 title={title}
                                 scrolling="no"

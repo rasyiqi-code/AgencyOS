@@ -3,6 +3,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
+import { fetchRenderedHtml } from "@/lib/server/cloudflare-rendering";
 
 const DATA_DIR = path.join(process.cwd(), "data/portfolios");
 const MANIFEST_PATH = path.join(DATA_DIR, "manifest.json");
@@ -86,4 +87,13 @@ export async function deletePortfolio(id: string) {
 
     revalidatePath("/portfolio");
     revalidatePath("/admin/portfolio");
+}
+
+export async function getRenderedHtml(url: string): Promise<string> {
+    try {
+        return await fetchRenderedHtml(url);
+    } catch (error) {
+        console.error("Failed to fetch rendered HTML:", error);
+        return "<h1>Failed to render page preview</h1>";
+    }
 }

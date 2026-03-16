@@ -1,4 +1,4 @@
-import { getPortfolios, getPortfolioHtml } from "@/lib/portfolios/actions";
+import { getPortfolios, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PortfolioGrid } from "@/components/public/portfolio-grid";
 import { Badge } from "@/components/ui/badge";
@@ -60,10 +60,27 @@ export default async function PortfolioPage() {
 
     // Fetch HTML for all portfolios to pass to cards
     const portfolioWithHtml = await Promise.all(
-        portfolios.map(async (p) => ({
-            ...p,
-            html: await getPortfolioHtml(p.slug)
-        }))
+        portfolios.map(async (p) => {
+            let html = "";
+            if (p.externalUrl) {
+                // Fetch rendered HTML from Cloudflare for external URLs to bypass X-Frame-Options
+                const renderedHtml = await getRenderedHtml(p.externalUrl);
+                // Inject <base> tag so that relative assets (images, css) on the target site still work
+                const baseTag = `<base href="${p.externalUrl}">`;
+                if (renderedHtml.includes('<head>')) {
+                    html = renderedHtml.replace('<head>', `<head>${baseTag}`);
+                } else {
+                    html = baseTag + renderedHtml;
+                }
+            } else {
+                html = await getPortfolioHtml(p.slug);
+            }
+
+            return {
+                ...p,
+                html
+            }
+        })
     );
 
     const contactPhone = await getSettingValue("CONTACT_PHONE", "6285183131249");
@@ -152,7 +169,7 @@ export default async function PortfolioPage() {
                         </h2>
 
                         <div className="flex items-center gap-4">
-                            <Link href="/quote">
+                            <Link href="/price-calculator">
                                 <Button size="default" className="bg-brand-yellow hover:bg-brand-yellow/90 text-black font-black rounded-full px-6 h-10 text-sm shadow-xl shadow-brand-yellow/10 transition-all border-2 border-black/10">
                                     {t('getQuote')}
                                     <ArrowRight className="ml-2 w-4 h-4" />
