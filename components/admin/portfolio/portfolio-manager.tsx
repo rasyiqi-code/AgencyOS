@@ -64,8 +64,7 @@ function PortfolioPreview({ slug, html: directHtml, externalUrl, imageUrl }: { s
             ) : (
                 <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
                     <iframe
-                        src={externalUrl || undefined}
-                        srcDoc={!externalUrl ? buildSrcDoc(content) : undefined}
+                        srcDoc={buildSrcDoc(content)}
                         className="w-full h-full border-none overflow-hidden"
                         title="Admin Preview"
                         scrolling="no"
