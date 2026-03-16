@@ -25,6 +25,7 @@ import {
     Clock,
     MousePointer2,
     FormInput,
+    Tag,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,7 @@ interface PopUp {
     formHeadline: string | null;
     formHeadline_id: string | null;
     delay: number;
+    couponCode: string | null;
     createdAt: string;
 }
 
@@ -201,6 +203,11 @@ export function PopUpsManager() {
                                 </div>
                             </div>
 
+                            <div className="space-y-2">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Coupon Code (Optional)</Label>
+                                <Input name="couponCode" defaultValue={editingPopup?.couponCode || ""} placeholder="SAVE50" className="bg-white/5 border-white/10 font-mono tracking-widest" />
+                            </div>
+
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-0.5">
@@ -320,6 +327,12 @@ export function PopUpsManager() {
                                                 <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold">
                                                     <MousePointer2 className="w-3 h-3 text-brand-yellow/50" />
                                                     {popup.ctaText}
+                                                </div>
+                                            )}
+                                            {popup.couponCode && (
+                                                <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold">
+                                                    <Tag className="w-3 h-3 text-brand-yellow/50" />
+                                                    Coupon: {popup.couponCode}
                                                 </div>
                                             )}
                                             {popup.showFormLead && (

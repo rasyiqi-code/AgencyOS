@@ -478,6 +478,7 @@ model PopUp {
   formHeadline     String?
   formHeadline_id  String?
   delay            Int      @default(3)
+  couponCode       String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

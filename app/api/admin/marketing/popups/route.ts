@@ -65,6 +65,7 @@ export async function DELETE(req: NextRequest) {
         await deletePopUp(id);
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error("API Error:", error);
         return NextResponse.json({ error: (error as Error).message }, { status: 500 });
     }
 }

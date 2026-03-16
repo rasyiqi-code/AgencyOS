@@ -39,6 +39,7 @@ Thumbs.db
 /public/uploads/
 /doc/llms*.txt
 /data/payment-info.json
+/data/portfolios/cache/
 .agent/
 
 # vercel

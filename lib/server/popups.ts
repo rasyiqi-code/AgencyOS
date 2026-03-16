@@ -30,6 +30,7 @@ export async function createPopUp(data: {
     formHeadline?: string;
     formHeadline_id?: string;
     delay?: number;
+    couponCode?: string;
 }) {
     const popup = await prisma.popUp.create({
         data: {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml } from "@/lib/portfolios/actions";
+import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -40,14 +40,23 @@ function buildSrcDoc(content: string): string {
 }
 
 // === Live Preview Component untuk Card ===
-function PortfolioPreview({ slug, html: directHtml, imageUrl }: { slug?: string; html?: string; imageUrl?: string }) {
+function PortfolioPreview({ slug, html: directHtml, imageUrl, externalUrl }: { slug?: string; html?: string; imageUrl?: string; externalUrl?: string }) {
     const [fetchedContent, setFetchedContent] = useState("");
 
     useEffect(() => {
-        if (!directHtml && slug) {
+        if (directHtml) return;
+
+        if (externalUrl) {
+            // Get current host for localBaseUrl
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const localBaseUrl = `${protocol}//${host}`;
+            
+            getRenderedHtml(externalUrl, localBaseUrl).then(setFetchedContent);
+        } else if (slug) {
             getPortfolioHtml(slug).then(setFetchedContent);
         }
-    }, [slug, directHtml]);
+    }, [slug, directHtml, externalUrl]);
 
     const content = directHtml || fetchedContent;
 
@@ -179,95 +188,112 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                     setHtml("");
                 }
             }}>
-                <DialogContent className="max-w-3xl bg-zinc-950 border-white/10 text-white p-4 gap-3">
-                    <DialogHeader className="space-y-0 pb-0">
-                        <DialogTitle className="text-sm font-black text-white tracking-tight flex items-center gap-1.5">
-                            <Plus className="w-3.5 h-3.5 text-brand-yellow" /> New Project
+                <DialogContent className="max-w-4xl bg-[#09090b] border-white/[0.08] text-white p-6 gap-6 shadow-2xl rounded-[28px] overflow-hidden">
+                    <DialogHeader className="space-y-1">
+                        <DialogTitle className="text-xl font-black text-white tracking-tight flex items-center gap-2.5">
+                            <Plus className="w-5 h-5 text-brand-yellow drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]" /> 
+                            New Project
                         </DialogTitle>
                         <DialogDescription className="sr-only">Form tambah portfolio baru</DialogDescription>
                     </DialogHeader>
 
-                    {/* Row 1: 4 kolom — Title, Slug, Industry, Launch */}
-                    <div className="grid grid-cols-[1.5fr_1fr_1.5fr_1.5fr_1fr_auto] gap-2 items-end">
-                        <div>
-                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Title</label>
-                            <Input
-                                value={title}
-                                onChange={e => setTitle(e.target.value)}
-                                placeholder="Banking Pro"
-                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 text-xs"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Slug</label>
-                            <Input
-                                value={slug}
-                                onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
-                                placeholder="banking-pro"
-                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 font-mono text-[10px]"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">External URL</label>
-                            <Input
-                                value={externalUrl}
-                                onChange={e => setExternalUrl(e.target.value)}
-                                placeholder="https://..."
-                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 text-xs font-mono"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Image URL / OG</label>
-                            <Input
-                                value={imageUrl}
-                                onChange={e => setImageUrl(e.target.value)}
-                                placeholder="https://.../og.png"
-                                className="bg-white/5 border-white/10 focus:border-brand-yellow/50 h-8 text-xs font-mono"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-[8px] font-black text-zinc-600 uppercase tracking-widest ml-0.5 mb-1 block">Industry</label>
-                            <select
-                                value={category}
-                                onChange={e => setCategory(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 focus:border-brand-yellow/50 h-8 text-xs rounded-md px-2 text-white appearance-none cursor-pointer"
-                                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
-                            >
-                                <option value="" className="bg-zinc-900 text-zinc-400">Pilih...</option>
-                                <option value="Design" className="bg-zinc-900">Design</option>
-                                <option value="Fintech" className="bg-zinc-900">Fintech</option>
-                                <option value="E-Commerce" className="bg-zinc-900">E-Commerce</option>
-                                <option value="SaaS" className="bg-zinc-900">SaaS</option>
-                                <option value="Healthcare" className="bg-zinc-900">Healthcare</option>
-                                <option value="Education" className="bg-zinc-900">Education</option>
-                                <option value="Real Estate" className="bg-zinc-900">Real Estate</option>
-                                <option value="F&B" className="bg-zinc-900">F&B</option>
-                                <option value="Travel" className="bg-zinc-900">Travel</option>
-                                <option value="Media" className="bg-zinc-900">Media</option>
-                                <option value="Agency" className="bg-zinc-900">Agency</option>
-                                <option value="Portfolio" className="bg-zinc-900">Portfolio</option>
-                                <option value="Lainnya" className="bg-zinc-900">Lainnya</option>
-                            </select>
-                        </div>
-                        <Button
-                            size="sm"
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-5 h-8 rounded-lg font-black active:scale-95 transition-all text-xs uppercase tracking-wider whitespace-nowrap"
-                        >
-                            {isSaving ? "..." : "Launch"}
-                        </Button>
-                    </div>
+                    {/* Main Form Grid */}
+                    <div className="flex flex-col gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                            {/* Row 1: Left Group (Title, Slug, URL, OG) */}
+                            <div className="md:col-span-10 grid grid-cols-1 sm:grid-cols-4 gap-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Title</label>
+                                    <Input
+                                        value={title}
+                                        onChange={e => setTitle(e.target.value)}
+                                        placeholder="Bank"
+                                        className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 text-sm rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Slug</label>
+                                    <Input
+                                        value={slug}
+                                        onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                                        placeholder="bank"
+                                        className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 font-mono text-xs rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all text-zinc-400"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">External URL</label>
+                                    <Input
+                                        value={externalUrl}
+                                        onChange={e => setExternalUrl(e.target.value)}
+                                        placeholder="https://"
+                                        className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 text-xs font-mono rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all text-zinc-400 px-3"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Image URL / OG</label>
+                                    <Input
+                                        value={imageUrl}
+                                        onChange={e => setImageUrl(e.target.value)}
+                                        placeholder="https://"
+                                        className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 text-xs font-mono rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all text-zinc-400 px-3"
+                                    />
+                                </div>
+                            </div>
 
-                    {/* Row 2: Upload compact inline — Only show if no externalUrl */}
-                    {!externalUrl ? (
-                        <HtmlFileUploader onFileLoad={setHtml} currentHtml={html} compact />
-                    ) : (
-                        <div className="px-3 py-2 rounded-lg bg-brand-yellow/5 border border-brand-yellow/20 flex items-center gap-2">
-                            <ExternalLink className="w-3.5 h-3.5 text-brand-yellow" />
-                            <span className="text-[10px] text-zinc-400 font-medium">Using external URL for preview and redirect.</span>
+                            {/* Industry & Action Button */}
+                            <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-1 gap-3 items-end">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Industry</label>
+                                    <select
+                                        value={category}
+                                        onChange={e => setCategory(e.target.value)}
+                                        className="w-full bg-white/[0.03] border border-white/10 focus:border-brand-yellow/50 h-10 text-sm rounded-xl px-3 text-white appearance-none cursor-pointer focus:ring-4 focus:ring-brand-yellow/5 transition-all"
+                                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 15 5 5 5-5'/%3E%3Cpath d='m7 9 5-5 5 5'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
+                                    >
+                                        <option value="" className="bg-zinc-950 text-zinc-400">Pilih...</option>
+                                        <option value="Design" className="bg-zinc-950">Design</option>
+                                        <option value="Fintech" className="bg-zinc-950">Fintech</option>
+                                        <option value="E-Commerce" className="bg-zinc-950">E-Commerce</option>
+                                        <option value="SaaS" className="bg-zinc-950">SaaS</option>
+                                        <option value="Healthcare" className="bg-zinc-950">Healthcare</option>
+                                        <option value="Education" className="bg-zinc-950">Education</option>
+                                        <option value="Real Estate" className="bg-zinc-950">Real Estate</option>
+                                        <option value="F&B" className="bg-zinc-950">F&B</option>
+                                        <option value="Travel" className="bg-zinc-950">Travel</option>
+                                        <option value="Media" className="bg-zinc-950">Media</option>
+                                        <option value="Agency" className="bg-zinc-950">Agency</option>
+                                        <option value="Portfolio" className="bg-zinc-950">Portfolio</option>
+                                        <option value="Lainnya" className="bg-zinc-950">Lainnya</option>
+                                    </select>
+                                </div>
+                                <Button
+                                    size="lg"
+                                    onClick={handleSave}
+                                    disabled={isSaving}
+                                    className="bg-brand-yellow hover:bg-brand-yellow/90 hover:scale-[1.02] active:scale-95 text-black h-10 rounded-xl font-black transition-all text-xs uppercase tracking-[0.15em] shadow-[0_8px_20px_-6px_rgba(234,179,8,0.3)]"
+                                >
+                                    {isSaving ? "..." : "Launch"}
+                                </Button>
+                            </div>
                         </div>
-                    )}
+
+                        {/* Row 2: File Uploader */}
+                        {!externalUrl ? (
+                            <div className="pt-2">
+                                <HtmlFileUploader onFileLoad={setHtml} currentHtml={html} compact />
+                            </div>
+                        ) : (
+                            <div className="px-4 py-3 rounded-2xl bg-brand-yellow/[0.03] border border-brand-yellow/10 flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-300">
+                                <div className="p-2 rounded-lg bg-brand-yellow/10">
+                                    <ExternalLink className="w-4 h-4 text-brand-yellow" />
+                                </div>
+                                <div className="space-y-0.5">
+                                    <p className="text-xs text-white font-bold">External Link Active</p>
+                                    <p className="text-[10px] text-zinc-500 font-medium">Using external URL for preview and redirect. File upload disabled.</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </DialogContent>
             </Dialog>
 
@@ -290,7 +316,11 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
                         {/* Card Body (Live Render) */}
                         <div className="p-3">
-                            <PortfolioPreview slug={item.slug} imageUrl={item.imageUrl} />
+                            <PortfolioPreview 
+                                slug={item.slug} 
+                                imageUrl={item.imageUrl} 
+                                externalUrl={item.externalUrl}
+                            />
                         </div>
 
                         {/* Card Footer */}

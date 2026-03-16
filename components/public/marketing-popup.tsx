@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
+import { X, ArrowRight, Loader2, Sparkles, CheckCircle2, Tag, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ interface PopUp {
     formHeadline: string | null;
     formHeadline_id: string | null;
     delay: number;
+    couponCode: string | null;
     targetingType: string;
     targetingPaths: string[];
     targetingLocales: string[];
@@ -131,6 +132,11 @@ export function MarketingPopup() {
     const ctaText = (isId ? currentPopup?.ctaText_id : null) || currentPopup?.ctaText;
     const formHeadline = (isId ? currentPopup?.formHeadline_id : null) || currentPopup?.formHeadline;
 
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        toast.success(isId ? "Kode kupon disalin!" : "Coupon code copied!");
+    };
+
     if (!currentPopup) return null;
 
     return (
@@ -151,7 +157,7 @@ export function MarketingPopup() {
                         initial={{ opacity: 0, scale: 0.9, y: -40 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: -40 }}
-                        className="relative w-full max-w-lg bg-[#09090b] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-50"
+                        className="relative w-full max-w-[90%] sm:max-w-md bg-[#09090b] border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] z-50"
                     >
                         {/* Custom Close Button */}
                         <button
@@ -161,20 +167,50 @@ export function MarketingPopup() {
                             <X className="w-5 h-5" />
                         </button>
 
-                        <div className="p-8 md:p-10 space-y-6 relative">
+                        <div className="p-6 md:p-8 space-y-5 relative">
                             {/* Decorative Icon */}
-                            <div className="w-14 h-14 rounded-2xl bg-brand-yellow/10 flex items-center justify-center border border-brand-yellow/20 shadow-[0_0_20px_rgba(255,184,0,0.1)]">
-                                <Sparkles className="w-7 h-7 text-brand-yellow" />
+                            <div className="w-12 h-12 rounded-xl bg-brand-yellow/10 flex items-center justify-center border border-brand-yellow/20 shadow-[0_0_20px_rgba(255,184,0,0.1)]">
+                                <Sparkles className="w-6 h-6 text-brand-yellow" />
                             </div>
 
-                            <div className="space-y-3">
-                                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none break-words">
+                            <div className="space-y-2">
+                                <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight break-words">
                                     {headline}
                                 </h2>
-                                <p className="text-zinc-400 text-sm md:text-base leading-relaxed font-medium">
+                                <p className="text-zinc-400 text-xs md:text-sm leading-relaxed font-medium">
                                     {description}
                                 </p>
                             </div>
+
+                            {/* Coupon Section */}
+                            {currentPopup.couponCode && (
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="pt-2"
+                                >
+                                    <button 
+                                        onClick={() => copyToClipboard(currentPopup.couponCode!)}
+                                        className="w-full group relative flex flex-col items-center justify-center p-4 md:p-6 border-2 border-dashed border-brand-yellow/30 bg-brand-yellow/[0.03] rounded-2xl md:rounded-3xl hover:bg-brand-yellow/[0.06] hover:border-brand-yellow/50 transition-all overflow-hidden"
+                                    >
+                                        <div className="absolute top-0 left-0 w-6 h-6 -translate-x-1/2 -translate-y-1/2 bg-[#09090b] border border-white/10 rounded-full" />
+                                        <div className="absolute top-0 right-0 w-6 h-6 translate-x-1/2 -translate-y-1/2 bg-[#09090b] border border-white/10 rounded-full" />
+                                        <div className="absolute bottom-0 left-0 w-6 h-6 -translate-x-1/2 translate-y-1/2 bg-[#09090b] border border-white/10 rounded-full" />
+                                        <div className="absolute bottom-0 right-0 w-6 h-6 translate-x-1/2 translate-y-1/2 bg-[#09090b] border border-white/10 rounded-full" />
+                                        
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <Tag className="w-3 h-3 text-brand-yellow" />
+                                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-brand-yellow transition-colors">
+                                                {isId ? "Salin Kode" : "Copy Code"}
+                                            </span>
+                                        </div>
+                                        <div className="text-xl md:text-2xl font-black text-white tracking-[0.3em] font-mono group-active:scale-95 transition-transform flex items-center gap-3">
+                                            {currentPopup.couponCode}
+                                            <Copy className="w-4 h-4 text-brand-yellow/40 group-hover:text-brand-yellow transition-colors" />
+                                        </div>
+                                    </button>
+                                </motion.div>
+                            )}
 
                             {currentPopup.showFormLead && !isSubmitted ? (
                                 <form onSubmit={handleLeadSubmit} className="space-y-4 pt-2">
@@ -188,20 +224,20 @@ export function MarketingPopup() {
                                             name="name"
                                             placeholder={isId ? "Nama Anda" : "Your Name"}
                                             required
-                                            className="h-12 bg-white/5 border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus-visible:ring-brand-yellow"
+                                            className="h-11 md:h-12 bg-white/5 border-white/10 rounded-xl md:rounded-2xl text-white placeholder:text-zinc-600 focus-visible:ring-brand-yellow"
                                         />
                                         <Input
                                             name="email"
                                             type="email"
                                             placeholder="Email"
                                             required
-                                            className="h-12 bg-white/5 border-white/10 rounded-2xl text-white placeholder:text-zinc-600 focus-visible:ring-brand-yellow"
+                                            className="h-11 md:h-12 bg-white/5 border-white/10 rounded-xl md:rounded-2xl text-white placeholder:text-zinc-600 focus-visible:ring-brand-yellow"
                                         />
                                     </div>
                                     <Button
                                         type="submit"
                                         disabled={isPending}
-                                        className="w-full h-12 bg-white text-black hover:bg-brand-yellow rounded-2xl font-black uppercase tracking-widest text-xs transition-all"
+                                        className="w-full h-11 md:h-12 bg-white text-black hover:bg-brand-yellow rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all"
                                     >
                                         {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                                             <>
@@ -224,11 +260,11 @@ export function MarketingPopup() {
                             ) : ctaText && (
                                 <Button
                                     asChild
-                                    className="w-full h-14 bg-brand-yellow text-black hover:bg-white rounded-[1.25rem] font-black uppercase tracking-widest text-sm transition-all shadow-[0_4px_20px_rgba(255,255,0,0.2)]"
+                                    className="w-full h-12 md:h-14 bg-brand-yellow text-black hover:bg-white rounded-xl md:rounded-[1.25rem] font-black uppercase tracking-widest text-xs md:text-sm transition-all shadow-[0_4px_20px_rgba(255,255,0,0.2)]"
                                 >
                                     <a href={currentPopup.ctaUrl || "#"}>
                                         {ctaText}
-                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                        <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                                     </a>
                                 </Button>
                             )}

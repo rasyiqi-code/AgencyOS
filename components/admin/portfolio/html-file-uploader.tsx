@@ -119,15 +119,19 @@ export function HtmlFileUploader({ onFileLoad, currentHtml, compact = false }: H
     if (compact) {
         if (loadedFile) {
             return (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500/10 border border-green-500/20">
-                    <FileCode2 className="w-3.5 h-3.5 text-green-400 shrink-0" />
-                    <span className="text-xs text-white font-medium truncate">{loadedFile.name}</span>
-                    <span className="text-[10px] text-zinc-500 font-mono shrink-0">{formatFileSize(loadedFile.size)}</span>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-green-500/[0.03] border border-green-500/20 group/file transition-all animate-in fade-in zoom-in-95 duration-300">
+                    <div className="p-2 rounded-lg bg-green-500/10">
+                        <FileCode2 className="w-4 h-4 text-green-400 shrink-0" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                        <span className="text-xs text-white font-bold truncate">{loadedFile.name}</span>
+                        <span className="text-[10px] text-zinc-500 font-mono">{formatFileSize(loadedFile.size)}</span>
+                    </div>
                     <button
                         onClick={handleClear}
-                        className="ml-auto p-0.5 text-zinc-500 hover:text-red-400 transition-colors shrink-0"
+                        className="ml-auto p-1.5 rounded-lg bg-zinc-900/50 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all opacity-0 group-hover/file:opacity-100"
                     >
-                        <X className="w-3 h-3" />
+                        <X className="w-3.5 h-3.5" />
                     </button>
                     {hiddenInput}
                 </div>
@@ -140,16 +144,21 @@ export function HtmlFileUploader({ onFileLoad, currentHtml, compact = false }: H
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-dashed cursor-pointer transition-all ${isDragging
-                        ? "border-brand-yellow bg-brand-yellow/5"
-                        : "border-white/15 hover:border-white/25 hover:bg-white/[0.02]"
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed cursor-pointer transition-all duration-300 ${isDragging
+                        ? "border-brand-yellow bg-brand-yellow/[0.05] scale-[1.01]"
+                        : "border-white/10 hover:border-white/20 hover:bg-white/[0.02]"
                     }`}
             >
-                <Upload className={`w-3.5 h-3.5 shrink-0 ${isDragging ? "text-brand-yellow" : "text-zinc-500"}`} />
-                <span className="text-xs text-zinc-400">
-                    Drop file atau <span className="text-brand-yellow font-semibold">pilih .html</span>
-                </span>
-                <span className="text-[9px] text-zinc-600 font-mono ml-auto shrink-0">maks 5MB</span>
+                <div className={`p-2 rounded-lg transition-colors ${isDragging ? "bg-brand-yellow/20" : "bg-white/5"}`}>
+                    <Upload className={`w-4 h-4 shrink-0 ${isDragging ? "text-brand-yellow" : "text-zinc-500"}`} />
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-xs text-zinc-400 font-medium">
+                        Drop file atau <span className="text-brand-yellow font-bold">pilih .html</span>
+                    </span>
+                    <span className="text-[9px] text-zinc-600 font-black uppercase tracking-widest hidden sm:block">HTML/HTM Source File</span>
+                </div>
+                <span className="text-[10px] text-zinc-600 font-mono ml-auto shrink-0 bg-white/[0.03] px-2 py-0.5 rounded-md border border-white/5 tracking-tighter">maks 5MB</span>
                 {hiddenInput}
             </div>
         );
