@@ -38,12 +38,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class AgencyOS_License_Checker {
     private $api_url = '${origin}/api/public/verify-license'; 
-    private $product_slug;
+    private $productSlug;
     private $option_name;
 
-    public function __construct( $product_slug ) {
-        $this->product_slug = $product_slug;
-        $this->option_name = 'agencyos_license_' . $product_slug;
+    public function __construct( $productSlug ) {
+        $this->productSlug = $productSlug;
+        $this->option_name = 'agencyos_license_' . $productSlug;
 
         add_action( 'admin_menu', [ $this, 'register_license_menu' ] );
         add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -54,11 +54,11 @@ class AgencyOS_License_Checker {
     }
 
     public function register_license_menu() {
-        add_theme_page('Theme License', 'Theme License', 'manage_options', $this->product_slug . '-license', [ $this, 'render_license_page' ]);
+        add_theme_page('Theme License', 'Theme License', 'manage_options', $this->productSlug . '-license', [ $this, 'render_license_page' ]);
     }
 
     public function register_settings() {
-        register_setting( $this->product_slug . '_license_group', $this->option_name );
+        register_setting( $this->productSlug . '_license_group', $this->option_name );
     }
 
     public function render_license_page() {
@@ -68,7 +68,7 @@ class AgencyOS_License_Checker {
         <div class="wrap">
             <h1>Activate Your Product</h1>
             <form method="post" action="options.php">
-                <?php settings_fields( $this->product_slug . '_license_group' ); ?>
+                <?php settings_fields( $this->productSlug . '_license_group' ); ?>
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row">License Key</th>
@@ -97,7 +97,7 @@ class AgencyOS_License_Checker {
         $domain = parse_url( site_url(), PHP_URL_HOST );
 
         $response = wp_remote_post( $this->api_url, [
-            'body' => json_encode(['key' => $key, 'productSlug' => $this->product_slug, 'domain' => $domain]),
+            'body' => json_encode(['key' => $key, 'productSlug' => $this->productSlug, 'domain' => $domain]),
             'headers' => [ 'Content-Type' => 'application/json' ],
             'timeout' => 15
         ]);
@@ -170,12 +170,12 @@ suspend fun verifyLicense(key: String, productSlug: String, deviceId: String): B
 
     const pythonCode = `import requests
 
-def verify_license(key, product_slug, machine_id):
+def verify_license(key, productSlug, machineId):
     url = "${origin}/api/public/verify-license"
     payload = {
         "key": key,
-        "productSlug": product_slug,
-        "machineId": machine_id
+        "productSlug": productSlug,
+        "machineId": machineId
     }
     
     try:

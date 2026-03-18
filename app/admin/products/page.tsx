@@ -5,6 +5,8 @@ import { ProductForm } from "@/components/admin/products/product-form";
 import { ProductStats } from "@/components/admin/products/product-stats";
 import { Package } from "lucide-react";
 
+import { SaaSDocsDialog } from "@/components/admin/products/saas-docs-dialog";
+
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
@@ -35,7 +37,10 @@ export default async function ProductsPage() {
                         Manage your digital products (templates, plugins).
                     </p>
                 </div>
-                <ProductForm />
+                <div className="flex items-center gap-2">
+                    <SaaSDocsDialog />
+                    <ProductForm />
+                </div>
             </div>
 
             <ProductStats

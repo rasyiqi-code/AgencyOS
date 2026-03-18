@@ -26,7 +26,7 @@ export function SystemNav() {
         },
         {
             href: "/admin/system/keys",
-            label: "AI Configuration",
+            label: "API Key",
             icon: Key
         },
         {

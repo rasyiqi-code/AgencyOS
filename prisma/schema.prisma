@@ -421,6 +421,7 @@ model Product {
   image          String?
   fileUrl        String?
   currency       String         @default("USD")
+  externalWebhookUrl String?
   digitalOrders  DigitalOrder[]
   licenses       License[]
 }

@@ -49,8 +49,9 @@ export default async function DigitalSalesPage() {
                                         {order.status}
                                     </Badge>
                                 </div>
-                                <CardDescription className="text-zinc-500">
-                                    {order.userEmail} • {new Date(order.createdAt).toLocaleDateString("id-ID")}
+                                <CardDescription className="text-zinc-500 flex flex-col gap-1">
+                                    <span className="text-[10px] font-mono text-zinc-600">ID: {order.id}</span>
+                                    <span>{order.userEmail} • {new Date(order.createdAt).toLocaleDateString("id-ID")}</span>
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex items-center justify-between text-sm pt-0">

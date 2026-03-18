@@ -10,6 +10,13 @@ export async function POST(req: Request) {
             return NextResponse.json({ valid: false, message: "License key required" }, { status: 400 });
         }
 
+        // Standardize product identifier from various possible naming conventions
+        const activeProductSlug = productSlug || body.productId || body.product_slug;
+
+        if (!activeProductSlug) {
+            return NextResponse.json({ valid: false, message: "Product slug/ID required" }, { status: 400 });
+        }
+
         const license = await prisma.license.findUnique({
             where: { key },
             include: { product: true }
@@ -19,7 +26,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ valid: false, message: "Invalid license key" }, { status: 404 });
         }
 
-        if (license.product.slug !== productSlug) {
+        if (license.product.slug !== activeProductSlug) {
             return NextResponse.json({ valid: false, message: "Invalid product for this license" }, { status: 403 });
         }
 

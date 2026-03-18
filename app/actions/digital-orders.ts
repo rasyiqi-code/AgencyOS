@@ -6,6 +6,7 @@ import { isAdmin } from "@/lib/shared/auth-helpers";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
 import { notifyNewDigitalOrder, notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 import { sendPaymentSuccessEmail } from "@/lib/email/client-notifications";
+import { triggerExternalWebhook } from "@/lib/server/webhook-trigger";
 
 const db = prisma;
 
@@ -112,6 +113,28 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string, 
         // Order harus sudah PAID agar komisi valid
         await processAffiliateCommission(orderId, order.amount, order.paymentMetadata);
 
+        // Fetch product details for webhook & notifications
+        const product = await db.product.findUnique({
+            where: { id: order.productId },
+            select: { name: true, slug: true, externalWebhookUrl: true }
+        });
+
+        // Trigger External Webhook if configured (for SaaS Integration)
+        if (product?.externalWebhookUrl) {
+            triggerExternalWebhook(product.externalWebhookUrl, {
+                orderId: order.id,
+                email: order.userEmail,
+                userId: order.userId,
+                userName: order.userName,
+                productId: product.slug, // Send slug for readability (new standard)
+                productUuid: order.productId, // Send original database ID (backward compatibility)
+                productName: product.name,
+                amount: order.amount,
+                status: "PAID",
+                licenseKey: licenseResult.success ? licenseResult.license?.key : null
+            }).catch(err => console.error("[WEBHOOK_TRIGGER_FAILED]", err));
+        }
+
         // Notify Admin
         notifyPaymentSuccess({
             orderId: order.id,
@@ -121,10 +144,6 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string, 
         }).catch(err => console.error("Failed to send admin notification:", err));
 
         // Notify Client
-        const product = await db.product.findUnique({
-            where: { id: order.productId },
-            select: { name: true }
-        });
 
         sendPaymentSuccessEmail({
             to: order.userEmail,

@@ -7,11 +7,17 @@ import { Trash2, Key } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { AddKeyDialog } from "@/components/admin/add-key-dialog";
 import { EditKeyDialog } from "@/components/admin/edit-key-dialog";
+import { SaaSKeysClient } from "@/components/admin/system/saas-keys-client";
+
+import { SystemKey } from "@prisma/client";
 
 export default async function AdminKeysPage() {
     const keys = await prisma.systemKey.findMany({
         orderBy: { createdAt: "desc" },
-    });
+    }) as SystemKey[];
+
+    const aiKeys = keys.filter((k: SystemKey) => k.provider !== "agency-os");
+    const agencyKeys = keys.filter((k: SystemKey) => k.provider === "agency-os");
 
     async function deleteKey(id: string) {
         "use server";
@@ -66,16 +72,12 @@ export default async function AdminKeysPage() {
                         <Key className="w-6 h-6 text-zinc-600" />
                     </h1>
                     <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        Manage API Keys for Google Gemini and other AI providers.
+                        Manage API Keys for AI providers and third-party SaaS integrations.
                     </p>
                 </div>
             </div>
 
             <div className="grid gap-8 lg:grid-cols-3">
-
-
-
-
                 {/* Left Column: Context/Navigation */}
                 <div className="lg:col-span-1 space-y-4">
                     <SystemNav />
@@ -88,10 +90,10 @@ export default async function AdminKeysPage() {
                             <div className="flex items-center gap-4">
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <Key className="w-4 h-4 text-emerald-500" />
-                                    Active Keys
+                                    AI Provider Keys
                                 </h3>
                                 <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                                    {keys.filter(k => k.isActive).length} Online
+                                    {aiKeys.filter(k => k.isActive).length} Online
                                 </Badge>
                             </div>
                             <AddKeyDialog />
@@ -108,17 +110,17 @@ export default async function AdminKeysPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {keys.length === 0 && (
+                                {aiKeys.length === 0 && (
                                     <TableRow className="hover:bg-transparent border-white/5">
                                         <TableCell colSpan={5} className="text-center py-12 text-zinc-500">
                                             <div className="flex flex-col items-center gap-2">
                                                 <Key className="w-8 h-8 opacity-20" />
-                                                <p>Vault is empty. System running on fallback environment variables.</p>
+                                                <p>AI Vault is empty.</p>
                                             </div>
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {keys.map((key) => (
+                                {aiKeys.map((key) => (
                                     <TableRow key={key.id} className="hover:bg-white/5 border-white/5">
                                         <TableCell className="font-medium text-zinc-200">{key.label}</TableCell>
                                         <TableCell className="text-zinc-500 text-xs font-mono">
@@ -159,6 +161,8 @@ export default async function AdminKeysPage() {
                             </TableBody>
                         </Table>
                     </div>
+
+                    <SaaSKeysClient initialKeys={agencyKeys} />
                 </div>
             </div>
         </div>

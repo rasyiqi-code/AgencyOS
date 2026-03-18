@@ -81,6 +81,7 @@ export function SidebarSuperAdmin() {
 
             <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
             <SidebarLink href="/admin/products" icon={Package} label="DigiProducts" />
+            <SidebarLink href="/admin/digital-sales" icon={LayoutDashboard} label="Digital Sales" />
             <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
             <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
             <SidebarLink href="/admin/portfolio" icon={Images} label="Portfolio Admin" />
