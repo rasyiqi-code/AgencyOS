@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.99",
