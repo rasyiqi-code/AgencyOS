@@ -29,13 +29,14 @@ const productSchema = z.object({
     name_id: z.string().min(0),
     description_id: z.string().min(0),
     price: z.number().min(0, "Price must be positive"),
-    type: z.enum(["plugin", "template"]),
+    type: z.enum(["plugin", "template", "saas"]),
     isActive: z.boolean(),
     purchaseType: z.enum(["one_time", "subscription"]),
     interval: z.string().min(0),
     fileUrl: z.string().min(0),
     image: z.string().min(0),
     currency: z.enum(["USD", "IDR"]),
+    externalWebhookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
 });
 
 type ProductFormValues = {
@@ -45,13 +46,14 @@ type ProductFormValues = {
     name_id: string;
     description_id: string;
     price: number;
-    type: "plugin" | "template";
+    type: "plugin" | "template" | "saas";
     isActive: boolean;
     purchaseType: "one_time" | "subscription";
     interval: string;
     fileUrl: string;
     image: string;
     currency: "USD" | "IDR";
+    externalWebhookUrl?: string;
 };
 
 interface ProductFormProps {
@@ -78,13 +80,14 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
             description: product.description ?? "",
             description_id: (product as Product & { description_id?: string }).description_id ?? "",
             price: product.price ? Number(product.price) : 0,
-            type: (product.type as "plugin" | "template") || "plugin",
+            type: (product.type as "plugin" | "template" | "saas") || "plugin",
             image: product.image ?? "",
             purchaseType: (product.purchaseType as "one_time" | "subscription") || "one_time",
             fileUrl: product.fileUrl ?? "",
             isActive: product.isActive ?? true,
             interval: product.interval ?? "",
             currency: (product as Product & { currency?: string }).currency as "USD" | "IDR" || "USD",
+            externalWebhookUrl: product.externalWebhookUrl ?? "",
         } : {
             name: "",
             name_id: "",
@@ -99,6 +102,7 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
             isActive: true,
             interval: "",
             currency: "USD",
+            externalWebhookUrl: "",
         }
     });
 
@@ -332,6 +336,7 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
                                         >
                                             <option value="plugin" className="bg-zinc-900">Plugin</option>
                                             <option value="template" className="bg-zinc-900">Template</option>
+                                            <option value="saas" className="bg-zinc-900">SaaS (External Webhook)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -384,6 +389,18 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
                                     placeholder="https://storage.com/file.zip"
                                     className="bg-black/50 border-white/5 rounded-xl h-11 text-xs focus:border-brand-yellow/30 transition-colors"
                                 />
+                            </div>
+
+                            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">External Webhook (SaaS)</Label>
+                                <Input
+                                    {...form.register("externalWebhookUrl")}
+                                    placeholder="https://saas-backend.com/webhook"
+                                    className="bg-black/50 border-white/5 rounded-xl h-11 text-xs focus:border-brand-yellow/30 transition-colors"
+                                />
+                                {form.formState.errors.externalWebhookUrl && (
+                                    <p className="text-[10px] font-bold text-red-500 uppercase tracking-tight">{form.formState.errors.externalWebhookUrl.message}</p>
+                                )}
                             </div>
 
                             {form.watch("purchaseType") === "subscription" && (

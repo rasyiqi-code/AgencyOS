@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { name, slug, description, price, type, isActive, purchaseType, interval, image, fileUrl, name_id, description_id } = body;
+        const { name, slug, description, price, type, isActive, purchaseType, interval, image, fileUrl, name_id, description_id, externalWebhookUrl } = body;
 
         // Validasi: name dan slug wajib ada (price 0 diizinkan untuk produk gratis)
         if (!name || !slug) {
@@ -63,6 +63,7 @@ export async function POST(req: Request) {
                 fileUrl,
                 name_id,
                 description_id,
+                externalWebhookUrl,
                 currency: body.currency || 'USD',
             },
         });
