@@ -19,6 +19,8 @@ export const WEBHOOK_PAYLOAD = `{
   }
 }`;
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://crediblemark.com";
+
 export const SAAS_RESPONSE_PAYLOAD = `{
   "active": true,
   "orderId": "DIGI-1739443234567",
@@ -38,7 +40,7 @@ export const SAAS_RESPONSE_PAYLOAD = `{
 export const SAAS_SNIPPETS = {
   nextjs: `// Verify subscription and get details
 export async function getSubscription(email: string, productSlug: string) {
-  const res = await fetch(\`https://crediblemark.com/api/v1/subscription/check?email=\${email}&productSlug=\${productSlug}\`, {
+  const res = await fetch(\`\${BASE_URL}/api/v1/subscription/check?email=\${email}&productSlug=\${productSlug}\`, {
     headers: { 'Authorization': \`Bearer \${process.env.AGENCY_OS_API_KEY}\` },
   });
   const data = await res.json();
@@ -53,7 +55,7 @@ export async function getSubscription(email: string, productSlug: string) {
   node: `const axios = require('axios');
 
 async function getSubscription(email, productSlug) {
-  const res = await axios.get('https://crediblemark.com/api/v1/subscription/check', {
+  const res = await axios.get('\${BASE_URL}/api/v1/subscription/check', {
     params: { email, productId: productSlug },
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
   });
@@ -67,7 +69,7 @@ async function getSubscription(email, productSlug) {
   python: `import requests
 
 def get_subscription(email, product_slug):
-    url = "https://crediblemark.com/api/v1/subscription/check"
+    url = "\${BASE_URL}/api/v1/subscription/check"
     params = {"email": email, "productSlug": product_slug}
     headers = {"Authorization": "Bearer YOUR_API_KEY"}
     
@@ -79,7 +81,7 @@ def get_subscription(email, product_slug):
         return data
     return None`,
   php: `<?php
-$url = "https://crediblemark.com/api/v1/subscription/check?email=user@mail.com&productSlug=your-slug";
+$url = "\${BASE_URL}/api/v1/subscription/check?email=user@mail.com&productSlug=your-slug";
 $opts = ["http" => ["header" => "Authorization: Bearer YOUR_API_KEY"]];
 $context = stream_context_create($opts);
 $response = json_decode(file_get_contents($url, false, $context), true);
@@ -96,7 +98,7 @@ import 'dart:convert';
 // Get subscription details
 Future<Map<String, dynamic>?> getSubscription(String email, String slug) async {
   final res = await http.get(
-    Uri.parse('https://crediblemark.com/api/v1/subscription/check?email=$email&productSlug=$slug'),
+    Uri.parse('\${BASE_URL}/api/v1/subscription/check?email=$email&productSlug=$slug'),
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
   );
   final data = jsonDecode(res.body);
@@ -107,7 +109,7 @@ Future<Map<String, dynamic>?> getSubscription(String email, String slug) async {
 export const LICENSE_SNIPPETS = {
   nextjs: `// Verify standalone license key
 export async function verifyLicense(key: string, productSlug: string) {
-  const res = await fetch('https://crediblemark.com/api/public/verify-license', {
+  const res = await fetch('\${BASE_URL}/api/public/verify-license', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key, productSlug })
@@ -117,7 +119,7 @@ export async function verifyLicense(key: string, productSlug: string) {
   node: `const axios = require('axios');
 
 async function verifyLicense(key, productSlug) {
-  const res = await axios.post('https://crediblemark.com/api/public/verify-license', {
+  const res = await axios.post('\${BASE_URL}/api/public/verify-license', {
     key, productSlug
   });
   return res.data.valid;
@@ -125,13 +127,13 @@ async function verifyLicense(key, productSlug) {
   python: `import requests
 
 def verify_license(key, product_slug):
-    url = "https://crediblemark.com/api/public/verify-license"
+    url = "\${BASE_URL}/api/public/verify-license"
     payload = {"key": key, "productSlug": product_slug}
     
     response = requests.post(url, json=payload)
     return response.json().get("valid", False)`,
   php: `<?php
-$url = "https://crediblemark.com/api/public/verify-license";
+$url = "\${BASE_URL}/api/public/verify-license";
 $data = ["key" => "LICENSE-KEY", "productSlug" => "your-slug"];
 $options = ["http" => [
     "header" => "Content-type: application/json\\r\\n",
@@ -147,7 +149,7 @@ import 'dart:convert';
 // Verify License Key
 Future<bool> verifyLicense(String key, String slug) async {
   final res = await http.post(
-    Uri.parse('https://crediblemark.com/api/public/verify-license'),
+    Uri.parse('\${BASE_URL}/api/public/verify-license'),
     body: jsonEncode({ 'key': key, 'productSlug': slug }),
   );
   return jsonDecode(res.body)['valid'] == true;
@@ -156,7 +158,7 @@ Future<bool> verifyLicense(String key, String slug) async {
 export const SAAS_SNIPPETS_ID = {
   nextjs: `// Verifikasi langganan dan ambil detailnya
 export async function getSubscription(email: string, productSlug: string) {
-  const res = await fetch(\`https://crediblemark.com/api/v1/subscription/check?email=\${email}&productSlug=\${productSlug}\`, {
+  const res = await fetch(\`\${BASE_URL}/api/v1/subscription/check?email=\${email}&productSlug=\${productSlug}\`, {
     headers: { 'Authorization': \`Bearer \${process.env.AGENCY_OS_API_KEY}\` },
   });
   const data = await res.json();
@@ -171,7 +173,7 @@ export async function getSubscription(email: string, productSlug: string) {
   node: `const axios = require('axios');
 
 async function getSubscription(email, productSlug) {
-  const res = await axios.get('https://crediblemark.com/api/v1/subscription/check', {
+  const res = await axios.get('\${BASE_URL}/api/v1/subscription/check', {
     params: { email, productId: productSlug },
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
   });
@@ -185,7 +187,7 @@ async function getSubscription(email, productSlug) {
   python: `import requests
 
 def get_subscription(email, product_slug):
-    url = "https://crediblemark.com/api/v1/subscription/check"
+    url = "\${BASE_URL}/api/v1/subscription/check"
     params = {"email": email, "productSlug": product_slug}
     headers = {"Authorization": "Bearer YOUR_API_KEY"}
     
@@ -197,7 +199,7 @@ def get_subscription(email, product_slug):
         return data
     return None`,
   php: `<?php
-$url = "https://crediblemark.com/api/v1/subscription/check?email=user@mail.com&productSlug=your-slug";
+$url = "\${BASE_URL}/api/v1/subscription/check?email=user@mail.com&productSlug=your-slug";
 $opts = ["http" => ["header" => "Authorization: Bearer YOUR_API_KEY"]];
 $context = stream_context_create($opts);
 $response = json_decode(file_get_contents($url, false, $context), true);
@@ -214,7 +216,7 @@ import 'dart:convert';
 // Ambil detail langganan
 Future<Map<String, dynamic>?> getSubscription(String email, String slug) async {
   final res = await http.get(
-    Uri.parse('https://crediblemark.com/api/v1/subscription/check?email=$email&productSlug=$slug'),
+    Uri.parse('\${BASE_URL}/api/v1/subscription/check?email=$email&productSlug=$slug'),
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
   );
   final data = jsonDecode(res.body);
@@ -225,7 +227,7 @@ Future<Map<String, dynamic>?> getSubscription(String email, String slug) async {
 export const LICENSE_SNIPPETS_ID = {
   nextjs: `// Verifikasi kunci lisensi standalone
 export async function verifyLicense(key: string, productSlug: string) {
-  const res = await fetch('https://crediblemark.com/api/public/verify-license', {
+  const res = await fetch('\${BASE_URL}/api/public/verify-license', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key, productSlug })
@@ -235,7 +237,7 @@ export async function verifyLicense(key: string, productSlug: string) {
   node: `const axios = require('axios');
 
 async function verifyLicense(key, productSlug) {
-  const res = await axios.post('https://crediblemark.com/api/public/verify-license', {
+  const res = await axios.post('\${BASE_URL}/api/public/verify-license', {
     key, productSlug
   });
   return res.data.valid;
@@ -243,13 +245,13 @@ async function verifyLicense(key, productSlug) {
   python: `import requests
 
 def verify_license(key, product_slug):
-    url = "https://crediblemark.com/api/public/verify-license"
+    url = "\${BASE_URL}/api/public/verify-license"
     payload = {"key": key, "productSlug": product_slug}
     
     response = requests.post(url, json=payload)
     return response.json().get("valid", False)`,
   php: `<?php
-$url = "https://crediblemark.com/api/public/verify-license";
+$url = "\${BASE_URL}/api/public/verify-license";
 $data = ["key" => "LICENSE-KEY", "productSlug" => "your-slug"];
 $options = ["http" => [
     "header" => "Content-type: application/json\\r\\n",
@@ -265,7 +267,7 @@ import 'dart:convert';
 // Verifikasi Kunci Lisensi
 Future<bool> verifyLicense(String key, String slug) async {
   final res = await http.post(
-    Uri.parse('https://crediblemark.com/api/public/verify-license'),
+    Uri.parse('\${BASE_URL}/api/public/verify-license'),
     body: jsonEncode({ 'key': key, 'productSlug': slug }),
   );
   return jsonDecode(res.body)['valid'] == true;
