@@ -1,56 +1,106 @@
 export const WEBHOOK_PAYLOAD = `{
   "event": "subscription.activated",
+  "timestamp": "2024-03-18T15:30:00Z",
   "data": {
     "orderId": "ORD-123456",
     "email": "customer@example.com",
     "productId": "premium-saas-slug",
+    "productName": "Premium SaaS Plan",
+    "amount": 29.00,
+    "price": 29.00,
+    "currency": "USD",
+    "interval": "monthly",
     "licenseKey": "KEY-XXXX-XXXX-XXXX",
-    "timestamp": "2024-03-18T15:30:00Z"
+    "status": "PAID",
+    "metadata": {
+      "user_id": "user_123",
+      "project_name": "My Awesome Project"
+    }
+  }
+}`;
+
+export const SAAS_RESPONSE_PAYLOAD = `{
+  "active": true,
+  "orderId": "DIGI-1739443234567",
+  "email": "customer@example.com",
+  "productName": "Premium SaaS Plan",
+  "purchaseDate": "2024-03-18T15:30:00Z",
+  "expiresAt": "2025-03-18T15:30:00Z",
+  "licenseKey": "KEY-XXXX-XXXX-XXXX",
+  "price": 29.00,
+  "currency": "USD",
+  "interval": "monthly",
+  "metadata": {
+    "user_id": "user_123"
   }
 }`;
 
 export const SAAS_SNIPPETS = {
-  nextjs: `// Verify subscription for SaaS
-export async function checkAccess(email: string, productSlug: string) {
+  nextjs: `// Verify subscription and get details
+export async function getSubscription(email: string, productSlug: string) {
   const res = await fetch(\`https://your-agency-os.com/api/v1/subscription/check?email=\${email}&productSlug=\${productSlug}\`, {
     headers: { 'Authorization': \`Bearer \${process.env.AGENCY_OS_API_KEY}\` },
   });
-  return (await res.json()).active;
+  const data = await res.json();
+  
+  if (data.active) {
+    console.log("Plan:", data.productName);
+    console.log("Expires:", data.expiresAt);
+    return data;
+  }
+  return null;
 }`,
   node: `const axios = require('axios');
 
-async function checkStatus(email, productSlug) {
+async function getSubscription(email, productSlug) {
   const res = await axios.get('https://your-agency-os.com/api/v1/subscription/check', {
     params: { email, productId: productSlug },
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
   });
-  return res.data.active;
+  
+  if (res.data.active) {
+    console.log(\`Active Plan: \${res.data.productName}\`);
+    return res.data;
+  }
+  return null;
 }`,
   python: `import requests
 
-def check_saas(email, product_slug):
+def get_subscription(email, product_slug):
     url = "https://your-agency-os.com/api/v1/subscription/check"
     params = {"email": email, "productSlug": product_slug}
     headers = {"Authorization": "Bearer YOUR_API_KEY"}
     
     res = requests.get(url, params=params, headers=headers)
-    return res.json().get("active", False)`,
+    data = res.json()
+    
+    if data.get("active"):
+        print(f"Plan: {data.get('productName')}")
+        return data
+    return None`,
   php: `<?php
 $url = "https://your-agency-os.com/api/v1/subscription/check?email=user@mail.com&productSlug=your-slug";
 $opts = ["http" => ["header" => "Authorization: Bearer YOUR_API_KEY"]];
 $context = stream_context_create($opts);
 $response = json_decode(file_get_contents($url, false, $context), true);
-echo $response['active'] ? 'Active' : 'N/A';`,
+
+if ($response['active']) {
+    echo "Active Plan: " . $response['productName'];
+    // Access more fields: $response['expiresAt'], $response['price'], etc.
+} else {
+    echo "No active subscription.";
+}`,
   flutter: `import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// Check SaaS status
-Future<bool> checkSaaS(String email, String slug) async {
+// Get subscription details
+Future<Map<String, dynamic>?> getSubscription(String email, String slug) async {
   final res = await http.get(
     Uri.parse('https://your-agency-os.com/api/v1/subscription/check?email=$email&productSlug=$slug'),
     headers: { 'Authorization': 'Bearer YOUR_API_KEY' },
   );
-  return jsonDecode(res.body)['active'] == true;
+  final data = jsonDecode(res.body);
+  return data['active'] == true ? data : null;
 }`
 };
 

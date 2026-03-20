@@ -27,7 +27,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { productId, email, name, affiliateCode, couponCode } = await req.json();
+        const { productId, email, name, affiliateCode, couponCode, metadata } = await req.json();
         const userId = user.id; // Override userId from session
         const userEmail = user.primaryEmail || email; // Prioritize Stack Auth email
         const userName = user.displayName || name;
@@ -96,6 +96,7 @@ export async function POST(req: Request) {
                 userName: userName || null,
                 amount: finalAmount,
                 status: "PENDING",
+                metadata: metadata || {},
 
                 paymentMetadata: {
                     ...(affiliateCode ? { affiliate_code: affiliateCode } : {}),

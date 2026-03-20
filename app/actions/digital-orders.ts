@@ -116,7 +116,7 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string, 
         // Fetch product details for webhook & notifications
         const product = await db.product.findUnique({
             where: { id: order.productId },
-            select: { name: true, slug: true, externalWebhookUrl: true }
+            select: { name: true, slug: true, externalWebhookUrl: true, price: true, currency: true, interval: true }
         });
 
         // Trigger External Webhook if configured (for SaaS Integration)
@@ -131,7 +131,12 @@ export async function completeDigitalOrder(orderId: string, paymentId?: string, 
                 productName: product.name,
                 amount: order.amount,
                 status: "PAID",
-                licenseKey: licenseResult.success ? licenseResult.license?.key : null
+                licenseKey: licenseResult.success ? licenseResult.license?.key : null,
+                // New fields for transparency
+                price: product.price,
+                currency: product.currency,
+                interval: product.interval || "one_time",
+                metadata: order.metadata || {},
             }).catch(err => console.error("[WEBHOOK_TRIGGER_FAILED]", err));
         }
 

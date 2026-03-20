@@ -454,6 +454,7 @@ model DigitalOrder {
   paymentId       String?
   paymentType     String?
   paymentMetadata Json?
+  metadata        Json?
   licenseId       String?  @unique
   proofUrl        String?
   createdAt       DateTime @default(now())

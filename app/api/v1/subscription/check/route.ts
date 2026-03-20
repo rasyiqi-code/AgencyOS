@@ -81,6 +81,28 @@ export async function GET(request: Request) {
             });
         }
 
+        // Auto-activate license for SaaS products on first check if not already activated
+        if (order.product.type === "saas" && order.license && order.license.activations === 0) {
+            try {
+                await prisma.license.update({
+                    where: { id: order.license.id },
+                    data: {
+                        activations: { increment: 1 },
+                        metadata: {
+                            ...(order.license.metadata as object || {}),
+                            activatedVia: "saas_check",
+                            activatedAt: new Date().toISOString()
+                        }
+                    }
+                });
+                // Update local object for response if needed
+                order.license.activations = 1;
+            } catch (e) {
+                console.error("[AUTO_ACTIVATE_ERROR]", e);
+                // Continue despite error
+            }
+        }
+
         return NextResponse.json({
             active: true,
             orderId: order.id,
@@ -89,6 +111,11 @@ export async function GET(request: Request) {
             purchaseDate: order.createdAt,
             expiresAt: order.license?.expiresAt || null,
             licenseKey: order.license?.key || null,
+            // New fields based on suggestion
+            price: order.product.price,
+            currency: order.product.currency,
+            interval: order.product.interval || "one_time",
+            metadata: order.metadata || {},
         });
 
     } catch (error) {

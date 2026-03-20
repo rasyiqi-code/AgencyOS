@@ -7,7 +7,7 @@ import { SaaSSnippets } from "@/components/public/docs/saas-snippets";
 import { LicenseSnippets } from "@/components/public/docs/license-snippets";
 import { CopySectionButton } from "@/components/public/docs/copy-section-button";
 import { CopyAllButton } from "@/components/public/docs/copy-all-button";
-import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS } from "@/components/public/docs/constants";
+import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS, SAAS_RESPONSE_PAYLOAD } from "@/components/public/docs/constants";
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
@@ -40,8 +40,9 @@ export default async function DocumentationPage({
     // Build Full Documentation Markdown for Copy All
     const buildFullDocs = () => {
         const title = type === 'saas' ? "SaaS & Subscription Integration" : "Licensed Product Verification";
+        const responseSchema = type === 'saas' ? `\n\n### Response Schema\n\`\`\`json\n${SAAS_RESPONSE_PAYLOAD}\n\`\`\`` : '';
         const specificContent = type === 'saas' 
-            ? `## SaaS Integration\nEndpoint: GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${SAAS_SNIPPETS.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${SAAS_SNIPPETS.python}\n\`\`\``
+            ? `## SaaS Integration\nEndpoint: GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${SAAS_SNIPPETS.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${SAAS_SNIPPETS.python}\n\`\`\`${responseSchema}`
             : `## License Verification\nEndpoint: POST /api/public/verify-license\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${LICENSE_SNIPPETS.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${LICENSE_SNIPPETS.python}\n\`\`\``;
 
         return `# ${title}\n\n## 1. Webhook Payload\n\`\`\`json\n${webhookPayload}\n\`\`\`\n\n${specificContent}\n\n## 3. Architecture\nSupported aliases: productSlug, productId, product_slug.`;
@@ -244,6 +245,28 @@ export default async function DocumentationPage({
                                 <div className="p-6 rounded-2xl bg-zinc-900 border border-white/5 space-y-3">
                                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Main Endpoint</div>
                                     <code className="text-xs bg-black/40 p-4 rounded-xl block text-emerald-300">GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG</code>
+                                </div>
+
+                                {/* Response Schema */}
+                                <div className="space-y-4">
+                                    <h3 className="text-xl font-bold text-white">{isId ? "Skema Respons API" : "API Response Schema"}</h3>
+                                    <p className="text-zinc-500 text-sm">
+                                        {isId 
+                                            ? "Request yang berhasil akan mengembalikan data detail langganan berikut:" 
+                                            : "A successful request will return the following subscription details:"}
+                                    </p>
+                                    <div className="bg-black p-6 rounded-2xl border border-white/10 overflow-hidden shadow-xl group relative">
+                                        <pre className="text-xs md:text-sm font-mono text-emerald-400/80 overflow-x-auto selection:bg-brand-yellow/20 leading-relaxed">
+                                            {SAAS_RESPONSE_PAYLOAD}
+                                        </pre>
+                                        <div className="absolute top-4 right-4 group-hover:opacity-100 opacity-0 transition-opacity">
+                                            <CopySectionButton 
+                                                isId={isId} 
+                                                title={isId ? "Respons API" : "API Response"} 
+                                                content={SAAS_RESPONSE_PAYLOAD} 
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <SaaSSnippets isId={isId} />
