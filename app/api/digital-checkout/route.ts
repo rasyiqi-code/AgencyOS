@@ -20,6 +20,8 @@ import { stackServerApp } from "@/lib/config/stack";
 
 
 export async function POST(req: Request) {
+    let productId = "";
+    let userEmail = "";
     try {
         // Enforce Auth
         const user = await stackServerApp.getUser();
@@ -27,9 +29,13 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { productId, email, name, affiliateCode, couponCode, metadata } = await req.json();
+        const body = await req.json();
+        productId = body.productId;
+        const email = body.email;
+        const { name, affiliateCode, couponCode, metadata } = body;
+        
         const userId = user.id; // Override userId from session
-        const userEmail = user.primaryEmail || email; // Prioritize Stack Auth email
+        userEmail = user.primaryEmail || email; // Prioritize Stack Auth email
         const userName = user.displayName || name;
 
 
@@ -112,10 +118,19 @@ export async function POST(req: Request) {
             redirectUrl: `/digital-invoices/${orderId}`
         });
 
-    } catch (error) {
-        console.error("[DIGITAL_CHECKOUT_ERROR]", error);
+    } catch (error: any) {
+        console.error("[DIGITAL_CHECKOUT_ERROR]", {
+            message: error.message,
+            stack: error.stack,
+            productId: productId,
+            userEmail: userEmail,
+            error: error
+        });
         return NextResponse.json(
-            { error: "Terjadi kesalahan saat memproses checkout" },
+            { 
+                error: "Terjadi kesalahan saat memproses checkout",
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+            },
             { status: 500 }
         );
     }
