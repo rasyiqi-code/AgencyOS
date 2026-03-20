@@ -150,16 +150,16 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
                 <CardContent className="space-y-6 pb-8">
                     {/* Info Produk */}
                     <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/5 space-y-4">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <div className="font-bold text-white text-lg">{product.name}</div>
+                        <div className="space-y-4">
+                            <div className="space-y-1">
+                                <div className="font-bold text-white text-xl leading-tight">{product.name}</div>
                                 <div className="text-sm text-zinc-500 capitalize">
                                     {product.purchaseType === "subscription"
                                         ? `Subscription / ${product.interval || "month"}`
                                         : `${ti('oneTime')} ${ti('license')}`}
                                 </div>
                             </div>
-                            <div className="text-2xl font-bold text-white tracking-tight">
+                            <div className="text-3xl font-bold text-white tracking-tight pt-3 border-t border-white/5">
                                 <PriceDisplay amount={amount ?? product.price} />
                             </div>
                         </div>
