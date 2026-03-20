@@ -6,12 +6,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 
-import { SAAS_SNIPPETS } from "./constants";
+import { SAAS_SNIPPETS, SAAS_SNIPPETS_ID } from "./constants";
 
 export function SaaSSnippets({ isId }: { isId: boolean }) {
     const [copied, setCopied] = React.useState(false);
 
-    const snippets = SAAS_SNIPPETS;
+    const snippets = isId ? SAAS_SNIPPETS_ID : SAAS_SNIPPETS;
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);

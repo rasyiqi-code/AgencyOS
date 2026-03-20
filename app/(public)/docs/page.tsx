@@ -7,7 +7,7 @@ import { SaaSSnippets } from "@/components/public/docs/saas-snippets";
 import { LicenseSnippets } from "@/components/public/docs/license-snippets";
 import { CopySectionButton } from "@/components/public/docs/copy-section-button";
 import { CopyAllButton } from "@/components/public/docs/copy-all-button";
-import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS, SAAS_RESPONSE_PAYLOAD } from "@/components/public/docs/constants";
+import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS, SAAS_RESPONSE_PAYLOAD, SAAS_SNIPPETS_ID, LICENSE_SNIPPETS_ID } from "@/components/public/docs/constants";
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
@@ -39,13 +39,34 @@ export default async function DocumentationPage({
 
     // Build Full Documentation Markdown for Copy All
     const buildFullDocs = () => {
-        const title = type === 'saas' ? "SaaS & Subscription Integration" : "Licensed Product Verification";
-        const responseSchema = type === 'saas' ? `\n\n### Response Schema\n\`\`\`json\n${SAAS_RESPONSE_PAYLOAD}\n\`\`\`` : '';
-        const specificContent = type === 'saas' 
-            ? `## SaaS Integration\nEndpoint: GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${SAAS_SNIPPETS.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${SAAS_SNIPPETS.python}\n\`\`\`${responseSchema}`
-            : `## License Verification\nEndpoint: POST /api/public/verify-license\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${LICENSE_SNIPPETS.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${LICENSE_SNIPPETS.python}\n\`\`\``;
+        const titleEn = type === 'saas' ? "SaaS & Subscription Integration" : "Licensed Product Verification";
+        const titleId = type === 'saas' ? "Integrasi SaaS & Langganan" : "Verifikasi Lisensi Produk";
+        const title = isId ? titleId : titleEn;
 
-        return `# ${title}\n\n## 1. Webhook Payload\n\`\`\`json\n${webhookPayload}\n\`\`\`\n\n${specificContent}\n\n## 3. Architecture\nSupported aliases: productSlug, productId, product_slug.`;
+        const responseSchemaEn = type === 'saas' ? `\n\n### Response Schema\n\`\`\`json\n${SAAS_RESPONSE_PAYLOAD}\n\`\`\`` : '';
+        const responseSchemaId = type === 'saas' ? `\n\n### Skema Respons\n\`\`\`json\n${SAAS_RESPONSE_PAYLOAD}\n\`\`\`` : '';
+        const responseSchema = isId ? responseSchemaId : responseSchemaEn;
+
+        const saasSnippets = isId ? SAAS_SNIPPETS_ID : SAAS_SNIPPETS;
+        const licenseSnippets = isId ? LICENSE_SNIPPETS_ID : LICENSE_SNIPPETS;
+
+        const specificContentEn = type === 'saas' 
+            ? `## SaaS Integration\nEndpoint: GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${saasSnippets.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${saasSnippets.python}\n\`\`\`${responseSchema}`
+            : `## License Verification\nEndpoint: POST /api/public/verify-license\n\n### Snippets\n\n#### Next.js\n\`\`\`typescript\n${licenseSnippets.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${licenseSnippets.python}\n\`\`\``;
+
+        const specificContentId = type === 'saas' 
+            ? `## Integrasi SaaS\nEndpoint: GET /api/v1/subscription/check?email=USER_EMAIL&productSlug=YOUR_SLUG\n\n### Contoh Kode\n\n#### Next.js\n\`\`\`typescript\n${saasSnippets.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${saasSnippets.python}\n\`\`\`${responseSchema}`
+            : `## Verifikasi Lisensi\nEndpoint: POST /api/public/verify-license\n\n### Contoh Kode\n\n#### Next.js\n\`\`\`typescript\n${licenseSnippets.nextjs}\n\`\`\`\n\n#### Python\n\`\`\`python\n${licenseSnippets.python}\n\`\`\``;
+
+        const specificContent = isId ? specificContentId : specificContentEn;
+
+        const archEn = "## 3. Architecture\nSupported aliases: productSlug, productId, product_slug.";
+        const archId = "## 3. Arsitektur\nAlias didukung: productSlug, productId, product_slug.";
+        const arch = isId ? archId : archEn;
+
+        const webhookTitle = isId ? "1. Payload Webhook" : "1. Webhook Payload";
+
+        return `# ${title}\n\n## ${webhookTitle}\n\`\`\`json\n${webhookPayload}\n\`\`\`\n\n${specificContent}\n\n${arch}`;
     };
 
     const fullDocumentation = buildFullDocs();
