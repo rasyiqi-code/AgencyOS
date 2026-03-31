@@ -71,10 +71,18 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
 
     // Fix: Convert to USD if Service is in IDR
     if (extendedEstimate.service?.currency === 'IDR') {
-        const { rate } = await paymentService.convertToIDR(1);
+        // Use order's exchange rate if available, otherwise get current rate
+        const rate = (order.exchangeRate && order.exchangeRate > 1)
+            ? order.exchangeRate
+            : (await paymentService.convertToIDR(1)).rate;
+
         // Avoid division by zero
         if (rate > 0) {
             extendedEstimate.totalCost = extendedEstimate.totalCost / rate;
+            // Normalize currency to USD to avoid double conversion in InvoiceDocument
+            if (extendedEstimate.service) {
+                extendedEstimate.service.currency = 'USD';
+            }
         }
     }
 
