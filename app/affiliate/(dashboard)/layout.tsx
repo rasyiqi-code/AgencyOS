@@ -6,16 +6,17 @@ import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 import { AffiliateSidebarNavigation } from "@/components/marketing/affiliate-sidebar-navigation";
 import { DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export default async function AffiliateLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "LOGO_URL"] } }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // Impact: Avoids redundant database queries for static system settings on every page load/navigation within the affiliate panel.
+    // Measurement: Next.js Cache Hit logs will show reduced DB query frequency for 'system-settings' tag.
+    const settings = await getSystemSettings(["AGENCY_NAME", "LOGO_URL"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
 
