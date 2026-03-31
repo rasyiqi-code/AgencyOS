@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
 import { fetchRenderedHtml } from "@/lib/server/cloudflare-rendering";
+import { secureRandomAlphanumeric } from "@/lib/utils/crypto";
 
 const DATA_DIR = path.join(process.cwd(), "data/portfolios");
 const MANIFEST_PATH = path.join(DATA_DIR, "manifest.json");
@@ -50,7 +51,7 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
     await ensureDirs();
     const portfolios = await getPortfolios();
 
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = secureRandomAlphanumeric(7);
     const newItem: PortfolioItem = {
         ...item,
         id,

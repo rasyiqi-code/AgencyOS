@@ -7,6 +7,7 @@ import { paymentService } from "@/lib/server/payment-service";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
 import { cookies } from "next/headers";
+import { secureRandomInt } from "@/lib/utils/crypto";
 
 export async function POST(req: Request) {
     const debugSteps: string[] = [];
@@ -242,7 +243,7 @@ export async function POST(req: Request) {
 
         debugSteps.push("Creating new order ID");
         // Create a unique order ID
-        const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        const orderId = `ORDER-${Date.now()}-${secureRandomInt(0, 1000)}`;
 
         let snapToken = null;
 
