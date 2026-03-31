@@ -66,25 +66,30 @@ export async function POST(
             return NextResponse.json({ error: "Invalid mood" }, { status: 400 });
         }
 
-        const uploadedUrls: string[] = [];
+        let uploadedUrls: string[] = [];
 
         if (files && files.length > 0) {
             const { uploadFile } = await import("@/lib/integrations/storage");
 
-            for (const file of files) {
+            const uploadPromises = files.map(async (file, index) => {
                 if (file.size > 0 && file.name !== 'undefined') {
                     try {
                         // sanitize filename for safety
                         const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-                        const path = `projects/${projectId}/daily-updates/${Date.now()}-${safeName}`;
-                        const url = await uploadFile(file, path);
-                        uploadedUrls.push(url);
+                        // Use index to ensure uniqueness even if Date.now() is the same
+                        const path = `projects/${projectId}/daily-updates/${Date.now()}-${index}-${safeName}`;
+                        return await uploadFile(file, path);
                     } catch (uploadError) {
                         console.error("Failed to upload file:", file.name, uploadError);
                         // Continue uploading others or fail? Let's log warning and continue for now
+                        return null;
                     }
                 }
-            }
+                return null;
+            });
+
+            const results = await Promise.all(uploadPromises);
+            uploadedUrls = results.filter((url): url is string => url !== null);
         }
 
         const log = await prisma.dailyLog.create({
