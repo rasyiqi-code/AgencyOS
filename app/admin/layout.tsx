@@ -10,15 +10,17 @@ import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wr
 import { prisma } from "@/lib/config/db";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "LOGO_URL"] } }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // Impact: Avoids redundant database queries for static system settings on every page load/navigation within the admin panel.
+    // Measurement: Next.js Cache Hit logs will show reduced DB query frequency for 'system-settings' tag.
+    const settings = await getSystemSettings(["AGENCY_NAME", "LOGO_URL"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
 

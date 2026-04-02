@@ -118,10 +118,10 @@ export async function POST(req: Request) {
             redirectUrl: `/digital-invoices/${orderId}`
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("[DIGITAL_CHECKOUT_ERROR]", {
-            message: error.message,
-            stack: error.stack,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
             productId: productId,
             userEmail: userEmail,
             error: error
@@ -129,7 +129,7 @@ export async function POST(req: Request) {
         return NextResponse.json(
             { 
                 error: "Terjadi kesalahan saat memproses checkout",
-                details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+                details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
             },
             { status: 500 }
         );
