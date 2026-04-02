@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 import { cookies } from "next/headers";
 import Image from "next/image";
@@ -10,9 +11,8 @@ export async function SiteFooter() {
     const t = await getTranslations("Footer");
     const locale = await getLocale();
 
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"]);
     const agencyName = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const companyName = settings.find((s: { key: string; value: string }) => s.key === "COMPANY_NAME")?.value || "AgencyOS";
     const logoUrl = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO")?.value;

@@ -1,12 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function ExpertProfile() {
     const t = await getTranslations("Expert");
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (

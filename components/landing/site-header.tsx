@@ -7,7 +7,7 @@ import { Check, User, LogIn, Rocket } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
 
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function SiteHeader() {
     const user = await stackServerApp.getUser();
@@ -41,9 +41,8 @@ export async function SiteHeader() {
 
     // Fetch Logo
     // Fetch Logo & Brand
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"]);
     const logoUrl = settings.find(s => s.key === "AGENCY_LOGO")?.value;
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const displayMode = settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both"; // 'both', 'logo', 'text'

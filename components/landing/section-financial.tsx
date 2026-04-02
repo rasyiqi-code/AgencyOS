@@ -1,13 +1,12 @@
 import { Check, X, Info, Building2, Rocket } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function FinancialLogic() {
     const t = await getTranslations("Financial");
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return (

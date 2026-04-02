@@ -1,12 +1,11 @@
 import { HeroContent } from "@/components/landing/hero-content";
-import { prisma } from "@/lib/config/db";
 import { SystemSetting } from "@prisma/client";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function LandingHero() {
     // Fetch Agency Name
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (
