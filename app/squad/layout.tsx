@@ -5,7 +5,7 @@ import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 import { SquadSidebarNavigation } from "@/components/squad/sidebar-navigation";
 import { DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 import Image from "next/image";
 
 export default async function SquadLayout({
@@ -13,9 +13,9 @@ export default async function SquadLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "LOGO_URL"] } }
-    });
+    // ⚡ Bolt: Cache global settings queries
+    // Expected impact: Prevents redundant database queries on every render and avoids N+1 queries during SSR
+    const settings = await getSystemSettings(["AGENCY_NAME", "LOGO_URL"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
     const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
 
