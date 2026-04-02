@@ -2,6 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { notifyNewAffiliate } from "@/lib/email/admin-notifications";
+import { secureRandomInt } from "@/lib/utils/crypto";
 
 export async function POST() {
     try {
@@ -22,7 +23,7 @@ export async function POST() {
         // Generate Referral Code
         // Simple strategy: First name + random number
         const namePart = (user.displayName || "user").split(" ")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
-        let referralCode = `${namePart}${Math.floor(Math.random() * 1000)}`;
+        let referralCode = `${namePart}${secureRandomInt(0, 1000)}`;
 
         // Ensure uniqueness (dengan batas retry untuk mencegah infinite loop)
         const MAX_RETRIES = 10;
@@ -39,7 +40,7 @@ export async function POST() {
             if (!check) {
                 isUnique = true;
             } else {
-                referralCode = `${namePart}${Math.floor(Math.random() * 100000)}`;
+                referralCode = `${namePart}${secureRandomInt(0, 100000)}`;
                 retries++;
             }
         }

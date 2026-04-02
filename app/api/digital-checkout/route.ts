@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { validateCoupon } from "@/lib/server/marketing";
 import { stackServerApp } from "@/lib/config/stack";
+import { secureRandomInt } from "@/lib/utils/crypto";
 
 /**
  * API Route: POST /api/digital-checkout
@@ -76,7 +77,7 @@ export async function POST(req: Request) {
         }
 
         // Buat ID order unik dengan prefix DIGI- agar bisa dibedakan di webhook
-        const orderId = `DIGI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        const orderId = `DIGI-${Date.now()}-${secureRandomInt(0, 1000)}`;
 
         // Handle Coupon
         let finalAmount = product.price;
