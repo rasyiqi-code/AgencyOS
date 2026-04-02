@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
 import { TestimonialCard } from "./testimonial-card";
+import { getSystemSettings } from "@/lib/server/settings";
 
 interface DBTestimonial {
     id: string;
@@ -14,9 +15,8 @@ interface DBTestimonial {
 
 export async function Testimonials() {
     const t = await getTranslations("Testimonials");
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     // Fetch active testimonials from DB
