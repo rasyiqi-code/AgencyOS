@@ -83,7 +83,6 @@ export function InstallPrompt() {
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();
             deferredPromptRef.current = e as BeforeInstallPromptEvent;
-            console.log("[PWA] beforeinstallprompt event captured");
             // Tampilkan banner setelah delay singkat (UX lebih baik)
             setTimeout(() => setIsVisible(true), 2000);
         };
@@ -96,7 +95,6 @@ export function InstallPrompt() {
             setIsInstalled(true);
             setIsVisible(false);
             deferredPromptRef.current = null;
-            console.log("[PWA] Aplikasi berhasil diinstall!");
         };
 
         window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -126,13 +124,7 @@ export function InstallPrompt() {
             // Chrome modern: prompt() langsung return {outcome, platform}
             // Chrome lama: prompt() return void, pakai userChoice
             const result = await prompt.prompt();
-            const choice = result ?? (await prompt.userChoice);
-
-            if (choice.outcome === "accepted") {
-                console.log("[PWA] User menerima install prompt");
-            } else {
-                console.log("[PWA] User menolak install prompt");
-            }
+            await (result ?? prompt.userChoice);
         } catch (error) {
             console.error("[PWA] Error saat menampilkan prompt:", error);
         } finally {
