@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 // Singleton to avoid re-initializing
 let s3ClientInstance: S3Client | null = null;
@@ -7,11 +7,8 @@ let s3BucketName: string | null = null;
 let s3ConfigHash: string | null = null;
 
 export async function getClient() {
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name'] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name']);
 
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
 
@@ -118,8 +115,9 @@ export async function uploadFile(
             ContentType: finalContentType,
         }));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+        const settings = await getSystemSettings(['r2_public_domain']);
+        const publicDomain = settings.find(s => s.key === 'r2_public_domain')?.value;
 
         if (publicDomain) {
             let domain = publicDomain.trim();
@@ -147,8 +145,9 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
         const response = await client.send(command);
         const files = (response.Contents || []).filter(item => item.Key && !item.Key.endsWith('/'));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+        const settings = await getSystemSettings(['r2_public_domain']);
+        const publicDomain = settings.find(s => s.key === 'r2_public_domain')?.value;
 
         let domain = '';
         if (publicDomain) {

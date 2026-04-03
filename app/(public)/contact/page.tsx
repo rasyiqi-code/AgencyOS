@@ -7,6 +7,7 @@ import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 
 import { ResolvingMetadata } from "next";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
@@ -65,9 +66,8 @@ export async function generateMetadata(
 }
 
 export default async function ContactPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "CONTACT_HOURS"] } }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    const settings = await getSystemSettings(["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "CONTACT_HOURS"]);
 
     const info = {
         email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,
