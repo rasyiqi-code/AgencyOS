@@ -1,5 +1,4 @@
 import React from 'react';
-import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 import { Key, Share2, ShieldCheck, Layers, Cpu, ArrowLeft, ExternalLink } from "lucide-react";
@@ -8,6 +7,7 @@ import { LicenseSnippets } from "@/components/public/docs/license-snippets";
 import { CopySectionButton } from "@/components/public/docs/copy-section-button";
 import { CopyAllButton } from "@/components/public/docs/copy-all-button";
 import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS, SAAS_RESPONSE_PAYLOAD, SAAS_SNIPPETS_ID, LICENSE_SNIPPETS_ID } from "@/components/public/docs/constants";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
@@ -31,9 +31,8 @@ export default async function DocumentationPage({
     const params = await searchParams;
     const type = params.type;
 
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    const settings = await getSystemSettings(["COMPANY_NAME"]);
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
     const webhookPayload = WEBHOOK_PAYLOAD;
 

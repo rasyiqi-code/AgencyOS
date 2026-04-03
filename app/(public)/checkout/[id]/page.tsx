@@ -8,6 +8,7 @@ import { ExtendedEstimate } from "@/lib/shared/types";
 import { getBonuses } from "@/lib/server/marketing";
 import { Bonus } from "@/lib/shared/types";
 import { SystemSetting } from "@prisma/client";
+import { getSystemSettings } from "@/lib/server/settings";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -92,9 +93,12 @@ export default async function CheckoutPage(props: PageProps) {
         // Fetch dependencies for Service Checkout
         const user = await stackServerApp.getUser();
 
-        const settings = await prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'] } }
-        });
+        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+        const settings = await getSystemSettings([
+            'bank_name', 'bank_account', 'bank_holder',
+            'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS',
+            'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'
+        ]);
         const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
 
         const context = (estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE";
