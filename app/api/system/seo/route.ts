@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getSystemSettings } from "@/lib/server/settings";
 
 const SEO_TITLE_KEY = "SEO_TITLE";
 const SEO_TITLE_ID_KEY = "SEO_TITLE_ID";
@@ -16,11 +17,14 @@ const SEO_GOOGLE_VERIFICATION_KEY = "SEO_GOOGLE_VERIFICATION";
 const SEO_GA_ID_KEY = "SEO_GA_ID";
 
 export async function GET() {
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: [SEO_TITLE_KEY, SEO_TITLE_ID_KEY, SEO_DESCRIPTION_KEY, SEO_DESCRIPTION_ID_KEY, SEO_KEYWORDS_KEY, SEO_KEYWORDS_ID_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY, SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use cached settings instead of direct DB query
+    // 🎯 Why: Prevents unnecessary database queries for static settings
+    // 📊 Impact: Eliminates a database query during page loads, reducing SSR time and DB load
+    const settings = await getSystemSettings([
+        SEO_TITLE_KEY, SEO_TITLE_ID_KEY, SEO_DESCRIPTION_KEY, SEO_DESCRIPTION_ID_KEY,
+        SEO_KEYWORDS_KEY, SEO_KEYWORDS_ID_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY,
+        SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY
+    ]);
 
     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
 
