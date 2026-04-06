@@ -1,10 +1,12 @@
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function uploadFileMock(file: any, path: string) {
     // simulate 100ms delay to represent network latency
     await new Promise(resolve => setTimeout(resolve, 100));
     return `https://example.com/${path}`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function sequential(files: any[], projectId: string) {
     const start = performance.now();
     const uploadedUrls: string[] = [];
@@ -24,6 +26,7 @@ async function sequential(files: any[], projectId: string) {
     return end - start;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function parallel(files: any[], projectId: string) {
     const start = performance.now();
     const uploadPromises = files.map(async (file) => {

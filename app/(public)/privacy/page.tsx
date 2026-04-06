@@ -1,6 +1,7 @@
 import React from 'react';
 import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
+import { getSystemSettings } from "@/lib/server/settings";
 import { Metadata } from "next";
 
 import { ResolvingMetadata } from "next";
@@ -58,9 +59,8 @@ export async function generateMetadata(
 }
 
 export default async function PrivacyPolicyPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
 

@@ -19,6 +19,7 @@ export const WEBHOOK_PAYLOAD = `{
   }
 }`;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://crediblemark.com";
 
 export const SAAS_RESPONSE_PAYLOAD = `{

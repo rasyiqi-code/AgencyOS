@@ -1,6 +1,6 @@
 import React from 'react';
-import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
+import { getSystemSettings } from "@/lib/server/settings";
 import { Metadata } from "next";
 import { Key, Share2, ShieldCheck, Layers, Cpu, ArrowLeft, ExternalLink } from "lucide-react";
 import { SaaSSnippets } from "@/components/public/docs/saas-snippets";
@@ -31,9 +31,8 @@ export default async function DocumentationPage({
     const params = await searchParams;
     const type = params.type;
 
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
+    const settings = await getSystemSettings(["COMPANY_NAME"]);
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
     const webhookPayload = WEBHOOK_PAYLOAD;
 
