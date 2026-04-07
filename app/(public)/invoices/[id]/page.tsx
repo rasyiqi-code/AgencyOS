@@ -6,6 +6,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { paymentService } from "@/lib/server/payment-service";
 import type { InvoiceOrder } from "@/types/payment";
+import { getSystemSettings } from "@/lib/server/settings";
 
 async function getOrder(id: string) {
     return await prisma.order.findUnique({
@@ -100,9 +101,10 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
 
     // Fetch System Settings for Bank and Agency
     const [settings, hasActiveGateway] = await Promise.all([
-        prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'] } }
-        }),
+        // ⚡ Bolt Optimization: Replace direct DB query with cached getSystemSettings
+        // 🎯 Why: Prevents N+1 database queries during SSR across the component tree
+        // 📊 Impact: Significantly reduces database load and improves page generation time
+        getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']),
         paymentGatewayService.hasActiveGateway()
     ]);
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;

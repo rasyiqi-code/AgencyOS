@@ -4,6 +4,7 @@ import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 
 import { ResolvingMetadata } from "next";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
@@ -58,9 +59,10 @@ export async function generateMetadata(
 }
 
 export default async function TermsPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Replace direct DB query with cached getSystemSettings
+    // 🎯 Why: Prevents N+1 database queries during SSR across the component tree
+    // 📊 Impact: Significantly reduces database load and improves page generation time
+    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
 
