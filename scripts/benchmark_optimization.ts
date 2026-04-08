@@ -1,11 +1,11 @@
 
-async function uploadFileMock(file: any, path: string) {
+async function uploadFileMock(file: {size: number, name: string}, path: string) {
     // simulate 100ms delay to represent network latency
     await new Promise(resolve => setTimeout(resolve, 100));
     return `https://example.com/${path}`;
 }
 
-async function sequential(files: any[], projectId: string) {
+async function sequential(files: {size: number, name: string}[], projectId: string) {
     const start = performance.now();
     const uploadedUrls: string[] = [];
     for (const file of files) {
@@ -24,7 +24,7 @@ async function sequential(files: any[], projectId: string) {
     return end - start;
 }
 
-async function parallel(files: any[], projectId: string) {
+async function parallel(files: {size: number, name: string}[], projectId: string) {
     const start = performance.now();
     const uploadPromises = files.map(async (file) => {
         if (file.size > 0 && file.name !== 'undefined') {
@@ -43,6 +43,7 @@ async function parallel(files: any[], projectId: string) {
     });
 
     const results = await Promise.all(uploadPromises);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const uploadedUrls = results.filter((url): url is string => url !== null);
     const end = performance.now();
     return end - start;
