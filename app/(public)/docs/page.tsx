@@ -8,6 +8,7 @@ import { LicenseSnippets } from "@/components/public/docs/license-snippets";
 import { CopySectionButton } from "@/components/public/docs/copy-section-button";
 import { CopyAllButton } from "@/components/public/docs/copy-all-button";
 import { WEBHOOK_PAYLOAD, SAAS_SNIPPETS, LICENSE_SNIPPETS, SAAS_RESPONSE_PAYLOAD, SAAS_SNIPPETS_ID, LICENSE_SNIPPETS_ID } from "@/components/public/docs/constants";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
@@ -31,9 +32,10 @@ export default async function DocumentationPage({
     const params = await searchParams;
     const type = params.type;
 
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Prevents redundant DB queries for global settings across the component tree during SSR (N+1 query problem).
+    // 📊 Impact: Faster SSR and reduced database load.
+    const settings = await getSystemSettings(["COMPANY_NAME"]);
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
     const webhookPayload = WEBHOOK_PAYLOAD;
 
