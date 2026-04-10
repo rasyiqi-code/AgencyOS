@@ -6,7 +6,6 @@ import { Terminal, MessageSquare, Activity, Calendar, Clock } from "lucide-react
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import StatusSelector from "./status-selector"; // Same folder import
 import { TechnicalAssetManager } from "./asset-manager";
-// import { DeveloperSelector } from "./developer-selector"; // Removed
 import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
 import { ProjectHeader } from "@/components/dashboard/missions/header";
 import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
