@@ -235,7 +235,7 @@ async function handleProjectOrderWebhook(
         notifyPaymentSuccess({
             orderId: order.id,
             amount: order.amount,
-            customerName: "Client", // TODO: Fetch from Project if needed
+            customerName: order.project?.clientName || "Client",
             type: "SERVICE"
         }).catch(err => console.error("Failed to send admin notification:", err));
     }
