@@ -13,7 +13,7 @@ import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
 import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
 import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
 import { Badge } from "@/components/ui/badge";
-import { type ExtendedProject, type ProjectFile } from "@/lib/shared/types";
+import { type ExtendedProject, type ProjectFile, type ExtendedSquadProfile } from "@/lib/shared/types";
 import { PreviewUploader } from "./preview-uploader";
 import { FileManager } from "./file-manager";
 import { FeedbackBoard } from "@/components/feedback/board";
@@ -60,9 +60,9 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
     });
 
     // Map with status so we can display it
-    const team = teamApplications.map(app => ({
+    const team: ExtendedSquadProfile[] = teamApplications.map(app => ({
         ...app.squad,
-        applicationStatus: app.status // Hack: Injecting status into the profile object for UI usage (needs type adjustment or loose typing in component) 
+        applicationStatus: app.status
     }));
 
     return (

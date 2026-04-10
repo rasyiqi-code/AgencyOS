@@ -1,5 +1,10 @@
 
 import { z } from "zod";
+import type { SquadProfile } from "@prisma/client";
+
+export interface ExtendedSquadProfile extends SquadProfile {
+    applicationStatus?: string;
+}
 
 export interface ProjectFile {
     name: string;
