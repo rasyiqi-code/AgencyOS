@@ -4,7 +4,6 @@
 import { User, Github, UserCheck, XCircle } from "lucide-react";
 import { DeveloperSelector } from "./developer-selector";
 import { SquadProfile } from "@prisma/client";
-// import Image from "next/image";
 
 interface AssignedTeamCardProps {
     projectId: string;
