@@ -23,7 +23,8 @@ export function enhanceHtml(html: string, url: string, localBaseUrl?: string): s
         enhancedHtml = enhancedHtml.replace(/(href|src)="\/([^/][^"]+\.(?:woff2?|ttf|otf)(?:\?.*)?)"/g, `$1="${proxyUrl}${origin}/$2"`);
         
         // 2. Wrap absolute external fonts in absolute Proxy
-        const fontRegex = /(href|src)="(https?:\/\/[^"]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)"/g;
+        // Avoid double wrapping if it's already wrapped in the proxy URL
+        const fontRegex = /(href|src)="(https?:\/\/(?!localhost:3000\/api\/proxy|[^"]*api\/proxy)[^"]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)"/g;
         enhancedHtml = enhancedHtml.replace(fontRegex, `$1="${proxyUrl}$2"`);
 
         // 3. Rewrite url() patterns in internal <style> blocks
