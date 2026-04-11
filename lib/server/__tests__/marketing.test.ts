@@ -1,5 +1,13 @@
 import { describe, expect, it, mock, beforeEach } from "bun:test";
 
+// Mock next/cache
+mock.module("next/cache", () => {
+    return {
+        revalidatePath: mock(),
+        unstable_cache: (fn: any) => fn
+    };
+});
+
 // Mock prisma client
 mock.module("@/lib/config/db", () => {
     return {

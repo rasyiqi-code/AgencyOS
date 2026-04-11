@@ -1,15 +1,12 @@
-import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function GET() {
     try {
-        const settings = await prisma.systemSetting.findMany({
-            where: {
-                key: {
-                    in: ["AGENCY_NAME"]
-                }
-            }
-        });
+        // ⚡ Bolt Optimization: Replaced direct Prisma query with cached getSystemSettings
+        // 🎯 Why: Prevent redundant database queries for static system settings
+        // 📊 Impact: Reduces database load and speeds up API response time
+        const settings = await getSystemSettings(["AGENCY_NAME"]);
 
         const settingsMap = settings.reduce((acc, curr) => {
             acc[curr.key] = curr.value;
