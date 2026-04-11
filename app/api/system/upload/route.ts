@@ -13,6 +13,18 @@ export async function POST(req: NextRequest) {
 
         if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
+        // Validate file type
+        const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+        if (!allowedTypes.includes(file.type)) {
+            return NextResponse.json({ error: "Invalid file type. Only images are allowed." }, { status: 400 });
+        }
+
+        // Validate file size (e.g., max 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            return NextResponse.json({ error: "File too large. Maximum size is 5MB." }, { status: 400 });
+        }
+
         // Use a clean filename for R2
         const timestamp = Date.now();
         const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
