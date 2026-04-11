@@ -1,10 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { redirect, notFound } from "next/navigation";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-// import { updateService } from "@/app/actions/admin";
-// import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
-// import { ServiceImageUpload } from "@/components/admin/services/image-upload";
-// import { SubmitButton } from "@/components/admin/submit-button";
 import { EditServiceForm, type ServiceData } from "@/components/admin/services/edit-service-form";
 
 export default async function EditServicePage({ params }: { params: Promise<{ id: string }> }) {
