@@ -13,7 +13,12 @@ const updateProjectSchema = z.object({
     deployUrl: z.string().optional().nullable(),
     developerId: z.string().optional().nullable(),
     previewUrl: z.string().optional().nullable(),
-    files: z.any().optional(),
+    files: z.array(z.object({
+        name: z.string(),
+        url: z.string(),
+        type: z.string(),
+        uploadedAt: z.string()
+    })).optional(),
     bounty: z.number().optional().nullable(),
 });
 
