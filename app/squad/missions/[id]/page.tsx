@@ -8,7 +8,7 @@ import { ServiceFeaturesList } from "@/components/dashboard/shared/service-featu
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { FileManager } from "@/app/admin/pm/[id]/file-manager";
 import { SafeImage } from "@/components/ui/safe-image";
-import { ProjectFile } from "@/lib/shared/types";
+import { ProjectFile, ExtendedSquadProfile } from "@/lib/shared/types";
 import { ProjectPreview } from "@/components/dashboard/missions/project-preview";
 import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
 import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
@@ -87,7 +87,7 @@ export default async function MissionDetailPage({ params }: PageProps) {
     const invitedTeam = teamApplications.filter(app => app.status === 'invited').map(app => app.squad);
 
     // Full team for card display (with status injected)
-    const team = teamApplications.map(app => ({
+    const team: ExtendedSquadProfile[] = teamApplications.map(app => ({
         ...app.squad,
         applicationStatus: app.status
     }));

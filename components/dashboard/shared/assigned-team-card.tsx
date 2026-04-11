@@ -4,6 +4,7 @@
 import { User, Github, UserCheck, XCircle } from "lucide-react";
 import { DeveloperSelector } from "./developer-selector";
 import { SquadProfile } from "@prisma/client";
+import type { ExtendedSquadProfile } from "@/lib/shared/types";
 // import Image from "next/image";
 
 interface AssignedTeamCardProps {
@@ -25,9 +26,9 @@ export function AssignedTeamCard({
     repoName,
     repoUrl,
     isEditable = false,
-}: AssignedTeamCardProps & { team?: (SquadProfile & { applicationStatus?: string })[] }) {
+}: AssignedTeamCardProps & { team?: ExtendedSquadProfile[] }) {
     // Combine single profile if exists and team is empty (migration path)
-    const effectiveTeam = (team.length > 0 ? team : (assignedProfile ? [assignedProfile] : [])) as (SquadProfile & { applicationStatus?: string })[];
+    const effectiveTeam = (team.length > 0 ? team : (assignedProfile ? [assignedProfile] : [])) as ExtendedSquadProfile[];
 
     return (
         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
