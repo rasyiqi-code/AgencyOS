@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 const RESEND_KEY_DB_KEY = "RESEND_API_KEY";
 const ADMIN_EMAIL_DB_KEY = "ADMIN_EMAIL_TARGET";
@@ -9,6 +10,10 @@ const ADMIN_EMAIL_DB_KEY = "ADMIN_EMAIL_TARGET";
 export async function GET() {
     const user = await stackServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const settings = await prisma.systemSetting.findMany({
         where: {
@@ -27,6 +32,10 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     const user = await stackServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     try {
         const body = await req.json();
