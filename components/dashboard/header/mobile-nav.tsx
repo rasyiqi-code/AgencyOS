@@ -13,7 +13,7 @@ import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/n
 import Link from "next/link";
 import Image from "next/image";
 
-import { UserButton } from "@stackframe/stack";
+import { UserButton, useUser } from "@stackframe/stack";
 
 interface MobileNavProps {
     agencyName: string;
@@ -23,6 +23,14 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavProps) {
+    const user = useUser();
+    const mockUserFallback = user?.profileImageUrl === "" ? {
+        ...user,
+        displayName: user.displayName || undefined,
+        primaryEmail: user.primaryEmail || undefined,
+        profileImageUrl: undefined
+    } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string } : undefined;
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -54,7 +62,7 @@ export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavPr
                             </span>
                         </Link>
                     </SheetTitle>
-                    <UserButton />
+                    <UserButton mockUser={mockUserFallback} />
                 </SheetHeader>
 
                 <div className="flex-1 overflow-y-auto py-6 px-3">

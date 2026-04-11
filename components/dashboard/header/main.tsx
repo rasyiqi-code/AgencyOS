@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@stackframe/stack";
+import { UserButton, useUser } from "@stackframe/stack";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -35,7 +35,13 @@ export function DashboardHeader({
     const t = useTranslations("Common");
 
     // Fix for Stack Auth bug: empty string profile image causes browser error
-
+    const user = useUser();
+    const mockUserFallback = user?.profileImageUrl === "" ? {
+        ...user,
+        displayName: user.displayName || undefined,
+        primaryEmail: user.primaryEmail || undefined,
+        profileImageUrl: undefined
+    } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string } : undefined;
 
     // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
     const cleanPath = pathname.replace(/^\/(en|id)/, "") || "/";
@@ -84,7 +90,7 @@ export function DashboardHeader({
 
             <div className="flex items-center gap-2 shrink-0">
                 <div className="hidden md:block">
-                    <UserButton />
+                    <UserButton mockUser={mockUserFallback} />
                 </div>
 
                 {/* Desktop Switchers */}
