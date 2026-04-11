@@ -75,17 +75,27 @@ export async function GET(request: Request) {
         });
 
         // 2. Enrich Projects with Client Names from Stack Auth
-        const uniqueUserIds = Array.from(new Set(projects.map(p => p.userId).filter(Boolean)));
-        const stackUsers = await Promise.all(
-            uniqueUserIds.map(async (id) => {
-                try {
-                    return await stackServerApp.getUser(id);
-                } catch (e) {
-                    console.error(`Failed to fetch user ${id} in getProjects`, e);
-                    return null;
-                }
-            })
-        );
+        // ⚡ Bolt Optimization: Only fetch users that don't already have a clientName natively tracked in Prisma.
+        // Note: The external API (@stackframe/stack) does not support a batched fetch method (e.g. getUsers(ids)).
+        // 🎯 Why: Mitigates the N+1 network request pattern inherently. New projects structurally have clientName set in POST.
+        // 📊 Impact: Reduces external API network calls to O(0) in the steady state.
+        const missingClientNameProjects = projects.filter((p) => !p.clientName && p.userId);
+        const uniqueUserIds = Array.from(new Set(missingClientNameProjects.map(p => p.userId)));
+
+        let stackUsers: Array<{ id: string; displayName?: string | null; primaryEmail?: string | null } | null> = [];
+        if (uniqueUserIds.length > 0) {
+            stackUsers = await Promise.all(
+                uniqueUserIds.map(async (id) => {
+                    try {
+                        return await stackServerApp.getUser(id);
+                    } catch (e) {
+                        console.error(`Failed to fetch user ${id} in getProjects`, e);
+                        return null;
+                    }
+                })
+            );
+        }
+
         const userMap = new Map(stackUsers.filter(Boolean).map(u => [u!.id, u]));
 
         const enrichedProjects = projects.map((p) => {
@@ -116,9 +126,11 @@ export async function POST(request: Request) {
         const body = createProjectSchema.parse(json);
 
         // Create Project and Initial Brief in one transaction
+        // ⚡ Bolt Optimization: Save clientName on creation to inherently resolve N+1 API fetching in GET method
         const project = await prisma.project.create({
             data: {
                 userId: user.id,
+                clientName: user.displayName || user.primaryEmail || "Unnamed Client",
                 title: body.title,
                 description: body.description,
                 briefs: {
