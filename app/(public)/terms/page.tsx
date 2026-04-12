@@ -2,6 +2,7 @@ import React from 'react';
 import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
+import { getSystemSettings } from "@/lib/server/settings";
 
 import { ResolvingMetadata } from "next";
 
@@ -58,9 +59,10 @@ export async function generateMetadata(
 }
 
 export default async function TermsPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Use shared cache utility for fetching basic agency details
+    // 🎯 Why: Mitigates direct database lookups for invariant strings on high-traffic content pages
+    // 📊 Impact: Decreased database load during high concurrency traffic on Terms page
+    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
 
