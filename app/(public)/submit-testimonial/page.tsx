@@ -4,6 +4,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
+import { getSystemSettings } from "@/lib/server/settings";
 
 import { ResolvingMetadata } from "next";
 
@@ -71,9 +72,11 @@ export default async function SubmitTestimonialPage() {
     let agencyName = "AgencyOS";
 
     try {
-        const setting = await prisma.systemSetting.findFirst({
-            where: { key: "AGENCY_NAME" }
-        });
+        // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+        // 🎯 Why: Prevents redundant DB queries for global settings during SSR
+        // 📊 Impact: Reduces DB load and improves page response time
+        const settings = await getSystemSettings(["AGENCY_NAME"]);
+        const setting = settings.find(s => s.key === "AGENCY_NAME");
         if (setting?.value) {
             agencyName = setting.value;
         }

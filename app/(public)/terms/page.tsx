@@ -2,6 +2,7 @@ import React from 'react';
 import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
+import { getSystemSettings } from "@/lib/server/settings";
 
 import { ResolvingMetadata } from "next";
 
@@ -58,9 +59,10 @@ export async function generateMetadata(
 }
 
 export default async function TermsPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME", "COMPANY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Prevents redundant DB queries for global settings during SSR
+    // 📊 Impact: Reduces DB load and improves page response time
+    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
     const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
 

@@ -2,6 +2,7 @@ import { ClientDashboardContent } from "@/components/public/client-dashboard-con
 import { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -50,9 +51,10 @@ export async function generateMetadata(
 }
 
 export default async function ClientDashboardPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["AGENCY_NAME"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Prevents redundant DB queries for global settings during SSR
+    // 📊 Impact: Reduces DB load and improves page response time
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return <ClientDashboardContent agencyName={agencyName} />;

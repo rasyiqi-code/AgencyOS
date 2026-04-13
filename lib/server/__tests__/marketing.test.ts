@@ -1,5 +1,14 @@
 import { describe, expect, it, mock, beforeEach } from "bun:test";
 
+// Mock next/cache
+mock.module("next/cache", () => {
+    return {
+        revalidatePath: mock(),
+        revalidateTag: mock(),
+        unstable_cache: (fn: unknown) => fn
+    };
+});
+
 // Mock prisma client
 mock.module("@/lib/config/db", () => {
     return {
@@ -11,23 +20,24 @@ mock.module("@/lib/config/db", () => {
     };
 });
 
-import { validateCoupon } from "../marketing";
-import { prisma } from "@/lib/config/db";
+// dynamic import to ensure mocks are applied before evaluation
+const { validateCoupon } = await import("../marketing");
+const { prisma } = await import("@/lib/config/db");
 
 describe("validateCoupon", () => {
     beforeEach(() => {
-        (prisma.coupon.findUnique as any).mockReset();
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockReset();
     });
 
     it("should return invalid if coupon is not found", async () => {
-        (prisma.coupon.findUnique as any).mockResolvedValue(null);
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue(null);
 
         const result = await validateCoupon("NOTFOUND");
         expect(result).toEqual({ valid: false, message: "Invalid coupon code." });
     });
 
     it("should return invalid if coupon is inactive", async () => {
-        (prisma.coupon.findUnique as any).mockResolvedValue({
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue({
             code: "INACTIVE",
             isActive: false,
         });
@@ -37,7 +47,7 @@ describe("validateCoupon", () => {
     });
 
     it("should return invalid if coupon has expired", async () => {
-        (prisma.coupon.findUnique as any).mockResolvedValue({
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue({
             code: "EXPIRED",
             isActive: true,
             expiresAt: new Date(Date.now() - 10000), // Expired 10 seconds ago
@@ -48,7 +58,7 @@ describe("validateCoupon", () => {
     });
 
     it("should return invalid if coupon usage limit reached", async () => {
-        (prisma.coupon.findUnique as any).mockResolvedValue({
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue({
             code: "LIMITREACHED",
             isActive: true,
             expiresAt: new Date(Date.now() + 10000), // Valid in the future
@@ -61,7 +71,7 @@ describe("validateCoupon", () => {
     });
 
     it("should return invalid if coupon is not valid for context", async () => {
-        (prisma.coupon.findUnique as any).mockResolvedValue({
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue({
             code: "NOCONTEXT",
             isActive: true,
             expiresAt: null,
@@ -84,10 +94,10 @@ describe("validateCoupon", () => {
             appliesTo: ["DIGITAL", "SERVICE"],
         };
 
-        (prisma.coupon.findUnique as any).mockResolvedValue(validCoupon);
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue(validCoupon);
 
         const result = await validateCoupon("VALID", "SERVICE");
-        expect(result).toEqual({ valid: true, coupon: validCoupon });
+        expect(result).toEqual({ valid: true, coupon: validCoupon as unknown as Record<string, unknown> });
     });
 
     it("should return valid and the coupon if everything is correct without context", async () => {
@@ -100,9 +110,9 @@ describe("validateCoupon", () => {
             appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"],
         };
 
-        (prisma.coupon.findUnique as any).mockResolvedValue(validCoupon);
+        (prisma.coupon.findUnique as ReturnType<typeof mock>).mockResolvedValue(validCoupon);
 
         const result = await validateCoupon("VALID");
-        expect(result).toEqual({ valid: true, coupon: validCoupon });
+        expect(result).toEqual({ valid: true, coupon: validCoupon as unknown as Record<string, unknown> });
     });
 });
