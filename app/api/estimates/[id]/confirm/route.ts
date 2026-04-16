@@ -123,10 +123,15 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                     data: { status: 'paid' }
                 });
 
-                // Process commissions for each confirmed order
-                for (const order of pendingOrders) {
-                    await processAffiliateCommission(order.id, order.amount, order.paymentMetadata);
-                }
+                // Process commissions for each confirmed order concurrently
+                // ⚡ Bolt Optimization: Replace sequential for...of loop with Promise.all
+                // 🎯 Why: Avoids N+1 sequential latency during bulk order processing
+                // 📊 Impact: Significantly faster execution when pendingOrders > 1
+                await Promise.all(
+                    pendingOrders.map(order =>
+                        processAffiliateCommission(order.id, order.amount, order.paymentMetadata)
+                    )
+                );
             }
 
             // --- Notifications ---
