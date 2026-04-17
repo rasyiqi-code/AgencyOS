@@ -69,16 +69,31 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         service: estimateData.service
     };
 
-    // Fix: Convert to USD if Service is in IDR
+    // ⚡ Bolt Optimization: Standardize service costs to USD
+    // 🎯 Why: To avoid double conversion and ensure consistency when the service was originally in IDR
     if (extendedEstimate.service?.currency === 'IDR') {
         // Use order's exchange rate if available, otherwise get current rate
         const rate = (order.exchangeRate && order.exchangeRate > 1)
             ? order.exchangeRate
             : (await paymentService.convertToIDR(1)).rate;
 
+        // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
+        const isLegacyMismatched = extendedEstimate.totalCost < 5000;
+
         // Avoid division by zero
         if (rate > 0) {
-            extendedEstimate.totalCost = extendedEstimate.totalCost / rate;
+            if (!isLegacyMismatched) {
+                extendedEstimate.totalCost = extendedEstimate.totalCost / rate;
+                if (extendedEstimate.service) {
+                    extendedEstimate.service.price = extendedEstimate.service.price / rate;
+                }
+            }
+
+            // Populate order exchange rate if it was missing/invalid for consistency in client components
+            if (!order.exchangeRate || order.exchangeRate <= 1) {
+                (order as any).exchangeRate = rate;
+            }
+
             // Normalize currency to USD to avoid double conversion in InvoiceDocument
             if (extendedEstimate.service) {
                 extendedEstimate.service.currency = 'USD';
