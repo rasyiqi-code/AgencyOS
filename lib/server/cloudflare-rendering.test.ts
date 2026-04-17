@@ -5,7 +5,7 @@ import { mock } from "bun:test";
 
 mock.module("next/cache", () => {
   return {
-    unstable_cache: (fn: any) => fn
+    unstable_cache: (fn: unknown) => fn
   };
 });
 

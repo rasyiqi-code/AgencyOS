@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
 import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
@@ -48,16 +49,13 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
     const isPaid = order.status === 'PAID';
     const hasActiveGateway = await paymentGatewayService.hasActiveGateway();
 
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: {
-                in: [
-                    'bank_name', 'bank_account', 'bank_holder',
-                    'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'
-                ]
-            }
-        }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // 🎯 Why: Reduces redundant database queries for static system settings during SSR, mitigating the N+1 query problem.
+    // 📊 Impact: Faster page load and reduced DB connections.
+    const settings = await getSystemSettings([
+        'bank_name', 'bank_account', 'bank_holder',
+        'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'
+    ]);
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
     const bankDetails = {
         bank_name: getSetting('bank_name'),

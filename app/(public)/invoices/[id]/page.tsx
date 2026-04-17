@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
 import { ExtendedEstimate } from "@/lib/shared/types";
@@ -99,10 +100,11 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     };
 
     // Fetch System Settings for Bank and Agency
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // 🎯 Why: Reduces redundant database queries for static system settings during SSR, mitigating the N+1 query problem.
+    // 📊 Impact: Faster page load and reduced DB connections.
     const [settings, hasActiveGateway] = await Promise.all([
-        prisma.systemSetting.findMany({
-            where: { key: { in: ['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM'] } }
-        }),
+        getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']),
         paymentGatewayService.hasActiveGateway()
     ]);
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { prisma } from "@/lib/config/db";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 import { Key, Share2, ShieldCheck, Layers, Cpu, ArrowLeft, ExternalLink } from "lucide-react";
