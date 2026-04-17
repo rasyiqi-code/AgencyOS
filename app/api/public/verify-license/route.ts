@@ -63,7 +63,6 @@ export async function POST(req: Request) {
             }
 
             // Register new activation
-            // const updatedDevices = [...devices, deviceId];
             devices.push(deviceId);
 
             await prisma.license.update({
