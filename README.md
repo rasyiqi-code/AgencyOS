@@ -1,5 +1,7 @@
 # AgencyOS: The Hybrid Agency Platform
 
+[English Version](README.en.md)
+
 > **Visi**: Menciptakan "Sistem Operasi Bisnis" yang memungkinkan agensi berjalan sebagai Hybrid Agency (AI + Manusia).
 > **Filosofi**: Async First. AI Augmented. Zero-bloat. Transparansi.
 
@@ -53,32 +55,46 @@
 ## ✅ 3. Fitur Utama (Siap Pakai)
 
 ### Bisnis Inti
-- [x] **Kalkulator Penawaran AI**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
-- [x] **Sistem Pembayaran Otomatis**: Konfirmasi pembayaran otomatis via Webhooks & Cek Redirect (Midtrans/Creem).
-- [x] **Manajemen Proyek Admin**: Dashboard lengkap dengan Pencarian, Filter, Paginasi, & Penugasan (`app/admin/pm`).
-- [x] **Generator Faktur PDF**: Pembuatan invoice otomatis (`components/checkout/invoice-document.tsx`).
-- [x] **Manajemen Pesanan Digital**: Alur lengkap penjualan produk digital dengan lisensi otomatis (`app/admin/finance/digital-orders`).
+- [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
+- [x] **Sistem Pembayaran Fleksibel**: Mendukung **One-time** & **Subskripsi (Retainer)** via Midtrans/Creem.
+- [x] **Manajemen Proyek Admin**: Dashboard lengkap dengan alur kerja jasa (Projects/Estimates) (`app/admin/pm`).
+- [x] **Generator Faktur PDF**: Pembuatan invoice otomatis dengan dukungan multi-termin (`components/checkout/invoice-document.tsx`).
+- [x] **Manajemen Pesanan Digital**: Alur penjualan aset (Asset-based) dengan pengiriman file otomatis dan aktivasi lisensi.
+- [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
+- [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
 
 ### Pertumbuhan & Pemasaran
 - [x] **Sistem Afiliasi**: Portal afiliasi lengkap dengan pelacakan referral, komisi, dan permintaan pembayaran (`app/affiliate`).
 - [x] **Marketing Suite**: Manajemen aset pemasaran, banner, dan sistem testimoni (`app/admin/marketing`).
 - [x] **Mesin Produk Digital**: Sistem penjualan produk digital (template/plugin) dengan manajemen lisensi (`app/admin/products`).
-
-### Tim & Kolaborasi
-- [x] **Portal Squad**: Portal khusus untuk freelancer/mitra mendaftar dan melamar misi (`app/squad`).
-- [x] **Sistem Feedback Visual**: Komentar & unggah gambar pada staging (`components/feedback/board.tsx` & `/api/feedback`).
-- [x] **Sistem Tiket Support**: Sistem tiket dukungan dengan integrasi database (`prisma/schema.prisma`).
+- [x] **Sistem Pop-up Dinamis**: Manajemen pop-up marketing yang dapat dikontrol dari panel admin (`app/api/public/popups`).
 
 ### Infrastruktur
 - [x] **Rotasi Kunci Sistem**: Manajemen kunci API LLM dengan redundansi (`app/genkit/ai.ts`).
 - [x] **Media Library 2.0**: Manajemen file canggih dengan folder, pencarian, dan tampilan toggle (`components/admin/media`).
 - [x] **Integrasi Cloudflare R2**: Penyimpanan aset produksi yang dapat diskalakan dan hemat biaya.
 - [x] **Keamanan Kelas Enterprise**: Header Content Security Policy (CSP) & Optimasi Gambar (Next.js 16).
+- [x] **PWA & Web Push**: Dukungan instalasi native & notifikasi web push untuk update status (`components/pwa`).
+- [x] **API Verifikasi Lisensi**: Endpoint publik untuk verifikasi lisensi (termasuk **activation limits** per-device) di aplikasi pihak ketiga.
+- [x] **Optimasi SEO & Sitemap**: Sitemap dinamis dengan multi-locale alternates dan caching performa tinggi (`app/sitemap.ts`).
+- [x] **Manajemen Kurs Mata Uang**: Sistem konversi IDR/USD otomatis dengan integrasi kurs riil (`lib/server/currency-service.ts`).
 - [x] **Skrip Deployment Produksi**: Setup Docker tersedia (`Dockerfile` & `docker-compose.yml`).
 
 ---
 
-## 🚀 4. Panduan Cepat (Quick Start)
+## ⚡ 4. Fitur Enterprise & Lanjutan
+
+- [x] **Orkestrasi Gateway Pembayaran**: Konfigurasi dinamis Midtrans & Creem melalui database tanpa deploy ulang.
+- [x] **Sistem Webhook Eksternal**: Memicu event otomatis ke SaaS pihak ketiga (Zapier/Make) untuk alur kerja terintegrasi.
+- [x] **Manajemen Lead & Kontak**: Sistem pelacakan prospek dan inquiry publik yang terintegrasi di admin panel.
+- [x] **Sistem Changelog**: Modul untuk mempublikasikan update fitur dan rilis produk secara transparan.
+- [x] **Kontrol Tim Admin**: Manajemen akses internal untuk tim administrasi dengan kendali terpusat.
+- [x] **Identitas GitHub OAuth**: Sinkronisasi profil Squad Lead melalui GitHub untuk verifikasi kredibilitas.
+- [x] **Kotak Masuk Klien Aman**: Saluran komunikasi internal terenkripsi khusus di dalam Dashboard Klien.
+
+---
+
+## 🚀 5. Panduan Cepat (Quick Start)
 
 1.  **Instalasi**: `bun install`
 2.  **Env**: Atur `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
@@ -122,3 +138,7 @@ git add .
 git commit -m "chore: readiness for deployment"
 git push
 ```
+---
+
+## ⚖️ Lisensi
+Proyek ini dilisensikan di bawah **Lisensi MIT** - lihat berkas [LICENSE](LICENSE) untuk detailnya.
