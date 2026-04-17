@@ -2,14 +2,15 @@
 import { Globe } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { SeoSettingsForm } from "@/components/admin/system/seo-settings-form";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSeoPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
+    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
+    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
+    const settings = await getSystemSettings(["SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
 
     const seoData = {
         title: settings.find(s => s.key === "SEO_TITLE")?.value || null,

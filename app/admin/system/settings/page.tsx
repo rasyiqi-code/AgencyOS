@@ -2,14 +2,15 @@
 import { Settings2 } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_TELEGRAM", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
+    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
+    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
+    const settings = await getSystemSettings(["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_TELEGRAM", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"]);
 
     const contactData = {
         email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,

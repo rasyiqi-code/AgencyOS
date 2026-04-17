@@ -6,14 +6,14 @@ import { CreditCard, Save, Building, User } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { PaymentGatewayConfigForm } from "@/components/admin/payment-gateway-config-form";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export default async function AdminPaymentPage() {
     // Fetch bank settings
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['bank_name', 'bank_account', 'bank_holder'] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
+    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
+    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
+    const settings = await getSystemSettings(['bank_name', 'bank_account', 'bank_holder']);
 
     // Fetch payment gateway configs
     const [midtransConfig, creemConfig] = await Promise.all([

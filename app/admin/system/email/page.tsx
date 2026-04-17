@@ -1,13 +1,14 @@
 import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 // import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
 
 export default async function AdminEmailPage() {
-    const settings = await prisma.systemSetting.findMany({
-        where: { key: { in: ["RESEND_API_KEY", "ADMIN_EMAIL_TARGET"] } }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
+    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
+    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
+    const settings = await getSystemSettings(["RESEND_API_KEY", "ADMIN_EMAIL_TARGET"]);
     const resendApiKey = settings.find(s => s.key === "RESEND_API_KEY")?.value || null;
     const adminTargetEmail = settings.find(s => s.key === "ADMIN_EMAIL_TARGET")?.value || null;
 
