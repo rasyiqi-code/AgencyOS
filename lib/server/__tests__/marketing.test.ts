@@ -4,7 +4,7 @@ import { describe, expect, it, mock, beforeEach } from "bun:test";
 mock.module("next/cache", () => {
     return {
         revalidatePath: mock(),
-        unstable_cache: (fn: any) => fn
+        unstable_cache: (fn: unknown) => fn
     };
 });
 
