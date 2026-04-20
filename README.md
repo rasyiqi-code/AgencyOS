@@ -61,16 +61,18 @@
 - [x] **Generator Faktur PDF**: Pembuatan invoice otomatis dengan dukungan multi-termin (`components/checkout/invoice-document.tsx`).
 - [x] **Manajemen Pesanan Digital**: Alur penjualan aset (Asset-based) dengan pengiriman file otomatis dan aktivasi lisensi.
 - [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
-- [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
 
 ### Pertumbuhan & Pemasaran
+- [x] **Sistem Promosi Dinamis**: Manajemen penawaran khusus, diskon terbatas, dan kode kupon dengan tampilan masonry grid yang elegan (`app/(public)/promosi`).
 - [x] **Sistem Afiliasi**: Portal afiliasi lengkap dengan pelacakan referral, komisi, dan permintaan pembayaran (`app/affiliate`).
 - [x] **Marketing Suite**: Manajemen aset pemasaran, banner, dan sistem testimoni (`app/admin/marketing`).
 - [x] **Mesin Produk Digital**: Sistem penjualan produk digital (template/plugin) dengan manajemen lisensi (`app/admin/products`).
 - [x] **Sistem Pop-up Dinamis**: Manajemen pop-up marketing yang dapat dikontrol dari panel admin (`app/api/public/popups`).
 
 ### Infrastruktur
+- [x] **Smart Portfolio Preview**: Sistem deteksi blokir iframe otomatis dengan fallback proxy rendering untuk preview situs eksternal yang mulus (`lib/portfolios/actions.ts`).
 - [x] **Rotasi Kunci Sistem**: Manajemen kunci API LLM dengan redundansi (`app/genkit/ai.ts`).
+
 - [x] **Media Library 2.0**: Manajemen file canggih dengan folder, pencarian, dan tampilan toggle (`components/admin/media`).
 - [x] **Integrasi Cloudflare R2**: Penyimpanan aset produksi yang dapat diskalakan dan hemat biaya.
 - [x] **Keamanan Kelas Enterprise**: Header Content Security Policy (CSP) & Optimasi Gambar (Next.js 16).

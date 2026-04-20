@@ -61,16 +61,18 @@
 - [x] **PDF Invoice Generator**: Automatic invoice generation with multi-milestone support (`components/checkout/invoice-document.tsx`).
 - [x] **Digital Asset Management**: Asset-based sales flow with automated file delivery and license activation.
 - [x] **AI Content Generator**: Automated Service & Product creation via Genkit AI (`app/api/genkit`).
-- [x] **AI Content Generator**: Automated Service & Product creation via Genkit AI (`app/api/genkit`).
 
 ### Growth & Marketing
+- [x] **Dynamic Promotions System**: Manage special offers, limited discounts, and coupon codes with an elegant masonry grid display (`app/(public)/promosi`).
 - [x] **Affiliate System**: Complete affiliate portal with referral tracking, commissions, and payout requests (`app/affiliate`).
 - [x] **Marketing Suite**: Management of marketing assets, banners, and testimonial systems (`app/admin/marketing`).
 - [x] **Digital Product Engine**: System for selling digital products (templates/plugins) with license management (`app/admin/products`).
 - [x] **Dynamic Pop-up System**: Marketing pop-up manager controllable via the admin panel (`app/api/public/popups`).
 
 ### Infrastructure
+- [x] **Smart Portfolio Preview**: Automated iframe block detection with fallback proxy rendering for seamless external site previews (`lib/portfolios/actions.ts`).
 - [x] **System Key Rotation**: LLM API key management with redundancy (`app/genkit/ai.ts`).
+
 - [x] **Media Library 2.0**: Advanced file management with folders, search, and toggle views (`components/admin/media`).
 - [x] **Cloudflare R2 Integration**: Scalable and cost-effective production asset storage.
 - [x] **Enterprise-Grade Security**: Content Security Policy (CSP) headers & Image Optimization (Next.js 16).
