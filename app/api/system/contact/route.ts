@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getSystemSettings } from "@/lib/server/settings";
 
 const CONTACT_EMAIL_KEY = "CONTACT_EMAIL";
 const CONTACT_PHONE_KEY = "CONTACT_PHONE";
@@ -17,11 +18,14 @@ const SERVICES_SUBTITLE_KEY = "SERVICES_SUBTITLE";
 const CONTACT_HOURS_KEY = "CONTACT_HOURS";
 
 export async function GET() {
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_TELEGRAM_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] }
-        }
-    });
+    // ⚡ Bolt Optimization: Replaced direct Prisma query with cached getSystemSettings
+    // 🎯 Why: Prevent redundant database queries for static system contact settings
+    // 📊 Impact: Reduces database load and speeds up API response time
+    const settings = await getSystemSettings([
+        CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_TELEGRAM_KEY, CONTACT_ADDRESS_KEY,
+        AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY,
+        SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY
+    ]);
 
     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
 
