@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { fetchRenderedHtml as fetchFromCloudflare } from "@/lib/server/cloudflare-rendering";
 import { prisma } from "@/lib/config/db";
 
@@ -17,28 +17,40 @@ export interface PortfolioItem {
 }
 
 export async function getPortfolios(): Promise<PortfolioItem[]> {
-    try {
-        const portfolios = await prisma.portfolio.findMany({
-            orderBy: { createdAt: "desc" },
-        });
-        return portfolios as unknown as PortfolioItem[];
-    } catch {
-        console.error("[Portfolios] Failed to fetch from DB");
-        return [];
-    }
+    return unstable_cache(
+        async () => {
+            try {
+                const portfolios = await prisma.portfolio.findMany({
+                    orderBy: { createdAt: "desc" },
+                });
+                return portfolios as unknown as PortfolioItem[];
+            } catch {
+                console.error("[Portfolios] Failed to fetch from DB");
+                return [];
+            }
+        },
+        ["portfolios-list"],
+        { revalidate: 3600, tags: ["portfolios"] }
+    )();
 }
 
 export async function getPortfolioHtml(slug: string): Promise<string> {
-    try {
-        const portfolio = await prisma.portfolio.findUnique({
-            where: { slug },
-            select: { htmlContent: true },
-        });
-        return portfolio?.htmlContent || "<h1>Design not found</h1>";
-    } catch {
-        console.error("[Portfolios] Failed to fetch HTML from DB");
-        return "<h1>Error loading design</h1>";
-    }
+    return unstable_cache(
+        async () => {
+            try {
+                const portfolio = await prisma.portfolio.findUnique({
+                    where: { slug },
+                    select: { htmlContent: true },
+                });
+                return portfolio?.htmlContent || "<h1>Design not found</h1>";
+            } catch {
+                console.error("[Portfolios] Failed to fetch HTML from DB");
+                return "<h1>Error loading design</h1>";
+            }
+        },
+        [`portfolio-html-${slug}`],
+        { revalidate: 3600, tags: ["portfolios", `portfolio-${slug}`] }
+    )();
 }
 
 /**
@@ -77,9 +89,10 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
             },
         });
 
-        revalidatePath("/portfolio");
-        revalidatePath("/admin/portfolio");
-        revalidatePath(`/view-design/${cleanSlug}`);
+        revalidatePath("/portfolio", "page");
+        revalidatePath("/admin/portfolio", "page");
+        revalidatePath(`/view-design/${cleanSlug}`, "page");
+        revalidateTag("portfolios", "updateTag");
 
         return newItem as unknown as PortfolioItem;
     } catch (error) {
@@ -94,9 +107,10 @@ export async function deletePortfolio(id: string) {
             where: { id },
         });
 
-        revalidatePath("/portfolio");
-        revalidatePath("/admin/portfolio");
-        revalidatePath(`/view-design/${item.slug}`);
+        revalidatePath("/portfolio", "page");
+        revalidatePath("/admin/portfolio", "page");
+        revalidatePath(`/view-design/${item.slug}`, "page");
+        revalidateTag("portfolios", "updateTag");
     } catch (error) {
         console.error("[Portfolios] Delete failed:", error);
         throw error;

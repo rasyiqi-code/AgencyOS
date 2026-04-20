@@ -38,7 +38,7 @@ describe("auth-helpers", () => {
             const mockUser = { id: "user_1" };
             mockGetUser.mockResolvedValue(mockUser);
             const user = await getCurrentUser();
-            expect(user).toBe(mockUser);
+            expect(user).toBe(mockUser as unknown as Awaited<ReturnType<typeof getCurrentUser>>);
         });
 
         it("should return null when not logged in", async () => {
