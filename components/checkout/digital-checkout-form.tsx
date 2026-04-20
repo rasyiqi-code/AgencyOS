@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, CreditCard, Tag, Check } from "lucide-react";
+import { Loader2, Tag, Check } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
 import { useTranslations } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -133,12 +133,7 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
         <Card className="w-full border-white/10 bg-zinc-900 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-brand-yellow to-lime-500" />
             <CardHeader className="space-y-4 pt-8">
-                <div className="flex items-center gap-2 mb-1">
-                    <div className="w-8 h-8 bg-brand-yellow/10 rounded-lg flex items-center justify-center border border-brand-yellow/20">
-                        <CreditCard className="w-4 h-4 text-brand-yellow" />
-                    </div>
-                    <span className="font-bold text-white tracking-tight">Agency OS Checkout</span>
-                </div>
+
                 <div>
                     <CardTitle className="text-2xl font-bold text-white">{t('finishPayment')}</CardTitle>
                     <CardDescription className="text-zinc-400">

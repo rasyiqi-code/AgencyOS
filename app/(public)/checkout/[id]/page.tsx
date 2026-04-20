@@ -9,6 +9,7 @@ import { getBonuses } from "@/lib/server/marketing";
 import { Bonus } from "@/lib/shared/types";
 import { SystemSetting } from "@prisma/client";
 import { getSystemSettings } from "@/lib/server/settings";
+import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -44,18 +45,19 @@ export default async function CheckoutPage(props: PageProps) {
         description: b.description || ""
     }));
 
-    // Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
+    // Fetch user and enforce login for all checkout types
+    const user = await stackServerApp.getUser().catch(() => null);
+
+    if (!user) {
+        // Enforce Login for all Checkout flows to ensure we have user identity
+        redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
+    }
+
+    const userId = user.id;
+    const userEmail = user.primaryEmail || undefined;
+
+    // 1. Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
     if (product && product.isActive) {
-        const user = await stackServerApp.getUser().catch(() => null);
-
-        if (!user) {
-            // Enforce Login for Digital Products
-            redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
-        }
-
-        const userId = user!.id;
-        const userEmail = user!.primaryEmail || undefined;
-
         const p = product;
         const productData = {
             id: p.id,
@@ -70,6 +72,7 @@ export default async function CheckoutPage(props: PageProps) {
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
                 <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
+                    <CheckoutProgress currentStep={1} />
                     <DigitalCheckoutContent
                         product={productData}
                         bonuses={bonusesData}
@@ -91,8 +94,6 @@ export default async function CheckoutPage(props: PageProps) {
     // Jika Estimate ditemukan, render Service Checkout Flow (Legacy)
     if (estimate) {
         // Fetch dependencies for Service Checkout
-        const user = await stackServerApp.getUser();
-
         // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query to avoid N+1 query and reduce database load
         // 🎯 Why: This page is frequently accessed during checkout. Caching system settings reduces database queries.
         // 📊 Impact: Eliminates 1 database query per checkout page load for legacy estimate flow.
@@ -132,7 +133,7 @@ export default async function CheckoutPage(props: PageProps) {
             } : null
         };
 
-        const bonusesData = bonuses.map((b: Bonus) => ({
+        const bonusesDataForEstimate = bonuses.map((b: Bonus) => ({
             ...b,
             icon: b.icon || "Check",
             value: b.value || "",
@@ -147,11 +148,12 @@ export default async function CheckoutPage(props: PageProps) {
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
                 <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
+                    <CheckoutProgress currentStep={1} />
                     <CheckoutContent
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
                         activeRate={activeRate}
-                        bonuses={bonusesData}
+                        bonuses={bonusesDataForEstimate}
                         user={userData}
                         agencySettings={agencySettings}
                         hasActiveGateway={hasActiveGateway}

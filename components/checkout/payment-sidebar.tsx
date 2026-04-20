@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 import { useTranslations } from "next-intl";
 
-export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context }: {
+export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context, user }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
     onApplyCoupon: (coupon: Coupon | null) => void,
@@ -24,11 +24,13 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number,
     projectTotalAmount?: number,
-    context?: "SERVICE" | "CALCULATOR"
+    context?: "SERVICE" | "CALCULATOR",
+    user?: { displayName: string | null, email: string | null }
 }) {
     console.log("DEBUG CHECKOUT - priceType:", estimate.service?.priceType);
     console.log("DEBUG CHECKOUT - status:", estimate.status);
     const t = useTranslations("Checkout");
+    const ti = useTranslations("Invoice");
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
     const [offeredPrice, setOfferedPrice] = useState<string>("");
@@ -234,9 +236,33 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
 
     return (
         <div className="space-y-4 sticky top-24">
+            {/* Customer Information (Identity Step Preview) */}
+            {user && (
+                <Card className="bg-zinc-900 border-white/10 text-white overflow-hidden relative group">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-lime-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <CardHeader className="px-4 sm:px-6 pt-4 pb-2">
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                                <CheckCircle className="w-3 h-3 text-lime-500" />
+                                {ti("billTo")}
+                            </CardTitle>
+                            <Button variant="ghost" size="sm" className="h-6 text-[10px] text-zinc-500 hover:text-white" onClick={() => window.location.href = '/handler/sign-in'}>
+                                {t("change")}
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="px-4 sm:px-6 pb-4">
+                        <div className="space-y-1">
+                            <div className="text-sm font-bold text-white">{user.displayName || "Valued Client"}</div>
+                            <div className="text-xs text-zinc-400 font-mono">{user.email}</div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             <Card className="bg-zinc-900 border-white/10 text-white">
                 <CardHeader className="px-4 sm:px-6 pt-4 sm:pt-6">
-                    <CardTitle className="text-xl sm:text-2xl break-words">{isQuoteNegotiation ? t("submitOffer") : t("paymentOptions")}</CardTitle>
+                    <CardTitle className="text-xl sm:text-2xl break-words">{isQuoteNegotiation ? t("submitOffer") : t("title")}</CardTitle>
                     <CardDescription className="text-sm break-words">
                         {isQuoteNegotiation
                             ? t("submitOfferDesc")

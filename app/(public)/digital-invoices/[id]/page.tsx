@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { DigitalInvoiceClientWrapper } from "@/components/invoice/digital-invoice-client-wrapper";
+import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
@@ -72,9 +73,27 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
         telegram: getSetting('CONTACT_TELEGRAM')
     };
 
+    // Determine current step for progress indicator
+    let currentStep: 1 | 2 | 3 | 4 = 2;
+    if (isPaid) {
+        currentStep = 4;
+    } else {
+        const metadata = order.paymentMetadata as Record<string, unknown>;
+        const hasInitiatedPayment = metadata && (
+            metadata.payment_type || 
+            metadata.transaction_id || 
+            metadata.status_code || 
+            order.status === 'WAITING_VERIFICATION'
+        );
+        if (hasInitiatedPayment) {
+            currentStep = 3;
+        }
+    }
+
     return (
         <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
             <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
+                <CheckoutProgress currentStep={currentStep} />
                 <DigitalInvoiceClientWrapper
                     order={order}
                     isPaid={isPaid}

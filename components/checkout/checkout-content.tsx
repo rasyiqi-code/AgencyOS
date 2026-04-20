@@ -75,6 +75,7 @@ export function CheckoutContent({
                     projectPaidAmount={projectPaidAmount}
                     projectTotalAmount={projectTotalAmount}
                     context={context}
+                    user={user}
                 />
             </div>
 
