@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/rasyiqi-code/AgencyOS/master/public/logo.png" alt="AgencyOS Logo" width="120" />
+  <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
   
   # AgencyOS
   ### The Ultimate Hybrid Business Operating System
@@ -125,5 +125,5 @@ This project is licensed under the **MIT License**. Built with ❤️ for the fu
 ---
 
 <div align="center">
-  [Bahasa Indonesia](README.md) | [Documentation](DOCS.md) | [Support](mailto:support@crediblemark.com)
+  [Bahasa Indonesia](README.md) | [Deployment](DEPLOY.md) | [Support](mailto:support@crediblemark.com)
 </div>
