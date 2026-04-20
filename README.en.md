@@ -1,8 +1,8 @@
 <div align="center">
   <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
   
-  # AgencyOS
-  ### The Ultimate Hybrid Business Operating System
+  <h1>AgencyOS</h1>
+  <h3>Website for Agencies</h3>
   
   [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![Prisma](https://img.shields.io/badge/Prisma-7.2.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
@@ -125,5 +125,5 @@ This project is licensed under the **MIT License**. Built with ❤️ for the fu
 ---
 
 <div align="center">
-  [Bahasa Indonesia](README.md) | [Deployment](DEPLOY.md) | [Support](mailto:support@crediblemark.com)
+  <a href="README.md">Bahasa Indonesia</a> | <a href="DEPLOY.md">Deployment</a> | <a href="mailto:support@crediblemark.com">Support</a>
 </div>
