@@ -9,6 +9,7 @@ interface PortfolioItem {
     title: string;
     slug: string;
     category?: string;
+    description?: string;
     html: string;
     externalUrl?: string;
     imageUrl?: string;
@@ -59,9 +60,9 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
                             className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all duration-300 border ${activeCategory === cat
-                                ? "text-white border-white/30 shadow-lg"
-                                : "text-zinc-400 border-white/10 hover:text-white hover:border-white/20"
-                                }`}
+                                 ? "text-white border-white/30 shadow-lg"
+                                 : "text-zinc-400 border-white/10 hover:text-white hover:border-white/20"
+                                 }`}
                             style={activeCategory === cat ? { backgroundColor: "#a67c00" } : undefined}
                         >
                             {cat}
@@ -78,6 +79,7 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
                             title={item.title}
                             slug={item.slug}
                             category={item.category}
+                            description={item.description}
                             html={item.html}
                             externalUrl={item.externalUrl}
                             imageUrl={item.imageUrl}

@@ -96,22 +96,27 @@ export async function SiteHeader() {
                         </Link>
 
                         <nav className="hidden md:flex items-center gap-8">
-                            <Link href={`/${locale}/price-calculator`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            <Link href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500/80 hover:text-emerald-400 transition-colors duration-200 cursor-pointer">
                                 {t("priceCalculator")}
                             </Link>
-                            <Link href={`/${locale}/services`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            <Link href={`/${locale}/services`} className="text-sm font-bold text-sky-500/80 hover:text-sky-400 transition-colors duration-200 cursor-pointer">
                                 {t("services")}
                             </Link>
-                            <Link href={`/${locale}/products`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            <Link href={`/${locale}/products`} className="text-sm font-bold text-indigo-500/80 hover:text-indigo-400 transition-colors duration-200 cursor-pointer">
                                 {t("products")}
                             </Link>
-                            <Link href={`/portfolio`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            <Link href={`/portfolio`} className="text-sm font-bold text-rose-500/80 hover:text-rose-400 transition-colors duration-200 cursor-pointer">
                                 Portfolio
                             </Link>
-                            <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer">
+                            <Link href="/promosi" className="text-sm font-bold text-brand-yellow/80 hover:text-brand-yellow transition-colors duration-200 cursor-pointer">
+                                {t("promo")}
+                            </Link>
+
+                            <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-500/80 hover:text-orange-400 transition-colors duration-200 cursor-pointer">
                                 Blog
                             </a>
                         </nav>
+
                     </div>
 
                     <div className="flex items-center gap-2 md:gap-6">
@@ -154,22 +159,27 @@ export async function SiteHeader() {
             {/* Mobile Sub-Header Navigation - Sticky */}
             <div className="sticky top-0 z-40 md:hidden border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 overflow-x-auto no-scrollbar mask-gradient-x">
                 <div className="flex items-center gap-6 px-6 h-10 w-max mx-auto min-w-full">
-                    <Link href={`/${locale}/price-calculator`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <Link href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500/80 hover:text-emerald-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("priceCalculator")}
                     </Link>
-                    <Link href={`/${locale}/services`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <Link href={`/${locale}/services`} className="text-sm font-bold text-sky-500/80 hover:text-sky-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("services")}
                     </Link>
-                    <Link href={`/${locale}/products`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <Link href={`/${locale}/products`} className="text-sm font-bold text-indigo-500/80 hover:text-indigo-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("products")}
                     </Link>
-                    <Link href={`/portfolio`} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <Link href={`/portfolio`} className="text-sm font-bold text-rose-500/80 hover:text-rose-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         Portfolio
                     </Link>
-                    <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <Link href="/promosi" className="text-sm font-bold text-brand-yellow/80 hover:text-brand-yellow transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                        {t("promo")}
+                    </Link>
+
+                    <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-500/80 hover:text-orange-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         Blog
                     </a>
                 </div>
+
             </div>
         </>
     );

@@ -1,15 +1,8 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
-import { revalidatePath } from "next/cache";
-import { fetchRenderedHtml } from "@/lib/server/cloudflare-rendering";
-import { secureRandomAlphanumeric } from "@/lib/utils/crypto";
-
-const DATA_DIR = path.join(process.cwd(), "data/portfolios");
-const MANIFEST_PATH = path.join(DATA_DIR, "manifest.json");
-const HTML_DIR = path.join(DATA_DIR, "html");
-const CACHE_DIR = path.join(DATA_DIR, "cache");
+import { revalidatePath, unstable_cache } from "next/cache";
+import { fetchRenderedHtml as fetchFromCloudflare } from "@/lib/server/cloudflare-rendering";
+import { prisma } from "@/lib/config/db";
 
 export interface PortfolioItem {
     id: string;
@@ -19,137 +12,137 @@ export interface PortfolioItem {
     description?: string;
     externalUrl?: string;
     imageUrl?: string;
-    createdAt: string;
-}
-
-async function ensureDirs() {
-    await fs.mkdir(HTML_DIR, { recursive: true });
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    try {
-        await fs.access(MANIFEST_PATH);
-    } catch {
-        await fs.writeFile(MANIFEST_PATH, JSON.stringify([]));
-    }
+    htmlContent?: string;
+    createdAt: Date | string;
 }
 
 export async function getPortfolios(): Promise<PortfolioItem[]> {
-    await ensureDirs();
-    const data = await fs.readFile(MANIFEST_PATH, "utf-8");
-    return JSON.parse(data);
+    try {
+        const portfolios = await prisma.portfolio.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+        return portfolios as unknown as PortfolioItem[];
+    } catch {
+        console.error("[Portfolios] Failed to fetch from DB");
+        return [];
+    }
 }
 
 export async function getPortfolioHtml(slug: string): Promise<string> {
-    const filePath = path.join(HTML_DIR, `${slug}.html`);
     try {
-        return await fs.readFile(filePath, "utf-8");
+        const portfolio = await prisma.portfolio.findUnique({
+            where: { slug },
+            select: { htmlContent: true },
+        });
+        return portfolio?.htmlContent || "<h1>Design not found</h1>";
     } catch {
-        return "<h1>File not found</h1>";
+        console.error("[Portfolios] Failed to fetch HTML from DB");
+        return "<h1>Error loading design</h1>";
     }
+}
+
+/**
+ * Sanitizes a string to be used as a slug.
+ */
+function sanitizeSlug(slug: string): string {
+    return slug
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-+|-+$/g, "");
 }
 
 export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt">, html: string) {
-    await ensureDirs();
-    const portfolios = await getPortfolios();
+    try {
+        const cleanSlug = sanitizeSlug(item.slug || item.title);
+        
+        const newItem = await prisma.portfolio.upsert({
+            where: { slug: cleanSlug },
+            update: {
+                title: item.title,
+                category: item.category,
+                description: item.description,
+                externalUrl: item.externalUrl,
+                imageUrl: item.imageUrl,
+                htmlContent: html || undefined,
+            },
+            create: {
+                title: item.title,
+                slug: cleanSlug,
+                category: item.category,
+                description: item.description,
+                externalUrl: item.externalUrl,
+                imageUrl: item.imageUrl,
+                htmlContent: html,
+            },
+        });
 
-    const id = secureRandomAlphanumeric(7);
-    const newItem: PortfolioItem = {
-        ...item,
-        id,
-        createdAt: new Date().toISOString(),
-    };
+        revalidatePath("/portfolio");
+        revalidatePath("/admin/portfolio");
+        revalidatePath(`/view-design/${cleanSlug}`);
 
-    // Save HTML file
-    await fs.writeFile(path.join(HTML_DIR, `${newItem.slug}.html`), html);
-
-    // Update manifest
-    portfolios.push(newItem);
-    await fs.writeFile(MANIFEST_PATH, JSON.stringify(portfolios, null, 2));
-
-    revalidatePath("/portfolio");
-    revalidatePath("/admin/portfolio");
-    return newItem;
+        return newItem as unknown as PortfolioItem;
+    } catch (error) {
+        console.error("[Portfolios] Save failed:", error);
+        throw error instanceof Error ? error : new Error("Unknown error during save");
+    }
 }
 
 export async function deletePortfolio(id: string) {
-    await ensureDirs();
-    let portfolios = await getPortfolios();
-    const item = portfolios.find(p => p.id === id);
-
-    if (item) {
-        // Delete HTML file
-        try {
-            await fs.unlink(path.join(HTML_DIR, `${item.slug}.html`));
-        } catch (e) {
-            console.error("Failed to delete HTML file", e);
-        }
-
-        // Update manifest
-        portfolios = portfolios.filter(p => p.id !== id);
-        await fs.writeFile(MANIFEST_PATH, JSON.stringify(portfolios, null, 2));
-    }
-
-    revalidatePath("/portfolio");
-    revalidatePath("/admin/portfolio");
-}
-
-// In-memory cache for ultra-fast access
-const proxyMap = new Map<string, { html: string; timestamp: number }>();
-// Pending promise map to handle parallel requests for the same URL
-const pendingRequests = new Map<string, Promise<string>>();
-const CACHE_TTL = 60 * 60 * 1000; // 1 Hour
-
-function getCacheKey(url: string) {
-    // Basic alphanumeric sanitization for filename
-    return Buffer.from(url).toString('base64').replace(/[/+=]/g, '_').substring(0, 100);
-}
-
-export async function getRenderedHtml(url: string, localBaseUrl?: string): Promise<string> {
-    const cacheKey = getCacheKey(url);
-    const cachePath = path.join(CACHE_DIR, `${cacheKey}.cache.html`);
-
-    // 1. Memory Cache Hit
-    const memoryCached = proxyMap.get(url);
-    if (memoryCached && Date.now() - memoryCached.timestamp < CACHE_TTL) {
-        return memoryCached.html;
-    }
-
-    // 2. Persistent Disk Cache Discovery
     try {
-        const stats = await fs.stat(cachePath);
-        if (Date.now() - stats.mtimeMs < CACHE_TTL) {
-            const html = await fs.readFile(cachePath, "utf-8");
-            proxyMap.set(url, { html, timestamp: stats.mtimeMs });
-            return html;
-        }
-    } catch {
-        // Disk cache miss or invalid, proceed to fetch
-    }
+        const item = await prisma.portfolio.delete({
+            where: { id },
+        });
 
-    // 3. Parallel Request Deduplication (Debounce)
+        revalidatePath("/portfolio");
+        revalidatePath("/admin/portfolio");
+        revalidatePath(`/view-design/${item.slug}`);
+    } catch (error) {
+        console.error("[Portfolios] Delete failed:", error);
+        throw error;
+    }
+}
+
+// Pending promise map to handle parallel requests for the same URL in the same process
+const pendingRequests = new Map<string, Promise<string>>();
+
+/**
+ * Fetches rendered HTML with persistent caching and deduplication.
+ */
+export async function getRenderedHtml(url: string, localBaseUrl?: string): Promise<string> {
+    const cacheKey = `portfolio-render-${url}`;
+
+    // 1. Check for a pending request in the current process to avoid redundant calls
     if (pendingRequests.has(url)) {
-        console.log(`[ProxyCache] deduplicating parallel request: ${url}`);
         return pendingRequests.get(url)!;
     }
 
-    // 4. Actual Content Fetch
-    const fetchPromise = (async () => {
-        try {
-            const html = await fetchRenderedHtml(url, localBaseUrl);
-            
-            // Background storage
-            await fs.mkdir(CACHE_DIR, { recursive: true });
-            await fs.writeFile(cachePath, html);
-            proxyMap.set(url, { html, timestamp: Date.now() });
+    // 2. Define the actual fetch logic
+    const fetchAction = async () => {
+        // Use unstable_cache to persist across requests/restarts
+        return unstable_cache(
+            async () => {
+                try {
+                    // Add a small random jitter to prevent burst requests if many pages load at once
+                    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+                    
+                    return await fetchFromCloudflare(url, localBaseUrl);
+                } catch {
+                    console.warn(`[ProxyCache] Rendering failed for ${url}, using fallback text.`);
+                    return `<html><body><h1>Content currently unavailable</h1><p>${url}</p></body></html>`;
+                }
+            },
+            [cacheKey],
+            { revalidate: 3600 * 6, tags: ["portfolio-render"] } // Cache for 6 hours
+        )();
+    };
 
-            return html;
-        } catch (_error) {
-            console.error("[ProxyCache] Fatal Error:", _error);
-            return `[Proxy Error] Full render failed.`;
-        } finally {
-            pendingRequests.delete(url);
-        }
-    })();
-
-    pendingRequests.set(url, fetchPromise);
-    return fetchPromise;
+    const promise = fetchAction();
+    pendingRequests.set(url, promise);
+    
+    try {
+        return await promise;
+    } finally {
+        pendingRequests.delete(url);
+    }
 }

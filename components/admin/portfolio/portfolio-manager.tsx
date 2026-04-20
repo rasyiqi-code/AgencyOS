@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Trash2, Plus, AlertTriangle, Layout, Maximize2, ExternalLink } from "lucide-react";
+import { Trash2, Plus, AlertTriangle, Layout, Maximize2, ExternalLink, Info } from "lucide-react";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 import { HtmlFileUploader } from "./html-file-uploader";
 
 // Style CSS untuk menyembunyikan scrollbar di preview iframe
@@ -61,26 +62,27 @@ function PortfolioPreview({ slug, html: directHtml, imageUrl, externalUrl }: { s
     const content = directHtml || fetchedContent;
 
     return (
-        <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-white relative group/preview shadow-[0_10px_30px_-15px_rgba(0,0,0,0.15)] ring-1 ring-zinc-100">
+        <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/5 bg-zinc-900 relative group/preview shadow-2xl">
             {imageUrl ? (
                 <Image
                     src={imageUrl}
                     alt="Preview"
                     fill
-                    className="object-cover"
+                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 />
             ) : (
-                <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none">
+                <div className="absolute inset-0 origin-top-left w-[400%] h-[400%] scale-[0.25] pointer-events-none select-none opacity-80 group-hover:opacity-100 transition-opacity duration-700">
                     <iframe
-                        srcDoc={buildSrcDoc(content)}
+                        src={externalUrl || undefined}
+                        srcDoc={!externalUrl ? buildSrcDoc(content) : undefined}
                         className="w-full h-full border-none overflow-hidden"
                         title="Admin Preview"
                         scrolling="no"
                     />
                 </div>
             )}
-            <div className="absolute inset-0 bg-white/5 group-hover/preview:bg-transparent transition-colors pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 pointer-events-none" />
         </div>
     );
 }
@@ -96,11 +98,13 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
     // Form state
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState("Web App");
     const [externalUrl, setExternalUrl] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [html, setHtml] = useState("");
+    const [description, setDescription] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+    const [isSlugAuto, setIsSlugAuto] = useState(true);
 
     // === Handler: Simpan portfolio baru ===
     async function handleSave() {
@@ -111,17 +115,23 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
         setIsSaving(true);
         try {
-            const newItem = await savePortfolio({ title, slug, category, externalUrl, imageUrl, description: "" }, html);
+            const newItem = await savePortfolio({ title, slug, category, externalUrl, imageUrl, description }, html);
             setItems([...items, newItem]);
             setIsModalOpen(false);
             // Reset form setelah berhasil
             setTitle("");
             setSlug("");
-            setCategory("");
+            setCategory("Web App");
+            setDescription("");
+            setImageUrl("");
+            setExternalUrl("");
             setHtml("");
+            setIsSlugAuto(true);
             toast.success("Portfolio saved successfully");
-        } catch {
-            toast.error("Failed to save portfolio");
+        } catch (error) {
+            const err = error as Error;
+            console.error("Save error:", err);
+            toast.error(err.message || "Failed to save portfolio");
         } finally {
             setIsSaving(false);
         }
@@ -182,10 +192,12 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                 if (!open) {
                     setTitle("");
                     setSlug("");
-                    setCategory("");
+                    setCategory("Web App");
                     setExternalUrl("");
                     setImageUrl("");
                     setHtml("");
+                    setDescription("");
+                    setIsSlugAuto(true);
                 }
             }}>
                 <DialogContent className="max-w-4xl bg-[#09090b] border-white/[0.08] text-white p-6 gap-6 shadow-2xl rounded-[28px] overflow-hidden">
@@ -206,8 +218,14 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                     <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Title</label>
                                     <Input
                                         value={title}
-                                        onChange={e => setTitle(e.target.value)}
-                                        placeholder="Bank"
+                                        onChange={e => {
+                                            const val = e.target.value;
+                                            setTitle(val);
+                                            if (isSlugAuto) {
+                                                setSlug(val.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''));
+                                            }
+                                        }}
+                                        placeholder="Project Name"
                                         className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 text-sm rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all"
                                     />
                                 </div>
@@ -215,13 +233,16 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                     <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Slug</label>
                                     <Input
                                         value={slug}
-                                        onChange={e => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
-                                        placeholder="bank"
+                                        onChange={e => {
+                                            setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'));
+                                            setIsSlugAuto(false);
+                                        }}
+                                        placeholder="project-slug"
                                         className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 h-10 font-mono text-xs rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all text-zinc-400"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">External URL</label>
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block" title="Used for Live Preview if no HTML file is uploaded">External URL (Preview)</label>
                                     <Input
                                         value={externalUrl}
                                         onChange={e => setExternalUrl(e.target.value)}
@@ -230,7 +251,7 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Image URL / OG</label>
+                                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block" title="Overrides the Live Preview with a static image">Thumbnail Override URL</label>
                                     <Input
                                         value={imageUrl}
                                         onChange={e => setImageUrl(e.target.value)}
@@ -251,7 +272,10 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 15 5 5 5-5'/%3E%3Cpath d='m7 9 5-5 5 5'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
                                     >
                                         <option value="" className="bg-zinc-950 text-zinc-400">Pilih...</option>
+                                        <option value="Web App" className="bg-zinc-950">Web App</option>
+                                        <option value="Landing Page" className="bg-zinc-950">Landing Page</option>
                                         <option value="Design" className="bg-zinc-950">Design</option>
+                                        <option value="Corporate" className="bg-zinc-950">Corporate</option>
                                         <option value="Fintech" className="bg-zinc-950">Fintech</option>
                                         <option value="E-Commerce" className="bg-zinc-950">E-Commerce</option>
                                         <option value="SaaS" className="bg-zinc-950">SaaS</option>
@@ -263,6 +287,10 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                         <option value="Media" className="bg-zinc-950">Media</option>
                                         <option value="Agency" className="bg-zinc-950">Agency</option>
                                         <option value="Portfolio" className="bg-zinc-950">Portfolio</option>
+                                        <option value="Creative" className="bg-zinc-950">Creative</option>
+                                        <option value="Fashion" className="bg-zinc-950">Fashion</option>
+                                        <option value="Technology" className="bg-zinc-950">Technology</option>
+                                        <option value="Automotive" className="bg-zinc-950">Automotive</option>
                                         <option value="Lainnya" className="bg-zinc-950">Lainnya</option>
                                     </select>
                                 </div>
@@ -275,6 +303,17 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                     {isSaving ? "..." : "Launch"}
                                 </Button>
                             </div>
+                        </div>
+                        
+                        {/* Row 1.5: Description */}
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-0.5 block">Description</label>
+                            <Textarea
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                                placeholder="Briefly describe this project..."
+                                className="bg-white/[0.03] border-white/10 focus:border-brand-yellow/50 min-h-[80px] text-sm rounded-xl focus:ring-4 focus:ring-brand-yellow/5 transition-all resize-none"
+                            />
                         </div>
 
                         {/* Row 2: File Uploader */}
@@ -302,53 +341,86 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                 {items.map((item) => (
                     <div
                         key={item.id}
-                        className="group bg-white border border-zinc-200 rounded-3xl flex flex-col overflow-hidden hover:border-brand-yellow/50 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-brand-yellow/5 relative"
+                        className="group relative bg-zinc-950/40 border border-white/5 rounded-2xl flex flex-col overflow-hidden hover:border-brand-yellow/30 transition-all duration-700 shadow-2xl hover:shadow-brand-yellow/5 backdrop-blur-sm"
                     >
-                        {/* Card Header */}
-                        <div className="px-5 py-4 flex items-center justify-between border-b border-zinc-100 bg-white/50 backdrop-blur-sm">
-                            <h4 className="font-bold text-zinc-900 text-base tracking-tight truncate pr-4 group-hover:text-brand-yellow transition-colors">
-                                {item.title}
-                            </h4>
-                            <div className="p-2 rounded-xl bg-zinc-50 text-zinc-400 group-hover:text-brand-yellow group-hover:bg-brand-yellow/10 transition-all border border-zinc-200 cursor-pointer">
-                                <Maximize2 className="w-3.5 h-3.5" />
-                            </div>
-                        </div>
-
-                        {/* Card Body (Live Render) */}
+                        {/* Main Visual Area */}
                         <div className="p-3">
                             <PortfolioPreview 
                                 slug={item.slug} 
                                 imageUrl={item.imageUrl} 
                                 externalUrl={item.externalUrl}
                             />
-                        </div>
-
-                        {/* Card Footer */}
-                        <div className="px-5 py-3.5 flex items-center justify-between bg-zinc-50/50 border-t border-zinc-100">
-                            <div className="flex items-center gap-2">
-                                <span className="text-[10px] text-zinc-500 font-mono italic">Live Rendered</span>
-                            </div>
-                            <div className="flex items-center gap-3">
+                            
+                            {/* Floating Actions on Hover */}
+                            <div className="absolute top-6 right-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                                <button
+                                    onClick={() => handleDelete(item.id)}
+                                    className="p-2.5 rounded-full bg-black/60 backdrop-blur-xl text-white/50 hover:text-red-500 hover:bg-black/80 transition-all border border-white/10"
+                                    title="Delete Project"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
                                 <a
                                     href={`/view-design/${item.slug}`}
                                     target="_blank"
-                                    className="flex items-center gap-1.5 text-[10px] font-black text-zinc-800 hover:text-brand-yellow transition-colors tracking-widest uppercase"
+                                    className="p-2.5 rounded-full bg-black/60 backdrop-blur-xl text-white/50 hover:text-brand-yellow hover:bg-black/80 transition-all border border-white/10"
+                                    title="View Full Preview"
+                                >
+                                    <Maximize2 className="w-4 h-4" />
+                                </a>
+                            </div>
+
+                            {/* Status Badge */}
+                            <div className="absolute bottom-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-xl rounded-full border border-white/10">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
+                                </span>
+                                <span className="text-[9px] text-zinc-300 font-bold uppercase tracking-widest font-mono">
+                                    {item.externalUrl ? "Live Site" : "Live Render"}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="px-6 pb-6 pt-2">
+                            <div className="flex flex-col gap-1 mb-4">
+                                <div className="flex items-center gap-2">
+                                    {item.category && (
+                                         <span className="text-[10px] text-brand-yellow/60 font-bold uppercase tracking-[0.2em]">
+                                            {item.category}
+                                         </span>
+                                    )}
+                                </div>
+                                <h4 className="text-lg font-bold text-white tracking-tight group-hover:text-brand-yellow transition-colors duration-500 truncate">
+                                    {item.title}
+                                </h4>
+                                {item.description && (
+                                    <p className="text-[11px] text-zinc-500 line-clamp-1 font-light italic">
+                                        {item.description}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <div className="flex items-center gap-2">
+                                    <Info className="w-3.5 h-3.5 text-zinc-600" />
+                                    <span className="text-[10px] text-zinc-600 font-mono italic">Admin Managed</span>
+                                </div>
+                                
+                                <a
+                                    href={`/view-design/${item.slug}`}
+                                    target="_blank"
+                                    className="flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-brand-yellow text-white hover:text-black rounded-full text-[10px] font-black transition-all duration-500 border border-white/10 hover:border-brand-yellow"
                                 >
                                     PREVIEW
                                     <ExternalLink className="w-3 h-3" />
                                 </a>
-                                <div className="h-3 w-px bg-zinc-200" />
-                                <button
-                                    onClick={() => handleDelete(item.id)}
-                                    className="text-zinc-600 hover:text-red-500 transition-colors"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
                             </div>
                         </div>
 
-                        {/* Hover Overlay Glow */}
-                        <div className="absolute inset-0 border-2 border-brand-yellow/0 group-hover:border-brand-yellow/10 rounded-3xl pointer-events-none transition-all duration-500" />
+                        {/* Hover Glow */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     </div>
                 ))}
 

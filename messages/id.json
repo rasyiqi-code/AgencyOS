@@ -12,7 +12,7 @@
     },
     "ViewDesign": {
         "previewMode": "MODE PRATINJAU",
-        "inquireDesign": "Pesan Desain",
+        "inquireDesign": "Pesan",
         "inquireShort": "Pesan",
         "modalTitle": "Miliki Desain Seperti Ini",
         "modalDescription": "Wujudkan visi bisnis Anda dengan desain profesional kelas dunia. Kami siap membantu Anda membangun identitas digital yang memukau dan efektif.",
@@ -29,7 +29,9 @@
         "services": "Layanan",
         "products": "Produk Digital",
         "myAccount": "Akun Saya",
+        "promo": "Promo",
         "startProject": "Mulai"
+
     },
     "Hero": {
         "statusBadge": "Partner Strategis",

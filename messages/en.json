@@ -11,8 +11,8 @@
     },
     "ViewDesign": {
         "previewMode": "PREVIEW MODE",
-        "inquireDesign": "Inquire Design",
-        "inquireShort": "Inquire",
+        "inquireDesign": "Order",
+        "inquireShort": "Order",
         "modalTitle": "Own a Design Like This",
         "modalDescription": "Realize your business vision with world-class professional design. We are ready to help you build a stunning and effective digital identity.",
         "whatsappCTA": "Contact via WhatsApp",
@@ -28,7 +28,9 @@
         "services": "Services",
         "products": "Digital Products",
         "myAccount": "My Account",
+        "promo": "Promo",
         "startProject": "Start"
+
     },
     "Hero": {
         "statusBadge": "Strategic Partner",
