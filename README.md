@@ -99,7 +99,9 @@
 ## 🚀 5. Panduan Cepat (Quick Start)
 
 1.  **Instalasi**: `bun install`
-2.  **Env**: Atur `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
+2.  **Konfigurasi Env**: 
+    *   Salin `.env.example` menjadi `.env` (untuk pengembangan lokal) atau `.env.docker` (untuk Docker).
+    *   Isi variabel yang diperlukan (Database, Stack Auth, dll).
 3.  **Database**:
     *   **Lokal Native**: `bun prisma migrate dev`
     *   **Lokal Docker**: `docker compose -f docker-compose.dev.yml up -d db`
@@ -117,6 +119,8 @@ Lihat panduan lengkap di **`DEPLOY.md`**.
 ## 🛠️ 6. Referensi Perintah (Cheat Sheet)
 
 ### 🐳 Manajemen Docker
+> **Catatan**: Pastikan `.env.docker` sudah dikonfigurasi sebelum menjalankan Docker.
+
 | Aksi | Perintah |
 | :--- | :--- |
 | **Mulai DB Lokal** | `docker compose -f docker-compose.dev.yml up -d db` |

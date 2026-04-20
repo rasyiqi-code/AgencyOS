@@ -99,7 +99,9 @@
 ## 🚀 5. Quick Start
 
 1.  **Installation**: `bun install`
-2.  **Env**: Set up `.env` based on `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
+2.  **Env Configuration**: 
+    *   Copy `.env.example` to `.env` (for local development) or `.env.docker` (for Docker).
+    *   Fill in the required variables (Database, Stack Auth, etc.).
 3.  **Database**:
     *   **Local Native**: `bun prisma migrate dev`
     *   **Local Docker**: `docker compose -f docker-compose.dev.yml up -d db`
@@ -117,6 +119,8 @@ See the full guide in **`DEPLOY.md`**.
 ## 🛠️ 6. Command Reference (Cheat Sheet)
 
 ### 🐳 Docker Management
+> **Note**: Ensure `.env.docker` is configured before running Docker.
+
 | Action | Command |
 | :--- | :--- |
 | **Start Local DB** | `docker compose -f docker-compose.dev.yml up -d db` |

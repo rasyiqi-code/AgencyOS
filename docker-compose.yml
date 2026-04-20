@@ -33,16 +33,12 @@ services:
       - VERCEL_CLIENT_SECRET=${VERCEL_CLIENT_SECRET}
       - VERCEL_INTEGRATION_SLUG=${VERCEL_INTEGRATION_SLUG}
       - NODE_ENV=production
-    volumes:
-      # Persist data directory (portfolios, payment-info) across redeployments
-      - app_data_prod:/app/data
     networks:
       - agency-network-prod
-
 
 networks:
   agency-network-prod:
     driver: bridge
 
 volumes:
-  app_data_prod:
+  postgres_data_prod:
