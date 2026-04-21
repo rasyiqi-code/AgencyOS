@@ -127,7 +127,7 @@ export default async function AdminProjectsPage({
     }) as unknown as ExtendedProject[];
 
     return (
-        <div className="w-full py-6 min-w-0 overflow-hidden">
+        <div className="w-full py-6 min-w-0">
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">

@@ -2,7 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Copy, CheckCircle2 } from "lucide-react";
+import { Copy, CheckCircle2, FileText } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
@@ -204,7 +205,12 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
             const isPending = status === 'pending_payment' || status === 'payment_pending' || status === 'pending';
 
             return (
-                <div className="flex items-center justify-end gap-0">
+                <div className="flex items-center justify-end gap-1">
+                    <Link href={`/id/invoices/${estimate.id}`} target="_blank">
+                        <button className="p-2 text-zinc-500 hover:text-brand-yellow hover:bg-brand-yellow/10 rounded-lg transition-colors" title="Open Invoice">
+                            <FileText className="w-4 h-4" />
+                        </button>
+                    </Link>
                     {isPending && (
                         <div className="scale-75 origin-right">
                             <ConfirmPaymentButton estimateId={estimate.estimateId || estimate.id} />

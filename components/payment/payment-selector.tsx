@@ -22,6 +22,8 @@ export interface PaymentSelectorProps {
     chargeEndpoint?: string; // NEW PROP
     contactWA?: string | null;
     contactTele?: string | null;
+    hasActiveGateway?: boolean;
+    gatewayStatus?: { midtrans: boolean; creem: boolean };
 }
 
 interface PaymentMethod {
@@ -85,7 +87,7 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
     },
 ];
 
-export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele }: PaymentSelectorProps) {
+export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele, hasActiveGateway = true, gatewayStatus }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
         if (!paymentMetadata) return null;
@@ -109,9 +111,35 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
         availableGroups = PAYMENT_GROUPS.filter(g => ['card', 'manual'].includes(g.id));
     }
 
-    const filteredGroups = allowedGroups
-        ? availableGroups.filter(g => allowedGroups.includes(g.id))
-        : availableGroups;
+    // Filter groups based on availability
+    let filteredGroups = availableGroups;
+
+    // 1. Filter out manual if bankDetails is missing
+    if (!bankDetails) {
+        filteredGroups = filteredGroups.filter(g => g.id !== 'manual');
+    }
+
+    // 2. Filter out gateway groups if no active gateway (global check)
+    if (!hasActiveGateway) {
+        filteredGroups = filteredGroups.filter(g => g.id === 'manual');
+    }
+
+    // 3. Individual Gateway Filtering (Fine-grained control)
+    if (gatewayStatus) {
+        if (!gatewayStatus.midtrans) {
+            // Midtrans handles VA, E-Wallet, CStore
+            filteredGroups = filteredGroups.filter(g => !['va', 'ewallet', 'cstore'].includes(g.id));
+        }
+        if (!gatewayStatus.creem) {
+            // Creem handles Card
+            filteredGroups = filteredGroups.filter(g => g.id !== 'card');
+        }
+    }
+
+    // 4. Apply allowedGroups filter if provided
+    if (allowedGroups) {
+        filteredGroups = filteredGroups.filter(g => allowedGroups.includes(g.id));
+    }
 
     const handleCharge = async () => {
         if (!selectedMethod) return;
@@ -204,7 +232,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
     if (isVerifying) {
         return (
-            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-8 shadow-xl flex flex-col items-center justify-center text-center h-[400px]">
+            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-8 shadow-xl flex flex-col items-center justify-center text-center h-fit min-h-[350px]">
                 <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
                     <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                 </div>
@@ -221,7 +249,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
     return (
         <>
-            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-6 shadow-xl flex flex-col h-[700px]">
+            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-6 shadow-xl flex flex-col h-fit max-h-[800px]">
                 <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
                     <Wallet className="w-5 h-5 text-lime-400" />
                     Payment Method
@@ -287,7 +315,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                         </div>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col justify-center items-center text-center space-y-4 animate-in fade-in zoom-in duration-300">
+                    <div className="flex-1 flex flex-col justify-center items-center text-center space-y-4 animate-in fade-in zoom-in duration-300 min-h-[300px]">
                         <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20 animate-pulse">
                             <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
                         </div>

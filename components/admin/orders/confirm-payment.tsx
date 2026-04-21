@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 // import { confirmOrder } from "@/app/actions/admin";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
 export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: string, paymentType?: string | null }) {
     const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     const isDP = paymentType === 'DP';
     const actionLabel = isDP ? "Confirm DP (50%)" : "Confirm Full Payment";
@@ -22,6 +24,7 @@ export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: 
                 });
                 if (!res.ok) throw new Error("Failed");
                 toast.success(`Payment confirmed. Project status updated.`);
+                router.refresh();
             } catch (error) {
                 toast.error("Failed to confirm payment.");
                 console.error(error);

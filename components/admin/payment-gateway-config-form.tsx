@@ -13,11 +13,13 @@ interface PaymentGatewayConfig {
         clientKey: string;
         merchantId: string;
         isProduction: boolean;
+        isActive: boolean;
     };
     creem?: {
         apiKey: string;
         storeId: string;
         isProduction: boolean;
+        isActive: boolean;
     };
 }
 
@@ -26,13 +28,15 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
         serverKey: '',
         clientKey: '',
         merchantId: '',
-        isProduction: false
+        isProduction: false,
+        isActive: false
     });
 
     const [creemConfig, setCreemConfig] = useState(initialConfig.creem || {
         apiKey: '',
         storeId: '',
-        isProduction: false
+        isProduction: false,
+        isActive: false
     });
 
     const [showMidtransKeys, setShowMidtransKeys] = useState(false);
@@ -143,6 +147,17 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
 
                     <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/30 border border-white/5">
                         <div>
+                            <p className="text-sm font-medium text-white">Active Status</p>
+                            <p className="text-xs text-zinc-500">Enable or disable Midtrans as a payment option</p>
+                        </div>
+                        <Switch
+                            checked={midtransConfig.isActive}
+                            onCheckedChange={(checked) => setMidtransConfig({ ...midtransConfig, isActive: checked })}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/30 border border-white/5">
+                        <div>
                             <p className="text-sm font-medium text-white">Production Mode</p>
                             <p className="text-xs text-zinc-500">Enable for live transactions (disable for sandbox)</p>
                         </div>
@@ -214,6 +229,17 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
                             onChange={(e) => setCreemConfig({ ...creemConfig, storeId: e.target.value })}
                             placeholder="sto_xxxxx"
                             className="bg-black/20 border-white/10 text-zinc-200 font-mono text-sm focus-visible:ring-purple-500/20"
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-800/30 border border-white/5">
+                        <div>
+                            <p className="text-sm font-medium text-white">Active Status</p>
+                            <p className="text-xs text-zinc-500">Enable or disable Creem as a payment option</p>
+                        </div>
+                        <Switch
+                            checked={creemConfig.isActive}
+                            onCheckedChange={(checked) => setCreemConfig({ ...creemConfig, isActive: checked })}
                         />
                     </div>
 

@@ -13,8 +13,10 @@ import {
     Copy,
     ChevronLeft,
     ChevronRight,
-    XCircle
+    XCircle,
+    FileText
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,6 +31,7 @@ import { ConfirmPaymentButton } from "@/components/admin/orders/confirm-payment"
 import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
 import { CancelOrderButton } from "@/components/admin/orders/cancel-button";
+import { DeleteOrderButton } from "@/components/admin/orders/delete-button";
 import { useTranslations } from "next-intl";
 import { formatPaymentMethod } from "@/lib/shared/utils";
 
@@ -363,6 +366,11 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                         </span>
 
                         <div className="flex items-center gap-2 mt-2">
+                            <Link href={`/id/invoices/${data.id}`} target="_blank">
+                                <Button variant="outline" size="icon" className="h-9 w-9 border-zinc-800 bg-zinc-900 hover:bg-zinc-800 hover:text-brand-yellow text-zinc-400" title="Open Invoice">
+                                    <FileText className="w-4 h-4" />
+                                </Button>
+                            </Link>
                             {isPending && !isSettledDP && (
                                 <div className="flex items-center">
                                     <span className="text-xs text-amber-500 italic mr-2">{t("waitingConfirmation")}</span>
@@ -379,6 +387,7 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                                 <span className="text-xs text-zinc-500 italic">{t("dpSettled")} - No Action Needed</span>
                             )}
                             {data.status !== 'cancelled' && <CancelOrderButton estimateId={data.id} />}
+                            {data.status === 'cancelled' && <DeleteOrderButton id={data.id} />}
                         </div>
                     </div>
                 </div>

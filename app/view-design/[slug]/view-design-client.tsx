@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Monitor, Smartphone, Tablet, MessageCircle, Send, ExternalLink, Check } from "lucide-react";
+import { ArrowLeft, Monitor, Smartphone, Tablet, MessageCircle, Send, ExternalLink, Check, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/shared/utils";
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import {
@@ -30,7 +30,37 @@ interface ViewDesignClientProps {
     logoDisplayMode?: string;
 }
 
-const PREVIEW_HIDE_SCROLLBAR = `<style>body { scrollbar-width: none; -ms-overflow-style: none; } body::-webkit-scrollbar { display: none; }</style>`;
+const PREVIEW_CUSTOM_SCROLLBAR = `
+<style>
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 10px;
+    }
+    :hover::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(234, 211, 8, 0.5) !important;
+    }
+    html, body {
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+    }
+    :hover {
+        scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    }
+    @media (max-width: 768px) {
+        ::-webkit-scrollbar { display: none; }
+        html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    }
+</style>`;
 
 function buildSrcDoc(content: string): string {
     if (!content) return "<html><body style='background: #f8fafc'></body></html>";
@@ -38,11 +68,11 @@ function buildSrcDoc(content: string): string {
     const isFullDocument = /^<!doctype\s+html|^<html[\s>]/i.test(trimmed);
     if (isFullDocument) {
         if (/<head[\s>]/i.test(trimmed)) {
-            return trimmed.replace(/<head([^>]*)>/i, `<head$1>${PREVIEW_HIDE_SCROLLBAR}`);
+            return trimmed.replace(/<head([^>]*)>/i, `<head$1>${PREVIEW_CUSTOM_SCROLLBAR}`);
         }
-        return trimmed.replace(/<html([^>]*)>/i, `<html$1><head>${PREVIEW_HIDE_SCROLLBAR}</head>`);
+        return trimmed.replace(/<html([^>]*)>/i, `<html$1><head>${PREVIEW_CUSTOM_SCROLLBAR}</head>`);
     }
-    return `<html><head>${PREVIEW_HIDE_SCROLLBAR}</head><body>${content}</body></html>`;
+    return `<html><head>${PREVIEW_CUSTOM_SCROLLBAR}</head><body>${content}</body></html>`;
 }
 
 type DeviceType = "desktop" | "tablet" | "mobile";
@@ -59,6 +89,7 @@ export function ViewDesignClient({
     logoDisplayMode = "both"
 }: ViewDesignClientProps) {
     const [device, setDevice] = useState<DeviceType>("desktop");
+    const [showNotice, setShowNotice] = useState(true);
     const t = useTranslations("ViewDesign");
 
     const waLink = contactPhone
@@ -79,7 +110,7 @@ export function ViewDesignClient({
                             <ArrowLeft className="w-5 h-5" />
                         </Button>
                     </Link>
-                    <div className="hidden sm:block h-8 w-px bg-white/5" />
+                    <div className="hidden sm:block h-8 w-px bg-zinc-700" />
                     <div className="flex items-center gap-2 md:gap-3">
                         {/* 1. Logo Image (Conditional) */}
                         {(logoDisplayMode === "logo" || logoDisplayMode === "both") && (
@@ -114,16 +145,13 @@ export function ViewDesignClient({
                                 
                                 {/* Logo-only mode with divider if logo exists */}
                                 {logoDisplayMode === "logo" && logoUrl && (
-                                    <div className="h-4 w-px bg-white/10 mx-1 hidden md:block" />
+                                    <div className="h-4 w-px bg-zinc-700 mx-1 hidden md:block" />
                                 )}
 
-                                <span className="text-zinc-500 font-medium truncate max-w-[120px] md:max-w-none">
+                                <span className="text-white font-bold truncate max-w-[120px] md:max-w-none">
                                     {title}
                                 </span>
                             </h1>
-                            <p className="text-[10px] text-zinc-600 font-mono uppercase tracking-tighter hidden md:block leading-none mt-0.5">
-                                {logoDisplayMode === "logo" ? "Live Preview" : "Previewing Live Design System"}
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +162,7 @@ export function ViewDesignClient({
                         onClick={() => setDevice("desktop")}
                         className={cn(
                             "px-4 py-1.5 rounded-lg transition-all flex items-center gap-2 text-xs font-medium",
-                            device === "desktop" ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                            device === "desktop" ? "bg-white/10 text-white shadow-lg" : "text-zinc-400 hover:text-zinc-200"
                         )}
                     >
                         <Monitor className="w-3.5 h-3.5" />
@@ -144,7 +172,7 @@ export function ViewDesignClient({
                         onClick={() => setDevice("tablet")}
                         className={cn(
                             "px-4 py-1.5 rounded-lg transition-all flex items-center gap-2 text-xs font-medium",
-                            device === "tablet" ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                            device === "tablet" ? "bg-white/10 text-white shadow-lg" : "text-zinc-400 hover:text-zinc-200"
                         )}
                     >
                         <Tablet className="w-3.5 h-3.5" />
@@ -154,7 +182,7 @@ export function ViewDesignClient({
                         onClick={() => setDevice("mobile")}
                         className={cn(
                             "px-4 py-1.5 rounded-lg transition-all flex items-center gap-2 text-xs font-medium",
-                            device === "mobile" ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                            device === "mobile" ? "bg-white/10 text-white shadow-lg" : "text-zinc-400 hover:text-zinc-200"
                         )}
                     >
                         <Smartphone className="w-3.5 h-3.5" />
@@ -213,48 +241,91 @@ export function ViewDesignClient({
                     </Dialog>
                 </div>
             </header>
+            
+            {/* Disclaimer for External URLs */}
+            <AnimatePresence>
+                {externalUrl && showNotice && (
+                    <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden bg-brand-yellow/10 border-b border-brand-yellow/20 px-4 py-2 flex items-center justify-between gap-3 backdrop-blur-md z-40"
+                    >
+                        <div className="flex items-center gap-3 justify-center flex-1">
+                            <Info className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
+                            <p className="text-[10px] md:text-xs text-zinc-300 font-medium tracking-tight">
+                                <span className="text-brand-yellow font-bold uppercase mr-1">Note:</span>
+                                Pratinjau mungkin tidak sempurna karena batasan rendering. 
+                                <Link href={externalUrl} target="_blank" className="text-brand-yellow hover:underline ml-1 font-bold">
+                                    Buka situs asli untuk pengalaman penuh.
+                                </Link>
+                            </p>
+                        </div>
+                        <button 
+                            onClick={() => setShowNotice(false)}
+                            className="p-1 hover:bg-white/10 rounded-full transition-colors text-zinc-500 hover:text-white"
+                        >
+                            <X className="w-3.5 h-3.5" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Design Preview Area with Managed Aspect Ratio & Frame */}
-            <main className="flex-1 relative bg-[#0a0a0a] flex flex-col items-center p-4 md:p-8 overflow-hidden">
-                <MotionConfig transition={{ type: "spring", stiffness: 120, damping: 20 }}>
-                    <div className="flex-1 w-full max-w-7xl flex flex-col items-center h-full relative">
-                        {/* Device Info (Dynamic) */}
-                        <motion.div 
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-4 hidden lg:flex items-center gap-3 text-[10px] text-zinc-500 font-mono uppercase tracking-[0.2em]"
-                        >
-                            <span>Resolution: {device === "mobile" ? "375 x 812" : device === "tablet" ? "768 x 1024" : "FullScreen"}</span>
-                            <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                            <span>Status: Interactive</span>
-                        </motion.div>
+            <main 
+                className={cn(
+                    "flex-1 relative bg-[#0a0a0a] flex flex-col overflow-hidden transition-all duration-500",
+                    device !== "desktop" ? "p-0 items-center justify-start" : "p-0"
+                )}
+            >
+                <MotionConfig transition={{ type: "spring", stiffness: 100, damping: 20 }}>
+                    <div className={cn(
+                        "w-full flex flex-col relative",
+                        device !== "desktop" ? "max-w-5xl flex-1 items-center justify-start" : "h-full"
+                    )}>
+                        {/* Device Info - Now floating and subtle */}
+                        {device !== "desktop" && (
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="absolute top-4 right-6 z-30 flex items-center gap-3 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/5 text-[9px] text-zinc-400 font-mono uppercase tracking-widest pointer-events-none"
+                            >
+                                <span>{device === "mobile" ? "375 x 812" : "768 x 1024"}</span>
+                                <div className="w-0.5 h-0.5 rounded-full bg-zinc-700" />
+                                <span className="text-brand-yellow/80">Interactive</span>
+                            </motion.div>
+                        )}
 
                         <motion.div
+                            layout
                             animate={{
                                 width: device === "mobile" ? 375 : device === "tablet" ? 768 : "100%",
-                                height: "100%",
-                                borderRadius: device === "desktop" ? "0px" : "40px",
-                                padding: device === "desktop" ? "0px" : "12px",
+                                height: device === "desktop" ? "100%" : "calc(100vh - 64px)",
+                                borderRadius: "0px",
+                            }}
+                            style={{
+                                maxHeight: "100%"
                             }}
                             className={cn(
-                                "bg-zinc-950 shadow-[0_0_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden border border-white/5 relative group mx-auto",
-                                device !== "desktop" && "border-[12px] border-zinc-800 shadow-2xl ring-1 ring-white/10"
+                                "relative group transition-all duration-700 shadow-2xl",
+                                device !== "desktop" 
+                                    ? "bg-white border-x border-zinc-800" 
+                                    : "border-none h-full w-full"
                             )}
                         >
-                            {/* Realistic Smartphone elements */}
-                            {device === "mobile" && (
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-800 rounded-b-2xl z-20 flex items-center justify-center">
-                                    <div className="w-10 h-1 rounded-full bg-zinc-900" />
-                                </div>
-                            )}
-
                             {/* The Design Iframe */}
                             <iframe
-                                srcDoc={buildSrcDoc(html)}
+                                src={externalUrl && !html ? externalUrl : undefined}
+                                srcDoc={html ? buildSrcDoc(html) : undefined}
                                 className="w-full h-full border-0 bg-white"
                                 title={`${title} Preview`}
-                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation"
                             />
+
+                            {/* Screen Reflection Overlay (Only for non-desktop) */}
+                            {device !== "desktop" && (
+                                <div className="absolute inset-0 pointer-events-none rounded-[34px] bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-20" />
+                            )}
                         </motion.div>
                     </div>
                 </MotionConfig>

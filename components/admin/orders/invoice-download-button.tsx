@@ -34,6 +34,7 @@ export function InvoiceDownloadButton({ estimate }: InvoiceDownloadButtonProps) 
                 <div ref={componentRef}>
                     <InvoiceDocument
                         estimate={estimate as ExtendedEstimate}
+                        isPaid={estimate.status === 'paid'}
                         user={{ email: "Client", displayName: "Client" }}
                     />
                 </div>

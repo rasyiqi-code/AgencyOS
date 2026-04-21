@@ -1,10 +1,8 @@
-import { getSnap } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
 import { Prisma } from "@prisma/client";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
-import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
 import { cookies } from "next/headers";
 import { secureRandomInt } from "@/lib/utils/crypto";
@@ -19,7 +17,7 @@ export async function POST(req: Request) {
         }
         debugSteps.push("User authenticated: " + user.id);
 
-        const { projectId, estimateId, title, paymentType = "FULL", appliedCoupon, currency = "USD" } = await req.json();
+        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD" } = await req.json();
         debugSteps.push(`Request parsed. Project: ${projectId}, Estimate: ${estimateId}, Type: ${paymentType}`);
 
         if (!projectId && !estimateId) {
@@ -119,25 +117,19 @@ export async function POST(req: Request) {
         debugSteps.push("Calculating amount to pay");
         // Calculate amount based on payment type
         let amountToPay = dbAmount;
-        let itemName = title ? title.substring(0, 50) : "Project Payment";
 
         if (paymentType === "DP") {
             amountToPay = dbAmount * 0.5; // 50% DP
-            itemName = `DP: ${itemName}`;
         } else if (paymentType === "REPAYMENT") {
             const project = await prisma.project.findUnique({ where: { id: finalProjectId } });
             const paid = project?.paidAmount || 0;
             const total = project?.totalAmount || dbAmount;
             amountToPay = total - paid;
-            itemName = `Repayment: ${itemName}`;
 
             if (amountToPay <= 0) {
                 return NextResponse.json({ message: "Project already fully paid" }, { status: 400 });
             }
         }
-
-        // Ensure itemName fits Midtrans limit (50 chars)
-        itemName = itemName.substring(0, 50);
 
         // Validasi dan terapkan kupon server-side (jika ada)
         let validatedCoupon: { code: string; discountType: string; discountValue: number } | null = null;
@@ -180,10 +172,7 @@ export async function POST(req: Request) {
 
         console.log(`[CHECKOUT] Type: ${paymentType}, Currency: ${currency}, Amount: ${amountToPay} USD -> ${finalIdrAmount} IDR (Rate: ${finalRate})`);
 
-        debugSteps.push("Checking gateway availability");
-        // Detect gateway availability
-        const hasGateway = await paymentGatewayService.hasActiveGateway();
-
+        debugSteps.push("Checking for existing pending order");
         // Check for existing pending order for this project AND this payment type
         const existingOrder = await prisma.order.findFirst({
             where: {
@@ -197,45 +186,14 @@ export async function POST(req: Request) {
         if (existingOrder && existingOrder.amount === amountToPay) {
             debugSteps.push("Reusing existing order: " + existingOrder.id);
             const orderId = existingOrder.id;
-            let snapToken = existingOrder.snapToken;
 
-            if (hasGateway && !snapToken) {
-                debugSteps.push("Generating new snap token for existing order");
-                const parameter = {
-                    transaction_details: {
-                        order_id: orderId,
-                        gross_amount: finalIdrAmount,
-                    },
-                    credit_card: { secure: true },
-                    customer_details: {
-                        first_name: user.displayName || user.primaryEmail || "Customer",
-                        email: user.primaryEmail,
-                    },
-                    item_details: [{
-                        id: finalProjectId,
-                        price: finalIdrAmount,
-                        quantity: 1,
-                        name: itemName,
-                    }]
-                };
-
-                const snap = await getSnap();
-                const transaction = await snap.createTransaction(parameter);
-                snapToken = transaction.token;
-
-                await prisma.order.update({
-                    where: { id: orderId },
-                    data: { snapToken }
-                });
-            }
-
-            // Sync invoiceId to project for easier dashboard access (optional, maybe specific for latest order)
+            // Sync invoiceId to project for easier dashboard access
             await prisma.project.update({
                 where: { id: finalProjectId },
                 data: { invoiceId: orderId }
             });
 
-            return NextResponse.json({ token: snapToken, orderId });
+            return NextResponse.json({ orderId });
         } else if (existingOrder) {
             // Amount changed, delete old pending order
             await prisma.order.delete({ where: { id: existingOrder.id } });
@@ -244,40 +202,6 @@ export async function POST(req: Request) {
         debugSteps.push("Creating new order ID");
         // Create a unique order ID
         const orderId = `ORDER-${Date.now()}-${secureRandomInt(0, 1000)}`;
-
-        let snapToken = null;
-
-        if (hasGateway) {
-            debugSteps.push("Initializing Midtrans transaction");
-            // Prepare Midtrans transaction details
-            const parameter = {
-                transaction_details: {
-                    order_id: orderId,
-                    gross_amount: finalIdrAmount, // Use IDR
-                },
-                credit_card: {
-                    secure: true,
-                },
-                customer_details: {
-                    first_name: user.displayName || user.primaryEmail || "Customer",
-                    email: user.primaryEmail,
-                },
-                item_details: [
-                    {
-                        id: finalProjectId,
-                        price: finalIdrAmount, // Use IDR
-                        quantity: 1,
-                        name: itemName,
-                    },
-                ],
-            };
-
-            // Get Snap Token from Midtrans
-            const snap = await getSnap();
-            const transaction = await snap.createTransaction(parameter);
-            snapToken = transaction.token;
-            debugSteps.push("Snap token generated");
-        }
 
         // Check for affiliate cookie
         const cookieStore = await cookies();
@@ -291,7 +215,6 @@ export async function POST(req: Request) {
                 amount: amountToPay,
                 userId: user.id,
                 project: finalProjectId ? { connect: { id: finalProjectId } } : undefined,
-                snapToken,
                 status: "pending",
                 type: paymentType, // Save type
                 currency: currency,
@@ -331,7 +254,7 @@ export async function POST(req: Request) {
         });
 
         debugSteps.push("Success");
-        return NextResponse.json({ token: snapToken, orderId });
+        return NextResponse.json({ orderId });
     } catch (error) {
         console.error("[MIDTRANS_CHECKOUT_ERROR]", error);
         return NextResponse.json({

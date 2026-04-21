@@ -208,3 +208,25 @@ export async function cancelDigitalOrder(orderId: string) {
         return { success: false, error: message };
     }
 }
+
+/**
+ * Hapus DigitalOrder secara permanen oleh Admin.
+ * @param orderId - ID DigitalOrder yang akan dihapus
+ */
+export async function deleteDigitalOrder(orderId: string) {
+    try {
+        if (!(await isAdmin())) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        await db.digitalOrder.delete({
+            where: { id: orderId },
+        });
+
+        return { success: true };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("[DELETE_DIGITAL_ORDER_ERROR]", error);
+        return { success: false, error: message };
+    }
+}

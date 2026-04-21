@@ -511,3 +511,32 @@ model PushSubscription {
 
   @@index([endpoint])
 }
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String?
+  description String?
+  externalUrl String?
+  imageUrl    String?
+  htmlContent String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Promotion {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  imageUrl    String
+  ctaText     String?
+  ctaUrl      String?
+  couponCode  String?
+  isActive    Boolean  @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+

@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useReactToPrint } from "react-to-print";
-import { Download, AlertTriangle } from "lucide-react";
+import { Download, AlertTriangle, MoveHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
@@ -43,6 +43,7 @@ interface InvoiceClientWrapperProps {
     bankDetails?: BankDetails;
     agencySettings?: AgencyInvoiceSettings;
     hasActiveGateway?: boolean;
+    gatewayStatus?: { midtrans: boolean; creem: boolean };
 }
 
 const thankYouQuotes = [
@@ -55,7 +56,7 @@ const thankYouQuotes = [
 
 import { useTranslations } from "next-intl";
 
-export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true }: InvoiceClientWrapperProps) {
+export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true, gatewayStatus }: InvoiceClientWrapperProps) {
     const t = useTranslations("Invoice");
     const tc = useTranslations("Checkout");
     const router = useRouter();
@@ -120,6 +121,12 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                     {isPaid && <span className="text-emerald-400 font-bold border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10">{t('paid')}</span>}
                 </div>
 
+                {/* Scroll Hint Mobile */}
+                <div className="mb-3 flex items-center justify-center gap-2 py-2 px-4 bg-zinc-900/50 border border-white/5 rounded-lg text-[10px] font-bold text-zinc-400 uppercase tracking-widest xl:hidden animate-pulse">
+                    <MoveHorizontal className="w-3 h-3 text-lime-500" />
+                    {t('scrollNotice') || "Scroll horizontal to view full invoice"}
+                </div>
+
                 <div className="bg-white text-black rounded-lg shadow-2xl overflow-x-auto min-h-[800px]">
                     <div className="min-w-[800px] h-full">
                         <InvoiceDocument
@@ -131,6 +138,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             paymentType={order.type}
                             currency={effectiveCurrency}
                             exchangeRate={effectiveRate}
+                            bankDetails={bankDetails}
                         />
                     </div>
                 </div>
@@ -157,7 +165,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         </div>
                     </div>
 
-                    {!isPaid && (
+                    {!isPaid && (hasActiveGateway || bankDetails) && (
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm p-3 bg-white/5 rounded-lg border border-white/5">
                                 <span className="text-zinc-300">{tc('totalToPay')}</span>
@@ -166,7 +174,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                                 </span>
                             </div>
 
-                            {!hasActiveGateway && (
+                            {!hasActiveGateway && bankDetails && (
                                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
                                     <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
                                         <AlertTriangle className="w-4 h-4" />
@@ -181,6 +189,12 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             <p className="text-xs text-zinc-500">
                                 {t('completePaymentProject')}
                             </p>
+                        </div>
+                    )}
+
+                    {!isPaid && !hasActiveGateway && !bankDetails && (
+                        <div className="mt-4 p-4 rounded-xl bg-zinc-800/50 border border-white/5 text-center">
+                            <p className="text-xs text-zinc-500">{t('paymentMethodsDisabled') || "Online payment is currently unavailable for this invoice."}</p>
                         </div>
                     )}
 
@@ -211,7 +225,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                             {t('downloadPrint')}
                         </Button>
 
-                        <div className="relative group">
+                        <div className="relative group hidden xl:block">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
                             <div className="relative bg-zinc-900 border border-white/10 p-6 rounded-lg text-center space-y-3">
                                 <div className="text-2xl text-lime-400 opacity-50 font-serif">&quot;</div>
@@ -227,7 +241,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                 )}
 
                 {/* Custom Core API Payment Widget */}
-                {!isPaid && (
+                {!isPaid && (hasActiveGateway || bankDetails) && (
                     <PaymentSelector
                         orderId={order.id}
                         amount={displayAmount}
@@ -239,6 +253,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         orderStatus={order.status}
                         contactWA={agencySettings?.phone}
                         contactTele={agencySettings?.telegram}
+                        hasActiveGateway={hasActiveGateway}
+                        gatewayStatus={gatewayStatus}
                     />
                 )}
 

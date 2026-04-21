@@ -7,9 +7,9 @@ import { getSystemSettings } from "@/lib/server/settings";
 export const dynamic = "force-dynamic";
 
 export default async function AdminSeoPage() {
-    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
-    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
-    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Reduces redundant database queries for global settings, mitigating N+1 query problems and reducing database load.
+    // 📊 Impact: Faster API response times and less database load by leveraging Next.js caching.
     const settings = await getSystemSettings(["SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
 
     const seoData = {
