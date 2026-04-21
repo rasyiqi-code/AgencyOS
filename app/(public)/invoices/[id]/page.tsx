@@ -93,7 +93,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
 
             // Populate order exchange rate if it was missing/invalid for consistency in client components
             if (!order.exchangeRate || order.exchangeRate <= 1) {
-                (order as { exchangeRate: number | null }).exchangeRate = rate;
+                (order as Record<string, unknown>).exchangeRate = rate;
             }
 
             // Normalize currency to USD to avoid double conversion in InvoiceDocument

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 /**
  * Dynamic route handler for /llms.txt
@@ -13,20 +14,16 @@ import { prisma } from "@/lib/config/db";
 export async function GET() {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    // Fetch agency info from system settings
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: {
-                in: [
-                    "AGENCY_NAME",
-                    "SEO_DESCRIPTION",
-                    "SEO_DESCRIPTION_ID",
-                    "CONTACT_PHONE",
-                    "CONTACT_EMAIL",
-                ],
-            },
-        },
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Reduces redundant database queries for global settings, mitigating N+1 query problems and reducing database load.
+    // 📊 Impact: Faster API response times and less database load by leveraging Next.js caching.
+    const settings = await getSystemSettings([
+        "AGENCY_NAME",
+        "SEO_DESCRIPTION",
+        "SEO_DESCRIPTION_ID",
+        "CONTACT_PHONE",
+        "CONTACT_EMAIL",
+    ]);
 
     const agencyName =
         settings.find((s) => s.key === "AGENCY_NAME")?.value || "Agency OS";

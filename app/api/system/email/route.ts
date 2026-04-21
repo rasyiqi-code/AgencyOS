@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { getSystemSettings } from "@/lib/server/settings";
 
 const RESEND_KEY_DB_KEY = "RESEND_API_KEY";
 const ADMIN_EMAIL_DB_KEY = "ADMIN_EMAIL_TARGET";
@@ -15,11 +16,10 @@ export async function GET() {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: [RESEND_KEY_DB_KEY, ADMIN_EMAIL_DB_KEY] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+    // 🎯 Why: Reduces redundant database queries for global settings, mitigating N+1 query problems and reducing database load.
+    // 📊 Impact: Faster API response times and less database load by leveraging Next.js caching.
+    const settings = await getSystemSettings([RESEND_KEY_DB_KEY, ADMIN_EMAIL_DB_KEY]);
 
     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
 
