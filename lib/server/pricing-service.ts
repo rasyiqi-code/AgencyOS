@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export interface PricingConfig {
     baseRate: number;
@@ -18,14 +19,13 @@ const KEYS = {
 
 export class PricingService {
     async getConfig(): Promise<PricingConfig> {
-        const settings = await prisma.systemSetting.findMany({
-            where: {
-                key: { in: Object.values(KEYS) }
-            }
-        });
+        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+        // 🎯 Why: Reduces database load by caching frequently accessed pricing settings.
+        // 📊 Impact: Eliminates a database query on pricing config initialization.
+        const settings = await getSystemSettings(Object.values(KEYS));
 
         const getVal = (key: string, def: number) => {
-            const s = settings.find(x => x.key === key);
+            const s = settings.find((x: { key: string; value: string }) => x.key === key);
             return s ? parseFloat(s.value) : def;
         };
 

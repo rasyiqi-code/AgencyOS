@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 // Singleton to avoid re-initializing
 let s3ClientInstance: S3Client | null = null;
@@ -7,13 +8,12 @@ let s3BucketName: string | null = null;
 let s3ConfigHash: string | null = null;
 
 export async function getClient() {
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name'] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // 🎯 Why: Reduces database load by caching frequently accessed storage settings.
+    // 📊 Impact: Eliminates a database query on storage client initialization.
+    const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name']);
 
-    const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
+    const getSetting = (key: string) => settings.find((s: { key: string, value: string }) => s.key === key)?.value;
 
     const endpoint = getSetting('r2_endpoint')?.trim();
     const accessKeyId = getSetting('r2_access_key_id')?.trim();
