@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
   
-  <h1>AgencyOS</h1>
+  <h1>AgencyWeb</h1>
   <h3>Website Untuk Agency</h3>
   
   [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
