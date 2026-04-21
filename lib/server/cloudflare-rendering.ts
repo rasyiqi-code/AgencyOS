@@ -1,19 +1,50 @@
 import { getSettingValue } from "@/lib/server/settings";
 
 /**
+ * Ensures a URL has a protocol (defaults to https if missing).
+ */
+function ensureAbsoluteUrl(url: string): string {
+    if (!url) return "";
+    const trimmed = url.trim();
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+        return trimmed;
+    }
+    return `https://${trimmed}`;
+}
+
+/**
  * Enhances HTML by rewriting links to be absolute and proxying fonts.
  */
 export function enhanceHtml(html: string, url: string, localBaseUrl?: string): string {
     try {
-        const origin = new URL(url).origin;
-        const baseUrl = url.split('?')[0].split('#')[0];
+        const absoluteUrl = ensureAbsoluteUrl(url);
+        const urlObj = new URL(absoluteUrl);
+        const origin = urlObj.origin;
+        const baseUrl = absoluteUrl.split('?')[0].split('#')[0];
         const baseDir = baseUrl.endsWith('/') ? baseUrl : baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
         
         let enhancedHtml = html;
 
-        // Add <base> tag to handle all relative links (images, css, scripts) naturally
+        // Add <base> tag and Luxury Scrollbar CSS
+        const scrollbarCss = `
+        <style>
+            ::-webkit-scrollbar { width: 5px; height: 5px; }
+            ::-webkit-scrollbar-track { background: transparent; }
+            ::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
+            :hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+            ::-webkit-scrollbar-thumb:hover { background: rgba(234, 211, 8, 0.5) !important; }
+            html, body { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+            :hover { scrollbar-color: rgba(255, 255, 255, 0.1) transparent; }
+            @media (max-width: 768px) {
+                ::-webkit-scrollbar { display: none; }
+                html, body { scrollbar-width: none; -ms-overflow-style: none; }
+            }
+        </style>`;
+
         if (!enhancedHtml.includes("<base") && enhancedHtml.includes("<head>")) {
-            enhancedHtml = enhancedHtml.replace("<head>", `<head><base href="${baseDir}">`);
+            enhancedHtml = enhancedHtml.replace("<head>", `<head><base href="${baseDir}">${scrollbarCss}`);
+        } else if (enhancedHtml.includes("<head>")) {
+            enhancedHtml = enhancedHtml.replace("<head>", `<head>${scrollbarCss}`);
         }
 
         // AssetProxy configuration - MUST be absolute local URL to ignore the <base> tag
@@ -44,6 +75,8 @@ export async function fetchRenderedHtml(url: string, localBaseUrl?: string): Pro
     const accountId = await getSettingValue("cloudflare_account_id");
     const apiToken = await getSettingValue("cloudflare_api_token");
 
+    const absoluteUrl = ensureAbsoluteUrl(url);
+
     if (!accountId || !apiToken) {
         console.error("[CloudflareProxy] Missing credentials");
         throw new Error("Missing Cloudflare credentials (cloudflare_account_id, cloudflare_api_token) in system settings.");
@@ -52,7 +85,7 @@ export async function fetchRenderedHtml(url: string, localBaseUrl?: string): Pro
     const endpoint = `https://api.cloudflare.com/client/v4/accounts/${accountId}/browser-rendering/content`;
 
     try {
-        console.log(`[CloudflareProxy] Fetching via Browser Rendering: ${url}`);
+        console.log(`[CloudflareProxy] Fetching via Browser Rendering: ${absoluteUrl}`);
         const response = await fetch(endpoint, {
             method: "POST",
             headers: {
@@ -60,7 +93,7 @@ export async function fetchRenderedHtml(url: string, localBaseUrl?: string): Pro
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                url,
+                url: absoluteUrl,
                 gotoOptions: {
                     waitUntil: "networkidle2",
                 }
@@ -68,15 +101,14 @@ export async function fetchRenderedHtml(url: string, localBaseUrl?: string): Pro
         });
 
         if (!response.ok) {
+            // Handle 429 specifically and silently fallback
+            if (response.status === 429) {
+                console.warn(`[CloudflareProxy] Rate limit reached for ${absoluteUrl}, falling back to raw fetch.`);
+                return await fetchRawHtml(absoluteUrl, localBaseUrl);
+            }
+
             const errorText = await response.text();
             console.error(`[CloudflareProxy] Status: ${response.status}, Error: ${errorText}`);
-            
-            // If Rate Limited (429), attempt fallback to simple fetch
-            if (response.status === 429) {
-                console.warn("[CloudflareProxy] Rate limit reached, falling back to simple fetch...");
-                return await fetchRawHtml(url, localBaseUrl);
-            }
-            
             throw new Error(`Cloudflare Browser Rendering failed (${response.status}): ${errorText}`);
         }
 
@@ -125,6 +157,115 @@ async function fetchRawHtml(url: string, localBaseUrl?: string): Promise<string>
         return enhanceHtml(html, url, localBaseUrl);
     } catch (e) {
         console.error("[CloudflareProxy] Fallback failed:", e);
-        return `<html><body><h1>Failed to load content</h1><p>${url}</p></body></html>`;
+        // Premium Smart Redirect Page
+        return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { 
+                    background: #050505; 
+                    color: white; 
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    text-align: center;
+                    overflow: hidden;
+                }
+                .container {
+                    padding: 40px;
+                    border-radius: 32px;
+                    background: rgba(255,255,255,0.03);
+                    border: 1px solid rgba(255,255,255,0.1);
+                    backdrop-filter: blur(20px);
+                    max-width: 400px;
+                }
+                h1 { font-size: 20px; font-weight: 900; letter-spacing: -0.05em; margin-bottom: 10px; }
+                p { font-size: 13px; color: #71717a; margin-bottom: 25px; line-height: 1.6; }
+                .btn {
+                    background: #ead308;
+                    color: black;
+                    padding: 12px 28px;
+                    border-radius: 100px;
+                    text-decoration: none;
+                    font-size: 12px;
+                    font-weight: 900;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    transition: all 0.3s;
+                    display: inline-block;
+                }
+                .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(234,211,8,0.3); }
+                .loader {
+                    width: 40px;
+                    height: 40px;
+                    border: 3px solid rgba(234,211,8,0.1);
+                    border-top: 3px solid #ead308;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 20px;
+                }
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style>
+            <script>
+                // Smart Redirect: Escape the frame and go to the source if preview fails
+                setTimeout(() => {
+                    try {
+                        window.top.location.href = "${url}";
+                    } catch (e) {
+                        window.location.href = "${url}";
+                    }
+                }, 3000);
+            </script>
+        </head>
+        <body>
+            <div class="container">
+                <div class="loader"></div>
+                <h1>PREVIEW SECURING...</h1>
+                <p>Establishing a direct connection to<br/><span style="color: #ead308; font-family: monospace;">${url}</span></p>
+                <a href="${url}" target="_blank" class="btn">Launch Site</a>
+            </div>
+        </body>
+        </html>`;
+    }
+}
+/**
+ * Checks if a URL allows being displayed in an iframe.
+ * Returns true if it's blocked by X-Frame-Options or CSP.
+ */
+export async function isFrameBlocked(url: string): Promise<boolean> {
+    try {
+        const absoluteUrl = ensureAbsoluteUrl(url);
+        const response = await fetch(absoluteUrl, { 
+            method: 'HEAD',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            },
+            next: { revalidate: 86400 } // Cache this check for 24 hours
+        });
+
+        const xFrameOptions = response.headers.get('x-frame-options')?.toLowerCase();
+        const csp = response.headers.get('content-security-policy')?.toLowerCase();
+
+        // Check X-Frame-Options
+        if (xFrameOptions === 'deny' || xFrameOptions === 'sameorigin') {
+            return true;
+        }
+
+        // Check CSP frame-ancestors
+        if (csp && (csp.includes('frame-ancestors \'none\'') || csp.includes('frame-ancestors \'self\''))) {
+            return true;
+        }
+
+        return false;
+    } catch {
+        // If we can't even HEAD the site, it might be heavily protected, safer to proxy
+        return true;
     }
 }

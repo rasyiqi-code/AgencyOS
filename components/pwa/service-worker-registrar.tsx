@@ -12,13 +12,23 @@ import { toast } from "sonner";
  */
 export function ServiceWorkerRegistrar() {
     useEffect(() => {
-        // Hanya register di production atau jika sw.js tersedia
-        if (!("serviceWorker" in navigator)) {
-            console.log("[PWA] Service Worker tidak didukung browser ini");
+        // Jangan jalankan Service Worker di mode development
+        if (process.env.NODE_ENV === "development") {
             return;
         }
 
-        registerServiceWorker();
+        // Cek dukungan browser
+        if (!("serviceWorker" in navigator)) {
+            return;
+        }
+
+        // Jalankan registrasi setelah halaman benar-benar selesai loading
+        if (document.readyState === "complete") {
+            registerServiceWorker();
+        } else {
+            window.addEventListener("load", registerServiceWorker);
+            return () => window.removeEventListener("load", registerServiceWorker);
+        }
     }, []);
 
     return null;

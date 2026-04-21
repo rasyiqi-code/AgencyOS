@@ -205,11 +205,11 @@ export default async function AdminQuotesPage() {
                     })}
                 </div>
 
-                <Card className="hidden sm:block bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 overflow-hidden rounded-3xl">
+                <Card className="hidden sm:block bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 rounded-3xl relative">
                     <CardContent className="p-0">
                         <div className="overflow-x-auto">
                             <Table>
-                                <TableHeader className="border-zinc-800/50 bg-white/5">
+                                <TableHeader className="sticky top-14 sm:top-16 z-20 bg-zinc-900/90 backdrop-blur-md border-zinc-800/50">
                                     <TableRow className="border-zinc-800/50 hover:bg-transparent">
                                         <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colOrderId')}</TableHead>
                                         <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colClient')}</TableHead>

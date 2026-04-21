@@ -1,0 +1,108 @@
+From 24ac6f431b7483baaa3e6a647b2b8683ce333315 Mon Sep 17 00:00:00 2001
+From: rasyiqi-code <219076611+rasyiqi-code@users.noreply.github.com>
+Date: Mon, 20 Apr 2026 18:00:02 +0000
+Subject: [PATCH] =?UTF-8?q?=E2=9A=A1=20Bolt:=20Use=20cached=20getSystemSet?=
+ =?UTF-8?q?tings=20in=20system=20config=20APIs?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Replaced direct `prisma.systemSetting.findMany` queries with the cached `getSystemSettings` helper in `app/api/system/seo`, `app/api/system/contact`, and `app/api/system/email` to reduce database load and speed up API response times.
+---
+ app/api/system/contact/route.ts | 14 +++++++++-----
+ app/api/system/email/route.ts   | 10 +++++-----
+ app/api/system/seo/route.ts     | 14 +++++++++-----
+ 3 files changed, 23 insertions(+), 15 deletions(-)
+
+diff --git a/app/api/system/contact/route.ts b/app/api/system/contact/route.ts
+index 2ac4a64..78cc7da 100644
+--- a/app/api/system/contact/route.ts
++++ b/app/api/system/contact/route.ts
+@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
+ import { prisma } from "@/lib/config/db";
+ import { stackServerApp } from "@/lib/config/stack";
+ import { revalidatePath, revalidateTag } from "next/cache";
++import { getSystemSettings } from "@/lib/server/settings";
+ 
+ const CONTACT_EMAIL_KEY = "CONTACT_EMAIL";
+ const CONTACT_PHONE_KEY = "CONTACT_PHONE";
+@@ -17,11 +18,14 @@ const SERVICES_SUBTITLE_KEY = "SERVICES_SUBTITLE";
+ const CONTACT_HOURS_KEY = "CONTACT_HOURS";
+ 
+ export async function GET() {
+-    const settings = await prisma.systemSetting.findMany({
+-        where: {
+-            key: { in: [CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_TELEGRAM_KEY, CONTACT_ADDRESS_KEY, AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY, SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY] }
+-        }
+-    });
++    // ⚡ Bolt Optimization: Replaced direct Prisma query with cached getSystemSettings
++    // 🎯 Why: Prevent redundant database queries for static system contact settings
++    // 📊 Impact: Reduces database load and speeds up API response time
++    const settings = await getSystemSettings([
++        CONTACT_EMAIL_KEY, CONTACT_PHONE_KEY, CONTACT_TELEGRAM_KEY, CONTACT_ADDRESS_KEY,
++        AGENCY_NAME_KEY, COMPANY_NAME_KEY, AGENCY_LOGO_KEY, AGENCY_LOGO_DISPLAY_KEY,
++        SERVICES_TITLE_KEY, SERVICES_SUBTITLE_KEY, CONTACT_HOURS_KEY
++    ]);
+ 
+     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
+ 
+diff --git a/app/api/system/email/route.ts b/app/api/system/email/route.ts
+index 04f65de..a5b3254 100644
+--- a/app/api/system/email/route.ts
++++ b/app/api/system/email/route.ts
+@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
+ import { prisma } from "@/lib/config/db";
+ import { stackServerApp } from "@/lib/config/stack";
+ import { isAdmin } from "@/lib/shared/auth-helpers";
++import { getSystemSettings } from "@/lib/server/settings";
+ 
+ const RESEND_KEY_DB_KEY = "RESEND_API_KEY";
+ const ADMIN_EMAIL_DB_KEY = "ADMIN_EMAIL_TARGET";
+@@ -15,11 +16,10 @@ export async function GET() {
+         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+     }
+ 
+-    const settings = await prisma.systemSetting.findMany({
+-        where: {
+-            key: { in: [RESEND_KEY_DB_KEY, ADMIN_EMAIL_DB_KEY] }
+-        }
+-    });
++    // ⚡ Bolt Optimization: Replaced direct Prisma query with cached getSystemSettings
++    // 🎯 Why: Prevent redundant database queries for static system email settings
++    // 📊 Impact: Reduces database load and speeds up API response time
++    const settings = await getSystemSettings([RESEND_KEY_DB_KEY, ADMIN_EMAIL_DB_KEY]);
+ 
+     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
+ 
+diff --git a/app/api/system/seo/route.ts b/app/api/system/seo/route.ts
+index 3a5e09c..2ee39c5 100644
+--- a/app/api/system/seo/route.ts
++++ b/app/api/system/seo/route.ts
+@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
+ import { prisma } from "@/lib/config/db";
+ import { stackServerApp } from "@/lib/config/stack";
+ import { revalidatePath, revalidateTag } from "next/cache";
++import { getSystemSettings } from "@/lib/server/settings";
+ 
+ const SEO_TITLE_KEY = "SEO_TITLE";
+ const SEO_TITLE_ID_KEY = "SEO_TITLE_ID";
+@@ -16,11 +17,14 @@ const SEO_GOOGLE_VERIFICATION_KEY = "SEO_GOOGLE_VERIFICATION";
+ const SEO_GA_ID_KEY = "SEO_GA_ID";
+ 
+ export async function GET() {
+-    const settings = await prisma.systemSetting.findMany({
+-        where: {
+-            key: { in: [SEO_TITLE_KEY, SEO_TITLE_ID_KEY, SEO_DESCRIPTION_KEY, SEO_DESCRIPTION_ID_KEY, SEO_KEYWORDS_KEY, SEO_KEYWORDS_ID_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY, SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY] }
+-        }
+-    });
++    // ⚡ Bolt Optimization: Replaced direct Prisma query with cached getSystemSettings
++    // 🎯 Why: Prevent redundant database queries for static system settings
++    // 📊 Impact: Reduces database load and speeds up API response time
++    const settings = await getSystemSettings([
++        SEO_TITLE_KEY, SEO_TITLE_ID_KEY, SEO_DESCRIPTION_KEY, SEO_DESCRIPTION_ID_KEY,
++        SEO_KEYWORDS_KEY, SEO_KEYWORDS_ID_KEY, SEO_OG_IMAGE_KEY, SEO_FAVICON_KEY,
++        SEO_GOOGLE_VERIFICATION_KEY, SEO_GA_ID_KEY
++    ]);
+ 
+     const getVal = (key: string) => settings.find(s => s.key === key)?.value || null;
+ 

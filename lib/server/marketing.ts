@@ -157,3 +157,65 @@ export async function getPromotionCoupon(context?: "DIGITAL" | "SERVICE" | "CALC
         orderBy: { createdAt: "desc" },
     });
 }
+
+// --- Promotions (Posters/Banners) ---
+
+export async function getPromotions(onlyActive = false) {
+    return await prisma.promotion.findMany({
+        where: onlyActive ? { 
+            isActive: true,
+            OR: [
+                { endDate: null },
+                { endDate: { gte: new Date() } }
+            ]
+        } : {},
+        orderBy: { createdAt: "desc" },
+    });
+}
+
+export async function createPromotion(data: {
+    title: string;
+    description?: string;
+    imageUrl: string;
+    ctaText?: string;
+    ctaUrl?: string;
+    couponCode?: string;
+    startDate?: Date;
+    endDate?: Date;
+}) {
+    const promotion = await prisma.promotion.create({
+        data,
+    });
+    revalidatePath("/admin/marketing");
+    revalidatePath("/promosi");
+    return promotion;
+}
+
+export async function updatePromotion(id: string, data: Partial<{
+    title: string;
+    description: string;
+    imageUrl: string;
+    ctaText: string;
+    ctaUrl: string;
+    couponCode: string;
+    startDate: Date;
+    endDate: Date;
+    isActive: boolean;
+}>) {
+    const promotion = await prisma.promotion.update({
+        where: { id },
+        data,
+    });
+
+    revalidatePath("/admin/marketing");
+    revalidatePath("/promosi");
+    return promotion;
+}
+
+export async function deletePromotion(id: string) {
+    await prisma.promotion.delete({ where: { id } });
+    revalidatePath("/admin/marketing");
+    revalidatePath("/promosi");
+}
+
+

@@ -6,8 +6,8 @@ import { prisma } from "@/lib/config/db";
 mock.module("@/lib/config/db", () => ({
     prisma: {
         systemSetting: {
-            findUnique: mock(),
-            upsert: mock(),
+            findUnique: mock() as unknown as ReturnType<typeof mock>,
+            upsert: mock() as unknown as ReturnType<typeof mock>,
         }
     }
 }));
@@ -19,7 +19,7 @@ describe("CurrencyService.fetchAndCacheRates", () => {
     beforeEach(() => {
         service = new CurrencyService();
         fetchMock = mock();
-        global.fetch = fetchMock;
+        global.fetch = fetchMock as unknown as typeof fetch;
 
         // Default mocks
         (prisma.systemSetting.findUnique as ReturnType<typeof mock>).mockResolvedValue(null);

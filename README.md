@@ -1,144 +1,129 @@
-# AgencyOS: The Hybrid Agency Platform
-
-[English Version](README.en.md)
-
-> **Visi**: Menciptakan "Sistem Operasi Bisnis" yang memungkinkan agensi berjalan sebagai Hybrid Agency (AI + Manusia).
-> **Filosofi**: Async First. AI Augmented. Zero-bloat. Transparansi.
-
----
-
-## 🏗️ 1. Arsitektur & Peran Pengguna
-
-### A. Klien (User)
-*   **Akses**: Dashboard Klien (`/dashboard`)
-*   **Status**: Terimplementasi.
-*   **Fitur**: Ringkasan proyek, integrasi chatbot, pencatatan feedback, pembayaran termin.
-
-### B. Arsitek (Super Admin)
-*   **Akses**: Panel Admin (`/admin`)
-*   **Status**: Terimplementasi (Lanjutan).
-*   **Fitur**: Manajemen proyek, manajemen keuangan (faktur/pesanan), pengaturan sistem (kunci AI, pembayaran), Tiket Support, Manajemen Afiliasi.
-
-### C. Squad Lead (Mitra)
-*   **Akses**: Portal Squad (`/squad`)
-*   **Status**: Terimplementasi (Beta).
-*   **Fitur**: Profil skill, lamaran misi (proyek), manajemen portofolio.
-
-### D. Agen AI (CredibleBot)
-*   **Mesin**: Genkit (Google Gemini)
-*   **Status**: Produksi.
-*   **Fitur**: Rotasi API Key otomatis (Load Balancing), pembuatan PRD, konsultasi estimasi harga.
+<div align="center">
+  <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
+  
+  <h1>AgencyOS</h1>
+  <h3>Website Untuk Agency</h3>
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![Prisma](https://img.shields.io/badge/Prisma-7.2.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+  [![Tailwind](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+  [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+  
+  **Visi**: Merevolusi cara agensi bekerja melalui integrasi cerdas antara AI dan keahlian manusia dalam satu ekosistem terpadu.
+</div>
 
 ---
 
-## 🛠️ 2. Teknologi (Tech Stack)
+## 📖 Apa itu AgencyOS?
 
-### Frontend
-- **Framework**: Next.js 16.1.4 (App Router)
-- **UI Library**: React 19, Tailwind CSS 4, Shadcn UI
-- **Manajemen State**: Zustand
-- **Ikon**: Lucide React
+**AgencyOS** adalah platform "Business Operating System" modern yang dirancang khusus untuk agensi masa depan. Dengan filosofi *Async-First* dan *AI-Augmented*, platform ini memungkinkan agensi Anda berjalan lebih efisien melalui otomatisasi cerdas, manajemen proyek yang transparan, dan sistem pembayaran yang terintegrasi penuh.
 
-### Backend & Database
-- **Otentikasi**: Stack Auth
-- **Database**: PostgreSQL dengan Prisma ORM 7.2.0
-- **Penyimpanan**: AWS S3 (via `@aws-sdk/client-s3`) / Cloudflare R2
-- **Pembayaran**: Midtrans / Creem (Otomatis Penuh)
-
-### Integrasi AI
-- **Framework**: Genkit AI
-- **Model**: Gemini 2.0 Flash (Utama), Gemini 1.5 Flash (Cadangan)
-- **Logika**: Rotasi kunci dinamis via `prisma.systemKey`
+### 🌟 Nilai Utama
+- 🤖 **AI Augmented**: Meningkatkan produktivitas dengan bantuan Agen AI (CredibleBot).
+- ⚡ **Async First**: Komunikasi dan alur kerja yang tidak harus real-time, memungkinkan skalabilitas tinggi.
+- 💎 **Luxury Aesthetic**: Antarmuka premium dengan "Luxury Dark Studio" branding yang memikat klien.
+- 🛠️ **Zero-Bloat**: Hanya fitur yang benar-benar Anda butuhkan untuk menjalankan bisnis agensi.
 
 ---
 
-## ✅ 3. Fitur Utama (Siap Pakai)
+## 🏗️ Arsitektur & Peran Pengguna
 
-### Bisnis Inti
-- [x] **AI Quote Calculator**: Estimasi harga dinamis berdasarkan fitur & kompleksitas (`components/quote-calculator.tsx`).
-- [x] **Sistem Pembayaran Fleksibel**: Mendukung **One-time** & **Subskripsi (Retainer)** via Midtrans/Creem.
-- [x] **Manajemen Proyek Admin**: Dashboard lengkap dengan alur kerja jasa (Projects/Estimates) (`app/admin/pm`).
-- [x] **Generator Faktur PDF**: Pembuatan invoice otomatis dengan dukungan multi-termin (`components/checkout/invoice-document.tsx`).
-- [x] **Manajemen Pesanan Digital**: Alur penjualan aset (Asset-based) dengan pengiriman file otomatis dan aktivasi lisensi.
-- [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
-- [x] **Generator Konten AI**: Pembuatan Layanan & Produk otomatis via Genkit AI (`app/api/genkit`).
-
-### Pertumbuhan & Pemasaran
-- [x] **Sistem Afiliasi**: Portal afiliasi lengkap dengan pelacakan referral, komisi, dan permintaan pembayaran (`app/affiliate`).
-- [x] **Marketing Suite**: Manajemen aset pemasaran, banner, dan sistem testimoni (`app/admin/marketing`).
-- [x] **Mesin Produk Digital**: Sistem penjualan produk digital (template/plugin) dengan manajemen lisensi (`app/admin/products`).
-- [x] **Sistem Pop-up Dinamis**: Manajemen pop-up marketing yang dapat dikontrol dari panel admin (`app/api/public/popups`).
-
-### Infrastruktur
-- [x] **Rotasi Kunci Sistem**: Manajemen kunci API LLM dengan redundansi (`app/genkit/ai.ts`).
-- [x] **Media Library 2.0**: Manajemen file canggih dengan folder, pencarian, dan tampilan toggle (`components/admin/media`).
-- [x] **Integrasi Cloudflare R2**: Penyimpanan aset produksi yang dapat diskalakan dan hemat biaya.
-- [x] **Keamanan Kelas Enterprise**: Header Content Security Policy (CSP) & Optimasi Gambar (Next.js 16).
-- [x] **PWA & Web Push**: Dukungan instalasi native & notifikasi web push untuk update status (`components/pwa`).
-- [x] **API Verifikasi Lisensi**: Endpoint publik untuk verifikasi lisensi (termasuk **activation limits** per-device) di aplikasi pihak ketiga.
-- [x] **Optimasi SEO & Sitemap**: Sitemap dinamis dengan multi-locale alternates dan caching performa tinggi (`app/sitemap.ts`).
-- [x] **Manajemen Kurs Mata Uang**: Sistem konversi IDR/USD otomatis dengan integrasi kurs riil (`lib/server/currency-service.ts`).
-- [x] **Skrip Deployment Produksi**: Setup Docker tersedia (`Dockerfile` & `docker-compose.yml`).
+| Peran | Deskripsi | Akses |
+| :--- | :--- | :--- |
+| **Klien** | Fokus pada pemantauan proyek, feedback, dan pembayaran. | `/dashboard` |
+| **Arsitek (Admin)** | Kendali penuh atas operasional, keuangan, dan pengaturan AI. | `/admin` |
+| **Squad Lead** | Partner/Freelancer yang mengerjakan misi (proyek). | `/squad` |
+| **CredibleBot** | Agen AI yang membantu PRD, estimasi, dan rotasi API Key. | `Genkit AI` |
 
 ---
 
-## ⚡ 4. Fitur Enterprise & Lanjutan
+## 🛠️ Tech Stack Modern
 
-- [x] **Orkestrasi Gateway Pembayaran**: Konfigurasi dinamis Midtrans & Creem melalui database tanpa deploy ulang.
-- [x] **Sistem Webhook Eksternal**: Memicu event otomatis ke SaaS pihak ketiga (Zapier/Make) untuk alur kerja terintegrasi.
-- [x] **Manajemen Lead & Kontak**: Sistem pelacakan prospek dan inquiry publik yang terintegrasi di admin panel.
-- [x] **Sistem Changelog**: Modul untuk mempublikasikan update fitur dan rilis produk secara transparan.
-- [x] **Kontrol Tim Admin**: Manajemen akses internal untuk tim administrasi dengan kendali terpusat.
-- [x] **Identitas GitHub OAuth**: Sinkronisasi profil Squad Lead melalui GitHub untuk verifikasi kredibilitas.
-- [x] **Kotak Masuk Klien Aman**: Saluran komunikasi internal terenkripsi khusus di dalam Dashboard Klien.
-
----
-
-## 🚀 5. Panduan Cepat (Quick Start)
-
-1.  **Instalasi**: `bun install`
-2.  **Env**: Atur `.env` berdasarkan `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
-3.  **Database**:
-    *   **Lokal Native**: `bun prisma migrate dev`
-    *   **Lokal Docker**: `docker compose -f docker-compose.dev.yml up -d db`
-4.  **Dev Server**: `bun dev`
-
----
-
-## 🚢 5. Deployment (Dokploy / VPS)
-Lihat panduan lengkap di **`DEPLOY.md`**.
-*   **One-Click Deploy**: Gunakan `docker-compose.yml` (Aplikasi + DB).
-*   **Manual Deploy**: Gunakan `Dockerfile` (Hanya Aplikasi) + Managed DB.
-
----
-
-## 🛠️ 6. Referensi Perintah (Cheat Sheet)
-
-### 🐳 Manajemen Docker
-| Aksi | Perintah |
+| Komponen | Teknologi |
 | :--- | :--- |
-| **Mulai DB Lokal** | `docker compose -f docker-compose.dev.yml up -d db` |
-| **Stop DB Lokal** | `docker compose -f docker-compose.dev.yml down` |
-| **Tes Prod Lokal** | `docker compose up --build` |
-| **Bersihkan Docker** | `docker system prune -a` |
+| **Frontend** | **Next.js 16 (App Router)**, React 19, Tailwind CSS 4, Zustand |
+| **Backend** | **PostgreSQL** dengan **Prisma ORM 7.2.0** |
+| **Integrasi AI** | **Genkit AI** (Google Gemini 2.0 Flash & 1.5 Flash) |
+| **Otentikasi** | **Stack Auth** (Enterprise Ready) |
+| **Pembayaran** | **Midtrans** & **Creem.io** (Automated Reconciliation) |
+| **Storage** | **AWS S3** / **Cloudflare R2** |
+
+---
+
+## ✅ Fitur Utama
+
+### 💎 Core Experience
+- [x] **AI Quote Calculator**: Estimasi harga dinamis berbasis fitur & kompleksitas.
+- [x] **Smart Portfolio Preview**: Deteksi blokir iframe dengan fallback proxy rendering.
+- [x] **Dynamic Promotions**: Manajemen promo dengan tampilan masonry grid yang elegan.
+- [x] **Project Life Cycle**: Alur kerja dari estimasi, kontrak, hingga pengiriman.
+
+### 📈 Growth & Revenue
+- [x] **Affiliate Engine**: Portal referral lengkap dengan pelacakan komisi otomatis.
+- [x] **Digital Asset Store**: Penjualan template/plugin dengan manajemen lisensi otomatis.
+- [x] **Marketing Suite**: Popup dinamis, banner, dan sistem testimoni terpusat.
+- [x] **Automated Invoicing**: Generator PDF faktur dengan dukungan multi-termin.
+
+### ⚙️ Infrastructure & Security
+- [x] **LLM Key Rotation**: Load balancing API key untuk menghindari limitasi.
+- [x] **Media Library 2.0**: Manajemen file canggih dengan folder dan pencarian.
+- [x] **PWA & Web Push**: Notifikasi status proyek langsung ke perangkat pengguna.
+- [x] **Enterprise Security**: Header CSP ketat dan optimasi gambar mutakhir.
+
+---
+
+## 🚀 Panduan Cepat (Quick Start)
+
+### 1. Persiapan Environment
+Salin template environment dan sesuaikan nilainya:
+```bash
+cp .env.example .env
+# Jika menggunakan Docker
+cp .env.example .env.docker
+```
+
+### 2. Instalasi & Setup
+```bash
+bun install
+bun prisma migrate dev
+bun prisma db seed
+bun dev
+```
+
+---
+
+## 🚢 Deployment (Dokploy / VPS)
+
+AgencyOS siap dideploy menggunakan Docker. Lihat panduan lengkap di [DEPLOY.md](DEPLOY.md).
+
+```bash
+# Production build via Docker
+docker compose up --build -d
+```
+
+---
+
+## 🛠️ Referensi Perintah (Cheat Sheet)
+
+### 🐳 Docker
+| Perintah | Deskripsi |
+| :--- | :--- |
+| `docker compose -f docker-compose.dev.yml up -d db` | Mulai Database lokal |
+| `docker system prune -a` | Bersihkan sisa Docker |
 
 ### 🗄️ Database (Prisma)
-| Aksi | Perintah |
+| Perintah | Deskripsi |
 | :--- | :--- |
-| **Buka GUI DB** | `bunx prisma studio` |
-| **Migrasi Dev** | `bun prisma migrate dev --name <nama_migrasi>` |
-| **Reset DB** | `bun prisma migrate reset` |
-| **Generate Client** | `bun x prisma generate` |
-| **Seed Data** | `bun prisma db seed` |
+| `bunx prisma studio` | Buka GUI Database |
+| `bun prisma db seed` | Masukkan data awal (Seeding) |
 
-### 🚀 Persiapan Deployment
-```bash
-# Komit perubahan
-git add .
-git commit -m "chore: readiness for deployment"
-git push
-```
 ---
 
 ## ⚖️ Lisensi
-Proyek ini dilisensikan di bawah **Lisensi MIT** - lihat berkas [LICENSE](LICENSE) untuk detailnya.
+Proyek ini dilisensikan di bawah **Lisensi MIT**. Dibuat dengan ❤️ untuk ekosistem agensi masa depan.
+
+---
+
+<div align="center">
+  <a href="README.en.md">English Version</a> | <a href="DEPLOY.md">Deployment</a> | <a href="mailto:support@crediblemark.com">Support</a>
+</div>

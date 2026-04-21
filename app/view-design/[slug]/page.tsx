@@ -1,4 +1,5 @@
 import { getPortfolios, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
+import { isFrameBlocked } from "@/lib/server/cloudflare-rendering";
 import { getSettingValue } from "@/lib/server/settings";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -70,7 +71,14 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
 
     let html = "";
     if (portfolio.externalUrl) {
-        html = await getRenderedHtml(portfolio.externalUrl, localBaseUrl);
+        // Only use proxy if the site blocks iframes
+        const blocked = await isFrameBlocked(portfolio.externalUrl);
+        if (blocked) {
+            console.log(`[SmartPreview] Proxying blocked site in full view: ${portfolio.externalUrl}`);
+            html = await getRenderedHtml(portfolio.externalUrl, localBaseUrl);
+        } else {
+            html = ""; // Direct src will be used
+        }
     } else {
         html = await getPortfolioHtml(portfolio.slug);
     }

@@ -1,145 +1,129 @@
-# AgencyOS: The Hybrid Agency Platform
-
-[Bahasa Indonesia](README.md)
-
-> **Vision**: Creating a "Business Operating System" that allows agencies to run as a Hybrid Agency (AI + Human).
-> **Philosophy**: Async First. AI Augmented. Zero-bloat. Transparency.
-
----
-
-## 🏗️ 1. Architecture & User Roles
-
-### A. Client (User)
-*   **Access**: Client Dashboard (`/dashboard`)
-*   **Status**: Implemented.
-*   **Features**: Project summary, chatbot integration, feedback logging, milestone payments.
-
-### B. Architect (Super Admin)
-*   **Access**: Admin Panel (`/admin`)
-*   **Status**: Implemented (Advanced).
-*   **Features**: Project management, financial management (Invoices/Orders), system settings (AI keys, payments), Support Tickets, Affiliate Management.
-
-### C. Squad Lead (Partner)
-*   **Access**: Squad Portal (`/squad`)
-*   **Status**: Implemented (Beta).
-*   **Features**: Skill profile, mission application (projects), portfolio management.
-
-### D. AI Agent (CredibleBot)
-*   **Engine**: Genkit (Google Gemini)
-*   **Status**: Production.
-*   **Features**: Automatic API Key rotation (Load Balancing), PRD generation, price estimation consultation.
+<div align="center">
+  <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
+  
+  <h1>AgencyOS</h1>
+  <h3>Website for Agencies</h3>
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![Prisma](https://img.shields.io/badge/Prisma-7.2.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+  [![Tailwind](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+  [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+  
+  **Vision**: Revolutionizing agency operations through intelligent integration of AI and human expertise in a unified ecosystem.
+</div>
 
 ---
 
-## 🛠️ 2. Technology (Tech Stack)
+## 📖 What is AgencyOS?
 
-### Frontend
-- **Framework**: Next.js 16.1.4 (App Router)
-- **UI Library**: React 19, Tailwind CSS 4, Shadcn UI
-- **State Management**: Zustand
-- **Icons**: Lucide React
+**AgencyOS** is a modern "Business Operating System" specifically engineered for the agencies of tomorrow. Guided by an *Async-First* and *AI-Augmented* philosophy, this platform empowers your agency to scale efficiently through intelligent automation, transparent project management, and fully integrated payment systems.
 
-### Backend & Database
-- **Authentication**: Stack Auth
-- **Database**: PostgreSQL with Prisma ORM 7.2.0
-- **Storage**: AWS S3 (via `@aws-sdk/client-s3`) / Cloudflare R2
-- **Payments**: Midtrans / Creem (Fully Automated)
-
-### AI Integration
-- **Framework**: Genkit AI
-- **Models**: Gemini 2.0 Flash (Primary), Gemini 1.5 Flash (Backup)
-- **Logic**: Dynamic key rotation via `prisma.systemKey`
+### 🌟 Core Values
+- 🤖 **AI Augmented**: Boost productivity with the assistance of dedicated AI Agents (CredibleBot).
+- ⚡ **Async First**: Decoupled communication and workflows for maximum scalability and freedom.
+- 💎 **Luxury Aesthetic**: Premium "Luxury Dark Studio" branding designed to impress high-ticket clients.
+- 🛠️ **Zero-Bloat**: Focused exclusively on the features essential for running a world-class agency.
 
 ---
 
-## ✅ 3. Key Features (Ready to Use)
+## 🏗️ Architecture & User Roles
 
-### Core Business
-- [x] **AI Quote Calculator**: Dynamic price estimation based on features & complexity (`components/quote-calculator.tsx`).
-- [x] **Flexible Payment System**: Supports **One-time** & **Subscription (Retainer)** via Midtrans/Creem.
-- [x] **Admin Project Management**: Dedicated dashboard for service workflows (Projects/Estimates) (`app/admin/pm`).
-- [x] **PDF Invoice Generator**: Automatic invoice generation with multi-milestone support (`components/checkout/invoice-document.tsx`).
-- [x] **Digital Asset Management**: Asset-based sales flow with automated file delivery and license activation.
-- [x] **AI Content Generator**: Automated Service & Product creation via Genkit AI (`app/api/genkit`).
-- [x] **AI Content Generator**: Automated Service & Product creation via Genkit AI (`app/api/genkit`).
-
-### Growth & Marketing
-- [x] **Affiliate System**: Complete affiliate portal with referral tracking, commissions, and payout requests (`app/affiliate`).
-- [x] **Marketing Suite**: Management of marketing assets, banners, and testimonial systems (`app/admin/marketing`).
-- [x] **Digital Product Engine**: System for selling digital products (templates/plugins) with license management (`app/admin/products`).
-- [x] **Dynamic Pop-up System**: Marketing pop-up manager controllable via the admin panel (`app/api/public/popups`).
-
-### Infrastructure
-- [x] **System Key Rotation**: LLM API key management with redundancy (`app/genkit/ai.ts`).
-- [x] **Media Library 2.0**: Advanced file management with folders, search, and toggle views (`components/admin/media`).
-- [x] **Cloudflare R2 Integration**: Scalable and cost-effective production asset storage.
-- [x] **Enterprise-Grade Security**: Content Security Policy (CSP) headers & Image Optimization (Next.js 16).
-- [x] **PWA & Web Push**: Native installation support & web push notification system for status updates (`components/pwa`).
-- [x] **License Verification API**: Public endpoint for verifying licenses (including per-device **activation limits**) in third-party applications.
-- [x] **SEO & Sitemap Optimization**: Dynamic sitemaps with multi-locale alternates and high-performance caching (`app/sitemap.ts`).
-- [x] **Currency Exchange Management**: Automated IDR/USD conversion system with real-time rate integration (`lib/server/currency-service.ts`).
-- [x] **Production Deployment Scripts**: Docker setup available (`Dockerfile` & `docker-compose.yml`).
+| Role | Description | Access |
+| :--- | :--- | :--- |
+| **Client** | Focused on project tracking, feedback, and seamless payments. | `/dashboard` |
+| **Architect (Admin)** | Full operational, financial, and AI configuration control. | `/admin` |
+| **Squad Lead** | Verified partners/freelancers executing high-impact missions. | `/squad` |
+| **CredibleBot** | AI agent managing PRDs, estimations, and API Key rotation. | `Genkit AI` |
 
 ---
 
-## ⚡ 4. Enterprise & Advanced Features
+## 🛠️ Modern Tech Stack
 
-- [x] **Payment Gateway Orchestration**: Dynamic configuration of Midtrans & Creem via the database without redeploys.
-- [x] **External Webhook System**: Trigger automated events to third-party SaaS (Zapier/Make) for integrated workflows.
-- [x] **Lead & Contact Management**: Integrated system for tracking prospects and public inquiries in the admin panel.
-- [x] **Changelog System**: Module to transparently publish feature updates and product releases.
-- [x] **Admin Team Control**: Internal management for administrative teams with centralized access control.
-- [x] **GitHub OAuth Identity**: Sync Squad Lead profiles via GitHub to verify technical credibility.
-- [x] **Secure Client Inbox**: Encrypted internal communication channel dedicated within the Client Dashboard.
-
----
-
-## 🚀 5. Quick Start
-
-1.  **Installation**: `bun install`
-2.  **Env**: Set up `.env` based on `prisma/schema.prisma` (DATABASE_URL, STACK_API_KEY).
-3.  **Database**:
-    *   **Local Native**: `bun prisma migrate dev`
-    *   **Local Docker**: `docker compose -f docker-compose.dev.yml up -d db`
-4.  **Dev Server**: `bun dev`
-
----
-
-## 🚢 5. Deployment (Dokploy / VPS)
-See the full guide in **`DEPLOY.md`**.
-*   **One-Click Deploy**: Use `docker-compose.yml` (App + DB).
-*   **Manual Deploy**: Use `Dockerfile` (App only) + Managed DB.
-
----
-
-## 🛠️ 6. Command Reference (Cheat Sheet)
-
-### 🐳 Docker Management
-| Action | Command |
+| Component | Technology |
 | :--- | :--- |
-| **Start Local DB** | `docker compose -f docker-compose.dev.yml up -d db` |
-| **Stop Local DB** | `docker compose -f docker-compose.dev.yml down` |
-| **Test Local Prod** | `docker compose up --build` |
-| **Clean Docker** | `docker system prune -a` |
+| **Frontend** | **Next.js 16 (App Router)**, React 19, Tailwind CSS 4, Zustand |
+| **Backend** | **PostgreSQL** with **Prisma ORM 7.2.0** |
+| **AI Integration** | **Genkit AI** (Google Gemini 2.0 Flash & 1.5 Flash) |
+| **Authentication** | **Stack Auth** (Enterprise Ready) |
+| **Payments** | **Midtrans** & **Creem.io** (Fully Automated Reconciliation) |
+| **Storage** | **AWS S3** / **Cloudflare R2** |
 
-### 🗄️ Database (Prisma)
-| Action | Command |
-| :--- | :--- |
-| **Open DB GUI** | `bunx prisma studio` |
-| **Dev Migration** | `bun prisma migrate dev --name <migration_name>` |
-| **Reset DB** | `bun prisma migrate reset` |
-| **Generate Client** | `bun x prisma generate` |
-| **Seed Data** | `bun prisma db seed` |
+---
 
-### 🚀 Deployment Preparation
+## ✅ Key Features
+
+### 💎 Core Experience
+- [x] **AI Quote Calculator**: Dynamic price estimation based on features & complexity.
+- [x] **Smart Portfolio Preview**: Automated iframe block detection with fallback proxy rendering.
+- [x] **Dynamic Promotions**: Elegant masonry grid display for special offers and discounts.
+- [x] **Project Life Cycle**: Complete workflow from estimation to contract and delivery.
+
+### 📈 Growth & Revenue
+- [x] **Affiliate Engine**: Comprehensive referral portal with automated commission tracking.
+- [x] **Digital Asset Store**: Sell templates/plugins with automated license management.
+- [x] **Marketing Suite**: Dynamic popups, banners, and centralized testimonial systems.
+- [x] **Automated Invoicing**: Multi-milestone PDF invoice generator.
+
+### ⚙️ Infrastructure & Security
+- [x] **LLM Key Rotation**: Dynamic API key load balancing to ensure 100% uptime.
+- [x] **Media Library 2.0**: Advanced file management with nested folders and search.
+- [x] **PWA & Web Push**: Real-time project status notifications directly to user devices.
+- [x] **Enterprise Security**: Strict CSP headers and cutting-edge image optimization.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Environment Preparation
+Copy the environment template and configure the values:
 ```bash
-# Commit changes
-git add .
-git commit -m "chore: readiness for deployment"
-git push
+cp .env.example .env
+# For Docker usage
+cp .env.example .env.docker
+```
+
+### 2. Installation & Setup
+```bash
+bun install
+bun prisma migrate dev
+bun prisma db seed
+bun dev
 ```
 
 ---
 
+## 🚢 Deployment (Dokploy / VPS)
+
+AgencyOS is production-ready and Docker-optimized. See the full guide at [DEPLOY.md](DEPLOY.md).
+
+```bash
+# Production build via Docker
+docker compose up --build -d
+```
+
+---
+
+## 🛠️ Command Reference (Cheat Sheet)
+
+### 🐳 Docker
+| Command | Description |
+| :--- | :--- |
+| `docker compose -f docker-compose.dev.yml up -d db` | Start local database |
+| `docker system prune -a` | Clean up Docker resources |
+
+### 🗄️ Database (Prisma)
+| Command | Description |
+| :--- | :--- |
+| `bunx prisma studio` | Open Database GUI |
+| `bun prisma db seed` | Seed initial data |
+
+---
+
 ## ⚖️ License
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**. Built with ❤️ for the future of agency ecosystems.
+
+---
+
+<div align="center">
+  <a href="README.md">Bahasa Indonesia</a> | <a href="DEPLOY.md">Deployment</a> | <a href="mailto:support@crediblemark.com">Support</a>
+</div>

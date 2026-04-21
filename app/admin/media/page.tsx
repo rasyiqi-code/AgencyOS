@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MediaPage() {
     return (
-        <div className="w-full py-4 sm:py-6 min-w-0 overflow-hidden">
+        <div className="w-full py-4 sm:py-6 min-w-0">
             <div className="flex items-center justify-between mb-6 sm:mb-8">
                 <div>
                     <div className="flex items-center gap-2 mb-2">

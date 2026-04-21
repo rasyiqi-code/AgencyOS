@@ -104,3 +104,30 @@ export async function PUT(
         );
     }
 }
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    try {
+        const { id } = await params;
+        const isOrderId = id.startsWith('ORDER-');
+
+        if (isOrderId) {
+            // Delete associated project if no other orders exist?
+            // For now, just delete the order as requested (remove from list)
+            await prisma.order.delete({ where: { id } });
+        } else {
+            await prisma.estimate.delete({ where: { id } });
+        }
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting transaction:', error);
+        return NextResponse.json({ error: 'Failed to delete transaction' }, { status: 500 });
+    }
+}

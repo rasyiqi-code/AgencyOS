@@ -41,6 +41,7 @@ Thumbs.db
 /data/payment-info.json
 /data/portfolios/cache/
 .agent/
+.jules/
 
 # vercel
 .vercel

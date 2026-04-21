@@ -4,7 +4,7 @@ import { describe, expect, it, mock, beforeEach } from "bun:test";
 mock.module("next/cache", () => {
     return {
         revalidatePath: mock(),
-        unstable_cache: (fn: unknown) => fn
+        unstable_cache: (fn: (...args: unknown[]) => unknown) => fn
     };
 });
 
@@ -84,7 +84,12 @@ describe("validateCoupon", () => {
 
     it("should return valid and the coupon if everything is correct", async () => {
         const validCoupon = {
+            id: "coupon-1",
+            createdAt: new Date(),
+            updatedAt: new Date(),
             code: "VALID",
+            discountType: "PERCENTAGE",
+            discountValue: 10,
             isActive: true,
             expiresAt: new Date(Date.now() + 10000),
             maxUses: 10,
@@ -100,7 +105,12 @@ describe("validateCoupon", () => {
 
     it("should return valid and the coupon if everything is correct without context", async () => {
         const validCoupon = {
+            id: "coupon-2",
+            createdAt: new Date(),
+            updatedAt: new Date(),
             code: "VALID",
+            discountType: "FIXED",
+            discountValue: 100,
             isActive: true,
             expiresAt: null,
             maxUses: null,

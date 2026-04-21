@@ -2,6 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
+import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { stackServerApp } from "@/lib/config/stack";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
@@ -106,29 +107,32 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     // If user is logged in and matches the order owner, use their details. 
     // Otherwise fallback to generic client.
 
-    const userData = isOwner ? {
-        displayName: user?.displayName || "Valued Client",
-        email: user?.primaryEmail || "",
-    } : {
-        displayName: "Valued Client",
-        email: "client@example.com"
+    // User data for InvoiceDocument
+    // Priority: 1. Manual Client Name from Project, 2. Account Display Name (if owner & NOT offline), 3. Fallback
+    const isOffline = order.userId === 'OFFLINE' || !!order.project?.clientName;
+    
+    const userData = {
+        displayName: order.project?.clientName || (isOwner && !isOffline ? user?.displayName : null) || "Valued Client",
+        email: (isOwner && !isOffline ? user?.primaryEmail : null) || "", 
     };
 
     // Fetch System Settings for Bank and Agency
     // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
     // 🎯 Why: Reduces redundant database queries for static system settings during SSR, mitigating the N+1 query problem.
     // 📊 Impact: Faster page load and reduced DB connections.
-    const [settings, hasActiveGateway] = await Promise.all([
-        getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']),
-        paymentGatewayService.hasActiveGateway()
+    const [settings, gatewayStatus] = await Promise.all([
+        getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'manual_payment_active', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']),
+        paymentGatewayService.getGatewayStatus()
     ]);
+    const hasActiveGateway = gatewayStatus.midtrans || gatewayStatus.creem;
     const getSetting = (key: string) => settings.find(s => s.key === key)?.value;
 
-    const bankDetails = {
+    const isManualActive = getSetting('manual_payment_active') === 'true';
+    const bankDetails = isManualActive ? {
         bank_name: getSetting('bank_name'),
         bank_account: getSetting('bank_account'),
         bank_holder: getSetting('bank_holder')
-    };
+    } : undefined;
 
     const agencySettings = {
         agencyName: getSetting('AGENCY_NAME') || "Agency OS",
@@ -139,9 +143,28 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         telegram: getSetting('CONTACT_TELEGRAM')
     };
 
+    // Determine current step for progress indicator
+    let currentStep: 1 | 2 | 3 | 4 = 2;
+    if (isPaid) {
+        currentStep = 4;
+    } else {
+        const metadata = order.paymentMetadata as Record<string, unknown>;
+        const hasInitiatedPayment = metadata && (
+            metadata.payment_type || 
+            metadata.transaction_id || 
+            metadata.status_code || 
+            order.status === 'waiting_verification' ||
+            order.snapToken
+        );
+        if (hasInitiatedPayment) {
+            currentStep = 3;
+        }
+    }
+
     return (
         <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
-            <div className="container mx-auto px-4 py-24 max-w-7xl">
+            <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
+                <CheckoutProgress currentStep={currentStep} />
                 <InvoiceClientWrapper
                     order={order as unknown as InvoiceOrder}
                     estimate={extendedEstimate}
@@ -150,6 +173,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
                     bankDetails={bankDetails}
                     agencySettings={agencySettings}
                     hasActiveGateway={hasActiveGateway}
+                    gatewayStatus={gatewayStatus}
                 />
             </div>
         </div>

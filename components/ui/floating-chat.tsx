@@ -397,7 +397,7 @@ export function FloatingChatWidget() {
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className={cn(
-                            "relative shadow-2xl rounded-full transition-all duration-300 cursor-pointer border border-zinc-100/10",
+                            "relative shadow-2xl rounded-full transition-all duration-300 cursor-pointer border border-zinc-100/10 flex items-center",
                             isMenuOpen ? "bg-zinc-100 scale-95" : "bg-white hover:scale-105"
                         )}
                     >
@@ -406,19 +406,30 @@ export function FloatingChatWidget() {
                                 {unreadCount}
                             </span>
                         )}
-                        <div className="px-6 py-3 font-bold text-sm flex items-center gap-2 text-black">
-                            <span className="relative flex h-3 w-3">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                            </span>
-                            {isMenuOpen ? (
-                                <span className="flex items-center gap-2">
-                                    {t("needHelp")} <X className="w-4 h-4 opacity-50" />
+                        <div className="pl-1.5 pr-6 py-1.5 font-bold text-sm flex items-center gap-3 text-black">
+                            <div className="relative">
+                                <Avatar className="h-8 w-8 border-2 border-zinc-100">
+                                    <AvatarImage src="/expert.png" className="object-cover object-top" />
+                                    <AvatarFallback className="bg-brand-yellow text-black">
+                                        <User className="w-4 h-4" />
+                                    </AvatarFallback>
+                                </Avatar>
+
+
+
+                                <span className="absolute bottom-0 right-0 flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 border-2 border-white"></span>
                                 </span>
-                            ) : t("needHelp")}
+
+                            </div>
+                            <span className="font-black uppercase tracking-wider text-[11px]">
+                                {isMenuOpen ? "CLOSE" : "ONLINE"}
+                            </span>
                         </div>
                     </button>
                 </div>
+
             </div>
         );
     }

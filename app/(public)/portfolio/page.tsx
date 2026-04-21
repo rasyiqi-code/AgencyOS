@@ -1,4 +1,5 @@
 import { getPortfolios, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
+import { isFrameBlocked } from "@/lib/server/cloudflare-rendering";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PortfolioGrid } from "@/components/public/portfolio-grid";
 import { Badge } from "@/components/ui/badge";
@@ -58,28 +59,22 @@ export default async function PortfolioPage() {
     const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
     const t = await getTranslations("Portfolio");
 
-    // Fetch HTML for all portfolios to pass to cards
+    // Smart Fetch: Only proxy if the target site blocks iframes
     const portfolioWithHtml = await Promise.all(
         portfolios.map(async (p) => {
-            let html = "";
-            if (p.externalUrl) {
-                // Fetch rendered HTML from Cloudflare for external URLs to bypass X-Frame-Options
-                const renderedHtml = await getRenderedHtml(p.externalUrl);
-                // Inject <base> tag so that relative assets (images, css) on the target site still work
-                const baseTag = `<base href="${p.externalUrl}">`;
-                if (renderedHtml.includes('<head>')) {
-                    html = renderedHtml.replace('<head>', `<head>${baseTag}`);
-                } else {
-                    html = baseTag + renderedHtml;
-                }
-            } else {
-                html = await getPortfolioHtml(p.slug);
+            if (!p.externalUrl) {
+                return { ...p, html: await getPortfolioHtml(p.slug) };
             }
 
-            return {
-                ...p,
-                html
+            // Check if site blocks iframes
+            const blocked = await isFrameBlocked(p.externalUrl);
+            
+            if (blocked) {
+                console.log(`[SmartPreview] Proxying blocked site: ${p.externalUrl}`);
+                return { ...p, html: await getRenderedHtml(p.externalUrl) };
             }
+
+            return { ...p, html: "" }; // Empty HTML means use direct src
         })
     );
 

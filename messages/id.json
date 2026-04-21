@@ -12,7 +12,7 @@
     },
     "ViewDesign": {
         "previewMode": "MODE PRATINJAU",
-        "inquireDesign": "Pesan Desain",
+        "inquireDesign": "Pesan",
         "inquireShort": "Pesan",
         "modalTitle": "Miliki Desain Seperti Ini",
         "modalDescription": "Wujudkan visi bisnis Anda dengan desain profesional kelas dunia. Kami siap membantu Anda membangun identitas digital yang memukau dan efektif.",
@@ -29,6 +29,7 @@
         "services": "Layanan",
         "products": "Produk Digital",
         "myAccount": "Akun Saya",
+        "promo": "Promo",
         "startProject": "Mulai"
     },
     "Hero": {
@@ -301,9 +302,9 @@
         "secure": "Aman dengan enkripsi SSL 256-bit.",
         "problem": "Masalah dengan pembayaran?",
         "confirmed": "Pembayaran Dikonfirmasi",
-        "confirmedDesc": "Terima kasih! Pembayaran Anda telah diverifikasi dan misi Anda sekarang aktif.",
+        "confirmedDesc": "Terima kasih! Pembayaran Anda telah diverifikasi.",
         "downloadReceipt": "Unduh Tanda Terima",
-        "accessMission": "Akses Mission Control",
+        "shareInvoice": "Bagikan Invoice",
         "submitOffer": "Ajukan Penawaran",
         "submitOfferDesc": "Layanan ini dapat dinegosiasikan. Silakan masukkan penawaran harga Anda berdasarkan detail layanan di atas.",
         "yourOfferPrice": "Harga Penawaran Anda ({currency})",
@@ -316,6 +317,7 @@
         "offerAutoSaved": "Status penawaran akan tersimpan otomatis di sistem saat Anda memilih channel.",
         "invalidOffer": "Silakan masukkan penawaran harga yang valid.",
         "offerSubmitError": "Gagal mengirim penawaran. Silakan coba lagi.",
+        "linkCopied": "Tautan disalin ke papan klip!",
         "discussPrice": "Harga Diskusi",
         "quoteSummaryMessage": "Halo, saya tertarik dengan layanan \"{service}\" (ID: {id}). Penawaran harga saya: {price}. Mohon reviewnya, terima kasih.",
         "manualWaitTime": "Harap tunggu hingga 24 jam untuk verifikasi manual.",
@@ -608,7 +610,20 @@
             "pendingUpdates": "Pembaruan Tertunda",
             "noOrders": "Pesanan tidak ditemukan.",
             "previous": "Sebelumnya",
-            "next": "Selanjutnya",
+            "next": "Berikutnya",
+            "Dashboard": {
+                "title": "Finance Command",
+                "revenue": "Total Pendapatan",
+                "lifetime": "Pendapatan Seumur Hidup",
+                "pending": "Pesanan Tertunda",
+                "needsAction": "Butuh Tindakan Invoice",
+                "manageOrders": "Kelola Invoice & Pesanan",
+                "manageOrdersDesc": "Akses penuh ke riwayat pesanan layanan dan verifikasi pembayaran.",
+                "digitalOrders": "Pesanan Produk Digital",
+                "digitalOrdersDesc": "Pantau transaksi untuk plugin, template, dan unduhan digital.",
+                "quotes": "Penawaran Harga (Quotes)",
+                "quotesDesc": "Review dan negosiasi penawaran harga dari calon klien atas layanan Anda."
+            },
             "Status": {
                 "dp": "PARSIAL (DP)",
                 "full": "LUNAS",
@@ -972,7 +987,8 @@
         "exploreMore": "Jelajahi lebih banyak produk digital premium"
     },
     "Invoice": {
-        "title": "FAKTUR",
+        "invoiceNo": "No. Invoice",
+        "title": "Faktur",
         "billTo": "Tagih Ke",
         "date": "Tanggal",
         "dateIssued": "Tanggal Terbit",
@@ -1004,7 +1020,9 @@
         "completePaymentDigital": "Mohon selesaikan pembayaran di bawah ini untuk mengakses produk digital Anda.",
         "thankYouPurchase": "Terima kasih atas pembelian Anda. Selamat menikmati produk Anda!",
         "oneTime": "Sekali bayar",
-        "license": "Lisensi"
+        "license": "Lisensi",
+        "scrollNotice": "Geser untuk detail invoice",
+        "paymentMethodsDisabled": "Pembayaran online saat ini tidak tersedia untuk tagihan ini."
     },
     "FloatingChat": {
         "needHelp": "Butuh Bantuan? 👋"

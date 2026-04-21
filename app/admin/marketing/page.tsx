@@ -11,7 +11,9 @@ import { PopUpsManager } from "@/components/admin/marketing/popups-manager";
 import { LeadsManager } from "@/components/admin/marketing/leads-manager";
 import { Megaphone, Tag, Gift, Users, DollarSign, Mail, FolderOpen, LayoutTemplate, UserPlus, Bell } from "lucide-react";
 import { PushManager } from "@/components/admin/marketing/push-manager";
+import { PromotionsManager } from "@/components/admin/marketing/promotions-manager";
 import { useSearchParams, useRouter } from "next/navigation";
+
 import { Suspense } from "react";
 
 export default function MarketingPage() {
@@ -49,7 +51,12 @@ function MarketingContent() {
                 <div className="mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
                     <div className="overflow-x-auto no-scrollbar pb-2">
                         <TabsList className="bg-zinc-900/50 border border-white/5 inline-flex w-max min-w-full sm:min-w-0 h-11 md:h-12 p-1 rounded-xl shadow-2xl shadow-black/20 items-center justify-start gap-1">
+                            <TabsTrigger value="promotions" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+                                <Megaphone className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
+                                <span className="hidden md:inline">Promos</span>
+                            </TabsTrigger>
                             <TabsTrigger value="popups" className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-widest py-1.5 h-9 md:h-10 px-3 md:px-5 data-[state=active]:bg-zinc-800 data-[state=active]:text-white transition-all shrink-0">
+
                                 <LayoutTemplate className="w-4 h-4 md:w-4 md:h-4 text-brand-yellow" />
                                 <span className="hidden md:inline">PopUps</span>
                             </TabsTrigger>
@@ -89,7 +96,12 @@ function MarketingContent() {
                     </div>
                 </div>
 
+                <TabsContent value="promotions" className="mt-0 outline-none focus-visible:outline-none">
+                    <PromotionsManager />
+                </TabsContent>
+
                 <TabsContent value="popups" className="mt-0 outline-none focus-visible:outline-none">
+
                     <PopUpsManager />
                 </TabsContent>
 

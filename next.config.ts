@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'crediblemark.com',
+        pathname: '/**',
+      },
+
+      {
+        protocol: 'https',
         hostname: '*.r2.dev',
         pathname: '/**',
       },

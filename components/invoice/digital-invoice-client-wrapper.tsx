@@ -42,6 +42,7 @@ interface DigitalInvoiceClientWrapperProps {
         email: string;
         phone?: string | null;
         telegram?: string | null;
+        website?: string | null;
     };
     hasActiveGateway?: boolean;
     userMethod?: { name?: string | null; displayName?: string | null; email?: string | null } | null;
@@ -64,8 +65,8 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
     const componentRef = useRef<HTMLDivElement>(null);
 
     // Dynamic Company Info from Settings
-    const companyName = agencySettings?.companyName || "Agency OS";
-    const address = agencySettings?.address || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000";
+    const agencyName = agencySettings?.agencyName || "Agency OS";
+    const website = agencySettings?.website || process.env.NEXT_PUBLIC_APP_URL?.replace('https://', '').replace('http://', '') || "agencyos.id";
     const billingEmail = agencySettings?.email || "billing@crediblemark.com";
 
     // Quote logic
@@ -131,77 +132,84 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                             </div>
                         )}
 
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-12 relative z-10">
-                            <div>
-                                <h1 className="text-4xl font-bold text-zinc-900 tracking-tight mb-2 flex items-center gap-3">
-                                    {t('title')}
-                                </h1>
-                                <p className="text-zinc-500 text-sm">#{order.id}</p>
-                            </div>
-                            <div className="text-right flex flex-col items-end">
-                                <div className="mb-2">
-                                    {/* Logo Placeholder - assuming logo.png exists as in service invoice */}
+                        {/* Refined Header (Kop) */}
+                        <div className="pb-8 mb-4 relative z-10">
+                            <div className="flex justify-between items-baseline">
+                                <div className="flex items-end gap-4">
                                     <Image
                                         src="/logo.png"
                                         alt="Logo"
-                                        width={64}
-                                        height={64}
+                                        width={40}
+                                        height={40}
                                         className="object-contain"
                                         style={{ height: 'auto', width: 'auto' }}
-                                        sizes="64px"
+                                        sizes="40px"
                                     />
+                                    <h1 className="text-4xl font-black tracking-tighter leading-none text-[#D4AF37]">{agencyName}</h1>
                                 </div>
-                                <div className="font-bold text-xl mb-1">{companyName}</div>
-                                <div className="text-zinc-500 text-sm whitespace-pre-line">
-                                    {address}<br />
-                                    {billingEmail}
+                                <div className="text-right">
+                                    <h2 className="text-4xl font-black text-[#D4AF37] uppercase tracking-tighter leading-none select-none flex items-baseline justify-end relative -top-[6px]">
+                                        <span className="mr-4 opacity-30 relative -top-[2px]">|</span>{t('title')}
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between items-start mt-4 pt-4 border-t border-zinc-100/80">
+                                <div className="flex justify-between items-start mt-4 pt-4 border-t border-b border-zinc-100/80 pb-4">
+                                    <div className="text-sm text-zinc-600 max-w-xs leading-tight whitespace-pre-line text-left space-y-[1px]">
+                                        <div className="font-bold text-zinc-900">{website}</div>
+                                        <div className="text-zinc-500 font-medium text-[12px]">{billingEmail}</div>
+                                    </div>
+                                    <div className="text-right space-y-[1px]">
+                                        <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
+                                            <span className="text-zinc-500 font-bold">{t('invoiceNo', { fallback: "No. Invoice" })}</span>
+                                            <span className="font-mono font-bold text-zinc-900">#{order.id.slice(-8).toUpperCase()}</span>
+                                        </div>
+                                        <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
+                                            <span className="text-zinc-500 font-bold">{t('dateIssued')}</span>
+                                            <span className="font-bold text-zinc-900">
+                                                {new Date(order.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Client Info */}
-                        <div className="mb-12 flex justify-between">
-                            <div>
-                                <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">{t('billTo')}</h3>
-                                <p className="text-lg font-bold">
+                        {/* Client & Payment Info */}
+                        <div className="mb-8 flex justify-between items-end relative z-10">
+                            {/* Client Info Card */}
+                            <div className="bg-white py-4 px-6 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-zinc-100 min-w-[320px] text-left">
+                                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('billTo')}</h3>
+                                <p className="text-xl font-bold text-zinc-900 leading-tight">
                                     {order.userName || userMethod?.name || userMethod?.displayName || t('guestUser')}
                                 </p>
-                                <p className="text-zinc-500 text-sm">{order.userEmail}</p>
+                                <p className="text-zinc-500 text-sm font-medium mt-0.5">{order.userEmail}</p>
                             </div>
-                            <div className="text-right">
-                                <div className="mb-4">
-                                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('dateIssued')}</h3>
-                                    <p className="font-medium">
-                                        {new Date(order.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
-                                    </p>
-                                </div>
-                                <div>
-                                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('totalAmount')}</h3>
-                                    <p className="text-2xl font-bold text-zinc-900">
-                                        <PriceDisplay amount={order.amount} />
-                                    </p>
+
+                            {/* Total Amount (Aligned with Card content) */}
+                            <div className="flex flex-col justify-end items-end pr-2 pb-4">
+                                <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('totalAmount')}</h3>
+                                <div className="text-4xl font-black text-[#D4AF37] tracking-tighter leading-none">
+                                    <PriceDisplay amount={order.amount} />
                                 </div>
                             </div>
                         </div>
 
                         {/* Line Items */}
-                        <table className="w-full mb-12">
+                        <table className="w-full mb-4">
                             <thead>
-                                <tr className="border-b-2 border-black">
+                                <tr className="border-b border-zinc-200">
                                     <th className="text-left py-3 font-bold uppercase text-xs tracking-wider">{t('description')}</th>
                                     <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-32">{t('amount')}</th>
                                 </tr>
                             </thead>
                             <tbody className="text-sm">
-                                <tr className="border-b border-zinc-100">
-                                    <td className="py-6 pr-4">
-                                        <div className="font-bold text-lg mb-1">{order.product.name}</div>
-                                        <div className="text-zinc-600 text-sm capitalize">
-                                            {order.product.purchaseType ? order.product.purchaseType.replace('_', ' ') : t('oneTime')} {t('license')}
-                                        </div>
+                                <tr>
+                                    <td className="pt-6 pb-2 pr-4">
+                                        <div className="font-bold text-lg">{order.product.name}</div>
                                     </td>
-                                    <td className="py-6 text-right font-medium align-top">
+                                    <td className="pt-6 pb-2 text-right font-medium align-top">
                                         <PriceDisplay amount={order.amount} />
                                     </td>
                                 </tr>
@@ -209,25 +217,11 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                         </table>
 
                         {/* Footer / Total */}
-                        <div className="mt-auto border-t-2 border-black pt-8 flex justify-between items-start">
+                        <div className="mt-auto border-t border-zinc-200 pt-8 flex justify-between items-start">
                             <div className="relative">
-                                {/* Stamp if Paid */}
-                                {isPaid && (
-                                    <div className="opacity-80 transform -rotate-12 transform-gpu">
-                                        <Image
-                                            src="/stamp.png"
-                                            alt="Official Stamp"
-                                            width={120}
-                                            height={120}
-                                            className="object-contain grayscale-[0.2]"
-                                            style={{ height: 'auto', width: 'auto' }}
-                                            sizes="120px"
-                                        />
-                                    </div>
-                                )}
                             </div>
                             <div className="w-64">
-                                <div className="flex justify-between mb-2">
+                                <div className="flex justify-between mb-1">
                                     <span className="text-zinc-500">{t('subtotal')}</span>
                                     <span className="font-medium"><PriceDisplay amount={order.amount} /></span>
                                 </div>
@@ -235,12 +229,9 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                                     <span className="text-zinc-500">{t('tax')} (0%)</span>
                                     <span className="font-medium"><PriceDisplay amount={0} /></span>
                                 </div>
-                                <div className="flex justify-between text-xl font-bold border-t border-zinc-200 pt-4">
+                                <div className="flex justify-between text-xl font-bold border-t border-zinc-200 pt-2">
                                     <span>{t('total')}</span>
                                     <span><PriceDisplay amount={order.amount} /></span>
-                                </div>
-                                <div className="text-[10px] text-zinc-400 mt-2 text-right uppercase tracking-widest">
-                                    {t('grandTotal')}: <PriceDisplay amount={order.amount} />
                                 </div>
                             </div>
                         </div>
@@ -271,8 +262,17 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                             </div>
                         )}
 
-                        <div className="text-center text-xs text-zinc-400 mt-12 pb-8">
-                            {isPaid ? t('thankYouPaid') : t('thankYouDigital')}
+                        <div className="text-center text-xs text-zinc-400 mt-12 pb-8 flex flex-col items-center gap-2">
+                            <div>
+                                {isPaid ? t('thankYouPaid') : t('thankYouDigital')}
+                                {!isPaid && bankDetails && bankDetails.bank_account && (
+                                    <span className="ml-2 pl-2 border-l border-zinc-200 inline-flex items-center gap-2">
+                                        <span className="text-zinc-900 font-bold">{bankDetails.bank_name}</span>
+                                        <span className="font-mono font-bold text-zinc-900">{bankDetails.bank_account}</span>
+                                        <span className="text-zinc-500">a.n {bankDetails.bank_holder}</span>
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
