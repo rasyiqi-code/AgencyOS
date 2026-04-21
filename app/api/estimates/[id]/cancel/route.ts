@@ -47,11 +47,21 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
 
         const project = estimate?.project || orderFromId?.project;
 
-        if (!project && !estimate) {
+        if (!project && !estimate && !orderFromId) {
             return NextResponse.json({ error: "Transaction/Invoice not found" }, { status: 404 });
         }
 
         const updates: Prisma.PrismaPromise<unknown>[] = [];
+
+        // 0. Update Order Status (if we have order object)
+        if (orderFromId) {
+            updates.push(
+                prisma.order.update({
+                    where: { id: orderFromId.id },
+                    data: { status: 'cancelled' }
+                })
+            );
+        }
 
         // 1. Update Estimate Status
         if (estimateId) {
@@ -96,11 +106,23 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
         // --- Notifications ---
         if (project) {
             try {
-                const stackUser = await stackServerApp.getUser(project.userId);
-                if (stackUser && stackUser.primaryEmail) {
+                let customerEmail = "";
+                let customerName = "Client";
+
+                if (project.userId !== 'OFFLINE') {
+                    const stackUser = await stackServerApp.getUser(project.userId);
+                    if (stackUser) {
+                        customerEmail = stackUser.primaryEmail || "";
+                        customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";
+                    }
+                } else if (project.clientName) {
+                    customerName = project.clientName;
+                }
+
+                if (customerEmail) {
                     sendOrderCancelledEmail({
-                        to: stackUser.primaryEmail,
-                        customerName: stackUser.displayName || stackUser.primaryEmail.split('@')[0] || "Client",
+                        to: customerEmail,
+                        customerName,
                         orderId: targetId,
                         productName: project.title || estimate?.title || "Service"
                     }).catch(err => console.error("Cancellation notification error:", err));

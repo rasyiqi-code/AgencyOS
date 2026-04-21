@@ -81,6 +81,7 @@ export function QuoteGeneratorForm({ services, availableUsers, translations }: Q
                                 name="clientName"
                                 placeholder="E.g. John Doe"
                                 className="w-full h-full bg-transparent pt-6 pb-2 px-4 text-sm text-white focus:outline-none"
+                                required
                             />
                         </div>
                         <div className="w-full relative group sm:col-span-1 lg:col-span-7 bg-black/40 border border-zinc-800 rounded-xl focus-within:border-brand-yellow/50 focus-within:ring-1 focus-within:ring-brand-yellow/20 hover:bg-black/60 transition-all overflow-hidden">
@@ -89,8 +90,8 @@ export function QuoteGeneratorForm({ services, availableUsers, translations }: Q
                             </label>
                             <input
                                 name="clientEmail"
-                                type="email"
-                                placeholder="E.g. client@email.com"
+                                type="text"
+                                placeholder="E.g. client@email.com or +628123..."
                                 className="w-full h-full bg-transparent pt-6 pb-2 px-4 text-sm text-white focus:outline-none"
                             />
                         </div>

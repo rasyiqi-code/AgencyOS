@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, Loader2, AlertTriangle, MessageSquare, Inbox, Send, ChevronUp, Tag, Check } from "lucide-react";
@@ -12,7 +13,7 @@ import { toast } from "sonner";
 
 import { useTranslations } from "next-intl";
 
-export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context, user }: {
+export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context, user, orderId }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
     onApplyCoupon: (coupon: Coupon | null) => void,
@@ -25,13 +26,31 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
     projectPaidAmount?: number,
     projectTotalAmount?: number,
     context?: "SERVICE" | "CALCULATOR",
-    user?: { displayName: string | null, email: string | null }
+    user?: { displayName: string | null, email: string | null },
+    orderId?: string | null
 }) {
     console.log("DEBUG CHECKOUT - priceType:", estimate.service?.priceType);
     console.log("DEBUG CHECKOUT - status:", estimate.status);
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
     const [isProcessing, setIsProcessing] = useState(false);
+    const [countdown, setCountdown] = useState(5);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (estimate.status === 'paid' && orderId && countdown > 0) {
+            const timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [estimate.status, orderId, countdown]);
+
+    useEffect(() => {
+        if (countdown <= 0 && estimate.status === 'paid' && orderId) {
+            router.push(`/invoices/${orderId}`);
+        }
+    }, [countdown, estimate.status, orderId, router]);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
     const [offeredPrice, setOfferedPrice] = useState<string>("");
     console.log("DEBUG SIDEBAR - priceType:", estimate.service?.priceType);
@@ -195,42 +214,46 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
         return t("quoteSummaryMessage", { service: estimate.service?.title || estimate.title, id: estimate.id.slice(-8).toUpperCase(), price: priceLabel });
     };
 
-    if (estimate.status === 'paid') {
+    const isPaid = estimate.status === 'paid';
+
+    if (isPaid) {
         return (
-            <Card className="bg-brand-yellow/10 border-brand-yellow/20 text-white sticky top-24">
-                <CardHeader>
-                    <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="w-8 h-8 text-brand-yellow" />
-                        <CardTitle className="text-brand-yellow">{t("confirmed")}</CardTitle>
+            <div className="w-full max-w-md mx-auto text-center space-y-8 py-12 animate-in fade-in zoom-in duration-700">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-20 h-20 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center mb-2">
+                        <CheckCircle className="w-10 h-10 text-brand-yellow" />
                     </div>
-                    <CardDescription className="text-brand-yellow/80">
+                    <h2 className="text-3xl font-black text-brand-yellow tracking-tighter">
+                        {t("confirmed")}
+                    </h2>
+                    <p className="text-brand-yellow/60 text-sm max-w-xs mx-auto">
                         {t("confirmedDesc")}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="p-4 rounded-lg bg-brand-yellow/5 border border-brand-yellow/20 text-sm text-brand-yellow/90">
+                    </p>
+                </div>
+
+                <div className="space-y-6">
+                    <div className="inline-block px-6 py-2 rounded-full bg-brand-yellow/5 border border-brand-yellow/10 text-xs font-bold text-brand-yellow/40 uppercase tracking-[0.2em]">
                         {t('transactionId')}: #{estimate.id.slice(-8).toUpperCase()}
                     </div>
 
-                    <div className="space-y-3">
-                        <Button
-                            variant="outline"
-                            className="w-full border-brand-yellow/30 bg-transparent text-brand-yellow hover:bg-brand-yellow/10 hover:text-brand-yellow/90 cursor-pointer"
-                            onClick={onPrint}
-                        >
-                            <Download className="w-4 h-4 mr-2" />
-                            {t("downloadReceipt")}
-                        </Button>
-
-                        <Button
-                            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-bold h-12 cursor-pointer"
-                            onClick={() => window.location.href = '/dashboard/missions'}
-                        >
-                            {t("accessMission")}
-                        </Button>
+                    <div className="flex flex-col items-center justify-center">
+                        {countdown > 0 && orderId ? (
+                            <div className="space-y-4">
+                                <div className="text-8xl font-black text-brand-yellow tracking-tighter drop-shadow-[0_0_30px_rgba(254,215,0,0.3)]">
+                                    {countdown}
+                                </div>
+                                <div className="text-[12px] font-black text-brand-yellow/40 uppercase tracking-[0.4em] animate-pulse">
+                                    Redirecting to Invoice...
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="px-8 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-bold tracking-widest uppercase text-sm">
+                                Payment Verified
+                            </div>
+                        )}
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         );
     }
 

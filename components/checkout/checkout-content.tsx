@@ -20,7 +20,8 @@ export function CheckoutContent({
     defaultPaymentType,
     projectPaidAmount = 0,
     projectTotalAmount = 0,
-    context
+    context,
+    orderId
 }: {
     estimate: ExtendedEstimate,
     bankDetails: BankDetails,
@@ -33,6 +34,7 @@ export function CheckoutContent({
     projectPaidAmount?: number;
     projectTotalAmount?: number;
     context?: "SERVICE" | "CALCULATOR";
+    orderId?: string | null;
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
@@ -49,19 +51,23 @@ export function CheckoutContent({
             : Math.max(0, estimate.totalCost - appliedCoupon.discountValue)
         : estimate.totalCost;
 
+    const isPaid = estimate.status === 'paid';
+
     return (
-        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
+        <div className={`flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto ${isPaid ? 'justify-center items-center py-12' : ''}`}>
             {/* Left: Summary & Trust (Replaces Invoice) */}
-            <div className="flex-1">
-                <CheckoutSummary
-                    estimate={estimate}
-                    bonuses={bonuses}
-                    context={context}
-                />
-            </div>
+            {!isPaid && (
+                <div className="flex-1">
+                    <CheckoutSummary
+                        estimate={estimate}
+                        bonuses={bonuses}
+                        context={context}
+                    />
+                </div>
+            )}
 
             {/* Right: Payment Actions */}
-            <div className="w-full lg:w-96 space-y-6">
+            <div className={`w-full lg:w-96 space-y-6 ${isPaid ? 'transform scale-110 transition-transform duration-500' : ''}`}>
                 <PaymentSidebar
                     estimate={estimate}
                     amount={discountedAmount}
@@ -76,6 +82,7 @@ export function CheckoutContent({
                     projectTotalAmount={projectTotalAmount}
                     context={context}
                     user={user}
+                    orderId={orderId}
                 />
             </div>
 
@@ -86,9 +93,11 @@ export function CheckoutContent({
                         refAction={invoiceRef}
                         estimate={estimate}
                         user={user}
+                        isPaid={estimate.status === 'paid'}
                         agencySettings={agencySettings}
                         currency={currency}
                         exchangeRate={rate || activeRate}
+                        bankDetails={bankDetails}
                     />
                 </div>
             </div>

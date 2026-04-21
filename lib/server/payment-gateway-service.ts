@@ -5,12 +5,14 @@ interface MidtransConfig {
     clientKey: string;
     merchantId: string;
     isProduction: boolean;
+    isActive: boolean;
 }
 
 interface CreemConfig {
     apiKey: string;
     storeId: string;
     isProduction: boolean;
+    isActive: boolean;
 }
 
 export class PaymentGatewayService {
@@ -19,7 +21,8 @@ export class PaymentGatewayService {
             serverKey: "",
             clientKey: "",
             merchantId: "",
-            isProduction: false
+            isProduction: false,
+            isActive: false
         };
 
         try {
@@ -44,7 +47,8 @@ export class PaymentGatewayService {
         const defaultConfig: CreemConfig = {
             apiKey: "",
             storeId: "",
-            isProduction: false
+            isProduction: false,
+            isActive: false
         };
 
         try {
@@ -87,16 +91,26 @@ export class PaymentGatewayService {
     }
 
     /**
-     * Check if at least one payment gateway is configured and active
+     * Get individual activation status for all gateways
      */
-    async hasActiveGateway(): Promise<boolean> {
+    async getGatewayStatus(): Promise<{ midtrans: boolean; creem: boolean }> {
         const [midtrans, creem] = await Promise.all([
             this.getMidtransConfig(),
             this.getCreemConfig()
         ]);
 
-        return (midtrans.serverKey !== "" && midtrans.clientKey !== "") ||
-            (creem.apiKey !== "" && creem.storeId !== "");
+        return {
+            midtrans: midtrans.isActive && midtrans.serverKey !== "" && midtrans.clientKey !== "",
+            creem: creem.isActive && creem.apiKey !== "" && creem.storeId !== ""
+        };
+    }
+
+    /**
+     * Check if at least one payment gateway is configured and active
+     */
+    async hasActiveGateway(): Promise<boolean> {
+        const status = await this.getGatewayStatus();
+        return status.midtrans || status.creem;
     }
 }
 

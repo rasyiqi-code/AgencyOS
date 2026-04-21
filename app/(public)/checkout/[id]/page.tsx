@@ -140,15 +140,46 @@ export default async function CheckoutPage(props: PageProps) {
             description: b.description || ""
         }));
 
+        // Determine display user data for the invoice
+        // If it's a manual quote or linked to a project, prioritize the project/estimate owner info
         const userData = {
-            displayName: user?.displayName || "Valued Client",
-            email: user?.primaryEmail || "",
+            displayName: estimate.project?.clientName || user?.displayName || "Valued Client",
+            email: "", // Default to empty to avoid showing admin's email on client's invoice
         };
+
+        if (estimate.project?.userId) {
+            if (estimate.project.userId === 'OFFLINE') {
+                // Handle Offline Client
+                // Extract contact (email/phone) from summary if possible: "Custom quote for Name (contact)"
+                const emailMatch = estimate.summary.match(/\(([^)]+)\)/);
+                if (emailMatch) {
+                    userData.email = emailMatch[1];
+                }
+            } else if (estimate.project.userId !== user?.id) {
+                // If the logged-in user is NOT the owner (e.g. Admin Preview), fetch owner info
+                try {
+                    const allUsers = await stackServerApp.listUsers({ limit: 100 });
+                    const owner = allUsers.find(u => u.id === estimate.project?.userId);
+                    if (owner) {
+                        userData.displayName = owner.displayName || owner.primaryEmail || estimate.project.clientName || "Valued Client";
+                        userData.email = owner.primaryEmail || "";
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch estimate owner for invoice:", e);
+                }
+            } else {
+                // Logged in user IS the owner
+                userData.email = user.primaryEmail || "";
+            }
+        } else {
+            // No project (Instant Calculator flow), use current logged-in user
+            userData.email = user?.primaryEmail || "";
+        }
 
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
-                <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
-                    <CheckoutProgress currentStep={1} />
+            <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
+                    <CheckoutProgress currentStep={estimate.status === 'paid' ? 4 : 1} />
                     <CheckoutContent
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
@@ -161,6 +192,7 @@ export default async function CheckoutPage(props: PageProps) {
                         projectPaidAmount={estimate.project?.paidAmount || 0}
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
                         context={context}
+                        orderId={estimate.project?.invoiceId}
                     />
                 </div>
             </div>

@@ -74,7 +74,8 @@ export async function POST(req: NextRequest) {
                 serverKey: config.serverKey,
                 clientKey: config.clientKey,
                 merchantId: config.merchantId,
-                isProduction: config.isProduction || false
+                isProduction: config.isProduction || false,
+                isActive: config.isActive || false
             });
 
             // Reset instances to force reload with new config
@@ -98,7 +99,8 @@ export async function POST(req: NextRequest) {
             await paymentGatewayService.saveCreemConfig({
                 apiKey: config.apiKey,
                 storeId: config.storeId,
-                isProduction: config.isProduction || false
+                isProduction: config.isProduction || false,
+                isActive: config.isActive || false
             });
 
             // Reset instance to force reload with new config

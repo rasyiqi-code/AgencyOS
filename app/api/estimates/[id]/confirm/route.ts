@@ -136,30 +136,37 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
 
             // --- Notifications ---
             try {
-                const stackUser = await stackServerApp.getUser(project.userId);
-                if (stackUser) {
-                    const customerEmail = stackUser.primaryEmail || "";
-                    const customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";
+                let customerEmail = "";
+                let customerName = "Client";
 
-                    if (customerEmail) {
-                        // Client Notification
-                        sendPaymentSuccessEmail({
-                            to: customerEmail,
-                            customerName,
-                            orderId: targetId,
-                            amount: amountPaid,
-                            productName: project.title || (estimate?.title) || "Service"
-                        }).catch(err => console.error("Client notification error:", err));
+                if (project.userId !== 'OFFLINE') {
+                    const stackUser = await stackServerApp.getUser(project.userId);
+                    if (stackUser) {
+                        customerEmail = stackUser.primaryEmail || "";
+                        customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";
                     }
+                } else if (project.clientName) {
+                    customerName = project.clientName;
+                }
 
-                    // Admin Notification (Finalized)
-                    notifyPaymentSuccess({
+                if (customerEmail) {
+                    // Client Notification
+                    sendPaymentSuccessEmail({
+                        to: customerEmail,
+                        customerName,
                         orderId: targetId,
                         amount: amountPaid,
-                        customerName,
-                        type: "SERVICE"
-                    }).catch(err => console.error("Admin notification error:", err));
+                        productName: project.title || (estimate?.title) || "Service"
+                    }).catch(err => console.error("Client notification error:", err));
                 }
+
+                // Admin Notification (Finalized)
+                notifyPaymentSuccess({
+                    orderId: targetId,
+                    amount: amountPaid,
+                    customerName,
+                    type: "SERVICE"
+                }).catch(err => console.error("Admin notification error:", err));
             } catch (err) {
                 console.error("Failed to fetch user for notifications:", err);
             }

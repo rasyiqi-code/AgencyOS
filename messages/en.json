@@ -30,7 +30,6 @@
         "myAccount": "My Account",
         "promo": "Promo",
         "startProject": "Start"
-
     },
     "Hero": {
         "statusBadge": "Strategic Partner",
@@ -523,6 +522,19 @@
             "noOrders": "No orders found.",
             "previous": "Previous",
             "next": "Next",
+            "Dashboard": {
+                "title": "Finance Command",
+                "revenue": "Total Revenue",
+                "lifetime": "Lifetime Earnings",
+                "pending": "Pending Orders",
+                "needsAction": "Needs Invoice Action",
+                "manageOrders": "Manage Invoices & Orders",
+                "manageOrdersDesc": "Full access to service order history and payment verification.",
+                "digitalOrders": "Digital Product Orders",
+                "digitalOrdersDesc": "Monitor transactions for plugins, templates, and digital downloads.",
+                "quotes": "Price Quotes",
+                "quotesDesc": "Review and negotiate price quotes from potential clients."
+            },
             "Status": {
                 "dp": "PARTIAL (DP)",
                 "full": "FULL PAYMENT",
@@ -930,9 +942,9 @@
         "secure": "Secure 256-bit SSL encrypted.",
         "problem": "Problem with payment?",
         "confirmed": "Payment Confirmed",
-        "confirmedDesc": "Thank you! Your payment has been verified and your mission is now active.",
+        "confirmedDesc": "Thank you! Your payment has been verified.",
         "downloadReceipt": "Download Receipt",
-        "accessMission": "Access Mission Control",
+        "shareInvoice": "Share Invoice",
         "submitOffer": "Submit Offer",
         "submitOfferDesc": "This service is negotiable. Please enter your offer price based on the service details above.",
         "yourOfferPrice": "Your Offer Price ({currency})",
@@ -945,6 +957,7 @@
         "offerAutoSaved": "Your offer will be automatically saved when you select a channel.",
         "invalidOffer": "Please enter a valid offer price.",
         "offerSubmitError": "Failed to submit offer. Please try again.",
+        "linkCopied": "Link copied to clipboard!",
         "discussPrice": "Price TBD",
         "quoteSummaryMessage": "Hi, I'm interested in the \"{service}\" service (ID: {id}). My offer: {price}. Please review, thanks.",
         "manualWaitTime": "Please allow up to 24 hours for manual verification.",
@@ -973,7 +986,8 @@
         "exploreMore": "Explore more premium digital products"
     },
     "Invoice": {
-        "title": "INVOICE",
+        "invoiceNo": "Invoice No",
+        "title": "Invoice",
         "billTo": "Bill To",
         "date": "Date",
         "dateIssued": "Date Issued",
@@ -1005,7 +1019,9 @@
         "completePaymentDigital": "Please complete payment below to access your digital product.",
         "thankYouPurchase": "Thank you for your purchase. Enjoy your product!",
         "oneTime": "One-time",
-        "license": "License"
+        "license": "License",
+        "scrollNotice": "Scroll to view full invoice",
+        "paymentMethodsDisabled": "Online payment is currently unavailable for this invoice."
     },
     "FloatingChat": {
         "needHelp": "Need Help? 👋"

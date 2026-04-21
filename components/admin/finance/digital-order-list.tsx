@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     Search,
     Filter,
@@ -16,8 +16,10 @@ import {
     ExternalLink,
     XCircle,
     Layers,
-    ShieldCheck
+    ShieldCheck,
+    FileText
 } from "lucide-react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +31,9 @@ import {
 } from "@/components/ui/accordion";
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { formatPaymentMethod } from "@/lib/shared/utils";
+import { DeleteOrderButton } from "@/components/admin/orders/delete-button";
 import { confirmDigitalOrder, cancelDigitalOrder } from "@/app/actions/digital-orders";
 
 
@@ -307,6 +311,13 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                            <Link href={`/id/digital-invoices/${order.id}`} target="_blank">
+                                <Button variant="outline" size="sm" className="w-full sm:w-auto text-xs gap-2 border-white/5 bg-zinc-900/50 hover:bg-zinc-800 hover:text-brand-yellow rounded-lg">
+                                    <FileText className="w-3.5 h-3.5" />
+                                    View Invoice
+                                </Button>
+                            </Link>
+
                             {order.proofUrl && (
                                 <Button variant="secondary" size="sm" className="w-full sm:w-auto text-xs gap-2 bg-zinc-800 hover:bg-zinc-700 border-white/10 rounded-lg" asChild>
                                     <a href={order.proofUrl} target="_blank" rel="noopener noreferrer">
@@ -321,6 +332,10 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
                                     <CancelOrderButton orderId={order.id} />
                                     <ConfirmPaymentButton orderId={order.id} />
                                 </>
+                            )}
+
+                            {isCancelled && (
+                                <DeleteOrderButton id={order.id} type="digital" />
                             )}
                         </div>
                     </div>
@@ -367,62 +382,62 @@ function DetailItem({ label, value, onCopy, isMono, isBadge, isUpper }: {
 }
 
 function ConfirmPaymentButton({ orderId }: { orderId: string }) {
-    const [loading, setLoading] = useState(false);
+    const [isPending, startTransition] = React.useTransition();
+    const router = useRouter();
 
     const handleConfirm = async (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!confirm("Are you sure you want to confirm this payment?")) return;
 
-        setLoading(true);
-        try {
-            const res = await confirmDigitalOrder(orderId);
-            if (res.success) {
-                toast.success("Payment confirmed successfully!");
-                window.location.reload();
-            } else {
-                toast.error(res.error || "Failed to confirm payment");
+        startTransition(async () => {
+            try {
+                const res = await confirmDigitalOrder(orderId);
+                if (res.success) {
+                    toast.success("Payment confirmed successfully!");
+                    router.refresh();
+                } else {
+                    toast.error(res.error || "Failed to confirm payment");
+                }
+            } catch {
+                toast.error("An error occurred");
             }
-        } catch {
-            toast.error("An error occurred");
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     return (
         <Button
             size="sm"
             onClick={handleConfirm}
-            disabled={loading}
+            disabled={isPending}
             className="w-full sm:w-auto text-xs gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-9 border-none ring-1 ring-white/10 rounded-lg shadow-lg shadow-emerald-500/10"
         >
-            {loading ? <Clock className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+            {isPending ? <Clock className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
             Confirm Payment
         </Button>
     );
 }
 
 function CancelOrderButton({ orderId }: { orderId: string }) {
-    const [loading, setLoading] = useState(false);
+    const [isPending, startTransition] = React.useTransition();
+    const router = useRouter();
 
     const handleCancel = async (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!confirm("Are you sure you want to cancel this order? This action cannot be undone.")) return;
 
-        setLoading(true);
-        try {
-            const res = await cancelDigitalOrder(orderId);
-            if (res.success) {
-                toast.success("Order cancelled successfully!");
-                window.location.reload();
-            } else {
-                toast.error(res.error || "Failed to cancel order");
+        startTransition(async () => {
+            try {
+                const res = await cancelDigitalOrder(orderId);
+                if (res.success) {
+                    toast.success("Order cancelled successfully!");
+                    router.refresh();
+                } else {
+                    toast.error(res.error || "Failed to cancel order");
+                }
+            } catch {
+                toast.error("An error occurred");
             }
-        } catch {
-            toast.error("An error occurred");
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     return (
@@ -430,10 +445,10 @@ function CancelOrderButton({ orderId }: { orderId: string }) {
             variant="destructive"
             size="sm"
             onClick={handleCancel}
-            disabled={loading}
+            disabled={isPending}
             className="w-full sm:w-auto text-xs gap-2 h-9 border-none rounded-lg"
         >
-            {loading ? <Clock className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+            {isPending ? <Clock className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
             Cancel Order
         </Button>
     );
