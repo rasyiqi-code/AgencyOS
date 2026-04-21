@@ -209,7 +209,7 @@ export default async function AdminQuotesPage() {
                     <CardContent className="p-0">
                         <div className="overflow-x-auto">
                             <Table>
-                                <TableHeader className="sticky top-14 sm:top-16 z-20 bg-zinc-900/90 backdrop-blur-md border-zinc-800/50">
+                                <TableHeader className="z-20 bg-zinc-900/90 backdrop-blur-md border-zinc-800/50">
                                     <TableRow className="border-zinc-800/50 hover:bg-transparent">
                                         <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colOrderId')}</TableHead>
                                         <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colClient')}</TableHead>
