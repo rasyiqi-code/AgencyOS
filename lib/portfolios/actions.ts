@@ -68,14 +68,18 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
     try {
         const cleanSlug = sanitizeSlug(item.slug || item.title);
         
+        // Ensure URLs are valid or null to prevent crashes in next/image or iframes
+        const sanitizedImageUrl = item.imageUrl && item.imageUrl.length > 8 ? item.imageUrl : undefined;
+        const sanitizedExternalUrl = item.externalUrl && item.externalUrl.length > 8 ? item.externalUrl : undefined;
+
         const newItem = await prisma.portfolio.upsert({
             where: { slug: cleanSlug },
             update: {
                 title: item.title,
                 category: item.category,
                 description: item.description,
-                externalUrl: item.externalUrl,
-                imageUrl: item.imageUrl,
+                externalUrl: sanitizedExternalUrl,
+                imageUrl: sanitizedImageUrl,
                 htmlContent: html || undefined,
             },
             create: {
@@ -83,8 +87,8 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
                 slug: cleanSlug,
                 category: item.category,
                 description: item.description,
-                externalUrl: item.externalUrl,
-                imageUrl: item.imageUrl,
+                externalUrl: sanitizedExternalUrl,
+                imageUrl: sanitizedImageUrl,
                 htmlContent: html,
             },
         });
@@ -92,7 +96,7 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
         revalidatePath("/portfolio", "page");
         revalidatePath("/admin/portfolio", "page");
         revalidatePath(`/view-design/${cleanSlug}`, "page");
-        revalidateTag("portfolios", "updateTag");
+        (revalidateTag as unknown as (tag: string) => void)("portfolios");
 
         return newItem as unknown as PortfolioItem;
     } catch (error) {
@@ -110,7 +114,7 @@ export async function deletePortfolio(id: string) {
         revalidatePath("/portfolio", "page");
         revalidatePath("/admin/portfolio", "page");
         revalidatePath(`/view-design/${item.slug}`, "page");
-        revalidateTag("portfolios", "updateTag");
+        (revalidateTag as unknown as (tag: string) => void)("portfolios");
     } catch (error) {
         console.error("[Portfolios] Delete failed:", error);
         throw error;

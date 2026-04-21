@@ -113,6 +113,17 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
             return;
         }
 
+        // Basic URL validation to prevent crashes (e.g. just "https://")
+        if (externalUrl && externalUrl.length < 10 && !externalUrl.includes(".")) {
+            toast.error("Please enter a valid External URL");
+            return;
+        }
+        
+        if (imageUrl && imageUrl.length < 10 && !imageUrl.includes(".")) {
+            toast.error("Please enter a valid Thumbnail URL");
+            return;
+        }
+
         setIsSaving(true);
         try {
             const newItem = await savePortfolio({ title, slug, category, externalUrl, imageUrl, description }, html);

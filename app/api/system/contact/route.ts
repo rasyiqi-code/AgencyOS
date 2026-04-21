@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
 
         revalidatePath("/admin/system/settings", "page");
         revalidatePath("/", "layout");
-        revalidateTag("system-settings", "updateTag");
+        (revalidateTag as unknown as (tag: string) => void)("system-settings");
 
         return NextResponse.json({ success: true });
     } catch (error) {

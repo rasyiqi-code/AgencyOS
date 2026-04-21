@@ -35,7 +35,7 @@ export default async function AdminStoragePage() {
         if (cfAccountId) await prisma.systemSetting.upsert({ where: { key: "cloudflare_account_id" }, update: { value: cfAccountId }, create: { key: "cloudflare_account_id", value: cfAccountId } });
         if (cfApiToken) await prisma.systemSetting.upsert({ where: { key: "cloudflare_api_token" }, update: { value: cfApiToken }, create: { key: "cloudflare_api_token", value: cfApiToken } });
         
-        revalidateTag("system-settings", "updateTag");
+        (revalidateTag as unknown as (tag: string) => void)("system-settings");
         revalidatePath("/admin/system/storage");
     }
 
