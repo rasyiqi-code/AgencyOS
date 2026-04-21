@@ -1,0 +1,197 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight, Zap, Layers, ShieldCheck, Sparkles } from "lucide-react";
+import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
+import { useEffect, useState } from "react";
+
+export function SectionSolutions() {
+    const t = useTranslations("Solutions");
+    const locale = useLocale();
+
+    const products = [
+        { 
+            key: "web", 
+            icon: Zap, 
+            color: "text-blue-400",
+            glow: "from-blue-500/20",
+            border: "hover:border-blue-500/30"
+        },
+        { 
+            key: "app", 
+            icon: Layers, 
+            color: "text-purple-400",
+            glow: "from-purple-500/20",
+            border: "hover:border-purple-500/30"
+        },
+        { 
+            key: "security", 
+            icon: ShieldCheck, 
+            color: "text-emerald-400",
+            glow: "from-emerald-500/20",
+            border: "hover:border-emerald-500/30"
+        }
+    ];
+
+    return (
+        <section className="py-20 bg-black overflow-hidden relative border-t border-white/5">
+            {/* Background Grid Texture */}
+            <div className="absolute inset-0 z-0 opacity-[0.03] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none"
+                style={{
+                    backgroundImage: `radial-gradient(#fff 1px, transparent 1px)`,
+                    backgroundSize: '32px 32px'
+                }}
+            />
+
+            <div className="container mx-auto px-4 relative z-10">
+                {/* Header Section */}
+                <div className="text-center mb-16 max-w-4xl mx-auto">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/50 border border-white/10 text-brand-yellow text-[10px] font-black uppercase tracking-[0.3em] mb-6 shadow-2xl backdrop-blur-md"
+                    >
+                        <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+                        {t("badge")}
+                    </motion.div>
+                    
+                    <motion.h2 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter max-w-4xl mx-auto leading-[1.1]"
+                    >
+                        {t("title")}
+                    </motion.h2>
+                    
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="text-zinc-400 text-lg md:text-xl font-medium max-w-2xl mx-auto"
+                    >
+                        {t("subtitle")}
+                    </motion.p>
+                </div>
+
+                {/* Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 max-w-7xl mx-auto">
+                    {products.map((product, index) => (
+                        <SolutionCard 
+                            key={product.key} 
+                            product={product} 
+                            index={index}
+                            locale={locale}
+                            t={t}
+                        />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+interface SolutionCardProps {
+    product: {
+        key: string;
+        icon: React.ElementType;
+        color: string;
+        glow: string;
+        border: string;
+    };
+    index: number;
+    locale: string;
+    t: (key: string) => string;
+}
+
+function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const [targetIndex, setTargetIndex] = useState(0);
+    const targets = t(`items.${product.key}.target`).split(",").map((s: string) => s.trim());
+
+    useEffect(() => {
+        if (targets.length <= 1) return;
+        const interval = setInterval(() => {
+            setTargetIndex((prev) => (prev + 1) % targets.length);
+        }, 1500);
+        return () => clearInterval(interval);
+    }, [targets.length]);
+
+    const handleMouseMove = ({ currentTarget, clientX, clientY }: React.MouseEvent) => {
+        const { left, top } = currentTarget.getBoundingClientRect();
+        mouseX.set(clientX - left);
+        mouseY.set(clientY - top);
+    };
+
+    const background = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.06), transparent 40%)`;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 * (index + 1), duration: 0.5 }}
+            onMouseMove={handleMouseMove}
+            className={`group relative p-8 rounded-[2.5rem] bg-zinc-900/30 border border-white/5 transition-all duration-500 flex flex-col items-center text-center h-full backdrop-blur-xl overflow-hidden shadow-2xl ${product.border}`}
+        >
+            {/* Interactive Spotlight */}
+            <motion.div
+                className="absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{ background }}
+            />
+
+            {/* Corner Accent */}
+            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${product.glow} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl rounded-full`} />
+            
+            <div className="relative z-10 flex flex-col items-center h-full">
+                {/* Icon Box */}
+                <div className="w-16 h-16 rounded-2xl bg-zinc-950 border border-white/10 flex items-center justify-center mb-10 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-700 shadow-2xl relative overflow-hidden">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${product.glow} to-transparent opacity-50`} />
+                    <product.icon className={`w-8 h-8 ${product.color} relative z-10`} />
+                </div>
+
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-4 group-hover:text-brand-yellow transition-colors leading-tight tracking-tight">
+                    {t(`items.${product.key}.title`)}
+                </h3>
+
+                {/* Target Badge with Switcher */}
+                <div className="mb-6 h-8 flex items-center justify-center overflow-hidden">
+                    <AnimatePresence mode="wait">
+                        <motion.span
+                            key={targetIndex}
+                            initial={{ y: 15, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -15, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "circOut" }}
+                            className="text-[11px] font-black text-brand-yellow uppercase tracking-[0.2em] leading-relaxed whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,200,0,0.3)]"
+                        >
+                            {targets[targetIndex]}
+                        </motion.span>
+                    </AnimatePresence>
+                </div>
+
+                {/* Description */}
+                <p className="text-zinc-400 font-medium leading-relaxed mb-12 text-base group-hover:text-zinc-200 transition-colors">
+                    {t(`items.${product.key}.desc`)}
+                </p>
+
+                {/* Action */}
+                <div className="mt-auto w-full">
+                    <Link href={`/${locale}/contact`} className="block">
+                        <Button className="w-full h-14 rounded-2xl bg-zinc-950 hover:bg-brand-yellow text-white hover:text-black border border-white/10 hover:border-brand-yellow transition-all duration-500 font-black uppercase tracking-tighter text-sm group-hover:shadow-2xl group-hover:shadow-brand-yellow/20 flex items-center justify-center gap-2 group/btn">
+                            {t(`items.${product.key}.cta`)}
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                        </Button>
+                    </Link>
+                </div>
+            </div>
+        </motion.div>
+    );
+}

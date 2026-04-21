@@ -32,13 +32,16 @@ export function WorkflowContent() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
                 variants={containerVariants}
-                className="space-y-16"
+                className="space-y-20"
             >
-                <motion.div variants={itemVariants} className="text-center">
-                    <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter uppercase italic">
+                <motion.div variants={itemVariants} className="text-center flex flex-col items-center">
+                    <div className="px-3 py-1 rounded-full bg-black/10 border border-black/5 text-black text-[10px] font-black uppercase tracking-[0.3em] mb-6 shadow-sm backdrop-blur-md">
+                        {t("badge")}
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-black text-black mb-6 tracking-tighter uppercase italic leading-tight">
                         {t("title")}
                     </h2>
-                    <p className="text-black font-bold max-w-2xl mx-auto opacity-80">{t("subtitle")}</p>
+                    <p className="text-black/70 font-bold max-w-2xl mx-auto text-lg">{t("subtitle")}</p>
                 </motion.div>
 
                 <div className="relative">
@@ -57,30 +60,30 @@ export function WorkflowContent() {
                             <div className="w-24 h-24 mx-auto bg-black border-4 border-black/10 rounded-full flex items-center justify-center relative z-10 mb-6 shadow-2xl group hover:scale-105 transition-all duration-500">
                                 <MessageSquare className="w-10 h-10 text-brand-yellow group-hover:scale-110 transition-transform" />
                             </div>
-                            <h3 className="text-xl font-black text-black mb-3 italic uppercase tracking-tight">{t("step1")}</h3>
-                            <p className="text-black text-sm font-bold leading-relaxed opacity-80">
+                            <h3 className="text-2xl font-black text-black mb-4 italic uppercase tracking-tight leading-none">{t("step1")}</h3>
+                            <p className="text-black/80 text-base font-bold leading-relaxed max-w-[280px] mx-auto">
                                 {t("step1Desc")}
                             </p>
                         </motion.div>
 
                         {/* Step 2 */}
                         <motion.div variants={itemVariants} className="relative text-center">
-                            <div className="w-24 h-24 mx-auto bg-black border-4 border-black/10 rounded-full flex items-center justify-center relative z-10 mb-6 shadow-2xl group hover:scale-110 transition-all duration-500">
+                            <div className="w-24 h-24 mx-auto bg-black border-4 border-black/10 rounded-full flex items-center justify-center relative z-10 mb-8 shadow-2xl group hover:scale-110 transition-all duration-500">
                                 <Calculator className="w-10 h-10 text-brand-yellow" />
                             </div>
-                            <h3 className="text-xl font-black text-black mb-3 italic uppercase tracking-tight">{t("step2")}</h3>
-                            <p className="text-black text-sm font-bold leading-relaxed opacity-80">
+                            <h3 className="text-2xl font-black text-black mb-4 italic uppercase tracking-tight leading-none">{t("step2")}</h3>
+                            <p className="text-black/80 text-base font-bold leading-relaxed max-w-[280px] mx-auto">
                                 {t("step2Desc")}
                             </p>
                         </motion.div>
 
                         {/* Step 3 */}
                         <motion.div variants={itemVariants} className="relative text-center">
-                            <div className="w-24 h-24 mx-auto bg-black border-4 border-black/10 rounded-full flex items-center justify-center relative z-10 mb-6 shadow-2xl group hover:scale-105 transition-all duration-500">
+                            <div className="w-24 h-24 mx-auto bg-black border-4 border-black/10 rounded-full flex items-center justify-center relative z-10 mb-8 shadow-2xl group hover:scale-105 transition-all duration-500">
                                 <MousePointerClick className="w-10 h-10 text-brand-yellow group-hover:scale-110 transition-transform" />
                             </div>
-                            <h3 className="text-xl font-black text-black mb-3 italic uppercase tracking-tight">{t("step3")}</h3>
-                            <p className="text-black text-sm font-bold leading-relaxed opacity-80">
+                            <h3 className="text-2xl font-black text-black mb-4 italic uppercase tracking-tight leading-none">{t("step3")}</h3>
+                            <p className="text-black/80 text-base font-bold leading-relaxed max-w-[280px] mx-auto">
                                 {t("step3Desc")}
                             </p>
                         </motion.div>

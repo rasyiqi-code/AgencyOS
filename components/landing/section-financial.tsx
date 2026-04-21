@@ -69,7 +69,7 @@ export async function FinancialLogic() {
 
                                 <div className="space-y-4 pt-2">
                                     <div className="p-5 rounded-xl bg-red-500/5 border border-red-500/10">
-                                        <div className="text-2xl font-black text-red-600 mb-0.5 tracking-tighter">Rp 180 Jt+</div>
+                                        <div className="text-2xl font-black text-red-600 mb-0.5 tracking-tighter">{t("salaryOldValue")}</div>
                                         <div className="text-[10px] text-black/50 font-black uppercase tracking-widest leading-none">{t("salaryOld")}</div>
                                     </div>
 
@@ -78,19 +78,19 @@ export async function FinancialLogic() {
                                             <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
                                                 <X className="w-3 h-3 text-red-600" strokeWidth={3} />
                                             </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">1 - 2 Bulan {t("hiringTime")}</span>
+                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("hiringTimeOld")}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 group/item">
+                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
+                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
+                                            </div>
+                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("riskOld")}</span>
                                         </div>
                                         <div className="flex items-center gap-3 group/item">
                                             <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
                                                 <Info className="w-3 h-3 text-red-500/50" />
                                             </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("hiddenCostOld")}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <X className="w-3 h-3 text-red-500/50" strokeWidth={3} />
-                                            </div>
-                                            <span className="text-black/70 text-[10px] font-black uppercase tracking-widest leading-tight">{t("riskOld")}</span>
+                                            <span className="text-black/80 text-[10px] font-black uppercase tracking-widest leading-tight">{t("hiddenCostOld")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@ export async function FinancialLogic() {
 
                                 <div className="space-y-4 pt-2">
                                     <div className="p-5 rounded-xl bg-brand-yellow/10 border border-brand-yellow/20 shadow-lg shadow-brand-yellow/5">
-                                        <div className="text-2xl font-black text-brand-yellow mb-0.5 tracking-tighter">Rp 15 - 30 Jt</div>
+                                        <div className="text-2xl font-black text-brand-yellow mb-0.5 tracking-tighter">{t("salaryNewValue")}</div>
                                         <div className="text-[10px] text-brand-yellow/60 font-black uppercase tracking-widest leading-none">{t("salaryNew")}</div>
                                     </div>
 
@@ -133,19 +133,24 @@ export async function FinancialLogic() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3 justify-end group/item text-right">
-                                            <span className="text-zinc-300 text-sm font-black tracking-tight">{t("hiddenCost")} Rp 0</span>
+                                            <span className="text-zinc-300 text-sm font-black tracking-tight">{t("hiddenCostNew")}</span>
                                             <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">
+                                                <Check className="w-3 h-3 text-black" strokeWidth={3} />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 justify-end group/item text-right">
+                                            <span className="text-emerald-400 text-sm font-black tracking-tight">{t("riskNew")}</span>
+                                            <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
                                                 <Check className="w-3 h-3 text-black" strokeWidth={3} />
                                             </div>
                                         </div>
                                         <div className="flex flex-col items-end gap-1.5 text-right group/item">
                                             <div className="flex items-center gap-3">
-                                                <span className="text-brand-yellow font-black uppercase tracking-widest text-[9px]">{t("riskNew")}</span>
-                                                <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
+                                                <span className="text-brand-yellow font-black uppercase tracking-widest text-[10px]">{t("ownership")}</span>
+                                                <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">
                                                     <Check className="w-3 h-3 text-black" strokeWidth={3} />
                                                 </div>
                                             </div>
-                                            <span className="text-[9px] text-zinc-500 uppercase font-black pr-8 italic">{t("roi")}</span>
                                         </div>
                                     </div>
                                 </div>

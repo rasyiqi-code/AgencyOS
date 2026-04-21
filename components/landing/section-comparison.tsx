@@ -11,7 +11,7 @@ export async function Comparison() {
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     return (
-        <section className="py-24 bg-brand-yellow relative overflow-hidden">
+        <section className="py-16 bg-brand-yellow relative overflow-hidden">
             {/* Pola background grid yang premium (disesuaikan untuk bg kuning) */}
             <div className="absolute inset-0 z-0 opacity-[0.1] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)] pointer-events-none"
                 style={{
@@ -24,94 +24,45 @@ export async function Comparison() {
             <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-black/5 blur-[120px] rounded-full" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter">
+                <div className="text-center mb-10">
+                    <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter whitespace-pre-line">
                         {t("title", { brand: agencyName })}
                     </h2>
-                    <p className="text-black/70 font-medium max-w-2xl mx-auto">{t("subtitle")}</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
                     {/* Traditional */}
-                    <div className="p-8 rounded-2xl border border-black/10 bg-white shadow-xl transform hover:scale-[1.01] transition-all duration-500">
-                        <h3 className="text-xl font-bold text-black/50 mb-8 border-b border-black/5 pb-4 uppercase tracking-widest">{t("oldTitle")}</h3>
-                        <ul className="space-y-6">
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old1")}</strong> {t("old1Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old2")}</strong> {t("old2Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old3")}</strong> {t("old3Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old4")}</strong> {t("old4Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old5")}</strong> {t("old5Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old6")}</strong> {t("old6Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old7")}</strong> {t("old7Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start text-zinc-900">
-                                <X className="w-5 h-5 text-red-600 shrink-0 mt-1" strokeWidth={3} />
-                                <span className="tracking-tight font-medium"><strong className="font-bold">{t("old8")}</strong> {t("old8Sub")}</span>
-                            </li>
+                    <div className="p-6 rounded-2xl border border-black/10 bg-white shadow-xl transform hover:scale-[1.01] transition-all duration-500">
+                        <h3 className="text-lg font-bold text-black/50 mb-6 border-b border-black/5 pb-3 uppercase tracking-widest">{t("oldTitle")}</h3>
+                        <ul className="space-y-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <li key={i} className="flex gap-4 items-start text-zinc-900">
+                                    <X className="w-5 h-5 text-red-600 shrink-0 mt-0.5" strokeWidth={3} />
+                                    <span className="tracking-tight text-sm md:text-base font-medium leading-tight">
+                                        <strong className="font-bold">{t(`old${i}`)}</strong> {t(`old${i}Sub`)}
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
                     {/* Agency OS */}
-                    <div className="p-8 rounded-2xl border border-black/20 bg-black text-white relative overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
+                    <div className="p-6 rounded-2xl border border-black/20 bg-black text-white relative overflow-hidden shadow-2xl transform hover:scale-[1.01] transition-transform duration-500">
                         <div className="absolute top-0 right-0 px-4 py-1 bg-white text-[10px] font-black text-black rounded-bl-xl tracking-tighter shadow-lg">
                             {t("recommended")}
                         </div>
-                        <h3 className="text-xl font-black text-brand-yellow mb-8 border-b border-white/10 pb-4 uppercase tracking-tight">
+                        <h3 className="text-lg font-black text-brand-yellow mb-6 border-b border-white/10 pb-3 uppercase tracking-tight">
                             {t("newTitle", { brand: agencyName })}
                         </h3>
-                        <ul className="space-y-6">
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new1")}</strong> {t("new1Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new2")}</strong> {t("new2Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new3")}</strong> {t("new3Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new4")}</strong> {t("new4Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new5")}</strong> {t("new5Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new6")}</strong> {t("new6Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new7")}</strong> {t("new7Sub")}</span>
-                            </li>
-                            <li className="flex gap-4 items-start">
-                                <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-1" strokeWidth={3} />
-                                <span className="font-medium"><strong className="text-brand-yellow">{t("new8")}</strong> {t("new8Sub")}</span>
-                            </li>
+                        <ul className="space-y-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <li key={i} className="flex gap-4 items-start">
+                                    <Check className="w-5 h-5 text-brand-yellow shrink-0 mt-0.5" strokeWidth={3} />
+                                    <span className="text-sm md:text-base font-medium leading-tight">
+                                        <strong className="text-brand-yellow">{t(`new${i}`)}</strong> {t(`new${i}Sub`)}
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>

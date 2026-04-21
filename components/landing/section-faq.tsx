@@ -19,7 +19,7 @@ export async function FAQSection() {
                 }}
             />
 
-            <div className="container mx-auto px-4 max-w-3xl relative z-10">
+            <div className="container mx-auto px-4 max-w-4xl relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter italic uppercase">
                         {t("title")}
@@ -27,14 +27,14 @@ export async function FAQSection() {
                 </div>
 
                 <Accordion type="single" collapsible className="w-full text-black">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => (
                         <AccordionItem key={i} value={`item-${i}`} className="border-b border-black/10">
-                            <AccordionTrigger className="hover:no-underline hover:text-black/70 text-left font-bold tracking-tight">
+                            <AccordionTrigger className="hover:no-underline hover:text-black/70 text-left font-black tracking-tight text-base md:text-lg py-2.5">
                                 {t(`q${i}`)}
                             </AccordionTrigger>
-                            <AccordionContent className="text-black/60 font-medium leading-relaxed">
+                            <AccordionContent className="text-black/70 font-semibold leading-relaxed text-sm md:text-base pb-6 max-w-3xl">
                                 {t.rich(`a${i}`, {
-                                    strong: (chunks) => <strong className="text-black font-black">{chunks}</strong>
+                                    strong: (chunks) => <strong className="text-black font-black underline decoration-black/20 decoration-2 underline-offset-4">{chunks}</strong>
                                 })}
                             </AccordionContent>
                         </AccordionItem>
@@ -48,7 +48,7 @@ export async function FAQSection() {
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "FAQPage",
-                            "mainEntity": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
+                            "mainEntity": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => ({
                                 "@type": "Question",
                                 "name": t(`q${i}`),
                                 "acceptedAnswer": {

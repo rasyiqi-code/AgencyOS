@@ -2,11 +2,11 @@ import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { SectionCTA } from "@/components/landing/section-cta";
-import { SectionEcosystem } from "@/components/landing/section-ecosystem";
+
 import { SocialProof } from "@/components/landing/section-social-proof";
 import { Comparison } from "@/components/landing/section-comparison";
-import { SectionMissionControl } from "@/components/landing/section-mission-control";
 import { ProductCatalog } from "@/components/landing/section-products";
+import { SectionSolutions } from "@/components/landing/section-solutions";
 import { Workflow } from "@/components/landing/section-workflow";
 import { ExpertProfile } from "@/components/landing/section-expert";
 import { FinancialLogic } from "@/components/landing/section-financial";
@@ -103,8 +103,7 @@ export default async function Home() {
       </ScrollAnimationWrapper>
 
       <Comparison />
-      <SectionMissionControl />
-      <SectionEcosystem />
+      <SectionSolutions />
       <FinancialLogic />
       <ProductCatalog />
       <Workflow />

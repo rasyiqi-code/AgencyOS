@@ -72,12 +72,12 @@
         "adminCta": "Compliance Standards"
     },
     "SocialProof": {
-        "faster": "Predictability",
-        "fasterSub": "Fixed Milestones & Schedules",
-        "fixedPrice": "Clear ROI",
-        "fixedPriceSub": "Transparent Financial Logic",
-        "verified": "Security first",
-        "verifiedSub": "Enterprise-Grade Standards",
+        "faster": "On-Time Execution",
+        "fasterSub": "Guaranteed release schedule. No costly delay drama affecting your operations.",
+        "fixedPrice": "Transparent Investment",
+        "fixedPriceSub": "Fixed contract pricing upfront. No hidden fees or bloated mid-project bills.",
+        "verified": "Enterprise Architecture",
+        "verifiedSub": "Robust, unhackable infrastructure ready to handle any traffic spikes.",
         "techStack": "Modern Tech Stack",
         "stackFramework": "Modern Frameworks",
         "stackCloud": "Cloud Infrastructure",
@@ -118,7 +118,7 @@
     "Comparison": {
         "title": "Legacy Outsourcing vs. {brand}",
         "subtitle": "Why enterprises choose our Strategic Engineering model.",
-        "oldTitle": "Standard Outsourcing",
+        "oldTitle": "Them",
         "old1": "Inefficiency:",
         "old1Sub": "Kickoff takes months.",
         "old2": "Uncertainty:",
@@ -183,34 +183,59 @@
         "ctaGeneric": "Choose Package",
         "viewAllServices": "View All Services"
     },
+    "Solutions": {
+        "badge": "THE SOLUTION: Categorized by Value",
+        "title": "Strategic Solutions for Businesses Ready to Scale.",
+        "subtitle": "Evolve your digital infrastructure with future-proof technology.",
+        "items": {
+            "web": {
+                "title": "High-Performance Web (Scale-up)",
+                "target": "Company Profile, Landing Page, Corporate Blog, Content Marketing, Online Store, Pro Portfolio, Media Hub, Campaign Microsite, Education Web, News Portal, Digital Catalog, Event Page, Brand Activation",
+                "desc": "Build a super-fast Marketing Engine for maximum conversion. Not your average WordPress.",
+                "cta": "Optimize Performance"
+            },
+            "app": {
+                "title": "Complex Web App (Efficiency)",
+                "target": "Internal System, Custom Dashboard, SaaS Platform, Business Automation, Custom CRM, Inventory System, Member Portal, Management Tool, API Integration, Booking System, Payroll App, Logistics Tracking, Analytic Dashboard",
+                "desc": "Build an Operational Engine to automate your business and eliminate manual processes.",
+                "cta": "Build System"
+            },
+            "security": {
+                "title": "Managed Security & GEO (Future-Proof)",
+                "target": "Enterprise Brand, High-Traffic Site, AI-Ready SEO, Cybersecurity, Anti-DDoS, Data Protection, GEO Optimization, Search Generative AI, Bot Protection, Cloud Security, Database Encryption, Security Audit",
+                "desc": "Optimize your website to be cited by Generative AI (GEO) and secured against cyber attacks.",
+                "cta": "Secure Assets"
+            }
+        }
+    },
     "Workflow": {
-        "title": "Strategic Precision. Maximum Velocity.",
-        "subtitle": "Highly efficient asynchronous delivery for complex requirements.",
-        "step1": "1. Strategic Scoping",
-        "step1Desc": "Collaborate with our AI-enhanced system to define industrial-grade requirements and technical specifications instantly.",
-        "step2": "2. Agile Engineering",
-        "step2Desc": "Monitor delivery in real-time. Our Senior Engineers leverage AI to ensure code quality, security, and velocity.",
-        "step3": "3. Governance & Deployment",
-        "step3Desc": "Approve milestones through your secure Dashboard. Full transparency over progress, documentation, and production rollout."
+        "badge": "PROCESS: No Bullsh*t Workflow",
+        "title": "3 Steps to Launch.",
+        "subtitle": "All progress is monitored in real-time through the Client Dashboard. An honest, fast, and results-oriented work methodology.",
+        "step1": "Architecture & Logic",
+        "step1Desc": "We don't design first. We dissect your business logic to ensure the system works, not just looks pretty.",
+        "step2": "Fast Iteration",
+        "step2Desc": "You see weekly progress through a transparent project management system. No bad surprises at month-end.",
+        "step3": "Handover & Support",
+        "step3Desc": "Delivery of all digital assets, technical documentation, and post-release support. We won't disappear."
     },
     "Financial": {
-        "title": "Optimize Investment, Not Just Cost.",
-        "subtitle": "Strategic financial logic for modern enterprise growth.",
+        "title": "Execution Velocity is Today's Business Currency.",
+        "subtitle": "Why spend months building an internal team when you can launch instantly?",
         "comparison": "FINANCIAL LOGIC",
-        "hireSenior": "TYPICAL FULL-TIME HIRE",
-        "hybrid": "{brand}",
-        "salary": "Capital Expenditure",
-        "salaryOld": "Annual Salary + Fixed Overhead",
-        "salaryNew": "Project-Based Investment",
-        "hiringTime": "Operational Delay",
-        "hiringTimeOld": "2 - 4 Months Recruitment",
-        "hiringTimeNew": "Immediate Mobilization",
-        "hiddenCost": "Total Cost of Ownership",
-        "hiddenCostOld": "Taxes, Benefits, Licenses, Retention",
-        "risk": "Business Risk",
-        "riskOld": "Resource turnover & legacy debt",
-        "riskNew": "Performance Guarantee & Warranty",
-        "roi": "ROI: Scalable Growth & Efficiency"
+        "hireSenior": "BUILDING INTERNAL TEAM",
+        "hybrid": "{brand} PARTNERSHIP",
+        "salaryOldValue": "High Overhead",
+        "salaryOld": "Fixed Salary + Benefits + Operations",
+        "salaryNewValue": "Fixed-Price",
+        "salaryNew": "Guaranteed Project-Based Investment",
+        "hiringTimeOld": "Takes 2-3 months just for recruitment & onboarding.",
+        "riskOld": "Turnover risk leading to messy code (Tech Debt).",
+        "hiddenCostOld": "Hidden costs: Software licenses, hardware, insurance, & bonuses.",
+        "hiringTimeNew": "Instant execution by a specialist team from Day One.",
+        "hiddenCostNew": "No agency license fees or subscription systems (Vendor Lock-in).",
+        "riskNew": "Deployment guarantee with industry-standard code architecture.",
+        "ownership": "Source code becomes your company asset 100%."
     },
     "Guarantee": {
         "title": "We Take On All The Risk.",
@@ -239,7 +264,7 @@
         "name": "Rasyiqi",
         "badge": "12+ YEARS EXPERIENCE",
         "quote": "Focus on solutions, no complications.",
-        "description": "Starting as a freelance web developer in 2015 while still a student, I spent years crafting websites for diverse clients. What began as a hobby evolved into a professional pursuit, leading to the founding of {brand}. I now lead a team of elite engineers, bringing structural discipline and enterprise-grade management to every project we touch.",
+        "description": "Every business has a unique DNA, and so do the systems they need. We build infrastructure from scratch with the highest industry standards for clean code and security. Our focus is singular: providing you with a solid and fast digital foundation to sustain long-term business growth.",
         "footer": "Build to Scale. Design to Prevail.",
         "tagline": "Build to Scale. Design to Prevail."
     },
@@ -295,9 +320,18 @@
         "experience": "Experience"
     },
     "Stats": {
-        "experience": "Years Experience",
-        "web": "Web Projects",
-        "client": "Happy Clients"
+        "stack": {
+            "title": "∞",
+            "desc": "Scalability"
+        },
+        "royalty": {
+            "title": "100%",
+            "desc": "Source Code Ownership"
+        },
+        "performance": {
+            "title": "$0",
+            "desc": "No Subscription Fees"
+        }
     },
     "ClientDashboard": {
         "badge": "CLIENT DASHBOARD",
@@ -363,7 +397,7 @@
         }
     },
     "FAQ": {
-        "title": "Frequently Asked Questions",
+        "title": "FAQ: Addressing The Skeptics",
         "q1": "Is direct synchronous communication available?",
         "a1": "Our platform is optimized for <strong>Asynchronous Communication</strong> to ensure precision and absolute documentation. However, for critical coordination or deep strategic consulting, scheduled Premium Call sessions are available.",
         "q2": "How is post-deployment stability managed?",
@@ -383,7 +417,13 @@
         "q9": "Do you provide long-term maintenance?",
         "a9": "Yes, we offer retainer packages for ongoing feature development, security updates, and infrastructure monitoring.",
         "q10": "How long does a typical project take?",
-        "a10": "Most MVPs are shipped in 4-8 weeks. Enterprise migrations may take 3-6 months depending on complexity."
+        "a10": "Most MVPs are delivered in 4-8 weeks. Enterprise migrations may take 3-6 months depending on complexity.",
+        "q11": "Why is the price more expensive than a freelancer?",
+        "a11": "Because you are paying for certainty. We provide a professional team and a guarantee of code that won't break when traffic spikes.",
+        "q12": "Do I get access to the source code?",
+        "a12": "Yes. From the moment the contract is signed, all the code we write is your company's asset.",
+        "q13": "What if there are bugs?",
+        "a13": "We provide a free bug fix guarantee for the first 3-6 months after launch."
     },
     "Dashboard": {
         "Sidebar": {

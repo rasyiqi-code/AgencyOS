@@ -54,7 +54,7 @@
                 "Dirimu Sendiri"
             ]
         },
-        "description": "Dari situs yang sederhana hingga <white>skala enterprise</white>. {brand} membangun ekosistem teknologi yang skalabel, cepat, dan teroptimasi untuk pertumbuhan bisnis Anda.",
+        "description": "Kami tidak sekadar \"bikin web/aplikasi\". Kami membangun infrastruktur digital yang scalable, transparan, dan 100% menjadi aset milik Anda. Berhenti membuang uang pada vendor yang hilang setelah bayaran lunas.",
         "launchDashboard": "Konsultasi Gratis",
         "viewServices": "Solusi Bisnis",
         "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL"
@@ -73,12 +73,12 @@
         "adminCta": "Standar Kepatuhan"
     },
     "SocialProof": {
-        "faster": "Terprediksi",
-        "fasterSub": "Jadwal & Milestone Pasti",
-        "fixedPrice": "ROI Jelas",
-        "fixedPriceSub": "Logika Finansial Transparan",
-        "verified": "Keamanan Utama",
-        "verifiedSub": "Standar Kelas Enterprise",
+        "faster": "Eksekusi Tepat Waktu",
+        "fasterSub": "Jadwal rilis pasti. Tanpa drama penundaan yang merugikan operasional Anda.",
+        "fixedPrice": "Investasi Transparan",
+        "fixedPriceSub": "Harga kontrak tetap di awal. Tidak ada biaya siluman atau tagihan bengkak di tengah jalan.",
+        "verified": "Arsitektur Enterprise",
+        "verifiedSub": "Infrastruktur tangguh yang anti-bobol dan siap menahan lonjakan trafik sebesar apa pun.",
         "techStack": "Teknologi Modern",
         "stackFramework": "Framework Modern",
         "stackCloud": "Infrastruktur Cloud",
@@ -117,43 +117,27 @@
         ]
     },
     "Comparison": {
-        "title": "Outsourcing Tradisional vs. {brand}",
-        "subtitle": "Mengapa perusahaan memilih Model Engineering Strategis kami.",
-        "oldTitle": "Outsourcing Standar",
-        "old1": "Inefisiensi:",
-        "old1Sub": "Kickoff yang memakan waktu berbulan-bulan.",
-        "old2": "Ketidakpastian:",
-        "old2Sub": "Biaya membengkak di tengah jalan.",
-        "old3": "Black-box Process:",
-        "old3Sub": "Anda tidak tahu apa yang sedang dikerjakan.",
-        "old4": "Junior-Heavy:",
-        "old4Sub": "Proyek Anda jadi tempat latihan tenaga magang.",
-        "old5": "Progres Proyek:",
-        "old5Sub": "\"Black Box\" (Hanya tahu saat sudah jadi)",
-        "old6": "Akuntabilitas:",
-        "old6Sub": "Update hanya saat diminta (reaktif)",
-        "old7": "Kepemilikan Kode:",
-        "old7Sub": "Sering tertahan di server vendor",
-        "old8": "Kepastian Biaya:",
-        "old8Sub": "Potensi biaya tersembunyi & membengkak",
-        "newTitle": "{brand} Hybrid",
+        "title": "Mengapa 80% Proyek IT Gagal?\nKarena Anda Memilih Vendor yang Salah.",
+        "subtitle": "",
+        "oldTitle": "Mereka",
+        "old1": "Biaya Siluman:",
+        "old1Sub": "Harga murah di awal, tagihan bengkak di akhir.",
+        "old2": "Black Box:",
+        "old2Sub": "Anda tidak tahu apa yang mereka kerjakan.",
+        "old3": "Vendor Lock-in:",
+        "old3Sub": "Kode dikunci, Anda dipaksa langganan.",
+        "old4": "Template-based:",
+        "old4Sub": "Lambat, berat, dan tidak aman.",
+        "newTitle": "{brand}",
         "recommended": "PILIHAN ENTERPRISE",
-        "new1": "Rapid Onboarding:",
-        "new1Sub": "Strategi matang & tim siap gerak dalam 48 jam.",
-        "new2": "Cost Predictability:",
-        "new2Sub": "Model langganan atau harga tetap tanpa biaya siluman.",
-        "new3": "Full Visibility:",
-        "new3Sub": "Akses 24/7 ke Internal Agency OS kami untuk pantau progres.",
-        "new4": "Expert-Led:",
-        "new4Sub": "Ditangani langsung oleh Senior Engineer dengan 12 tahun pengalaman.",
-        "new5": "Live Stream:",
-        "new5Sub": "Pantau progres per detik.",
-        "new6": "Daily Logs:",
-        "new6Sub": "Laporan otomatis setiap hari.",
-        "new7": "100% Milik Anda:",
-        "new7Sub": "Akses GitHub dari hari ke-1.",
-        "new8": "Fixed Pricing:",
-        "new8Sub": "Tanpa kejutan biaya tambahan."
+        "new1": "Fixed Price:",
+        "new1Sub": "Harga yang disepakati adalah harga yang Anda bayar.",
+        "new2": "Daily Report:",
+        "new2Sub": "Pantau progres setiap hari via Dashboard/Trello.",
+        "new3": "Full Ownership:",
+        "new3Sub": "Source code milik Anda 100% sejak hari pertama.",
+        "new4": "Bespoke Development:",
+        "new4Sub": "Kode bersih, ringan, dan aman standar industri."
     },
     "ProductCatalog": {
         "title": "Solusi Strategis",
@@ -184,34 +168,59 @@
         "ctaGeneric": "Pilih Paket",
         "viewAllServices": "Lihat Semua Layanan"
     },
+    "Solutions": {
+        "badge": "THE SOLUTION: Categorized by Value",
+        "title": "Solusi Strategis untuk Bisnis yang Ingin Naik Kelas.",
+        "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi masa depan.",
+        "items": {
+            "web": {
+                "title": "High-Performance Web (Scale-up)",
+                "target": "Company Profile, Landing Page, Corporate Blog, Content Marketing, Toko Online, Portfolio Pro, Media Hub, Microsite Campaign, Web Edukasi, Portal Berita, Katalog Digital, Event Page, Brand Activation",
+                "desc": "Membangun Marketing Engine yang super cepat untuk konversi maksimal. Bukan WordPress biasa.",
+                "cta": "Optimasi Performa"
+            },
+            "app": {
+                "title": "Complex Web App (Efficiency)",
+                "target": "Sistem Internal, Dashboard Khusus, Platform SaaS, Otomasi Bisnis, CRM Kustom, Sistem Inventaris, Portal Keanggotaan, Management Tool, Integrasi API Sistem, Sistem Booking, Payroll App, Tracking Logistik, Dashboard Analytic",
+                "desc": "Membangun Operational Engine untuk mengotomasi bisnis dan membuang proses manual.",
+                "cta": "Bangun Sistem"
+            },
+            "security": {
+                "title": "Managed Security & GEO (Future-Proof)",
+                "target": "Enterprise Brand, High-Traffic Site, AI-Ready SEO, Cybersecurity, Anti-DDoS, Data Protection, GEO Optimization, Search Generative AI, Bot Protection, Cloud Security, Database Encryption, Audit Keamanan",
+                "desc": "Optimasi website Anda agar dikutip oleh Generative AI (GEO) dan aman dari serangan siber.",
+                "cta": "Amankan Aset"
+            }
+        }
+    },
     "Workflow": {
-        "title": "Presisi Strategis. Kecepatan Maksimal.",
-        "subtitle": "Pengiriman model asynchronous yang efisien untuk kebutuhan bisnis yang kompleks.",
-        "step1": "1. Scoping Strategis",
-        "step1Desc": "Kolaborasi dengan sistem berbasis AI kami untuk mendefinisikan kebutuhan dan spesifikasi teknis standar industri secara instan.",
-        "step2": "2. Agile Engineering",
-        "step2Desc": "Pantau pengiriman secara real-time. Senior Engineer kami menggunakan AI untuk menjamin kualitas kode, keamanan, dan kecepatan.",
-        "step3": "3. Tata Kelola & Deployment",
-        "step3Desc": "Setujui milestone melalui Dashboard aman Anda. Transparansi penuh atas progres, dokumentasi, dan peluncuran produksi."
+        "badge": "PROCESS: No Bullsh*t Workflow",
+        "title": "3 Langkah Peluncuran.",
+        "subtitle": "Semua progres terpantau real-time melalui Dashboard Klien. Metodologi kerja yang jujur, cepat, dan berorientasi pada hasil nyata.",
+        "step1": "Arsitektur & Logika",
+        "step1Desc": "Kita tidak desain dulu. Kita bedah logika bisnis Anda agar sistemnya bekerja, bukan cuma tampil cantik.",
+        "step2": "Iterasi Cepat",
+        "step2Desc": "Anda melihat progres mingguan melalui sistem manajemen proyek transparan. Tidak ada kejutan buruk di akhir bulan.",
+        "step3": "Handover & Support",
+        "step3Desc": "Penyerahan semua aset digital, dokumentasi teknis, dan pendampingan pasca-rilis. Kami tidak akan kabur."
     },
     "Financial": {
-        "title": "Optimalkan Investasi, Bukan Sekadar Biaya.",
-        "subtitle": "Logika finansial strategis untuk pertumbuhan perusahaan modern.",
+        "title": "Kecepatan Eksekusi Adalah Mata Uang Bisnis Saat Ini.",
+        "subtitle": "Mengapa menghabiskan waktu berbulan-bulan membangun tim internal jika Anda bisa langsung meluncur?",
         "comparison": "LOGIKA FINANSIAL",
-        "hireSenior": "REKRUTMEN FULL-TIME BIASA",
-        "hybrid": "{brand} (PARTNER STRATEGIS)",
-        "salary": "Pengeluaran Modal (CapEx)",
-        "salaryOld": "Gaji Tahunan + Biaya Overhead",
-        "salaryNew": "Investasi Berbasis Proyek",
-        "hiringTime": "Hambatan Operasional",
-        "hiringTimeOld": "Rekrutmen 2 - 4 Bulan",
-        "hiringTimeNew": "Mobilisasi Segera",
-        "hiddenCost": "Total Biaya Kepemilikan (TCO)",
-        "hiddenCostOld": "Pajak, Tunjangan, Lisensi, Retensi",
-        "risk": "Risiko Bisnis",
-        "riskOld": "Turnover karyawan & utang teknis",
-        "riskNew": "Jaminan Performa & Garansi",
-        "roi": "ROI: Skalabilitas & Efisiensi"
+        "hireSenior": "MEMBANGUN TIM INTERNAL",
+        "hybrid": "KEMITRAAN {brand}",
+        "salaryOldValue": "Overhead Tinggi",
+        "salaryOld": "Gaji Tetap + Tunjangan + Operasional",
+        "salaryNewValue": "Fixed-Price",
+        "salaryNew": "Investasi Berbasis Proyek (Pasti)",
+        "hiringTimeOld": "Butuh 2-3 bulan hanya untuk rekrutmen & onboarding.",
+        "riskOld": "Risiko turnover (kutu loncat) yang meninggalkan kode berantakan (Tech Debt).",
+        "hiddenCostOld": "Biaya tersembunyi: Lisensi software, perangkat, BPJS, & THR.",
+        "hiringTimeNew": "Eksekusi instan oleh tim spesialis sejak Hari Pertama.",
+        "hiddenCostNew": "Tidak ada biaya lisensi agensi atau sistem langganan (Vendor Lock-in).",
+        "riskNew": "Garansi deployment dengan arsitektur kode standar industri.",
+        "ownership": "Source code menjadi aset perusahaan Anda 100%."
     },
     "Guarantee": {
         "title": "Aman dan Transparan.",
@@ -328,7 +337,7 @@
         "name": "Rasyiqi",
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",
-        "description": "Berawal sebagai pengembang web freelance pada 2015 saat masih mahasiswa, saya menghabiskan bertahun-tahun membuat website untuk berbagai klien. Dari sekadar hobi, ini berkembang menjadi profesi serius yang melahirkan {brand}. Kini saya memimpin tim engineer elit, membawa disiplin struktural dan manajemen tingkat enterprise ke setiap proyek.",
+        "description": "Setiap bisnis memiliki DNA yang unik, begitu pula sistem yang dibutuhkannya. Kami membangun infrastruktur dari nol dengan standar clean code dan keamanan terbaik di industri. Fokus kami hanya satu: memberikan Anda fondasi digital yang solid dan cepat untuk menopang pertumbuhan bisnis jangka panjang",
         "footer": "Bangun untuk Tumbuh. Rancang untuk Tangguh.",
         "tagline": "Build to Scale. Design to Prevail."
     },
@@ -384,9 +393,18 @@
         "experience": "Pengalaman"
     },
     "Stats": {
-        "experience": "Tahun Pengalaman",
-        "web": "Proyek Web",
-        "client": "Klien Puas"
+        "stack": {
+            "title": "∞",
+            "desc": "Skalabilitas"
+        },
+        "royalty": {
+            "title": "100%",
+            "desc": "Source Code Milik Anda"
+        },
+        "performance": {
+            "title": "$0",
+            "desc": "Tanpa Biaya Langganan"
+        }
     },
     "ClientDashboard": {
         "badge": "DASHBOARD KLIEN",
@@ -452,7 +470,7 @@
         }
     },
     "FAQ": {
-        "title": "Frequently Asked Questions",
+        "title": "FAQ: Addressing The Skeptics",
         "q1": "Apakah kami bisa berkomunikasi secara langsung?",
         "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk kordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
         "q2": "Bagaimana manajemen bug setelah fase deployment?",
@@ -472,7 +490,13 @@
         "q9": "Apakah ada layanan maintenance jangka panjang?",
         "a9": "Ya, kami menawarkan paket retainer untuk pengembangan fitur berkelanjutan, pembaruan keamanan, dan monitoring infrastruktur.",
         "q10": "Berapa lama durasi proyek biasanya?",
-        "a10": "Sebagian besar MVP dikirim dalam 4-8 minggu. Migrasi enterprise mungkin memakan waktu 3-6 bulan tergantung kompleksitas."
+        "a10": "Sebagian besar MVP dikirim dalam 4-8 minggu. Migrasi enterprise mungkin memakan waktu 3-6 bulan tergantung kompleksitas.",
+        "q11": "Kenapa harganya lebih mahal dari freelancer?",
+        "a11": "Karena Anda membayar untuk kepastian. Kami memberikan tim profesional dan jaminan kode yang tidak akan hancur saat trafik naik.",
+        "q12": "Apakah saya dapat akses ke source code?",
+        "a12": "Ya. Sejak kontrak ditandatangani, semua kode yang kami tulis adalah aset perusahaan Anda.",
+        "q13": "Bagaimana jika ada bug?",
+        "a13": "Kami berikan garansi perbaikan bug gratis selama 3-6 bulan pertama setelah peluncuran."
     },
     "Dashboard": {
         "Sidebar": {
@@ -899,7 +923,7 @@
         "processing": "Sedang Memproses"
     },
     "Footer": {
-        "ctaTitle": "Bermitra dengan Ahli yang Memahami Kompleksitas Enterprise",
+        "ctaTitle": "Serahkan Kompleksitas Teknis Kepada Kami. Anda Fokus Berekspansi.",
         "ctaButton": "Konsultasi Gratis",
         "clientLogin": "Konsol Klien",
         "contactUs": "Hubungi Tenaga Ahli",

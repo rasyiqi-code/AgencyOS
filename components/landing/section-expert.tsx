@@ -50,7 +50,7 @@ export async function ExpertProfile() {
                         </div>
 
                         <div className="max-w-2xl lg:ml-0 mx-auto space-y-5 sm:space-y-6">
-                            <p className="text-zinc-400 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed antialiased font-light">
+                            <p className="text-zinc-400 text-[10px] sm:text-xs md:text-sm lg:text-base leading-relaxed antialiased font-light">
                                 {t("description", { brand: agencyName })}
                             </p>
 
