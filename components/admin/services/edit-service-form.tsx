@@ -203,7 +203,7 @@ export function EditServiceForm({
                     <Link href="/admin/pm/services">
                         <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
                             <ArrowLeft className="w-4 h-4 mr-2" />
-                            Cancel
+                            {t("cancel")}
                         </Button>
                     </Link>
                 </div>
@@ -386,7 +386,7 @@ export function EditServiceForm({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("price", { ns: "Cards" }) || "Price"}</label>
+                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("price")}</label>
                                     <div className="flex gap-2">
                                         <Select name="currency" defaultValue={service.currency || "USD"}>
                                             <SelectTrigger className="w-[100px] bg-black/20 border-white/10 text-zinc-200">
