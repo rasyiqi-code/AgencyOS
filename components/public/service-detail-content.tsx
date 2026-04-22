@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
@@ -20,6 +21,8 @@ export interface Service {
     interval: string;
     features: unknown; // Prisma Json
     features_id?: unknown; // Prisma Json
+    addons?: unknown; // Prisma Json
+    addons_id?: unknown; // Prisma Json
     image: string | null;
     slug?: string | null;
 }
@@ -34,6 +37,7 @@ interface ServiceDetailContentProps {
 export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: ServiceDetailContentProps) {
     const t = useTranslations("Cards");
     const tService = useTranslations("Service");
+    const tIncluded = useTranslations("Included");
 
     // Fallback to EN if ID content is missing
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
@@ -43,10 +47,36 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
         ? (service as unknown as Record<string, unknown>).features_id as string[]
         : service.features as string[];
 
+    type AddonType = { name: string; price: number; currency?: "USD" | "IDR"; interval?: string };
+
+    const displayAddons = (isId && Array.isArray((service as unknown as Record<string, unknown>).addons_id) && ((service as unknown as Record<string, unknown>).addons_id as AddonType[]).length > 0)
+        ? (service as unknown as Record<string, unknown>).addons_id as AddonType[]
+        : (service.addons as AddonType[]) || [];
+
     const intervalLabel = service.interval === 'one_time' ? tService("oneTime") : service.interval;
 
+    const [selectedAddons, setSelectedAddons] = useState<AddonType[]>([]);
+
+    const toggleAddon = (addon: AddonType) => {
+        setSelectedAddons(prev => {
+            const exists = prev.find(a => a.name === addon.name);
+            if (exists) {
+                return prev.filter(a => a.name !== addon.name);
+            }
+            return [...prev, addon];
+        });
+    };
+
+    const isAIService = service.slug === "custom-generative-ai-architecture-for-business-automation";
+    const finalFeatures = isAIService 
+        ? [1, 2, 3, 4, 5, 6].map(i => ({ title: tIncluded(`f${i}`), description: tIncluded(`f${i}Desc`) }))
+        : displayFeatures.map(f => ({ 
+            title: (f as string).replace(/<[^>]*>?/gm, ''), 
+            description: tService("premiumStandard") 
+        }));
+
     return (
-        <div className="relative min-h-screen bg-black overflow-hidden flex flex-col">
+        <div className="relative min-h-screen bg-black overflow-x-clip flex flex-col">
             {/* Standard Landing Background */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {/* Grid Pattern */}
@@ -61,18 +91,17 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                 )}
             </div>
 
-            <div className="flex-grow z-10 pt-0 pb-16">
-                <div className="max-w-7xl mx-auto px-6 md:px-8">
+            <div className="flex-grow z-10">
 
 
-                    {/* HERO SECTION: Balanced Compact Scroll Shape */}
-                    <div className="relative rounded-[20px] md:rounded-[32px] border border-white/5 bg-zinc-900/20 backdrop-blur-3xl mb-6 md:mb-12 shadow-2xl overflow-hidden">
+                    {/* HERO SECTION: Full-Width Layout */}
+                    <div className="relative border-b border-white/5 bg-zinc-900/10 backdrop-blur-3xl mb-12 md:mb-20 overflow-hidden">
                         {/* Decorative internal glow */}
                         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-yellow/[0.03] to-transparent pointer-events-none" />
 
                         {/* Scroll Container */}
                         <div className="overflow-x-auto scrollbar-hide">
-                            <div className="relative z-10 flex flex-row items-center gap-8 md:gap-16 p-4 md:p-10 lg:p-12 min-w-[520px] md:min-w-0">
+                            <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10 flex flex-row items-center gap-8 md:gap-16 p-4 md:p-10 lg:p-12 min-w-[520px] md:min-w-0">
                                 {/* Left Content: Info */}
                                 <div className="flex-1 space-y-4 md:space-y-6">
                                     <div className="space-y-1.5 md:space-y-3">
@@ -87,10 +116,9 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
 
                                     <div className="flex items-center gap-6 md:gap-12">
                                         <div className="flex flex-col">
-                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{t("price")}</span>
-                                            <div className="flex items-baseline gap-1.5 md:gap-2">
+                                            <div className="flex items-baseline gap-1 md:gap-2">
                                                 {service.priceType === 'STARTING_AT' && (
-                                                    <span className="text-[10px] md:text-sm font-bold text-zinc-400">
+                                                    <span className="text-[9px] md:text-xs font-medium text-zinc-500 pb-0.5">
                                                         {tService("startsAt")}
                                                     </span>
                                                 )}
@@ -103,11 +131,13 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             </div>
                                         </div>
 
-                                        <div className="h-8 md:h-10 w-px bg-white/10" />
-
-                                        <div className="flex flex-col">
-                                            <span className="text-[7px] md:text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">{tService("timeline")}</span>
-                                            <span className="text-base md:text-xl font-bold text-white tracking-tight">{tService("rapidDelivery")}</span>
+                                        <div className="hidden sm:block">
+                                            <PurchaseButton
+                                                serviceId={service.id}
+                                                interval={service.interval}
+                                                selectedAddons={selectedAddons}
+                                                className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.05] active:scale-95 whitespace-nowrap"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -115,7 +145,7 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                 {/* Right Content: Visual & CTA */}
                                 <div className="w-[200px] md:w-[320px] lg:w-[380px] shrink-0 space-y-3 md:space-y-4">
                                     {service.image ? (
-                                        <div className="relative aspect-video rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
+                                        <div className="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
                                             <Image
                                                 src={service.image}
                                                 alt={displayTitle}
@@ -126,35 +156,104 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
                                     ) : (
-                                        <div className="aspect-video rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
+                                        <div className="aspect-square rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
                                             <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-zinc-800" />
                                         </div>
                                     )}
 
-                                    <div className="hidden lg:block">
-                                        <PurchaseButton
-                                            serviceId={service.id}
-                                            interval={service.interval}
-                                            customLabel={service.priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
-                                            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 md:px-10 py-3 md:py-4 rounded-xl font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
-                                        />
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="max-w-4xl mx-auto space-y-20">
-                        {/* ABOUT SECTION: Centered */}
-                        <div className="space-y-6 text-center max-w-3xl mx-auto">
-                            <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2 justify-center">
-                                <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full animate-pulse" />
-                                {t("about")}
-                            </h4>
-                            <div
-                                className="text-zinc-300 leading-relaxed font-light text-md md:text-xl prose prose-invert max-w-none prose-p:mb-4 prose-strong:text-white prose-strong:font-black"
-                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
-                            />
+                    <div className="max-w-6xl mx-auto px-6 md:px-8 space-y-24 pb-32">
+                        {/* ABOUT SECTION with Sidebar */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                            {/* Left Column: About (2/3 width) */}
+                            <div className="lg:col-span-2 space-y-8">
+                                <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full animate-pulse" />
+                                    {t("about")}
+                                </h4>
+                                <div
+                                    className="text-zinc-300 leading-relaxed font-light text-base md:text-lg lg:text-xl prose prose-invert max-w-none prose-p:mb-6 prose-strong:text-white prose-strong:font-black prose-li:text-zinc-400"
+                                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
+                                />
+                            </div>
+
+                            {/* Right Column: Add-ons (1/3 width) as Sidebar - No Container Style */}
+                            {service.priceType === 'STARTING_AT' && displayAddons && displayAddons.length > 0 ? (
+                                <div className="space-y-6 sticky top-24">
+                                    <div className="space-y-1">
+                                        <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <div className="w-1 h-3 bg-brand-yellow rounded-full" />
+                                            Optional Add-ons
+                                        </h4>
+                                        <p className="text-[10px] text-zinc-500 font-medium">Personalize your infrastructure</p>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {displayAddons.map((addon: AddonType, idx: number) => {
+                                            const isSelected = selectedAddons.some(a => a.name === addon.name);
+                                            return (
+                                                <div
+                                                    key={idx}
+                                                    onClick={() => toggleAddon(addon)}
+                                                    className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border duration-300 ${isSelected ? 'bg-brand-yellow/10 border-brand-yellow/30 shadow-lg shadow-brand-yellow/5' : 'bg-white/[0.03] border-transparent hover:bg-white/[0.08] hover:border-white/10'}`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-brand-yellow border-brand-yellow scale-110' : 'border-zinc-700 bg-black/40'}`}>
+                                                            {isSelected && <Check className="w-3 h-3 text-black stroke-[3]" />}
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className={`text-xs md:text-sm font-bold tracking-tight ${isSelected ? 'text-brand-yellow' : 'text-zinc-300'}`}>{addon.name}</span>
+                                                            {addon.interval && addon.interval !== "one_time" && (
+                                                                <span className="text-[9px] text-zinc-500 uppercase font-black tracking-widest">{addon.interval}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-xs md:text-sm font-black text-white ml-3 whitespace-nowrap">
+                                                        +<PriceDisplay amount={addon.price} baseCurrency={addon.currency || (service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <div className="pt-6 border-t border-white/10 mt-6 space-y-4 hidden lg:block">
+                                        <div className="flex justify-between items-end mb-2">
+                                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Total Investment</span>
+                                            <div className="text-xl font-black text-white tracking-tighter">
+                                                <PriceDisplay
+                                                    amount={service.price + selectedAddons.reduce((sum, a) => sum + a.price, 0)}
+                                                    baseCurrency={(service.currency as "USD" | "IDR") || 'USD'}
+                                                    compact={true}
+                                                />
+                                            </div>
+                                        </div>
+                                        <PurchaseButton
+                                            serviceId={service.id}
+                                            interval={service.interval}
+                                            selectedAddons={selectedAddons}
+                                            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95 group"
+                                        />
+                                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide">SECURE CHECKOUT BY CREEM & STRIPE</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-6 sticky top-24 hidden lg:block">
+                                    <div className="space-y-4">
+                                        <PurchaseButton
+                                            serviceId={service.id}
+                                            interval={service.interval}
+                                            selectedAddons={[]}
+                                            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
+                                        />
+                                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide mt-4">SECURE CHECKOUT BY CREEM & STRIPE</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* WHAT'S INCLUDED SECTION: Redesigned as Grid */}
@@ -168,16 +267,16 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {displayFeatures.map((feature: string, i: number) => (
+                                {finalFeatures.map((feature, i: number) => (
                                     <div key={i} className="flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-white/5 hover:border-brand-yellow/20 transition-all duration-300 group/feat">
                                         <div className="mt-1 flex items-center justify-center w-6 h-6 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 group-hover/feat:bg-brand-yellow/20 transition-colors shrink-0">
                                             <Check className="w-3 h-3 text-brand-yellow" />
                                         </div>
                                         <div className="space-y-1">
                                             <span className="text-sm md:text-base text-zinc-200 font-bold leading-tight group-hover/feat:text-white transition-colors block">
-                                                {feature.replace(/<[^>]*>?/gm, '')}
+                                                {feature.title}
                                             </span>
-                                            <p className="text-xs text-zinc-500 leading-normal">{tService("premiumStandard")}</p>
+                                            <p className="text-xs text-zinc-500 leading-normal">{feature.description}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -206,34 +305,36 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* ===== MOBILE STICKY CTA ===== */}
-            <div className="fixed bottom-0 left-0 right-0 py-2 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-[100]">
-                <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
-                    <div>
-                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">{t("price")}</div>
-                        <div className="text-xl font-black text-white tracking-tighter flex flex-col sm:flex-row sm:items-end gap-1">
-                            {service.priceType === 'STARTING_AT' && (
-                                <span className="text-[10px] font-normal text-zinc-400 leading-none mb-1 sm:mb-0 sm:pb-1">
-                                    {tService("startsAt")}{" "}
-                                </span>
-                            )}
-                            <div className="flex items-end gap-1">
-                                <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
-                                <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                {/* ===== MOBILE STICKY CTA ===== */}
+                <div className="fixed bottom-0 left-0 right-0 py-2 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-[100]">
+                    <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+                        <div>
+                            <div className="text-xl font-black text-white tracking-tighter flex items-end gap-1.5">
+                                {service.priceType === 'STARTING_AT' && (
+                                    <span className="text-[10px] font-medium text-zinc-500 pb-1">
+                                        {tService("startsAt")}
+                                    </span>
+                                )}
+                                <div className="flex items-end gap-1">
+                                    <PriceDisplay
+                                        amount={service.price + selectedAddons.reduce((sum, a) => sum + a.price, 0)}
+                                        baseCurrency={(service.currency as "USD" | "IDR") || 'USD'}
+                                        compact={true}
+                                    />
+                                    <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                                </div>
                             </div>
                         </div>
+                        <div className="flex-1 max-w-[160px]">
+                            <PurchaseButton
+                                serviceId={service.id}
+                                interval={service.interval}
+                                selectedAddons={selectedAddons}
+                                className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
+                            />
+                        </div>
                     </div>
-                    <div className="flex-1 max-w-[160px]">
-                        <PurchaseButton
-                            serviceId={service.id}
-                            interval={service.interval}
-                            customLabel={service.priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
-                            className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     );

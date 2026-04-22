@@ -38,6 +38,7 @@ export type FinanceData = {
         title: string;
         clientName: string | null;
         userId: string | null;
+        description?: string | null;
         paymentStatus?: string | null;
         paidAmount?: number | null;
         totalAmount?: number | null;
@@ -87,9 +88,15 @@ export const financeColumns: ColumnDef<FinanceData>[] = [
         cell: ({ row }) => {
             const project = row.original.project;
             const title = project?.title || row.original.title || "Untitled Project";
+            const description = project?.description;
             return (
                 <div className="flex flex-col gap-0.5 leading-tight overflow-hidden">
                     <span className="font-medium text-white text-sm whitespace-nowrap truncate">{title}</span>
+                    {description && description.includes('Add-ons:') && (
+                        <span className="text-[10px] text-brand-yellow/80 truncate">
+                            +{description.split('Add-ons:')[1].trim().split('\n').length} Add-on(s)
+                        </span>
+                    )}
                 </div>
             );
         },

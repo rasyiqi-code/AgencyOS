@@ -3,9 +3,9 @@ import { ServicesClientWrapper } from "@/components/public/services-client-wrapp
 import { Metadata } from "next";
 import { Service } from "@prisma/client";
 import { Testimonials } from "@/components/landing/section-testimonials";
-import { SectionIncluded } from "@/components/landing/section-included";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/section-faq";
+import { SectionCustomRequest } from "@/components/landing/section-custom-request";
 
 
 
@@ -119,8 +119,8 @@ export default async function PublicServicesPage() {
             />
             {/* Landing style components to make the page complete */}
             <Testimonials />
-            <SectionIncluded />
             <SectionGuarantee />
+            <SectionCustomRequest />
             <FAQSection />
         </div>
     );

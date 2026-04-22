@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { slugify } from "@/lib/shared/utils";
+import { Prisma } from "@prisma/client";
 
 const billingPeriodMap: Record<string, string> = {
     'monthly': 'every-month',
@@ -110,10 +111,28 @@ export async function POST(req: NextRequest) {
                 visibility: formData.get("visibility")?.toString() || "PUBLIC",
                 features,
                 features_id,
+                addons: (() => {
+                    try {
+                        const val = formData.get("addons");
+                        return val ? JSON.parse(val.toString()) : [];
+                    } catch (e) {
+                        console.warn("Failed to parse addons:", e);
+                        return [];
+                    }
+                })(),
+                addons_id: (() => {
+                    try {
+                        const val = formData.get("addons_id");
+                        return val ? JSON.parse(val.toString()) : [];
+                    } catch (e) {
+                        console.warn("Failed to parse addons_id:", e);
+                        return [];
+                    }
+                })(),
                 image: imageUrl,
                 creemProductId,
                 slug: slugInput ? slugify(slugInput) : slugify(title)
-            }
+            } as Prisma.ServiceCreateInput
         });
 
         return NextResponse.json(service, { status: 201 });

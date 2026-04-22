@@ -1,6 +1,6 @@
 "use client";
 
-import { ExtendedEstimate, Bonus } from "@/lib/shared/types";
+import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import { Gift, Zap, Check, ShieldCheck } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 
@@ -11,9 +11,11 @@ interface CheckoutSummaryProps {
     estimate: ExtendedEstimate;
     bonuses: Bonus[];
     context?: "SERVICE" | "CALCULATOR";
+    selectedAddons?: ServiceAddon[];
+    onToggleAddon?: (addon: ServiceAddon) => void;
 }
 
-export function CheckoutSummary({ estimate, bonuses, context }: CheckoutSummaryProps) {
+export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [], onToggleAddon }: CheckoutSummaryProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
@@ -22,6 +24,10 @@ export function CheckoutSummary({ estimate, bonuses, context }: CheckoutSummaryP
     const serviceFeatures = isId
         ? (estimate.service?.features_id as string[]) || (estimate.service?.features as string[])
         : (estimate.service?.features as string[]);
+
+    const serviceAddons = isId
+        ? (estimate.service?.addons_id as ServiceAddon[]) || (estimate.service?.addons as ServiceAddon[])
+        : (estimate.service?.addons as ServiceAddon[]);
 
     const estimatedDays = Math.ceil(estimate.totalHours / 6);
     const salesPoints = [
@@ -74,6 +80,38 @@ export function CheckoutSummary({ estimate, bonuses, context }: CheckoutSummaryP
                                     <span className="text-sm leading-relaxed">{feature}</span>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Add-ons */}
+                {serviceAddons && serviceAddons.length > 0 && (
+                    <div className="pt-6 border-t border-white/5">
+                        <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <LucideIcons.PlusCircle className="w-4 h-4 text-blue-400" />
+                            {isId ? "Add-ons Tersedia" : "Available Add-ons"}
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                            {serviceAddons.map((addon, i) => {
+                                const isSelected = selectedAddons.some(a => a.name === addon.name);
+                                return (
+                                    <div 
+                                        key={i} 
+                                        onClick={() => onToggleAddon && onToggleAddon(addon)}
+                                        className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${isSelected ? 'bg-brand-yellow/10 border-brand-yellow/30' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
+                                    >
+                                        <div className={`mt-1 w-4 h-4 rounded-[4px] border flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'bg-brand-yellow border-brand-yellow' : 'border-zinc-500'}`}>
+                                            {isSelected && <Check className="w-3 h-3 text-black" />}
+                                        </div>
+                                        <div>
+                                            <div className={`text-sm font-medium ${isSelected ? 'text-brand-yellow' : 'text-zinc-200'}`}>{addon.name}</div>
+                                            <div className="text-xs text-zinc-500 mt-0.5">
+                                                {addon.currency} {addon.price.toLocaleString()} {addon.interval === 'monthly' ? '/ bln' : addon.interval === 'yearly' ? '/ thn' : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

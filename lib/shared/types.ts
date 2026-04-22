@@ -94,6 +94,14 @@ export interface Coupon {
     appliesTo?: string[];
 }
 
+export interface ServiceAddon {
+    name: string;
+    description?: string;
+    price: number;
+    currency?: string;
+    interval?: string;
+}
+
 export interface InvoiceItem {
     title: string;
     description: string;
@@ -124,6 +132,8 @@ export interface ExtendedEstimate {
         image: string | null;
         interval: string;
         priceType: string;
+        addons?: unknown;
+        addons_id?: unknown;
     } | null;
     project?: {
         id: string;
@@ -153,8 +163,11 @@ export interface ExtendedProject {
         price: number;
         currency?: string | null;
         features: unknown;
+        features_id?: unknown;
         image: string | null;
         interval: string;
+        addons?: unknown;
+        addons_id?: unknown;
     } | null;
     briefs: ProjectBrief[];
     feedback: FeedbackItem[];

@@ -60,8 +60,9 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
         notFound();
     }
 
-    // Fetch users from Stack Auth for social proof avatars
-    let trustedAvatars: string[] = [];
+    // Social proof avatars (temporarily disabled due to Stack Auth SDK error)
+    const trustedAvatars: string[] = [];
+    /*
     try {
         const { stackServerApp } = await import("@/lib/config/stack");
         const users = await stackServerApp.listUsers();
@@ -72,6 +73,7 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     } catch (error) {
         console.error("Failed to fetch trusted avatars:", error);
     }
+    */
 
     // Transform to match interface safely
     const processedService = {
@@ -80,6 +82,8 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
         features_id: service.features_id as unknown
     };
 
+    const isAIService = service.slug === "custom-generative-ai-architecture-for-business-automation";
+    
     return (
         <div className="flex flex-col">
             <ServiceDetailContent
@@ -89,7 +93,7 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                 trustedAvatars={trustedAvatars}
             />
             <Testimonials />
-            <SectionIncluded />
+            {!isAIService && <SectionIncluded />}
             <SectionGuarantee />
             <FAQSection />
         </div>

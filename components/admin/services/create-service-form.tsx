@@ -9,13 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
+import { DynamicAddonInput } from "@/components/ui/dynamic-addon-input";
 import { Button } from "@/components/ui/button";
 import { FileText, ListChecks, CreditCard, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/shared/utils";
 
 import { CreatableCategorySelect } from "./creatable-category-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Flag, Sparkles, Loader2, ArrowLeft, Package } from "lucide-react";
+import { Flag, Sparkles, Loader2, ArrowLeft, Package, Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Link from "next/link";
@@ -38,6 +39,16 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
     const [generatedData, setGeneratedData] = useState<DraftServiceData | null>(null);
     const [slug, setSlug] = useState("");
     const [isCustomSlug, setIsCustomSlug] = useState(false);
+    const [priceType, setPriceType] = useState<string>(generatedData?.priceType || "FIXED");
+    const [interval, setInterval] = useState<string>(generatedData?.interval || "one_time");
+
+    // Sync priceType and interval logic
+    const handlePriceTypeChange = (value: string) => {
+        setPriceType(value);
+        if (value === "STARTING_AT") {
+            setInterval("one_time");
+        }
+    };
 
     async function handleGenerate() {
         if (!prompt.trim()) return;
@@ -95,7 +106,7 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
             router.push("/admin/pm/services");
             router.refresh();
         } catch (error) {
-            console.error(error);
+            console.error("SERVICE CREATE ERROR:", error);
             toast.error(error instanceof Error ? error.message : "Failed to publish service");
         } finally {
             setIsSubmitting(false);
@@ -275,6 +286,25 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                     </div>
                                 </div>
                             </div>
+
+                            {priceType === "STARTING_AT" && (
+                                <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden mt-6">
+                                    <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                                        <Plus className="w-4 h-4 text-purple-400" />
+                                        <h3 className="text-sm font-semibold text-white">Add-ons (Optional)</h3>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Available Add-ons</label>
+                                            <DynamicAddonInput
+                                                name="addons"
+                                                defaultValue={generatedData?.addons || []}
+                                                currency={generatedData?.currency || "USD"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </TabsContent>
 
                         {/* INDONESIAN CONTENT */}
@@ -324,6 +354,25 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                     </div>
                                 </div>
                             </div>
+
+                            {priceType === "STARTING_AT" && (
+                                <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden mt-6">
+                                    <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                                        <Plus className="w-4 h-4 text-purple-400" />
+                                        <h3 className="text-sm font-semibold text-white">Add-ons (Opsional)</h3>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Add-on Tersedia</label>
+                                            <DynamicAddonInput
+                                                name="addons_id"
+                                                defaultValue={generatedData?.addons_id || []}
+                                                currency={generatedData?.currency || "USD"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </TabsContent>
                     </Tabs>
                 </div>
@@ -368,7 +417,7 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("priceType")}</label>
-                                    <Select name="priceType" defaultValue="FIXED">
+                                    <Select name="priceType" value={priceType} onValueChange={handlePriceTypeChange}>
                                         <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
                                             <SelectValue />
                                         </SelectTrigger>
@@ -382,7 +431,7 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("price")}</label>
                                     <div className="flex gap-2">
-                                        <Select name="currency" defaultValue="USD">
+                                        <Select name="currency" defaultValue={generatedData?.currency || "USD"}>
                                             <SelectTrigger className="w-[100px] bg-black/20 border-white/10 text-zinc-200">
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -405,8 +454,13 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("billingInterval")}</label>
-                                    <Select name="interval" defaultValue="one_time">
-                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
+                                    <Select 
+                                        name="interval" 
+                                        value={interval} 
+                                        onValueChange={setInterval}
+                                        disabled={priceType === "STARTING_AT"}
+                                    >
+                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200 disabled:opacity-50">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -415,6 +469,12 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                             <SelectItem value="yearly">{tAdmin("yearlySub")}</SelectItem>
                                         </SelectContent>
                                     </Select>
+                                    {priceType === "STARTING_AT" && (
+                                        <p className="text-[10px] text-zinc-500 mt-1">
+                                            Starting At services are always one-time setup, with optional recurring add-ons.
+                                        </p>
+                                    )}
+                                    <input type="hidden" name="interval" value={interval} />
                                 </div>
                             </div>
                             <div className="px-6 py-4 bg-zinc-900/60 border-t border-white/5">

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { Prisma } from "@prisma/client";
+import { ServiceAddon } from "@/lib/shared/types";
 import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
         }
         debugSteps.push("User authenticated: " + user.id);
 
-        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD" } = await req.json();
+        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD", selectedAddons = [] } = await req.json();
         debugSteps.push(`Request parsed. Project: ${projectId}, Estimate: ${estimateId}, Type: ${paymentType}`);
 
         if (!projectId && !estimateId) {
@@ -41,7 +42,56 @@ export async function POST(req: Request) {
             }
             debugSteps.push("Estimate found");
 
-            dbAmount = estimate.totalCost;
+            let currentTotalCost = estimate.totalCost;
+            let currentSummary = estimate.summary;
+
+            // Handle dynamically selected addons from checkout page
+            if (estimate.service) {
+                // Rebuild the estimate's total cost and summary from the TRUE base!
+                const basePrice = estimate.service.price;
+                
+                // Remove previous addons text if it exists
+                const addonsMarker = "\n\nAdd-ons Selected at Checkout:";
+                const baseSummary = estimate.summary.includes(addonsMarker) 
+                    ? estimate.summary.substring(0, estimate.summary.indexOf(addonsMarker))
+                    : estimate.summary;
+                
+                let addonsTotal = 0;
+                let addonsSummaryText = "";
+
+                if (selectedAddons && selectedAddons.length > 0) {
+                    addonsSummaryText = addonsMarker;
+                    (selectedAddons as ServiceAddon[]).forEach((addon) => {
+                        addonsTotal += addon.price;
+                        const currencySymbol = addon.currency === 'IDR' ? 'Rp' : '$';
+                        addonsSummaryText += `\n- + ${addon.name} (${currencySymbol}${addon.price} ${addon.interval === "monthly" ? "Monthly" : addon.interval === "yearly" ? "Yearly" : "One-time"})`;
+                    });
+                }
+
+                currentTotalCost = basePrice + addonsTotal;
+                currentSummary = baseSummary + addonsSummaryText;
+                
+                // Always update estimate in DB so it perfectly matches current selection
+                await prisma.estimate.update({
+                    where: { id: estimate.id },
+                    data: {
+                        totalCost: currentTotalCost,
+                        summary: currentSummary
+                    }
+                });
+                
+                if (estimate.project) {
+                    await prisma.project.update({
+                        where: { id: estimate.project.id },
+                        data: {
+                            totalAmount: currentTotalCost,
+                            description: currentSummary
+                        }
+                    });
+                }
+            }
+
+            dbAmount = currentTotalCost;
 
             // Check currency for estimate
             if (estimate.service?.currency === 'IDR') {
@@ -207,12 +257,14 @@ export async function POST(req: Request) {
         const cookieStore = await cookies();
         const affiliateCode = cookieStore.get('agencyos_affiliate_id')?.value;
 
+        const finalOrderAmount = currency === "IDR" ? finalIdrAmount : amountToPay;
+
         debugSteps.push("Saving order to DB");
         // Save order to database
         await prisma.order.create({
             data: {
                 id: orderId,
-                amount: amountToPay,
+                amount: finalOrderAmount,
                 userId: user.id,
                 project: finalProjectId ? { connect: { id: finalProjectId } } : undefined,
                 status: "pending",

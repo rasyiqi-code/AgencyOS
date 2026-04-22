@@ -25,6 +25,7 @@ export interface BillingOrder {
     type: string;
     project: {
         title: string;
+        description?: string | null;
         invoiceId: string | null;
         estimateId: string | null;
         paymentStatus?: string | null;
@@ -295,6 +296,12 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                                 <Badge variant="outline" className="text-[9px] px-1.5 h-4 border-zinc-700 text-zinc-400">
                                     {order.project.paymentStatus.replace(/_/g, ' ')}
                                 </Badge>
+                            </div>
+                        )}
+                        {order.project?.description && order.project.description.includes('Add-ons:') && (
+                            <div className="flex flex-col gap-1 mt-2 p-2 bg-zinc-950 rounded-md border border-white/5">
+                                <span className="font-semibold text-zinc-400">Add-ons Included:</span>
+                                <span className="text-zinc-500 whitespace-pre-line leading-relaxed">{order.project.description.split('Add-ons:')[1].trim()}</span>
                             </div>
                         )}
                     </div>

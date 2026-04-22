@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { slugify } from "@/lib/shared/utils";
+import { Prisma } from "@prisma/client";
 
 const billingPeriodMap: Record<string, string> = {
     'monthly': 'every-month',
@@ -74,6 +75,9 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
         const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
         const category = formData.get("category")?.toString() || "Uncategorized";
 
+        const addonsRaw = formData.get("addons")?.toString();
+        const addonsIdRaw = formData.get("addons_id")?.toString();
+
         const data: Record<string, unknown> = {
             title,
             title_id,
@@ -87,6 +91,22 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
             visibility: formData.get("visibility")?.toString() || "PUBLIC",
             features,
             features_id,
+            addons: (() => {
+                try {
+                    return addonsRaw ? JSON.parse(addonsRaw) : [];
+                } catch (e) {
+                    console.warn("Failed to parse addons:", e);
+                    return [];
+                }
+            })(),
+            addons_id: (() => {
+                try {
+                    return addonsIdRaw ? JSON.parse(addonsIdRaw) : [];
+                } catch (e) {
+                    console.warn("Failed to parse addons_id:", e);
+                    return [];
+                }
+            })(),
             slug: slugInput ? slugify(slugInput) : slugify(title)
         };
 
@@ -156,7 +176,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId
 
         const updated = await prisma.service.update({
             where: { id },
-            data: data
+            data: data as Prisma.ServiceUpdateInput
         });
 
         return NextResponse.json(updated);

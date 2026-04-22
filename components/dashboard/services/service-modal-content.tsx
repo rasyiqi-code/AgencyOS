@@ -66,7 +66,6 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                 <PurchaseButton
                     serviceId={service.id}
                     interval={service.interval}
-                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? t("requestQuote") : undefined}
                     className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-tighter shadow-xl shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95"
                 />
                 <DialogClose className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-all">

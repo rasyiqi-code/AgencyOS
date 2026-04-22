@@ -5,34 +5,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Layers, Users, Zap, ArrowUpRight, ArrowRight } from "lucide-react";
 
 export async function SuperAdminDashboardView() {
-    // Fetch Stats Data
-    const [stats] = await Promise.all([
-        prisma.$transaction(async (tx) => {
-            const revenue = await tx.estimate.aggregate({
-                where: { status: 'paid' },
-                _sum: { totalCost: true }
-            });
-
-            const activeProjects = await tx.project.count({
-                where: { status: { in: ['queue', 'dev'] } }
-            });
-
-            const pendingOrders = await tx.estimate.count({
-                where: { status: 'pending_payment' }
-            });
-
-            const totalClients = await tx.project.groupBy({
-                by: ['userId'],
-            });
-
-            return {
-                revenue: revenue._sum.totalCost || 0,
-                activeProjects,
-                pendingOrders,
-                totalClients: totalClients.length
-            };
+    // Fetch Stats Data in parallel without a transaction to prevent timeouts
+    const [revenueResult, activeProjects, pendingOrders, totalClientsResult] = await Promise.all([
+        prisma.estimate.aggregate({
+            where: { status: 'paid' },
+            _sum: { totalCost: true }
+        }),
+        prisma.project.count({
+            where: { status: { in: ['queue', 'dev'] } }
+        }),
+        prisma.estimate.count({
+            where: { status: 'pending_payment' }
+        }),
+        prisma.project.groupBy({
+            by: ['userId'],
         })
     ]);
+
+    const stats = {
+        revenue: revenueResult._sum.totalCost || 0,
+        activeProjects,
+        pendingOrders,
+        totalClients: totalClientsResult.length
+    };
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">

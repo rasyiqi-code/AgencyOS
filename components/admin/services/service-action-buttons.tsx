@@ -19,8 +19,8 @@ export function ServiceActionButtons({ serviceId }: ServiceActionButtonsProps) {
             }}
         >
             <Link href={`/admin/pm/services/${serviceId}/edit`}>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors">
-                    <Edit className="w-4 h-4" />
+                <Button variant="secondary" size="icon" className="h-8 w-8 bg-zinc-900/80 border border-white/5 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                    <Edit className="w-3.5 h-3.5" />
                 </Button>
             </Link>
             <DeleteServiceButton serviceId={serviceId} />

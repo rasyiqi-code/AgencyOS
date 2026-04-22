@@ -50,6 +50,7 @@ export default async function AdminOrdersPage() {
             project: project ? {
                 id: project.id,
                 title: project.title,
+                description: project.description,
                 clientName: project.clientName,
                 userId: project.userId,
                 paymentStatus: project.paymentStatus,

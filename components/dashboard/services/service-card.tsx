@@ -133,7 +133,6 @@ export function ServiceCard({ service }: ServiceCardProps) {
                                 <PurchaseButton
                                     serviceId={service.id}
                                     interval={service.interval}
-                                    customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? t("requestQuote") : undefined}
                                     className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-9 px-4 rounded-xl w-full text-[10px] uppercase mt-4 tracking-tighter shadow-lg shadow-brand-yellow/20 shrink-0"
                                 />
                             </div>

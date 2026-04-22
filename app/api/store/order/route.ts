@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { serviceId } = body;
+        const { serviceId, selectedAddons = [] } = body;
 
         if (!serviceId) {
             return NextResponse.json({ error: "Missing service ID" }, { status: 400 });
@@ -24,6 +24,25 @@ export async function POST(req: NextRequest) {
 
         const isQuoteOnly = (service as Record<string, unknown>).priceType === "STARTING_AT";
 
+        // Calculate addons
+        let addonsTotal = 0;
+        let hasRecurringAddon = false;
+        let addonsSummary = "";
+
+        if (selectedAddons && selectedAddons.length > 0) {
+            selectedAddons.forEach((addon: { price: number, interval?: string, currency?: string, name: string }) => {
+                addonsTotal += addon.price;
+                if (addon.interval && addon.interval !== "one_time") {
+                    hasRecurringAddon = true;
+                }
+                const currencySymbol = (addon.currency || (service as unknown as { currency?: string }).currency) === 'IDR' ? 'Rp' : '$';
+                addonsSummary += `\n- + ${addon.name} (${currencySymbol}${addon.price} ${addon.interval === "monthly" ? "Monthly" : addon.interval === "yearly" ? "Yearly" : "One-time"})`;
+            });
+        }
+
+        const finalPrice = service.price + addonsTotal;
+        const willBeSubscription = service.interval !== 'one_time' || hasRecurringAddon;
+
         // Create Project Placeholder
         const project = await prisma.project.create({
             data: {
@@ -31,10 +50,15 @@ export async function POST(req: NextRequest) {
                 clientName: user.displayName || user.primaryEmail || "Unnamed Client",
                 title: isQuoteOnly ? `Quote Request: ${service.title}` : `Order: ${service.title}`,
                 description: isQuoteOnly
-                    ? `Requesting a custom quote for ${service.title}`
-                    : `Purchase of ${service.title} (${service.interval})`,
+                    ? `Requesting a custom quote for ${service.title}${addonsSummary ? '\nAdd-ons:' + addonsSummary : ''}`
+                    : `Purchase of ${service.title} (${service.interval})${addonsSummary ? '\nAdd-ons:' + addonsSummary : ''}`,
                 status: isQuoteOnly ? 'draft' : 'payment_pending',
                 serviceId: service.id,
+                totalAmount: finalPrice,
+                // If recurring, start tracking subscription status
+                ...(willBeSubscription ? {
+                    subscriptionStatus: 'pending',
+                } : {})
             }
         });
 
@@ -43,12 +67,14 @@ export async function POST(req: NextRequest) {
             data: {
                 title: isQuoteOnly ? `Quote: ${service.title}` : `Invoice: ${service.title}`,
                 prompt: isQuoteOnly ? "Custom Quote Request" : "Productized Service Purchase",
-                summary: isQuoteOnly ? `Custom quote request for ${service.title}` : `${service.title}`,
+                summary: isQuoteOnly 
+                    ? `Custom quote request for ${service.title}${addonsSummary ? '\n\nAdd-ons:' + addonsSummary : ''}` 
+                    : `${service.title}${addonsSummary ? '\n\nAdd-ons:' + addonsSummary : ''}`,
                 screens: [],
                 apis: [],
                 totalHours: 0,
-                totalCost: service.price,
-                complexity: service.interval === 'one_time' ? 'Fixed' : 'Subscription',
+                totalCost: finalPrice,
+                complexity: willBeSubscription ? 'Subscription' : 'Fixed',
                 status: isQuoteOnly ? 'draft' : 'pending_payment',
                 serviceId: service.id,
                 project: {

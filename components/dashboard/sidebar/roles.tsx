@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe, Repeat } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -66,6 +66,7 @@ export function SidebarSuperAdmin() {
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
             <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
+            <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
 
             <SidebarSectionHeader>CRM & Team</SidebarSectionHeader>
@@ -102,6 +103,7 @@ export function SidebarFinance() {
             <SidebarLink href="/admin/finance" icon={LayoutDashboard} label={t("dashboard")} />
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("invoices")} />
             <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
+            <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
             <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
         </>
     );

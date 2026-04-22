@@ -4,7 +4,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/config/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Package } from "lucide-react";
+import { Plus, Package, CreditCard, Zap } from "lucide-react";
 import Link from "next/link";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
@@ -85,9 +85,9 @@ export default async function ServicesPage() {
                                         value={service.id}
                                         key={service.id}
                                         id={`service-item-${service.id}`}
-                                        className="border border-zinc-800/60 rounded-xl overflow-hidden transition-all duration-200 hover:border-zinc-700/80 bg-zinc-950/50 data-[state=open]:border-zinc-700/80 w-full max-w-full"
+                                        className="border border-zinc-800/60 rounded-xl overflow-hidden transition-all duration-200 hover:border-zinc-700/80 bg-zinc-950/50 data-[state=open]:border-zinc-700/80 w-full max-w-full relative"
                                     >
-                                        <AccordionTrigger className="hover:no-underline px-4 py-3.5 cursor-pointer hover:bg-zinc-900/40 group">
+                                        <AccordionTrigger className="hover:no-underline px-4 py-3.5 cursor-pointer hover:bg-zinc-900/40 group pr-32">
                                             <div className="flex flex-1 items-center justify-between gap-4 min-w-0">
                                                 <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
                                                     {/* Status indicator dot — green if synced, amber if not */}
@@ -116,27 +116,20 @@ export default async function ServicesPage() {
                                                                 >
                                                                     {service.visibility === 'PRIVATE' ? (isId ? 'Private' : 'Private') : (isId ? 'Public' : 'Public')}
                                                                 </Badge>
-                                                                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-medium py-0 px-1.5 h-4 text-[10px] shrink-0">
-                                                                    {intervalLabel}
-                                                                </Badge>
-                                                                <Badge
-                                                                    variant="outline"
-                                                                    className={`py-0 px-1.5 h-4 text-[10px] shrink-0 font-medium ${isSynced
-                                                                        ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-                                                                        : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                                                                        }`}
-                                                                >
-                                                                    {isSynced ? 'Synced' : (isId ? 'Belum Sinkron' : 'Not Synced')}
-                                                                </Badge>
+
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {/* Action buttons — moved outside to Client Component */}
-                                                <ServiceActionButtons serviceId={service.id} />
                                             </div>
                                         </AccordionTrigger>
+
+                                        {/* Action buttons — moved outside to avoid nested <button> hydration error */}
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center gap-1.5">
+                                            <ServiceActionButtons serviceId={service.id} />
+                                        </div>
+
                                         <AccordionContent className="px-4 pb-4 pt-1 border-t border-zinc-800/40 overflow-hidden min-w-0">
                                             <div className="flex flex-col sm:flex-row items-start gap-4 mt-3">
                                                 {/* Service Image — ukuran dibatasi agar responsive di mobile */}
@@ -167,6 +160,26 @@ export default async function ServicesPage() {
                                                                 <span className="text-[10px] text-zinc-600 uppercase tracking-wider block">Creem ID</span>
                                                                 <span className={`text-xs font-mono truncate block ${isSynced ? 'text-zinc-400' : 'text-amber-500 italic'}`} title={service.creemProductId || undefined}>
                                                                     {service.creemProductId || (isId ? 'Belum Sinkron' : 'Not Synced')}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 group/detail">
+                                                            <span className="text-zinc-600"><Zap className="w-3.5 h-3.5" /></span>
+                                                            <div className="flex-1 min-w-0">
+                                                                <span className="text-[10px] text-zinc-600 uppercase tracking-wider block">{isId ? 'Interval' : 'Interval'}</span>
+                                                                <span className="text-xs text-zinc-400 font-medium">
+                                                                    {intervalLabel}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 group/detail">
+                                                            <span className="text-zinc-600"><CreditCard className="w-3.5 h-3.5" /></span>
+                                                            <div className="flex-1 min-w-0">
+                                                                <span className="text-[10px] text-zinc-600 uppercase tracking-wider block">{isId ? 'Model Harga' : 'Price Model'}</span>
+                                                                <span className="text-xs text-zinc-400 font-medium">
+                                                                    {service.priceType === 'STARTING_AT' 
+                                                                        ? (isId ? 'Investasi Dasar' : 'Starting At') 
+                                                                        : (isId ? 'Harga Tetap' : 'Fixed Price')}
                                                                 </span>
                                                             </div>
                                                         </div>

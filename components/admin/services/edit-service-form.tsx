@@ -10,8 +10,9 @@ import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 import { Button } from "@/components/ui/button";
-import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2, Link as LinkIcon } from "lucide-react";
+import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2, Plus, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/shared/utils";
+import { DynamicAddonInput, type ServiceAddon } from "@/components/ui/dynamic-addon-input";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag } from "lucide-react";
@@ -36,6 +37,8 @@ export interface ServiceData {
     slug?: string | null;
     category?: string | null;
     visibility?: string;
+    addons?: ServiceAddon[] | null;
+    addons_id?: ServiceAddon[] | null;
 }
 
 interface DraftServiceData extends Partial<ServiceData> {
@@ -66,6 +69,16 @@ export function EditServiceForm({
     const [generationKey, setGenerationKey] = useState(0);
     const [generatedData, setGeneratedData] = useState<DraftServiceData | null>(null);
     const [slug, setSlug] = useState(service.slug || "");
+    const [priceType, setPriceType] = useState<string>(generatedData?.priceType ?? service.priceType ?? "FIXED");
+    const [interval, setInterval] = useState<string>(generatedData?.interval ?? service.interval ?? "one_time");
+
+    // Sync priceType and interval logic
+    const handlePriceTypeChange = (value: string) => {
+        setPriceType(value);
+        if (value === "STARTING_AT") {
+            setInterval("one_time");
+        }
+    };
 
     async function handleGenerate() {
         if (!prompt.trim()) return;
@@ -281,6 +294,25 @@ export function EditServiceForm({
                                     </div>
                                 </div>
                             </div>
+
+                            {priceType === "STARTING_AT" && (
+                                <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                                        <Plus className="w-4 h-4 text-blue-400" />
+                                        <h3 className="text-sm font-semibold text-white">Add-ons (English)</h3>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Configure optional upsells</label>
+                                            <DynamicAddonInput
+                                                name="addons"
+                                                defaultValue={generatedData?.addons ?? service.addons ?? []}
+                                                currency={generatedData?.currency ?? service.currency ?? "USD"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </TabsContent>
 
                         {/* INDONESIAN CONTENT */}
@@ -330,6 +362,25 @@ export function EditServiceForm({
                                     </div>
                                 </div>
                             </div>
+
+                            {priceType === "STARTING_AT" && (
+                                <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                                        <Plus className="w-4 h-4 text-red-500" />
+                                        <h3 className="text-sm font-semibold text-white">Add-ons (Bahasa Indonesia)</h3>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Konfigurasi add-on opsional</label>
+                                            <DynamicAddonInput
+                                                name="addons_id"
+                                                defaultValue={generatedData?.addons_id ?? service.addons_id ?? []}
+                                                currency={generatedData?.currency ?? service.currency ?? "USD"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </TabsContent>
                     </Tabs>
                 </div>
@@ -374,7 +425,7 @@ export function EditServiceForm({
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("priceType")}</label>
-                                    <Select name="priceType" defaultValue={service.priceType || 'FIXED'}>
+                                    <Select name="priceType" value={priceType} onValueChange={handlePriceTypeChange}>
                                         <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
                                             <SelectValue />
                                         </SelectTrigger>
@@ -388,7 +439,7 @@ export function EditServiceForm({
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{t("price")}</label>
                                     <div className="flex gap-2">
-                                        <Select name="currency" defaultValue={service.currency || "USD"}>
+                                        <Select name="currency" defaultValue={generatedData?.currency ?? service.currency ?? "USD"}>
                                             <SelectTrigger className="w-[100px] bg-black/20 border-white/10 text-zinc-200">
                                                 <SelectValue />
                                             </SelectTrigger>
@@ -411,8 +462,13 @@ export function EditServiceForm({
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("billingInterval")}</label>
-                                    <Select name="interval" defaultValue={service.interval}>
-                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">
+                                    <Select 
+                                        name="interval" 
+                                        value={interval} 
+                                        onValueChange={setInterval}
+                                        disabled={priceType === "STARTING_AT"}
+                                    >
+                                        <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200 disabled:opacity-50">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -421,6 +477,12 @@ export function EditServiceForm({
                                             <SelectItem value="yearly">{tAdmin("yearlySub")}</SelectItem>
                                         </SelectContent>
                                     </Select>
+                                    {priceType === "STARTING_AT" && (
+                                        <p className="text-[10px] text-zinc-500 mt-1">
+                                            Starting At services are always one-time setup, with optional recurring add-ons.
+                                        </p>
+                                    )}
+                                    <input type="hidden" name="interval" value={interval} />
                                 </div>
                             </div>
                             <div className="px-6 py-4 bg-zinc-900/60 border-t border-white/5">

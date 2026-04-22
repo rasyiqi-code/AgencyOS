@@ -11,11 +11,12 @@ interface PurchaseButtonProps {
     interval: string;
     className?: string;
     customLabel?: string;
+    selectedAddons?: Record<string, unknown>[];
 }
 
 import { useTranslations } from "next-intl";
 
-export function PurchaseButton({ serviceId, interval, className, customLabel }: PurchaseButtonProps) {
+export function PurchaseButton({ serviceId, interval, className, customLabel, selectedAddons = [] }: PurchaseButtonProps) {
     const t = useTranslations("Cards");
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
             const res = await fetch("/api/store/order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ serviceId })
+                body: JSON.stringify({ serviceId, selectedAddons })
             });
 
             const data = await res.json();

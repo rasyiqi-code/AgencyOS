@@ -117,7 +117,7 @@ export default async function ProductsPage() {
                         {t("empty")}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                         {products.map((product: { id: string; name: string; slug: string; description: string | null; price: number; purchaseType: string; interval: string | null; image: string | null; type: string }) => (
                             <ProductCard key={product.id} product={product} />
                         ))}

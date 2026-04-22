@@ -211,12 +211,30 @@ async function handleProjectOrderWebhook(
             paymentStatus = "PARTIAL";
         }
 
+        // Logic for Subscriptions
+        const isSubscription = order.project.subscriptionStatus === 'pending' || order.project.subscriptionStatus === 'active';
+        let nextBillingDate = undefined;
+        if (isSubscription) {
+            nextBillingDate = new Date();
+            const summaryText = order.project.description || "";
+            if (summaryText.includes('Yearly') || summaryText.toLowerCase().includes('(yearly)')) {
+                nextBillingDate.setFullYear(nextBillingDate.getFullYear() + 1);
+            } else {
+                nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+            }
+        }
+
         await prisma.project.update({
             where: { id: order.project.id },
             data: {
-                status: "queue",
+                // Jangan reset status project jika sudah berjalan (renewal)
+                ...(order.project.status === 'pending' || order.project.status === 'draft' || order.project.status === 'payment_pending' ? { status: "queue" } : {}),
                 paymentStatus: paymentStatus,
                 paidAmount: newPaid,
+                ...(isSubscription ? {
+                    subscriptionStatus: 'active',
+                    subscriptionEndsAt: nextBillingDate
+                } : {})
             },
         });
 

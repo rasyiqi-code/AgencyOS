@@ -7,7 +7,6 @@ import { PriceDisplay, useCurrency } from "@/components/providers/currency-provi
 import { useState } from "react";
 import Link from "next/link";
 import { type Service } from "./service-detail-content";
-import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface ServiceCardProps {
     service: Service;
@@ -24,11 +23,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
     const isId = currency === 'IDR';
 
     const displayTitle = (isId && (service as unknown as Record<string, unknown>).title_id) ? (service as unknown as Record<string, unknown>).title_id as string : service.title;
-    const displayDescription = (isId && (service as unknown as Record<string, unknown>).description_id) ? (service as unknown as Record<string, unknown>).description_id as string : service.description;
 
     const displayFeatures = (isId && Array.isArray((service as unknown as Record<string, unknown>).features_id) && ((service as unknown as Record<string, unknown>).features_id as string[]).length > 0)
         ? (service as unknown as Record<string, unknown>).features_id as string[]
         : service.features as string[];
+
+    const displayAddons = (isId && Array.isArray((service as unknown as Record<string, unknown>).addons_id) && ((service as unknown as Record<string, unknown>).addons_id as unknown[]).length > 0)
+        ? (service as unknown as Record<string, unknown>).addons_id as unknown[]
+        : (service.addons as unknown[]) || [];
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -54,8 +56,8 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 }}
             />
 
-            {/* Visual Block */}
-            <Link href={`/services/${service.slug || service.id}`} className="relative aspect-[16/9] overflow-hidden shrink-0 block">
+            {/* Visual Block - Changed to Square Ratio */}
+            <Link href={`/services/${service.slug || service.id}`} className="relative aspect-square overflow-hidden shrink-0 block">
                 {service.image ? (
                     <Image
                         src={service.image}
@@ -73,32 +75,34 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
             </Link>
 
-            <div className="flex flex-col flex-grow p-6 md:p-8 relative z-10">
+            <div className="flex flex-col flex-grow p-4 md:p-5 relative z-10">
                 {/* Header Block */}
-                <div className="mb-6">
+                <div className="mb-4">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
                             {service.interval === 'one_time'
                                 ? tService("oneTime")
                                 : service.interval}
                         </div>
+                        {displayAddons.length > 0 && (
+                            <div className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-400 uppercase tracking-widest">
+                                + Add-ons
+                            </div>
+                        )}
                     </div>
                     <Link href={`/services/${service.slug || service.id}`}>
-                        <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
+                        <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
                             {displayTitle}
                         </h3>
                     </Link>
-                    <div
-                        className="text-zinc-400 text-sm leading-relaxed line-clamp-2 font-light"
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
-                    />
+
                 </div>
 
                 <div className="mt-auto">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {/* Features Block */}
-                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col relative group/list">
-                            <ul className="space-y-2">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col relative group/list">
+                            <ul className="space-y-1.5">
                                 {displayFeatures.slice(0, 3).map((feature: string, idx: number) => (
                                     <li key={idx} className="flex items-start gap-2 group/item">
                                         <Check className="w-3 h-3 text-brand-yellow shrink-0 mt-0.5" />
@@ -120,20 +124,21 @@ export function ServiceCard({ service }: ServiceCardProps) {
                         </div>
 
                         {/* Metrics Block */}
-                        <div className="p-4 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[110px]">
-                            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{t("price")}</div>
-                            {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
-                                <span className="text-[9px] font-normal text-zinc-400 leading-none mb-0.5">
-                                    {tService("startsAt")}
-                                </span>
-                            )}
+                        <div className="p-3 rounded-xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[100px]">
+                            <div className="flex items-center gap-2 mb-1">
+                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t("price")}</div>
+                                {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
+                                    <span className="text-[9px] font-normal text-zinc-400">
+                                        {tService("startsAt")}
+                                    </span>
+                                )}
+                            </div>
                             <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
                                 <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
                             </div>
                             <PurchaseButton
                                 serviceId={service.id}
                                 interval={service.interval}
-                                customLabel={(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' ? tService("requestQuote") : undefined}
                                 className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-9 px-4 rounded-xl w-full text-[10px] uppercase mt-4 tracking-tighter shadow-lg shadow-brand-yellow/20 shrink-0"
                             />
                         </div>

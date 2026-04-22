@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
 import { BillingList, type BillingOrder } from "@/components/dashboard/billing/billing-list";
+import { UnpaidBills } from "@/components/dashboard/billing/unpaid-bills";
 import { Receipt } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -29,12 +30,39 @@ export default async function ClientBillingPage() {
             project: {
                 select: {
                     title: true,
+                    description: true,
                     invoiceId: true,
                     estimateId: true,
                     paymentStatus: true
                 }
             }
         }
+    });
+
+    // Ambil tagihan langganan bulanan yang belum dibayar
+    const unpaidEstimates = await prisma.estimate.findMany({
+        where: {
+            project: { userId: user.id },
+            complexity: "Subscription Renewal",
+            status: "pending_payment"
+        },
+        include: { service: true },
+        orderBy: { createdAt: 'desc' }
+    });
+
+    const now = new Date();
+    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    const projectsNeedingRenewal = await prisma.project.findMany({
+        where: {
+            userId: user.id,
+            subscriptionStatus: { not: null },
+            subscriptionEndsAt: { lte: nextWeek },
+            estimate: {
+                status: { not: "pending_payment" }
+            }
+        },
+        include: { service: true }
     });
 
     return (
@@ -49,6 +77,7 @@ export default async function ClientBillingPage() {
                 </p>
             </div>
 
+            <UnpaidBills unpaidEstimates={unpaidEstimates} projectsNeedingRenewal={projectsNeedingRenewal} />
 
             <BillingList orders={orders as unknown as BillingOrder[]} />
         </div>
