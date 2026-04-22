@@ -53,11 +53,7 @@ export async function FinancialLogic() {
                             <span className="text-sm font-black text-black/40 rotate-180 [writing-mode:vertical-lr]">01</span>
                         </div>
 
-                        <div className="h-full bg-white border border-black/15 rounded-[2rem] p-6 md:p-10 relative overflow-hidden transition-all duration-500 hover:scale-[1.01] shadow-2xl">
-                            {/* Arc Corner A */}
-                            <div className="absolute -top-1 -right-1 w-24 h-24 bg-zinc-50 rounded-bl-[3rem] border-l border-b border-black/10 flex items-start justify-end p-4">
-                                <span className="text-2xl font-black text-black/20 select-none italic">A</span>
-                            </div>
+                        <div className="h-full bg-white border border-black/15 rounded-[2rem] p-5 md:p-8 relative overflow-hidden transition-all duration-500 hover:scale-[1.01] shadow-2xl">
 
                             <div className="space-y-6 relative z-10">
                                 <div className="flex items-center gap-4">
@@ -67,13 +63,13 @@ export async function FinancialLogic() {
                                     <h3 className="text-lg font-black text-black tracking-tighter leading-tight italic">{t("hireSenior")}</h3>
                                 </div>
 
-                                <div className="space-y-4 pt-2">
-                                    <div className="p-5 rounded-xl bg-red-500/5 border border-red-500/10">
-                                        <div className="text-2xl font-black text-red-600 mb-0.5 tracking-tighter">{t("salaryOldValue")}</div>
+                                <div className="space-y-3 pt-1">
+                                    <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10">
+                                        <div className="text-xl font-black text-red-600 mb-0.5 tracking-tighter">{t("salaryOldValue")}</div>
                                         <div className="text-[10px] text-black/50 font-black tracking-wide leading-none">{t("salaryOld")}</div>
                                     </div>
 
-                                    <div className="space-y-3.5">
+                                    <div className="space-y-2.5">
                                         <div className="flex items-center gap-3 group/item">
                                             <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
                                                 <X className="w-3 h-3 text-red-600" strokeWidth={3} />
@@ -111,11 +107,7 @@ export async function FinancialLogic() {
                             <span className="text-sm font-black text-brand-yellow [writing-mode:vertical-lr]">02</span>
                         </div>
 
-                        <div className="h-full bg-black border border-white/20 rounded-[2rem] p-6 md:p-10 relative overflow-hidden transition-all duration-500 hover:scale-[1.02] shadow-2xl ring-1 ring-white/10">
-                            {/* Arc Corner B */}
-                            <div className="absolute -top-1 -left-1 w-24 h-24 bg-brand-yellow rounded-br-[3rem] border-r border-b border-brand-yellow/20 flex items-start justify-start p-4 shadow-2xl shadow-brand-yellow/20">
-                                <span className="text-2xl font-black text-black select-none italic">B</span>
-                            </div>
+                        <div className="h-full bg-black border border-white/20 rounded-[2rem] p-5 md:p-8 relative overflow-hidden transition-all duration-500 hover:scale-[1.02] shadow-2xl ring-1 ring-white/10">
 
                             <div className="space-y-6 relative z-10">
                                 <div className="flex items-center justify-end gap-4">
@@ -125,13 +117,13 @@ export async function FinancialLogic() {
                                     </div>
                                 </div>
 
-                                <div className="space-y-4 pt-2">
-                                    <div className="p-5 rounded-xl bg-brand-yellow/10 border border-brand-yellow/20 shadow-lg shadow-brand-yellow/5">
-                                        <div className="text-2xl font-black text-brand-yellow mb-0.5 tracking-tighter">{t("salaryNewValue")}</div>
+                                <div className="space-y-3 pt-1">
+                                    <div className="p-4 rounded-xl bg-brand-yellow/10 border border-brand-yellow/20 shadow-lg shadow-brand-yellow/5">
+                                        <div className="text-xl font-black text-brand-yellow mb-0.5 tracking-tighter">{t("salaryNewValue")}</div>
                                         <div className="text-[10px] text-brand-yellow/60 font-black tracking-wide leading-none">{t("salaryNew")}</div>
                                     </div>
 
-                                    <div className="space-y-3.5">
+                                    <div className="space-y-2.5">
                                         <div className="flex items-center gap-3 justify-end group/item text-right">
                                             <span className="text-zinc-300 text-sm font-black tracking-tight">{t("hiringTimeNew")}</span>
                                             <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">

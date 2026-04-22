@@ -79,8 +79,8 @@ export function SectionSolutions() {
                     </motion.p>
                 </div>
 
-                {/* Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 max-w-7xl mx-auto">
+                {/* Cards Grid - Horizontal Scroll on Mobile */}
+                <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 relative z-10 max-w-7xl mx-auto pb-8 md:pb-0 snap-x snap-mandatory no-scrollbar scroll-smooth">
                     {products.map((product, index) => (
                         <SolutionCard 
                             key={product.key} 
@@ -138,7 +138,7 @@ function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
             viewport={{ once: true }}
             transition={{ delay: 0.1 * (index + 1), duration: 0.5 }}
             onMouseMove={handleMouseMove}
-            className={`group relative p-8 rounded-[2.5rem] bg-zinc-900/30 border border-white/5 transition-all duration-500 flex flex-col items-center text-center h-full backdrop-blur-xl overflow-hidden shadow-2xl ${product.border}`}
+            className={`flex-shrink-0 w-[85vw] md:w-full snap-center group relative p-8 rounded-[2.5rem] bg-zinc-900/30 border border-white/5 transition-all duration-500 flex flex-col items-center text-center h-full backdrop-blur-xl overflow-hidden shadow-2xl ${product.border}`}
         >
             {/* Interactive Spotlight */}
             <motion.div

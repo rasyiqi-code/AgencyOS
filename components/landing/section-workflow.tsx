@@ -2,7 +2,7 @@ import { WorkflowContent } from "@/components/landing/workflow-content";
 
 export async function Workflow() {
     return (
-        <section id="workflow" className="py-24 bg-brand-yellow border-y border-black/5 relative overflow-hidden">
+        <section id="workflow" className="py-16 bg-brand-yellow border-y border-black/5 relative overflow-hidden">
             {/* Pola background diagonal lines yang dinamis dengan mask yang lebih tajam */}
             <div className="absolute inset-0 z-0 opacity-[0.06] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_60%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_60%)] pointer-events-none"
                 style={{

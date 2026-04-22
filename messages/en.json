@@ -55,7 +55,7 @@
         },
         "description": "From a simple site to <white>enterprise-scale</white>. {brand} builds a scalable, fast, and optimized technology ecosystem for your business growth.",
         "launchDashboard": "Free Consultation",
-        "viewServices": "Business Solutions",
+        "viewServices": "Solutions",
         "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE"
     },
     "Ecosystem": {
@@ -184,7 +184,7 @@
         "viewAllServices": "View All Services"
     },
     "Solutions": {
-        "badge": "THE SOLUTION: Categorized by Value",
+        "badge": "Solutions by Value",
         "title": "Strategic Solutions for Businesses Ready to Scale.",
         "subtitle": "Evolve your digital infrastructure with future-proof technology.",
         "items": {
@@ -209,8 +209,8 @@
         }
     },
     "Workflow": {
-        "badge": "PROCESS: No Bullsh*t Workflow",
-        "title": "3 Steps to Launch.",
+        "badge": "3 Steps to Launch",
+        "title": "No Bullsh*t Workflow",
         "subtitle": "All progress is monitored in real-time through the Client Dashboard. An honest, fast, and results-oriented work methodology.",
         "step1": "Architecture & Logic",
         "step1Desc": "We don't design first. We dissect your business logic to ensure the system works, not just looks pretty.",
@@ -243,22 +243,6 @@
         "subtitle": "100% Money Back Guarantee\nDuring Briefing Phase",
         "desc": "We are very confident in our hybrid system. If after the AI briefing session and receiving the initial Blueprint you feel it doesn't fit our approach, we will refund your deposit 100%.",
         "footer": "No questions asked. No drama. You still get to keep the AI-generated Blueprint analysis."
-    },
-    "Included": {
-        "title": "Included with Every Service",
-        "subtitle": "No matter which package you choose, {brand} quality standards are included.",
-        "f1": "High-Performance Foundation",
-        "f1Desc": "No bloatware systems for instant speed and maximum Google-standard performance scores.",
-        "f2": "Frictionless Mobile-First",
-        "f2Desc": "Precision interface that adapts perfectly across all devices, from smartphones to 4K monitors.",
-        "f3": "Standard Security Protocol",
-        "f3Desc": "Default protection with SSL encryption, database hardening, and automated threat mitigation.",
-        "f4": "100% Asset Ownership",
-        "f4Desc": "Full ownership of source code and database authority handed over without license fees.",
-        "f5": "Technical SEO Ready",
-        "f5Desc": "Code structure following Google algorithm guidelines for search dominance from day one.",
-        "f6": "Technical Documentation",
-        "f6Desc": "Full handover of technical assets and operational guides for your complete digital sovereignty."
     },
     "CustomCTA": {
         "title": "Need a Specific Solution?",
@@ -861,7 +845,7 @@
         "ctaButton": "Free Consultation",
         "clientLogin": "Client Console",
         "contactUs": "Contact Expert",
-        "services": "Business Solutions",
+        "services": "Solutions",
         "supportHelp": "Support & Governance",
         "terms": "Terms of Service",
         "partners": "Partners",
@@ -904,7 +888,13 @@
         "everythingToSucceed": "Everything you need to succeed",
         "premiumStandard": "Premium quality deliverable included as standard in this package.",
         "rapidDelivery": "Rapid Delivery",
-        "timeline": "Timeline"
+        "timeline": "Timeline",
+        "f1": "High-Performance Architecture",
+        "f2": "Mobile-First Experience",
+        "f3": "Standard Security Protocol",
+        "f4": "100% Asset Ownership",
+        "f5": "Search Engine Visibility",
+        "f6": "Documentation & Handover"
     },
     "Products": {
         "title": "Digital Products",

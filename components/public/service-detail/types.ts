@@ -1,0 +1,24 @@
+export interface Service {
+    id: string;
+    title: string;
+    title_id?: string | null;
+    description: string;
+    description_id?: string | null;
+    price: number;
+    priceType?: string;
+    currency?: string | null;
+    interval: string;
+    features: unknown;
+    features_id?: unknown;
+    addons?: unknown;
+    addons_id?: unknown;
+    image: string | null;
+    slug?: string | null;
+}
+
+export type AddonType = { 
+    name: string; 
+    price: number; 
+    currency?: "USD" | "IDR"; 
+    interval?: string 
+};

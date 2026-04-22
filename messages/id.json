@@ -56,7 +56,7 @@
         },
         "description": "Kami tidak sekadar \"bikin web/aplikasi\". Kami membangun infrastruktur digital yang scalable, transparan, dan 100% menjadi aset milik Anda. Berhenti membuang uang pada vendor yang hilang setelah bayaran lunas.",
         "launchDashboard": "Konsultasi Gratis",
-        "viewServices": "Solusi Bisnis",
+        "viewServices": "Solusi",
         "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL"
     },
     "Ecosystem": {
@@ -169,7 +169,7 @@
         "viewAllServices": "Lihat Semua Layanan"
     },
     "Solutions": {
-        "badge": "THE SOLUTION: Categorized by Value",
+        "badge": "Solusi Berdasarkan Nilai",
         "title": "Solusi Strategis untuk Bisnis yang Ingin Naik Kelas.",
         "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi masa depan.",
         "items": {
@@ -194,8 +194,8 @@
         }
     },
     "Workflow": {
-        "badge": "PROCESS: No Bullsh*t Workflow",
-        "title": "3 Langkah Peluncuran.",
+        "badge": "3 Langkah Peluncuran.",
+        "title": "No Bullsh*t Workflow",
         "subtitle": "Semua progres terpantau real-time melalui Dashboard Klien. Metodologi kerja yang jujur, cepat, dan berorientasi pada hasil nyata.",
         "step1": "Arsitektur & Logika",
         "step1Desc": "Kita tidak desain dulu. Kita bedah logika bisnis Anda agar sistemnya bekerja, bukan cuma tampil cantik.",
@@ -228,22 +228,6 @@
         "subtitle": "Garansi Uang Kembali 100%\nSelama Fase Briefing",
         "desc": "Jika Blueprint awal tidak cocok setelah sesi briefing AI, deposit kami kembalikan 100%. Tanpa syarat. Anda tetap boleh mengamankan Blueprint tersebut selama belum masuk tahap development.",
         "footer": ""
-    },
-    "Included": {
-        "title": "Sudah Terpasang di Setiap Layanan",
-        "subtitle": "Apapun paket yang Anda pilih, standar kualitas {brand} sudah termasuk di dalamnya.",
-        "f1": "Arsitektur Berkinerja Tinggi",
-        "f1Desc": "Sistem tanpa bloatware untuk kecepatan instan dan skor performa standar Google yang maksimal.",
-        "f2": "Pengalaman Mobile-First",
-        "f2Desc": "Antarmuka presisi yang beradaptasi sempurna di berbagai ukuran layar, dari ponsel hingga monitor 4K.",
-        "f3": "Protokol Keamanan Standar",
-        "f3Desc": "Proteksi default dengan enkripsi SSL, pengamanan database, dan mitigasi spam otomatis secara real-time.",
-        "f4": "Kepemilikan Aset 100%",
-        "f4Desc": "Hak milik penuh atas kode sumber dan otoritas database diserahkan kepada Anda tanpa biaya lisensi.",
-        "f5": "Visibilitas Mesin Pencari",
-        "f5Desc": "Struktur kode yang mematuhi pedoman teknikal algoritma Google untuk dominasi mesin pencari sejak hari pertama.",
-        "f6": "Dokumentasi & Handover",
-        "f6Desc": "Penyerahan aset teknis dan panduan operasional yang jelas untuk kedaulatan digital Anda sepenuhnya."
     },
     "CustomCTA": {
         "title": "Butuh Solusi Spesifik?",
@@ -930,11 +914,11 @@
         "processing": "Sedang Memproses"
     },
     "Footer": {
-        "ctaTitle": "Serahkan Kompleksitas Teknis Kepada Kami. Anda Fokus Berekspansi.",
+        "ctaTitle": "Kompetitor Anda Mulai Mengotomasi Bisnisnya. Anda ?",
         "ctaButton": "Konsultasi Gratis",
         "clientLogin": "Konsol Klien",
         "contactUs": "Hubungi Tenaga Ahli",
-        "services": "Solusi Bisnis",
+        "services": "Solusi",
         "supportHelp": "Dukungan & Governance",
         "terms": "Ketentuan Layanan",
         "partners": "Partner Strategis",
@@ -977,7 +961,13 @@
         "everythingToSucceed": "Semua yang Anda butuhkan untuk sukses",
         "premiumStandard": "Hasil kerja kualitas premium disertakan sebagai standar dalam paket ini.",
         "rapidDelivery": "Pengiriman Cepat",
-        "timeline": "Linimasa"
+        "timeline": "Linimasa",
+        "f1": "Arsitektur Berkinerja Tinggi",
+        "f2": "Pengalaman Mobile-First",
+        "f3": "Protokol Keamanan Standar",
+        "f4": "Kepemilikan Aset 100%",
+        "f5": "Visibilitas Mesin Pencari",
+        "f6": "Dokumentasi & Handover"
     },
     "Products": {
         "title": "Produk Digital",

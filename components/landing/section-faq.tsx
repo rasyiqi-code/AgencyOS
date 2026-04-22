@@ -10,7 +10,7 @@ export async function FAQSection() {
     const t = await getTranslations("FAQ");
 
     return (
-        <section className="py-24 bg-brand-yellow relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-brand-yellow relative overflow-hidden">
             {/* Pola background mesh/crosshatch yang stabil */}
             <div className="absolute inset-0 z-0 opacity-[0.07] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none"
                 style={{
@@ -20,7 +20,7 @@ export async function FAQSection() {
             />
 
             <div className="container mx-auto px-4 max-w-4xl relative z-10">
-                <div className="text-center mb-16">
+                <div className="text-center mb-8 md:mb-10">
                     <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter italic uppercase">
                         {t("title")}
                     </h2>
@@ -29,7 +29,7 @@ export async function FAQSection() {
                 <Accordion type="single" collapsible className="w-full text-black">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((i) => (
                         <AccordionItem key={i} value={`item-${i}`} className="border-b border-black/10">
-                            <AccordionTrigger className="hover:no-underline hover:text-black/70 text-left font-black tracking-tight text-base md:text-lg py-2.5">
+                            <AccordionTrigger className="hover:no-underline hover:text-black/70 text-left font-black tracking-tight text-base md:text-lg py-2.5 [&>svg]:text-black [&>svg]:w-5 [&>svg]:h-5 [&>svg]:opacity-100 [&>svg]:stroke-[3]">
                                 {t(`q${i}`)}
                             </AccordionTrigger>
                             <AccordionContent className="text-black/70 font-semibold leading-relaxed text-sm md:text-base pb-6 max-w-3xl">

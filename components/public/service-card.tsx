@@ -6,7 +6,7 @@ import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { useState } from "react";
 import Link from "next/link";
-import { type Service } from "./service-detail-content";
+import { type Service } from "./service-detail/types";
 
 interface ServiceCardProps {
     service: Service;

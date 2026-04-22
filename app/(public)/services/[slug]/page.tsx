@@ -1,10 +1,9 @@
 import { prisma } from "@/lib/config/db";
-import { ServiceDetailContent } from "@/components/public/service-detail-content";
+import { ServiceDetailContent } from "@/components/public/service-detail";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Testimonials } from "@/components/landing/section-testimonials";
-import { SectionIncluded } from "@/components/landing/section-included";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/section-faq";
 
@@ -82,7 +81,6 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
         features_id: service.features_id as unknown
     };
 
-    const isAIService = service.slug === "custom-generative-ai-architecture-for-business-automation";
     
     return (
         <div className="flex flex-col">
@@ -93,7 +91,6 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                 trustedAvatars={trustedAvatars}
             />
             <Testimonials />
-            {!isAIService && <SectionIncluded />}
             <SectionGuarantee />
             <FAQSection />
         </div>

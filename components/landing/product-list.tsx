@@ -10,7 +10,7 @@ import { Sparkles, ChevronDown, Check } from "lucide-react";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { useTranslations, useLocale } from "next-intl";
-import { type Service } from "@/components/public/service-detail-content";
+import { type Service } from "@/components/public/service-detail/types";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useState, useRef } from "react";
 
