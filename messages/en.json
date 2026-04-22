@@ -222,20 +222,21 @@
     "Financial": {
         "title": "Execution Velocity is Today's Business Currency.",
         "subtitle": "Why spend months building an internal team when you can launch instantly?",
-        "comparison": "FINANCIAL LOGIC",
-        "hireSenior": "BUILDING INTERNAL TEAM",
-        "hybrid": "{brand} PARTNERSHIP",
+        "comparison": "Financial Logic",
+        "hireSenior": "Building Internal Team",
+        "hybrid": "{brand} Partnership",
         "salaryOldValue": "High Overhead",
         "salaryOld": "Fixed Salary + Benefits + Operations",
         "salaryNewValue": "Fixed-Price",
         "salaryNew": "Guaranteed Project-Based Investment",
-        "hiringTimeOld": "Takes 2-3 months just for recruitment & onboarding.",
-        "riskOld": "Turnover risk leading to messy code (Tech Debt).",
-        "hiddenCostOld": "Hidden costs: Software licenses, hardware, insurance, & bonuses.",
-        "hiringTimeNew": "Instant execution by a specialist team from Day One.",
-        "hiddenCostNew": "No agency license fees or subscription systems (Vendor Lock-in).",
-        "riskNew": "Deployment guarantee with industry-standard code architecture.",
-        "ownership": "Source code becomes your company asset 100%."
+        "hiringTimeOld": "Slow onboarding (2-3 months).",
+        "riskOld": "Turnover risk & tech debt.",
+        "managementOld": "High management & training costs.",
+        "hiddenCostOld": "Hidden costs (Licenses, benefits).",
+        "hiringTimeNew": "Instant execution from Day 1.",
+        "hiddenCostNew": "No license fees or vendor lock-in.",
+        "riskNew": "Standard industry deployment.",
+        "ownership": "100% source code ownership"
     },
     "Guarantee": {
         "title": "We Take On All The Risk.",
@@ -330,7 +331,7 @@
         },
         "performance": {
             "title": "$0",
-            "desc": "No Subscription Fees"
+            "desc": "No Hidden Fees"
         }
     },
     "ClientDashboard": {
@@ -397,7 +398,7 @@
         }
     },
     "FAQ": {
-        "title": "FAQ: Addressing The Skeptics",
+        "title": "Commonly Asked..",
         "q1": "Is direct synchronous communication available?",
         "a1": "Our platform is optimized for <strong>Asynchronous Communication</strong> to ensure precision and absolute documentation. However, for critical coordination or deep strategic consulting, scheduled Premium Call sessions are available.",
         "q2": "How is post-deployment stability managed?",

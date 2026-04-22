@@ -207,20 +207,21 @@
     "Financial": {
         "title": "Kecepatan Eksekusi Adalah Mata Uang Bisnis Saat Ini.",
         "subtitle": "Mengapa menghabiskan waktu berbulan-bulan membangun tim internal jika Anda bisa langsung meluncur?",
-        "comparison": "LOGIKA FINANSIAL",
-        "hireSenior": "MEMBANGUN TIM INTERNAL",
-        "hybrid": "KEMITRAAN {brand}",
+        "comparison": "Logika Finansial",
+        "hireSenior": "Membangun Tim Internal",
+        "hybrid": "Kemitraan {brand}",
         "salaryOldValue": "Overhead Tinggi",
         "salaryOld": "Gaji Tetap + Tunjangan + Operasional",
         "salaryNewValue": "Fixed-Price",
         "salaryNew": "Investasi Berbasis Proyek (Pasti)",
-        "hiringTimeOld": "Butuh 2-3 bulan hanya untuk rekrutmen & onboarding.",
-        "riskOld": "Risiko turnover (kutu loncat) yang meninggalkan kode berantakan (Tech Debt).",
-        "hiddenCostOld": "Biaya tersembunyi: Lisensi software, perangkat, BPJS, & THR.",
-        "hiringTimeNew": "Eksekusi instan oleh tim spesialis sejak Hari Pertama.",
-        "hiddenCostNew": "Tidak ada biaya lisensi agensi atau sistem langganan (Vendor Lock-in).",
-        "riskNew": "Garansi deployment dengan arsitektur kode standar industri.",
-        "ownership": "Source code menjadi aset perusahaan Anda 100%."
+        "hiringTimeOld": "Onboarding lama (2-3 bulan).",
+        "riskOld": "Risiko turnover & Tech Debt.",
+        "managementOld": "Beban manajemen & training tinggi.",
+        "hiddenCostOld": "Biaya siluman (Software, BPJS, THR).",
+        "hiringTimeNew": "Eksekusi instan Hari ke-1.",
+        "hiddenCostNew": "Tanpa biaya lisensi/lock-in.",
+        "riskNew": "Garansi deployment standar industri.",
+        "ownership": "Full ownership source code 100%"
     },
     "Guarantee": {
         "title": "Aman dan Transparan.",
@@ -394,16 +395,16 @@
     },
     "Stats": {
         "stack": {
-            "title": "∞",
-            "desc": "Skalabilitas"
+            "title": "Tech Stack",
+            "desc": "50+ Technologies"
         },
         "royalty": {
-            "title": "100%",
-            "desc": "Source Code Milik Anda"
+            "title": "Source Code",
+            "desc": "100% Milik Anda"
         },
         "performance": {
-            "title": "$0",
-            "desc": "Tanpa Biaya Langganan"
+            "title": "100%",
+            "desc": "No Hidden Fees"
         }
     },
     "ClientDashboard": {
@@ -470,7 +471,7 @@
         }
     },
     "FAQ": {
-        "title": "FAQ: Addressing The Skeptics",
+        "title": "Banyak Ditanya..",
         "q1": "Apakah kami bisa berkomunikasi secara langsung?",
         "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk kordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
         "q2": "Bagaimana manajemen bug setelah fase deployment?",
