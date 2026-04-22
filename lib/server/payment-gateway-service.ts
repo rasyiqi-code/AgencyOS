@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 interface MidtransConfig {
     serverKey: string;
@@ -26,9 +27,11 @@ export class PaymentGatewayService {
         };
 
         try {
-            const setting = await prisma.systemSetting.findUnique({
-                where: { key: "midtrans_config" }
-            });
+            // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+            // 🎯 Why: Reduces direct database queries and utilizes Next.js unstable_cache
+            // 📊 Impact: Faster configuration retrieval and lower database load
+            const settings = await getSystemSettings(["midtrans_config"]);
+            const setting = settings.find(s => s.key === "midtrans_config");
 
             if (setting?.value) {
                 return JSON.parse(setting.value);
@@ -52,9 +55,11 @@ export class PaymentGatewayService {
         };
 
         try {
-            const setting = await prisma.systemSetting.findUnique({
-                where: { key: "creem_config" }
-            });
+            // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
+            // 🎯 Why: Reduces direct database queries and utilizes Next.js unstable_cache
+            // 📊 Impact: Faster configuration retrieval and lower database load
+            const settings = await getSystemSettings(["creem_config"]);
+            const setting = settings.find(s => s.key === "creem_config");
 
             if (setting?.value) {
                 return JSON.parse(setting.value);
