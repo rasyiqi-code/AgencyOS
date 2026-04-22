@@ -117,8 +117,8 @@
         ]
     },
     "Comparison": {
-        "title": "Mengapa 80% Proyek IT Gagal?\nKarena Anda Memilih Vendor yang Salah.",
-        "subtitle": "",
+        "title": "Kenapa Kami Mahal?",
+        "subtitle": "Karena memperbaiki sistem murah yang gagal, harganya jauh lebih mahal.",
         "oldTitle": "Mereka",
         "old1": "Biaya Siluman:",
         "old1Sub": "Harga murah di awal, tagihan bengkak di akhir.",
@@ -205,7 +205,7 @@
         "step3Desc": "Penyerahan semua aset digital, dokumentasi teknis, dan pendampingan pasca-rilis. Kami tidak akan kabur."
     },
     "Financial": {
-        "title": "Kecepatan Eksekusi Adalah Mata Uang Bisnis Saat Ini.",
+        "title": "Yang Jarang Disadari",
         "subtitle": "Mengapa menghabiskan waktu berbulan-bulan membangun tim internal jika Anda bisa langsung meluncur?",
         "comparison": "Logika Finansial",
         "hireSenior": "Membangun Tim Internal",
