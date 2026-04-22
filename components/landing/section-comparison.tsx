@@ -24,10 +24,13 @@ export async function Comparison() {
             <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-black/5 blur-[120px] rounded-full" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-10">
+                <div className="text-center mb-10 max-w-3xl mx-auto">
                     <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter whitespace-pre-line">
                         {t("title", { brand: agencyName })}
                     </h2>
+                    <p className="text-lg md:text-xl font-medium text-black/60 tracking-tight">
+                        {t("subtitle")}
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
