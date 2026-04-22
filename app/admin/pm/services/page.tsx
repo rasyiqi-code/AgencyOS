@@ -1,11 +1,10 @@
-// import { deleteService } from "@/app/actions/admin";
-import { DeleteServiceButton } from "@/components/admin/services/delete-service-button";
+import { ServiceActionButtons } from "@/components/admin/services/service-action-buttons";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import Image from "next/image";
 import { prisma } from "@/lib/config/db";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Package, Edit } from "lucide-react";
+import { Plus, Package } from "lucide-react";
 import Link from "next/link";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
@@ -85,51 +84,57 @@ export default async function ServicesPage() {
                                     <AccordionItem
                                         value={service.id}
                                         key={service.id}
+                                        id={`service-item-${service.id}`}
                                         className="border border-zinc-800/60 rounded-xl overflow-hidden transition-all duration-200 hover:border-zinc-700/80 bg-zinc-950/50 data-[state=open]:border-zinc-700/80 w-full max-w-full"
                                     >
                                         <AccordionTrigger className="hover:no-underline px-4 py-3.5 cursor-pointer hover:bg-zinc-900/40 group">
-                                            <div className="flex flex-1 min-w-0 items-start gap-2 sm:gap-3">
-                                                {/* Status indicator dot — green if synced, amber if not */}
-                                                <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${isSynced ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                            <div className="flex flex-1 items-center justify-between gap-4 min-w-0">
+                                                <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
+                                                    {/* Status indicator dot — green if synced, amber if not */}
+                                                    <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${isSynced ? 'bg-emerald-500' : 'bg-amber-500'}`} />
 
-                                                {/* Title + price + date + badges */}
-                                                <div className="flex-1 min-w-0 pr-2">
-                                                    <span className="font-medium text-white text-sm truncate block">{displayTitle}</span>
-                                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[11px] text-zinc-500 mt-1">
-                                                        <span className="truncate">
-                                                            <PriceDisplay amount={service.price} baseCurrency={((service as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
-                                                        </span>
-                                                        <span className="hidden sm:inline-block text-zinc-700">•</span>
-                                                        <span className="hidden sm:inline-block whitespace-nowrap">
-                                                            {new Date(service.createdAt).toLocaleDateString()}
-                                                        </span>
+                                                    {/* Title + price + date + badges */}
+                                                    <div className="flex-1 min-w-0 pr-2">
+                                                        <span className="font-medium text-white text-sm truncate block">{displayTitle}</span>
+                                                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[11px] text-zinc-500 mt-1">
+                                                            <span className="truncate">
+                                                                <PriceDisplay amount={service.price} baseCurrency={((service as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} />
+                                                            </span>
+                                                            <span className="hidden sm:inline-block text-zinc-700">•</span>
+                                                            <span className="hidden sm:inline-block whitespace-nowrap">
+                                                                {new Date(service.createdAt).toLocaleDateString()}
+                                                            </span>
 
-                                                        {/* Badges */}
-                                                        <div className="flex flex-wrap items-center gap-1.5 ml-0 sm:ml-2">
-                                                            <Badge
-                                                                variant="outline"
-                                                                className={`py-0 px-1.5 h-4 text-[10px] shrink-0 font-medium ${service.visibility === 'PRIVATE'
-                                                                    ? 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
-                                                                    : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                                                    }`}
-                                                            >
-                                                                {service.visibility === 'PRIVATE' ? (isId ? 'Private' : 'Private') : (isId ? 'Public' : 'Public')}
-                                                            </Badge>
-                                                            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-medium py-0 px-1.5 h-4 text-[10px] shrink-0">
-                                                                {intervalLabel}
-                                                            </Badge>
-                                                            <Badge
-                                                                variant="outline"
-                                                                className={`py-0 px-1.5 h-4 text-[10px] shrink-0 font-medium ${isSynced
-                                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-                                                                    : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                                                                    }`}
-                                                            >
-                                                                {isSynced ? 'Synced' : (isId ? 'Belum Sinkron' : 'Not Synced')}
-                                                            </Badge>
+                                                            {/* Badges */}
+                                                            <div className="flex flex-wrap items-center gap-1.5 ml-0 sm:ml-2">
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className={`py-0 px-1.5 h-4 text-[10px] shrink-0 font-medium ${service.visibility === 'PRIVATE'
+                                                                        ? 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+                                                                        : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                                        }`}
+                                                                >
+                                                                    {service.visibility === 'PRIVATE' ? (isId ? 'Private' : 'Private') : (isId ? 'Public' : 'Public')}
+                                                                </Badge>
+                                                                <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-medium py-0 px-1.5 h-4 text-[10px] shrink-0">
+                                                                    {intervalLabel}
+                                                                </Badge>
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className={`py-0 px-1.5 h-4 text-[10px] shrink-0 font-medium ${isSynced
+                                                                        ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                                                                        : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                                                                        }`}
+                                                                >
+                                                                    {isSynced ? 'Synced' : (isId ? 'Belum Sinkron' : 'Not Synced')}
+                                                                </Badge>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {/* Action buttons — moved outside to Client Component */}
+                                                <ServiceActionButtons serviceId={service.id} />
                                             </div>
                                         </AccordionTrigger>
                                         <AccordionContent className="px-4 pb-4 pt-1 border-t border-zinc-800/40 overflow-hidden min-w-0">
@@ -167,16 +172,7 @@ export default async function ServicesPage() {
                                                         </div>
                                                     </div>
 
-                                                    {/* Action buttons */}
-                                                    <div className="flex items-center gap-2 justify-end pt-1">
-                                                        <Link href={`/admin/pm/services/${service.id}/edit`}>
-                                                            <Button variant="outline" size="sm" className="h-8 px-4 text-xs border-zinc-700 hover:bg-zinc-800 hover:text-white text-zinc-400 gap-2">
-                                                                <Edit className="w-3.5 h-3.5" />
-                                                                Edit
-                                                            </Button>
-                                                        </Link>
-                                                        <DeleteServiceButton serviceId={service.id} />
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </AccordionContent>

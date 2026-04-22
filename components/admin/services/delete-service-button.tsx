@@ -10,8 +10,17 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
-    function handleDelete() {
+    function handleDelete(e: React.MouseEvent) {
+        e.preventDefault();
+        e.stopPropagation();
+        
         if (!confirm("Are you sure you want to delete this service?")) return;
+
+        // Optimistically hide the element for instant feedback
+        const element = document.getElementById(`service-item-${serviceId}`);
+        if (element) {
+            element.style.display = 'none';
+        }
 
         startTransition(async () => {
             try {
@@ -19,7 +28,11 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
                     method: "DELETE"
                 });
 
-                if (!res.ok) throw new Error("Failed to delete service");
+                if (!res.ok) {
+                    // Revert optimistic update if it fails
+                    if (element) element.style.display = '';
+                    throw new Error("Failed to delete service");
+                }
 
                 toast.success("Service deleted");
                 router.refresh();
@@ -36,7 +49,7 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
             size="sm"
             onClick={handleDelete}
             disabled={isPending}
-            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-8 w-8 transition-all"
         >
             <Trash2 className="w-3.5 h-3.5" />
         </Button>
