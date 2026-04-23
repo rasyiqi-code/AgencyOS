@@ -33,25 +33,25 @@
         "startProject": "Mulai"
     },
     "Hero": {
-        "statusBadge": "Partner Strategis",
+        "statusBadge": "Kamu",
         "title1": "Butuh",
-        "forYour": "untuk",
+        "forYour": "Untuk",
         "typing": {
             "build": [
-                "Web?",
-                "Aplikasi?",
-                "SaaS?",
-                "Sistem?",
-                "Produk?",
-                "Platform?",
-                "Solusi?",
-                "Growth?",
-                "Presence?"
+                "Web",
+                "Aplikasi",
+                "SaaS",
+                "Sistem",
+                "Produk",
+                "Platform",
+                "Solusi",
+                "Growth",
+                "Presence"
             ],
             "audience": [
-                "Bisnismu",
-                "Organisasimu",
-                "Dirimu Sendiri"
+                "Bisnis",
+                "Organisasi",
+                "Personal"
             ]
         },
         "description": "Kami tidak sekadar \"bikin web/aplikasi\". Kami membangun infrastruktur digital yang scalable, transparan, dan 100% menjadi aset milik Anda. Berhenti membuang uang pada vendor yang hilang setelah bayaran lunas.",
@@ -914,7 +914,7 @@
         "processing": "Sedang Memproses"
     },
     "Footer": {
-        "ctaTitle": "Kompetitor Anda Mulai Mengotomasi Bisnisnya. Anda ?",
+        "ctaTitle": "Kompetitor Sudah Take Action. Anda ?",
         "ctaButton": "Konsultasi Gratis",
         "clientLogin": "Konsol Klien",
         "contactUs": "Hubungi Tenaga Ahli",

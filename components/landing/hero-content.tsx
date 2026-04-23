@@ -42,13 +42,13 @@ export function HeroContent({ agencyName }: HeroContentProps) {
         }
     };
 
+    const [typingStatus, setTypingStatus] = React.useState<"typing" | "full" | "deleting">("typing");
+
     return (
         <>
             <div className="absolute inset-0 bg-black">
                 {/* Grid Pattern */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-
-
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
@@ -82,12 +82,16 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 <TypingHeroTitle
                                     prefix={t("title1")}
                                     targets={t.raw("typing.build")}
+                                    mode="typing"
+                                    onStateChange={setTypingStatus}
                                 />
                             </div>
                             <div className="text-2xl md:text-4xl xl:text-5xl font-semibold tracking-tight leading-[1.1] opacity-80">
                                 <TypingHeroTitle
                                     prefix={t("forYour")}
                                     targets={t.raw("typing.audience")}
+                                    mode="rapid"
+                                    isPaused={typingStatus !== "full"}
                                 />
                             </div>
                         </motion.div>

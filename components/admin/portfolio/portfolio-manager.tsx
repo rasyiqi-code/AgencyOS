@@ -284,6 +284,9 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                                     >
                                         <option value="" className="bg-zinc-950 text-zinc-400">Pilih...</option>
                                         <option value="Web App" className="bg-zinc-950">Web App</option>
+                                        <option value="GitHub Repo" className="bg-zinc-950">GitHub Repo</option>
+                                        <option value="Android App" className="bg-zinc-950">Android App</option>
+                                        <option value="Desktop App" className="bg-zinc-950">Desktop App</option>
                                         <option value="Landing Page" className="bg-zinc-950">Landing Page</option>
                                         <option value="Design" className="bg-zinc-950">Design</option>
                                         <option value="Corporate" className="bg-zinc-950">Corporate</option>

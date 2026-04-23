@@ -32,9 +32,9 @@
         "startProject": "Start"
     },
     "Hero": {
-        "statusBadge": "Strategic Partner",
-        "title1": "We Build",
-        "forYour": "for your",
+        "statusBadge": "You",
+        "title1": "Need",
+        "forYour": "For Your",
         "typing": {
             "build": [
                 "Web",

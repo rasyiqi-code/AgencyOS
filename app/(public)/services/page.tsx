@@ -117,10 +117,10 @@ export default async function PublicServicesPage() {
             <ServicesClientWrapper
                 services={processedServices}
             />
+            <SectionCustomRequest />
             {/* Landing style components to make the page complete */}
             <Testimonials />
             <SectionGuarantee />
-            <SectionCustomRequest />
             <FAQSection />
         </div>
     );
