@@ -56,7 +56,9 @@
         "description": "From a simple site to <white>enterprise-scale</white>. {brand} builds a scalable, fast, and optimized technology ecosystem for your business growth.",
         "launchDashboard": "Free Consultation",
         "viewServices": "Solutions",
-        "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE"
+        "poweredBy": "ENTERPRISE-GRADE SOLUTIONS • EXPERT MONITORING • SCALABLE ARCHITECTURE",
+        "heroTagline1": "BUILD TO SCALE.",
+        "heroTagline2": "DESIGN TO PREVAIL."
     },
     "Ecosystem": {
         "title": "Your Strategic Software Partner",

@@ -6,6 +6,7 @@ import { ArrowRight, Zap, Layers, ShieldCheck, Sparkles } from "lucide-react";
 import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState } from "react";
+import { ScrollHint } from "./scroll-hint";
 
 export function SectionSolutions() {
     const t = useTranslations("Solutions");
@@ -79,8 +80,8 @@ export function SectionSolutions() {
                     </motion.p>
                 </div>
 
-                {/* Cards Grid - Horizontal Scroll on Mobile */}
-                <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 relative z-10 max-w-7xl mx-auto pb-8 md:pb-0 snap-x snap-mandatory no-scrollbar scroll-smooth">
+                {/* Cards Grid Container with Modular Scroll Hint */}
+                <ScrollHint className="md:grid md:grid-cols-3 gap-6 md:gap-8 relative z-10 max-w-7xl mx-auto pb-8 md:pb-0 scroll-smooth">
                     {products.map((product, index) => (
                         <SolutionCard 
                             key={product.key} 
@@ -90,7 +91,7 @@ export function SectionSolutions() {
                             t={t}
                         />
                     ))}
-                </div>
+                </ScrollHint>
             </div>
         </section>
     );

@@ -48,12 +48,15 @@ export function MobileNav({
                 <SheetHeader className="p-6 border-b border-white/10 text-left">
                     <SheetTitle className="text-white flex items-center gap-2">
                         {logoUrl ? (
-                            <div className="relative h-8 w-auto aspect-[3/1] max-w-[120px]">
+                            <div className="h-7 w-auto">
                                 <Image
                                     src={logoUrl}
                                     alt={agencyName}
-                                    fill
-                                    className="object-contain object-left"
+                                    width={120}
+                                    height={28}
+                                    className="h-7 w-auto object-contain object-left"
+                                    sizes="120px"
+                                    style={{ width: 'auto' }}
                                 />
                             </div>
                         ) : (

@@ -27,6 +27,7 @@ export async function ExpertProfile() {
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                 unoptimized
+                                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
                             />
                         </div>
 
@@ -56,8 +57,6 @@ export async function ExpertProfile() {
 
                             <div className="pt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 border-t border-white/10 uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-zinc-500">
                                 <span className="text-zinc-300">{t("name")}</span>
-                                <span className="hidden sm:block text-zinc-800">/</span>
-                                <span className="text-brand-yellow/70 italic">{t("footer")}</span>
                             </div>
                         </div>
                     </div>

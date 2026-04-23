@@ -59,7 +59,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1"
+                        className="relative space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1"
                     >
                         {/* Status Widget */}
                         <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
@@ -76,7 +76,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
                         <motion.div
                             variants={itemVariants}
-                            className="space-y-4"
+                            className="relative space-y-4"
                         >
                             <div className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
                                 <TypingHeroTitle
@@ -264,7 +264,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none"
                                 >
-                                    BUILD TO SCALE.
+                                {t("heroTagline1")}
                                 </motion.p>
                                 <motion.p
                                     initial={{ y: 20, opacity: 0 }}
@@ -278,7 +278,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none mt-2"
                                 >
-                                    DESIGN TO PREVAIL.
+                                    {t("heroTagline2")}
                                 </motion.p>
                             </div>
                         </motion.div>

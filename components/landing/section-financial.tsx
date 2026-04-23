@@ -2,6 +2,7 @@ import { Check, X, Info, Building2, Rocket } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { getSystemSettings } from "@/lib/server/settings";
+import { ScrollHint } from "./scroll-hint";
 
 export async function FinancialLogic() {
     const t = await getTranslations("Financial");
@@ -45,7 +46,7 @@ export async function FinancialLogic() {
                     </p>
                 </div>
 
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 scrollbar-hide lg:grid lg:grid-cols-2 lg:gap-6 lg:items-stretch lg:max-w-4xl lg:mx-auto lg:overflow-visible lg:pb-0 px-6 md:px-0">
+                <ScrollHint variant="inverted" className="gap-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:items-stretch lg:max-w-4xl lg:mx-auto lg:overflow-visible lg:pb-0 px-6 md:px-0">
                     {/* Card A: Typical Full-time Hire */}
                     <div className="relative group flex-shrink-0 w-[78vw] md:w-[400px] lg:w-full snap-center">
                         {/* Side Tab "01" */}
@@ -75,6 +76,12 @@ export async function FinancialLogic() {
                                                 <X className="w-3 h-3 text-red-600" strokeWidth={3} />
                                             </div>
                                             <span className="text-black/80 text-sm font-bold tracking-tight">{t("hiringTimeOld")}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 group/item">
+                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
+                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
+                                            </div>
+                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("riskOld")}</span>
                                         </div>
                                         <div className="flex items-center gap-3 group/item">
                                             <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
@@ -155,7 +162,7 @@ export async function FinancialLogic() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </ScrollHint>
             </div>
         </section>
     );

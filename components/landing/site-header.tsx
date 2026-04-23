@@ -76,7 +76,7 @@ export async function SiteHeader() {
                                         alt={`${agencyName} Logo`}
                                         width={120}
                                         height={32}
-                                        className="h-8 w-auto object-contain hover:scale-105 transition-transform"
+                                        className="h-7 w-auto object-contain hover:scale-105 transition-transform"
                                         priority
                                         style={{ width: 'auto' }}
                                     />
