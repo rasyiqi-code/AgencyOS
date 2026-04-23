@@ -4,14 +4,14 @@ import { Input } from "@/components/ui/input";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Cloud } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export default async function AdminStoragePage() {
     // Fetch settings
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name', 'cloudflare_account_id', 'cloudflare_api_token'] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // 🎯 Why: Reduces database load by caching frequently accessed storage settings.
+    // 📊 Impact: Eliminates a database query on the storage settings page load.
+    const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name', 'cloudflare_account_id', 'cloudflare_api_token']);
 
     const getSetting = (key: string) => settings.find((s: { key: string; value: string }) => s.key === key)?.value || "";
 

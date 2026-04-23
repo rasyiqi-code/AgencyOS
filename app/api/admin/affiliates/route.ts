@@ -1,6 +1,7 @@
 import { stackServerApp } from "@/lib/config/stack";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function GET() {
     try {
@@ -31,14 +32,13 @@ export async function GET() {
         const pendingPayouts = totalEarnings - totalPaid;
 
         // Get default commission rate & Resend API Key
-        const settings = await prisma.systemSetting.findMany({
-            where: {
-                key: { in: ["affiliate_default_commission_rate", "RESEND_API_KEY"] }
-            }
-        });
+        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+        // 🎯 Why: Reduces database load by caching frequently accessed affiliate settings.
+        // 📊 Impact: Eliminates a database query on the affiliates endpoint.
+        const settings = await getSystemSettings(["affiliate_default_commission_rate", "RESEND_API_KEY"]);
 
-        const defaultRate = parseFloat(settings.find(s => s.key === "affiliate_default_commission_rate")?.value || "10");
-        const resendKeyRaw = settings.find(s => s.key === "RESEND_API_KEY")?.value;
+        const defaultRate = parseFloat(settings.find((s: { key: string; value: string }) => s.key === "affiliate_default_commission_rate")?.value || "10");
+        const resendKeyRaw = settings.find((s: { key: string; value: string }) => s.key === "RESEND_API_KEY")?.value;
         const resendApiKey = resendKeyRaw ? `${resendKeyRaw.substring(0, 4)}...${resendKeyRaw.substring(resendKeyRaw.length - 4)}` : "";
 
         return NextResponse.json({

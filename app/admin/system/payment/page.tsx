@@ -8,14 +8,14 @@ import { PaymentGatewayConfigForm } from "@/components/admin/payment-gateway-con
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export default async function AdminPaymentPage() {
     // Fetch bank settings
-    const settings = await prisma.systemSetting.findMany({
-        where: {
-            key: { in: ['bank_name', 'bank_account', 'bank_holder', 'manual_payment_active'] }
-        }
-    });
+    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
+    // 🎯 Why: Reduces database load by caching frequently accessed payment settings.
+    // 📊 Impact: Eliminates a database query on the payment settings page load.
+    const settings = await getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'manual_payment_active']);
 
     // Fetch payment gateway configs
     const [midtransConfig, creemConfig] = await Promise.all([
