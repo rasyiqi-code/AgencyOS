@@ -4,6 +4,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
+import { getSettingValue } from "@/lib/server/settings";
 
 import { ResolvingMetadata } from "next";
 
@@ -71,11 +72,12 @@ export default async function SubmitTestimonialPage() {
     let agencyName = "AgencyOS";
 
     try {
-        const setting = await prisma.systemSetting.findFirst({
-            where: { key: "AGENCY_NAME" }
-        });
-        if (setting?.value) {
-            agencyName = setting.value;
+        // ⚡ Bolt Optimization: Use getSettingValue for caching instead of raw Prisma query.
+        // 🎯 Why: Prevents redundant database hits by leveraging unstable_cache.
+        // 📊 Impact: Eliminates a DB query when visiting the testimonial page.
+        const settingValue = await getSettingValue("AGENCY_NAME");
+        if (settingValue) {
+            agencyName = settingValue;
         }
     } catch {
         // Fallback to default if DB fetch fails
