@@ -882,6 +882,7 @@
         "price": "Price",
         "premiumService": "Premium Service",
         "deliverables": "Deliverables & Features",
+        "whatYouGet": "What You'll Get",
         "fixedPrice": "Fixed Investment",
         "startingAt": "Base Setup",
         "requestQuote": "Request Quote",
@@ -896,7 +897,9 @@
         "f3": "Standard Security Protocol",
         "f4": "100% Asset Ownership",
         "f5": "Search Engine Visibility",
-        "f6": "Documentation & Handover"
+        "f6": "Documentation & Handover",
+        "trustedBy": "Trusted by {count}+ Premium Clients",
+        "defaultTrusted": "150+ Clients Trusted this service"
     },
     "Products": {
         "title": "Digital Products",
@@ -915,7 +918,11 @@
         "purchasePackage": "Purchase Package",
         "purchasePlan": "Purchase Plan",
         "signIn": "Please sign in to purchase",
-        "error": "Failed to process purchase. Please try again."
+        "error": "Failed to process purchase. Please try again.",
+        "optionalAddons": "Optional Add-ons",
+        "personalize": "Personalize your infrastructure",
+        "totalInvestment": "Total Investment",
+        "secureCheckout": "SECURE CHECKOUT BY CREEM & STRIPE"
     },
     "Checkout": {
         "title": "Checkout",

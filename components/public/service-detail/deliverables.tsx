@@ -26,7 +26,7 @@ export function Deliverables({ service, isId }: DeliverablesProps) {
                     {tService("deliverables")}
                 </h4>
                 <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
-                    {isId ? "Apa yang Anda Dapatkan" : "What You'll Get"}
+                    {tService("whatYouGet")}
                 </h2>
             </div>
 

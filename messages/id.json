@@ -955,6 +955,7 @@
         "price": "Harga",
         "premiumService": "Layanan Premium",
         "deliverables": "Deliverables & Fitur",
+        "whatYouGet": "Apa yang Anda Dapatkan",
         "fixedPrice": "Investasi Pasti",
         "startingAt": "Investasi Dasar",
         "requestQuote": "Minta Penawaran",
@@ -969,7 +970,9 @@
         "f3": "Protokol Keamanan Standar",
         "f4": "Kepemilikan Aset 100%",
         "f5": "Visibilitas Mesin Pencari",
-        "f6": "Dokumentasi & Handover"
+        "f6": "Dokumentasi & Handover",
+        "trustedBy": "Dipercaya oleh {count}+ Klien Premium",
+        "defaultTrusted": "150+ Klien Mempercayai layanan ini"
     },
     "Products": {
         "title": "Produk Digital",
@@ -988,7 +991,11 @@
         "purchasePackage": "Pilih",
         "purchasePlan": "Berlangganan",
         "signIn": "Silakan masuk untuk membeli",
-        "error": "Gagal memproses pembelian. Silakan coba lagi."
+        "error": "Gagal memproses pembelian. Silakan coba lagi.",
+        "optionalAddons": "Add-ons Opsional",
+        "personalize": "Personalisasi infrastruktur Anda",
+        "totalInvestment": "Total Investasi",
+        "secureCheckout": "PEMBAYARAN AMAN OLEH CREEM & STRIPE"
     },
     "ProductDetail": {
         "back": "Kembali ke Produk",

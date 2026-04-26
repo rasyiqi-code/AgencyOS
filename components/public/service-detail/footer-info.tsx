@@ -3,11 +3,15 @@
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 
+import { useTranslations } from "next-intl";
+
 interface FooterInfoProps {
     trustedAvatars: string[];
 }
 
 export function FooterInfo({ trustedAvatars }: FooterInfoProps) {
+    const t = useTranslations("Service");
+
     return (
         <div className="pt-8 border-t border-white/5 flex flex-col items-center gap-4">
             <div className="flex items-center gap-4 text-zinc-500 text-[10px] font-bold uppercase tracking-widest">
@@ -26,7 +30,7 @@ export function FooterInfo({ trustedAvatars }: FooterInfoProps) {
                         ))
                     )}
                 </div>
-                {trustedAvatars.length > 0 ? `Trusted by ${trustedAvatars.length * 10}+ Premium Clients` : "150+ Clients Trusted this service"}
+                {trustedAvatars.length > 0 ? t("trustedBy", { count: trustedAvatars.length * 10 }) : t("defaultTrusted")}
             </div>
         </div>
     );

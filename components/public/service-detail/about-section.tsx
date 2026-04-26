@@ -38,9 +38,9 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
                     <div className="space-y-1">
                         <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
                             <div className="w-1 h-3 bg-brand-yellow rounded-full" />
-                            Optional Add-ons
+                            {t("optionalAddons")}
                         </h4>
-                        <p className="text-[10px] text-zinc-500 font-medium">Personalize your infrastructure</p>
+                        <p className="text-[10px] text-zinc-500 font-medium">{t("personalize")}</p>
                     </div>
 
                     <div className="space-y-3">
@@ -73,7 +73,7 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
 
                     <div className="pt-6 border-t border-white/10 mt-6 space-y-4 hidden lg:block">
                         <div className="justify-between items-end mb-2 flex">
-                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Total Investment</span>
+                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t("totalInvestment")}</span>
                             <div className="text-xl font-black text-white tracking-tighter">
                                 <PriceDisplay
                                     amount={service.price + selectedAddons.reduce((sum, a) => sum + a.price, 0)}
@@ -88,7 +88,7 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
                             selectedAddons={selectedAddons}
                             className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95 group"
                         />
-                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide">SECURE CHECKOUT BY CREEM & STRIPE</p>
+                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide">{t("secureCheckout")}</p>
                     </div>
                 </div>
             ) : (
@@ -100,7 +100,7 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
                             selectedAddons={[]}
                             className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-brand-yellow/20 transition-all hover:scale-[1.02] active:scale-95"
                         />
-                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide mt-4">SECURE CHECKOUT BY CREEM & STRIPE</p>
+                        <p className="text-[9px] text-center text-zinc-600 font-medium tracking-wide mt-4">{t("secureCheckout")}</p>
                     </div>
                 </div>
             )}
