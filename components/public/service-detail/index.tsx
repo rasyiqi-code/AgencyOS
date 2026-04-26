@@ -6,17 +6,20 @@ import { Service, AddonType } from "./types";
 import { ServiceHero } from "./hero";
 import { AboutSection } from "./about-section";
 import { ServiceFeatures } from "./features";
+import { Deliverables } from "./deliverables";
 import { FooterInfo } from "./footer-info";
 import { StickyCTA } from "./sticky-cta";
 
-interface ServiceDetailContentProps {
+interface ServiceDetailContentProps
+{
     service: Service;
     isId: boolean;
     showBack?: boolean;
     trustedAvatars?: string[];
 }
 
-export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: ServiceDetailContentProps) {
+export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: ServiceDetailContentProps)
+{
     const tService = useTranslations("Service");
 
     // Fallback to EN if ID content is missing
@@ -31,8 +34,10 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
 
     const [selectedAddons, setSelectedAddons] = useState<AddonType[]>([]);
 
-    const toggleAddon = (addon: AddonType) => {
-        setSelectedAddons(prev => {
+    const toggleAddon = (addon: AddonType) =>
+    {
+        setSelectedAddons(prev =>
+        {
             const exists = prev.find(a => a.name === addon.name);
             if (exists) {
                 return prev.filter(a => a.name !== addon.name);
@@ -54,15 +59,15 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
             </div>
 
             <div className="flex-grow z-10">
-                <ServiceHero 
-                    service={service} 
-                    displayTitle={displayTitle} 
-                    intervalLabel={intervalLabel} 
-                    selectedAddons={selectedAddons} 
+                <ServiceHero
+                    service={service}
+                    displayTitle={displayTitle}
+                    intervalLabel={intervalLabel}
+                    selectedAddons={selectedAddons}
                 />
 
                 <div className="max-w-6xl mx-auto px-6 md:px-8 space-y-24 pb-32">
-                    <AboutSection 
+                    <AboutSection
                         service={service}
                         displayDescription={displayDescription}
                         displayAddons={displayAddons}
@@ -70,16 +75,18 @@ export function ServiceDetailContent({ service, isId, trustedAvatars = [] }: Ser
                         toggleAddon={toggleAddon}
                     />
 
+                    <Deliverables service={service} isId={isId} />
+
                     <ServiceFeatures />
 
                     <FooterInfo trustedAvatars={trustedAvatars} />
                 </div>
             </div>
 
-            <StickyCTA 
-                service={service} 
-                intervalLabel={intervalLabel} 
-                selectedAddons={selectedAddons} 
+            <StickyCTA
+                service={service}
+                intervalLabel={intervalLabel}
+                selectedAddons={selectedAddons}
             />
         </div>
     );

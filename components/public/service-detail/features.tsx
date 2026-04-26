@@ -3,19 +3,21 @@
 import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-interface Feature {
+interface Feature
+{
     title: string;
     description: string;
 }
 
 
-export function ServiceFeatures() {
+export function ServiceFeatures()
+{
     const t = useTranslations("Cards");
     const tService = useTranslations("Service");
 
-    const finalFeatures: Feature[] = [1, 2, 3, 4, 5, 6].map(i => ({ 
-        title: tService(`f${i}`), 
-        description: tService("premiumStandard") 
+    const finalFeatures: Feature[] = [1, 2, 3, 4, 5, 6].map(i => ({
+        title: tService(`f${i}`),
+        description: tService("premiumStandard")
     }));
 
     return (
