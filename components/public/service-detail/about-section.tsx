@@ -52,8 +52,8 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
                                     onClick={() => toggleAddon(addon)}
                                     className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border duration-300 ${isSelected ? 'bg-brand-yellow/10 border-brand-yellow/30 shadow-lg shadow-brand-yellow/5' : 'bg-white/[0.03] border-transparent hover:bg-white/[0.08] hover:border-white/10'}`}
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-brand-yellow border-brand-yellow scale-110' : 'border-zinc-700 bg-black/40'}`}>
+                                    <div className="flex items-start gap-3">
+                                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-300 shrink-0 mt-0.5 ${isSelected ? 'bg-brand-yellow border-brand-yellow scale-110' : 'border-zinc-700 bg-black/40'}`}>
                                             {isSelected && <Check className="w-3 h-3 text-black stroke-[3]" />}
                                         </div>
                                         <div className="flex flex-col">
