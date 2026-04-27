@@ -158,8 +158,10 @@ export default async function CheckoutPage(props: PageProps) {
             } else if (estimate.project.userId !== user?.id) {
                 // If the logged-in user is NOT the owner (e.g. Admin Preview), fetch owner info
                 try {
-                    const allUsers = await stackServerApp.listUsers({ limit: 100 });
-                    const owner = allUsers.find(u => u.id === estimate.project?.userId);
+                    // ⚡ Bolt Optimization: Replaced O(N) listUsers with O(1) getUser for single user lookup
+                    // 🎯 Why: Avoids fetching 100 users into memory just to find one user by ID
+                    // 📊 Impact: Faster API response time and reduced memory usage
+                    const owner = await stackServerApp.getUser(estimate.project.userId);
                     if (owner) {
                         userData.displayName = owner.displayName || owner.primaryEmail || estimate.project.clientName || "Valued Client";
                         userData.email = owner.primaryEmail || "";
