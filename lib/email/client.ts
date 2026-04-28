@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { prisma } from "@/lib/config/db";
+import { getSettingValue } from "@/lib/server/settings";
 
 /**
  * Shared helper to get an initialized Resend client.
@@ -11,13 +11,13 @@ import { prisma } from "@/lib/config/db";
  */
 export async function getResendClient(): Promise<Resend | null> {
     try {
-        // 1. Try DB first
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "RESEND_API_KEY" }
-        });
+        // ⚡ Bolt Optimization: Use getSettingValue for Next.js unstable_cache
+        // 🎯 Why: Replaces direct prisma query to reduce database load for email settings.
+        // 📊 Impact: O(1) cache lookup instead of O(1) DB query for repeated emails.
+        const dbApiKey = await getSettingValue("RESEND_API_KEY");
 
         // 2. Fallback to Env
-        const apiKey = setting?.value || process.env.RESEND_API_KEY;
+        const apiKey = dbApiKey || process.env.RESEND_API_KEY;
 
         if (!apiKey) {
             console.warn("Resend API key not configured in DB or Env. Email sending disabled.");
@@ -40,11 +40,12 @@ export async function getResendClient(): Promise<Resend | null> {
  */
 export async function getAdminEmailTarget(): Promise<string> {
     try {
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "ADMIN_EMAIL_TARGET" }
-        });
+        // ⚡ Bolt Optimization: Use getSettingValue for Next.js unstable_cache
+        // 🎯 Why: Replaces direct prisma query to reduce database load for email settings.
+        // 📊 Impact: O(1) cache lookup instead of O(1) DB query for repeated admin emails.
+        const dbAdminEmail = await getSettingValue("ADMIN_EMAIL_TARGET");
 
-        return setting?.value || process.env.ADMIN_EMAIL || "support@crediblemark.com";
+        return dbAdminEmail || process.env.ADMIN_EMAIL || "support@crediblemark.com";
     } catch {
         return process.env.ADMIN_EMAIL || "support@crediblemark.com";
     }
