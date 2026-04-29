@@ -3,6 +3,7 @@ import { stackServerApp } from "@/lib/config/stack";
 import { NextResponse } from "next/server";
 import { notifyNewAffiliate } from "@/lib/email/admin-notifications";
 import { secureRandomInt } from "@/lib/utils/crypto";
+import { getSettingValue } from "@/lib/server/settings";
 
 export async function POST() {
     try {
@@ -46,10 +47,11 @@ export async function POST() {
         }
 
         // Get default commission rate
-        const defaultRateSetting = await prisma.systemSetting.findUnique({
-            where: { key: "affiliate_default_commission_rate" }
-        });
-        const defaultRate = defaultRateSetting ? parseFloat(defaultRateSetting.value) : 10;
+        // ⚡ Bolt Optimization: Use getSettingValue (which utilizes unstable_cache) instead of direct prisma query.
+        // 🎯 Why: Reduces database load by caching frequently accessed settings.
+        // 📊 Impact: Eliminates a database query during affiliate registration.
+        const defaultRateSettingValue = await getSettingValue("affiliate_default_commission_rate");
+        const defaultRate = defaultRateSettingValue ? parseFloat(defaultRateSettingValue) : 10;
 
         // Create Profile
         const profile = await prisma.affiliateProfile.create({

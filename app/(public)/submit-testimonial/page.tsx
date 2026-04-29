@@ -6,6 +6,7 @@ import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 
 import { ResolvingMetadata } from "next";
+import { getSettingValue } from "@/lib/server/settings";
 
 export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
@@ -71,11 +72,12 @@ export default async function SubmitTestimonialPage() {
     let agencyName = "AgencyOS";
 
     try {
-        const setting = await prisma.systemSetting.findFirst({
-            where: { key: "AGENCY_NAME" }
-        });
-        if (setting?.value) {
-            agencyName = setting.value;
+        // ⚡ Bolt Optimization: Use getSettingValue (which utilizes unstable_cache) instead of direct prisma query.
+        // 🎯 Why: Reduces database load by caching frequently accessed settings.
+        // 📊 Impact: Eliminates a database query when loading the testimonial submission page.
+        const settingValue = await getSettingValue("AGENCY_NAME");
+        if (settingValue) {
+            agencyName = settingValue;
         }
     } catch {
         // Fallback to default if DB fetch fails
