@@ -76,8 +76,10 @@ export async function createManualQuote(formData: FormData) {
         // Auto-fetch name from Stack Auth if not provided and not offline
         if (!finalClientName && userId !== 'OFFLINE') {
             try {
-                const users = await stackServerApp.listUsers({ limit: 100 });
-                const user = users.find(u => u.id === userId);
+                // ⚡ Bolt Optimization: Use stackServerApp.getUser() instead of listUsers() array lookup
+                // 🎯 Why: Avoids O(N) network payload and memory overhead when fetching a single user.
+                // 📊 Impact: O(1) performance lookup and reduced API latency.
+                const user = await stackServerApp.getUser(userId);
                 const fetchedName = user?.displayName || user?.primaryEmail || null;
                 if (fetchedName) finalClientName = fetchedName;
             } catch (e) {
