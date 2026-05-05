@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { processAffiliateCommission } from "@/lib/affiliate/commission";
+import { processAffiliateCommissionsBulk } from "@/lib/affiliate/commission";
 import { stackServerApp } from "@/lib/config/stack";
 import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 import { sendPaymentSuccessEmail } from "@/lib/email/client-notifications";
@@ -123,15 +123,11 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                     data: { status: 'paid' }
                 });
 
-                // Process commissions for each confirmed order concurrently
-                // ⚡ Bolt Optimization: Replace sequential for...of loop with Promise.all
-                // 🎯 Why: Avoids N+1 sequential latency during bulk order processing
-                // 📊 Impact: Significantly faster execution when pendingOrders > 1
-                await Promise.all(
-                    pendingOrders.map(order =>
-                        processAffiliateCommission(order.id, order.amount, order.paymentMetadata)
-                    )
-                );
+                // Process commissions for all confirmed orders in bulk
+                // ⚡ Bolt Optimization: Replace Promise.all concurrent loop with single bulk query
+                // 🎯 Why: Avoids N+1 queries latency to DB during bulk order processing and prevents connection pool exhaustion
+                // 📊 Impact: O(1) queries instead of O(N), much faster execution for batch processing
+                await processAffiliateCommissionsBulk(pendingOrders);
             }
 
             // --- Notifications ---
