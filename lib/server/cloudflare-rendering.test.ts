@@ -135,7 +135,13 @@ describe("enhanceHtml", () => {
             // Restore console.warn
             console.warn = originalWarn;
 
-            expect(enhanced).toBe(html);
+            // Since our logic adds base tags and scrollbar CSS even for "invalid" urls
+            // (because `new URL("https://not-a-valid-url")` is valid to the URL constructor),
+            // let's test a genuinely throwing case, e.g., passing an empty url or one that fails URL parsing completely
+            // actually, 'enhanceHtml' is expected to catch errors and return `html`.
+            // new URL("https://") throws a TypeError in bun/node
+            const throwingEnhanced = enhanceHtml(html, "");
+            expect(throwingEnhanced).toBe(html);
         });
     });
 });

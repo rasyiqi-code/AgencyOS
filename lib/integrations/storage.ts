@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { prisma } from "@/lib/config/db";
-import { getSystemSettings } from "@/lib/server/settings";
+import { getSystemSettings, getSettingValue } from "@/lib/server/settings";
 
 // Singleton to avoid re-initializing
 let s3ClientInstance: S3Client | null = null;
@@ -118,8 +117,7 @@ export async function uploadFile(
             ContentType: finalContentType,
         }));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        const publicDomain = await getSettingValue('r2_public_domain');
 
         if (publicDomain) {
             let domain = publicDomain.trim();
@@ -147,8 +145,7 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
         const response = await client.send(command);
         const files = (response.Contents || []).filter(item => item.Key && !item.Key.endsWith('/'));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        const publicDomain = await getSettingValue('r2_public_domain');
 
         let domain = '';
         if (publicDomain) {
