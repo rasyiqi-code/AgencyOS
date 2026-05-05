@@ -289,21 +289,29 @@ export async function POST(req: Request) {
             totalAmount: projectTotalAmount // Ensure total amount is set
         };
 
+        const updatePromises: Promise<unknown>[] = [];
+
         if (paymentType === 'REPAYMENT' && estimateId) {
             // Reset estimate to pending to show up in Admin Finance as "Awaiting Confirmation"
-            await prisma.estimate.update({
-                where: { id: estimateId },
-                data: {
-                    status: 'pending_payment',
-                    // Optional: we can track the current payment type in the estimate too if needed
-                }
-            });
+            updatePromises.push(
+                prisma.estimate.update({
+                    where: { id: estimateId },
+                    data: {
+                        status: 'pending_payment',
+                        // Optional: we can track the current payment type in the estimate too if needed
+                    }
+                })
+            );
         }
 
-        await prisma.project.update({
-            where: { id: finalProjectId },
-            data: updateData
-        });
+        updatePromises.push(
+            prisma.project.update({
+                where: { id: finalProjectId },
+                data: updateData
+            })
+        );
+
+        await Promise.all(updatePromises);
 
         debugSteps.push("Success");
         return NextResponse.json({ orderId });
