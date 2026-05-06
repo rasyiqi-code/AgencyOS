@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { prisma } from "@/lib/config/db";
+import { getSettingValue } from "@/lib/server/settings";
 
 /**
  * Shared helper to get an initialized Resend client.
@@ -11,13 +11,11 @@ import { prisma } from "@/lib/config/db";
  */
 export async function getResendClient(): Promise<Resend | null> {
     try {
-        // 1. Try DB first
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "RESEND_API_KEY" }
-        });
-
-        // 2. Fallback to Env
-        const apiKey = setting?.value || process.env.RESEND_API_KEY;
+        // ⚡ Bolt Optimization: Replace direct DB query with cached getSettingValue
+        // 🎯 Why: Frequent email initialization shouldn't hit the DB directly when cached settings are available
+        // 📊 Impact: Eliminates a blocking DB query from the email sending path
+        // 1. Try DB first (cached) or fallback to env
+        const apiKey = await getSettingValue("RESEND_API_KEY", process.env.RESEND_API_KEY || "");
 
         if (!apiKey) {
             console.warn("Resend API key not configured in DB or Env. Email sending disabled.");
@@ -40,11 +38,11 @@ export async function getResendClient(): Promise<Resend | null> {
  */
 export async function getAdminEmailTarget(): Promise<string> {
     try {
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "ADMIN_EMAIL_TARGET" }
-        });
-
-        return setting?.value || process.env.ADMIN_EMAIL || "support@crediblemark.com";
+        // ⚡ Bolt Optimization: Use getSettingValue for caching instead of raw prisma query
+        // 🎯 Why: Avoids unnecessary database reads for static configuration
+        // 📊 Impact: Saves 1 database query per admin email sent
+        const fallback = process.env.ADMIN_EMAIL || "support@crediblemark.com";
+        return await getSettingValue("ADMIN_EMAIL_TARGET", fallback);
     } catch {
         return process.env.ADMIN_EMAIL || "support@crediblemark.com";
     }
