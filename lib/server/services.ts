@@ -10,18 +10,13 @@ export const getServices = async (onlyActive = true) => {
     const request = (async () => {
         return unstable_cache(
             async (activeOnly: boolean) => {
-                try {
-                    return await prisma.service.findMany({
-                        where: activeOnly ? {
-                            isActive: true,
-                            visibility: 'PUBLIC'
-                        } : {},
-                        orderBy: { updatedAt: 'desc' }
-                    });
-                } catch (error) {
-                    console.error("[Services] Failed to fetch services:", error);
-                    return [];
-                }
+                return await prisma.service.findMany({
+                    where: activeOnly ? {
+                        isActive: true,
+                        visibility: 'PUBLIC'
+                    } : {},
+                    orderBy: { updatedAt: 'desc' }
+                });
             },
             [cacheKey],
             {

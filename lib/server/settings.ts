@@ -23,17 +23,12 @@ export const getSystemSettings = async (keys: string[]) => {
     const request = (async () => {
         return unstable_cache(
             async (keysToFetch: string[]) => {
-                try {
-                    const settings = await prisma.systemSetting.findMany({
-                        where: {
-                            key: { in: keysToFetch }
-                        }
-                    });
-                    return settings;
-                } catch (error) {
-                    console.error("[Settings] Failed to fetch system settings:", error);
-                    return [];
-                }
+                const settings = await prisma.systemSetting.findMany({
+                    where: {
+                        key: { in: keysToFetch }
+                    }
+                });
+                return settings;
             },
             [`system-settings-${cacheKey}`],
             {

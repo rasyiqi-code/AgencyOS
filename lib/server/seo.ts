@@ -14,15 +14,10 @@ export const getPageSeo = async (path: string) => {
     const request = (async () => {
         return unstable_cache(
             async (p: string) => {
-                try {
-                    const pageSeo = await prisma.pageSeo.findUnique({
-                        where: { path: p }
-                    });
-                    return pageSeo;
-                } catch (error) {
-                    console.error(`[SEO] Failed to fetch SEO for path ${p}:`, error);
-                    return null;
-                }
+                const pageSeo = await prisma.pageSeo.findUnique({
+                    where: { path: p }
+                });
+                return pageSeo;
             },
             [`page-seo-${path}`],
             {
