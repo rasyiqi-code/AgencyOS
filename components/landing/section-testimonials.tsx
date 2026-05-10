@@ -3,6 +3,7 @@ import { prisma } from "@/lib/config/db";
 import { TestimonialCard } from "./testimonial-card";
 import { getSystemSettings } from "@/lib/server/settings";
 import { getActiveTestimonials } from "@/lib/server/testimonials";
+import { SystemSetting } from "@prisma/client";
 
 interface DBTestimonial {
     id: string;
@@ -18,7 +19,7 @@ export async function Testimonials() {
     const t = await getTranslations("Testimonials");
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
     // Fetch active testimonials from DB (cached)
     const dbTestimonials = await getActiveTestimonials(10);

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
+import { SystemSetting } from "@prisma/client";
 
 // Track in-flight requests to prevent "Parallel Overload" (Stampede)
 // Multiple components calling getSystemSettings at once will share the same promise.
@@ -58,5 +59,5 @@ export const getSystemSettings = async (keys: string[]) => {
  */
 export async function getSettingValue(key: string, defaultValue: string = ""): Promise<string> {
     const settings = await getSystemSettings([key]);
-    return settings.find(s => s.key === key)?.value || defaultValue;
+    return settings.find((s: SystemSetting) => s.key === key)?.value || defaultValue;
 }
