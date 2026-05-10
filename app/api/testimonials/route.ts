@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { stackServerApp } from "@/lib/config/stack";
+import { getActiveTestimonials } from "@/lib/server/testimonials";
 
 export async function GET(req: Request) {
     try {
@@ -20,10 +21,11 @@ export async function GET(req: Request) {
 
         const onlyActive = active === "true";
 
-        const testimonials = await prisma.testimonial.findMany({
-            where: onlyActive ? { isActive: true } : undefined,
-            orderBy: { createdAt: "desc" },
-        });
+        const testimonials = onlyActive 
+            ? await getActiveTestimonials() 
+            : await prisma.testimonial.findMany({
+                orderBy: { createdAt: "desc" },
+            });
 
         return NextResponse.json({ success: true, data: testimonials });
     } catch {

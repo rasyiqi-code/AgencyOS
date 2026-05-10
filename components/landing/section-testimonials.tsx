@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/config/db";
 import { TestimonialCard } from "./testimonial-card";
 import { getSystemSettings } from "@/lib/server/settings";
+import { getActiveTestimonials } from "@/lib/server/testimonials";
 
 interface DBTestimonial {
     id: string;
@@ -19,12 +20,8 @@ export async function Testimonials() {
     const settings = await getSystemSettings(["AGENCY_NAME"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
-    // Fetch active testimonials from DB
-    const dbTestimonials = await prisma.testimonial.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: 'desc' },
-        take: 10 // Limit for marquee
-    });
+    // Fetch active testimonials from DB (cached)
+    const dbTestimonials = await getActiveTestimonials(10);
 
     // Fallback to static if no DB data
     let reviews: { name: string; role: string; text: string; image: string }[] = [];

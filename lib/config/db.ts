@@ -5,11 +5,11 @@ import { PrismaClient } from '@prisma/client'
 
 const connectionString = process.env.DATABASE_URL
 
-const pool = new Pool({ 
-    connectionString,
-    max: 3, // Limit connections per lambda to prevent exhaustion
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    max: 1, // Crucial for serverless: 1 connection per lambda to avoid hitting global DB limits
+    idleTimeoutMillis: 10000, // Release idle connections faster
+    connectionTimeoutMillis: 15000, // Wait longer for a connection if pool is busy
 })
 pool.on('error', (err) => {
     console.error('Unexpected error on idle client', err)

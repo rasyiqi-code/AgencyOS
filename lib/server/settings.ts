@@ -21,7 +21,7 @@ export const getSystemSettings = unstable_cache(
             return [];
         }
     },
-    ["system-settings"],
+    ["system-settings"], // Note: keys are passed as arguments to the wrapper which handles them, but for unstable_cache it's better to be explicit or ensure args are stable
     {
         tags: ["system-settings"],
         revalidate: 3600,
