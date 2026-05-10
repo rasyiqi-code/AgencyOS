@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/config/db";
 import { TestimonialCard } from "./testimonial-card";
 import { getSystemSettings } from "@/lib/server/settings";
 import { getActiveTestimonials } from "@/lib/server/testimonials";
@@ -40,7 +39,7 @@ export async function Testimonials() {
             name: t(`reviews.${i}.name`),
             role: t(`reviews.${i}.role`),
             text: t(`reviews.${i}.text`, { brand: agencyName }),
-            image: `https://i.pravatar.cc/150?u=user${i + 1}`
+            image: `https://i.pravatar.cc/64?u=user${i + 1}`
         }));
     }
 

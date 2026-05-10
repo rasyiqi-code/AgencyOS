@@ -34,7 +34,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
                             <Avatar className="w-10 h-10 border border-white/10 ring-2 ring-white/5">
-                                <AvatarImage src={review.image} className="object-cover" />
+                                <AvatarImage src={review.image} alt={review.name} className="object-cover" />
                                 <AvatarFallback className="bg-zinc-800 text-white font-bold text-sm">
                                     {review.name.charAt(0)}
                                 </AvatarFallback>
@@ -62,7 +62,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-4">
                             <Avatar className="w-12 h-12 border border-white/10 ring-2 ring-white/5">
-                                <AvatarImage src={review.image} className="object-cover" />
+                                <AvatarImage src={review.image} alt={review.name} className="object-cover" />
                                 <AvatarFallback className="bg-zinc-800 text-white font-bold text-lg">
                                     {review.name.charAt(0)}
                                 </AvatarFallback>

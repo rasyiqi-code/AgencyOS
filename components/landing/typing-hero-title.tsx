@@ -27,7 +27,7 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
     // Effect untuk mode "rapid" - Dikontrol oleh isPaused jika ada
     useEffect(() => {
         if (mode !== "rapid" || isPaused) return;
-        
+
         const interval = setInterval(() => {
             setTargetIndex((prev) => (prev + 1) % safeTargets.length);
         }, 600); // Sesuai pilihan user terakhir
@@ -37,7 +37,7 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
     // Effect untuk mode "typing"
     useEffect(() => {
         if (mode !== "typing") return;
-        
+
         const currentTarget = safeTargets[targetIndex];
         if (!currentTarget) return;
 
@@ -69,9 +69,9 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
     }, [displayText, isDeleting, targetIndex, safeTargets, typingSpeed, mode, onStateChange]);
 
     return (
-        <div className="flex flex-row items-center justify-center lg:justify-start gap-x-2 md:gap-x-4 whitespace-nowrap overflow-visible">
+        <span className="inline-flex flex-row items-center justify-center lg:justify-start gap-x-2 md:gap-x-4 whitespace-nowrap overflow-visible">
             <span className="text-white shrink-0">{prefix}</span>
-            <div className="relative inline-flex items-center h-[1.2em]">
+            <span className="relative inline-flex items-center h-[1.2em]">
                 {mode === "rapid" ? (
                     <AnimatePresence mode="wait">
                         <motion.span
@@ -97,7 +97,7 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
                         />
                     </span>
                 )}
-            </div>
-        </div>
+            </span>
+        </span>
     );
 }

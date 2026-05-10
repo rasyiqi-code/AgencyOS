@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
-import { prisma } from "@/lib/config/db";
+import { getAffiliateName } from "@/lib/server/affiliates";
 import { getSystemSettings } from "@/lib/server/settings";
 
 import { cookies } from "next/headers";
@@ -27,13 +27,7 @@ export async function SiteFooter() {
     let affiliateName = null;
 
     if (affiliateCode) {
-        const affiliate = await prisma.affiliateProfile.findUnique({
-            where: { referralCode: affiliateCode },
-            select: { name: true }
-        });
-        if (affiliate) {
-            affiliateName = affiliate.name;
-        }
+        affiliateName = await getAffiliateName(affiliateCode);
     }
 
     return (

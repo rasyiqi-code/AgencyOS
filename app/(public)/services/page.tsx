@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/config/db";
 import { getPageSeo } from "@/lib/server/seo";
 import { getServices } from "@/lib/server/services";
 import { ServicesClientWrapper } from "@/components/public/services-client-wrapper";

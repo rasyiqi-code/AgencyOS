@@ -7,8 +7,10 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['@prisma/client', 'prisma'],
+  productionBrowserSourceMaps: false,
   experimental: {
     webpackMemoryOptimizations: true,
+    serverSourceMaps: false,
     staleTimes: {
       dynamic: 30,
       static: 180,
@@ -19,6 +21,8 @@ const nextConfig: NextConfig = {
       'date-fns',
       'lodash',
       'framer-motion',
+      'clsx',
+      'tailwind-merge',
     ],
   },
   images: {

@@ -15,12 +15,12 @@ interface ExchangeRates {
     lastUpdated: number;
 }
 
-const inFlightCurrencyRequests = new Map<string, Promise<any>>();
+const inFlightCurrencyRequests = new Map<string, Promise<unknown>>();
 
 export class CurrencyService {
     async getConfig(): Promise<CurrencyConfig | null> {
         const cacheKey = "currency-config";
-        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey)!;
+        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey) as Promise<CurrencyConfig | null>;
 
         const request = (async () => {
             return unstable_cache(
@@ -42,7 +42,7 @@ export class CurrencyService {
 
         inFlightCurrencyRequests.set(cacheKey, request);
         try {
-            return await request;
+            return await (request as Promise<CurrencyConfig | null>);
         } finally {
             inFlightCurrencyRequests.delete(cacheKey);
         }
@@ -58,7 +58,7 @@ export class CurrencyService {
 
     async getRates(): Promise<ExchangeRates | null> {
         const cacheKey = "currency-rates-logic";
-        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey)!;
+        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey) as Promise<ExchangeRates | null>;
 
         const request = (async () => {
             // 1. Try to get cached rates from DB (now with Next.js caching)
@@ -78,7 +78,7 @@ export class CurrencyService {
                 { revalidate: 3600, tags: ["currency"] }
             );
 
-            let cached = await getCachedRates();
+            const cached = await getCachedRates();
             const config = await this.getConfig();
             
             if (!config || !config.apiKey) {
@@ -99,7 +99,7 @@ export class CurrencyService {
 
         inFlightCurrencyRequests.set(cacheKey, request);
         try {
-            return await request;
+            return await (request as Promise<ExchangeRates | null>);
         } finally {
             inFlightCurrencyRequests.delete(cacheKey);
         }

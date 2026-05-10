@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/config/db";
+import { getServiceBySlug } from "@/lib/server/services";
 import { ServiceDetailContent } from "@/components/public/service-detail";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -6,6 +6,7 @@ import { getLocale } from "next-intl/server";
 import { Testimonials } from "@/components/landing/section-testimonials";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/section-faq";
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 export const dynamic = "force-dynamic";
 
@@ -19,9 +20,7 @@ interface ServicePageProps {
 export async function generateMetadata(props: ServicePageProps): Promise<Metadata> {
     const params = await props.params;
     const locale = await getLocale();
-    const service = await prisma.service.findUnique({
-        where: { slug: params.slug }
-    });
+    const service = await getServiceBySlug(params.slug);
 
     if (!service) return { title: "Service Not Found" };
 
@@ -51,13 +50,15 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     const locale = await getLocale();
     const isId = locale === 'id';
 
-    const service = await prisma.service.findUnique({
-        where: { slug: params.slug }
-    });
+    const service = await getServiceBySlug(params.slug);
 
     if (!service) {
         notFound();
     }
+
+    const title = (isId ? service.title_id : null) || service.title;
+    const description = (isId ? service.description_id : null) || service.description || "";
+    const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
 
     // Social proof avatars (temporarily disabled due to Stack Auth SDK error)
     const trustedAvatars: string[] = [];
@@ -84,6 +85,46 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     
     return (
         <div className="flex flex-col">
+            <BreadcrumbSchema
+                items={[
+                    { name: isId ? 'Beranda' : 'Home', item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}` },
+                    { name: isId ? 'Layanan' : 'Services', item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/services` },
+                    { name: title, item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/services/${service.slug}` },
+                ]}
+            />
+            {/* Service Structured Data for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Service",
+                        "serviceType": title,
+                        "provider": {
+                            "@type": "Organization",
+                            "name": "Crediblemark",
+                            "url": process.env.NEXT_PUBLIC_APP_URL
+                        },
+                        "description": cleanDescription,
+                        "areaServed": "Worldwide",
+                        "hasOfferCatalog": {
+                            "@type": "OfferCatalog",
+                            "name": title,
+                            "itemListElement": [
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": title
+                                    },
+                                    "price": service.price,
+                                    "priceCurrency": "USD"
+                                }
+                            ]
+                        }
+                    })
+                }}
+            />
             <ServiceDetailContent
                 service={processedService}
                 isId={isId}

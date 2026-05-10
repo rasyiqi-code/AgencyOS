@@ -51,7 +51,7 @@ export async function FinancialLogic() {
                     <div className="relative group flex-shrink-0 w-[78vw] md:w-[400px] lg:w-full snap-center">
                         {/* Side Tab "01" */}
                         <div className="absolute -left-3 top-1/2 -translate-y-1/2 hidden md:flex w-10 h-16 bg-zinc-100 border border-black/5 rounded-l-lg items-center justify-center shadow-2xl z-20">
-                            <span className="text-sm font-black text-black/40 rotate-180 [writing-mode:vertical-lr]">01</span>
+                            <span className="text-sm font-black text-black/60 rotate-180 [writing-mode:vertical-lr]">01</span>
                         </div>
 
                         <div className="h-full bg-white border border-black/15 rounded-[2rem] p-5 md:p-8 relative overflow-hidden transition-all duration-500 hover:scale-[1.01] shadow-2xl">
@@ -67,7 +67,7 @@ export async function FinancialLogic() {
                                 <div className="space-y-3 pt-1">
                                     <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10">
                                         <div className="text-xl font-black text-red-600 mb-0.5 tracking-tighter">{t("salaryOldValue")}</div>
-                                        <div className="text-[10px] text-black/50 font-black tracking-wide leading-none">{t("salaryOld")}</div>
+                                        <div className="text-[10px] text-black/75 font-black tracking-wide leading-none">{t("salaryOld")}</div>
                                     </div>
 
                                     <div className="space-y-2.5">

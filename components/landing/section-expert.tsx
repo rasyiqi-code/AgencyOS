@@ -26,7 +26,6 @@ export async function ExpertProfile() {
                                 alt="Rasyiqi"
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                                unoptimized
                                 sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
                             />
                         </div>

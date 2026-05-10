@@ -59,7 +59,8 @@
         "viewServices": "Solusi",
         "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL",
         "heroTagline1": "BANGUN UNTUK TUMBUH.",
-        "heroTagline2": "RANCANG UNTUK TANGGUH."
+        "heroTagline2": "RANCANG UNTUK TANGGUH.",
+        "heroImageAlt": "Senior developer di {brand} yang merepresentasikan keahlian rekayasa perangkat lunak dan transformasi digital"
     },
     "Ecosystem": {
         "title": "Partner Software Strategis Anda",
@@ -362,7 +363,7 @@
             "role": "Cybersecurity Expert",
             "specialty": "Penetration Testing, Compliance",
             "exp": "12+ Tahun",
-            "image": "https://i.pravatar.cc/150?u=sarah"
+            "image": "https://i.pravatar.cc/96?u=sarah"
         },
         "Vetting": {
             "title": "Standar Kurasi Kami",
@@ -465,9 +466,9 @@
     "FAQ": {
         "title": "Banyak Ditanya..",
         "q1": "Apakah kami bisa berkomunikasi secara langsung?",
-        "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk kordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
+        "a1": "Sistem kami dioptimalkan untuk <strong>Komunikasi Asynchronous</strong> demi efisiensi dan dokumentasi yang presisi. Namun, untuk koordinasi darurat atau sesi strategi tingkat lanjut, tersedia slot Call Premium yang terjadwal.",
         "q2": "Bagaimana manajemen bug setelah fase deployment?",
-        "a2": "Setiap proyek mencakup <strong>Garansi Bug 30 Hari</strong>. Laporan ditangani melalui dashboard dengan prioritas tinggi untuk menjamin kontinuitas operasional bisnis Anda.",
+        "a2": "Setiap proyek mencakup <strong>Garansi Bug 90 Hari</strong>. Laporan ditangani melalui dashboard dengan prioritas tinggi untuk menjamin kontinuitas operasional bisnis Anda.",
         "q3": "Siapa pemegang hak kedaulatan source code?",
         "a3": "Anda memiliki <strong>100% hak milik</strong>. Setelah penyelesaian kewajiban finansial, seluruh aset teknis dan repositori GitHub ditransfer sepenuhnya ke kendali perusahaan Anda.",
         "q4": "Bagaimana prosedur perubahan lingkup (change request)?",
@@ -489,7 +490,7 @@
         "q12": "Apakah saya dapat akses ke source code?",
         "a12": "Ya. Sejak kontrak ditandatangani, semua kode yang kami tulis adalah aset perusahaan Anda.",
         "q13": "Bagaimana jika ada bug?",
-        "a13": "Kami berikan garansi perbaikan bug gratis selama 3-6 bulan pertama setelah peluncuran."
+        "a13": "Kami berikan garansi perbaikan bug gratis selama 90 hari pertama setelah peluncuran."
     },
     "Dashboard": {
         "Sidebar": {

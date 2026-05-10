@@ -150,9 +150,9 @@ export function SectionStats() {
                             <div className="mb-2">
                                 <stat.icon className="w-3 h-3 md:w-5 md:h-5 text-zinc-500 group-hover:text-brand-yellow transition-colors duration-300" />
                             </div>
-                            <h3 className="text-[10px] md:text-2xl font-black text-white mb-0.5 md:mb-1 tracking-tight md:tracking-tighter text-balance group-hover:text-brand-yellow transition-colors">
+                            <h2 className="text-[10px] md:text-2xl font-black text-white mb-0.5 md:mb-1 tracking-tight md:tracking-tighter text-balance group-hover:text-brand-yellow transition-colors">
                                 {t(`${stat.key}.title`)}
-                            </h3>
+                            </h2>
                             <div className="flex flex-col items-center gap-1">
                                 {stat.key !== "stack" && (
                                     <p className="text-zinc-500 text-[7px] md:text-[10px] font-bold uppercase tracking-widest leading-none max-w-xs mx-auto">

@@ -1,22 +1,25 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { SectionCTA } from "@/components/landing/section-cta";
+import dynamic from "next/dynamic";
 
-import { SocialProof } from "@/components/landing/section-social-proof";
-import { Comparison } from "@/components/landing/section-comparison";
-import { SectionSolutions } from "@/components/landing/section-solutions";
-import { Workflow } from "@/components/landing/section-workflow";
-import { ExpertProfile } from "@/components/landing/section-expert";
-import { FinancialLogic } from "@/components/landing/section-financial";
-import { SectionStats } from "@/components/landing/section-stats";
-import { SectionGuarantee } from "@/components/landing/section-guarantee";
-import { FAQSection } from "@/components/landing/section-faq";
-import { Testimonials } from "@/components/landing/section-testimonials";
-import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
+// Critical components stay static for SEO and LCP
+// Non-critical components below the fold are lazy loaded
+const SectionStats = dynamic(() => import("@/components/landing/section-stats").then(mod => mod.SectionStats));
+const ExpertProfile = dynamic(() => import("@/components/landing/section-expert").then(mod => mod.ExpertProfile));
+const SocialProof = dynamic(() => import("@/components/landing/section-social-proof").then(mod => mod.SocialProof));
+const Comparison = dynamic(() => import("@/components/landing/section-comparison").then(mod => mod.Comparison));
+const SectionSolutions = dynamic(() => import("@/components/landing/section-solutions").then(mod => mod.SectionSolutions));
+const FinancialLogic = dynamic(() => import("@/components/landing/section-financial").then(mod => mod.FinancialLogic));
+const Workflow = dynamic(() => import("@/components/landing/section-workflow").then(mod => mod.Workflow));
+const Testimonials = dynamic(() => import("@/components/landing/section-testimonials").then(mod => mod.Testimonials));
+const SectionGuarantee = dynamic(() => import("@/components/landing/section-guarantee").then(mod => mod.SectionGuarantee));
+const FAQSection = dynamic(() => import("@/components/landing/section-faq").then(mod => mod.FAQSection));
+const SectionCTA = dynamic(() => import("@/components/landing/section-cta").then(mod => mod.SectionCTA));
+
+const ScrollAnimationWrapper = dynamic(() => import("@/components/ui/scroll-animation-wrapper").then(mod => mod.ScrollAnimationWrapper));
 import { JsonLd } from "@/components/seo/json-ld";
 import { Organization } from "schema-dts";
-import { prisma } from "@/lib/config/db";
 import { Metadata } from "next";
 import { SystemSetting } from "@prisma/client";
 import { getLocale } from "next-intl/server";

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Star, Award, Code2, Globe, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -94,10 +94,15 @@ export function ExpertsPageContent() {
                             >
                                 <div className="relative mb-6">
                                     <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity" />
-                                    <Avatar className="w-24 h-24 border-2 border-white/10 group-hover:border-blue-500/50 transition-colors">
-                                        <AvatarImage src={expert.image} alt={expert.name} />
-                                        <AvatarFallback>{expert.name[0]}</AvatarFallback>
-                                    </Avatar>
+                                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-blue-500/50 transition-colors relative">
+                                        <Image 
+                                            src={expert.image} 
+                                            alt={expert.name} 
+                                            fill 
+                                            className="object-cover" 
+                                            sizes="96px"
+                                        />
+                                    </div>
                                 </div>
                                 <h3 className="text-2xl font-bold mb-1">{expert.name}</h3>
                                 <div className="text-blue-500 font-medium text-sm mb-4">{expert.role}</div>

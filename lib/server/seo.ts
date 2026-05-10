@@ -1,14 +1,15 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
+import { PageSeo } from "@prisma/client";
 
-const inFlightSeoRequests = new Map<string, Promise<any>>();
+const inFlightSeoRequests = new Map<string, Promise<unknown>>();
 
 /**
  * Fetch SEO metadata for a specific path with caching.
  */
 export const getPageSeo = async (path: string) => {
     if (inFlightSeoRequests.has(path)) {
-        return inFlightSeoRequests.get(path)!;
+        return inFlightSeoRequests.get(path) as Promise<PageSeo | null>;
     }
 
     const request = (async () => {
@@ -30,7 +31,7 @@ export const getPageSeo = async (path: string) => {
     inFlightSeoRequests.set(path, request);
 
     try {
-        return await request;
+        return await (request as Promise<PageSeo | null>);
     } finally {
         inFlightSeoRequests.delete(path);
     }

@@ -36,7 +36,7 @@ export async function Comparison() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
                     {/* Traditional */}
                     <div className="p-6 rounded-2xl border border-black/10 bg-white shadow-xl transform hover:scale-[1.01] transition-all duration-500">
-                        <h3 className="text-lg font-bold text-black/50 mb-6 border-b border-black/5 pb-3 uppercase tracking-widest">{t("oldTitle")}</h3>
+                        <h3 className="text-lg font-bold text-black/70 mb-6 border-b border-black/5 pb-3 uppercase tracking-widest">{t("oldTitle")}</h3>
                         <ul className="space-y-4">
                             {[1, 2, 3, 4].map((i) => (
                                 <li key={i} className="flex gap-4 items-start text-zinc-900">

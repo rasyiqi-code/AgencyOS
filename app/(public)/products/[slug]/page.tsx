@@ -141,7 +141,6 @@ export default async function ProductDetailPage(props: PageProps) {
                                             src={product.image}
                                             alt={product.name}
                                             fill
-                                            unoptimized
                                             className="object-cover"
                                             sizes="(max-width: 768px) 100vw, 700px"
                                             priority

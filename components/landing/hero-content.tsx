@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { TypingHeroTitle } from "./typing-hero-title";
 
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
+import { cn } from "@/lib/shared/utils";
 
 interface HeroContentProps {
     agencyName: string;
@@ -18,7 +19,16 @@ interface HeroContentProps {
 export function HeroContent({ agencyName }: HeroContentProps) {
     const t = useTranslations("Hero");
     const { setIsMenuOpen } = useFloatingChat();
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+    const [isMobile, setIsMobile] = React.useState(false);
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+        setIsMobile(window.innerWidth < 1024);
+        const handleResize = () => setIsMobile(window.innerWidth < 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
 
 
@@ -78,14 +88,14 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             variants={itemVariants}
                             className="relative space-y-4"
                         >
-                            <div className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
+                            <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
                                 <TypingHeroTitle
                                     prefix={t("title1")}
                                     targets={t.raw("typing.build")}
                                     mode="typing"
                                     onStateChange={setTypingStatus}
                                 />
-                            </div>
+                            </h1>
                             <div className="text-2xl md:text-4xl xl:text-5xl font-semibold tracking-tight leading-[1.1] opacity-80">
                                 <TypingHeroTitle
                                     prefix={t("forYour")}
@@ -163,7 +173,6 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{
                                 duration: isMobile ? 0.8 : 1.2,
-                                delay: isMobile ? 0.2 : 0.6,
                                 ease: "easeOut"
                             }}
                             className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[700px] z-10 flex items-end justify-center"
@@ -171,83 +180,73 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
 
                             {/* Business Visuals Masking Layer (Bottom) */}
-                            <BusinessVisuals />
+                            {mounted && <BusinessVisuals isMobile={isMobile} />}
 
                             {/* Floating AI Model Badges - Background Layer (Middle) */}
                             <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-40">
-                                <BadgeWrapper delay={1.4} duration={5} top="15%" className="left-2 lg:-left-1">
-                                    <BadgeContent name="OpenAI" model="GPT" icon="/brands/openai.png" />
-                                </BadgeWrapper>
+                                {mounted && (
+                                    <>
+                                        <BadgeWrapper
+                                            isMobile={isMobile}
+                                            className={isMobile ? "top-[10%] left-[5%]" : "top-[20%] -left-12"}
+                                            delay={1.2}
+                                        >
+                                            <BadgeContent
+                                                icon="/brands/gemini.png"
+                                                name="Google"
+                                                model="Gemini 1.5 Pro"
+                                            />
+                                        </BadgeWrapper>
 
-                                <BadgeWrapper delay={1.6} duration={7} top="42%" className="left-2 lg:-left-3">
-                                    <BadgeContent name="Google" model="Gemini" icon="/brands/gemini.png" />
-                                </BadgeWrapper>
+                                        <BadgeWrapper
+                                            isMobile={isMobile}
+                                            className={isMobile ? "top-[10%] right-[5%]" : "top-[15%] -right-8"}
+                                            delay={1.4}
+                                        >
+                                            <BadgeContent
+                                                icon="/brands/openai.png"
+                                                name="OpenAI"
+                                                model="GPT-4o"
+                                            />
+                                        </BadgeWrapper>
 
-                                <BadgeWrapper delay={1.8} duration={6} top="8%" className="right-2 lg:right-1">
-                                    <BadgeContent name="Anthropic" model="Claude" icon="/brands/claude.png" />
-                                </BadgeWrapper>
+                                        <BadgeWrapper
+                                            isMobile={isMobile}
+                                            className={isMobile ? "bottom-[15%] left-[5%]" : "bottom-[20%] -left-8"}
+                                            delay={1.6}
+                                        >
+                                            <BadgeContent
+                                                icon="/brands/llama.png"
+                                                name="Meta"
+                                                model="Llama 3.1"
+                                            />
+                                        </BadgeWrapper>
 
-                                {!isMobile && (
-                                    <BadgeWrapper delay={1.5} duration={8} bottom="45%" className="hidden lg:flex right-2 lg:-right-2">
-                                        <BadgeContent name="DeepSeek" model="DeepSeek-V3" icon="/brands/deepseek.png" />
-                                    </BadgeWrapper>
-                                )}
-
-                                <BadgeWrapper delay={2.0} duration={9} top="25%" className="right-2 lg:-right-3">
-                                    <BadgeContent name="Meta" model="Llama" icon="/brands/llama.png" />
-                                </BadgeWrapper>
-
-                                {!isMobile && (
-                                    <BadgeWrapper delay={1.7} duration={6.5} bottom="25%" className="right-2 lg:-right-1">
-                                        <BadgeContent name="Mistral" model="Mistral" icon="/brands/mistral.png" />
-                                    </BadgeWrapper>
-                                )}
-
-                                <BadgeWrapper delay={2.2} duration={11} top="65%" className="left-2 lg:-left-4">
-                                    <BadgeContent name="Perplexity" model="Sonar" icon="/brands/perplexityai.png" />
-                                </BadgeWrapper>
-
-                                {!isMobile && (
-                                    <BadgeWrapper delay={1.9} duration={9.5} bottom="10%" className="hidden lg:flex left-2 lg:-left-1.5">
-                                        <BadgeContent name="HuggingFace" model="Open Source" icon="/brands/huggingface.png" />
-                                    </BadgeWrapper>
-                                )}
-
-                                {!isMobile && (
-                                    <BadgeWrapper delay={2.4} duration={12} top="5%" className="lg:hidden left-2 opacity-50">
-                                        <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
-                                    </BadgeWrapper>
-                                )}
-
-                                <BadgeWrapper delay={2.4} duration={12} top="2%" left="50%" transformX="-50%" className="hidden lg:flex">
-                                    <BadgeContent name="xAI" model="Grok" icon="/brands/grok.png" />
-                                </BadgeWrapper>
-
-                                <BadgeWrapper delay={2.1} duration={8.5} bottom="15%" className="right-4 lg:right-[10%]">
-                                    <BadgeContent name="Groq" model="LPU Engine" icon="/brands/groq.svg" isSvg />
-                                </BadgeWrapper>
-
-                                {!isMobile && (
-                                    <BadgeWrapper delay={2.3} duration={7.5} top="30%" className="hidden lg:flex right-2 lg:-right-1">
-                                        <BadgeContent name="Cohere" model="Command R" icon="/brands/cohere.png" />
-                                    </BadgeWrapper>
-                                )}
-
-                                {!isMobile && (
-                                    <BadgeWrapper delay={2.5} duration={10.5} bottom="60%" className="hidden lg:flex left-2 lg:-left-2">
-                                        <BadgeContent name="Aya" model="Multilingual" icon="/brands/aya.svg" isSvg />
-                                    </BadgeWrapper>
+                                        <BadgeWrapper
+                                            isMobile={isMobile}
+                                            className={isMobile ? "bottom-[10%] right-[5%]" : "bottom-[25%] -right-12"}
+                                            delay={1.8}
+                                        >
+                                            <BadgeContent
+                                                icon="/brands/claude.png"
+                                                name="Anthropic"
+                                                model="Claude 3.5 Sonnet"
+                                            />
+                                        </BadgeWrapper>
+                                    </>
                                 )}
                             </div>
 
                             <Image
                                 src="/expert.png"
-                                alt="Expert Digital Agency Model"
+                                alt={t("heroImageAlt", { brand: agencyName })}
                                 fill
                                 className="object-contain object-bottom relative z-10"
                                 priority
+                                loading="eager"
+                                decoding="sync"
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 fetchPriority="high"
-                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 800px"
                             />
 
                             {/* Accent Tagline Layer (Top) */}
@@ -289,61 +288,52 @@ export function HeroContent({ agencyName }: HeroContentProps) {
     );
 }
 
-function BadgeWrapper({ children, delay, duration, top, left, right, bottom, className, transformX = "0" }: {
+function BadgeWrapper({ children, delay, duration = 8, className, isMobile }: {
     children: React.ReactNode;
     delay: number;
-    duration: number;
-    top?: string;
-    left?: string;
-    right?: string;
-    bottom?: string;
+    duration?: number;
     className?: string;
-    transformX?: string;
+    isMobile: boolean;
 }) {
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{
-                opacity: 1,
-                scale: 1,
-                y: typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : [0, -10, 0]
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ 
+                opacity: 1, 
+                y: isMobile ? 0 : [0, -10, 0] 
             }}
             transition={{
                 opacity: { duration: 0.5, delay },
-                scale: { duration: 0.5, delay },
-                y: {
-                    duration: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : duration,
-                    repeat: typeof window !== 'undefined' && window.innerWidth < 1024 ? 0 : Infinity,
-                    ease: "easeInOut"
+                y: { 
+                    duration: duration, 
+                    repeat: isMobile ? 0 : Infinity, 
+                    ease: "easeInOut",
+                    delay: delay
                 }
             }}
-            style={{
-                position: 'absolute',
-                top, left, right, bottom,
-                translateX: transformX,
-                zIndex: 0
-            }}
-            className={`bg-white/5 md:backdrop-blur-xl border border-white/10 p-1.5 rounded-lg shadow-2xl group/badge transition-transform hover:scale-110 ${className}`}
+            className={cn("absolute", className)}
         >
             {children}
         </motion.div>
     );
 }
 
-function BadgeContent({ name, model, icon, isSvg = false }: {
+function BadgeContent({ name, model, icon }: {
     name: string;
     model: string;
     icon: string;
-    isSvg?: boolean;
 }) {
     return (
-        <div className="flex items-center gap-1.5">
-            <div className={`w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 ${isSvg ? 'flex items-center justify-center bg-zinc-800/50' : ''}`}>
-                {isSvg ? (
-                    <Image src={icon} alt={`${name} model icon`} width={14} height={14} className="object-contain w-auto h-auto shrink-0" priority />
-                ) : (
-                    <Image src={icon} alt={`${name} model logo`} fill className="object-cover" sizes="20px" />
-                )}
+        <div className="flex items-center gap-1.5 group/badge">
+            <div className="w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 bg-white/5 p-1 flex items-center justify-center">
+                <Image 
+                    src={icon} 
+                    alt={`${name} logo`} 
+                    width={16} 
+                    height={16} 
+                    className="object-contain" 
+                    priority 
+                />
             </div>
             <div>
                 <div className="text-[7px] text-zinc-500 uppercase tracking-tighter font-bold font-mono leading-none">{name}</div>
@@ -353,8 +343,7 @@ function BadgeContent({ name, model, icon, isSvg = false }: {
     );
 }
 
-const BusinessVisuals = () => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
 
     return (
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -396,7 +385,7 @@ const BusinessVisuals = () => {
                     />
                 ))}
 
-                {/* Growth Path - Slower/Disabled on Mobile to save CPU if needed, but pathLength is lightweight */}
+                {/* Growth Path - Slower/Disabled on Mobile to save CPU */}
                 <motion.path
                     d="M 0 350 Q 150 330 300 250 T 600 150 T 800 50"
                     fill="none"
@@ -405,9 +394,9 @@ const BusinessVisuals = () => {
                     initial={{ pathLength: 0, opacity: 0 }}
                     animate={{ pathLength: 1, opacity: 1 }}
                     transition={{
-                        duration: isMobile ? 5 : 3,
+                        duration: isMobile ? 2 : 3,
                         ease: "easeInOut",
-                        repeat: isMobile ? 0 : Infinity, // Don't repeat on mobile to save power
+                        repeat: isMobile ? 0 : Infinity,
                         repeatType: "loop",
                         repeatDelay: 1
                     }}

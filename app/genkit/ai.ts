@@ -10,14 +10,14 @@ export const ai = genkit({
     plugins: [googleAI({ apiKey: false })], // Expect apiKey at call time
 });
 
-const inFlightAIRequests = new Map<string, Promise<any>>();
+const inFlightAIRequests = new Map<string, Promise<unknown>>();
 
 /**
  * Helper to check AI availability.
  */
 export const isAIConfigured = async () => {
     const cacheKey = "is-ai-configured";
-    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey)!;
+    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey) as Promise<boolean>;
 
     const request = (async () => {
         return unstable_cache(
@@ -38,7 +38,7 @@ export const isAIConfigured = async () => {
 
     inFlightAIRequests.set(cacheKey, request);
     try {
-        return await request;
+        return await (request as Promise<boolean>);
     } finally {
         inFlightAIRequests.delete(cacheKey);
     }
@@ -46,7 +46,7 @@ export const isAIConfigured = async () => {
 
 export const getActiveAIConfig = async () => {
     const cacheKey = "active-ai-config";
-    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey)!;
+    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey) as Promise<{ apiKey: string; model: string }>;
 
     const request = (async () => {
         return unstable_cache(
@@ -69,7 +69,7 @@ export const getActiveAIConfig = async () => {
 
     inFlightAIRequests.set(cacheKey, request);
     try {
-        return await request;
+        return await (request as Promise<{ apiKey: string; model: string }>);
     } finally {
         inFlightAIRequests.delete(cacheKey);
     }

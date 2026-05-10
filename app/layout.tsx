@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
+import nextDynamic from "next/dynamic";
 
 export const dynamic = 'force-dynamic';
 import "./globals.css";
@@ -19,7 +20,6 @@ import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
 import { ReferralTracker } from "@/components/marketing/referral-tracker";
 import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
-import { InstallPrompt } from "@/components/pwa/install-prompt";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const favicon = settings.find(s => s.key === "SEO_FAVICON")?.value;
     const seoOgImage = (isId ? settings.find(s => s.key === "SEO_OG_IMAGE_ID")?.value : null) || settings.find(s => s.key === "SEO_OG_IMAGE")?.value;
     const googleVerification = settings.find(s => s.key === "SEO_GOOGLE_VERIFICATION")?.value;
+    const keywords = (isId ? settings.find(s => s.key === "SEO_KEYWORDS_ID")?.value : null) || settings.find(s => s.key === "SEO_KEYWORDS")?.value;
 
     const homepageTitle = `${agencyName} | ${seoTagline}`;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -53,6 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
         template: `%s | ${agencyName}`,
       },
       description: seoDesc,
+      keywords: keywords,
       verification: {
         google: googleVerification,
       },
@@ -99,8 +101,9 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-import { MarketingPopup } from "@/components/public/marketing-popup";
-import { PushNotificationBanner } from "@/components/public/push-notification-banner";
+const MarketingPopup = nextDynamic(() => import("@/components/public/marketing-popup").then(mod => mod.MarketingPopup));
+const PushNotificationBanner = nextDynamic(() => import("@/components/public/push-notification-banner").then(mod => mod.PushNotificationBanner));
+const InstallPrompt = nextDynamic(() => import("@/components/pwa/install-prompt").then(mod => mod.InstallPrompt));
 
 export default async function RootLayout({
   children,
@@ -112,8 +115,13 @@ export default async function RootLayout({
   const midtransConfig = await paymentGatewayService.getMidtransConfig();
 
   // Fetch SEO Settings for GA Script (using cache)
-  const seoSettings = await getSystemSettings(["SEO_GA_ID"]);
+  const seoSettings = await getSystemSettings(["SEO_GA_ID", "AGENCY_ADDRESS", "AGENCY_PHONE", "AGENCY_EMAIL", "AGENCY_LOGO", "AGENCY_NAME"]);
   const gaId = seoSettings.find(s => s.key === "SEO_GA_ID")?.value;
+  const agencyAddress = seoSettings.find(s => s.key === "AGENCY_ADDRESS")?.value;
+  const agencyPhone = seoSettings.find(s => s.key === "AGENCY_PHONE")?.value;
+  const agencyEmail = seoSettings.find(s => s.key === "AGENCY_EMAIL")?.value;
+  const agencyLogo = seoSettings.find(s => s.key === "AGENCY_LOGO")?.value;
+  const agencyName = seoSettings.find(s => s.key === "AGENCY_NAME")?.value;
 
   const snapUrl = midtransConfig.isProduction
     ? "https://app.midtrans.com/snap/snap.js"
@@ -149,18 +157,20 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": ["Organization", "LocalBusiness"],
               "@id": `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/#organization`,
-              name: "Crediblemark",
+               name: agencyName || "Crediblemark",
               url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-              logo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
-              image: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
+              logo: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
+              image: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
               description: "Senior Software House & Professional Digital Solutions",
               address: {
                 "@type": "PostalAddress",
+                "streetAddress": agencyAddress || undefined,
                 "addressCountry": "ID"
               },
               contactPoint: {
                 "@type": "ContactPoint",
-                "telephone": "+628123456789", // Placeholder, will fetch real one if needed later
+                "telephone": agencyPhone || undefined,
+                "email": agencyEmail || undefined,
                 "contactType": "customer service"
               }
             }),
@@ -173,10 +183,9 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         {/* Preconnect to critical origins */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="" />
+        <link rel="preconnect" href="https://i.pravatar.cc" />
         {midtransConfig.clientKey && (
           <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />
         )}
