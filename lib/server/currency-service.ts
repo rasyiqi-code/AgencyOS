@@ -15,23 +15,37 @@ interface ExchangeRates {
     lastUpdated: number;
 }
 
+const inFlightCurrencyRequests = new Map<string, Promise<any>>();
+
 export class CurrencyService {
     async getConfig(): Promise<CurrencyConfig | null> {
-        return unstable_cache(
-            async () => {
-                const setting = await prisma.systemSetting.findUnique({
-                    where: { key: CONFIG_KEY }
-                });
-                if (!setting) return null;
-                try {
-                    return JSON.parse(setting.value) as CurrencyConfig;
-                } catch {
-                    return null;
-                }
-            },
-            ["currency-config"],
-            { revalidate: 3600, tags: ["currency"] }
-        )();
+        const cacheKey = "currency-config";
+        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey)!;
+
+        const request = (async () => {
+            return unstable_cache(
+                async () => {
+                    const setting = await prisma.systemSetting.findUnique({
+                        where: { key: CONFIG_KEY }
+                    });
+                    if (!setting) return null;
+                    try {
+                        return JSON.parse(setting.value) as CurrencyConfig;
+                    } catch {
+                        return null;
+                    }
+                },
+                [cacheKey],
+                { revalidate: 3600, tags: ["currency"] }
+            )();
+        })();
+
+        inFlightCurrencyRequests.set(cacheKey, request);
+        try {
+            return await request;
+        } finally {
+            inFlightCurrencyRequests.delete(cacheKey);
+        }
     }
 
     async saveConfig(apiKey: string, intervalHours: number) {
@@ -43,40 +57,52 @@ export class CurrencyService {
     }
 
     async getRates(): Promise<ExchangeRates | null> {
-        // 1. Try to get cached rates from DB (now with Next.js caching)
-        const getCachedRates = unstable_cache(
-            async () => {
-                const setting = await prisma.systemSetting.findUnique({
-                    where: { key: RATES_KEY }
-                });
-                if (setting) {
-                    try {
-                        return JSON.parse(setting.value) as ExchangeRates;
-                    } catch { /* ignore */ }
-                }
-                return null;
-            },
-            ["currency-rates-db"],
-            { revalidate: 3600, tags: ["currency"] }
-        );
+        const cacheKey = "currency-rates-logic";
+        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey)!;
 
-        let cached = await getCachedRates();
-        const config = await this.getConfig();
-        
-        if (!config || !config.apiKey) {
+        const request = (async () => {
+            // 1. Try to get cached rates from DB (now with Next.js caching)
+            const getCachedRates = unstable_cache(
+                async () => {
+                    const setting = await prisma.systemSetting.findUnique({
+                        where: { key: RATES_KEY }
+                    });
+                    if (setting) {
+                        try {
+                            return JSON.parse(setting.value) as ExchangeRates;
+                        } catch { /* ignore */ }
+                    }
+                    return null;
+                },
+                ["currency-rates-db"],
+                { revalidate: 3600, tags: ["currency"] }
+            );
+
+            let cached = await getCachedRates();
+            const config = await this.getConfig();
+            
+            if (!config || !config.apiKey) {
+                return cached;
+            }
+
+            // 2. Check if update needed from API
+            const now = Date.now();
+            const intervalMs = (config.intervalHours || 24) * 60 * 60 * 1000;
+
+            if (!cached || (now - cached.lastUpdated > intervalMs)) {
+                console.log("[CurrencyService] DB cache expired or missing, fetching from API...");
+                return await this.fetchAndCacheRates(config.apiKey);
+            }
+
             return cached;
+        })();
+
+        inFlightCurrencyRequests.set(cacheKey, request);
+        try {
+            return await request;
+        } finally {
+            inFlightCurrencyRequests.delete(cacheKey);
         }
-
-        // 2. Check if update needed from API
-        const now = Date.now();
-        const intervalMs = (config.intervalHours || 24) * 60 * 60 * 1000;
-
-        if (!cached || (now - cached.lastUpdated > intervalMs)) {
-            console.log("[CurrencyService] DB cache expired or missing, fetching from API...");
-            return await this.fetchAndCacheRates(config.apiKey);
-        }
-
-        return cached;
     }
 
     async fetchAndCacheRates(apiKey: string): Promise<ExchangeRates | null> {

@@ -1,24 +1,42 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
 
+const inFlightSeoRequests = new Map<string, Promise<any>>();
+
 /**
  * Fetch SEO metadata for a specific path with caching.
  */
-export const getPageSeo = unstable_cache(
-    async (path: string) => {
-        try {
-            const pageSeo = await prisma.pageSeo.findUnique({
-                where: { path }
-            });
-            return pageSeo;
-        } catch (error) {
-            console.error(`[SEO] Failed to fetch SEO for path ${path}:`, error);
-            return null;
-        }
-    },
-    ["page-seo"],
-    {
-        tags: ["page-seo"],
-        revalidate: 3600, // 1 hour
+export const getPageSeo = async (path: string) => {
+    if (inFlightSeoRequests.has(path)) {
+        return inFlightSeoRequests.get(path)!;
     }
-);
+
+    const request = (async () => {
+        return unstable_cache(
+            async (p: string) => {
+                try {
+                    const pageSeo = await prisma.pageSeo.findUnique({
+                        where: { path: p }
+                    });
+                    return pageSeo;
+                } catch (error) {
+                    console.error(`[SEO] Failed to fetch SEO for path ${p}:`, error);
+                    return null;
+                }
+            },
+            [`page-seo-${path}`],
+            {
+                tags: ["page-seo"],
+                revalidate: 3600, // 1 hour
+            }
+        )(path);
+    })();
+
+    inFlightSeoRequests.set(path, request);
+
+    try {
+        return await request;
+    } finally {
+        inFlightSeoRequests.delete(path);
+    }
+};
