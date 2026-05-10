@@ -7,6 +7,20 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['@prisma/client', 'prisma'],
+  experimental: {
+    webpackMemoryOptimizations: true,
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      'date-fns',
+      'lodash',
+      'framer-motion',
+    ],
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 300,

@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/config/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { z } from "zod";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 
@@ -104,14 +104,26 @@ export async function deleteDigitalProduct(id: string) {
 }
 
 export async function getDigitalProducts(onlyActive = true) {
-    return await prisma.product.findMany({
-        where: onlyActive ? { isActive: true } : {},
-        orderBy: { createdAt: 'desc' }
-    });
+    return unstable_cache(
+        async () => {
+            return await prisma.product.findMany({
+                where: onlyActive ? { isActive: true } : {},
+                orderBy: { createdAt: 'desc' }
+            });
+        },
+        [`products-list-${onlyActive}`],
+        { revalidate: 3600, tags: ["products"] }
+    )();
 }
 
 export async function getDigitalProductBySlug(slug: string) {
-    return await prisma.product.findUnique({
-        where: { slug }
-    });
+    return unstable_cache(
+        async () => {
+            return await prisma.product.findUnique({
+                where: { slug }
+            });
+        },
+        [`product-${slug}`],
+        { revalidate: 3600, tags: ["products", `product-${slug}`] }
+    )();
 }

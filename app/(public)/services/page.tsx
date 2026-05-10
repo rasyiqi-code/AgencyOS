@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/config/db";
+import { getPageSeo } from "@/lib/server/seo";
+import { getServices } from "@/lib/server/services";
 import { ServicesClientWrapper } from "@/components/public/services-client-wrapper";
 import { Metadata } from "next";
 import { Service } from "@prisma/client";
@@ -21,11 +23,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: {
-            path: "/services"
-        }
-    });
+    const pageSeo = await getPageSeo("/services");
 
     const isId = locale === 'id';
 
@@ -60,16 +58,7 @@ export async function generateMetadata(
 }
 
 export default async function PublicServicesPage() {
-    // Parallel data fetching for performance
-    const [services] = await Promise.all([
-        prisma.service.findMany({
-            where: {
-                isActive: true,
-                visibility: 'PUBLIC'
-            },
-            orderBy: { updatedAt: 'desc' }
-        })
-    ]);
+    const services = await getServices();
 
     const processedServices = services.map((s: Service) => ({
         ...s,

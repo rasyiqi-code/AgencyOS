@@ -21,6 +21,7 @@ import { Metadata } from "next";
 import { SystemSetting } from "@prisma/client";
 import { getLocale } from "next-intl/server";
 import { getSystemSettings } from "@/lib/server/settings";
+import { getPageSeo } from "@/lib/server/seo";
 
 import { ResolvingMetadata } from "next";
 
@@ -29,11 +30,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const locale = await getLocale();
-  const pageSeo = await prisma.pageSeo.findUnique({
-    where: {
-      path: "/",
-    }
-  });
+  const pageSeo = await getPageSeo("/");
 
   if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
     return {};
