@@ -417,7 +417,21 @@
         "q12": "Do I get access to the source code?",
         "a12": "Yes. From the moment the contract is signed, all the code we write is your company's asset.",
         "q13": "What if there are bugs?",
-        "a13": "We provide a free bug fix guarantee for the first 90 days after launch."
+        "a13": "We provide a free bug fix guarantee for the first 90 days after launch.",
+        "q14": "Since when was CredibleMark founded?",
+        "a14": "CredibleMark has been actively providing strategic digital solutions since 2013.",
+        "q15": "What is the cheapest price for a website?",
+        "a15": "Our services start from Rp 3 Million. Full details about our available packages can be found on the Service page.",
+        "q16": "What are the dominant features of CredibleMark compared to other website builders?",
+        "a16": "Our main advantages are **Total Transparency** (real-time Dashboard), **Full Ownership** (Source code belongs to you), **No Hidden Fees**, as well as premium and modern **Coding Results and UI** quality.",
+        "q17": "What is the fastest time to create a website?",
+        "a17": "For a ready-to-use initial version (MVP), we usually complete it within 4 to 8 weeks depending on the complexity of the features.",
+        "q18": "What services does CredibleMark provide?",
+        "a18": "We provide professional website development, complex web applications (internal systems, CRM, SaaS), cybersecurity, and integrating your systems with other services like WhatsApp or payment gateways.",
+        "q19": "What is the advantage of having a website over a marketplace?",
+        "a19": "With your own website, you have full control over customer data, are free from third-party commission fees, and can build a much more exclusive and professional brand.",
+        "q20": "How can I make money through CredibleMark?",
+        "a20": "In addition to building systems that automate your business, you can also earn extra income by joining our Affiliate Program through this link: https://crediblemark.com/affiliate/join"
     },
     "Dashboard": {
         "Sidebar": {
