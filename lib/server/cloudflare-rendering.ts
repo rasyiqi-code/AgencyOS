@@ -19,9 +19,21 @@ export function enhanceHtml(html: string, url: string, localBaseUrl?: string): s
     try {
         const absoluteUrl = ensureAbsoluteUrl(url);
         const urlObj = new URL(absoluteUrl);
+        
+        // Basic validation: must have a hostname with a dot or be localhost
+        if (!urlObj.hostname || (!urlObj.hostname.includes('.') && urlObj.hostname !== 'localhost')) {
+            throw new Error("Invalid hostname");
+        }
+
         const origin = urlObj.origin;
         const baseUrl = absoluteUrl.split('?')[0].split('#')[0];
-        const baseDir = baseUrl.endsWith('/') ? baseUrl : baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+        
+        // Correct baseDir calculation: if no path or just /, it's origin + /
+        // Otherwise it's the directory of the current file
+        let baseDir = origin + "/";
+        if (urlObj.pathname !== "/" && urlObj.pathname !== "") {
+            baseDir = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+        }
         
         let enhancedHtml = html;
 
@@ -48,7 +60,9 @@ export function enhanceHtml(html: string, url: string, localBaseUrl?: string): s
         }
 
         // AssetProxy configuration - MUST be absolute local URL to ignore the <base> tag
-        const proxyUrl = localBaseUrl ? `${localBaseUrl}/api/proxy/asset?url=` : "/api/proxy/asset?url=";
+        const isDev = process.env.NODE_ENV === 'development';
+        const defaultLocalBase = isDev ? 'http://localhost:3000' : (process.env.NEXT_PUBLIC_APP_URL || "");
+        const proxyUrl = localBaseUrl ? `${localBaseUrl}/api/proxy/asset?url=` : `${defaultLocalBase}/api/proxy/asset?url=`;
         
         // 1. Rewrite relative fonts to be absolute Local Proxy URLs
         enhancedHtml = enhancedHtml.replace(/(href|src)="\/([^/][^"]+\.(?:woff2?|ttf|otf)(?:\?.*)?)"/g, `$1="${proxyUrl}${origin}/$2"`);
@@ -215,13 +229,17 @@ async function fetchRawHtml(url: string, localBaseUrl?: string): Promise<string>
             </style>
             <script>
                 // Smart Redirect: Escape the frame and go to the source if preview fails
-                setTimeout(() => {
-                    try {
-                        window.top.location.href = "${url}";
-                    } catch (e) {
-                        window.location.href = "${url}";
-                    }
-                }, 3000);
+                // Disabled in development to prevent annoying redirects while debugging
+                const isDev = ${process.env.NODE_ENV === 'development'};
+                if (!isDev) {
+                    setTimeout(() => {
+                        try {
+                            window.top.location.href = "${url}";
+                        } catch (e) {
+                            window.location.href = "${url}";
+                        }
+                    }, 3000);
+                }
             </script>
         </head>
         <body>

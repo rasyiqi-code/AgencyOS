@@ -65,7 +65,7 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
                                 className="w-full h-full border-none overflow-hidden"
                                 title={title}
                                 scrolling="no"
-                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation"
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                             />
                         </div>
                     )}

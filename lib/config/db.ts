@@ -1,37 +1,45 @@
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
-// Force type refresh - Added Promotion model
 
-const connectionString = process.env.DATABASE_URL
+const isDev = process.env.NODE_ENV === 'development'
 
-const pool = new Pool({
+const globalForPrisma = globalThis as unknown as {
+    prisma_v8: PrismaClient | undefined
+    pg_pool_v8: Pool | undefined
+    pg_adapter_v8: PrismaPg | undefined
+}
+
+const pool = globalForPrisma.pg_pool_v8 ?? new Pool({
     connectionString: process.env.DATABASE_URL,
-    max: 1, // Crucial for serverless: 1 connection per lambda to avoid hitting global DB limits
-    idleTimeoutMillis: 10000, // Release idle connections faster
-    connectionTimeoutMillis: 15000, // Wait longer for a connection if pool is busy
+    max: isDev ? 10 : 1, // Use more connections in dev, keep 1 for serverless prod
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000, // Faster failure if DB is down
+    // Enable SSL if your remote DB requires it (common for Render/AWS/etc)
+    // ssl: { rejectUnauthorized: false }
 })
-pool.on('error', (err) => {
-    console.error('Unexpected error on idle client', err)
-})
-const adapter = new PrismaPg(pool)
+
+if (isDev) {
+    globalForPrisma.pg_pool_v8 = pool
+}
+
+const adapter = globalForPrisma.pg_adapter_v8 ?? new PrismaPg(pool)
+
+if (isDev) {
+    globalForPrisma.pg_adapter_v8 = adapter
+}
 
 const prismaClientSingleton = () => {
     return new PrismaClient({ 
         adapter,
-        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        log: isDev ? ['query', 'error', 'warn'] : ['error'],
     })
-}
-
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
-
-const globalForPrisma = globalThis as unknown as {
-    prisma_v8: PrismaClientSingleton | undefined
 }
 
 export const prisma = globalForPrisma.prisma_v8 ?? prismaClientSingleton()
 
-// Always store in globalThis to reuse connections across serverless warm starts
-globalForPrisma.prisma_v8 = prisma
+if (isDev) {
+    globalForPrisma.prisma_v8 = prisma
+}
 
 
