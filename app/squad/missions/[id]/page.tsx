@@ -16,6 +16,7 @@ import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
 import { FeedbackBoard } from "@/components/feedback/board";
 import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
 import { InvitationAction } from "@/components/dashboard/missions/invitation-action";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -154,7 +155,7 @@ export default async function MissionDetailPage({ params }: PageProps) {
                         )}
 
                         {project.service?.description && (
-                            <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: project.service.description }} />
+                            <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.service.description) }} />
                         )}
 
                         {!project.description && !project.service?.description && (

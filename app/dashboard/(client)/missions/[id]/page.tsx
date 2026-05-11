@@ -18,6 +18,7 @@ import { type ExtendedProject, type ProjectFile } from "@/lib/shared/types";
 import { FileManager } from "@/app/admin/pm/[id]/file-manager";
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -106,7 +107,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                         )}
 
                         {project.service?.description && (
-                            <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: project.service.description }} />
+                            <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.service.description) }} />
                         )}
 
                         {!project.description && !project.service?.description && (
