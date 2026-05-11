@@ -8,6 +8,7 @@ import { Check, User, LogIn, Rocket } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
 
 import { getSystemSettings } from "@/lib/server/settings";
+import { LogoImage } from "./logo-image";
 
 export async function SiteHeader() {
     const user = await stackServerApp.getUser();
@@ -69,15 +70,13 @@ export async function SiteHeader() {
                             {/* Logo / Icon Section */}
                             {displayMode !== 'text' && (
                                 logoUrl ? (
-                                    <Image
+                                    <LogoImage
                                         src={logoUrl!}
                                         alt={`${agencyName} Logo`}
                                         width={120}
                                         height={32}
                                         className="h-7 w-auto object-contain hover:scale-105 transition-transform"
                                         priority
-                                        unoptimized
-                                        style={{ width: 'auto' }}
                                     />
                                 ) : (
                                     <div className="w-8 h-8 rounded-full bg-brand-grey flex items-center justify-center shadow-lg shadow-zinc-500/20 group-hover:shadow-zinc-500/30 transition-all duration-300 hover:scale-105">
