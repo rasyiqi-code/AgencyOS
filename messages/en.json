@@ -824,8 +824,10 @@
         "processing": "Processing"
     },
     "Footer": {
-        "ctaTitle": "Partner with Experts Who Understand Enterprise Complexity",
-        "ctaButton": "Free Consultation",
+        "ctaTitle": "Confused where to start? We're here to help.",
+        "ctaDescription": "Many business owners have already grown with our services. Let's discuss your digital needs, stress-free.",
+        "ctaButton": "Talk to an Expert, for Free!",
+        "ctaSocialProof": "60+ Founders Joined",
         "clientLogin": "Client Console",
         "contactUs": "Contact Expert",
         "services": "Solutions",

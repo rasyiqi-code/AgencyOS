@@ -109,7 +109,7 @@ export function FAQSection() {
                             </h3>
                             
                             <p className="text-zinc-500 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
-                                Sudah banyak pemilik bisnis yang terbantu dengan layanan kami. Yuk, obrolin kebutuhan digital Anda tanpa pusing.
+                                {tFooter("ctaDescription")}
                             </p>
 
                             <Button 
@@ -135,7 +135,7 @@ export function FAQSection() {
                                 </div>
                                 <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                                    60+ Pengusaha Sudah Bergabung
+                                    {tFooter("ctaSocialProof")}
                                 </div>
                             </div>
                         </div>
