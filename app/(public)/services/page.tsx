@@ -13,7 +13,7 @@ import { SectionCustomRequest } from "@/components/landing/section-custom-reques
 import { getLocale } from "next-intl/server";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
-export const dynamic = "force-dynamic";
+// Statically optimized with 1-hour revalidation (via services/seo/testimonials tags)
 
 import { ResolvingMetadata } from "next";
 

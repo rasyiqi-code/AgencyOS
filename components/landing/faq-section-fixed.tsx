@@ -124,10 +124,11 @@ export function FAQSection() {
                                 <div className="flex -space-x-2 shrink-0">
                                     {[1, 2, 3, 4].map((i) => (
                                         <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
-                                            <img 
+                                            <Image 
                                                 src={`/avatars/avatar-${i}.svg`} 
-                                                alt="User" 
-                                                className="w-full h-full object-cover" 
+                                                alt="UserAvatar" 
+                                                fill
+                                                className="object-cover" 
                                             />
                                         </div>
                                     ))}

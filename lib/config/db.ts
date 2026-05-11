@@ -32,7 +32,7 @@ if (isDev) {
 const prismaClientSingleton = () => {
     return new PrismaClient({ 
         adapter,
-        log: isDev ? ['query', 'error', 'warn'] : ['error'],
+        log: isDev ? ['error', 'warn'] : ['error'],
     })
 }
 

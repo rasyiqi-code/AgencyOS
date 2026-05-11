@@ -1,38 +1,29 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
-import { PageSeo } from "@prisma/client";
-
-const inFlightSeoRequests = new Map<string, Promise<unknown>>();
+import { cache } from "react";
 
 /**
- * Fetch SEO metadata for a specific path with caching.
+ * Fetch SEO metadata for a specific path with caching and memoization.
+ * React cache() ensures that calling this multiple times in a single render 
+ * (e.g. in generateMetadata and then in a Page component) hits the database only once.
  */
-export const getPageSeo = async (path: string) => {
-    if (inFlightSeoRequests.has(path)) {
-        return inFlightSeoRequests.get(path) as Promise<PageSeo | null>;
-    }
-
-    const request = (async () => {
-        return unstable_cache(
-            async (p: string) => {
+export const getPageSeo = cache(async (path: string) => {
+    return unstable_cache(
+        async (p: string) => {
+            try {
                 const pageSeo = await prisma.pageSeo.findUnique({
                     where: { path: p }
                 });
                 return pageSeo;
-            },
-            [`page-seo-${path}`],
-            {
-                tags: ["page-seo"],
-                revalidate: 3600, // 1 hour
+            } catch (error) {
+                console.error(`[SEO] Fetch Error for ${p}:`, error);
+                return null;
             }
-        )(path);
-    })();
-
-    inFlightSeoRequests.set(path, request);
-
-    try {
-        return await (request as Promise<PageSeo | null>);
-    } finally {
-        inFlightSeoRequests.delete(path);
-    }
-};
+        },
+        [`page-seo-${path}`],
+        {
+            tags: ["page-seo"],
+            revalidate: 3600, // 1 hour
+        }
+    )(path);
+});

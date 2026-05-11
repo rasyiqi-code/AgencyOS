@@ -6,24 +6,20 @@ import { Badge } from "@/components/ui/badge";
 import { getSettingValue } from "@/lib/server/settings";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap } from "lucide-react";
-import { prisma } from "@/lib/config/db";
-import { Metadata } from "next";
+import { ArrowRight, Zap, MessageCircle } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { TextTypewriter } from "@/components/ui/text-typewriter";
-import { MessageCircle } from "lucide-react";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
-import { ResolvingMetadata } from "next";
+import { getPageSeo } from "@/lib/server/seo";
 
 export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: { path: "/portfolio" }
-    });
+    const pageSeo = await getPageSeo("/portfolio");
 
     const isId = locale === 'id';
 
@@ -68,7 +64,7 @@ function PortfolioSkeleton() {
 
 async function PortfolioList() {
     const portfolios = await getPortfolios();
-    
+
     // Smart Fetch: Only proxy if the target site blocks iframes
     const portfolioWithHtml = await Promise.all(
         portfolios.map(async (p) => {
@@ -79,7 +75,7 @@ async function PortfolioList() {
 
                 // Check if site blocks iframes (Cached for 24h)
                 const blocked = await isFrameBlocked(p.externalUrl);
-                
+
                 if (blocked) {
                     return { ...p, html: await getRenderedHtml(p.externalUrl) };
                 }

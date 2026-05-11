@@ -1,26 +1,31 @@
 import { prisma } from "@/lib/config/db";
 import { revalidatePath, unstable_cache } from "next/cache";
+import { cache } from "react";
 
-export const getPopUps = unstable_cache(
-    async () => {
-        return await prisma.popUp.findMany({
-            orderBy: { createdAt: "desc" },
-        });
-    },
-    ["popups-all"],
-    { tags: ["popups"], revalidate: 3600 }
-);
+export const getPopUps = cache(async () => {
+    return unstable_cache(
+        async () => {
+            return await prisma.popUp.findMany({
+                orderBy: { createdAt: "desc" },
+            });
+        },
+        ["popups-all"],
+        { tags: ["popups"], revalidate: 3600 }
+    )();
+});
 
-export const getActivePopUps = unstable_cache(
-    async () => {
-        return await prisma.popUp.findMany({
-            where: { isActive: true },
-            orderBy: { createdAt: "desc" },
-        });
-    },
-    ["popups-active"],
-    { tags: ["popups"], revalidate: 3600 }
-);
+export const getActivePopUps = cache(async () => {
+    return unstable_cache(
+        async () => {
+            return await prisma.popUp.findMany({
+                where: { isActive: true },
+                orderBy: { createdAt: "desc" },
+            });
+        },
+        ["popups-active"],
+        { tags: ["popups"], revalidate: 3600 }
+    )();
+});
 
 export async function createPopUp(data: {
     headline: string;

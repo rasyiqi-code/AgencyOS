@@ -5,7 +5,7 @@ import { getSystemSettings } from "@/lib/server/settings";
  * Force dynamic rendering — manifest membaca dari database,
  * yang tidak tersedia saat build time (Docker build).
  */
-export const dynamic = "force-dynamic";
+// Optimized with getSystemSettings caching
 
 /**
  * Dynamic Web App Manifest menggunakan Next.js Metadata API.

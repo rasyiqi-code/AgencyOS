@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 const CONFIG_KEY = "currency_config";
 const RATES_KEY = "currency_rates";
@@ -15,39 +16,31 @@ interface ExchangeRates {
     lastUpdated: number;
 }
 
-const inFlightCurrencyRequests = new Map<string, Promise<unknown>>();
-
 export class CurrencyService {
-    async getConfig(): Promise<CurrencyConfig | null> {
-        const cacheKey = "currency-config";
-        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey) as Promise<CurrencyConfig | null>;
+    /**
+     * Mengambil konfigurasi currency dengan memoization.
+     */
+    getConfig = cache(async (): Promise<CurrencyConfig | null> => {
+        return unstable_cache(
+            async () => {
+                const setting = await prisma.systemSetting.findUnique({
+                    where: { key: CONFIG_KEY }
+                });
+                if (!setting) return null;
+                try {
+                    return JSON.parse(setting.value) as CurrencyConfig;
+                } catch {
+                    return null;
+                }
+            },
+            ["currency-config-singleton"],
+            { revalidate: 3600, tags: ["currency"] }
+        )();
+    });
 
-        const request = (async () => {
-            return unstable_cache(
-                async () => {
-                    const setting = await prisma.systemSetting.findUnique({
-                        where: { key: CONFIG_KEY }
-                    });
-                    if (!setting) return null;
-                    try {
-                        return JSON.parse(setting.value) as CurrencyConfig;
-                    } catch {
-                        return null;
-                    }
-                },
-                [cacheKey],
-                { revalidate: 3600, tags: ["currency"] }
-            )();
-        })();
-
-        inFlightCurrencyRequests.set(cacheKey, request);
-        try {
-            return await (request as Promise<CurrencyConfig | null>);
-        } finally {
-            inFlightCurrencyRequests.delete(cacheKey);
-        }
-    }
-
+    /**
+     * Menyimpan konfigurasi currency.
+     */
     async saveConfig(apiKey: string, intervalHours: number) {
         await prisma.systemSetting.upsert({
             where: { key: CONFIG_KEY },
@@ -56,54 +49,47 @@ export class CurrencyService {
         });
     }
 
-    async getRates(): Promise<ExchangeRates | null> {
-        const cacheKey = "currency-rates-logic";
-        if (inFlightCurrencyRequests.has(cacheKey)) return inFlightCurrencyRequests.get(cacheKey) as Promise<ExchangeRates | null>;
+    /**
+     * Mengambil exchange rates dengan memoization dan background refreshing.
+     */
+    getRates = cache(async (): Promise<ExchangeRates | null> => {
+        // 1. Try to get cached rates from DB (now with Next.js caching)
+        const getCachedRates = unstable_cache(
+            async () => {
+                const setting = await prisma.systemSetting.findUnique({
+                    where: { key: RATES_KEY }
+                });
+                if (setting) {
+                    try {
+                        return JSON.parse(setting.value) as ExchangeRates;
+                    } catch { /* ignore */ }
+                }
+                return null;
+            },
+            ["currency-rates-db-singleton"],
+            { revalidate: 3600, tags: ["currency"] }
+        );
 
-        const request = (async () => {
-            // 1. Try to get cached rates from DB (now with Next.js caching)
-            const getCachedRates = unstable_cache(
-                async () => {
-                    const setting = await prisma.systemSetting.findUnique({
-                        where: { key: RATES_KEY }
-                    });
-                    if (setting) {
-                        try {
-                            return JSON.parse(setting.value) as ExchangeRates;
-                        } catch { /* ignore */ }
-                    }
-                    return null;
-                },
-                ["currency-rates-db"],
-                { revalidate: 3600, tags: ["currency"] }
-            );
-
-            const cached = await getCachedRates();
-            const config = await this.getConfig();
-            
-            if (!config || !config.apiKey) {
-                return cached;
-            }
-
-            // 2. Check if update needed from API
-            const now = Date.now();
-            const intervalMs = (config.intervalHours || 24) * 60 * 60 * 1000;
-
-            if (!cached || (now - cached.lastUpdated > intervalMs)) {
-                console.log("[CurrencyService] DB cache expired or missing, fetching from API...");
-                return await this.fetchAndCacheRates(config.apiKey);
-            }
-
+        const cached = await getCachedRates();
+        const config = await this.getConfig();
+        
+        if (!config || !config.apiKey) {
             return cached;
-        })();
-
-        inFlightCurrencyRequests.set(cacheKey, request);
-        try {
-            return await (request as Promise<ExchangeRates | null>);
-        } finally {
-            inFlightCurrencyRequests.delete(cacheKey);
         }
-    }
+
+        // 2. Check if update needed from API
+        const now = Date.now();
+        const intervalMs = (config.intervalHours || 24) * 60 * 60 * 1000;
+
+        if (!cached || (now - cached.lastUpdated > intervalMs)) {
+            // Note: In a real high-traffic app, we might want to trigger this 
+            // in the background without blocking the current request.
+            // For now, we fetch if expired.
+            return await this.fetchAndCacheRates(config.apiKey);
+        }
+
+        return cached;
+    });
 
     async fetchAndCacheRates(apiKey: string): Promise<ExchangeRates | null> {
         const MAX_RETRIES = 2;
@@ -190,7 +176,6 @@ export class CurrencyService {
 
         return null;
     }
-
 }
 
 export const currencyService = new CurrencyService();

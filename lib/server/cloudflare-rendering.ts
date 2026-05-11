@@ -160,17 +160,41 @@ async function fetchRawHtml(url: string, localBaseUrl?: string): Promise<string>
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             },
-            next: { revalidate: 3600 } // Cache raw fetch for 1 hour
+            // Removed next.revalidate as it's already wrapped in unstable_cache in actions.ts
+            // and can cause confusing double-caching behavior/logs
         });
         
         if (!response.ok) {
-            throw new Error(`Raw fetch failed: ${response.status}`);
+            // Log as warning instead of error for 404s - it's a handled fallback
+            console.warn(`[CloudflareProxy] Raw fetch status ${response.status} for ${url}`);
+            if (response.status === 404) {
+                return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        body { background: #050505; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+                        .c { padding: 40px; border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); }
+                        h1 { color: #ead308; }
+                    </style>
+                </head>
+                <body>
+                    <div class="c">
+                        <h1>Situs Tidak Ditemukan</h1>
+                        <p>Konten di <b>${url}</b> saat ini tidak tersedia (404).</p>
+                        <a href="/" style="color: #ead308;">Kembali ke Beranda</a>
+                    </div>
+                </body>
+                </html>`;
+            }
+            throw new Error(`Status ${response.status}`);
         }
         
         const html = await response.text();
         return enhanceHtml(html, url, localBaseUrl);
     } catch (e) {
-        console.error("[CloudflareProxy] Fallback failed:", e);
+        console.warn("[CloudflareProxy] Fallback fetch failed (handled):", e instanceof Error ? e.message : String(e));
         // Premium Smart Redirect Page
         return `
         <!DOCTYPE html>

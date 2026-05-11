@@ -5,6 +5,13 @@ import { getPortfolios } from "@/lib/portfolios/actions";
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
+interface SitemapRoute {
+    route: string;
+    lastModified: Date | string | number;
+    changeFrequency: string;
+    priority: number;
+}
+
 export async function GET() {
     const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(/\/$/, "");
     const locales = ["id", "en"];
@@ -33,7 +40,7 @@ export async function GET() {
         "/terms",
     ];
 
-    const baseRoutes: any[] = [];
+    const baseRoutes: SitemapRoute[] = [];
 
     // Static Routes
     for (const route of staticPaths) {
@@ -49,7 +56,7 @@ export async function GET() {
     for (const portfolio of portfolios) {
         baseRoutes.push({
             route: `/view-design/${portfolio.slug}`,
-            lastModified: portfolio.createdAt,
+            lastModified: portfolio.createdAt as Date | string | number,
             changeFrequency: "monthly",
             priority: 0.7,
         });
@@ -59,7 +66,7 @@ export async function GET() {
     for (const product of products) {
         baseRoutes.push({
             route: `/products/${product.slug}`,
-            lastModified: product.updatedAt || now,
+            lastModified: (product.updatedAt || now) as Date | string | number,
             changeFrequency: "weekly",
             priority: 0.9,
         });
@@ -69,7 +76,7 @@ export async function GET() {
     for (const service of services) {
         baseRoutes.push({
             route: `/services/${service.slug}`,
-            lastModified: service.updatedAt || now,
+            lastModified: (service.updatedAt || now) as Date | string | number,
             changeFrequency: "weekly",
             priority: 0.8,
         });

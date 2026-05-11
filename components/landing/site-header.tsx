@@ -76,6 +76,7 @@ export async function SiteHeader() {
                                         height={32}
                                         className="h-7 w-auto object-contain hover:scale-105 transition-transform"
                                         priority
+                                        unoptimized
                                         style={{ width: 'auto' }}
                                     />
                                 ) : (

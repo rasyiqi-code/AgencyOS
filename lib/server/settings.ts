@@ -1,58 +1,49 @@
 import { prisma } from "@/lib/config/db";
 import { unstable_cache } from "next/cache";
 import { SystemSetting } from "@prisma/client";
+import { cache } from "react";
 
-// Track in-flight requests to prevent "Parallel Overload" (Stampede)
-// Multiple components calling getSystemSettings at once will share the same promise.
-const inFlightRequests = new Map<string, Promise<SystemSetting[]>>();
+/**
+ * Memfetche semua setting sekaligus dan menyimpannya dalam Request Memoization (React cache).
+ * Ini memastikan hanya ada SATU kueri ke database per satu kali render halaman, 
+ * berapapun jumlah komponen yang memanggilnya.
+ */
+const getAllSettingsCached = cache(async () => {
+    return unstable_cache(
+        async () => {
+            try {
+                return await prisma.systemSetting.findMany();
+            } catch (error) {
+                console.error("[Settings] DB Fetch Error:", error);
+                return [];
+            }
+        },
+        ["all-system-settings-singleton"],
+        {
+            tags: ["system-settings"],
+            revalidate: 3600, // Cache global selama 1 jam
+        }
+    )();
+});
 
 /**
  * Mengambil pengaturan sistem dengan dukungan caching Next.js.
  * @param keys Array kunci pengaturan yang ingin diambil.
- * @returns Map objek pengaturan.
+ * @returns Array objek pengaturan.
  */
 export const getSystemSettings = async (keys: string[]): Promise<SystemSetting[]> => {
-    // Sort keys for a consistent cache key
-    const sortedKeys = [...keys].sort();
-    const cacheKey = sortedKeys.join(",");
-
-    if (inFlightRequests.has(cacheKey)) {
-        return inFlightRequests.get(cacheKey)!;
-    }
-
-    const request = (async () => {
-        return unstable_cache(
-            async (keysToFetch: string[]) => {
-                const settings = await prisma.systemSetting.findMany({
-                    where: {
-                        key: { in: keysToFetch }
-                    }
-                });
-                return settings;
-            },
-            [`system-settings-${cacheKey}`],
-            {
-                tags: ["system-settings"],
-                revalidate: 3600,
-            }
-        )(sortedKeys);
-    })();
-
-    inFlightRequests.set(cacheKey, request);
-
-    try {
-        return await request;
-    } finally {
-        // Clear from map once resolved so future calls (after revalidation) can trigger fresh data if needed
-        // but during a single render cycle, it stays shared.
-        inFlightRequests.delete(cacheKey);
-    }
+    const allSettings = await getAllSettingsCached();
+    
+    // Filter hanya kunci yang diminta dari cache singleton
+    return allSettings.filter(s => keys.includes(s.key));
 };
 
 /**
  * Helper untuk mengambil nilai tunggal atau ganti dengan default.
+ * Digunakan secara luas di berbagai komponen.
  */
 export async function getSettingValue(key: string, defaultValue: string = ""): Promise<string> {
     const settings = await getSystemSettings([key]);
-    return settings.find((s: SystemSetting) => s.key === key)?.value || defaultValue;
+    const setting = settings.find((s) => s.key === key);
+    return setting?.value || defaultValue;
 }
