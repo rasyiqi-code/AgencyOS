@@ -141,9 +141,6 @@ export async function getRenderedHtml(url: string, localBaseUrl?: string): Promi
         return unstable_cache(
             async () => {
                 try {
-                    // Add a small random jitter to prevent burst requests if many pages load at once
-                    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
-                    
                     return await fetchFromCloudflare(url, localBaseUrl);
                 } catch {
                     console.warn(`[ProxyCache] Rendering failed for ${url}, using fallback text.`);

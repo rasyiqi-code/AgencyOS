@@ -28,6 +28,8 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 300,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
     remotePatterns: [
       {
         protocol: 'https',
@@ -39,7 +41,6 @@ const nextConfig: NextConfig = {
         hostname: 'crediblemark.com',
         pathname: '/**',
       },
-
       {
         protocol: 'https',
         hostname: '*.r2.dev',
@@ -58,6 +59,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.midtrans.com',
         pathname: '/**',
       }
     ],
@@ -78,7 +84,7 @@ const nextConfig: NextConfig = {
 
     return [
       {
-        source: '/(.*)',
+        source: '/((?!sitemap\\.xml|sitemap\\.xsl|robots\\.txt|manifest\\.webmanifest|.*\\.png|.*\\.ico).*)',
         headers: [
           {
             key: 'Content-Security-Policy',
@@ -86,9 +92,6 @@ const nextConfig: NextConfig = {
           }
         ],
       },
-      // CSP permisif untuk halaman dan API preview portfolio — agar konten bisa memuat berbagai CDN
-      // Dimasukkan di bawah agar meng-overwrite default CSP di atas
-      // Mendukung path dengan atau tanpa locale (id/en)
       {
         source: '/:locale?/(view-design|portfolio)/:slug*',
         headers: [
@@ -107,7 +110,6 @@ const nextConfig: NextConfig = {
           }
         ],
       },
-      // Khusus untuk API agar tetap kena permissive CSP
       {
         source: '/api/:path*',
         headers: [
@@ -126,7 +128,6 @@ const nextConfig: NextConfig = {
           }
         ],
       },
-      // Header khusus untuk Service Worker — tanpa cache agar selalu fresh
       {
         source: '/sw.js',
         headers: [

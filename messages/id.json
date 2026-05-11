@@ -63,8 +63,8 @@
         "heroImageAlt": "Senior developer di {brand} yang merepresentasikan keahlian rekayasa perangkat lunak dan transformasi digital"
     },
     "Ecosystem": {
-        "title": "Partner Software Strategis Anda",
-        "subtitle": "Satu sistem terpadu untuk semua kebutuhan bisnis Anda, tanpa ribet.",
+        "title": "Partner Teknologi Anda",
+        "subtitle": "Satu sistem terpadu untuk semua kebutuhan Anda.",
         "clientTitle": "Transparansi Total",
         "clientDesc": "Kendali penuh di tangan Anda. Pantau laporan harian, setujui hasil pengerjaan, dan lacak kesehatan proyek secara langsung.",
         "clientCta": "Dashboard Klien",
@@ -89,8 +89,8 @@
         "stackAI": "Kecerdasan Buatan"
     },
     "Testimonials": {
-        "title": "Dipercaya oleh Para Pendiri",
-        "subtitle": "Bergabung dengan klien puas yang membangun bersama {brand}.",
+        "title": "Kata Mereka",
+        "subtitle": "Kisah sukses mitra kami bersama {brand}.",
         "reviews": [
             {
                 "name": "Alex Chen",
@@ -120,8 +120,8 @@
         ]
     },
     "Comparison": {
-        "title": "Kenapa Kami Mahal?",
-        "subtitle": "Karena kami memberikan hasil dan pelayanan di atas penyedia website/aplikasi pada umumnya.",
+        "title": "Kenapa Pilih Kami?",
+        "subtitle": "Kami memberikan hasil dan pelayanan di atas standar pasar.",
         "oldTitle": "Mereka",
         "old1": "Biaya Siluman:",
         "old1Sub": "Harga murah di awal, tagihan bengkak di akhir.",
@@ -149,9 +149,9 @@
         "viewAllServices": "Lihat Semua Layanan"
     },
     "Solutions": {
-        "badge": "Solusi Berdasarkan Nilai",
-        "title": "Solusi Strategis untuk Bisnis yang Ingin Naik Kelas.",
-        "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi masa depan.",
+        "badge": "Solusi Strategis",
+        "title": "Solusi Bisnis Naik Kelas.",
+        "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi modern.",
         "items": {
             "web": {
                 "title": "Website Berkecepatan Tinggi (Scale-up)",
@@ -175,14 +175,14 @@
     },
     "Workflow": {
         "badge": "3 Langkah Peluncuran.",
-        "title": "No Bullsh*t Workflow",
-        "subtitle": "Semua progres terpantau real-time melalui Dashboard Klien. Metodologi kerja yang jujur, cepat, dan berorientasi pada hasil nyata.",
-        "step1": "Arsitektur & Logika",
-        "step1Desc": "Kita tidak desain dulu. Kita bedah logika bisnis Anda agar sistemnya bekerja, bukan cuma tampil cantik.",
-        "step2": "Iterasi Cepat",
-        "step2Desc": "Anda melihat progres mingguan melalui sistem manajemen proyek transparan. Tidak ada kejutan buruk di akhir bulan.",
-        "step3": "Handover & Support",
-        "step3Desc": "Penyerahan semua aset digital, dokumentasi teknis, dan pendampingan pasca-rilis. Kami tidak akan kabur."
+        "title": "Proses Kerja Jujur",
+        "subtitle": "Semua progres terpantau setiap saat melalui Dashboard Klien. Cara kerja yang transparan, cepat, dan fokus pada hasil nyata.",
+        "step1": "Rencana & Cara Kerja",
+        "step1Desc": "Kami tidak langsung membuat desain. Kami bedah cara kerja bisnis Anda agar sistemnya benar-benar bermanfaat, bukan cuma tampil cantik.",
+        "step2": "Pengerjaan Bertahap",
+        "step2Desc": "Anda bisa memantau perkembangan setiap minggu secara transparan. Tidak ada hasil yang tiba-tiba meleset di akhir bulan.",
+        "step3": "Serah Terima & Bantuan",
+        "step3Desc": "Penyerahan semua aset digital, panduan penggunaan, dan bantuan setelah rilis. Kami pastikan Anda tidak bingung menggunakannya."
     },
     "Financial": {
         "title": "Yang Jarang Disadari",
@@ -209,9 +209,9 @@
     },
     "Guarantee": {
         "title": "Aman dan Transparan.",
-        "subtitle": "Garansi Uang Kembali 100%\nSelama Fase Briefing",
-        "desc": "Jika Blueprint awal tidak cocok setelah sesi briefing, deposit kami kembalikan 100%. Tanpa syarat. Anda tetap boleh mengamankan Blueprint tersebut selama belum masuk tahap development.",
-        "footer": "Tanpa syarat. Tanpa drama. Anda tetap berhak menyimpan hasil analisis Blueprint dari kami."
+        "subtitle": "Garansi Uang Kembali 100%\nSebelum Mulai Dikerjakan",
+        "desc": "Jika rencana kerja awal tidak sesuai setelah diskusi awal kita, uang muka (DP) Anda kami kembalikan 100%. Tanpa syarat. Anda tetap boleh menyimpan rancangan tersebut selama proyek belum masuk tahap pembuatan.",
+        "footer": "Tanpa syarat. Tanpa drama. Anda tetap berhak menyimpan hasil rancangan awal dari kami."
     },
     "CustomCTA": {
         "title": "Butuh Solusi Spesifik?",

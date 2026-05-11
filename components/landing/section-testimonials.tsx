@@ -50,7 +50,7 @@ export async function Testimonials() {
     return (
         <section className="py-20 bg-black overflow-hidden border-y border-white/5">
             <div className="container mx-auto px-4 mb-10 text-center">
-                <h2 className="text-3xl font-bold text-white mb-2">{t("title", { brand: agencyName })}</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t("title", { brand: agencyName })}</h2>
                 <p className="text-zinc-500">{t("subtitle", { brand: agencyName })}</p>
             </div>
 

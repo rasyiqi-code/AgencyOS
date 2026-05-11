@@ -1,6 +1,6 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
-import { FAQSection } from "@/components/landing/faq-section";
+import { FAQSection } from "@/components/landing/faq-section-fixed";
 import { LandingHero } from "@/components/landing/landing-hero";
 import dynamic from "next/dynamic";
 

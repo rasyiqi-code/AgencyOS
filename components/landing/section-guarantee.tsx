@@ -18,10 +18,10 @@ export async function SectionGuarantee() {
                         </span>
                     </div>
 
-                    <h2 className="text-4xl sm:text-6xl md:text-8xl font-black text-brand-yellow mb-8 tracking-tighter leading-[0.9] uppercase drop-shadow-[0_0_25px_rgba(254,215,0,0.4)]">
+                    <h2 className="text-3xl sm:text-6xl md:text-8xl font-black text-brand-yellow mb-8 tracking-tighter leading-[0.9] uppercase drop-shadow-[0_0_25px_rgba(254,215,0,0.4)]">
                         {t("subtitle").split('\n')[0]}
                         {t("subtitle").includes('\n') && (
-                            <span className="block text-lg sm:text-2xl md:text-3xl font-medium text-white/50 lowercase tracking-normal mt-4">
+                            <span className="block text-base sm:text-2xl md:text-3xl font-medium text-white/50 lowercase tracking-normal mt-4">
                                 {t("subtitle").split('\n')[1]}
                             </span>
                         )}

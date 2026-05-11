@@ -54,29 +54,51 @@ export async function generateMetadata(
     };
 }
 
-export default async function PortfolioPage() {
-    const portfolios = await getPortfolios();
-    const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
-    const t = await getTranslations("Portfolio");
+import { Suspense } from "react";
 
+function PortfolioSkeleton() {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24 animate-pulse">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="aspect-[16/10] bg-white/5 rounded-2xl border border-white/10" />
+            ))}
+        </div>
+    );
+}
+
+async function PortfolioList() {
+    const portfolios = await getPortfolios();
+    
     // Smart Fetch: Only proxy if the target site blocks iframes
     const portfolioWithHtml = await Promise.all(
         portfolios.map(async (p) => {
-            if (!p.externalUrl) {
-                return { ...p, html: await getPortfolioHtml(p.slug) };
-            }
+            try {
+                if (!p.externalUrl) {
+                    return { ...p, html: await getPortfolioHtml(p.slug) };
+                }
 
-            // Check if site blocks iframes
-            const blocked = await isFrameBlocked(p.externalUrl);
-            
-            if (blocked) {
-                console.log(`[SmartPreview] Proxying blocked site: ${p.externalUrl}`);
-                return { ...p, html: await getRenderedHtml(p.externalUrl) };
-            }
+                // Check if site blocks iframes (Cached for 24h)
+                const blocked = await isFrameBlocked(p.externalUrl);
+                
+                if (blocked) {
+                    return { ...p, html: await getRenderedHtml(p.externalUrl) };
+                }
 
-            return { ...p, html: "" }; // Empty HTML means use direct src
+                return { ...p, html: "" }; // Empty HTML means use direct src
+            } catch (error) {
+                console.error(`[PortfolioList] Failed to process ${p.title}:`, error);
+                return { ...p, html: "" };
+            }
         })
     );
+
+    return <PortfolioGrid items={portfolioWithHtml} />;
+}
+
+export default async function PortfolioPage() {
+    const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
+    const portfolios = await getPortfolios(); // Fetch early for SEO script
+    const t = await getTranslations("Portfolio");
 
     const contactPhone = await getSettingValue("CONTACT_PHONE", "6285183131249");
     const locale = await getLocale();
@@ -139,7 +161,7 @@ export default async function PortfolioPage() {
                                 delay={500}
                             />
                         </h1>
-                        <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-light mb-8">
+                        <p className="text-zinc-400 max-w-2xl mx-auto text-sm md:text-base lg:text-lg leading-relaxed font-light mb-8">
                             {t('description')}
                         </p>
 
@@ -154,7 +176,9 @@ export default async function PortfolioPage() {
                     </div>
                 </ScrollAnimationWrapper>
 
-                <PortfolioGrid items={portfolioWithHtml} />
+                <Suspense fallback={<PortfolioSkeleton />}>
+                    <PortfolioList />
+                </Suspense>
 
                 {/* CTA Section - Compact & Inline */}
                 <ScrollAnimationWrapper>

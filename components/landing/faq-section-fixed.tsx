@@ -120,21 +120,20 @@ export function FAQSection() {
                                 <ArrowRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
                             </Button>
 
-                            <div className="mt-6 pt-6 border-t border-white/10 w-full flex flex-col items-center gap-3">
-                                <div className="flex -space-x-2">
+                            <div className="mt-6 pt-6 border-t border-white/10 w-full flex flex-row items-center justify-center gap-4">
+                                <div className="flex -space-x-2 shrink-0">
                                     {[1, 2, 3, 4].map((i) => (
                                         <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
-                                            <Image 
-                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} 
+                                            <img 
+                                                src={`/avatars/avatar-${i}.svg`} 
                                                 alt="User" 
-                                                fill
-                                                className="object-cover" 
+                                                className="w-full h-full object-cover" 
                                             />
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                                     60+ Pengusaha Sudah Bergabung
                                 </div>
                             </div>

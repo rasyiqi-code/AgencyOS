@@ -54,10 +54,10 @@ export function WorkflowContent() {
                     <div className="px-3 py-1 rounded-full bg-black/10 border border-black/5 text-black text-[9px] font-black uppercase tracking-[0.2em] mb-4 shadow-sm backdrop-blur-md">
                         {t("badge")}
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-black mb-4 tracking-tighter uppercase italic leading-tight">
+                    <h2 className="text-2xl md:text-5xl font-black text-black mb-4 tracking-tighter uppercase italic leading-tight">
                         {t("title")}
                     </h2>
-                    <p className="text-black/70 font-bold max-w-2xl mx-auto text-base md:text-lg">{t("subtitle")}</p>
+                    <p className="text-black/70 font-bold max-w-2xl mx-auto text-sm md:text-lg">{t("subtitle")}</p>
                 </motion.div>
 
                 <div className="relative">
@@ -93,10 +93,10 @@ export function WorkflowContent() {
 
                                 {/* Text Content */}
                                 <div className="flex flex-col text-left md:text-center">
-                                    <h3 className="text-lg md:text-xl font-black text-black mb-1 md:mb-2 italic uppercase tracking-tight leading-none">
+                                    <h3 className="text-base md:text-xl font-black text-black mb-1 md:mb-2 italic uppercase tracking-tight leading-none">
                                         {t(step.key)}
                                     </h3>
-                                    <p className="text-black/80 text-sm font-bold leading-relaxed max-w-[280px] md:mx-auto">
+                                    <p className="text-black/80 text-[13px] md:text-sm font-bold leading-relaxed max-w-[280px] md:mx-auto">
                                         {t(`${step.key}Desc`)}
                                     </p>
                                 </div>
