@@ -54,25 +54,25 @@
                 "Personal"
             ]
         },
-        "description": "Kami tidak sekadar \"bikin web/aplikasi\". Kami membangun infrastruktur digital yang scalable, transparan, dan 100% menjadi aset milik Anda. Berhenti membuang uang pada vendor yang hilang setelah bayaran lunas.",
+        "description": "Partner teknologi yang tetap mendampingi hingga bisnis Anda berjalan, bukan sekadar kirim kode lalu menghilang. Kami membangun pondasi digital yang tangguh, transparan, dan 100% menjadi aset milik Anda.",
         "launchDashboard": "Konsultasi Gratis",
         "viewServices": "Solusi",
-        "poweredBy": "SOLUSI KELAS ENTERPRISE • EXPERT MONITORING • ARSITEKTUR SKALABEL",
+        "poweredBy": "STANDAR TEKNOLOGI ENTERPRISE • TRANSPARANSI TOTAL • SISTEM SIAP BERKEMBANG PESAT",
         "heroTagline1": "BANGUN UNTUK TUMBUH.",
         "heroTagline2": "RANCANG UNTUK TANGGUH.",
         "heroImageAlt": "Senior developer di {brand} yang merepresentasikan keahlian rekayasa perangkat lunak dan transformasi digital"
     },
     "Ecosystem": {
         "title": "Partner Software Strategis Anda",
-        "subtitle": "Arsitektur platform terpadu yang dibangun untuk kebutuhan bisnis kompleks dan integrasi sistem yang mulus.",
+        "subtitle": "Satu sistem terpadu untuk semua kebutuhan bisnis Anda, tanpa ribet.",
         "clientTitle": "Transparansi Total",
-        "clientDesc": "Tata kelola korporat sebagai inti. Pantau log pengiriman, setujui milestone, dan lacak kesehatan proyek secara real-time.",
+        "clientDesc": "Kendali penuh di tangan Anda. Pantau laporan harian, setujui hasil pengerjaan, dan lacak kesehatan proyek secara langsung.",
         "clientCta": "Dashboard Klien",
         "squadTitle": "Expert Development",
         "squadDesc": "Kesuksesan membutuhkan keahlian domain yang dalam. Kami menugaskan Senior Engineer yang telah difilter ketat.",
         "squadCta": "Kenali Ahli Kami",
-        "adminTitle": "Kepatuhan Enterprise",
-        "adminDesc": "Pertahankan kedaulatan aset digital Anda. Kami menerapkan standar keamanan perbankan dan ISO-standard performance testing.",
+        "adminTitle": "Standar Kualitas Dunia",
+        "adminDesc": "Pegang kendali penuh atas aset digital Anda. Kami menerapkan standar keamanan perbankan dan pengujian performa kelas dunia.",
         "adminCta": "Standar Kepatuhan"
     },
     "SocialProof": {
@@ -121,53 +121,30 @@
     },
     "Comparison": {
         "title": "Kenapa Kami Mahal?",
-        "subtitle": "Karena memperbaiki sistem murah yang gagal, harganya jauh lebih mahal.",
+        "subtitle": "Karena kami memberikan hasil dan pelayanan di atas penyedia website/aplikasi pada umumnya.",
         "oldTitle": "Mereka",
         "old1": "Biaya Siluman:",
         "old1Sub": "Harga murah di awal, tagihan bengkak di akhir.",
-        "old2": "Black Box:",
-        "old2Sub": "Anda tidak tahu apa yang mereka kerjakan.",
-        "old3": "Vendor Lock-in:",
+        "old2": "Proses Tertutup:",
+        "old2Sub": "Anda tidak tahu apa yang sedang dikerjakan.",
+        "old3": "Ketergantungan Vendor:",
         "old3Sub": "Kode dikunci, Anda dipaksa langganan.",
         "old4": "Template-based:",
-        "old4Sub": "Lambat, berat, dan tidak aman.",
+        "old4Sub": "Sangat sulit diubah sesuai kebutuhan dan rawan kebocoran data.",
         "newTitle": "{brand}",
         "recommended": "PILIHAN ENTERPRISE",
-        "new1": "Fixed Price:",
+        "new1": "Harga Pasti:",
         "new1Sub": "Harga yang disepakati adalah harga yang Anda bayar.",
-        "new2": "Daily Report:",
-        "new2Sub": "Pantau progres setiap hari via Dashboard/Trello.",
-        "new3": "Full Ownership:",
-        "new3Sub": "Source code milik Anda 100% sejak hari pertama.",
-        "new4": "Bespoke Development:",
-        "new4Sub": "Kode bersih, ringan, dan aman standar industri."
+        "new2": "Laporan Harian:",
+        "new2Sub": "Pantau progres setiap hari via Dashboard.",
+        "new3": "Hak Milik Penuh:",
+        "new3Sub": "Kode aplikasi milik Anda 100% sejak hari pertama.",
+        "new4": "Dibuat Khusus:",
+        "new4Sub": "Sistem dibangun dari nol khusus untuk kebutuhan bisnis Anda."
     },
     "ProductCatalog": {
         "title": "Solusi Strategis",
-        "subtitle": "Model kerjasama yang disesuaikan untuk transformasi digital.",
-        "products": {
-            "ops": {
-                "title": "Ekosistem Internal & Ops",
-                "target": "Pasar Menengah & Ops Terdistribusi",
-                "desc": "Skalakan proses manual menjadi lingkungan database yang aman dan terintegrasi. Audit trail otomatis & logika komisi.",
-                "price": "Penawaran Enterprise Kustom",
-                "cta": "Minta Studi Kasus"
-            },
-            "publisher": {
-                "title": "Hub Media Next-Gen",
-                "target": "Perusahaan Media & Konten",
-                "desc": "Portal berita berbasis Next.js dengan kecepatan tinggi. CMS redaksi mutakhir dengan caching & distribusi data kelas industri.",
-                "price": "Mulai dari Rp 10 Jt",
-                "cta": "Lihat Arsitektur"
-            },
-            "saas": {
-                "title": "Ekspansi Lab Inovasi Korporat",
-                "target": "Corporate Innovation Labs",
-                "desc": "Protokol cepat untuk validasi unit bisnis baru. Pengembangan siklus penuh dari strategi hingga deployment siap produksi.",
-                "price": "Konsultasi Strategis",
-                "cta": "Mulai Sesi Strategi"
-            }
-        },
+        "subtitle": "Model kerja sama yang dirancang khusus untuk percepatan bisnis digital.",
         "ctaGeneric": "Pilih Paket",
         "viewAllServices": "Lihat Semua Layanan"
     },
@@ -177,21 +154,21 @@
         "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi masa depan.",
         "items": {
             "web": {
-                "title": "High-Performance Web (Scale-up)",
-                "target": "Company Profile, Landing Page, Corporate Blog, Content Marketing, Toko Online, Portfolio Pro, Media Hub, Microsite Campaign, Web Edukasi, Portal Berita, Katalog Digital, Event Page, Brand Activation",
-                "desc": "Membangun Marketing Engine yang super cepat untuk konversi maksimal. Bukan WordPress biasa.",
+                "title": "Website Berkecepatan Tinggi (Scale-up)",
+                "target": "Company Profile, Landing Page, Blog Perusahaan, Content Marketing, Toko Online, Portfolio Pro, Media Hub, Microsite Campaign, Web Edukasi, Portal Berita, Katalog Digital, Event Page, Brand Activation",
+                "desc": "Membangun Mesin Pemasaran yang super cepat untuk konversi maksimal. Bukan WordPress biasa.",
                 "cta": "Optimasi Performa"
             },
             "app": {
-                "title": "Complex Web App (Efficiency)",
+                "title": "Sistem & Aplikasi Web (Otomasi)",
                 "target": "Sistem Internal, Dashboard Khusus, Platform SaaS, Otomasi Bisnis, CRM Kustom, Sistem Inventaris, Portal Keanggotaan, Management Tool, Integrasi API Sistem, Sistem Booking, Payroll App, Tracking Logistik, Dashboard Analytic",
-                "desc": "Membangun Operational Engine untuk mengotomasi bisnis dan membuang proses manual.",
+                "desc": "Membangun Mesin Operasional untuk mengotomasi bisnis dan membuang proses manual.",
                 "cta": "Bangun Sistem"
             },
             "security": {
-                "title": "Managed Security & GEO (Future-Proof)",
+                "title": "Keamanan & Optimasi AI (GEO)",
                 "target": "Enterprise Brand, High-Traffic Site, AI-Ready SEO, Cybersecurity, Anti-DDoS, Data Protection, GEO Optimization, Search Generative AI, Bot Protection, Cloud Security, Database Encryption, Audit Keamanan",
-                "desc": "Optimasi website Anda agar dikutip oleh Generative AI (GEO) dan aman dari serangan siber.",
+                "desc": "Amankan website Anda dari serangan siber dan optimasi agar mudah ditemukan oleh AI seperti ChatGPT (GEO).",
                 "cta": "Amankan Aset"
             }
         }
@@ -213,24 +190,28 @@
         "comparison": "Logika Finansial",
         "hireSenior": "Membangun Tim Internal",
         "hybrid": "Kemitraan {brand}",
-        "salaryOldValue": "Overhead Tinggi",
+        "salaryOldValue": "Biaya Operasional Tinggi",
         "salaryOld": "Gaji Tetap + Tunjangan + Operasional",
-        "salaryNewValue": "Fixed-Price",
-        "salaryNew": "Investasi Berbasis Proyek (Pasti)",
-        "hiringTimeOld": "Onboarding lama (2-3 bulan).",
-        "riskOld": "Risiko turnover & Tech Debt.",
-        "managementOld": "Beban manajemen & training tinggi.",
-        "hiddenCostOld": "Biaya siluman (Software, BPJS, THR).",
-        "hiringTimeNew": "Eksekusi instan Hari ke-1.",
-        "hiddenCostNew": "Tanpa biaya lisensi/lock-in.",
-        "riskNew": "Garansi deployment standar industri.",
-        "ownership": "Full ownership source code 100%"
+        "salaryNewValue": "Harga Pasti (Fixed-Price)",
+        "salaryNew": "Investasi Berbasis Proyek (Efisien)",
+        "comp1Old": "Rekrutmen & Persiapan (2-3 bulan).",
+        "comp1New": "Eksekusi Instan (Hari ke-1).",
+        "comp2Old": "Gaji Senior Sangat Mahal & Langka.",
+        "comp2New": "Kualitas Setara, Harga Proyek.",
+        "comp3Old": "Risiko Resign & Masalah Teknis.",
+        "comp3New": "Jaminan Sistem Berjalan Lancar.",
+        "comp4Old": "Beban Manajemen & Pelatihan Tinggi.",
+        "comp4New": "Tanpa Beban Manajemen (Hands-off).",
+        "comp5Old": "Biaya Alat, Software & BPJS.",
+        "comp5New": "Hak Milik Kode 100% (Tanpa Lisensi).",
+        "comp6Old": "Revisi Lambat & Drama Internal.",
+        "comp6New": "Revisi Terjamin Sesuai Kesepakatan."
     },
     "Guarantee": {
         "title": "Aman dan Transparan.",
         "subtitle": "Garansi Uang Kembali 100%\nSelama Fase Briefing",
-        "desc": "Jika Blueprint awal tidak cocok setelah sesi briefing AI, deposit kami kembalikan 100%. Tanpa syarat. Anda tetap boleh mengamankan Blueprint tersebut selama belum masuk tahap development.",
-        "footer": ""
+        "desc": "Jika Blueprint awal tidak cocok setelah sesi briefing, deposit kami kembalikan 100%. Tanpa syarat. Anda tetap boleh mengamankan Blueprint tersebut selama belum masuk tahap development.",
+        "footer": "Tanpa syarat. Tanpa drama. Anda tetap berhak menyimpan hasil analisis Blueprint dari kami."
     },
     "CustomCTA": {
         "title": "Butuh Solusi Spesifik?",
@@ -331,13 +312,13 @@
         "name": "Rasyiqi",
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",
-        "description": "Setiap bisnis memiliki DNA yang unik, begitu pula sistem yang dibutuhkannya. Kami membangun infrastruktur dari nol dengan standar clean code dan keamanan terbaik di industri. Fokus kami hanya satu: memberikan Anda fondasi digital yang solid dan cepat untuk menopang pertumbuhan bisnis jangka panjang",
+        "description": "Setiap bisnis memiliki DNA yang unik, begitu pula sistem yang dibutuhkannya. Kami membangun sistem dari nol dengan standar kode yang rapi (clean code) dan keamanan terbaik di industri. Fokus kami hanya satu: memberikan Anda fondasi digital yang solid dan cepat untuk menopang pertumbuhan bisnis jangka panjang",
         "footer": "Bangun untuk Tumbuh. Rancang untuk Tangguh.",
         "tagline": "Build to Scale. Design to Prevail."
     },
     "Experts": {
         "badge": "TALENTA KELAS DUNIA",
-        "title": "Tim <blue>Elite Engineering</blue>",
+        "title": "Tim <blue>Tenaga Ahli (Elite)</blue>",
         "description": "Kami tidak merekrut developer junior. Setiap proyek dieksekusi oleh Senior Engineer yang telah terkurasi ketat dengan pengalaman industri yang luas.",
         "keys": [
             "Rasyiqi",
@@ -347,26 +328,26 @@
         "Rasyiqi": {
             "name": "Rasyiqi",
             "role": "Senior Fullstack Developer",
-            "specialty": "Next.js, AI Protocols, Cloud Infra",
+            "specialty": "Next.js, Protokol AI, Infrastruktur Cloud",
             "exp": "10+ Tahun",
             "image": "https://github.com/shadcn.png"
         },
         "Alexander": {
             "name": "Alexander",
             "role": "Principal Frontend Engineer",
-            "specialty": "UX Strategist, Design Systems",
+            "specialty": "Strategi UX, Sistem Desain",
             "exp": "8+ Tahun",
             "image": "https://github.com/nutlope.png"
         },
         "Sarah": {
             "name": "Sarah Chen",
             "role": "Cybersecurity Expert",
-            "specialty": "Penetration Testing, Compliance",
+            "specialty": "Uji Keamanan (Pentest), Kepatuhan",
             "exp": "12+ Tahun",
             "image": "https://i.pravatar.cc/96?u=sarah"
         },
         "Vetting": {
-            "title": "Standar Kurasi Kami",
+            "title": "Cara Kami Memilih Tim",
             "subtitle": "Hanya 1% teratas dari talenta engineering yang lolos ke tim kami.",
             "Technical": {
                 "title": "Penilaian Teknis",
@@ -411,7 +392,7 @@
             },
             "comms": {
                 "title": "Saluran Komunikasi Terpadu",
-                "desc": "Komunikasi langsung dan asinkron dengan tim engineering. Semua diskusi strategis terpusat dan terekam."
+                "desc": "Komunikasi langsung dan lewat pesan (asinkron) dengan tim engineering. Semua diskusi strategis terpusat dan terekam."
             },
             "issues": {
                 "title": "Manajemen Masalah",
@@ -427,7 +408,7 @@
             },
             "status": {
                 "title": "Status Operasional",
-                "desc": "Pelacakan kesehatan misi real-time. Pantau status deployment, kesehatan environment, dan alokasi tim secara instan."
+                "desc": "Pelacakan kondisi sistem real-time. Pantau status peluncuran (deployment), kesehatan server, dan alokasi tim secara instan."
             }
         },
         "MissionControl": {
@@ -435,25 +416,25 @@
             "title": "Kendali Penuh di Tangan Anda.",
             "titleHighlight": "Bukan Sekadar Janji, Tapi Bukti.",
             "description": "Kami menghilangkan \"kotak hitam\" dalam pengembangan perangkat lunak. Mission Control adalah jendela jujur Anda ke dalam dapur kami.",
-            "f1Title": "Live Engineering Pulse",
+            "f1Title": "Pantau Dapur Pengerjaan (Real-Time)",
             "f1Subtitle": "(Project Workbench)",
-            "f1Desc": "Lihat setiap commit GitHub secara langsung. Anda tahu kapan kode ditulis, fitur apa yang ditambahkan, dan bagaimana kualitasnya—tanpa perlu bertanya.",
-            "f2Title": "Daily Shipment Logs",
+            "f1Desc": "Lihat setiap perubahan kode secara langsung. Anda tahu kapan fitur ditambahkan dan bagaimana kualitasnya—tanpa perlu bertanya.",
+            "f2Title": "Laporan Progres Harian",
             "f2Desc": "Setiap sore, tim kami menjawab satu pertanyaan: \"Apa yang kami kirimkan hari ini?\". Anda mendapatkan laporan progres harian yang bisa diaudit, bukan sekadar janji mingguan yang basi.",
             "f3Title": "Unified Communications",
             "f3Desc": "Obrolan tim, dokumen proyek, dan status teknis dalam satu kanal terpadu. Tidak ada lagi instruksi yang hilang di tumpukan email."
         },
         "Philosophy": {
-            "badge": "ASYNC FIRST",
-            "title": "Mengapa Kami Menghindari <red>Meeting</red>",
-            "desc": "Rapat sinkronus seringkali membunuh momentum. Kami mengganti pertemuan yang tidak efisien dengan dokumentasi mutlak untuk menghormati waktu Anda.",
-            "stat1": "Manajer terhalang dari deep work",
+            "badge": "UTAMAKAN KOMUNIKASI TERTULIS",
+            "title": "Mengapa Kami Menghindari <red>Rapat</red>",
+            "desc": "Rapat tatap muka seringkali membunuh momentum. Kami mengganti pertemuan yang tidak efisien dengan dokumentasi tertulis untuk menghormati waktu Anda.",
+            "stat1": "Manajer terhalang dari fokus mendalam",
             "stat2": "Rapat sering tidak produktif",
             "stat3": "Waktu untuk kembali fokus setelah gangguan",
             "stat4": "Orang multitasking saat rapat",
             "wayTitle": "Cara {brand}",
             "way1": "<strong>Keputusan Terdokumentasi.</strong> Tidak ada \"katanya, katanya\". Semua tertulis permanen.",
-            "way2": "<strong>Async secara Default.</strong> Respon saat fokus, bukan saat kalender memaksa.",
+            "way2": "<strong>Komunikasi Lewat Pesan.</strong> Respon saat Anda fokus, bukan saat kalender memaksa.",
             "way3": "<strong>Update Visual.</strong> Jangan tanya status layout, lihat langsung di dashboard.",
             "way4": "<strong>Hanya Darurat.</strong> Kami hanya rapat jika strategi membutuhkan perubahan besar."
         },
@@ -465,12 +446,13 @@
     },
     "FAQ": {
         "title": "Banyak Ditanya..",
+        "subtitle": "Menjawab pertanyaan yang sering muncul untuk memastikan Anda merasa aman dan nyaman bekerja bersama kami.",
         "q1": "Apakah saya bisa berkonsultasi atau mengobrol langsung?",
         "a1": "Kami menggunakan sistem komunikasi kami (live chat/dashboard) supaya setiap keputusan tercatat rapi dan pekerjaan lebih cepat selesai. Namun jika ada hal mendesak, kita bisa menjadwalkan sesi telepon atau video call khusus.",
         "q2": "Bagaimana jika ada kendala teknis (error) setelah website/aplikasi jadi?",
-        "a2": "Setiap proyek memiliki **Garansi Perbaikan Error selama 90 Hari**. Anda cukup melapor lewat panel khusus, dan tim kami akan segera memperbaikinya agar bisnis Anda tetap berjalan lancar tanpa gangguan.",
+        "a2": "Setiap proyek memiliki <strong>Garansi Perbaikan Error selama 90 Hari</strong>. Anda cukup melapor lewat panel khusus, dan tim kami akan segera memperbaikinya agar bisnis Anda tetap berjalan lancar tanpa gangguan.",
         "q3": "Siapa yang memiliki file mentah (kode) aplikasinya nanti?",
-        "a3": "Anda memiliki **hak milik 100%**. Setelah semua pembayaran selesai, semua file mentah, desain, dan akses sistem akan kami serahkan sepenuhnya kepada Anda. Anda tidak akan \"terikat\" dengan kami selamanya.",
+        "a3": "Anda memiliki <strong>hak milik 100%</strong>. Setelah semua pembayaran selesai, semua file mentah, desain, dan akses sistem akan kami serahkan sepenuhnya kepada Anda. Anda tidak akan \"terikat\" dengan kami selamanya.",
         "q4": "Bagaimana jika saya ingin menambah fitur baru di tengah jalan?",
         "a4": "Kami sangat fleksibel. Jika perubahannya kecil, bisa langsung kami sesuaikan. Namun jika fiturnya cukup besar, kami akan buatkan rencana tambahan agar jadwal peluncuran utama tetap tepat waktu.",
         "q5": "Teknologi apa yang digunakan untuk membangun sistem saya?",
@@ -493,12 +475,12 @@
         "a13": "Kami memberikan garansi perbaikan gratis selama 3 bulan pertama. Kami pastikan sistem Anda berjalan sempurna sebelum kami benar-benar melepasnya.",
         "q14": "Sejak kapan CredibleMark berdiri?",
         "a14": "CredibleMark telah aktif memberikan solusi digital strategis sejak tahun 2013.",
-        "q15": "Berapa harga membuat website paling murah?",
-        "a15": "Harga layanan kami dimulai dari Rp 3 Juta. Detail lengkap mengenai berbagai paket pilihan dapat Anda lihat di halaman Layanan (Service).",
+        "q15": "Berapa investasi yang dibutuhkan untuk sebuah proyek?",
+        "a15": "Investasi disesuaikan dengan skala dan kompleksitas sistem yang Anda butuhkan. Kami fokus pada kualitas jangka panjang, bukan sekadar harga murah. Detail perkiraan harga untuk setiap model layanan dapat Anda lihat di halaman Layanan.",
         "q16": "Apa saja fasilitas paling dominan CredibleMark dibanding tempat pembuatan website lainnya?",
         "a16": "Keunggulan utama kami adalah **Transparansi Total** (Dashboard real-time), **Hak Milik Penuh** (Source code milik Anda), **Tanpa Biaya Tersembunyi**, serta kualitas **Hasil Kodingan dan UI** yang premium dan modern.",
-        "q17": "Berapa waktu paling cepat dalam membuat website?",
-        "a17": "Untuk versi awal yang siap pakai (MVP), kami biasanya menyelesaikannya dalam waktu 4 hingga 8 minggu tergantung kerumitan fitur.",
+        "q17": "Berapa lama waktu pengerjaan proyek?",
+        "a17": "Untuk versi awal yang siap pakai (MVP), kami biasanya menyelesaikannya dalam waktu minimal 4 minggu tergantung kerumitan fitur.",
         "q18": "CredibleMark melayani apa saja?",
         "a18": "Kami melayani pembuatan website profesional, aplikasi web kompleks (sistem internal, CRM, SaaS), keamanan siber, hingga menghubungkan sistem Anda dengan layanan lain seperti WhatsApp atau sistem pembayaran.",
         "q19": "Apa keuntungannya memiliki website dari pada memiliki marketplace?",
@@ -931,8 +913,8 @@
         "processing": "Sedang Memproses"
     },
     "Footer": {
-        "ctaTitle": "Kompetitor Sudah Take Action. Anda ?",
-        "ctaButton": "Konsultasi Gratis",
+        "ctaTitle": "Bingung Mulai Dari Mana? Kami Siap Bantu.",
+        "ctaButton": "Tanya-tanya Dulu, Gratis!",
         "clientLogin": "Konsol Klien",
         "contactUs": "Hubungi Tenaga Ahli",
         "services": "Solusi",

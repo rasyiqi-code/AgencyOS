@@ -1,0 +1,169 @@
+"use client";
+
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
+import { useTranslations, useMessages } from "next-intl";
+import { motion } from "framer-motion";
+import { ArrowRight, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useFloatingChat } from "@/lib/store/floating-chat-store";
+import Image from "next/image";
+
+export function FAQSection() {
+    const messages = useMessages();
+    const faqData = (messages as Record<string, unknown>)?.FAQ || {};
+    const t = useTranslations("FAQ");
+    const tFooter = useTranslations("Footer");
+    const { setIsMenuOpen } = useFloatingChat();
+    
+    const questionKeys = Object.keys(faqData)
+        .filter(key => key.startsWith('q'))
+        .sort((a, b) => {
+            const numA = parseInt(a.substring(1));
+            const numB = parseInt(b.substring(1));
+            return numA - numB;
+        });
+
+    if (questionKeys.length === 0) {
+        return null;
+    }
+
+    return (
+        <section className="py-16 md:py-24 bg-brand-yellow relative">
+            {/* Pola background mesh/crosshatch */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.05] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
+                    style={{
+                        backgroundImage: `linear-gradient(45deg, #000 0.5px, transparent 0.5px), linear-gradient(-45deg, #000 0.5px, transparent 0.5px)`,
+                        backgroundSize: '24px 24px'
+                    }}
+                />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 relative z-10 w-full">
+                {/* Heading Section */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mb-10 md:mb-16"
+                >
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-black tracking-tighter leading-none mb-4">
+                        {t("title")}
+                    </h2>
+                    <p className="text-black/60 font-medium text-base md:text-lg leading-relaxed max-w-xl">
+                        {t("subtitle") || "Menjawab pertanyaan yang sering muncul untuk memastikan Anda merasa aman dan nyaman bekerja bersama kami."}
+                    </p>
+                </motion.div>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 items-stretch w-full">
+                    {/* FAQ Items - 8 Columns */}
+                    <div className="md:col-span-8">
+                        <Accordion type="single" collapsible className="w-full text-black">
+                            {questionKeys.map((key, index) => {
+                                const i = key.substring(1);
+                                return (
+                                    <motion.div
+                                        key={key}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.05 }}
+                                    >
+                                        <AccordionItem 
+                                            value={`item-${i}`} 
+                                            className="border-b border-black/5 bg-transparent px-1 transition-all duration-300 hover:bg-black/5"
+                                        >
+                                            <AccordionTrigger className="hover:no-underline text-left font-bold tracking-tight text-sm md:text-base py-3 [&>svg]:text-black/30 [&>svg]:w-4 [&>svg]:h-4 group">
+                                                <div className="flex items-center gap-3">
+                                                    <span>{t(key)}</span>
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-black/60 font-medium leading-relaxed text-xs md:text-sm pb-4 pt-0">
+                                                {t.rich(`a${i}`, {
+                                                    strong: (chunks) => <strong className="text-black font-bold">{chunks}</strong>
+                                                })}
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </motion.div>
+                                );
+                            })}
+                        </Accordion>
+                    </div>
+
+                    {/* CTA Card - 4 Columns */}
+                    <div className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0">
+                        <div className="p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 w-full">
+                            <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(254,215,0,0.2)] group-hover:scale-110 transition-transform duration-500">
+                                <Zap className="w-5 h-5 md:w-6 md:h-6 text-black fill-black" />
+                            </div>
+
+                            <h3 className="text-lg md:text-2xl font-black mb-4 tracking-tighter leading-tight italic uppercase">
+                                {tFooter("ctaTitle")}
+                            </h3>
+                            
+                            <p className="text-zinc-500 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
+                                Sudah banyak pemilik bisnis yang terbantu dengan layanan kami. Yuk, obrolin kebutuhan digital Anda tanpa pusing.
+                            </p>
+
+                            <Button 
+                                onClick={() => setIsMenuOpen(true)}
+                                className="w-full h-11 md:h-12 rounded-full bg-brand-yellow hover:bg-white text-black transition-all duration-300 font-black uppercase tracking-tighter flex items-center justify-center gap-2 group/btn text-[10px] md:text-xs"
+                            >
+                                {tFooter("ctaButton")}
+                                <ArrowRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
+                            </Button>
+
+                            <div className="mt-6 pt-6 border-t border-white/10 w-full flex flex-col items-center gap-3">
+                                <div className="flex -space-x-2">
+                                    {[1, 2, 3, 4].map((i) => (
+                                        <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
+                                            <Image 
+                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} 
+                                                alt="User" 
+                                                fill
+                                                className="object-cover" 
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                    60+ Pengusaha Sudah Bergabung
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* FAQ Structured Data for SEO */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": questionKeys.map((key) => {
+                                const i = key.substring(1);
+                                return {
+                                    "@type": "Question",
+                                    "name": t(key),
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": (t.raw("a" + i) as string).replace(/<\/?[^>]+(>|$)/g, "")
+                                    }
+                                };
+                            })
+                        })
+                    }}
+                />
+            </div>
+        </section>
+    );
+}

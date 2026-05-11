@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { SiteFooter } from "@/components/landing/site-footer";
+import { FAQSection } from "@/components/landing/faq-section";
 import { LandingHero } from "@/components/landing/landing-hero";
 import dynamic from "next/dynamic";
 
@@ -14,8 +15,6 @@ const FinancialLogic = dynamic(() => import("@/components/landing/section-financ
 const Workflow = dynamic(() => import("@/components/landing/section-workflow").then(mod => mod.Workflow));
 const Testimonials = dynamic(() => import("@/components/landing/section-testimonials").then(mod => mod.Testimonials));
 const SectionGuarantee = dynamic(() => import("@/components/landing/section-guarantee").then(mod => mod.SectionGuarantee));
-const FAQSection = dynamic(() => import("@/components/landing/section-faq").then(mod => mod.FAQSection));
-const SectionCTA = dynamic(() => import("@/components/landing/section-cta").then(mod => mod.SectionCTA));
 
 const ScrollAnimationWrapper = dynamic(() => import("@/components/ui/scroll-animation-wrapper").then(mod => mod.ScrollAnimationWrapper));
 import { JsonLd } from "@/components/seo/json-ld";
@@ -71,7 +70,7 @@ export default async function Home() {
   const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
 
   return (
-    <main className="relative min-h-screen bg-black selection:bg-blue-500/30 overflow-x-hidden">
+    <main className="relative min-h-screen bg-black selection:bg-blue-500/30">
       <JsonLd<Organization>
         data={{
           "@context": "https://schema.org",
@@ -116,9 +115,6 @@ export default async function Home() {
 
       <FAQSection />
 
-      <ScrollAnimationWrapper>
-        <SectionCTA />
-      </ScrollAnimationWrapper>
       <SiteFooter />
     </main>
   );

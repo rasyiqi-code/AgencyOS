@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Testimonials } from "@/components/landing/section-testimonials";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
-import { FAQSection } from "@/components/landing/section-faq";
+import { FAQSection } from "@/components/landing/faq-section";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 export const dynamic = "force-dynamic";

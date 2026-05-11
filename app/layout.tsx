@@ -115,7 +115,9 @@ export default async function RootLayout({
   const midtransConfig = await paymentGatewayService.getMidtransConfig();
 
   // Fetch SEO Settings for GA Script (using cache)
-  const seoSettings = await getSystemSettings(["SEO_GA_ID", "AGENCY_ADDRESS", "AGENCY_PHONE", "AGENCY_EMAIL", "AGENCY_LOGO", "AGENCY_NAME"]);
+  const seoSettings = await getSystemSettings(["SEO_GA_ID", "AGENCY_ADDRESS", "AGENCY_PHONE", "AGENCY_EMAIL", "AGENCY_LOGO", "AGENCY_NAME", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID"]);
+  const isId = locale === 'id';
+  const seoDesc = (isId ? seoSettings.find(s => s.key === "SEO_DESCRIPTION_ID")?.value : null) || seoSettings.find(s => s.key === "SEO_DESCRIPTION")?.value || "Senior Software House";
   const gaId = seoSettings.find(s => s.key === "SEO_GA_ID")?.value;
   const agencyAddress = seoSettings.find(s => s.key === "AGENCY_ADDRESS")?.value;
   const agencyPhone = seoSettings.find(s => s.key === "AGENCY_PHONE")?.value;
@@ -161,7 +163,7 @@ export default async function RootLayout({
               url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
               logo: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
               image: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
-              description: "Senior Software House & Professional Digital Solutions",
+              description: seoDesc,
               address: {
                 "@type": "PostalAddress",
                 "streetAddress": agencyAddress || undefined,
@@ -190,7 +192,7 @@ export default async function RootLayout({
           <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />
         )}
       </head>
-      <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative overflow-x-hidden")}>
+      <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative")}>
         <NextTopLoader
           color="#FFB800"
           initialPosition={0.08}

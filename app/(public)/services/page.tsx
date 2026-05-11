@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { Service } from "@prisma/client";
 import { Testimonials } from "@/components/landing/section-testimonials";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
-import { FAQSection } from "@/components/landing/section-faq";
+import { FAQSection } from "@/components/landing/faq-section";
 import { SectionCustomRequest } from "@/components/landing/section-custom-request";
 
 

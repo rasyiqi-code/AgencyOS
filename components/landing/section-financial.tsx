@@ -71,36 +71,14 @@ export async function FinancialLogic() {
                                     </div>
 
                                     <div className="space-y-2.5">
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
+                                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                                            <div key={i} className="flex items-center gap-3 group/item">
+                                                <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
+                                                    <X className="w-3 h-3 text-red-600" strokeWidth={3} />
+                                                </div>
+                                                <span className="text-black/80 text-sm font-bold tracking-tight">{t(`comp${i}Old`)}</span>
                                             </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("hiringTimeOld")}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
-                                            </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("riskOld")}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
-                                            </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("riskOld")}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <X className="w-3 h-3 text-red-600" strokeWidth={3} />
-                                            </div>
-                                            <span className="text-black/80 text-sm font-bold tracking-tight">{t("managementOld")}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 group/item">
-                                            <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-red-500/20 transition-colors">
-                                                <Info className="w-3 h-3 text-red-500/50" />
-                                            </div>
-                                            <span className="text-black/80 text-[11px] font-black tracking-wide leading-tight">{t("hiddenCostOld")}</span>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -131,32 +109,14 @@ export async function FinancialLogic() {
                                     </div>
 
                                     <div className="space-y-2.5">
-                                        <div className="flex items-center gap-3 justify-end group/item text-right">
-                                            <span className="text-zinc-300 text-sm font-black tracking-tight">{t("hiringTimeNew")}</span>
-                                            <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">
-                                                <Check className="w-3 h-3 text-black" strokeWidth={3} />
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-3 justify-end group/item text-right">
-                                            <span className="text-zinc-300 text-sm font-black tracking-tight">{t("hiddenCostNew")}</span>
-                                            <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">
-                                                <Check className="w-3 h-3 text-black" strokeWidth={3} />
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-3 justify-end group/item text-right">
-                                            <span className="text-emerald-400 text-sm font-black tracking-tight">{t("riskNew")}</span>
-                                            <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
-                                                <Check className="w-3 h-3 text-black" strokeWidth={3} />
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col items-end gap-1.5 text-right group/item">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-brand-yellow font-black tracking-wide text-[11px]">{t("ownership")}</span>
+                                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                                            <div key={i} className="flex items-center gap-3 justify-end group/item text-right">
+                                                <span className="text-zinc-300 text-sm font-black tracking-tight">{t(`comp${i}New`)}</span>
                                                 <div className="w-5 h-5 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0 shadow-lg shadow-brand-yellow/20">
                                                     <Check className="w-3 h-3 text-black" strokeWidth={3} />
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
