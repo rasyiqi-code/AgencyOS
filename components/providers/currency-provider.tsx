@@ -60,13 +60,20 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
 
         // Fetch Dynamic Rate
         fetch('/api/currency/rates', { cache: 'no-store' })
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const text = await res.text();
+                return text ? JSON.parse(text) : {};
+            })
             .then(data => {
-                if (data.rates && data.rates.IDR) {
+                if (data && data.rates && data.rates.IDR) {
                     setRate(data.rates.IDR);
                 }
             })
-            .catch(err => console.error("Rate fetch failed", err));
+            .catch(err => {
+                console.warn("[CurrencyProvider] Rate fetch failed (using fallback):", err.message);
+                // Fallback is already set in state (16000)
+            });
 
         return () => clearTimeout(timer);
     }, []);
