@@ -356,8 +356,8 @@
         }
     },
     "FAQ": {
-        "title": "Frequently Asked Questions",
-        "subtitle": "Answering common questions to ensure you feel secure and comfortable working with us.",
+        "title": "Have Doubts?",
+        "subtitle": "We know you have many questions. Let's cover everything here so you can move forward with confidence.",
         "q1": "Is direct synchronous communication available?",
         "a1": "Our platform is optimized for <strong>Asynchronous Communication</strong> to ensure precision and absolute documentation. However, for critical coordination or deep strategic consulting, scheduled Premium Call sessions are available.",
         "q2": "How is post-deployment stability managed?",

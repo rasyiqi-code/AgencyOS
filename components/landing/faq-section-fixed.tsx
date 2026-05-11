@@ -52,11 +52,11 @@ export function FAQSection() {
                     viewport={{ once: true }}
                     className="mb-10 md:mb-16"
                 >
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-black tracking-tighter leading-none mb-4">
+                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black tracking-tight leading-none mb-6">
                         {t("title")}
                     </h2>
-                    <p className="text-black/60 font-medium text-base md:text-lg leading-relaxed max-w-xl">
-                        {t("subtitle") || "Menjawab pertanyaan yang sering muncul untuk memastikan Anda merasa aman dan nyaman bekerja bersama kami."}
+                    <p className="text-black/80 font-semibold text-lg md:text-xl leading-relaxed max-w-2xl">
+                        {t("subtitle")}
                     </p>
                 </motion.div>
 
