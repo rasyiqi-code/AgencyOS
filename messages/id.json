@@ -901,7 +901,7 @@
         "denied": "AKSES DITOLAK"
     },
     "Loader": {
-        "initializingCore": "Menyiapkan Arsitektur Senior...",
+        "initializingCore": "Menyiapkan Arsitektur...",
         "loadingNeural": "Mengoptimalkan Performa Skala Besar...",
         "establishingUplink": "Menjamin Keamanan Enterprise...",
         "decryptingData": "Memvalidasi Kedaulatan Kode...",

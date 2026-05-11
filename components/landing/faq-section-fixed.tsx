@@ -96,8 +96,11 @@ export function FAQSection() {
                     </div>
 
                     {/* CTA Card - 4 Columns */}
-                    <div className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0">
-                        <div className="p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 w-full">
+                    <div 
+                        className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer"
+                        onClick={() => setIsMenuOpen(true)}
+                    >
+                        <div className="p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 w-full transition-all duration-300 hover:border-brand-yellow/30">
                             <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             
                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(254,215,0,0.2)] group-hover:scale-110 transition-transform duration-500">
@@ -113,8 +116,7 @@ export function FAQSection() {
                             </p>
 
                             <Button 
-                                onClick={() => setIsMenuOpen(true)}
-                                className="w-full h-11 md:h-12 rounded-full bg-brand-yellow hover:bg-white text-black transition-all duration-300 font-black uppercase tracking-tighter flex items-center justify-center gap-2 group/btn text-[10px] md:text-xs"
+                                className="w-full h-11 md:h-12 rounded-full bg-brand-yellow hover:bg-white text-black transition-all duration-300 font-black uppercase tracking-tighter flex items-center justify-center gap-2 group/btn text-[10px] md:text-xs pointer-events-none"
                             >
                                 {tFooter("ctaButton")}
                                 <ArrowRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
