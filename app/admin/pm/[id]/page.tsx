@@ -18,6 +18,7 @@ import { FileManager } from "./file-manager";
 import { FeedbackBoard } from "@/components/feedback/board";
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { AssignedTeamCard } from "@/components/dashboard/shared/assigned-team-card";
+import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 
 interface PageProps {
@@ -87,7 +88,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                             )}
 
                             {project.service?.description && (
-                                <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: project.service.description }} />
+                                <div className="text-zinc-300 text-sm leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.service.description) }} />
                             )}
 
                             {!project.description && !project.service?.description && (
