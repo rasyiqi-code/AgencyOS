@@ -43,6 +43,14 @@ export function FloatingChatWidget() {
     // Local state for expanded/collapsed only, visibility is global
     const [isExpanded, setIsExpanded] = useState(false);
 
+    // Random CS Name Logic
+    const [csName, setCsName] = useState("Sarah");
+    useEffect(() => {
+        const names = ["Sarah", "Clara", "Amanda", "Bella", "Dian", "Maya", "Siska", "Lia", "Nabila"];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        setCsName(randomName);
+    }, []);
+
     const pathname = usePathname();
 
     // Helper handlers to replace local setters
@@ -456,7 +464,7 @@ export function FloatingChatWidget() {
                     </div>
                     <div>
                         <h3 className="font-semibold text-white text-sm">
-                            {mode === "human_chat" ? "Human Agent" : "Customer Support"}
+                            {mode === "human_chat" ? "Human Agent" : csName}
                         </h3>
                         <p className="text-xs text-zinc-400 flex items-center gap-1">
                             <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", "bg-brand-yellow")}></span>
