@@ -45,12 +45,7 @@ export function FloatingChatWidget() {
 
     // Random CS Name Logic
     const [csName, setCsName] = useState("Sarah");
-    useEffect(() => {
-        const names = ["Sarah", "Clara", "Amanda", "Bella", "Dian", "Maya", "Siska", "Lia", "Nabila"];
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        setCsName(randomName);
-    }, []);
-
+    
     const pathname = usePathname();
 
     // Helper handlers to replace local setters
@@ -65,9 +60,25 @@ export function FloatingChatWidget() {
         {
             id: "welcome-1",
             role: "assistant",
-            content: "Hi there! I'm CredibleSupport. How can I help you today?",
+            content: "Hi there! How can I help you today?",
         },
     ]);
+
+    // Initialize CS Name and Welcome Message
+    useEffect(() => {
+        const names = ["Sarah", "Clara", "Amanda", "Bella", "Dian", "Maya", "Siska", "Lia", "Nabila"];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        setCsName(randomName);
+        
+        setMessages([
+            {
+                id: "welcome-1",
+                role: "assistant",
+                content: `Hi there! I'm ${randomName}. How can I help you today?`,
+            }
+        ]);
+    }, []);
+
     const [isLoading, setIsLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);
     const [contactSettings, setContactSettings] = useState<ContactSettings>({
@@ -97,7 +108,7 @@ export function FloatingChatWidget() {
             .then(res => res.json())
             .then(data => {
                 setContactSettings({
-                    phone: data.phone?.replace(/\\D/g, '') || "6285183131249",
+                    phone: data.phone?.replace(/\D/g, '') || "6285183131249",
                     telegram: data.telegram?.replace('@', '') || "crediblemark"
                 });
             })
