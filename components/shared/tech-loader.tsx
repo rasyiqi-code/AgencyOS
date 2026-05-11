@@ -19,22 +19,40 @@ export function TechLoader() {
     const [currentStep, setCurrentStep] = useState(0);
     const [text, setText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
-    const [typingSpeed, setTypingSpeed] = useState(100);
+    const [typingSpeed, setTypingSpeed] = useState(30); // Faster initial speed
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
+        // Check if user has already seen the loader in this session
+        const hasSeenLoader = sessionStorage.getItem("agency-os-loader-seen");
+        if (hasSeenLoader) {
+            // If seen, we skip the animation and hide much faster
+            setIsVisible(false);
+            return;
+        }
+
         const handleTyping = () => {
             const fullText = LOADING_STEPS[currentStep % LOADING_STEPS.length];
 
             if (!isDeleting) {
                 setText(fullText.substring(0, text.length + 1));
-                setTypingSpeed(50 + Math.random() * 50);
+                setTypingSpeed(20 + Math.random() * 30); // Much faster typing
 
                 if (text === fullText) {
-                    setTimeout(() => setIsDeleting(true), 1500);
+                    // Stay on "System Ready" longer at the end
+                    const waitTime = currentStep === LOADING_STEPS.length - 1 ? 1000 : 600;
+                    setTimeout(() => {
+                        if (currentStep === LOADING_STEPS.length - 1) {
+                            sessionStorage.setItem("agency-os-loader-seen", "true");
+                            setIsVisible(false);
+                        } else {
+                            setIsDeleting(true);
+                        }
+                    }, waitTime);
                 }
             } else {
                 setText(fullText.substring(0, text.length - 1));
-                setTypingSpeed(30);
+                setTypingSpeed(10); // Very fast deletion
 
                 if (text === "") {
                     setIsDeleting(false);
@@ -46,6 +64,8 @@ export function TechLoader() {
         const timer = setTimeout(handleTyping, typingSpeed);
         return () => clearTimeout(timer);
     }, [text, isDeleting, currentStep, typingSpeed, LOADING_STEPS]);
+
+    if (!isVisible) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background font-mono">

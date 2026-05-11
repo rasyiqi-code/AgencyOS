@@ -901,12 +901,12 @@
         "denied": "AKSES DITOLAK"
     },
     "Loader": {
-        "initializingCore": "MENGINISIALISASI_SISTEM_INTI...",
-        "loadingNeural": "MEMUAT_PROTOKOL_SARAF...",
-        "establishingUplink": "MEMBANGUN_UPLINK_TERENKRIPSI...",
-        "decryptingData": "MENDEKRIPSI_DATA_AGENCY...",
-        "syncingWorkspace": "MENYINKRONKAN_MODE_WORKSPACE...",
-        "systemReady": "SISTEM_SIAP.",
+        "initializingCore": "Menyiapkan Arsitektur Senior...",
+        "loadingNeural": "Mengoptimalkan Performa Skala Besar...",
+        "establishingUplink": "Menjamin Keamanan Enterprise...",
+        "decryptingData": "Memvalidasi Kedaulatan Kode...",
+        "syncingWorkspace": "Membangun Fondasi Pertumbuhan...",
+        "systemReady": "Sistem Siap Digunakan.",
         "terminalVersion": "Terminal Sistem v2.0.26",
         "target": "Target",
         "status": "Status",
