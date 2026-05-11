@@ -20,6 +20,7 @@ import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
 import { ReferralTracker } from "@/components/marketing/referral-tracker";
 import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
+import { ScrollRestorer } from "@/components/ui/scroll-restorer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -232,6 +233,7 @@ export default async function RootLayout({
             <StackProvider app={stackServerApp}>
               <StackTheme>
                 {children}
+                <ScrollRestorer />
                 <ReferralTracker />
                 <PendingCheckoutRedirect />
                 <Suspense fallback={null}>
