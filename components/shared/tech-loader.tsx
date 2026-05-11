@@ -27,7 +27,7 @@ export function TechLoader() {
         const hasSeenLoader = sessionStorage.getItem("agency-os-loader-seen");
         if (hasSeenLoader) {
             // If seen, we skip the animation and hide much faster
-            setIsVisible(false);
+            setTimeout(() => setIsVisible(false), 0);
             return;
         }
 
