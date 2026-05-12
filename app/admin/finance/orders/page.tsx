@@ -77,9 +77,12 @@ export default async function AdminOrdersPage() {
     });
 
     // 2. Stack Auth User Resolution
-    // Collect specific IDs dari orders
+    // Collect specific IDs from financeData that actually need enrichment
     const uniqueUserIds = Array.from(new Set(
-        orders.map(o => o.userId).filter(Boolean) as string[]
+        financeData
+            .filter(item => item.project && item.project.userId && (item.project.clientName === "Client" || !item.project.clientName))
+            .map(item => item.project!.userId)
+            .filter(Boolean) as string[]
     ));
 
     const stackUsers = await Promise.all(
