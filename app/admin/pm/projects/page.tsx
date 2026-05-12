@@ -103,7 +103,10 @@ export default async function AdminProjectsPage({
 
     // Stack Auth: Resolve Users for Client Names
     // We do this to ensure even legacy data (where clientName might be null) has a name
-    const uniqueUserIds = Array.from(new Set(projects.map(p => p.userId).filter(Boolean)));
+    // ⚡ Bolt Optimization: Only fetch users for projects that are missing a clientName
+    const uniqueUserIds = Array.from(new Set(
+        projects.filter(p => !p.clientName).map(p => p.userId).filter(Boolean)
+    ));
     const stackUsers = await Promise.all(
         uniqueUserIds.map(async (id) => {
             try {
