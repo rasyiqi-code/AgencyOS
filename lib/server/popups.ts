@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { cache } from "react";
 
 export const getPopUps = cache(async () => {
@@ -53,6 +53,7 @@ export async function createPopUp(data: {
         },
     });
     revalidatePath("/admin/marketing");
+    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }
 
@@ -62,12 +63,14 @@ export async function updatePopUp(id: string, data: Partial<Parameters<typeof cr
         data,
     });
     revalidatePath("/admin/marketing");
+    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }
 
 export async function deletePopUp(id: string) {
-    await prisma.popUp.delete({ where: { id } });
+    await prisma.popUp.deleteMany({ where: { id } });
     revalidatePath("/admin/marketing");
+    (revalidateTag as unknown as (tag: string) => void)("popups");
 }
 
 export async function togglePopUpStatus(id: string, isActive: boolean) {
@@ -76,5 +79,6 @@ export async function togglePopUpStatus(id: string, isActive: boolean) {
         data: { isActive },
     });
     revalidatePath("/admin/marketing");
+    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }

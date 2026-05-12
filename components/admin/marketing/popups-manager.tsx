@@ -56,6 +56,8 @@ export function PopUpsManager() {
     const [isLoading, setIsLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [editingPopup, setEditingPopup] = useState<Partial<PopUp> | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [isMultiLang, setIsMultiLang] = useState(false);
 
     useEffect(() => {
         loadPopUps();
@@ -112,16 +114,27 @@ export function PopUpsManager() {
 
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus PopUp ini?")) return;
+        setDeletingId(id);
         try {
             const response = await fetch(`/api/admin/marketing/popups?id=${id}`, {
                 method: 'DELETE'
             });
-            if (!response.ok) throw new Error("Failed to delete");
-
-            toast.success("PopUp berhasil dihapus");
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                // If the error message indicates it's already gone, we treat it as success
+                if (errorData.error?.includes("P2025") || response.status === 404) {
+                    toast.success("PopUp sudah dihapus");
+                } else {
+                    throw new Error("Failed to delete");
+                }
+            } else {
+                toast.success("PopUp berhasil dihapus");
+            }
             loadPopUps();
         } catch {
             toast.error("Gagal menghapus PopUp");
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -152,7 +165,10 @@ export function PopUpsManager() {
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
                         <Button
-                            onClick={() => setEditingPopup(null)}
+                            onClick={() => {
+                                setEditingPopup(null);
+                                setIsMultiLang(false);
+                            }}
                             className="bg-brand-yellow text-black hover:bg-white font-black uppercase text-[10px] tracking-widest px-4 h-9 rounded-xl transition-all"
                         >
                             <Plus className="w-4 h-4 mr-2" />
@@ -170,42 +186,65 @@ export function PopUpsManager() {
                         </DialogHeader>
 
                         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5">
+                                <div className="space-y-0.5">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                                        <Globe className="w-3 h-3 text-brand-yellow" />
+                                        Multi-language Mode
+                                    </Label>
+                                    <p className="text-[10px] text-zinc-500">Enable translation fields for English and Indonesian.</p>
+                                </div>
+                                <Switch checked={isMultiLang} onCheckedChange={setIsMultiLang} />
+                            </div>
+
+                            <div className={`grid ${isMultiLang ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Headline (EN)</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Headline {isMultiLang && '(EN)'}</Label>
                                     <Input name="headline" defaultValue={editingPopup?.headline} required className="bg-white/5 border-white/10" />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Headline (ID)</Label>
-                                    <Input name="headline_id" defaultValue={editingPopup?.headline_id || ""} className="bg-white/5 border-white/10" />
-                                </div>
+                                {isMultiLang && (
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Headline (ID)</Label>
+                                        <Input name="headline_id" defaultValue={editingPopup?.headline_id || ""} className="bg-white/5 border-white/10" />
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className={`grid ${isMultiLang ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description (EN)</Label>
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description {isMultiLang && '(EN)'}</Label>
                                     <Textarea name="description" defaultValue={editingPopup?.description} required className="bg-white/5 border-white/10 min-h-[80px]" />
                                 </div>
+                                {isMultiLang && (
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description (ID)</Label>
+                                        <Textarea name="description_id" defaultValue={editingPopup?.description_id || ""} className="bg-white/5 border-white/10 min-h-[80px]" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={`grid ${isMultiLang ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Description (ID)</Label>
-                                    <Textarea name="description_id" defaultValue={editingPopup?.description_id || ""} className="bg-white/5 border-white/10 min-h-[80px]" />
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">CTA Text {isMultiLang && '(EN)'}</Label>
+                                    <Input name="ctaText" defaultValue={editingPopup?.ctaText || ""} className="bg-white/5 border-white/10" />
                                 </div>
+                                {isMultiLang && (
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">CTA Text (ID)</Label>
+                                        <Input name="ctaText_id" defaultValue={editingPopup?.ctaText_id || ""} className="bg-white/5 border-white/10" />
+                                    </div>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">CTA Text (EN)</Label>
-                                    <Input name="ctaText" defaultValue={editingPopup?.ctaText || ""} className="bg-white/5 border-white/10" />
-                                </div>
                                 <div className="space-y-2">
                                     <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">CTA URL</Label>
                                     <Input name="ctaUrl" defaultValue={editingPopup?.ctaUrl || ""} placeholder="https://..." className="bg-white/5 border-white/10" />
                                 </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Coupon Code (Optional)</Label>
-                                <Input name="couponCode" defaultValue={editingPopup?.couponCode || ""} placeholder="SAVE50" className="bg-white/5 border-white/10 font-mono tracking-widest" />
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Coupon Code (Optional)</Label>
+                                    <Input name="couponCode" defaultValue={editingPopup?.couponCode || ""} placeholder="SAVE50" className="bg-white/5 border-white/10 font-mono tracking-widest" />
+                                </div>
                             </div>
 
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-4">
@@ -219,15 +258,21 @@ export function PopUpsManager() {
                                     </div>
                                     <Switch name="showFormLead" defaultChecked={editingPopup?.showFormLead} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className={`grid ${isMultiLang ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                                     <div className="space-y-2">
-                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Form Headline (EN)</Label>
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Form Headline {isMultiLang && '(EN)'}</Label>
                                         <Input name="formHeadline" defaultValue={editingPopup?.formHeadline || ""} placeholder="Join our waitlist" className="bg-white/5 border-white/10" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Delay (Seconds)</Label>
-                                        <Input type="number" name="delay" defaultValue={editingPopup?.delay ?? 3} className="bg-white/5 border-white/10" />
-                                    </div>
+                                    {isMultiLang && (
+                                        <div className="space-y-2">
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Form Headline (ID)</Label>
+                                            <Input name="formHeadline_id" defaultValue={editingPopup?.formHeadline_id || ""} placeholder="Bergabung ke daftar tunggu" className="bg-white/5 border-white/10" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Delay (Seconds)</Label>
+                                    <Input type="number" name="delay" defaultValue={editingPopup?.delay ?? 3} className="bg-white/5 border-white/10" />
                                 </div>
                             </div>
 
@@ -359,6 +404,7 @@ export function PopUpsManager() {
                                                 className="h-9 w-9 text-zinc-600 hover:text-white hover:bg-white/5 rounded-xl"
                                                 onClick={() => {
                                                     setEditingPopup(popup);
+                                                    setIsMultiLang(!!(popup.headline_id || popup.description_id || popup.ctaText_id));
                                                     setIsOpen(true);
                                                 }}
                                             >
@@ -367,10 +413,11 @@ export function PopUpsManager() {
                                             <Button
                                                 size="icon"
                                                 variant="ghost"
-                                                className="h-9 w-9 text-zinc-600 hover:text-red-400 hover:bg-red-400/10 rounded-xl"
+                                                disabled={deletingId === popup.id}
+                                                className="h-9 w-9 text-zinc-600 hover:text-red-400 hover:bg-red-400/10 rounded-xl disabled:opacity-50"
                                                 onClick={() => handleDelete(popup.id)}
                                             >
-                                                <Trash2 className="w-4 h-4" />
+                                                <Trash2 className={`w-4 h-4 ${deletingId === popup.id ? 'animate-pulse' : ''}`} />
                                             </Button>
                                         </div>
                                     </TableCell>
