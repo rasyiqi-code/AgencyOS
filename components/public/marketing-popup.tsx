@@ -162,6 +162,7 @@ export function MarketingPopup() {
                         {/* Custom Close Button */}
                         <button
                             onClick={handleDismiss}
+                            aria-label={isId ? "Tutup popup" : "Close popup"}
                             className="absolute top-6 right-6 p-2 rounded-full border border-white/5 bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10 transition-all z-20"
                         >
                             <X className="w-5 h-5" />
