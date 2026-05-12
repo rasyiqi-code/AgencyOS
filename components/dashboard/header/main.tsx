@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton, useUser } from "@stackframe/stack";
+import { UserButton } from "@stackframe/stack";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { DashboardViewSwitcher } from "@/components/admin/dashboard-view-switcher";
 import { ProjectSearch } from "@/components/admin/pm/project-search";
 import { ProjectFilter } from "@/components/admin/pm/project-filter";
+import { useSafeUser } from "@/hooks/use-safe-user";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "./currency-switcher";
 import { MobileNav } from "./mobile-nav";
 import { MobileConfigMenu } from "./mobile-config-menu";
@@ -35,13 +36,7 @@ export function DashboardHeader({
     const t = useTranslations("Common");
 
     // Fix for Stack Auth bug: empty string profile image causes browser error
-    const user = useUser();
-    const mockUserFallback = user?.profileImageUrl === "" ? {
-        ...user,
-        displayName: user.displayName || undefined,
-        primaryEmail: user.primaryEmail || undefined,
-        profileImageUrl: undefined
-    } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string } : undefined;
+    const { mockUserFallback } = useSafeUser();
 
     // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
     const cleanPath = pathname.replace(/^\/(en|id)/, "") || "/";

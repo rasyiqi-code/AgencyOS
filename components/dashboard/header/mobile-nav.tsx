@@ -13,7 +13,8 @@ import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/n
 import Link from "next/link";
 import Image from "next/image";
 
-import { UserButton, useUser } from "@stackframe/stack";
+import { UserButton } from "@stackframe/stack";
+import { useSafeUser } from "@/hooks/use-safe-user";
 
 interface MobileNavProps {
     agencyName: string;
@@ -23,13 +24,7 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavProps) {
-    const user = useUser();
-    const mockUserFallback = user?.profileImageUrl === "" ? {
-        ...user,
-        displayName: user.displayName || undefined,
-        primaryEmail: user.primaryEmail || undefined,
-        profileImageUrl: undefined
-    } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string } : undefined;
+    const { mockUserFallback } = useSafeUser();
 
     return (
         <Sheet>

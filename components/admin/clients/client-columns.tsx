@@ -32,7 +32,7 @@ export const clientColumns: ColumnDef<ClientUser>[] = [
             return (
                 <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8 rounded-lg border border-zinc-800">
-                        <AvatarImage src={user.profileImageUrl || ""} alt={user.displayName || "User"} />
+                        <AvatarImage src={user.profileImageUrl || undefined} alt={user.displayName || "User"} />
                         <AvatarFallback className="rounded-lg bg-zinc-800 text-zinc-400 text-xs">
                             {initials}
                         </AvatarFallback>
