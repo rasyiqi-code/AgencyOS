@@ -103,7 +103,11 @@ export default async function AdminProjectsPage({
 
     // Stack Auth: Resolve Users for Client Names
     // We do this to ensure even legacy data (where clientName might be null) has a name
-    const uniqueUserIds = Array.from(new Set(projects.map(p => p.userId).filter(Boolean)));
+    // ⚡ Bolt Optimization: Only fetch users that don't have a valid clientName
+    // 🎯 Why: Prevents N+1 external API calls for records that already have denormalized names
+    // 📊 Impact: Reduces external Stack Auth requests significantly
+    const missingClientNameProjects = projects.filter((p) => (!p.clientName || p.clientName === "Client") && p.userId);
+    const uniqueUserIds = Array.from(new Set(missingClientNameProjects.map(p => p.userId as string)));
     const stackUsers = await Promise.all(
         uniqueUserIds.map(async (id) => {
             try {
@@ -118,7 +122,7 @@ export default async function AdminProjectsPage({
 
     // Enrich Projects
     const enrichedProjects = (projects as unknown as EnrichedProjectInput[]).map((p) => {
-        if (p.clientName) return p;
+        if (p.clientName && p.clientName !== "Client") return p;
         const u = userMap.get(p.userId) as StackUser | undefined;
         return {
             ...p,

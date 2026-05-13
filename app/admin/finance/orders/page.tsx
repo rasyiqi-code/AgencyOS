@@ -77,9 +77,16 @@ export default async function AdminOrdersPage() {
     });
 
     // 2. Stack Auth User Resolution
-    // Collect specific IDs dari orders
+    // ⚡ Bolt Optimization: Only fetch users that are missing a valid clientName natively
+    // 🎯 Why: Avoids unnecessary N+1 network calls to Stack Auth for users we already have names for
+    // 📊 Impact: Reduces Stack Auth API calls from O(N_orders) to O(N_missing_names)
+    const missingClientNameOrders = orders.filter(o => {
+        const project = o.project as { userId?: string | null; clientName?: string | null } | null;
+        return o.userId && (!project || !project.clientName || project.clientName === "Client");
+    });
+
     const uniqueUserIds = Array.from(new Set(
-        orders.map(o => o.userId).filter(Boolean) as string[]
+        missingClientNameOrders.map(o => o.userId as string)
     ));
 
     const stackUsers = await Promise.all(
@@ -96,7 +103,8 @@ export default async function AdminOrdersPage() {
 
     // 3. Enrich Data
     const enrichedData = financeData.map(item => {
-        // If project exists and has userId but missing clientName, enrich it
+        // We first try to enrich using the resolved stack auth user if available
+        // If not, we keep the original data
         if (item.project && item.project.userId && (item.project.clientName === "Client" || !item.project.clientName)) {
             const u = userMap.get(item.project.userId);
             if (u) {
@@ -109,6 +117,11 @@ export default async function AdminOrdersPage() {
                 };
             }
         }
+
+        // If there's NO project attached, but the base order has a userId, we might still want to
+        // use it if we can. (Though financeData mapping above doesn't surface it directly,
+        // we'll keep it strictly to existing behavior which only enriched project.clientName)
+
         return item;
     });
 
