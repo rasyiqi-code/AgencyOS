@@ -20,13 +20,8 @@ export default async function AdminQuotesPage() {
         redirect("/admin");
     }
 
-    // Ambil Estimate yang bertipe STARTING_AT
+    // Ambil semua Estimate
     const estimates = await prisma.estimate.findMany({
-        where: {
-            service: {
-                priceType: "STARTING_AT"
-            }
-        },
         include: {
             service: true,
             project: true,
@@ -35,7 +30,7 @@ export default async function AdminQuotesPage() {
     });
 
     const services = await prisma.service.findMany({
-        where: { priceType: "STARTING_AT" }
+        where: { isActive: true }
     });
 
     // Ambil daftar user unik dari Ticket & Project, dan JUGA dari Stack Auth

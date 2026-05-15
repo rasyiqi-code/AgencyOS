@@ -13,7 +13,6 @@ export function DashboardSidebarNavigation() {
 
             <SidebarSectionHeader>Operations</SidebarSectionHeader>
             <SidebarLink href="/dashboard/missions" icon={Rocket} label={t("missions")} />
-            <SidebarLink href="/dashboard/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/dashboard/inbox" icon={Inbox} label={t("inbox")} />
             <SidebarLink href="/dashboard/billing" icon={Receipt} label={t("billing")} />
 

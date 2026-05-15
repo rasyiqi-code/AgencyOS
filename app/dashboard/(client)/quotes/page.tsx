@@ -19,14 +19,11 @@ export default async function ClientQuotesPage() {
 
     const t = await getTranslations("Dashboard.ClientQuotes");
 
-    // Ambil Estimates milik user yang bertipe STARTING_AT
+    // Ambil Estimates milik user
     const estimates = await prisma.estimate.findMany({
         where: {
             project: {
                 userId: user.id
-            },
-            service: {
-                priceType: "STARTING_AT"
             }
         },
         include: {
