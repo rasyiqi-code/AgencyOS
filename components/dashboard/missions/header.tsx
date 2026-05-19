@@ -46,14 +46,14 @@ export function ProjectHeader({ project, children }: ProjectHeaderProps) {
                 <div className="flex items-center gap-2">
                     {project.repoUrl && (
                         <Link href={project.repoUrl} target="_blank">
-                            <Button variant="outline" size="icon" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
+                            <Button variant="outline" size="icon" aria-label="View repository" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
                                 <Github className="w-3 h-3" />
                             </Button>
                         </Link>
                     )}
                     {project.deployUrl && (
                         <Link href={project.deployUrl} target="_blank">
-                            <Button variant="outline" size="icon" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
+                            <Button variant="outline" size="icon" aria-label="View deployment" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
                                 <Globe className="w-3 h-3" />
                             </Button>
                         </Link>

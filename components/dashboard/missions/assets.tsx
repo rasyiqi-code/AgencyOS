@@ -95,7 +95,7 @@ export function ProjectAssets({ projectId, initialFiles }: { projectId: string, 
                                 </div>
                             </div>
                             <Link href={file.url} target="_blank">
-                                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-white">
+                                <Button variant="ghost" size="icon" aria-label="Download asset" className="h-7 w-7 text-zinc-400 hover:text-white">
                                     <Download className="w-3.5 h-3.5" />
                                 </Button>
                             </Link>
