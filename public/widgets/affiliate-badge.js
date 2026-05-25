@@ -55,7 +55,7 @@
     document.head.appendChild(styleSheet);
 
     badge.innerHTML = `
-        <span class="text">Powered by <strong>${agencyName}</strong></span>
+        <span class="text">Powered by <strong>${agencyName ? agencyName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;') : 'Agency OS'}</strong></span>
         <span class="btn">Learn More</span>
     `;
 

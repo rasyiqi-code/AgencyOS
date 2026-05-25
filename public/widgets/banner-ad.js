@@ -45,7 +45,7 @@
 
             container.innerHTML = `
                 <a href="${linkUrl}" target="_blank" style="display: block; text-decoration: none; border: 0;">
-                    <img src="${asset.imageUrl}" alt="${asset.title}" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #e5e7eb; display: block;" />
+                    <img src="${encodeURI(asset.imageUrl)}" alt="${asset.title ? asset.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;') : 'Ad'}" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #e5e7eb; display: block;" />
                 </a>
             `;
         })
