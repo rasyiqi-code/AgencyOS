@@ -136,7 +136,7 @@ export function ProductList({ products }: ProductListProps) {
                                     <ProductForm
                                         product={product}
                                         trigger={
-                                            <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg border border-white/5">
+                                            <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg border border-white/5" aria-label="Edit product">
                                                 <Pencil className="w-3.5 h-3.5" />
                                                 <span className="sr-only">Edit</span>
                                             </Button>
@@ -247,7 +247,7 @@ export function ProductList({ products }: ProductListProps) {
                                     <TableCell className="text-right pr-6">
                                         <div className="flex items-center justify-end gap-2">
                                             {product.fileUrl && (
-                                                <Button size="icon" variant="ghost" className="h-9 w-9 text-zinc-500 hover:text-brand-yellow hover:bg-brand-yellow/10 rounded-xl" asChild>
+                                                <Button size="icon" variant="ghost" className="h-9 w-9 text-zinc-500 hover:text-brand-yellow hover:bg-brand-yellow/10 rounded-xl" aria-label="Download file" asChild>
                                                     <a href={product.fileUrl} target="_blank" rel="noopener noreferrer">
                                                         <ExternalLink className="w-4 h-4" />
                                                         <span className="sr-only">Download</span>
@@ -257,7 +257,7 @@ export function ProductList({ products }: ProductListProps) {
                                             <ProductForm
                                                 product={product}
                                                 trigger={
-                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-zinc-500 hover:text-white hover:bg-white/5 rounded-xl border border-white/5">
+                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-zinc-500 hover:text-white hover:bg-white/5 rounded-xl border border-white/5" aria-label="Edit product">
                                                         <Pencil className="w-4 h-4" />
                                                         <span className="sr-only">Edit</span>
                                                     </Button>
