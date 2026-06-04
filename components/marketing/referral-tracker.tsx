@@ -16,7 +16,7 @@ export function ReferralTracker() {
             if (sessionStorage.getItem(sessionKey)) return;
 
             // Generate a simple fingerprint or just use null
-            const visitorId = localStorage.getItem("visitor_id") || Math.random().toString(36).substring(2);
+            const visitorId = localStorage.getItem("visitor_id") || crypto.randomUUID();
             localStorage.setItem("visitor_id", visitorId);
 
             fetch("/api/marketing/track", {
