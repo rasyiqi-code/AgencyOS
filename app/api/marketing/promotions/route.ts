@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPromotions, createPromotion } from "@/lib/server/marketing";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET(req: Request) {
     try {
@@ -14,6 +15,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+    if (!await isAdmin()) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
     try {
         const body = await req.json();
         const promotion = await createPromotion({
