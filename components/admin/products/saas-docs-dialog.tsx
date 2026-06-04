@@ -185,7 +185,7 @@ if response.json().get("active"):
                             <pre className="bg-black/50 p-6 rounded-2xl border border-white/5 text-[11px] font-mono text-emerald-400 overflow-x-auto whitespace-pre">
                                 {webhookExample}
                             </pre>
-                            <Button variant="ghost" size="icon" className="absolute top-4 right-4 h-10 w-10 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(webhookExample)}>
+                            <Button variant="ghost" size="icon" className="absolute top-4 right-4 h-10 w-10 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(webhookExample)} aria-label="Copy to clipboard">
                                 <Copy className="w-4 h-4" />
                             </Button>
                         </div>
@@ -228,7 +228,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-blue-400 overflow-x-auto whitespace-pre">
                                         {nextjsExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(nextjsExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(nextjsExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -238,7 +238,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-blue-400 overflow-x-auto whitespace-pre">
                                         {nodeJsExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(nodeJsExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(nodeJsExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -248,7 +248,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-emerald-400 overflow-x-auto whitespace-pre">
                                         {vueExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(vueExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(vueExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -258,7 +258,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-blue-400 overflow-x-auto whitespace-pre">
                                         {flutterExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(flutterExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(flutterExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -268,7 +268,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-indigo-400 overflow-x-auto whitespace-pre">
                                         {phpExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(phpExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(phpExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -278,7 +278,7 @@ if response.json().get("active"):
                                     <pre className="bg-black/50 p-4 rounded-xl border border-white/5 text-[11px] font-mono text-brand-yellow overflow-x-auto whitespace-pre">
                                         {pythonExample}
                                     </pre>
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(pythonExample)}>
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white/5 text-white opacity-0 group-hover:opacity-100 transition-all" onClick={() => copyToClipboard(pythonExample)} aria-label="Copy to clipboard">
                                         <Copy className="w-4 h-4" />
                                     </Button>
                                 </div>
