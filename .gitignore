@@ -41,7 +41,6 @@ Thumbs.db
 /data/payment-info.json
 /data/portfolios/cache/
 .agent/
-.jules/
 .Jules/
 
 # vercel
@@ -60,5 +59,3 @@ yarn-error.log*
 .pnpm-debug.log*
 .agent/
 .env.test
-
-*.jules
