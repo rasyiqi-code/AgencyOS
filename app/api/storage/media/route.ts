@@ -36,6 +36,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "No file provided" }, { status: 400 });
         }
 
+        // Batasi ukuran file unggahan maksimal 15MB untuk mencegah pemborosan memori RAM (mencegah crash OOM)
+        const MAX_FILE_SIZE = 15 * 1024 * 1024; 
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ 
+                error: "File size exceeds the 15MB limit" 
+            }, { status: 400 });
+        }
+
         let buffer: Uint8Array = new Uint8Array(await file.arrayBuffer());
         let finalFileName = file.name;
         let finalType = file.type;

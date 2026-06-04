@@ -2,6 +2,10 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// Cache memori untuk menyimpan hasil deteksi geolokasi IP klien guna menghindari pemanggilan API eksternal berulang kali
+const ipCache = new Map<string, { countryCode: string; expiry: number }>();
+const CACHE_TTL = 3600 * 1000; // Cache berlaku selama 1 jam
+
 export default async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
@@ -41,24 +45,36 @@ export default async function proxy(request: NextRequest) {
         const isDev = process.env.NODE_ENV === 'development';
         const isLocalhost = request.headers.get('host')?.includes('localhost');
 
-        // Fallback to IP-API if geo info is missing (for non-Vercel environments)
+        // Fallback ke IP-API jika informasi geo tidak ada (untuk lingkungan non-Vercel)
         if (!geoCountry && !isDev && !isLocalhost) {
             try {
                 const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || (request as NextRequest & { ip?: string }).ip;
                 if (ip && ip !== '127.0.0.1' && ip !== '::1') {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 500);
+                    // Periksa apakah data lokasi IP sudah tersimpan di cache memori
+                    const cachedGeo = ipCache.get(ip);
+                    if (cachedGeo && cachedGeo.expiry > Date.now()) {
+                        geoCountry = cachedGeo.countryCode;
+                        console.log(`[Middleware] Menggunakan cache geolokasi untuk IP: ${ip} -> ${geoCountry}`);
+                    } else {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 500);
 
-                    const ipRes = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
+                        const ipRes = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
+                            signal: controller.signal
+                        });
+                        clearTimeout(timeoutId);
 
-                    if (ipRes.ok) {
-                        const data = await ipRes.json();
-                        if (data.countryCode) {
-                            geoCountry = data.countryCode;
-                            console.log(`[Middleware] IP-API detected: ${geoCountry} for IP: ${ip}`);
+                        if (ipRes.ok) {
+                            const data = await ipRes.json();
+                            if (data.countryCode) {
+                                geoCountry = data.countryCode;
+                                // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
+                                ipCache.set(ip, {
+                                    countryCode: geoCountry,
+                                    expiry: Date.now() + CACHE_TTL
+                                });
+                                console.log(`[Middleware] IP-API detected: ${geoCountry} for IP: ${ip} (Disimpan ke cache)`);
+                            }
                         }
                     }
                 }
