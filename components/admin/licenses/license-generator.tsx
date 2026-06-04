@@ -25,14 +25,6 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
     const [expiresAt, setExpiresAt] = useState("");
     const [generatedKey, setGeneratedKey] = useState<string | null>(null);
 
-    // Bug Preventer: Radix Dialog on Next.js HMR sometimes leaves body unclickable
-    React.useEffect(() => {
-        document.body.style.pointerEvents = "";
-        return () => {
-            document.body.style.pointerEvents = "";
-        };
-    }, []);
-
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
