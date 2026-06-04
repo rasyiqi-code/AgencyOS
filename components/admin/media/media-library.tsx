@@ -81,8 +81,7 @@ export function MediaLibrary() {
 
         setUploading(true);
         try {
-            // Upload sequentially to avoid hitting Auth rate limits
-            for (const file of Array.from(selectedFiles)) {
+            const uploadPromises = Array.from(selectedFiles).map(async (file) => {
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("folder", "media"); // Default folder
@@ -97,7 +96,9 @@ export function MediaLibrary() {
                     const errorMsg = errorData.details || errorData.error || `Failed to upload ${file.name}`;
                     toast.error(`Gagal upload ${file.name}: ${errorMsg}`);
                 }
-            }
+            });
+
+            await Promise.all(uploadPromises);
 
             toast.success("Proses upload selesai");
             await loadFiles();
