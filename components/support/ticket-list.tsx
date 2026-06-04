@@ -122,7 +122,7 @@ export function TicketList({ tickets }: TicketListProps) {
                                     {new Date(ticket.createdAt).toLocaleDateString()}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-400">
+                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-400" aria-label="View ticket">
                                         <MessageCircle className="w-4 h-4" />
                                     </Button>
                                 </TableCell>

@@ -257,14 +257,14 @@ export function PageSeoList({ initialPages }: Props) {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Link href={page.path} target="_blank">
-                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10">
+                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10" aria-label="Open page">
                                                 <ExternalLink className="w-4 h-4" />
                                             </Button>
                                         </Link>
-                                        <Button onClick={() => handleEdit(page)} size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-blue-400 hover:bg-blue-950/20">
+                                        <Button onClick={() => handleEdit(page)} size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-blue-400 hover:bg-blue-950/20" aria-label="Edit SEO">
                                             <Pencil className="w-4 h-4" />
                                         </Button>
-                                        <Button onClick={() => handleDelete(page.id)} size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-950/20">
+                                        <Button onClick={() => handleDelete(page.id)} size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-950/20" aria-label="Delete SEO">
                                             <Trash2 className="w-4 h-4" />
                                         </Button>
                                     </div>

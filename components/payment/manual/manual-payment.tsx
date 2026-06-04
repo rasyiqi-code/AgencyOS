@@ -72,7 +72,7 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                             <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1.5">Account Number</div>
                             <div className="flex items-center justify-between group">
                                 <div className="text-2xl font-mono text-white font-bold tracking-tight">{bankDetails?.bank_account || "1234567890"}</div>
-                                <Button size="icon" variant="ghost" className="opacity-70 group-hover:opacity-100 transition-opacity" onClick={() => {
+                                <Button size="icon" variant="ghost" className="opacity-70 group-hover:opacity-100 transition-opacity" aria-label="Copy account number" onClick={() => {
                                     navigator.clipboard.writeText(bankDetails?.bank_account || "1234567890");
                                     toast.success("Copied!");
                                 }}>

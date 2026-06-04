@@ -84,7 +84,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                 <span className="text-xl sm:text-2xl font-mono text-white font-bold tracking-wider flex-1 break-all">
                                     {paymentData.permata_va_number || paymentData.va_numbers?.[0].va_number}
                                 </span>
-                                <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-400 hover:text-white hover:bg-zinc-800" onClick={() => {
+                                <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-400 hover:text-white hover:bg-zinc-800" aria-label="Copy VA number" onClick={() => {
                                     const vaNumber = paymentData.permata_va_number || paymentData.va_numbers?.[0]?.va_number;
                                     if (vaNumber) navigator.clipboard.writeText(vaNumber);
                                     toast.success("Copied!");
@@ -117,7 +117,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                     <div className="text-xs text-zinc-500 mb-1 uppercase tracking-wider">Company Code</div>
                                     <div className="flex justify-between items-center">
                                         <div className="text-xl font-mono text-white font-bold">{paymentData.biller_code}</div>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" onClick={() => {
+                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" aria-label="Copy company code" onClick={() => {
                                             if (paymentData.biller_code) navigator.clipboard.writeText(paymentData.biller_code);
                                             toast.success("Copied!");
                                         }}>
@@ -130,7 +130,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                                     <div className="text-xs text-zinc-500 mb-1 uppercase tracking-wider">Bill Key</div>
                                     <div className="flex justify-between items-center">
                                         <div className="text-xl font-mono text-white font-bold">{paymentData.bill_key}</div>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" onClick={() => {
+                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-zinc-500 hover:text-white" aria-label="Copy bill key" onClick={() => {
                                             if (paymentData.bill_key) navigator.clipboard.writeText(paymentData.bill_key);
                                             toast.success("Copied!");
                                         }}>
