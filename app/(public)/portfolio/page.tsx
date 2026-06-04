@@ -14,6 +14,8 @@ import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 import { getPageSeo } from "@/lib/server/seo";
 
+export const revalidate = 3600; // Cache halaman portofolio selama 1 jam (ISR)
+
 export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
     parent: ResolvingMetadata

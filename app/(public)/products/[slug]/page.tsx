@@ -12,6 +12,8 @@ import { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
+export const revalidate = 3600; // Cache halaman detail produk selama 1 jam (ISR)
+
 interface PageProps {
     params: Promise<{ slug: string }>;
 }

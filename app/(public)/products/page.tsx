@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getPageSeo } from "@/lib/server/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache halaman daftar produk selama 1 jam (ISR)
 
 import { ResolvingMetadata } from "next";
 

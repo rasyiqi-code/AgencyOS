@@ -4,6 +4,8 @@ import { NewsletterForm } from "@/components/marketing/newsletter-form";
 
 import { Metadata } from "next";
 
+export const revalidate = 3600; // Cache halaman promosi selama 1 jam (ISR)
+
 export const metadata: Metadata = {
     title: "Promosi & Penawaran Spesial | AgencyOS",
     description: "Temukan berbagai promo menarik, diskon spesial, dan penawaran terbatas untuk layanan kami.",

@@ -8,7 +8,7 @@ import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/faq-section-fixed";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache halaman detail layanan selama 1 jam (ISR)
 
 interface ServicePageProps {
     params: Promise<{
