@@ -1,13 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
-// Mock 'next/cache' module
 import { mock } from "bun:test";
 
-mock.module("next/cache", () => {
-  return {
-    unstable_cache: (fn: unknown) => fn
-  };
-});
 
 mock.module("@/lib/server/settings", () => ({
     getSettingValue: async () => "mock",
