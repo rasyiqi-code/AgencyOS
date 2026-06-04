@@ -12,7 +12,7 @@ mock.module("@/lib/config/db", () => ({
     prisma: {}
 }));
 
-import { enhanceHtml } from "./cloudflare-rendering";
+import { enhanceHtml } from "@/lib/server/cloudflare-rendering";
 
 describe("enhanceHtml", () => {
     const validUrl = "https://example.com/path/page.html?query=1#hash";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { calculateProjectQuote, pricingConfig, type QuoteParams } from "./pricing";
+import { calculateProjectQuote, pricingConfig, type QuoteParams } from "@/lib/shared/pricing";
 
 describe("calculateProjectQuote", () => {
     const defaultFeatures = {

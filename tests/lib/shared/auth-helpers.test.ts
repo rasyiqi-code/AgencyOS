@@ -18,7 +18,7 @@ mock.module("@/lib/config/db", () => ({
     },
 }));
 
-import { getCurrentUser, hasPermission, isAdmin, canManageProjects, canManageBilling, canManageKeys } from "./auth-helpers";
+import { getCurrentUser, hasPermission, isAdmin, canManageProjects, canManageBilling, canManageKeys } from "@/lib/shared/auth-helpers";
 
 describe("auth-helpers", () => {
     const originalEnv = process.env;

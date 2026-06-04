@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { mapPrismaProjectToExtended, type PrismaProjectWithRelations } from "./mappers";
+import { mapPrismaProjectToExtended, type PrismaProjectWithRelations } from "@/lib/shared/mappers";
 
 describe("mapPrismaProjectToExtended", () => {
     const baseProject = {

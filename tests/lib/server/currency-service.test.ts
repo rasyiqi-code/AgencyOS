@@ -1,5 +1,5 @@
 import { describe, expect, it, mock, beforeEach, afterEach, spyOn } from "bun:test";
-import { CurrencyService } from "./currency-service";
+import { CurrencyService } from "@/lib/server/currency-service";
 import { prisma } from "@/lib/config/db";
 
 // Mock prisma properly to avoid DB connection issues

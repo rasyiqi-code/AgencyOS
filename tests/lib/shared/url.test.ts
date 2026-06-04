@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, afterEach } from "bun:test";
-import { getAppUrl } from "./url";
+import { getAppUrl } from "@/lib/shared/url";
 
 describe("getAppUrl", () => {
   const originalEnv = process.env;

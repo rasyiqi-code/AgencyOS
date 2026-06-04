@@ -12,7 +12,7 @@ mock.module("@/lib/config/db", () => {
     };
 });
 
-import { validateCoupon } from "../marketing";
+import { validateCoupon } from "@/lib/server/marketing";
 import { prisma } from "@/lib/config/db";
 
 describe("validateCoupon", () => {

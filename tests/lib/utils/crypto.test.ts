@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { secureRandomInt, secureRandomAlphanumeric } from "./crypto";
+import { secureRandomInt, secureRandomAlphanumeric } from "@/lib/utils/crypto";
 
 describe("crypto utils", () => {
     describe("secureRandomInt", () => {

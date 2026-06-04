@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { cn, formatPaymentMethod, slugify } from "./utils";
+import { cn, formatPaymentMethod, slugify } from "@/lib/shared/utils";
 
 describe("Utils", () => {
   describe("cn", () => {
