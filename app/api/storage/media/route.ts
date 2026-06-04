@@ -55,8 +55,11 @@ export async function POST(req: NextRequest) {
 
         if (isProcessableImage) {
             try {
+                // Optimasi pemrosesan Sharp: Batasi ukuran gambar maks 1920px (width/height)
+                // dan turunkan effort kompresi webp ke 2 agar lebih hemat CPU & RAM
                 const processedBuffer = await sharp(buffer)
-                    .webp({ quality: 80, effort: 4 })
+                    .resize(1920, 1920, { fit: "inside", withoutEnlargement: true })
+                    .webp({ quality: 80, effort: 2 })
                     .toBuffer();
                 buffer = processedBuffer;
 

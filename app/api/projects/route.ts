@@ -69,8 +69,21 @@ export async function GET(request: Request) {
             orderBy: { createdAt: 'desc' },
             take: limit,
             skip,
-            include: {
-                service: true
+            select: {
+                id: true,
+                userId: true,
+                title: true,
+                description: true,
+                status: true,
+                createdAt: true,
+                invoiceId: true,
+                clientName: true,
+                service: {
+                    select: {
+                        id: true,
+                        title: true
+                    }
+                }
             }
         });
 

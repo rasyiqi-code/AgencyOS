@@ -1,10 +1,10 @@
-import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Cache memori untuk menyimpan hasil deteksi geolokasi IP klien guna menghindari pemanggilan API eksternal berulang kali
 const ipCache = new Map<string, { countryCode: string; expiry: number }>();
 const CACHE_TTL = 3600 * 1000; // Cache berlaku selama 1 jam
+const MAX_CACHE_SIZE = 1000; // Batas ukuran cache untuk mencegah pemborosan memori RAM (memory leak)
 
 export default async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
@@ -28,6 +28,9 @@ export default async function proxy(request: NextRequest) {
 
     // 2. Auth Check (Dashboard) - Check on CLEAN pathname to cover /id/dashboard etc.
     if (cleanPathname.startsWith("/dashboard")) {
+        // Melakukan dynamic import hexclaveServerApp hanya ketika mengakses dashboard.
+        // Ini mempercepat cold start dan mengurangi penggunaan memori untuk request non-dashboard.
+        const { hexclaveServerApp } = await import("@/lib/config/hexclave");
         const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.redirect(new URL("/handler/sign-in", request.url));
@@ -70,6 +73,13 @@ export default async function proxy(request: NextRequest) {
                                 const code: string = data.countryCode;
                                 geoCountry = code;
                                 // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
+                                // Batasi ukuran cache sebelum menyimpan entri baru untuk mencegah kebocoran memori (memory leak)
+                                if (ipCache.size >= MAX_CACHE_SIZE) {
+                                    const oldestKey = ipCache.keys().next().value;
+                                    if (oldestKey !== undefined) {
+                                        ipCache.delete(oldestKey);
+                                    }
+                                }
                                 ipCache.set(ip, {
                                     countryCode: code,
                                     expiry: Date.now() + CACHE_TTL

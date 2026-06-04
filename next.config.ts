@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Nonaktifkan kompresi bawaan Next.js karena Vercel/Cloudflare
+  // sudah melakukan Gzip/Brotli di edge — menghindari beban CPU ganda
+  compress: false,
   serverExternalPackages: ['@prisma/client', 'prisma'],
   productionBrowserSourceMaps: false,
   experimental: {
