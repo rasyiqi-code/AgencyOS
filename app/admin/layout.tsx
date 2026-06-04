@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 import { AdminSidebarNavigation } from "@/components/admin/admin-sidebar-navigation";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
-import { prisma } from "@/lib/config/db";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { getSystemSettings } from "@/lib/server/settings";

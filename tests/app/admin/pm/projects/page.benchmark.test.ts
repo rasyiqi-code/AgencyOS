@@ -43,11 +43,12 @@ describe("AdminProjectsPage Benchmark", () => {
             uniqueUserIds.map(async (id) => {
                 try {
                     return await hexclaveServerApp.getUser(id);
-                } catch (e) {
+                } catch {
                     return null;
                 }
             })
         );
+        expect(stackUsersPromiseAll).toBeDefined();
         const endPromiseAll = performance.now();
         const timePromiseAll = endPromiseAll - startPromiseAll;
 
@@ -84,11 +85,12 @@ describe("AdminProjectsPage Benchmark", () => {
             usersToFetch.map(async (id) => {
                 try {
                     return await hexclaveServerApp.getUser(id);
-                } catch (e) {
+                } catch {
                     return null;
                 }
             })
         );
+        expect(stackUsersOptimized).toBeDefined();
         const endOptimized = performance.now();
         const timeOptimized = endOptimized - startOptimized;
 
