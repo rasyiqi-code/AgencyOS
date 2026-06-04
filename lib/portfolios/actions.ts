@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 import { fetchRenderedHtml as fetchFromCloudflare } from "@/lib/server/cloudflare-rendering";
 import { prisma } from "@/lib/config/db";
 

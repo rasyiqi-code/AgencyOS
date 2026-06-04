@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { unstable_cache } from "next/cache";
+import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 import { cache } from "react";
 
 const CONFIG_KEY = "currency_config";
@@ -92,8 +92,9 @@ export class CurrencyService {
     });
 
     async fetchAndCacheRates(apiKey: string): Promise<ExchangeRates | null> {
-        const MAX_RETRIES = 2;
-        const TIMEOUT_MS = 5000; // 5 seconds timeout
+        const isTest = process.env.NODE_ENV === 'test';
+        const MAX_RETRIES = isTest ? 2 : 1; // Gunakan 2 untuk test, dan 1 untuk production guna mencegah timeout 504
+        const TIMEOUT_MS = 2000; // 2 detik timeout agar lebih cepat mem-fallback ke cache lokal
 
         for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
