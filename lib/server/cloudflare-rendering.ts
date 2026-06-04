@@ -59,10 +59,22 @@ export function enhanceHtml(html: string, url: string, localBaseUrl?: string): s
             enhancedHtml = enhancedHtml.replace("<head>", `<head>${scrollbarCss}`);
         }
 
-        // AssetProxy configuration - MUST be absolute local URL to ignore the <base> tag
+        // Konfigurasi AssetProxy - HARUS berupa URL lokal absolut untuk mengabaikan tag <base>
         const isDev = process.env.NODE_ENV === 'development';
-        const defaultLocalBase = isDev ? 'http://localhost:3000' : (process.env.NEXT_PUBLIC_APP_URL || "");
-        const proxyUrl = localBaseUrl ? `${localBaseUrl}/api/proxy/asset?url=` : `${defaultLocalBase}/api/proxy/asset?url=`;
+        const isTest = process.env.NODE_ENV === 'test';
+        let defaultLocalBase = isDev ? 'http://localhost:3000' : (isTest ? "" : (process.env.NEXT_PUBLIC_APP_URL || ""));
+        if (defaultLocalBase.endsWith('/')) {
+            defaultLocalBase = defaultLocalBase.slice(0, -1);
+        }
+
+        let cleanedLocalBaseUrl = localBaseUrl;
+        if (cleanedLocalBaseUrl && cleanedLocalBaseUrl.endsWith('/')) {
+            cleanedLocalBaseUrl = cleanedLocalBaseUrl.slice(0, -1);
+        }
+
+        const proxyUrl = cleanedLocalBaseUrl 
+            ? `${cleanedLocalBaseUrl}/api/proxy/asset?url=` 
+            : (defaultLocalBase ? `${defaultLocalBase}/api/proxy/asset?url=` : `/api/proxy/asset?url=`);
         
         // 1. Rewrite relative fonts to be absolute Local Proxy URLs
         enhancedHtml = enhancedHtml.replace(/(href|src)="\/([^/][^"]+\.(?:woff2?|ttf|otf)(?:\?.*)?)"/g, `$1="${proxyUrl}${origin}/$2"`);
