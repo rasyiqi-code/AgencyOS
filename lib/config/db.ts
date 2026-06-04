@@ -3,6 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 const isDev = process.env.NODE_ENV === 'development'
+const isServerless = !!process.env.VERCEL
 
 const globalForPrisma = globalThis as unknown as {
     prisma_v8: PrismaClient | undefined
@@ -10,15 +11,20 @@ const globalForPrisma = globalThis as unknown as {
     pg_adapter_v8: PrismaPg | undefined
 }
 
+// Konfigurasi pool koneksi: Serverless Vercel membutuhkan ukuran pool sangat kecil (maksimal 2)
+// untuk menghindari pool exhaustion karena banyaknya container asinkron yang terisolasi.
 const poolMax = process.env.DATABASE_POOL_SIZE
     ? parseInt(process.env.DATABASE_POOL_SIZE, 10)
-    : (isDev ? 10 : 5); // Default 10 di dev, 5 di prod (optimal untuk standalone Docker VPS)
+    : (isDev ? 10 : (isServerless ? 2 : 5));
+
+const idleTimeout = isServerless ? 10000 : 30000; // 10 detik di serverless agar cepat membebaskan koneksi
+const connectionTimeout = isServerless ? 15000 : 5000; // 15 detik di serverless untuk toleransi cold start Neon DB
 
 const pool = globalForPrisma.pg_pool_v8 ?? new Pool({
     connectionString: process.env.DATABASE_URL,
     max: poolMax,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000, // Kegagalan lebih cepat jika DB down
+    idleTimeoutMillis: idleTimeout,
+    connectionTimeoutMillis: connectionTimeout,
     // Aktifkan SSL jika remote DB membutuhkannya (biasanya untuk Render/AWS/Neon dsb.)
     // ssl: { rejectUnauthorized: false }
 })
