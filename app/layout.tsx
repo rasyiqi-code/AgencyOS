@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import nextDynamic from "next/dynamic";
 
-export const dynamic = 'force-dynamic';
 import "./globals.css";
 import { StackTheme, StackProvider } from "@stackframe/stack";
 import { stackServerApp } from "@/lib/config/stack";

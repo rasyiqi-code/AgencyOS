@@ -10,12 +10,16 @@ const globalForPrisma = globalThis as unknown as {
     pg_adapter_v8: PrismaPg | undefined
 }
 
+const poolMax = process.env.DATABASE_POOL_SIZE
+    ? parseInt(process.env.DATABASE_POOL_SIZE, 10)
+    : (isDev ? 10 : 5); // Default 10 di dev, 5 di prod (optimal untuk standalone Docker VPS)
+
 const pool = globalForPrisma.pg_pool_v8 ?? new Pool({
     connectionString: process.env.DATABASE_URL,
-    max: isDev ? 10 : 1, // Use more connections in dev, keep 1 for serverless prod
+    max: poolMax,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000, // Faster failure if DB is down
-    // Enable SSL if your remote DB requires it (common for Render/AWS/etc)
+    connectionTimeoutMillis: 5000, // Kegagalan lebih cepat jika DB down
+    // Aktifkan SSL jika remote DB membutuhkannya (biasanya untuk Render/AWS/Neon dsb.)
     // ssl: { rejectUnauthorized: false }
 })
 
