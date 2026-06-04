@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/config/db';
 import { broadcastPushNotification } from '@/lib/server/push';
+import { isAdmin } from '@/lib/shared/auth-helpers';
 
 // This handles broadcast from admin
 export async function POST(req: Request) {
-    try {
-        // Note: In real world, we would add strict admin authorization check here
-        // For now, we assume this is called by an authorized admin process
+    // SECURITY FIX: Added strict admin authorization check to prevent abuse
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
+    try {
         const body = await req.json();
         const { title, body: content, url, targetEndpoints } = body;
 
