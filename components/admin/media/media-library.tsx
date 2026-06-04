@@ -164,14 +164,20 @@ export function MediaLibrary() {
         let failCount = 0;
 
         try {
-            for (const key of keysToDelete) {
-                const encodedKey = encodeURIComponent(key);
-                const res = await fetch(`/api/storage/media/${encodedKey}`, {
-                    method: "DELETE",
-                });
-                if (res.ok) successCount++;
-                else failCount++;
-            }
+            await Promise.all(
+                keysToDelete.map(async (key) => {
+                    try {
+                        const encodedKey = encodeURIComponent(key);
+                        const res = await fetch(`/api/storage/media/${encodedKey}`, {
+                            method: "DELETE",
+                        });
+                        if (res.ok) successCount++;
+                        else failCount++;
+                    } catch {
+                        failCount++;
+                    }
+                })
+            );
 
             if (successCount > 0) toast.success(`${successCount} file berhasil dihapus`);
             if (failCount > 0) toast.error(`${failCount} file gagal dihapus`);
