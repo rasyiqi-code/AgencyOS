@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Badge } from "@/components/ui/badge";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Shield, Activity } from "lucide-react";
 
 export default async function SquadProfilePage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect('/handler/sign-in');

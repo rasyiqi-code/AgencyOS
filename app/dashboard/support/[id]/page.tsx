@@ -1,12 +1,12 @@
 import { ChatInterface } from "@/components/support/chat-interface";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { notFound, redirect } from "next/navigation";
 import type { MessageAttachment } from "@/types/payment";
 
 export default async function TicketChatPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

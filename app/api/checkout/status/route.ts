@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function PATCH(req: Request) {
     if (!await isAdmin()) {
@@ -64,7 +64,7 @@ export async function PATCH(req: Request) {
         // --- Notifications ---
         if (project && status === "pending_payment") {
             try {
-                const stackUser = await stackServerApp.getUser(project.userId);
+                const stackUser = await hexclaveServerApp.getUser(project.userId);
                 if (stackUser && stackUser.primaryEmail) {
                     const { sendPaymentRevertedEmail } = await import("@/lib/email/client-notifications");
                     sendPaymentRevertedEmail({

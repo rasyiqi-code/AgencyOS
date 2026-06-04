@@ -64,8 +64,8 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     const trustedAvatars: string[] = [];
     /*
     try {
-        const { stackServerApp } = await import("@/lib/config/stack");
-        const users = await stackServerApp.listUsers();
+        const { hexclaveServerApp } = await import("@/lib/config/hexclave");
+        const users = await hexclaveServerApp.listUsers();
         trustedAvatars = users
             .filter(u => !!u.profileImageUrl)
             .map(u => u.profileImageUrl!)

@@ -2,7 +2,7 @@ import { getCore } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import type { MidtransChargeParameter } from "@/types/payment";
 
 /**
@@ -12,7 +12,7 @@ import type { MidtransChargeParameter } from "@/types/payment";
 export async function POST(req: Request) {
     try {
         // Auth check: hanya user login yang boleh initiate charge
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

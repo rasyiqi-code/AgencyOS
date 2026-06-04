@@ -1,9 +1,9 @@
 import { CreateTicketForm } from "@/components/support/create-ticket-form";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
 
 export default async function NewTicketPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

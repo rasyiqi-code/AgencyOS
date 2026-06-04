@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -12,7 +12,7 @@ const createTicketSchema = z.object({
 });
 
 export async function POST(request: Request) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     try {
         const json = await request.json();

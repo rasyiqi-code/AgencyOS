@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { MissionCard } from "@/components/dashboard/missions/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { cookies } from "next/headers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function MissionsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     const { q } = await searchParams; // Await searchParams
 
     const cookieStore = await cookies();

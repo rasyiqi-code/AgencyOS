@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { getClientLicenses } from "@/app/actions/licenses";
 import { LicenseCard } from "@/components/dashboard/my-products/license-card";
 import { Package } from "lucide-react";
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  * Client bisa melihat, menyalin, dan me-regenerasi license key mereka.
  */
 export default async function MyProductsPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     // Redirect ke login jika belum autentikasi
     if (!user) {

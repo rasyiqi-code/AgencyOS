@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Check, User, LogIn, Rocket } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
@@ -10,7 +10,7 @@ import { getSystemSettings } from "@/lib/server/settings";
 import { LogoImage } from "./logo-image";
 
 export async function SiteHeader() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     const t = await getTranslations("Navigation");
     const tc = await getTranslations("Common");
     const locale = await getLocale();

@@ -1,4 +1,4 @@
-import { useUser } from "@stackframe/stack";
+import { useUser } from "@hexclave/next";
 
 /**
  * A custom hook that wraps Stack Auth's `useUser()` hook to centralize user data normalization.

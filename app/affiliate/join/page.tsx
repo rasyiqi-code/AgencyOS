@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { redirect } from "next/navigation";
 import { JoinAffiliateButton } from "@/components/marketing/join-affiliate-button";
@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 export default async function AffiliateJoinPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect('/handler/sign-in?returnTo=/affiliate/join');

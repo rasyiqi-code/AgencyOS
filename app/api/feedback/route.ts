@@ -2,13 +2,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function POST(req: Request) {
     try {
         // Auth check: hanya user login yang boleh membuat feedback
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { redirect } from "next/navigation";
 import { AffiliateLinksManager } from "@/components/affiliate/affiliate-links-manager";
@@ -7,7 +7,7 @@ import { DollarSign, MousePointerClick, TrendingUp, Users } from "lucide-react";
 import { BankSettingsCard } from "@/components/affiliate/bank-settings-card";
 
 export default async function AffiliateDashboardPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect('/handler/sign-in');

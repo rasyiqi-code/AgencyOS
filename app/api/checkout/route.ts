@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { Prisma } from "@prisma/client";
 import { ServiceAddon } from "@/lib/shared/types";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const debugSteps: string[] = [];
     try {
         debugSteps.push("Starting checkout");
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

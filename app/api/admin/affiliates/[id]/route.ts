@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,7 +12,7 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -26,7 +26,7 @@ export async function GET() {
         }
         let stackUsers: StackUser[] = [];
         try {
-            stackUsers = await stackServerApp.listUsers() as unknown as StackUser[];
+            stackUsers = await hexclaveServerApp.listUsers() as unknown as StackUser[];
         } catch (e) {
             console.error("Failed to list stack users:", e);
         }

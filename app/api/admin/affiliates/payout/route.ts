@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextRequest, NextResponse } from "next/server";
 import { sendPayoutApprovedEmail, sendPayoutRejectedEmail } from "@/lib/email/affiliate-emails";
@@ -10,7 +10,7 @@ import { sendPayoutApprovedEmail, sendPayoutRejectedEmail } from "@/lib/email/af
  */
 export async function PATCH(req: NextRequest) {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -102,7 +102,7 @@ export async function PATCH(req: NextRequest) {
  */
 export async function GET() {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

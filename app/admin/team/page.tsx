@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { getCurrentUser } from "@/lib/shared/auth-helpers";
 import { type StackUser } from "@/lib/shared/types";
@@ -33,7 +33,7 @@ export default async function AdminTeamPage() {
 
     let users: StackUser[] = [];
     try {
-        users = await stackServerApp.listUsers();
+        users = await hexclaveServerApp.listUsers();
     } catch (error) {
         console.error("Failed to fetch users:", error);
     }

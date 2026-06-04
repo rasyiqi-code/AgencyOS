@@ -1,11 +1,11 @@
 
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { redirect } from "next/navigation";
 import { SquadOnboardingForm } from "@/components/squad/onboarding-form";
 
 export default async function SquadOnboardingPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

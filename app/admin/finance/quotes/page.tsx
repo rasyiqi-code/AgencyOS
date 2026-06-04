@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Plus, LayoutGrid, List } from "lucide-react";
 import { canManageBilling } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { PriceEditor } from "@/components/admin/finance/price-editor";
 import { InvoiceActions } from "@/components/admin/finance/invoice-actions";
 import { DeleteQuoteButton } from "@/components/shared/delete-quote-button";
@@ -42,7 +42,7 @@ export default async function AdminQuotesPage() {
         prisma.project.findMany({
             select: { userId: true, clientName: true }
         }),
-        stackServerApp.listUsers({ limit: 100 })
+        hexclaveServerApp.listUsers({ limit: 100 })
     ]);
 
     // Gabungkan & Deduplicate

@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 const validMoods = ["on_track", "delayed", "shipped"];
 
@@ -10,7 +10,7 @@ export async function POST(
     props: { params: Promise<{ projectId: string }> }
 ) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const projectId = params.projectId;

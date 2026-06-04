@@ -1,13 +1,13 @@
 
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 
 export async function POST(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

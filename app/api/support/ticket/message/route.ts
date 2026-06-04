@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function POST(req: Request) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     // Allow messages if they are from a logged-in user OR it's a guest message to a valid ticket
     // Authentication for admin is still needed if sender is 'admin'
 

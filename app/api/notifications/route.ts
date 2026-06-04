@@ -1,10 +1,10 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 // Trigger re-lint
 import { NextResponse } from "next/server";
 
 export async function GET() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const notifications = await prisma.notification.findMany({
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function PATCH(req: Request) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id, all } = await req.json();

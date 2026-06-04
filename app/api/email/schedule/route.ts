@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getResendClient, getAdminEmailTarget } from '@/lib/email/client';
-import { stackServerApp } from '@/lib/config/stack';
+import { hexclaveServerApp } from '@/lib/config/hexclave';
 
 /**
  * Escape karakter HTML untuk mencegah XSS di email templates.
@@ -17,7 +17,7 @@ function escapeHtml(text: string): string {
 export async function POST(req: Request) {
     try {
         // Auth check: hanya user login yang boleh mengirim email schedule
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

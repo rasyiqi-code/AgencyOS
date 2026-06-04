@@ -1,5 +1,5 @@
 import { consultantFlow } from '../../genkit';
-import { stackServerApp } from '@/lib/config/stack';
+import { hexclaveServerApp } from '@/lib/config/hexclave';
 
 export const maxDuration = 60;
 
@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     try {
         // Auth check: hanya user login yang boleh menggunakan AI chatbot
         // Mencegah abuse biaya API LLM oleh pihak tak berwenang
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new Response(JSON.stringify({ error: "Unauthorized" }), {
                 status: 401,

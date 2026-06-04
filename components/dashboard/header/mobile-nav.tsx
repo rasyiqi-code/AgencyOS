@@ -13,7 +13,7 @@ import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/n
 import Link from "next/link";
 import Image from "next/image";
 
-import { UserButton } from "@stackframe/stack";
+import { UserButton } from "@hexclave/next";
 import { useSafeUser } from "@/hooks/use-safe-user";
 
 interface MobileNavProps {

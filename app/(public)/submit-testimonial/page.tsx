@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { SubmitTestimonialForm } from "./form";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
@@ -62,7 +62,7 @@ export async function generateMetadata(
 export const dynamic = "force-dynamic";
 
 export default async function SubmitTestimonialPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in?after_auth_return_to=/submit-testimonial");

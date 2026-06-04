@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function PATCH(req: NextRequest, props: { params: Promise<{ projectId: string }> }) {
     const params = await props.params;
@@ -27,7 +27,7 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{ project
 
         // --- Notifications ---
         try {
-            const stackUser = await stackServerApp.getUser(project.userId);
+            const stackUser = await hexclaveServerApp.getUser(project.userId);
             if (stackUser && stackUser.primaryEmail) {
                 const { sendProjectStatusUpdateEmail } = await import("@/lib/email/client-notifications");
                 sendProjectStatusUpdateEmail({

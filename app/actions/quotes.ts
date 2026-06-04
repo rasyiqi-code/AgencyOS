@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function setQuotePrice(formData: FormData) {
     const id = formData.get("estimateId") as string;
@@ -76,7 +76,7 @@ export async function createManualQuote(formData: FormData) {
         // Auto-fetch name from Stack Auth if not provided and not offline
         if (!finalClientName && userId !== 'OFFLINE') {
             try {
-                const users = await stackServerApp.listUsers({ limit: 100 });
+                const users = await hexclaveServerApp.listUsers({ limit: 100 });
                 const user = users.find(u => u.id === userId);
                 const fetchedName = user?.displayName || user?.primaryEmail || null;
                 if (fetchedName) finalClientName = fetchedName;

@@ -1,7 +1,7 @@
 
 
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Layers } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ProjectAccordionList } from "@/components/admin/pm/projects-accordion-list";
@@ -46,7 +46,7 @@ export default async function AdminProjectsPage({
             matchedUserIds = [query];
         } else {
             try {
-                const allUsers = await stackServerApp.listUsers();
+                const allUsers = await hexclaveServerApp.listUsers();
                 matchedUserIds = allUsers
                     .filter((u: StackUser) =>
                         (u.displayName && u.displayName.toLowerCase().includes(query.toLowerCase())) ||
@@ -111,7 +111,7 @@ export default async function AdminProjectsPage({
     const stackUsers = await Promise.all(
         uniqueUserIds.map(async (id) => {
             try {
-                return await stackServerApp.getUser(id);
+                return await hexclaveServerApp.getUser(id);
             } catch (e) {
                 console.error(`Failed to fetch user ${id}`, e);
                 return null;

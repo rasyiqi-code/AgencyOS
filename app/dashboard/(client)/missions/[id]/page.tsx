@@ -1,5 +1,5 @@
 
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
@@ -26,7 +26,7 @@ interface PageProps {
 
 export default async function ProjectDetailPage({ params }: PageProps) {
     const { id } = await params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

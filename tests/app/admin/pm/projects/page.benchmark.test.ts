@@ -2,9 +2,9 @@ import { expect, test, mock, describe } from "bun:test";
 import { performance } from "perf_hooks";
 
 // --- Mock Setup ---
-mock.module("@/lib/config/stack", () => {
+mock.module("@/lib/config/hexclave", () => {
   return {
-    stackServerApp: {
+    hexclaveServerApp: {
       getUser: async (id: string) => {
         // Simulate network latency (50ms per request)
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -16,7 +16,7 @@ mock.module("@/lib/config/stack", () => {
       },
     },
     default: {
-      stackServerApp: {
+      hexclaveServerApp: {
         getUser: async (id: string) => {
           await new Promise((resolve) => setTimeout(resolve, 50));
           return {
@@ -30,7 +30,7 @@ mock.module("@/lib/config/stack", () => {
   };
 });
 
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 describe("AdminProjectsPage Benchmark", () => {
     test("Sequential vs Parallel vs Denormalization", async () => {
@@ -42,7 +42,7 @@ describe("AdminProjectsPage Benchmark", () => {
         const stackUsersPromiseAll = await Promise.all(
             uniqueUserIds.map(async (id) => {
                 try {
-                    return await stackServerApp.getUser(id);
+                    return await hexclaveServerApp.getUser(id);
                 } catch (e) {
                     return null;
                 }
@@ -55,7 +55,7 @@ describe("AdminProjectsPage Benchmark", () => {
 
         // We can't really "fix" the Stack Auth fetch if we *must* fetch them all.
         // However, according to the memory context:
-        // "The Stack Auth SDK (@stackframe/stack) does not natively support batch fetching multiple users by an array of IDs. To avoid N+1 network requests involving Stack Auth users, denormalize user data (e.g., clientName) by saving it directly into the database (Prisma) alongside the related entity during creation (POST routes) rather than attempting batch fetches."
+        // "The Stack Auth SDK (@hexclave/next) does not natively support batch fetching multiple users by an array of IDs. To avoid N+1 network requests involving Stack Auth users, denormalize user data (e.g., clientName) by saving it directly into the database (Prisma) alongside the related entity during creation (POST routes) rather than attempting batch fetches."
 
         // Let's verify we have it in Prisma? No, the code says:
         // const enrichedProjects = ... map(p => { if (p.clientName) return p; ... })
@@ -83,7 +83,7 @@ describe("AdminProjectsPage Benchmark", () => {
         const stackUsersOptimized = await Promise.all(
             usersToFetch.map(async (id) => {
                 try {
-                    return await stackServerApp.getUser(id);
+                    return await hexclaveServerApp.getUser(id);
                 } catch (e) {
                     return null;
                 }

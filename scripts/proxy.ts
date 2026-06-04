@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -24,7 +24,7 @@ export default async function proxy(request: NextRequest) {
 
     // 2. Auth Check (Dashboard) - Check on CLEAN pathname to cover /id/dashboard etc.
     if (cleanPathname.startsWith("/dashboard")) {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.redirect(new URL("/handler/sign-in", request.url));
         }

@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import nextDynamic from "next/dynamic";
 
 import "./globals.css";
-import { StackTheme, StackProvider } from "@stackframe/stack";
-import { stackServerApp } from "@/lib/config/stack";
+import { HexclaveTheme, HexclaveProvider } from "@hexclave/next";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Toaster } from "@/components/ui/sonner";
 import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
 import { CurrencyProvider } from "@/components/providers/currency-provider";
@@ -229,8 +229,8 @@ export default async function RootLayout({
         )}
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>
-            <StackProvider app={stackServerApp}>
-              <StackTheme>
+            <HexclaveProvider app={hexclaveServerApp}>
+              <HexclaveTheme>
                 {children}
                 <ScrollRestorer />
                 <ReferralTracker />
@@ -243,8 +243,8 @@ export default async function RootLayout({
                 <InstallPrompt />
                 <MarketingPopup />
                 <PushNotificationBanner />
-              </StackTheme>
-            </StackProvider>
+              </HexclaveTheme>
+            </HexclaveProvider>
           </CurrencyProvider>
         </NextIntlClientProvider>
       </body>

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
 import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 import { ExtendedEstimate } from "@/lib/shared/types";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { paymentService } from "@/lib/server/payment-service";
 import type { InvoiceOrder } from "@/types/payment";
@@ -33,7 +33,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     const token = searchParams.token as string | undefined;
 
     // Auth Guard / Fetch User
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     const order = await getOrder(id);
 
     if (!order) notFound();

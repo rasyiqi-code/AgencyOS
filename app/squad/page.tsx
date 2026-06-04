@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Code } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import { InvitationCard } from "@/components/squad/invitation-card";
 import { redirect } from "next/navigation";
 
 export default async function MissionBoardPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

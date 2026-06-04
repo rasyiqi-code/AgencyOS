@@ -1,11 +1,11 @@
 
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -35,7 +35,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

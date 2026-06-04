@@ -1,10 +1,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { uploadFile } from "@/lib/integrations/storage";
 
 export async function POST(req: NextRequest) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     try {

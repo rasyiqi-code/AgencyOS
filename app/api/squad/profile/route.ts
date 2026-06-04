@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { squadService } from "@/lib/server/squad";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 // Squad API Route
 // This mirrors the functionality of Server Actions but via standard REST API
 // Useful for external integrations or mobile apps.
 
 export async function POST(req: NextRequest) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     // Basic Auth Check (Example)
     if (!user) {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     // Auth check: hanya user login yang boleh query profil squad
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

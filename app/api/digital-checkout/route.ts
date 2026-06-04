@@ -2,7 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { validateCoupon } from "@/lib/server/marketing";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { secureRandomInt } from "@/lib/utils/crypto";
 
 /**
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     let userEmail = "";
     try {
         // Enforce Auth
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { type StackUser } from "@/lib/shared/types";
 import { ShoppingCart } from "lucide-react";
 import { FinanceList } from "@/components/admin/finance/finance-list";
@@ -92,7 +92,7 @@ export default async function AdminOrdersPage() {
     const stackUsers = await Promise.all(
         uniqueUserIds.map(async (id) => {
             try {
-                return await stackServerApp.getUser(id);
+                return await hexclaveServerApp.getUser(id);
             } catch (e) {
                 console.error(`Failed to fetch user ${id}`, e);
                 return null;

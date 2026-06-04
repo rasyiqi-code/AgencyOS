@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { DigitalInvoiceClientWrapper } from "@/components/invoice/digital-invoice-client-wrapper";
 import { CheckoutProgress } from "@/components/checkout/checkout-progress";
@@ -17,7 +17,7 @@ export default async function DigitalInvoicePage(props: { params: Promise<{ id: 
     const params = await props.params;
     const { id } = params;
 
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     const order = await prisma.digitalOrder.findUnique({
         where: { id },

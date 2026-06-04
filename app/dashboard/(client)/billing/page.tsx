@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { BillingList, type BillingOrder } from "@/components/dashboard/billing/billing-list";
 import { UnpaidBills } from "@/components/dashboard/billing/unpaid-bills";
 import { Receipt } from "lucide-react";
@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export default async function ClientBillingPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect('/handler/sign-in');

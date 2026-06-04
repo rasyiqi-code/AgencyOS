@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { slugify } from "@/lib/shared/utils";
 import { Prisma } from "@prisma/client";
 
@@ -13,7 +13,7 @@ const billingPeriodMap: Record<string, string> = {
 
 export async function DELETE(req: NextRequest, props: { params: Promise<{ serviceId: string }> }) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const id = params.serviceId;
@@ -39,7 +39,7 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ servic
 
 export async function PUT(req: NextRequest, props: { params: Promise<{ serviceId: string }> }) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const id = params.serviceId;

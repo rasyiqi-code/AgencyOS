@@ -1,7 +1,7 @@
 import { getCore } from "@/lib/integrations/midtrans";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { paymentService } from "@/lib/server/payment-service";
 import type { MidtransChargeParameter } from "@/types/payment";
 
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { orderId, paymentType, bank } = body;
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
 
         // Auth check: hanya user login yang boleh charge
         if (!user) {

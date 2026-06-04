@@ -6,7 +6,7 @@ import { DashboardHeader } from "@/components/dashboard/header/main";
 import { SidebarContainer } from "@/components/dashboard/sidebar/container";
 import { SidebarContentWrapper } from "@/components/dashboard/sidebar/content-wrapper";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "@/components/dashboard/sidebar/navigation";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { getSystemSettings } from "@/lib/server/settings";
@@ -17,7 +17,7 @@ export default async function DashboardLayout({
     children: React.ReactNode;
 }) {
     // Auth gate: pastikan user login sebelum akses dashboard
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) {
         redirect('/handler/sign-in');
     }

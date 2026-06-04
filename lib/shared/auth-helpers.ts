@@ -1,8 +1,8 @@
                             
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function getCurrentUser() {
-    return await stackServerApp.getUser();
+    return await hexclaveServerApp.getUser();
 }
 
 /**

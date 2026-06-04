@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { OverviewHeader } from "@/components/dashboard/header/overview";
 import { MissionCard } from "@/components/dashboard/missions/card";
@@ -10,7 +10,7 @@ import Link from "next/link";
 import { mapPrismaProjectToExtended } from "@/lib/shared/mappers";
 
 export default async function DashboardPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     const t = await getTranslations("Dashboard.Overview");
 
     const prismaProjects = await prisma.project.findMany({

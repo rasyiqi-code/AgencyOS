@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { Prisma } from "@prisma/client";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { sendOrderCancelledEmail } from "@/lib/email/client-notifications";
 
 export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
                 let customerName = "Client";
 
                 if (project.userId !== 'OFFLINE') {
-                    const stackUser = await stackServerApp.getUser(project.userId);
+                    const stackUser = await hexclaveServerApp.getUser(project.userId);
                     if (stackUser) {
                         customerEmail = stackUser.primaryEmail || "";
                         customerName = stackUser.displayName || customerEmail.split('@')[0] || "Client";

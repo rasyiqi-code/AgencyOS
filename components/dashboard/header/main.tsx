@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@stackframe/stack";
+import { UserButton } from "@hexclave/next";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";

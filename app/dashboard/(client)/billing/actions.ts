@@ -1,12 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { revalidatePath } from "next/cache";
 
 export async function clientGenerateRenewalInvoice(projectId: string) {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return { success: false, error: "Unauthorized" };
         }

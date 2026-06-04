@@ -1,6 +1,6 @@
 import { TicketList } from "@/components/support/ticket-list";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
 
 import { cookies } from "next/headers";
@@ -11,7 +11,7 @@ type TicketWithMessages = Prisma.TicketGetPayload<{
 }>;
 
 export default async function SupportPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

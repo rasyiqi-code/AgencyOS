@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { deleteFile } from "@/lib/integrations/storage";
 
 export async function DELETE(
@@ -7,7 +7,7 @@ export async function DELETE(
     props: { params: Promise<{ key: string | string[] }> }
 ) {
     const params = await props.params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     try {

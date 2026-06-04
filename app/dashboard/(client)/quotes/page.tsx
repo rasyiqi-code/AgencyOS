@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { QuotePriceCell } from "@/components/admin/finance/quote-price-cell";
  * Mendukung i18n via next-intl dan currency switching via PriceDisplay.
  */
 export default async function ClientQuotesPage() {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return null;
 
     const t = await getTranslations("Dashboard.ClientQuotes");

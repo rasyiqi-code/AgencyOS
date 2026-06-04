@@ -1,9 +1,9 @@
 import { describe, expect, it, mock, beforeEach, afterEach } from "bun:test";
 
-// Mock stackServerApp - MUST BE BEFORE IMPORTS
+// Mock hexclaveServerApp - MUST BE BEFORE IMPORTS
 const mockGetUser = mock();
-mock.module("@/lib/config/stack", () => ({
-    stackServerApp: {
+mock.module("@/lib/config/hexclave", () => ({
+    hexclaveServerApp: {
         getUser: mockGetUser,
     },
 }));

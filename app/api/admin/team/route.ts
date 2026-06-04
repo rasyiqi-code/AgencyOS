@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { grantPermission, revokePermission } from "@/lib/server/admin-team";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 
 export async function POST(req: NextRequest) {
     if (!await isAdmin()) {
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     }
     try {
         const { userId, email, key, action } = await req.json();
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
 
         if (user?.id === userId) {
             return NextResponse.json({ error: "Admin cannot manage their own permissions to prevent accidental lockout." }, { status: 400 });
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
                     // Ambil data target user dari Stack Auth (bukan admin yang login)
                     let targetName = email.split('@')[0];
                     try {
-                        const targetUser = await stackServerApp.getUser(userId);
+                        const targetUser = await hexclaveServerApp.getUser(userId);
                         if (targetUser?.displayName) {
                             targetName = targetUser.displayName;
                         }

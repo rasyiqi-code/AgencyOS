@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ChevronLeft, FileText, Activity, Calendar, Clock, Github, Terminal, MessageSquare, Shield } from "lucide-react";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { ServiceFeaturesList } from "@/components/dashboard/shared/service-features";
 import { TechnicalSpecsViewer } from "@/components/dashboard/shared/technical-specs-viewer";
 import { FileManager } from "@/app/admin/pm/[id]/file-manager";
@@ -24,7 +24,7 @@ interface PageProps {
 
 export default async function MissionDetailPage({ params }: PageProps) {
     const { id } = await params;
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect("/handler/sign-in");

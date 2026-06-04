@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { getCore } from "@/lib/integrations/midtrans";
 import { completeDigitalOrder } from "@/app/actions/digital-orders";
 import type { MidtransPaymentMetadata } from "@/types/payment";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
     try {
         // Auth check: hanya user login yang boleh cek status pembayaran
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

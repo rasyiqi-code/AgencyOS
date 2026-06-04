@@ -1,7 +1,7 @@
 import { CheckoutContent } from "@/components/checkout/checkout-content";
 import { DigitalCheckoutContent } from "@/components/checkout/digital-checkout-content";
 import { prisma } from "@/lib/config/db";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { notFound, redirect } from "next/navigation";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { ExtendedEstimate } from "@/lib/shared/types";
@@ -46,7 +46,7 @@ export default async function CheckoutPage(props: PageProps) {
     }));
 
     // Fetch user and enforce login for all checkout types
-    const user = await stackServerApp.getUser().catch(() => null);
+    const user = await hexclaveServerApp.getUser().catch(() => null);
 
     if (!user) {
         // Enforce Login for all Checkout flows to ensure we have user identity
@@ -158,10 +158,10 @@ export default async function CheckoutPage(props: PageProps) {
             } else if (estimate.project.userId !== user?.id) {
                 // If the logged-in user is NOT the owner (e.g. Admin Preview), fetch owner info
                 try {
-                    // ⚡ Bolt Optimization: Use stackServerApp.getUser() instead of listUsers() array lookup
+                    // ⚡ Bolt Optimization: Use hexclaveServerApp.getUser() instead of listUsers() array lookup
                     // 🎯 Why: Avoids O(N) network payload and memory overhead when fetching a single user.
                     // 📊 Impact: O(1) performance lookup and reduced API latency.
-                    const owner = await stackServerApp.getUser(estimate.project.userId);
+                    const owner = await hexclaveServerApp.getUser(estimate.project.userId);
                     if (owner) {
                         userData.displayName = owner.displayName || owner.primaryEmail || estimate.project.clientName || "Valued Client";
                         userData.email = owner.primaryEmail || "";

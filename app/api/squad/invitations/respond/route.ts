@@ -1,9 +1,9 @@
 import { squadService } from "@/lib/server/squad";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     try {

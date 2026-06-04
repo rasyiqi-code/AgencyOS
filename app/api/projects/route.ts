@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // 1. Resolve Users for Name-based Search
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
             matchedUserIds = [query];
         } else {
             try {
-                const allUsers = await stackServerApp.listUsers();
+                const allUsers = await hexclaveServerApp.listUsers();
                 matchedUserIds = allUsers
                     .filter((u) =>
                         (u.displayName && u.displayName.toLowerCase().includes(query.toLowerCase())) ||
@@ -76,7 +76,7 @@ export async function GET(request: Request) {
 
         // 2. Enrich Projects with Client Names from Stack Auth
         // ⚡ Bolt Optimization: Only fetch users that don't already have a clientName natively tracked in Prisma.
-        // Note: The external API (@stackframe/stack) does not support a batched fetch method (e.g. getUsers(ids)).
+        // Note: The external API (@hexclave/next) does not support a batched fetch method (e.g. getUsers(ids)).
         // 🎯 Why: Mitigates the N+1 network request pattern inherently. New projects structurally have clientName set in POST.
         // 📊 Impact: Reduces external API network calls to O(0) in the steady state.
         const missingClientNameProjects = projects.filter((p) => !p.clientName && p.userId);
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
             stackUsers = await Promise.all(
                 uniqueUserIds.map(async (id) => {
                     try {
-                        return await stackServerApp.getUser(id);
+                        return await hexclaveServerApp.getUser(id);
                     } catch (e) {
                         console.error(`Failed to fetch user ${id} in getProjects`, e);
                         return null;
@@ -115,7 +115,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    const user = await stackServerApp.getUser();
+    const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

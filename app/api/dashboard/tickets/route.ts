@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
     let user;
     try {
-        user = await stackServerApp.getUser();
+        user = await hexclaveServerApp.getUser();
     } catch (error) {
         console.error("Stack Auth Error:", error);
         return NextResponse.json({ error: "Authentication Service Error" }, { status: 401 });

@@ -1,4 +1,4 @@
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
@@ -10,7 +10,7 @@ import { Prisma } from "@prisma/client";
  */
 export async function POST() {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -65,7 +65,7 @@ export async function POST() {
  */
 export async function GET() {
     try {
-        const user = await stackServerApp.getUser();
+        const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { stackServerApp } from "@/lib/config/stack";
+import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { sendInvoiceEmail } from "@/lib/email/client-notifications";
 import { ScreenItem, ApiItem } from "@/lib/shared/types";
 import { broadcastPushNotification } from "@/lib/server/push";
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "No associated user found for this estimate" }, { status: 400 });
         }
 
-        const stackUser = await stackServerApp.getUser(userId);
+        const stackUser = await hexclaveServerApp.getUser(userId);
         if (!stackUser?.primaryEmail) {
             return NextResponse.json({ error: "User email not found" }, { status: 400 });
         }
