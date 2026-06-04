@@ -24,11 +24,11 @@ describe("safeUnstableCache", () => {
         const mockFn = mock(async () => "fallback_database_value");
 
         // Mock unstable_cache agar melempar error invariant Next.js 15+
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation(() => {
+        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((() => {
             return async () => {
                 throw new Error("Invariant: incrementalCache missing in unstable_cache");
             };
-        });
+        }) as any);
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
         const result = await cached();
@@ -43,11 +43,11 @@ describe("safeUnstableCache", () => {
         const mockFn = mock(async () => "database_value");
 
         // Mock unstable_cache agar melempar database error biasa
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation(() => {
+        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((() => {
             return async () => {
                 throw new Error("Prisma: Connection failed");
             };
-        });
+        }) as any);
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
 
