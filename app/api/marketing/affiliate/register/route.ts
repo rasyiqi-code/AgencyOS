@@ -3,6 +3,7 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import { notifyNewAffiliate } from "@/lib/email/admin-notifications";
 import { secureRandomInt } from "@/lib/utils/crypto";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export async function POST() {
     try {
@@ -45,11 +46,11 @@ export async function POST() {
             }
         }
 
-        // Get default commission rate
-        const defaultRateSetting = await prisma.systemSetting.findUnique({
-            where: { key: "affiliate_default_commission_rate" }
-        });
-        const defaultRate = defaultRateSetting ? parseFloat(defaultRateSetting.value) : 10;
+        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
+        // untuk menghindari query DB langsung setiap kali ada pendaftaran affiliate
+        const commissionSettings = await getSystemSettings(["affiliate_default_commission_rate"]);
+        const defaultRateValue = commissionSettings.find(s => s.key === "affiliate_default_commission_rate")?.value;
+        const defaultRate = defaultRateValue ? parseFloat(defaultRateValue) : 10;
 
         // Create Profile
         const profile = await prisma.affiliateProfile.create({

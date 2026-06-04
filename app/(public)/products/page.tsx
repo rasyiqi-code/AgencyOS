@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/config/db";
+import { getPageSeo } from "@/lib/server/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +15,8 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: {
-            path: "/products"
-        }
-    });
+    // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
+    const pageSeo = await getPageSeo("/products");
 
     const isId = locale === 'id';
 

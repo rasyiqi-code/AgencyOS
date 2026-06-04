@@ -1,7 +1,7 @@
 import { ClientDashboardContent } from "@/components/public/client-dashboard-content";
 import { Metadata } from "next";
 import { getLocale } from "next-intl/server";
-import { prisma } from "@/lib/config/db";
+import { getPageSeo } from "@/lib/server/seo";
 import { getSystemSettings } from "@/lib/server/settings";
 
 export const dynamic = "force-dynamic";
@@ -13,11 +13,8 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: {
-            path: "/client-dashboard"
-        }
-    });
+    // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
+    const pageSeo = await getPageSeo("/client-dashboard");
 
     const isId = locale === 'id';
 

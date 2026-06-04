@@ -1,23 +1,23 @@
 import { Resend } from "resend";
-import { prisma } from "@/lib/config/db";
+import { getSystemSettings } from "@/lib/server/settings";
 
 /**
- * Shared helper to get an initialized Resend client.
- * Priority:
- * 1. Database System Setting (RESEND_API_KEY)
+ * Helper untuk menginisialisasi Resend client.
+ * Prioritas:
+ * 1. Database System Setting (RESEND_API_KEY) — via cache unstable_cache
  * 2. Environment Variable (RESEND_API_KEY)
  * 
- * Returns null if no key is configured.
+ * Mengembalikan null jika API key tidak dikonfigurasi.
  */
 export async function getResendClient(): Promise<Resend | null> {
     try {
-        // 1. Try DB first
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "RESEND_API_KEY" }
-        });
+        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
+        // untuk menghindari query DB langsung setiap kali kirim email
+        const settings = await getSystemSettings(["RESEND_API_KEY"]);
+        const dbApiKey = settings.find(s => s.key === "RESEND_API_KEY")?.value;
 
-        // 2. Fallback to Env
-        const apiKey = setting?.value || process.env.RESEND_API_KEY;
+        // Fallback ke Environment Variable
+        const apiKey = dbApiKey || process.env.RESEND_API_KEY;
 
         if (!apiKey) {
             console.warn("Resend API key not configured in DB or Env. Email sending disabled.");
@@ -32,19 +32,19 @@ export async function getResendClient(): Promise<Resend | null> {
 }
 
 /**
- * Helper to get the Admin Email Target.
- * Priority:
- * 1. Database System Setting (ADMIN_EMAIL_TARGET)
+ * Helper untuk mendapatkan alamat email target Admin.
+ * Prioritas:
+ * 1. Database System Setting (ADMIN_EMAIL_TARGET) — via cache unstable_cache
  * 2. Environment Variable (ADMIN_EMAIL)
- * 3. Default fallback
+ * 3. Fallback default
  */
 export async function getAdminEmailTarget(): Promise<string> {
     try {
-        const setting = await prisma.systemSetting.findUnique({
-            where: { key: "ADMIN_EMAIL_TARGET" }
-        });
+        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
+        const settings = await getSystemSettings(["ADMIN_EMAIL_TARGET"]);
+        const dbEmail = settings.find(s => s.key === "ADMIN_EMAIL_TARGET")?.value;
 
-        return setting?.value || process.env.ADMIN_EMAIL || "support@crediblemark.com";
+        return dbEmail || process.env.ADMIN_EMAIL || "support@crediblemark.com";
     } catch {
         return process.env.ADMIN_EMAIL || "support@crediblemark.com";
     }

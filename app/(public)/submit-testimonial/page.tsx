@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/config/db";
+import { getPageSeo } from "@/lib/server/seo";
+import { getSystemSettings } from "@/lib/server/settings";
 import { SubmitTestimonialForm } from "./form";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
@@ -12,9 +13,8 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: { path: "/submit-testimonial" }
-    });
+    // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
+    const pageSeo = await getPageSeo("/submit-testimonial");
 
     const isId = locale === 'id';
     const previousImages = (await parent).openGraph?.images || [];
@@ -68,18 +68,9 @@ export default async function SubmitTestimonialPage() {
         redirect("/handler/sign-in?after_auth_return_to=/submit-testimonial");
     }
 
-    let agencyName = "AgencyOS";
-
-    try {
-        const setting = await prisma.systemSetting.findFirst({
-            where: { key: "AGENCY_NAME" }
-        });
-        if (setting?.value) {
-            agencyName = setting.value;
-        }
-    } catch {
-        // Fallback to default if DB fetch fails
-    }
+    // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache untuk menghindari query DB langsung
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
+    let agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
 
     return (
         <SubmitTestimonialForm

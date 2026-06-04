@@ -1,6 +1,6 @@
 import React from 'react';
-import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
+import { getPageSeo } from "@/lib/server/seo";
 import { getLocale } from "next-intl/server";
 import { Metadata } from "next";
 
@@ -11,9 +11,8 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const locale = await getLocale();
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: { path: "/terms" }
-    });
+    // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
+    const pageSeo = await getPageSeo("/terms");
 
     const isId = locale === 'id';
     const previousImages = (await parent).openGraph?.images || [];

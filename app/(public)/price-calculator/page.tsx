@@ -4,7 +4,7 @@ import { isAdmin } from "@/lib/shared/auth-helpers";
 export const dynamic = "force-dynamic";
 
 import { Metadata } from "next";
-import { prisma } from "@/lib/config/db";
+import { getPageSeo } from "@/lib/server/seo";
 
 import { ResolvingMetadata } from "next";
 
@@ -12,9 +12,8 @@ export async function generateMetadata(
     _props: { params: Promise<Record<string, string>> },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const pageSeo = await prisma.pageSeo.findUnique({
-        where: { path: "/price-calculator" }
-    });
+    // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
+    const pageSeo = await getPageSeo("/price-calculator");
 
     const previousImages = (await parent).openGraph?.images || [];
     const ogImages = pageSeo?.ogImage ? [{ url: pageSeo.ogImage }] : previousImages;

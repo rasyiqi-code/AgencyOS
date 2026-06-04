@@ -118,8 +118,10 @@ export async function uploadFile(
             ContentType: finalContentType,
         }));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
+        // untuk menghindari query DB langsung setiap kali upload file
+        const domainSettings = await getSystemSettings(["r2_public_domain"]);
+        const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
 
         if (publicDomain) {
             let domain = publicDomain.trim();
@@ -147,8 +149,9 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
         const response = await client.send(command);
         const files = (response.Contents || []).filter(item => item.Key && !item.Key.endsWith('/'));
 
-        const settings = await prisma.systemSetting.findUnique({ where: { key: 'r2_public_domain' } });
-        const publicDomain = settings?.value;
+        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
+        const domainSettings = await getSystemSettings(["r2_public_domain"]);
+        const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
 
         let domain = '';
         if (publicDomain) {
