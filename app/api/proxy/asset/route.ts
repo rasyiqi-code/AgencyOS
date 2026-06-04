@@ -42,10 +42,16 @@ export async function GET(req: NextRequest) {
     if (!assetUrl) return new NextResponse("Missing URL", { status: 400, headers });
 
     // Validate URL format
+    let parsedUrl: URL;
     try {
-        new URL(assetUrl);
+        parsedUrl = new URL(assetUrl);
     } catch {
         return new NextResponse("Invalid URL format", { status: 400, headers });
+    }
+
+    // Pengamanan Tambahan dari PR #75: Hanya izinkan protokol http dan https
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        return new NextResponse("Invalid protocol", { status: 400, headers });
     }
 
     if (req.method === "OPTIONS") {
