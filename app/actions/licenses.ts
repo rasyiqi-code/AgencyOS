@@ -10,7 +10,7 @@ import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
 const db = prisma;
 
 /**
- * Custom key generator: AGE-XXXX-XXXX-XXXX
+ * Custom key generator: AGE-AAAA-BBBB-CCCC
  * Format unik untuk license key produk digital.
  * Menggunakan crypto.randomBytes() untuk keamanan yang lebih baik.
  */

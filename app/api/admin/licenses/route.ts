@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         }
 
         // Generate a unique key
-        // Format: KEY-XXXX-XXXX-XXXX
+        // Format: KEY-AAAA-BBBB-CCCC
         const key = `KEY-${randomBytes(6).toString('hex').toUpperCase().match(/.{1,4}/g)?.join('-')}`;
 
         const license = await prisma.license.create({

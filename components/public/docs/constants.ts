@@ -10,7 +10,7 @@ export const WEBHOOK_PAYLOAD = `{
     "price": 29.00,
     "currency": "USD",
     "interval": "monthly",
-    "licenseKey": "KEY-XXXX-XXXX-XXXX",
+    "licenseKey": "KEY-AAAA-BBBB-CCCC",
     "status": "PAID",
     "metadata": {
       "user_id": "user_123",
@@ -29,7 +29,7 @@ export const SAAS_RESPONSE_PAYLOAD = `{
   "productName": "Premium SaaS Plan",
   "purchaseDate": "2024-03-18T15:30:00Z",
   "expiresAt": "2025-03-18T15:30:00Z",
-  "licenseKey": "KEY-XXXX-XXXX-XXXX",
+  "licenseKey": "KEY-AAAA-BBBB-CCCC",
   "price": 29.00,
   "currency": "USD",
   "interval": "monthly",
