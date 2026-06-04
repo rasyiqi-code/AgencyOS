@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
-import { useUser } from "@stackframe/stack";
+import { useSafeUser } from "@/hooks/use-safe-user";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -37,7 +37,7 @@ interface ContactSettings {
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 
 export function FloatingChatWidget() {
-    const user = useUser();
+    const { user } = useSafeUser();
     const t = useTranslations("FloatingChat");
     const { isOpen, mode, openChat, closeChat, isMenuOpen, setIsMenuOpen } = useFloatingChat();
     // Local state for expanded/collapsed only, visibility is global
