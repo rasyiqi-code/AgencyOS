@@ -67,10 +67,11 @@ export default async function proxy(request: NextRequest) {
                         if (ipRes.ok) {
                             const data = await ipRes.json();
                             if (data.countryCode) {
-                                geoCountry = data.countryCode;
+                                const code: string = data.countryCode;
+                                geoCountry = code;
                                 // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
                                 ipCache.set(ip, {
-                                    countryCode: geoCountry,
+                                    countryCode: code,
                                     expiry: Date.now() + CACHE_TTL
                                 });
                                 console.log(`[Middleware] IP-API detected: ${geoCountry} for IP: ${ip} (Disimpan ke cache)`);
