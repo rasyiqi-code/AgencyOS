@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { updatePromotion, deletePromotion } from "@/lib/server/marketing";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function PATCH(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         const body = await req.json();
@@ -24,6 +29,10 @@ export async function DELETE(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         await deletePromotion(id);

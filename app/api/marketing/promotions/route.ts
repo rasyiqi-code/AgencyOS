@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { getPromotions, createPromotion } from "@/lib/server/marketing";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const admin = searchParams.get("admin") === "true";
+
+        if (admin && !await isAdmin()) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const promotions = await getPromotions(!admin);
         return NextResponse.json(promotions);
     } catch (error) {
@@ -14,6 +20,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
         const promotion = await createPromotion({
