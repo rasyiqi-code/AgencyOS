@@ -23,26 +23,24 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({
-    allowedToSwitchViews = false,
     agencyName = "Agency OS",
     logoUrl,
     navChildren,
     navFooter
 }: DashboardHeaderProps) {
-    // ... path logic ...
+    // ... logic path ...
     const pathname = usePathname();
     const router = useRouter();
     const t = useTranslations("Common");
 
-    // Fix for Stack Auth bug: empty string profile image causes browser error
+    // Perbaikan untuk bug Stack Auth: profil image kosong menyebabkan error browser
     const { mockUserFallback } = useSafeUser();
 
-    // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
+    // Normalisasi path untuk mengabaikan locale (misal /id/admin... -> /admin...)
     const cleanPath = pathname.replace(/^\/(en|id)/, "") || "/";
 
-    // Check if we are not on the root dashboard page or root admin page
+    // Periksa apakah kita tidak berada di halaman utama dashboard atau halaman utama admin
     const showBackButton = cleanPath !== "/dashboard" && cleanPath !== "/admin";
-    const isAdminPage = cleanPath.startsWith("/admin");
     const isProjectPage = cleanPath === "/admin/pm/projects";
 
     return (
