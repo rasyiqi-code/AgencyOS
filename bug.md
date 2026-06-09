@@ -906,9 +906,9 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-## 🔴 Round 3 — API REDUNDAN
+## 🔴 Round 3 — API REDUNDAN (SELESAI SEBAGIAN)
 
-### R3-C1. 5 Endpoint Dead Code (Tak Dipakai Siapa Pun)
+### R3-C1. [SELESAI] 5 Endpoint Dead Code (Tak Dipakai Siapa Pun)
 
 | Endpoint | File | Method | Keterangan |
 |----------|------|--------|------------|
@@ -924,7 +924,7 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-### R3-C2. 3 Endpoint Broken (Dipanggil Tapi Route-nya Tidak Ada → 404)
+### R3-C2. [SELESAI] 3 Endpoint Broken (Dipanggil Tapi Route-nya Tidak Ada → 404)
 
 | Endpoint yang Dipanggil | Caller | Baris |
 |-------------------------|--------|-------|
@@ -938,7 +938,7 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-### R3-C3. Duplikasi CRUD Product — API Route vs Server Action
+### R3-C3. [SELESAI] Duplikasi CRUD Product — API Route vs Server Action
 
 **Masalah:** Product CRUD diimplementasi 2× secara paralel.
 
@@ -960,7 +960,7 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-### R3-C4. 3 Endpoint Marketing Assets untuk 1 Entitas
+### R3-C4. [SELESAI] 3 Endpoint Marketing Assets untuk 1 Entitas
 
 | Endpoint | Level Akses | Perbedaan |
 |----------|-------------|-----------|
@@ -987,7 +987,7 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-### R3-C6. Checkout — 2 Endpoint dengan Validasi Kupon Dobel
+### R3-C6. [SELESAI] Checkout — 2 Endpoint dengan Validasi Kupon Dobel
 
 | Client-side | Server-side |
 |-------------|-------------|
@@ -999,7 +999,7 @@ Endpoint cek user login aja, tidak cek role affiliate/admin.
 
 ---
 
-### R3-C7. Sequential Call Patterns (Bisa Di-batch)
+### R3-C7. [SELESAI SEBAGIAN] Sequential Call Patterns (Bisa Di-batch)
 
 **Pattern #1 — Floating Chat Mount (2 calls sequential)**
 `components/ui/floating-chat.tsx:90-116`
@@ -1024,7 +1024,7 @@ POST /api/marketing/coupon/validate → lalu → POST /api/checkout
 
 ---
 
-### R3-C8. Endpoint dengan `listUsers()` (RAM Boros)
+### R3-C8. [SELESAI] Endpoint dengan `listUsers()` (RAM Boros)
 
 | Endpoint | File | Baris |
 |----------|------|-------|
@@ -1035,15 +1035,15 @@ Dua endpoint ini masih panggil `hexclaverServerApp.listUsers()` — lihat R2-C1.
 
 ---
 
-## 🟠 Round 3 — SEDANG
+## 🟠 Round 3 — SEDANG (SELESAI)
 
-### R3-M1. `app/api/marketing/assets/route.ts` — Auth Check Kurang Strict
+### R3-M1. [SELESAI] `app/api/marketing/assets/route.ts` — Auth Check Kurang Strict
 
 Hanya cek user login, tidak cek role. User biasa bisa lihat semua marketing assets.
 
 ---
 
-### R3-M2. Banyak Endpoint Publik Tanpa `Cache-Control` Header
+### R3-M2. [SELESAI] Banyak Endpoint Publik Tanpa `Cache-Control` Header
 
 | Endpoint | Data |
 |----------|------|
