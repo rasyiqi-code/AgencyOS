@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Copy, RefreshCw, Check, Download } from "lucide-react";
-import { regenerateLicense } from "@/app/actions/licenses";
+import { regenerateLicenseFn } from "@/src/server/licenses";
 import { toast } from "sonner";
 
 /**
@@ -51,7 +51,7 @@ export function LicenseCard({ license }: LicenseCardProps) {
 
         setRegenerating(true);
         try {
-            const result = await regenerateLicense(license.id);
+            const result = await regenerateLicenseFn({ data: license.id });
             if (result.success && result.license) {
                 setCurrentKey(result.license.key);
                 toast.success("License key berhasil di-regenerasi!");

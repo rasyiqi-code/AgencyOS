@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { deleteService } from "@/app/actions/services";
+import { deleteAdminServiceFn } from "@/src/server/pm";
 
 export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
     const router = useRouter();
@@ -25,7 +25,7 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
 
         startTransition(async () => {
             try {
-                const result = await deleteService(serviceId);
+                const result = await deleteAdminServiceFn({ data: serviceId);
 
                 if (result.error) {
                     if (element) element.style.display = '';

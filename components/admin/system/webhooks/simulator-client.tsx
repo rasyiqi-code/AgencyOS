@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Send, Globe, Database, Code, RefreshCcw, CheckCircle2, AlertCircle } from "lucide-react";
-import { simulateWebhook } from "@/app/actions/webhooks";
+import { simulateWebhookFn } from "@/src/server/admin";
 import { WEBHOOK_PAYLOAD } from "@/components/public/docs/constants";
 
 interface Product {
@@ -44,7 +44,7 @@ export function WebhookSimulator({ products }: { products: Product[] }) {
                 return;
             }
 
-            const result = await simulateWebhook({
+            const result = await simulateWebhookFn({ data: {
                 url: activeProduct.externalWebhookUrl,
                 payload: parsedPayload
             });

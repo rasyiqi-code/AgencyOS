@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText, Upload, Loader2, Download, Paperclip } from "lucide-react";
 import { toast } from "sonner";
-import { uploadProjectFile } from "@/app/actions/projects";
+import { uploadProjectFileFn } from "@/src/server/pm";
 
 interface ProjectFile {
     name: string;
@@ -26,7 +26,7 @@ export function ProjectAssets({ projectId, initialFiles }: { projectId: string, 
         formData.append("projectId", projectId);
 
         try {
-            const result = await uploadProjectFile(projectId, formData);
+            const result = formData.append("projectId", projectId); await uploadProjectFileFn({ data: formData });
 
             if (result.error) throw new Error("Failed to upload");
 

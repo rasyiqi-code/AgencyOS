@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/hooks";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { updateService } from "@/app/actions/services";
+import { updateAdminServiceFn } from "@/src/server/pm";
+import { useNavigate } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
@@ -58,7 +59,7 @@ export function EditServiceForm({
     features_id: string[],
     categories?: string[]
 }) {
-    const router = useRouter();
+    const navigate = useNavigate();
     const t = useTranslations("Service");
     const tAdmin = useTranslations("Admin.Services");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,15 +125,16 @@ export function EditServiceForm({
         }
 
         try {
-            const result = await updateService(service.id, formData);
+            formData.append("serviceId", service.id);
+            const result = await updateAdminServiceFn({ data: formData });
 
             if (result.error) {
                 throw new Error(typeof result.error === 'string' ? result.error : "Failed to update service");
             }
 
             toast.success(tAdmin("updateSuccess"));
-            router.push("/admin/pm/services");
-            router.refresh();
+            navigate({ to: "/admin/pm/services");
+            window.location.reload();
         } catch (error) {
             console.error(error);
             toast.error(error instanceof Error ? error.message : "Failed to update service");
