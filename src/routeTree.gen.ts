@@ -27,7 +27,12 @@ import { Route as SquadMissionsRouteImport } from './routes/squad.missions'
 import { Route as SquadActiveRouteImport } from './routes/squad.active'
 import { Route as HandlerSplatRouteImport } from './routes/handler.$'
 import { Route as DashboardSupportRouteImport } from './routes/dashboard.support'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardServicesRouteImport } from './routes/dashboard.services'
+import { Route as DashboardQuotesRouteImport } from './routes/dashboard.quotes'
 import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-products'
+import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
+import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
@@ -40,6 +45,7 @@ import { Route as AdminDigitalSalesRouteImport } from './routes/admin.digital-sa
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
+import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
@@ -150,9 +156,34 @@ const DashboardSupportRoute = DashboardSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardServicesRoute = DashboardServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardQuotesRoute = DashboardQuotesRouteImport.update({
+  id: '/quotes',
+  path: '/quotes',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardMyProductsRoute = DashboardMyProductsRouteImport.update({
   id: '/my-products',
   path: '/my-products',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInboxRoute = DashboardInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBillingRoute = DashboardBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => DashboardRoute,
 } as any)
 const AffiliateJoinRoute = AffiliateJoinRouteImport.update({
@@ -214,6 +245,11 @@ const AdminMarketingIndexRoute = AdminMarketingIndexRouteImport.update({
   id: '/marketing/',
   path: '/marketing/',
   getParentRoute: () => AdminRoute,
+} as any)
+const SquadMissionsIdRoute = SquadMissionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => SquadMissionsRoute,
 } as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
   id: '/system/currency',
@@ -332,11 +368,16 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
+  '/dashboard/quotes': typeof DashboardQuotesRoute
+  '/dashboard/services': typeof DashboardServicesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
   '/squad/active': typeof SquadActiveRoute
-  '/squad/missions': typeof SquadMissionsRoute
+  '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
   '/squad/profile': typeof SquadProfileRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
@@ -361,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -379,11 +421,16 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
+  '/dashboard/quotes': typeof DashboardQuotesRoute
+  '/dashboard/services': typeof DashboardServicesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
   '/squad/active': typeof SquadActiveRoute
-  '/squad/missions': typeof SquadMissionsRoute
+  '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
   '/squad/profile': typeof SquadProfileRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
@@ -408,6 +455,7 @@ export interface FileRoutesByTo {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -432,11 +480,16 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
+  '/dashboard/quotes': typeof DashboardQuotesRoute
+  '/dashboard/services': typeof DashboardServicesRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
   '/squad/active': typeof SquadActiveRoute
-  '/squad/missions': typeof SquadMissionsRoute
+  '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
   '/squad/profile': typeof SquadProfileRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
@@ -461,6 +514,7 @@ export interface FileRoutesById {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -486,7 +540,12 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/dashboard/billing'
+    | '/dashboard/inbox'
     | '/dashboard/my-products'
+    | '/dashboard/quotes'
+    | '/dashboard/services'
+    | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
     | '/squad/active'
@@ -515,6 +574,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
@@ -533,7 +593,12 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/dashboard/billing'
+    | '/dashboard/inbox'
     | '/dashboard/my-products'
+    | '/dashboard/quotes'
+    | '/dashboard/services'
+    | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
     | '/squad/active'
@@ -562,6 +627,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/squad/missions/$id'
     | '/admin/marketing'
     | '/admin/pm'
     | '/admin/pm/projects/$id'
@@ -585,7 +651,12 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/dashboard/billing'
+    | '/dashboard/inbox'
     | '/dashboard/my-products'
+    | '/dashboard/quotes'
+    | '/dashboard/services'
+    | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
     | '/squad/active'
@@ -614,6 +685,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
@@ -760,11 +832,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSupportRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/services': {
+      id: '/dashboard/services'
+      path: '/services'
+      fullPath: '/dashboard/services'
+      preLoaderRoute: typeof DashboardServicesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/quotes': {
+      id: '/dashboard/quotes'
+      path: '/quotes'
+      fullPath: '/dashboard/quotes'
+      preLoaderRoute: typeof DashboardQuotesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/my-products': {
       id: '/dashboard/my-products'
       path: '/my-products'
       fullPath: '/dashboard/my-products'
       preLoaderRoute: typeof DashboardMyProductsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/inbox': {
+      id: '/dashboard/inbox'
+      path: '/inbox'
+      fullPath: '/dashboard/inbox'
+      preLoaderRoute: typeof DashboardInboxRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/billing': {
+      id: '/dashboard/billing'
+      path: '/billing'
+      fullPath: '/dashboard/billing'
+      preLoaderRoute: typeof DashboardBillingRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/affiliate/join': {
@@ -850,6 +957,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/marketing/'
       preLoaderRoute: typeof AdminMarketingIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/squad/missions/$id': {
+      id: '/squad/missions/$id'
+      path: '/$id'
+      fullPath: '/squad/missions/$id'
+      preLoaderRoute: typeof SquadMissionsIdRouteImport
+      parentRoute: typeof SquadMissionsRoute
     }
     '/admin/system/currency': {
       id: '/admin/system/currency'
@@ -1092,13 +1206,23 @@ const AffiliateRouteWithChildren = AffiliateRoute._addFileChildren(
 )
 
 interface DashboardRouteChildren {
+  DashboardBillingRoute: typeof DashboardBillingRoute
+  DashboardInboxRoute: typeof DashboardInboxRoute
   DashboardMyProductsRoute: typeof DashboardMyProductsRoute
+  DashboardQuotesRoute: typeof DashboardQuotesRoute
+  DashboardServicesRoute: typeof DashboardServicesRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardSupportRoute: typeof DashboardSupportRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardBillingRoute: DashboardBillingRoute,
+  DashboardInboxRoute: DashboardInboxRoute,
   DashboardMyProductsRoute: DashboardMyProductsRoute,
+  DashboardQuotesRoute: DashboardQuotesRoute,
+  DashboardServicesRoute: DashboardServicesRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardSupportRoute: DashboardSupportRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
@@ -1107,9 +1231,21 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface SquadMissionsRouteChildren {
+  SquadMissionsIdRoute: typeof SquadMissionsIdRoute
+}
+
+const SquadMissionsRouteChildren: SquadMissionsRouteChildren = {
+  SquadMissionsIdRoute: SquadMissionsIdRoute,
+}
+
+const SquadMissionsRouteWithChildren = SquadMissionsRoute._addFileChildren(
+  SquadMissionsRouteChildren,
+)
+
 interface SquadRouteChildren {
   SquadActiveRoute: typeof SquadActiveRoute
-  SquadMissionsRoute: typeof SquadMissionsRoute
+  SquadMissionsRoute: typeof SquadMissionsRouteWithChildren
   SquadOnboardingRoute: typeof SquadOnboardingRoute
   SquadProfileRoute: typeof SquadProfileRoute
   SquadIndexRoute: typeof SquadIndexRoute
@@ -1117,7 +1253,7 @@ interface SquadRouteChildren {
 
 const SquadRouteChildren: SquadRouteChildren = {
   SquadActiveRoute: SquadActiveRoute,
-  SquadMissionsRoute: SquadMissionsRoute,
+  SquadMissionsRoute: SquadMissionsRouteWithChildren,
   SquadOnboardingRoute: SquadOnboardingRoute,
   SquadProfileRoute: SquadProfileRoute,
   SquadIndexRoute: SquadIndexRoute,
