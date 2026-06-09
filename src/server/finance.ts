@@ -538,7 +538,7 @@ export const confirmDigitalOrderFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: orderId }) => {
     await requireBillingAdmin()
-    const { completeDigitalOrder } = await import('@/app/actions/digital-orders')
+    const { completeDigitalOrder } = await import('@/src/server/digital-orders')
     const result = await completeDigitalOrder(orderId, `MANUAL-${orderId}`, "manual_transfer")
     if (!result.success) throw new Error(result.error || "Gagal mengonfirmasi pesanan digital")
     return { success: true }
