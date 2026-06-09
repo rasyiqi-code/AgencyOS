@@ -363,7 +363,8 @@ model SquadProfile {
   availability String               @default("available")
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
-  applications MissionApplication[]
+  applications   MissionApplication[]
+  payoutRequests PayoutRequest[]
 
   @@index([status])
 }
@@ -403,18 +404,21 @@ model AffiliateProfile {
 }
 
 model PayoutRequest {
-  id          String           @id @default(cuid())
-  affiliateId String
+  id          String            @id @default(cuid())
+  affiliateId String?
+  squadId     String?
   amount      Float
-  status      String           @default("pending")
+  status      String            @default("pending")
   bankInfo    Json?
   notes       String?
   processedAt DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  affiliate   AffiliateProfile? @relation(fields: [affiliateId], references: [id])
+  squad       SquadProfile?     @relation(fields: [squadId], references: [id])
 
   @@index([affiliateId])
+  @@index([squadId])
 }
 
 model ReferralUsage {

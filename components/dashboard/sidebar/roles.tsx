@@ -91,18 +91,30 @@ export function SidebarSuperAdmin() {
                     <SidebarSectionHeader>Finance & Billing (Digital)</SidebarSectionHeader>
                     <SidebarLink href="/admin/finance/digital-orders?mode=digital" icon={ShoppingCart} label="Digital Orders" />
 
-                    {/* PENJUALAN DIGITAL & PEMASARAN */}
-                    <SidebarSectionHeader>Marketing & Products</SidebarSectionHeader>
+                    {/* CAMPAIGNS & PROMOTIONS */}
+                    <SidebarSectionHeader>Campaigns & Promos</SidebarSectionHeader>
                     <SidebarLink href="/admin/marketing/promotions?mode=digital" icon={Megaphone} label="Visual Promos" />
                     <SidebarLink href="/admin/marketing/popups?mode=digital" icon={LayoutTemplate} label="PopUp Banners" />
+                    <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
+
+                    {/* DISCOUNTS & OFFERS */}
+                    <SidebarSectionHeader>Discounts & Offers</SidebarSectionHeader>
                     <SidebarLink href="/admin/marketing/coupons?mode=digital" icon={Tag} label="Coupon Codes" />
                     <SidebarLink href="/admin/marketing/bonuses?mode=digital" icon={Gift} label="Checkout Bonuses" />
+
+                    {/* AUDIENCE & LEADS */}
+                    <SidebarSectionHeader>Audience & Leads</SidebarSectionHeader>
                     <SidebarLink href="/admin/marketing/leads?mode=digital" icon={UserPlus} label="Contact Leads" />
                     <SidebarLink href="/admin/marketing/subscribers?mode=digital" icon={Mail} label="Newsletter Subs" />
+
+                    {/* AFFILIATE NETWORK */}
+                    <SidebarSectionHeader>Affiliate Network</SidebarSectionHeader>
                     <SidebarLink href="/admin/marketing/affiliates?mode=digital" icon={Users} label="Affiliate Partners" />
                     <SidebarLink href="/admin/marketing/payouts?mode=digital" icon={DollarSign} label="Payout Requests" />
                     <SidebarLink href="/admin/marketing/assets?mode=digital" icon={FolderOpen} label="Marketing Assets" />
-                    <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
+
+                    {/* DIGITAL PRODUCTS */}
+                    <SidebarSectionHeader>Digital Products</SidebarSectionHeader>
                     <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
                     <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
                     <SidebarLink href="/admin/licenses?mode=digital" icon={Key} label="Licenses" />

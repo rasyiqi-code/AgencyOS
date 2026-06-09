@@ -123,7 +123,10 @@ export async function getPayoutRequests() {
 
     try {
         const requests = await prisma.payoutRequest.findMany({
-            include: { affiliate: { select: { name: true, email: true, referralCode: true } } },
+            include: {
+                affiliate: { select: { name: true, email: true, referralCode: true } },
+                squad: { select: { name: true, email: true } }
+            },
             orderBy: { createdAt: 'desc' }
         });
 
@@ -151,7 +154,7 @@ export async function processPayout(requestId: string, action: "approved" | "rej
 
         const payoutReq = await prisma.payoutRequest.findUnique({
             where: { id: requestId },
-            include: { affiliate: true }
+            include: { affiliate: true, squad: true }
         });
 
         if (!payoutReq) {
@@ -162,36 +165,57 @@ export async function processPayout(requestId: string, action: "approved" | "rej
             return { success: false, error: "This request has already been processed" };
         }
 
-        if (action === "approved") {
-            await prisma.$transaction([
-                prisma.payoutRequest.update({
+        // Jika request diajukan oleh Squad
+        if (payoutReq.squadId && payoutReq.squad) {
+            if (action === "approved") {
+                await prisma.payoutRequest.update({
                     where: { id: requestId },
                     data: { status: "approved", notes, processedAt: new Date() }
-                }),
-                prisma.affiliateProfile.update({
-                    where: { id: payoutReq.affiliateId },
-                    data: { paidEarnings: { increment: payoutReq.amount } }
-                }),
-                prisma.commissionLog.updateMany({
-                    where: {
-                        affiliateId: payoutReq.affiliateId,
-                        status: "pending",
-                        createdAt: { lte: payoutReq.createdAt }
-                    },
-                    data: { status: "paid", paidAt: new Date() }
-                })
-            ]);
+                });
+                // Logika notifikasi squad jika diperlukan dapat diletakkan di sini
+            } else {
+                await prisma.payoutRequest.update({
+                    where: { id: requestId },
+                    data: { status: "rejected", notes, processedAt: new Date() }
+                });
+            }
+            revalidatePath('/admin/marketing');
+            return { success: true, data: { action } };
+        }
 
-            sendPayoutApprovedEmail(payoutReq.affiliate.email, payoutReq.affiliate.name, payoutReq.amount)
-                .catch(err => console.error("Email send failed:", err));
-        } else {
-            await prisma.payoutRequest.update({
-                where: { id: requestId },
-                data: { status: "rejected", notes, processedAt: new Date() }
-            });
+        // Jika request diajukan oleh Affiliate
+        if (payoutReq.affiliateId && payoutReq.affiliate) {
+            if (action === "approved") {
+                await prisma.$transaction([
+                    prisma.payoutRequest.update({
+                        where: { id: requestId },
+                        data: { status: "approved", notes, processedAt: new Date() }
+                    }),
+                    prisma.affiliateProfile.update({
+                        where: { id: payoutReq.affiliateId },
+                        data: { paidEarnings: { increment: payoutReq.amount } }
+                    }),
+                    prisma.commissionLog.updateMany({
+                        where: {
+                            affiliateId: payoutReq.affiliateId,
+                            status: "pending",
+                            createdAt: { lte: payoutReq.createdAt }
+                        },
+                        data: { status: "paid", paidAt: new Date() }
+                    })
+                ]);
 
-            sendPayoutRejectedEmail(payoutReq.affiliate.email, payoutReq.affiliate.name, payoutReq.amount, notes)
-                .catch(err => console.error("Email send failed:", err));
+                sendPayoutApprovedEmail(payoutReq.affiliate.email, payoutReq.affiliate.name, payoutReq.amount)
+                    .catch(err => console.error("Email send failed:", err));
+            } else {
+                await prisma.payoutRequest.update({
+                    where: { id: requestId },
+                    data: { status: "rejected", notes, processedAt: new Date() }
+                });
+
+                sendPayoutRejectedEmail(payoutReq.affiliate.email, payoutReq.affiliate.name, payoutReq.amount, notes)
+                    .catch(err => console.error("Email send failed:", err));
+            }
         }
 
         revalidatePath('/admin/marketing');

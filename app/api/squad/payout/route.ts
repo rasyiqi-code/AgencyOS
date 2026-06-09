@@ -24,29 +24,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
         }
 
-        // Karena tidak ada tabel SquadPayoutRequest terpisah, kita cek apakah ada AffiliateProfile untuk user ini.
-        // Jika belum ada, kita buatkan profil affiliate dummy agar data payout request bisa tersimpan di tabel PayoutRequest
-        let affiliateProfile = await prisma.affiliateProfile.findUnique({
-            where: { userId: user.id }
-        });
-
-        if (!affiliateProfile) {
-            affiliateProfile = await prisma.affiliateProfile.create({
-                data: {
-                    userId: user.id,
-                    name: squadProfile.name,
-                    email: squadProfile.email,
-                    referralCode: `squad-${squadProfile.id.slice(-6)}`,
-                    status: "approved",
-                    bankInfo: details || {},
-                }
-            });
-        }
-
-        // Buat data PayoutRequest baru
+        // Buat data PayoutRequest baru yang dikaitkan langsung ke squadId (tanpa profil affiliate dummy)
         const payoutRequest = await prisma.payoutRequest.create({
             data: {
-                affiliateId: affiliateProfile.id,
+                squadId: squadProfile.id,
                 amount: parseFloat(amount),
                 bankInfo: details || {},
                 notes: `Squad payout request via ${method}`,
