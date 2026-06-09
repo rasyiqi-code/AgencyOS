@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -70,12 +70,15 @@ export function LeadsManager() {
         }
     };
 
-    const filteredLeads = leads.filter(l =>
-        l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        l.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (l.lastName && l.lastName.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (l.subject && l.subject.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    // Membungkus filter array dengan useMemo untuk optimasi performa render
+    const filteredLeads = useMemo(() => {
+        return leads.filter(l =>
+            l.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            l.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (l.lastName && l.lastName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (l.subject && l.subject.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+    }, [leads, searchQuery]);
 
     const handleViewLead = (lead: Lead) => {
         setSelectedLead(lead);

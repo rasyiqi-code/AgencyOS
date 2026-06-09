@@ -28,9 +28,8 @@ export default async function CheckoutPage(props: PageProps) {
     const searchParams = await props.searchParams;
     const paymentType = typeof searchParams.paymentType === 'string' ? (searchParams.paymentType as "FULL" | "DP" | "REPAYMENT") : undefined;
 
-    const { currencyService } = await import("@/lib/server/currency-service");
-    const exchangeRates = await currencyService.getRates();
-    const activeRate = exchangeRates?.rates.IDR || 15000;
+    const { paymentService } = await import("@/lib/server/payment-service");
+    const activeRate = await paymentService.getExchangeRate();
 
     const product = await prisma.product.findUnique({
         where: { id }

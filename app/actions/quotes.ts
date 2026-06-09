@@ -10,7 +10,11 @@ export async function setQuotePrice(formData: FormData) {
     let newPrice = parseFloat(formData.get("newPrice") as string);
     const contextCurrency = formData.get("contextCurrency") as string;
     const activeRateStr = formData.get("activeRate") as string;
-    const activeRate = activeRateStr ? parseFloat(activeRateStr) : 15000;
+    let activeRate = activeRateStr ? parseFloat(activeRateStr) : 0;
+    if (!activeRate || isNaN(activeRate)) {
+        const { paymentService } = await import("@/lib/server/payment-service");
+        activeRate = await paymentService.getExchangeRate();
+    }
 
     if (!id || isNaN(newPrice)) return { error: "Invalid data" };
 
@@ -63,7 +67,11 @@ export async function createManualQuote(formData: FormData) {
     let amount = parseFloat(formData.get("amount") as string);
     const contextCurrency = formData.get("contextCurrency") as string;
     const activeRateStr = formData.get("activeRate") as string;
-    const activeRate = activeRateStr ? parseFloat(activeRateStr) : 15000;
+    let activeRate = activeRateStr ? parseFloat(activeRateStr) : 0;
+    if (!activeRate || isNaN(activeRate)) {
+        const { paymentService } = await import("@/lib/server/payment-service");
+        activeRate = await paymentService.getExchangeRate();
+    }
 
     if (!serviceId || !userId || isNaN(amount)) return { error: "Missing required fields" };
 

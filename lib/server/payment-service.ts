@@ -3,10 +3,9 @@ import { prisma } from "@/lib/config/db";
 
 export class PaymentService {
     /**
-     * Converts a USD amount to IDR using the latest cached exchange rate.
-     * Returns both the IDR amount and the rate used.
+     * Mengambil exchange rate USD ke IDR dengan fallback terstruktur dari database.
      */
-    async convertToIDR(usdAmount: number): Promise<{ idrAmount: number, rate: number }> {
+    async getExchangeRate(): Promise<number> {
         const rates = await currencyService.getRates();
         let rate: number | null = null;
 
@@ -22,11 +21,11 @@ export class PaymentService {
                     const parsed = JSON.parse(dbRateSetting.value);
                     if (parsed && parsed.rates && parsed.rates.IDR) {
                         rate = Number(parsed.rates.IDR);
-                        console.warn(`[PaymentService] Using last known rate from DB currency_rates: ${rate}`);
+                        console.warn(`[PaymentService] Menggunakan rate terakhir yang diketahui dari DB currency_rates: ${rate}`);
                     }
                 }
             } catch (err) {
-                console.error("[PaymentService] Failed to read currency_rates from DB:", err);
+                console.error("[PaymentService] Gagal membaca currency_rates dari DB:", err);
             }
 
             if (!rate) {
@@ -37,10 +36,10 @@ export class PaymentService {
                     });
                     if (dbFallbackSetting) {
                         rate = parseFloat(dbFallbackSetting.value);
-                        console.warn(`[PaymentService] Using fallback setting last_known_exchange_rate from DB: ${rate}`);
+                        console.warn(`[PaymentService] Menggunakan rate fallback last_known_exchange_rate dari DB: ${rate}`);
                     }
                 } catch (err) {
-                    console.error("[PaymentService] Failed to read last_known_exchange_rate from DB:", err);
+                    console.error("[PaymentService] Gagal membaca last_known_exchange_rate dari DB:", err);
                 }
             }
         }
@@ -53,20 +52,29 @@ export class PaymentService {
                 });
                 if (dbDefaultSetting) {
                     defaultDbRate = parseFloat(dbDefaultSetting.value) || 15000;
-                    console.warn(`[PaymentService] Using default_exchange_rate from DB: ${defaultDbRate}`);
+                    console.warn(`[PaymentService] Menggunakan default_exchange_rate dari DB: ${defaultDbRate}`);
                 }
             } catch (err) {
-                console.error("[PaymentService] Failed to read default_exchange_rate from DB:", err);
+                console.error("[PaymentService] Gagal membaca default_exchange_rate dari DB:", err);
             }
         }
 
         const finalRate = rate || defaultDbRate;
         if (!rate) {
-            console.warn(`[PaymentService] Real-time rates and DB fallbacks unavailable. Using final fallback rate: ${finalRate}`);
+            console.warn(`[PaymentService] Exchange rate real-time dan DB fallback tidak tersedia. Menggunakan rate fallback akhir: ${finalRate}`);
         }
 
-        const idrAmount = Math.ceil(usdAmount * finalRate);
-        return { idrAmount, rate: finalRate };
+        return finalRate;
+    }
+
+    /**
+     * Converts a USD amount to IDR using the latest cached exchange rate.
+     * Returns both the IDR amount and the rate used.
+     */
+    async convertToIDR(usdAmount: number): Promise<{ idrAmount: number, rate: number }> {
+        const rate = await this.getExchangeRate();
+        const idrAmount = Math.ceil(usdAmount * rate);
+        return { idrAmount, rate };
     }
 }
 
