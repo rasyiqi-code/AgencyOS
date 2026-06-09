@@ -277,4 +277,37 @@ export const clientGenerateRenewalInvoiceFn = createServerFn({ method: 'POST' })
     }
   })
 
+const createFromBriefSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  brief: z.string().min(1, "Brief is required"),
+})
+
+// 7. Membuat proyek baru dari brief konsultasi AI
+export const createProjectFromBriefFn = createServerFn({ method: 'POST' })
+  .validator((data: unknown) => createFromBriefSchema.parse(data))
+  .handler(async ({ data: body }) => {
+    const user = await requireClient()
+    try {
+      const project = await prisma.project.create({
+        data: {
+          userId: user.id,
+          title: body.title,
+          description: "Project started from AI Consultation",
+          spec: body.brief,
+          status: "queue",
+          briefs: {
+            create: {
+              content: body.brief,
+            },
+          },
+        },
+      })
+      return { success: true, data: project }
+    } catch (error) {
+      console.error("Project creation error:", error)
+      throw new Error("Internal Server Error")
+    }
+  })
+
+
 
