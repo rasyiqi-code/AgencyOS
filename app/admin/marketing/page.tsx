@@ -6,12 +6,12 @@ interface PageProps {
 
 /**
  * Root page untuk Marketing Center.
- * Melakukan redirect server-side secara instan ke sub-halaman Campaigns demi modularitas.
+ * Melakukan redirect server-side secara instan ke sub-halaman pertama yang aktif (Promotions) dengan meneruskan parameter mode.
  */
 export default async function MarketingPage({ searchParams }: PageProps) {
     const params = await searchParams;
     const mode = params?.mode || "digital";
     
-    // Redirect langsung ke tab default (Campaigns) dengan meneruskan parameter mode
-    redirect(`/admin/marketing/campaigns?mode=${mode}`);
+    // Redirect langsung ke Promotions
+    redirect(`/admin/marketing/promotions?mode=${mode}`);
 }

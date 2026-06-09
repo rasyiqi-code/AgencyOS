@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe, Repeat, Tag, DollarSign } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe, Repeat, Tag, DollarSign, LayoutTemplate, Gift, UserPlus, FolderOpen } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -93,10 +93,15 @@ export function SidebarSuperAdmin() {
 
                     {/* PENJUALAN DIGITAL & PEMASARAN */}
                     <SidebarSectionHeader>Marketing & Products</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/campaigns?mode=digital" icon={Megaphone} label="Campaigns & Promos" />
-                    <SidebarLink href="/admin/marketing/discounts?mode=digital" icon={Tag} label="Coupons & Bonuses" />
-                    <SidebarLink href="/admin/marketing/audience?mode=digital" icon={Users} label="Audience & Leads" />
-                    <SidebarLink href="/admin/marketing/affiliates?mode=digital" icon={DollarSign} label="Affiliates & Payouts" />
+                    <SidebarLink href="/admin/marketing/promotions?mode=digital" icon={Megaphone} label="Visual Promos" />
+                    <SidebarLink href="/admin/marketing/popups?mode=digital" icon={LayoutTemplate} label="PopUp Banners" />
+                    <SidebarLink href="/admin/marketing/coupons?mode=digital" icon={Tag} label="Coupon Codes" />
+                    <SidebarLink href="/admin/marketing/bonuses?mode=digital" icon={Gift} label="Checkout Bonuses" />
+                    <SidebarLink href="/admin/marketing/leads?mode=digital" icon={UserPlus} label="Contact Leads" />
+                    <SidebarLink href="/admin/marketing/subscribers?mode=digital" icon={Mail} label="Newsletter Subs" />
+                    <SidebarLink href="/admin/marketing/affiliates?mode=digital" icon={Users} label="Affiliate Partners" />
+                    <SidebarLink href="/admin/marketing/payouts?mode=digital" icon={DollarSign} label="Payout Requests" />
+                    <SidebarLink href="/admin/marketing/assets?mode=digital" icon={FolderOpen} label="Marketing Assets" />
                     <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
                     <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
                     <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
