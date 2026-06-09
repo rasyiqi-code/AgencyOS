@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,10 +28,22 @@ interface Props {
 }
 
 export function SeoSettingsForm({ initialData }: Props) {
-    // ... existing state ...
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const [data, setData] = useState<SeoSettings>(initialData);
+
+    // Refs untuk input teks / textarea
+    const googleVerificationRef = useRef<HTMLInputElement>(null);
+    const gaIdRef = useRef<HTMLInputElement>(null);
+    const titleRef = useRef<HTMLInputElement>(null);
+    const titleIdRef = useRef<HTMLInputElement>(null);
+    const descriptionRef = useRef<HTMLTextAreaElement>(null);
+    const descriptionIdRef = useRef<HTMLTextAreaElement>(null);
+    const keywordsRef = useRef<HTMLInputElement>(null);
+    const keywordsIdRef = useRef<HTMLInputElement>(null);
+
+    // State hanya untuk favicon & ogImage preview agar re-render visual lancar setelah upload selesai
+    const [faviconUrl, setFaviconUrl] = useState(initialData.favicon);
+    const [ogImageUrl, setOgImageUrl] = useState(initialData.ogImage);
 
     // ... handleFileUpload ...
     async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>, field: 'ogImage' | 'favicon') {
@@ -51,7 +63,11 @@ export function SeoSettingsForm({ initialData }: Props) {
             if (!res.ok) throw new Error("Upload failed");
 
             const json = await res.json();
-            setData(prev => ({ ...prev, [field]: json.url }));
+            if (field === 'favicon') {
+                setFaviconUrl(json.url);
+            } else {
+                setOgImageUrl(json.url);
+            }
             toast.success("Image uploaded!");
         } catch {
             toast.error("Upload failed");
@@ -63,11 +79,27 @@ export function SeoSettingsForm({ initialData }: Props) {
     // ... handleSave ...
     async function handleSave() {
         setIsLoading(true);
+        const payload: SeoSettings = {
+            title: titleRef.current?.value || null,
+            title_id: titleIdRef.current?.value || null, // Oh wait, titleIdRef
+            description: descriptionRef.current?.value || null,
+            description_id: descriptionIdRef.current?.value || null,
+            keywords: keywordsRef.current?.value || null,
+            keywords_id: keywordsIdRef.current?.value || null,
+            googleVerification: googleVerificationRef.current?.value || null,
+            gaId: gaIdRef.current?.value || null,
+            favicon: faviconUrl,
+            ogImage: ogImageUrl,
+        };
+
+        // If title_id is set via titleIdRef
+        payload.title_id = titleIdRef.current?.value || null;
+
         try {
             const res = await fetch("/api/system/seo", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify(payload)
             });
 
             if (!res.ok) throw new Error("Failed");
@@ -104,8 +136,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                                 <Label className="text-zinc-300">Google Verification Code</Label>
                                 <Input
                                     placeholder="google-site-verification=..."
-                                    value={data.googleVerification || ""}
-                                    onChange={(e) => setData({ ...data, googleVerification: e.target.value })}
+                                    ref={googleVerificationRef}
+                                    defaultValue={initialData.googleVerification || ""}
                                     className="bg-black/50 border-white/10 text-white font-mono text-xs"
                                 />
                                 <p className="text-[10px] text-zinc-500">For Google Search Console ownership verification.</p>
@@ -114,8 +146,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                                 <Label className="text-zinc-300">Google Analytics ID</Label>
                                 <Input
                                     placeholder="G-XXXXXXXXXX"
-                                    value={data.gaId || ""}
-                                    onChange={(e) => setData({ ...data, gaId: e.target.value })}
+                                    ref={gaIdRef}
+                                    defaultValue={initialData.gaId || ""}
                                     className="bg-black/50 border-white/10 text-white font-mono text-xs"
                                 />
                                 <p className="text-[10px] text-zinc-500">GA4 Measurement ID.</p>
@@ -128,8 +160,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Homepage Tagline (EN)</Label>
                             <Input
                                 placeholder="Digital Solutions & Growth Partner"
-                                value={data.title || ""}
-                                onChange={(e) => setData({ ...data, title: e.target.value })}
+                                ref={titleRef}
+                                defaultValue={initialData.title || ""}
                                 className="bg-black/50 border-white/10 text-white"
                             />
                             <p className="text-xs text-zinc-500">English version.</p>
@@ -138,8 +170,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Homepage Tagline (ID)</Label>
                             <Input
                                 placeholder="Solusi Digital & Partner Pertumbuhan"
-                                value={data.title_id || ""}
-                                onChange={(e) => setData({ ...data, title_id: e.target.value })}
+                                ref={titleIdRef}
+                                defaultValue={initialData.title_id || ""}
                                 className="bg-black/50 border-white/10 text-white"
                             />
                             <p className="text-xs text-zinc-500">Indonesian version.</p>
@@ -151,8 +183,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Meta Description (EN)</Label>
                             <Textarea
                                 placeholder="A brief description of your agency..."
-                                value={data.description || ""}
-                                onChange={(e) => setData({ ...data, description: e.target.value })}
+                                ref={descriptionRef}
+                                defaultValue={initialData.description || ""}
                                 className="bg-black/50 border-white/10 text-white min-h-[100px]"
                             />
                         </div>
@@ -160,8 +192,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Meta Description (ID)</Label>
                             <Textarea
                                 placeholder="Deskripsi singkat agensi Anda..."
-                                value={data.description_id || ""}
-                                onChange={(e) => setData({ ...data, description_id: e.target.value })}
+                                ref={descriptionIdRef}
+                                defaultValue={initialData.description_id || ""}
                                 className="bg-black/50 border-white/10 text-white min-h-[100px]"
                             />
                         </div>
@@ -172,8 +204,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Keywords (EN)</Label>
                             <Input
                                 placeholder="agency, web design"
-                                value={data.keywords || ""}
-                                onChange={(e) => setData({ ...data, keywords: e.target.value })}
+                                ref={keywordsRef}
+                                defaultValue={initialData.keywords || ""}
                                 className="bg-black/50 border-white/10 text-white"
                             />
                         </div>
@@ -181,8 +213,8 @@ export function SeoSettingsForm({ initialData }: Props) {
                             <Label className="text-zinc-300">Keywords (ID)</Label>
                             <Input
                                 placeholder="agensi, desain web"
-                                value={data.keywords_id || ""}
-                                onChange={(e) => setData({ ...data, keywords_id: e.target.value })}
+                                ref={keywordsIdRef}
+                                defaultValue={initialData.keywords_id || ""}
                                 className="bg-black/50 border-white/10 text-white"
                             />
                         </div>
@@ -193,9 +225,9 @@ export function SeoSettingsForm({ initialData }: Props) {
                         <div className="flex items-start gap-4">
                             {/* Preview */}
                             <div className="relative w-16 h-16 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
-                                {data.favicon ? (
+                                {faviconUrl ? (
                                     <Image
-                                        src={data.favicon}
+                                        src={faviconUrl}
                                         alt="Favicon Preview"
                                         fill
                                         className="object-contain p-2"
@@ -242,9 +274,9 @@ export function SeoSettingsForm({ initialData }: Props) {
                         <div className="flex items-start gap-4">
                             {/* Preview */}
                             <div className="relative w-32 h-20 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
-                                {data.ogImage ? (
+                                {ogImageUrl ? (
                                     <Image
-                                        src={data.ogImage}
+                                        src={ogImageUrl}
                                         alt="OG Preview"
                                         fill
                                         className="object-cover"

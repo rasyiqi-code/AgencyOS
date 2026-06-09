@@ -45,9 +45,24 @@ export class PaymentService {
             }
         }
 
-        const finalRate = rate || 15000;
+        let defaultDbRate = 15000;
         if (!rate) {
-            console.warn(`[PaymentService] Real-time rates and DB fallbacks unavailable. Using hardcoded fallback: ${finalRate}`);
+            try {
+                const dbDefaultSetting = await prisma.systemSetting.findUnique({
+                    where: { key: "default_exchange_rate" }
+                });
+                if (dbDefaultSetting) {
+                    defaultDbRate = parseFloat(dbDefaultSetting.value) || 15000;
+                    console.warn(`[PaymentService] Using default_exchange_rate from DB: ${defaultDbRate}`);
+                }
+            } catch (err) {
+                console.error("[PaymentService] Failed to read default_exchange_rate from DB:", err);
+            }
+        }
+
+        const finalRate = rate || defaultDbRate;
+        if (!rate) {
+            console.warn(`[PaymentService] Real-time rates and DB fallbacks unavailable. Using final fallback rate: ${finalRate}`);
         }
 
         const idrAmount = Math.ceil(usdAmount * finalRate);

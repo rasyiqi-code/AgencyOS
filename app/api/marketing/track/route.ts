@@ -45,13 +45,21 @@ export async function POST(req: Request) {
             }
         }
 
-        await prisma.referralUsage.create({
-            data: {
-                affiliateId: affiliate.id,
-                source: source || "direct",
-                visitorId: visitorId,
+        try {
+            await prisma.referralUsage.create({
+                data: {
+                    affiliateId: affiliate.id,
+                    source: source || "direct",
+                    visitorId: visitorId,
+                }
+            });
+        } catch (error: unknown) {
+            // Tangani error unique constraint Prisma (P2002) jika terjadi race condition
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+                return NextResponse.json({ status: "ok" });
             }
-        });
+            throw error;
+        }
 
         return NextResponse.json({ status: "ok" });
     } catch (error) {

@@ -50,6 +50,8 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
     const [isLoading, setIsLoading] = useState(false);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const messagesRef = useRef(messages);
+    messagesRef.current = messages;
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -70,7 +72,9 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
             role: 'user',
             content: userContent
         };
-        setMessages(prev => [...prev, userMessage]);
+        const updatedMessagesWithUser = [...messagesRef.current, userMessage];
+        messagesRef.current = updatedMessagesWithUser;
+        setMessages(updatedMessagesWithUser);
         setIsLoading(true);
 
         try {
@@ -80,7 +84,7 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    messages: [...messages, userMessage]
+                    messages: updatedMessagesWithUser
                 })
             });
 
@@ -89,11 +93,13 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
             // Add placeholder assistant message
             const assistantId = (Date.now() + 1).toString();
-            setMessages(prev => [...prev, {
+            const updatedMessagesWithAssistant = [...messagesRef.current, {
                 id: assistantId,
                 role: 'assistant',
                 content: ''
-            }]);
+            }];
+            messagesRef.current = updatedMessagesWithAssistant;
+            setMessages(updatedMessagesWithAssistant);
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
@@ -105,11 +111,11 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                 const { done, value } = await reader.read();
                 if (done) {
                     // Pastikan konten diperbarui secara penuh setelah streaming selesai
-                    setMessages(prev => prev.map(m =>
-                        m.id === assistantId
-                            ? { ...m, content: accumulatedContent }
-                            : m
-                    ));
+                    const assistantMsg = messagesRef.current.find(m => m.id === assistantId);
+                    if (assistantMsg) {
+                        assistantMsg.content = accumulatedContent;
+                    }
+                    setMessages([...messagesRef.current]);
                     break;
                 }
 
@@ -118,11 +124,11 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
                 const now = Date.now();
                 if (now - lastUpdateTime > THROTTLE_MS) {
-                    setMessages(prev => prev.map(m =>
-                        m.id === assistantId
-                            ? { ...m, content: accumulatedContent }
-                            : m
-                    ));
+                    const assistantMsg = messagesRef.current.find(m => m.id === assistantId);
+                    if (assistantMsg) {
+                        assistantMsg.content = accumulatedContent;
+                    }
+                    setMessages([...messagesRef.current]);
                     lastUpdateTime = now;
                 }
             }
