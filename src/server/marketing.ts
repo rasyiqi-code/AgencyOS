@@ -117,6 +117,20 @@ export const deleteCouponFn = createServerFn({ method: 'POST' })
     }
   })
 
+const validateCouponSchema = z.object({
+  code: z.string(),
+  context: z.enum(["DIGITAL", "SERVICE", "CALCULATOR"]).optional()
+})
+
+// 2b. Memvalidasi kupon diskon
+export const validateCouponFn = createServerFn({ method: 'POST' })
+  .validator(validateCouponSchema)
+  .handler(async ({ data }) => {
+    const { validateCoupon } = await import("@/lib/server/marketing")
+    const result = await validateCoupon(data.code, data.context)
+    return result as { valid: boolean; message?: string; coupon?: any }
+  })
+
 // ─── 3. LEADS ───
 export const getLeadsFn = createServerFn({ method: 'GET' })
   .handler(async () => {
