@@ -107,7 +107,10 @@ type TranslationFunction = {
  * Mendukung namespace, dot notation, dan interpolasi variabel
  */
 export function useTranslations(namespace?: string): TranslationFunction {
-  const { messages } = useContext(I18nContext)
+  const context = useContext(I18nContext)
+  const messages = (context.messages && 'default' in context.messages)
+    ? (context.messages.default as Record<string, unknown>)
+    : context.messages
 
   const tBase = useCallback(
     (key: string, values?: Record<string, string | number>): string => {
@@ -161,6 +164,9 @@ export function useLocale(): string {
  * Drop-in replacement untuk useMessages dari next-intl
  */
 export function useMessages(): Record<string, unknown> {
-  const { messages } = useContext(I18nContext)
+  const context = useContext(I18nContext)
+  const messages = (context.messages && 'default' in context.messages)
+    ? (context.messages.default as Record<string, unknown>)
+    : context.messages
   return messages
 }

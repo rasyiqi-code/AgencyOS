@@ -9,7 +9,8 @@ export const getLocaleMessages = createServerFn({ method: 'GET' }).handler(
     const cookieLocale = getCookie('NEXT_LOCALE')
     const locale = cookieLocale?.slice(0, 2) === 'id' ? 'id' : 'en'
 
-    const messages: Messages = (await import(`../../messages/${locale}.json`)) as Messages
+    const module = await import(`../../messages/${locale}.json`)
+    const messages: Messages = (module.default || module) as Messages
 
     return { locale, messages }
   },
