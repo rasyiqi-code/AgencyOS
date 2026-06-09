@@ -3,9 +3,10 @@ import { revalidatePath } from "next/cache";
 
 // --- Coupons ---
 
-export async function getCoupons() {
+export async function getCoupons(limit?: number) {
     return await prisma.coupon.findMany({
         orderBy: { createdAt: "desc" },
+        take: limit || 100, // Membatasi output untuk mencegah OOM
     });
 }
 
@@ -74,13 +75,14 @@ export async function applyCoupon(code: string) {
 
 // --- Bonuses ---
 
-export async function getBonuses(context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
+export async function getBonuses(context?: "DIGITAL" | "SERVICE" | "CALCULATOR", limit?: number) {
     return await prisma.marketingBonus.findMany({
         where: {
             isActive: true,
             ...(context ? { appliesTo: { has: context } } : {})
         },
         orderBy: { createdAt: "desc" },
+        take: limit || 100, // Membatasi output untuk mencegah OOM
     });
 }
 
@@ -135,9 +137,10 @@ export async function createSubscriber(email: string, name?: string) {
     return { success: true, subscriber };
 }
 
-export async function getSubscribers() {
+export async function getSubscribers(limit?: number) {
     return await prisma.marketingSubscriber.findMany({
         orderBy: { createdAt: "desc" },
+        take: limit || 100, // Membatasi output untuk mencegah OOM
     });
 }
 
@@ -160,7 +163,7 @@ export async function getPromotionCoupon(context?: "DIGITAL" | "SERVICE" | "CALC
 
 // --- Promotions (Posters/Banners) ---
 
-export async function getPromotions(onlyActive = false) {
+export async function getPromotions(onlyActive = false, limit?: number) {
     return await prisma.promotion.findMany({
         where: onlyActive ? { 
             isActive: true,
@@ -170,6 +173,7 @@ export async function getPromotions(onlyActive = false) {
             ]
         } : {},
         orderBy: { createdAt: "desc" },
+        take: limit || 100, // Membatasi output untuk mencegah OOM
     });
 }
 

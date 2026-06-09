@@ -67,6 +67,7 @@ model Order {
   @@index([projectId])
   @@index([userId])
   @@index([status])
+  @@index([userId, status])
 }
 
 model Brief {
@@ -154,6 +155,7 @@ model Estimate {
 
   @@index([serviceId])
   @@index([userId])
+  @@index([prompt])
 }
 
 model SystemKey {
@@ -165,6 +167,8 @@ model SystemKey {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   modelId   String?
+
+  @@index([provider, isActive])
 }
 
 model SystemSetting {
@@ -239,6 +243,7 @@ model Notification {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@index([userId, isRead])
 }
 
 model Coupon {
@@ -265,6 +270,8 @@ model MarketingBonus {
   appliesTo   String[] @default(["DIGITAL", "SERVICE", "CALCULATOR"])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 model MarketingSubscriber {
@@ -295,6 +302,8 @@ model Changelog {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   authorName  String?
+
+  @@index([status])
 }
 
 model Testimonial {
@@ -307,6 +316,8 @@ model Testimonial {
   isActive  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 model PageSeo {
@@ -343,6 +354,8 @@ model SquadProfile {
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
   applications MissionApplication[]
+
+  @@index([status])
 }
 
 model MissionApplication {
@@ -356,6 +369,7 @@ model MissionApplication {
   squad     SquadProfile @relation(fields: [squadId], references: [id])
 
   @@unique([missionId, squadId])
+  @@index([status])
 }
 
 model AffiliateProfile {
@@ -374,6 +388,8 @@ model AffiliateProfile {
   commissions    CommissionLog[]
   payoutRequests PayoutRequest[]
   referrals      ReferralUsage[]
+
+  @@index([status])
 }
 
 model PayoutRequest {
@@ -403,6 +419,8 @@ model ReferralUsage {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   affiliate      AffiliateProfile @relation(fields: [affiliateId], references: [id])
+
+  @@unique([affiliateId, visitorId])
 }
 
 model CommissionLog {
@@ -432,6 +450,8 @@ model MarketingAsset {
   metadata     Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 model Product {
@@ -497,6 +517,7 @@ model DigitalOrder {
 
   @@index([productId])
   @@index([userId])
+  @@index([userEmail, status])
 }
 
 model PopUp {
@@ -519,6 +540,8 @@ model PopUp {
   couponCode       String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 model Lead {
@@ -534,6 +557,9 @@ model Lead {
   locale      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
 }
 
 model PushSubscription {
@@ -574,5 +600,7 @@ model Promotion {
   endDate     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
 }
 

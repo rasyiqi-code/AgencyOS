@@ -27,8 +27,10 @@ export const getActiveTestimonials = cache(async (limit = 10) => {
     )();
 });
 
-export const getAllTestimonials = async () => {
+export const getAllTestimonials = async (limit?: number) => {
+    // Membatasi pengambilan seluruh data testimoni untuk mencegah konsumsi memori berlebih
     return await prisma.testimonial.findMany({
         orderBy: { createdAt: 'desc' },
+        take: limit || 100,
     });
 };

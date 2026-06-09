@@ -3,14 +3,14 @@ import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import { getSystemSettings } from "@/lib/server/settings";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const user = await hexclaveServerApp.getUser();
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        // Admin check: cek ADMIN_EMAILS dan SUPER_ADMIN_ID
+        // Cek Admin: cek ADMIN_EMAILS dan SUPER_ADMIN_ID
         const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
         const superAdminId = process.env.SUPER_ADMIN_ID;
         const isSuperAdmin = (user.primaryEmail && adminEmails.includes(user.primaryEmail)) || user.id === superAdminId;
@@ -19,17 +19,37 @@ export async function GET() {
             return new NextResponse("Forbidden", { status: 403 });
         }
 
+        // Ambil parameter pagination dari query string
+        const url = new URL(request.url);
+        const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "50", 10), 1), 100);
+        const page = Math.max(parseInt(url.searchParams.get("page") || "1", 10), 1);
+        const skip = (page - 1) * limit;
+
+        // Hitung agregat secara global langsung di database untuk performa tinggi
+        const aggregates = await prisma.affiliateProfile.aggregate({
+            _sum: {
+                paidEarnings: true,
+                totalEarnings: true,
+            },
+            _count: {
+                id: true,
+            }
+        });
+
+        const totalPaid = aggregates._sum.paidEarnings || 0;
+        const totalEarnings = aggregates._sum.totalEarnings || 0;
+        const pendingPayouts = totalEarnings - totalPaid;
+        const totalAffiliates = aggregates._count.id || 0;
+
+        // Ambil data afiliasi dengan batasan take dan skip
         const affiliates = await prisma.affiliateProfile.findMany({
             include: {
                 _count: { select: { referrals: true, commissions: true } }
             },
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            take: limit,
+            skip: skip,
         });
-
-        // Calculate aggregates
-        const totalPaid = affiliates.reduce((acc, curr) => acc + (curr.paidEarnings || 0), 0);
-        const totalEarnings = affiliates.reduce((acc, curr) => acc + (curr.totalEarnings || 0), 0);
-        const pendingPayouts = totalEarnings - totalPaid;
 
         // Get default commission rate & Resend API Key
         // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
@@ -44,7 +64,7 @@ export async function GET() {
         return NextResponse.json({
             affiliates,
             stats: {
-                totalAffiliates: affiliates.length,
+                totalAffiliates,
                 totalPaid,
                 pendingPayouts,
                 totalEarnings

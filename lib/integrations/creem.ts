@@ -67,16 +67,23 @@ interface ExtendedCreemSDK extends CreemSDK {
     };
 }
 
-// Singleton instance (lazy-loaded)
+// Singleton instance (lazy-loaded) dengan pelacakan hash konfigurasi untuk auto-reset otomatis
 let creemInstance: CreemSDK | null = null;
+let creemConfigHash: string | null = null;
 
 /**
- * Get Creem SDK instance (lazy-loaded with config from database)
+ * Get Creem SDK instance (lazy-loaded dengan konfigurasi ter-update otomatis dari database)
  */
 export async function getCreem(): Promise<CreemSDK> {
-    if (!creemInstance) {
-        const config = await paymentGatewayService.getCreemConfig();
+    const config = await paymentGatewayService.getCreemConfig();
+    const configHash = JSON.stringify({
+        apiKey: config.apiKey,
+        isProduction: config.isProduction,
+        storeId: config.storeId,
+        webhookSecret: process.env.CREEM_WEBHOOK_SECRET,
+    });
 
+    if (!creemInstance || creemConfigHash !== configHash) {
         if (!config.apiKey) {
             throw new Error("CREEM_API_KEY is not configured in database or .env");
         }
@@ -88,6 +95,7 @@ export async function getCreem(): Promise<CreemSDK> {
             // @ts-expect-error - Some versions of SDK might not have this in type but need it
             storeId: config.storeId
         }) as CreemSDK;
+        creemConfigHash = configHash;
 
         console.log(`[Creem] SDK initialized (${config.isProduction ? 'LIVE' : 'TEST'} mode)`);
     }

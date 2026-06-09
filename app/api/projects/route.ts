@@ -19,27 +19,14 @@ export async function GET(request: Request) {
     const user = await hexclaveServerApp.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // 1. Resolve Users for Name-based Search
+    // 1. Resolusi User untuk Pencarian Berbasis Nama (Hanya deteksi jika query berupa UUID)
+    // OPTIMASI C1: Menghapus hexclaveServerApp.listUsers() untuk menghindari pengunduhan ribuan user ke memori.
+    // Pencarian nama klien sekarang sepenuhnya menggunakan kolom clientName langsung di PostgreSQL (baris 58).
     let matchedUserIds: string[] = [];
     const isUUID = query && /^[0-9a-fA-F-]{36}$/.test(query);
 
-    if (query) {
-        if (isUUID) {
-            matchedUserIds = [query];
-        } else {
-            try {
-                const allUsers = await hexclaveServerApp.listUsers();
-                matchedUserIds = allUsers
-                    .filter((u) =>
-                        (u.displayName && u.displayName.toLowerCase().includes(query.toLowerCase())) ||
-                        (u.primaryEmail && u.primaryEmail.toLowerCase().includes(query.toLowerCase())) ||
-                        (u.id && u.id.toLowerCase().includes(query.toLowerCase()))
-                    )
-                    .map((u) => u.id);
-            } catch (e) {
-                console.error("Search user resolution failed in getProjects", e);
-            }
-        }
+    if (query && isUUID) {
+        matchedUserIds = [query];
     }
 
     // Hanya tampilkan proyek yang sudah PAID (konsisten dengan page.tsx)

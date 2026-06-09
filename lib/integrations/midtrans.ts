@@ -43,17 +43,25 @@ interface MidtransCore {
     };
 }
 
-// Singleton instances (lazy-loaded)
+// Singleton instances (lazy-loaded) dengan pelacakan hash konfigurasi untuk auto-reset otomatis
 let snapInstance: MidtransSnap | null = null;
+let snapConfigHash: string | null = null;
+
 let coreInstance: MidtransCore | null = null;
+let coreConfigHash: string | null = null;
 
 /**
- * Get Midtrans Snap API instance (lazy-loaded with config from database)
+ * Get Midtrans Snap API instance (lazy-loaded dengan konfigurasi ter-update otomatis dari database)
  */
 export async function getSnap(): Promise<MidtransSnap> {
-    if (!snapInstance) {
-        const config = await paymentGatewayService.getMidtransConfig();
+    const config = await paymentGatewayService.getMidtransConfig();
+    const configHash = JSON.stringify({
+        isProduction: config.isProduction,
+        serverKey: config.serverKey,
+        clientKey: config.clientKey,
+    });
 
+    if (!snapInstance || snapConfigHash !== configHash) {
         // Midtrans library doesn't have proper TS exports, needs intermediate unknown cast
         const MidtransLib = Midtrans as unknown as { Snap: new (config: object) => MidtransSnap };
         snapInstance = new MidtransLib.Snap({
@@ -61,6 +69,7 @@ export async function getSnap(): Promise<MidtransSnap> {
             serverKey: config.serverKey,
             clientKey: config.clientKey,
         });
+        snapConfigHash = configHash;
 
         console.log(`[Midtrans] Snap initialized (${config.isProduction ? 'PRODUCTION' : 'SANDBOX'} mode)`);
     }
@@ -68,12 +77,17 @@ export async function getSnap(): Promise<MidtransSnap> {
 }
 
 /**
- * Get Midtrans Core API instance (lazy-loaded with config from database)
+ * Get Midtrans Core API instance (lazy-loaded dengan konfigurasi ter-update otomatis dari database)
  */
 export async function getCore(): Promise<MidtransCore> {
-    if (!coreInstance) {
-        const config = await paymentGatewayService.getMidtransConfig();
+    const config = await paymentGatewayService.getMidtransConfig();
+    const configHash = JSON.stringify({
+        isProduction: config.isProduction,
+        serverKey: config.serverKey,
+        clientKey: config.clientKey,
+    });
 
+    if (!coreInstance || coreConfigHash !== configHash) {
         // Midtrans library doesn't have proper TS exports, needs intermediate unknown cast
         const MidtransLib = Midtrans as unknown as { CoreApi: new (config: object) => MidtransCore };
         coreInstance = new MidtransLib.CoreApi({
@@ -81,6 +95,7 @@ export async function getCore(): Promise<MidtransCore> {
             serverKey: config.serverKey,
             clientKey: config.clientKey,
         });
+        coreConfigHash = configHash;
 
         console.log(`[Midtrans] CoreApi initialized (${config.isProduction ? 'PRODUCTION' : 'SANDBOX'} mode)`);
     }

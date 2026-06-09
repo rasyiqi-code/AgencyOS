@@ -1,4 +1,5 @@
-import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { getSystemSettings } from "@/lib/server/settings";
 
 // Singleton to avoid re-initializing
@@ -94,15 +95,15 @@ export async function uploadFile(
 ): Promise<string> {
     const { client, bucketName } = await getClient();
 
-    let buffer: Buffer | Uint8Array;
+    let body: ReadableStream<Uint8Array> | Buffer | Uint8Array;
     let finalContentType = contentType;
 
     if (fileOrBuffer instanceof File) {
-        const arrayBuffer = await fileOrBuffer.arrayBuffer();
-        buffer = Buffer.from(arrayBuffer);
+        // Gunakan stream langsung dari berkas File agar tidak menumpuk di RAM
+        body = fileOrBuffer.stream();
         if (!finalContentType) finalContentType = fileOrBuffer.type;
     } else {
-        buffer = fileOrBuffer;
+        body = fileOrBuffer;
     }
 
     if (!finalContentType) {
@@ -110,12 +111,18 @@ export async function uploadFile(
     }
 
     return withRetry(async () => {
-        await client.send(new PutObjectCommand({
-            Bucket: bucketName,
-            Key: path,
-            Body: buffer,
-            ContentType: finalContentType,
-        }));
+        // OPTIMASI C5: Menggunakan @aws-sdk/lib-storage untuk mengalirkan berkas secara paralel/stream langsung
+        const parallelUpload = new Upload({
+            client,
+            params: {
+                Bucket: bucketName,
+                Key: path,
+                Body: body,
+                ContentType: finalContentType,
+            },
+        });
+
+        await parallelUpload.done();
 
         // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
         // untuk menghindari query DB langsung setiap kali upload file

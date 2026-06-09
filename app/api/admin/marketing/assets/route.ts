@@ -3,7 +3,7 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const user = await hexclaveServerApp.getUser();
         if (!user) return new NextResponse("Unauthorized", { status: 401 });
@@ -15,8 +15,16 @@ export async function GET() {
 
         if (!isSuperAdmin) return new NextResponse("Forbidden", { status: 403 });
 
+        // Ambil parameter pagination dari query string untuk membatasi query database
+        const url = new URL(request.url);
+        const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "100", 10), 1), 100);
+        const page = Math.max(parseInt(url.searchParams.get("page") || "1", 10), 1);
+        const skip = (page - 1) * limit;
+
         const assets = await prisma.marketingAsset.findMany({
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            take: limit,
+            skip: skip,
         });
 
         return NextResponse.json(assets);

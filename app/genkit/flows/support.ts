@@ -1,6 +1,5 @@
 import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
-import { prisma } from '@/lib/config/db';
 
 interface Message {
     role: 'user' | 'assistant' | 'system';
@@ -24,11 +23,9 @@ export const supportFlow = ai.defineFlow(
     async ({ messages }, { sendChunk }) => {
         const { apiKey, model } = await getActiveAIConfig();
 
-        // Fetch Dynamic Services from DB
-        const services = await prisma.service.findMany({
-            where: { isActive: true },
-            select: { title: true, description: true, price: true, currency: true }
-        });
+        // Fetch Dynamic Services from DB (OPTIMASI C2: Menggunakan fungsi getServices yang ter-cache)
+        const { getServices } = await import('@/lib/server/services');
+        const services = await getServices(true);
 
         const serviceList = services.map(s => `- **${s.title}**: ${s.description} (Mulai dari ${s.currency} ${s.price})`).join('\n');
 

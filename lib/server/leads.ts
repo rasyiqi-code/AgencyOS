@@ -19,9 +19,11 @@ export async function createLead(data: {
     return lead;
 }
 
-export async function getLeads() {
+export async function getLeads(limit?: number) {
+    // Membatasi pengambilan data leads untuk mencegah kebocoran memori (OOM)
     return await prisma.lead.findMany({
         orderBy: { createdAt: "desc" },
+        take: limit || 100,
     });
 }
 
