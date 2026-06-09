@@ -1,8 +1,6 @@
 'use client';
 
-
-// Lazy load ReactMarkdown — hanya dibutuhkan saat pesan assistant dirender
-const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 
 import { Button } from '@/components/ui/button';
@@ -10,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { createProjectFromBrief } from "@/app/actions/projects";
+import { createProjectFromBriefFn } from "@/src/server/client-dashboard";
+
+const ReactMarkdown = lazy(() => import('react-markdown'));
+
 
 interface ChatInterfaceProps {
     onBriefGenerated?: (brief: { title: string; description: string }) => void;
@@ -24,7 +24,7 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, minimal = false }: ChatInterfaceProps) {
-    const router = useRouter();
+    const navigate = useNavigate();
 
     // Construct initial messages based on context
     const initialMessages = initialContext
@@ -168,7 +168,7 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
             if (!response.ok) throw new Error("Failed to update");
 
             toast.success("Estimate updated!", { id: toastId });
-            router.refresh(); // Refresh server components
+            window.location.reload(); // Refresh server components
 
             // Call callback if exists
             if (onEstimateUpdate) onEstimateUpdate();
@@ -223,19 +223,21 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                 {m.role === 'user' ? (
                                     <div className="text-zinc-50">{m.content}</div>
                                 ) : (
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            p: ({ ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                                            ul: ({ ...props }) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
-                                            ol: ({ ...props }) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
-                                            li: ({ ...props }) => <li className="mb-0.5" {...props} />,
-                                            strong: ({ ...props }) => <span className="font-semibold text-zinc-900" {...props} />,
-                                            a: ({ ...props }) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
-                                        }}
-                                    >
-                                        {m.content.replace(/```json[\s\S]*?```/g, '')}
-                                    </ReactMarkdown>
+                                    <Suspense fallback={<div className="text-zinc-400">Loading markdown...</div>}>
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                p: ({ ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                                                ul: ({ ...props }) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
+                                                ol: ({ ...props }) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
+                                                li: ({ ...props }) => <li className="mb-0.5" {...props} />,
+                                                strong: ({ ...props }) => <span className="font-semibold text-zinc-900" {...props} />,
+                                                a: ({ ...props }) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                                            }}
+                                        >
+                                            {m.content.replace(/```json[\s\S]*?```/g, '')}
+                                        </ReactMarkdown>
+                                    </Suspense>
                                 )}
                             </div>
                         </div>
@@ -316,15 +318,17 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                                         onClick={async () => {
                                                             const toastId = toast.loading("Creating project...");
                                                             try {
-                                                                const result = await createProjectFromBrief({
-                                                                    title: action.title,
-                                                                    brief: action.description
+                                                                const result = await createProjectFromBriefFn({
+                                                                    data: {
+                                                                        title: action.title,
+                                                                        brief: action.description
+                                                                    }
                                                                 });
 
                                                                 if (result.error || !result.data) throw new Error("Failed to create project");
 
                                                                 toast.success("Project created successfully", { id: toastId });
-                                                                router.push(`/dashboard/projects/${result.data.id}`);
+                                                                navigate({ to: `/dashboard/projects/${result.data.id}` });
                                                             } catch (error) {
                                                                 toast.error("Failed to create project", { id: toastId });
                                                                 console.error(error);
