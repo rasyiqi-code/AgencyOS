@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe, Repeat } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Code, Key, Bell, Globe, Repeat, Tag, DollarSign } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -93,7 +93,11 @@ export function SidebarSuperAdmin() {
 
                     {/* PENJUALAN DIGITAL & PEMASARAN */}
                     <SidebarSectionHeader>Marketing & Products</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing?mode=digital" icon={Megaphone} label="Marketing Suite" />
+                    <SidebarLink href="/admin/marketing/campaigns?mode=digital" icon={Megaphone} label="Campaigns & Promos" />
+                    <SidebarLink href="/admin/marketing/discounts?mode=digital" icon={Tag} label="Coupons & Bonuses" />
+                    <SidebarLink href="/admin/marketing/audience?mode=digital" icon={Users} label="Audience & Leads" />
+                    <SidebarLink href="/admin/marketing/affiliates?mode=digital" icon={DollarSign} label="Affiliates & Payouts" />
+                    <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
                     <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
                     <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
                     <SidebarLink href="/admin/licenses?mode=digital" icon={Key} label="Licenses" />
