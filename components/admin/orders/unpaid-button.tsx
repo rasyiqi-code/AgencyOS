@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { XCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner"; // Assuming sonner is used
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 export function UnpaidButton({ estimateId }: { estimateId: string }) {
     const [isLoading, setIsLoading] = useState(false);

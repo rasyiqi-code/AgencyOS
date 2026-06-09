@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { ArrowRight } from "lucide-react";
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 

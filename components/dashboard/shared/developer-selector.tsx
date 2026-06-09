@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { UserCheck, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { updateProject } from "@/app/actions/projects";
-import { getSquadDevelopers } from "@/app/actions/affiliates";
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { updateProjectFn } from "@/src/server/pm";
+import { getSquadDevelopersFn } from "@/src/server/affiliates";
 
 interface Developer {
     id: string;
@@ -36,7 +36,7 @@ export function DeveloperSelector({
     useEffect(() => {
         async function fetchDevelopers() {
             try {
-                const result = await getSquadDevelopers();
+                const result = await getSquadDevelopersFn();
                 if (result.success) {
                     setDevelopers(result.data as Developer[]);
                 }
@@ -53,10 +53,9 @@ export function DeveloperSelector({
         const devId = value === "none" ? null : value;
         startTransition(async () => {
             try {
-                const result = await updateProject(projectId, { developerId: devId });
-                if (result.error) throw new Error("Failed");
+                await updateProjectFn({ data: { projectId, body: { developerId: devId } } });
                 toast.success("Developer assigned successfully");
-                router.refresh();
+                router.invalidate();
             } catch (error) {
                 console.error("Failed to assign developer", error);
                 toast.error("Failed to assign developer");

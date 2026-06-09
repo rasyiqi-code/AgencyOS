@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/config/db";
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 /**

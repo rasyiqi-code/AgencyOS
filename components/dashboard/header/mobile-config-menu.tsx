@@ -12,7 +12,7 @@ import {
     DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Globe, DollarSign, Settings2 } from "lucide-react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useNavigate, useLocation, useSearch } from "@tanstack/react-router";
 import { useTransition } from "react";
 
 

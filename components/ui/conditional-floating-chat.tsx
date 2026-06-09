@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 import { FloatingChatWidget } from "./floating-chat";
 
 export function ConditionalFloatingChat() {

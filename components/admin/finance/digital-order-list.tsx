@@ -19,7 +19,6 @@ import {
     ShieldCheck,
     FileText
 } from "lucide-react";
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,8 +29,8 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { format } from "date-fns";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "@/lib/i18n/hooks";
+import { useNavigate } from "@tanstack/react-router";
 import { formatPaymentMethod } from "@/lib/shared/utils";
 import { DeleteOrderButton } from "@/components/admin/orders/delete-button";
 import { confirmDigitalOrder, cancelDigitalOrder } from "@/app/actions/digital-orders";
@@ -311,12 +310,12 @@ function DigitalOrderListItem({ order, ts }: { order: DigitalOrderWithRelations,
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                            <Link href={`/id/digital-invoices/${order.id}`} target="_blank">
+                            <a href={`/id/digital-invoices/${order.id}`} target="_blank">
                                 <Button variant="outline" size="sm" className="w-full sm:w-auto text-xs gap-2 border-white/5 bg-zinc-900/50 hover:bg-zinc-800 hover:text-brand-yellow rounded-lg">
                                     <FileText className="w-3.5 h-3.5" />
                                     View Invoice
                                 </Button>
-                            </Link>
+                            </a>
 
                             {order.proofUrl && (
                                 <Button variant="secondary" size="sm" className="w-full sm:w-auto text-xs gap-2 bg-zinc-800 hover:bg-zinc-700 border-white/10 rounded-lg" asChild>

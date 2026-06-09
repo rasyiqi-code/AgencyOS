@@ -8,7 +8,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
 
 export function ProjectFilter() {
     const searchParams = useSearchParams();

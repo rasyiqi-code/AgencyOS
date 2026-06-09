@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Sparkles, ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 interface RecentEstimate {
@@ -94,7 +93,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {estimates.map((estimate) => (
                     <div key={estimate.id} className="group relative">
-                        <Link
+                        <a
                             href={`/price-calculator/${estimate.id}`}
                             className="block p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-yellow/50 hover:bg-zinc-800/80 transition-all group-hover:shadow-lg group-hover:shadow-brand-yellow/10"
                         >
@@ -124,7 +123,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
                                     {t("viewDetails")} <ArrowRight className="w-4 h-4" />
                                 </span>
                             </div>
-                        </Link>
+                        </a>
 
                         {isAdmin && (
                             <button

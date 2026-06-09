@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,12 +9,11 @@ import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react
 import { cn } from "@/lib/shared/utils";
 import { useSafeUser } from "@/hooks/use-safe-user";
 import { toast } from "sonner";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import remarkGfm from "remark-gfm";
 
 const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 import {
     Sheet,
     SheetContent,
@@ -581,7 +579,7 @@ export function FloatingChatWidget() {
                                                     a: ({ ...props }) => {
                                                         const isInternal = props.href?.startsWith("/");
                                                         if (isInternal) {
-                                                            return <Link href={props.href!} className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
+                                                            return <a href={props.href!} className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
                                                         }
                                                         return <a target="_blank" rel="noopener noreferrer" className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
                                                     },

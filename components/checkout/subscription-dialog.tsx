@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Gift, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 export function SubscriptionDialog({ onSubscribe, context }: {

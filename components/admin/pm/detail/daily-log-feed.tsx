@@ -138,9 +138,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
                                                     <SafeImage
                                                         src={img}
                                                         alt="Attachment"
-                                                        fill
-                                                        sizes="(max-width: 640px) 50vw, 33vw"
-                                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                     <a href={img} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-transparent" />
                                                 </div>

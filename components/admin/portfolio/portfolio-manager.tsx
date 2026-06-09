@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { PortfolioItem } from "@/lib/portfolios/actions";
 import { savePortfolioFn as savePortfolio, deletePortfolioFn as deletePortfolio, getPortfolioHtmlFn as getPortfolioHtml, getRenderedHtmlFn as getRenderedHtml } from "@/src/server/portfolios";
 import { Button } from "@/components/ui/button";

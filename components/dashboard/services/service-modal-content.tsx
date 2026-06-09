@@ -1,8 +1,7 @@
 "use client";
 
 import { Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { sanitizeHtml } from "@/lib/utils/sanitize";

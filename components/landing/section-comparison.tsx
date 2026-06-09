@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function Comparison() {
     const t = useTranslations("Comparison");

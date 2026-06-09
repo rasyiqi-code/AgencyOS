@@ -1,6 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 
 // Lazy load ReactMarkdown — hanya dibutuhkan saat pesan assistant dirender
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
@@ -12,7 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { createProjectFromBrief } from "@/app/actions/projects";
 

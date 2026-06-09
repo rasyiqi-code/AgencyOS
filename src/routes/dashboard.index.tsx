@@ -78,7 +78,7 @@ function DashboardHome() {
               Our AI helper is available 24/7 to assist you with your projects.
             </p>
             <Link
-              href="/dashboard/inbox"
+              to="/dashboard/inbox"
               className="text-xs bg-yellow-500 hover:bg-yellow-500/90 text-black font-semibold px-4 py-2 rounded-lg w-full transition-colors flex items-center justify-center gap-2"
             >
               Open Communications

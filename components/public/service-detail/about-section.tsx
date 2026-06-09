@@ -5,7 +5,7 @@ import { PriceDisplay } from "@/components/providers/currency-provider";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { sanitizeHtml } from "@/lib/utils/sanitize";
 import { Service, AddonType } from "./types";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 interface AboutSectionProps {
     service: Service;

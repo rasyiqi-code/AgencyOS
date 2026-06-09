@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { Service, AddonType } from "./types";
 import { ServiceHero } from "./hero";
 import { AboutSection } from "./about-section";

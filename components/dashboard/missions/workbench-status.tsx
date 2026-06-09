@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Globe, ExternalLink, Pencil, Save, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { updateProject } from "@/app/actions/projects";
+import { updateProjectFn } from "@/src/server/pm";
 
 interface WorkbenchStatusProps {
     projectId: string;
@@ -28,18 +28,13 @@ export function WorkbenchStatus({ projectId, deployUrl }: WorkbenchStatusProps) 
                 finalUrl = `https://${finalUrl}`;
             }
 
-            const result = await updateProject(projectId, { deployUrl: finalUrl });
-
-            if (!result.error) {
-                toast.success("Live URL updated");
-                setIsEditing(false);
-                setUrl(finalUrl);
-                router.refresh();
-            } else {
-                toast.error("Failed to update URL");
-            }
+            await updateProjectFn({ data: { projectId, body: { deployUrl: finalUrl } } });
+            toast.success("Live URL updated");
+            setIsEditing(false);
+            setUrl(finalUrl);
+            router.invalidate();
         } catch {
-            toast.error("Something went wrong");
+            toast.error("Failed to update URL");
         } finally {
             setIsLoading(false);
         }

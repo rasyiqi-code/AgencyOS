@@ -1,12 +1,11 @@
 "use client"
 
 import { useState, useTransition } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { CheckCircle2, Circle, Send, Paperclip, X, File as FileIcon, Link2, MessageSquare } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 import { type FeedbackItem } from "@/lib/shared/types";
 
@@ -108,7 +107,7 @@ export function FeedbackBoard({ projectId, feedbacks }: FeedbackBoardProps) {
                             <div className="relative inline-flex items-center gap-3 p-2 pr-8 rounded-lg border border-white/10 bg-zinc-800 group/preview">
                                 {file && isImage(file) ? (
                                     <div className="relative w-10 h-10 rounded overflow-hidden border border-white/10 shrink-0">
-                                        <Image src={preview} alt="Preview" fill className="object-cover" sizes="40px" />
+                                        <img src={preview} alt="Preview" fill className="object-cover" sizes="40px" />
                                     </div>
                                 ) : (
                                     <div className="w-10 h-10 rounded border border-white/10 bg-zinc-900 flex items-center justify-center shrink-0">

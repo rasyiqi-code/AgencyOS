@@ -1,6 +1,5 @@
 "use client";
 
-import NextLink from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";

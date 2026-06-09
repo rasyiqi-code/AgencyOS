@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,7 +14,7 @@ interface PurchaseButtonProps {
     selectedAddons?: Record<string, unknown>[];
 }
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function PurchaseButton({ serviceId, interval, className, customLabel, selectedAddons = [] }: PurchaseButtonProps) {
     const t = useTranslations("Cards");

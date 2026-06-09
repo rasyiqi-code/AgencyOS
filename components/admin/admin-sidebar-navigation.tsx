@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 import { SidebarSuperAdmin, SidebarFinance, SidebarPM } from "@/components/dashboard/sidebar/roles";
 
 interface Props {

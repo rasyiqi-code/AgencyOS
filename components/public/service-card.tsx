@@ -1,18 +1,16 @@
 "use client";
 
 import { Check, Sparkles, ChevronDown } from "lucide-react";
-import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { useState } from "react";
-import Link from "next/link";
 import { type Service } from "./service-detail/types";
 
 interface ServiceCardProps {
     service: Service;
 }
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function ServiceCard({ service }: ServiceCardProps) {
     const t = useTranslations("Cards");
@@ -57,7 +55,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
             />
 
             {/* Visual Block - Changed to Square Ratio */}
-            <Link href={`/services/${service.slug || service.id}`} className="relative aspect-square overflow-hidden shrink-0 block">
+            <a href={`/services/${service.slug || service.id}`} className="relative aspect-square overflow-hidden shrink-0 block">
                 {service.image ? (
                     <Image
                         src={service.image}
@@ -73,7 +71,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                     </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-            </Link>
+            </a>
 
             <div className="flex flex-col flex-grow p-4 md:p-5 relative z-10">
                 {/* Header Block */}
@@ -90,11 +88,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
                             </div>
                         )}
                     </div>
-                    <Link href={`/services/${service.slug || service.id}`}>
+                    <a href={`/services/${service.slug || service.id}`}>
                         <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
                             {displayTitle}
                         </h3>
-                    </Link>
+                    </a>
 
                 </div>
 
@@ -113,12 +111,12 @@ export function ServiceCard({ service }: ServiceCardProps) {
                             {displayFeatures.length > 3 && (
                                 <>
                                     <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
-                                    <Link
+                                    <a
                                         href={`/services/${service.slug || service.id}`}
                                         className="text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity"
                                     >
                                         +{displayFeatures.length - 3} {t("more")} <ChevronDown className="w-2.5 h-2.5" />
-                                    </Link>
+                                    </a>
                                 </>
                             )}
                         </div>

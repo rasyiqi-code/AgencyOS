@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/lib/i18n/hooks";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";

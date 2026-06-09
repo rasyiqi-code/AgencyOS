@@ -4,8 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MessageSquarePlus, MessageCircle } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 interface Ticket {
     id: string;
@@ -29,12 +28,12 @@ export function TicketList({ tickets }: TicketListProps) {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-white">Your Tickets</h2>
-                <Link href="/dashboard/support/new">
+                <a href="/dashboard/support/new">
                     <Button className="bg-white text-black hover:bg-zinc-200">
                         <MessageSquarePlus className="w-4 h-4 mr-2" />
                         Create Ticket
                     </Button>
-                </Link>
+                </a>
             </div>
 
             {/* Mobile Card View */}

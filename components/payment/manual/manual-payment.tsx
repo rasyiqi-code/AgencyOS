@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { toast } from "sonner";
 import { Loader2, Building, Copy, Upload, CheckCircle2, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { uploadOrderProof } from "@/app/actions/billing";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ManualPaymentProps {
     orderId: string;

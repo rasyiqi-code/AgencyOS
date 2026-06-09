@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { TestimonialCard } from "./testimonial-card";
 
 import { getSystemSettings, getActiveTestimonials } from "@/src/server/settings";

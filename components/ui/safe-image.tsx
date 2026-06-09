@@ -1,43 +1,35 @@
-
 "use client";
 
-import { useState } from "react";
-import Image, { ImageProps } from "next/image";
+import { useState, ImgHTMLAttributes } from "react";
 import { cn } from "@/lib/shared/utils";
 
-interface SafeImageProps extends ImageProps {
+interface SafeImageProps extends ImgHTMLAttributes<HTMLImageElement> {
     fallbackClassName?: string;
 }
 
+/**
+ * Komponen gambar aman yang secara otomatis beralih ke placeholder
+ * jika pemuatan gambar dari sumber asli (misalnya penyimpanan R2) gagal.
+ */
 export function SafeImage({ alt, src, className, fallbackClassName, ...props }: SafeImageProps) {
     const [error, setError] = useState(false);
 
-    if (error) {
-        // Fallback to unoptimized standard img tag or unoptimized Next Image
-        // We use Next Image with unoptimized=true to keep props consistency but bypass server optimization
+    if (error || !src) {
         return (
-            <Image
-                {...props}
-                src={src}
-                alt={alt}
-                className={cn(className, fallbackClassName)}
-                unoptimized={true}
-                onError={() => {
-                    // If even the direct link fails, we could show a placeholder or keep it broken
-                    console.error("Failed to load image even unoptimized:", src);
-                }}
-            />
+            <div className={cn("flex items-center justify-center bg-zinc-800 text-zinc-500 text-xs", className, fallbackClassName)}>
+                Gambar gagal dimuat
+            </div>
         );
     }
 
     return (
-        <Image
+        <img
             {...props}
             src={src}
             alt={alt}
             className={className}
             onError={() => {
-                console.warn("Image optimization failed, falling back to unoptimized:", src);
+                console.warn("Gagal memuat gambar, beralih ke fallback:", src);
                 setError(true);
             }}
         />

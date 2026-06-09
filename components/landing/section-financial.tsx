@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, X, Info, Building2, Rocket } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 import { ScrollHint } from "./scroll-hint";
 

@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MessageCircle } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/shared/utils";
 
 // Reuse types or define locally if simple
@@ -72,12 +71,12 @@ export function TicketTable({ tickets }: TicketTableProps) {
                                     {new Date(ticket.updatedAt).toLocaleDateString()}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Link href={`/admin/support/${ticket.id}`}>
+                                    <a href={`/admin/support/${ticket.id}`}>
                                         <Button size="sm" variant="outline" className="h-8 bg-zinc-900 border-zinc-700 hover:bg-zinc-800">
                                             <MessageCircle className="w-4 h-4 mr-2" />
                                             Reply
                                         </Button>
-                                    </Link>
+                                    </a>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -113,12 +112,12 @@ export function TicketTable({ tickets }: TicketTableProps) {
                             <span className="text-[9px] text-zinc-600 font-medium">{new Date(ticket.updatedAt).toLocaleDateString()}</span>
                         </div>
                         <div className="pt-1">
-                            <Link href={`/admin/support/${ticket.id}`} className="block w-full">
+                            <a href={`/admin/support/${ticket.id}`} className="block w-full">
                                 <Button variant="outline" className="w-full h-8 bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-[11px] font-medium">
                                     <MessageCircle className="w-3.5 h-3.5 mr-1.5" />
                                     Reply
                                 </Button>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 ))}

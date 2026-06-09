@@ -1,6 +1,5 @@
 import { getRecentCommits } from "@/lib/integrations/github";
 import { GitCommit, ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface RepoActivityProps {
@@ -35,13 +34,13 @@ export async function RepoActivity({ owner, repo }: RepoActivityProps) {
                         <GitCommit className="w-4 h-4" />
                         Recent Activity
                     </div>
-                    <Link
+                    <a
                         href={`https://github.com/${owner}/${repo}`}
                         target="_blank"
                         className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
                     >
                         View Repo <ExternalLink className="w-3 h-3" />
-                    </Link>
+                    </a>
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

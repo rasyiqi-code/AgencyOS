@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { Service, AddonType } from "./types";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 interface ServiceHeroProps {
     service: Service;

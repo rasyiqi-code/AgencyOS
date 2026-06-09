@@ -1,10 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ArrowRight, Zap, Layers, ShieldCheck, Sparkles } from "lucide-react";
 import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 import { useEffect, useState } from "react";
 import { ScrollHint } from "./scroll-hint";
 
@@ -185,12 +184,12 @@ function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
 
                 {/* Action */}
                 <div className="mt-auto w-full">
-                    <Link href={`/${locale}/services`} className="block">
+                    <a href={`/${locale}/services`} className="block">
                         <Button className="w-full h-14 rounded-2xl bg-zinc-950 hover:bg-brand-yellow text-white hover:text-black border border-white/10 hover:border-brand-yellow transition-all duration-500 font-black uppercase tracking-tighter text-sm group-hover:shadow-2xl group-hover:shadow-brand-yellow/20 flex items-center justify-center gap-2 group/btn">
                             {t(`items.${product.key}.cta`)}
                             <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                         </Button>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </motion.div>

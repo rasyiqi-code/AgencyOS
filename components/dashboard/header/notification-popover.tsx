@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDistanceToNow } from "date-fns"
 import { cn } from "@/lib/shared/utils"
-import { getNotifications, markNotificationRead } from "@/app/actions/system-admin"
+import { getNotificationsFn, markNotificationReadFn } from "@/src/server/settings"
 
 interface Notification {
     id: string
@@ -25,7 +25,7 @@ export function NotificationPopover() {
 
     const fetchNotifications = useCallback(async () => {
         try {
-            const data = await getNotifications()
+            const data = await getNotificationsFn()
             const serialized = data.map((n: Notification) => ({
                 ...n,
                 createdAt: n.createdAt instanceof Date ? n.createdAt.toISOString() : n.createdAt,
@@ -56,7 +56,7 @@ export function NotificationPopover() {
 
     const markAsRead = async (id: string) => {
         try {
-            await markNotificationRead(id)
+            await markNotificationReadFn({ data: { id } })
             fetchNotifications()
         } catch (err) {
             console.error(err)
@@ -65,7 +65,7 @@ export function NotificationPopover() {
 
     const markAllAsRead = async () => {
         try {
-            await markNotificationRead(undefined, true)
+            await markNotificationReadFn({ data: { all: true } })
             fetchNotifications()
         } catch (err) {
             console.error(err)

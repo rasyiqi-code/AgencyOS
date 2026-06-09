@@ -2,11 +2,10 @@
 
 import { Calculator, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
-import { useParams } from "next/navigation";
+import { useParams } from "@tanstack/react-router";
 
 export function SectionCustomRequest() {
     const t = useTranslations("CustomCTA");
@@ -37,10 +36,10 @@ export function SectionCustomRequest() {
                                     size="default"
                                     className="w-full sm:w-auto h-12 px-6 rounded-full bg-white text-black hover:bg-zinc-200 font-bold text-sm transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                    <Link href={`/${locale}/price-calculator`}>
+                                    <a href={`/${locale}/price-calculator`}>
                                         <Calculator className="w-4 h-4" />
                                         {t("calculator")}
-                                    </Link>
+                                    </a>
                                 </Button>
                                 
                                 <Button

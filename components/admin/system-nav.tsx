@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2, Globe, FileText } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 
@@ -70,7 +69,7 @@ export function SystemNav() {
                     const isActive = pathname === link.href;
 
                     return (
-                        <Link
+                        <a
                             key={link.href}
                             href={link.href}
                             className={cn(
@@ -82,7 +81,7 @@ export function SystemNav() {
                         >
                             <Icon className={cn("w-4 h-4", isActive ? "text-blue-400" : "text-zinc-500")} />
                             {link.label}
-                        </Link>
+                        </a>
                     );
                 })}
             </div>

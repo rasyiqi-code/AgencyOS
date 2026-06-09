@@ -5,7 +5,7 @@ import { User, Github, UserCheck, XCircle } from "lucide-react";
 import { DeveloperSelector } from "./developer-selector";
 import { SquadProfile } from "@prisma/client";
 import type { ExtendedSquadProfile } from "@/lib/shared/types";
-import { removeTeamMember } from "@/app/actions/projects";
+import { removeTeamMemberFn } from "@/src/server/pm";
 
 interface AssignedTeamCardProps {
     projectId: string;
@@ -61,7 +61,7 @@ export function AssignedTeamCard({
                                                     onClick={async () => {
                                                         if (confirm("Remove this member from the mission?")) {
                                                             try {
-                                                                const result = await removeTeamMember(projectId, profile.id);
+                                                                const result = await removeTeamMemberFn({ data: { projectId, squadId: profile.id } });
                                                                 if (result.error) throw new Error("Failed");
                                                                 window.location.reload();
                                                             } catch (e) {

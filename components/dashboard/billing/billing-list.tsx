@@ -12,7 +12,6 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import Link from "next/link";
 import { toast } from "sonner";
 import "@/types/payment"; // Import for Window.snap type augmentation
 
@@ -314,10 +313,10 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                                 className="h-8 text-xs bg-brand-yellow hover:bg-brand-yellow/80 text-black border-0 font-bold"
                                 asChild
                             >
-                                <Link href={`/checkout/${order.project.estimateId}?paymentType=${order.type}`}>
+                                <a href={`/checkout/${order.project.estimateId}?paymentType=${order.type}`}>
                                     <CreditCard className="w-3 h-3 mr-1.5" />
                                     {order.type === 'DP' ? 'Pay DP' : order.type === 'REPAYMENT' ? 'Pay Remaining' : 'Pay Now'}
-                                </Link>
+                                </a>
                             </Button>
                         ) : (
                             <Button
@@ -326,10 +325,10 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                                 className="h-8 text-xs text-zinc-400 hover:text-white hover:bg-white/10 border-white/10 bg-zinc-950"
                                 asChild
                             >
-                                <Link href={`/invoices/${order.id}${order.snapToken ? `?token=${order.snapToken}` : ''}`} target="_blank">
+                                <a href={`/invoices/${order.id}${order.snapToken ? `?token=${order.snapToken}` : ''}`} target="_blank">
                                     <FileText className="w-3 h-3 mr-1.5" />
                                     View Invoice
-                                </Link>
+                                </a>
                             </Button>
                         )}
                     </div>

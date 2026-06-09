@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { confirmPayment } from "@/app/actions/estimates";
+import { confirmPaymentFn } from "@/src/server/estimates";
 
 export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: string, paymentType?: string | null }) {
     const [isPending, startTransition] = useTransition();
@@ -19,10 +19,10 @@ export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: 
 
         startTransition(async () => {
             try {
-                const result = await confirmPayment(estimateId);
+                const result = await confirmPaymentFn({ data: estimateId });
                 if (result.error) throw new Error("Failed");
                 toast.success(`Payment confirmed. Project status updated.`);
-                router.refresh();
+                router.invalidate();
             } catch (error) {
                 toast.error("Failed to confirm payment.");
                 console.error(error);

@@ -14,7 +14,6 @@ import { ProductForm } from "./product-form";
 import { Pencil, Trash2, Key, ExternalLink, Package } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
-import Image from "next/image";
 import { Product } from "@prisma/client";
 import { cn } from "@/lib/shared/utils";
 

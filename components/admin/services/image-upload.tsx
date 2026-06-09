@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
 import { X, Image as ImageIcon, AlertCircle, RefreshCw } from "lucide-react";
 import { MediaLibraryPicker } from "@/components/admin/shared/media-library-picker";
 

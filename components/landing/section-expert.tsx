@@ -1,7 +1,6 @@
 'use client';
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function ExpertProfile() {
     const t = useTranslations("Expert");

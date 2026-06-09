@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText, Upload, Loader2, Download, Paperclip } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 import { uploadProjectFile } from "@/app/actions/projects";
 
 interface ProjectFile {
@@ -88,11 +87,11 @@ export function ProjectAssets({ projectId, initialFiles }: { projectId: string, 
                                     <p className="text-[10px] text-zinc-500">{new Date(file.uploadedAt).toLocaleDateString()}</p>
                                 </div>
                             </div>
-                            <Link href={file.url} target="_blank">
+                            <a href={file.url} target="_blank">
                                 <Button variant="ghost" size="icon" aria-label="Download asset" className="h-7 w-7 text-zinc-400 hover:text-white">
                                     <Download className="w-3.5 h-3.5" />
                                 </Button>
-                            </Link>
+                            </a>
                         </div>
                     ))}
                 </div>

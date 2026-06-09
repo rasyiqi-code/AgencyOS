@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { Building, Copy, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QRCode from "react-qr-code";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import type { MidtransPaymentData, SelectedPaymentMethod } from "@/types/payment";
 
 interface MidtransPaymentProps {

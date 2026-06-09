@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { clientGenerateRenewalInvoice } from "@/app/dashboard/(client)/billing/actions";
 
 

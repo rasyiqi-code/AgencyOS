@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Bot } from 'lucide-react';
-import dynamic from 'next/dynamic';
 
 // Lazy load ReactMarkdown — hanya dibutuhkan saat pesan assistant dirender
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
 import { X, Image as ImageIcon, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MediaLibraryPicker } from "@/components/admin/shared/media-library-picker";

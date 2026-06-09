@@ -18,7 +18,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "@tanstack/react-router"
 import { format } from "date-fns"
 
 interface Changelog {

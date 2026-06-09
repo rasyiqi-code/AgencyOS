@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Upload, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function UploadProof({ estimateId, className }: { estimateId: string, className?: string }) {
     const t = useTranslations("Checkout");

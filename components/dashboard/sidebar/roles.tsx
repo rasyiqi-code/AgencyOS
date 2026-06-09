@@ -1,17 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Key, Bell, Globe, Repeat, Tag, DollarSign, LayoutTemplate, Gift, UserPlus, FolderOpen } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 const subscribe = () => () => { };
 const getSnapshot = () => true;
 const getServerSnapshot = () => false;
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { useLocation, useSearch } from "@tanstack/react-router";
 
 export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: string; icon: ComponentType<{ className?: string }>; label: string; iconClass?: string }) {
     const { isCollapsed } = useSidebarStore();
@@ -28,7 +27,7 @@ export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: stri
     if (!isClient) return null;
 
     return (
-        <Link
+        <a
             href={href}
             title={isCollapsed ? label : undefined}
             className={cn(
@@ -39,7 +38,7 @@ export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: stri
         >
             <Icon className={cn("h-4 w-4 shrink-0", iconClass)} />
             {!isCollapsed && <span className="truncate">{label}</span>}
-        </Link>
+        </a>
     );
 }
 

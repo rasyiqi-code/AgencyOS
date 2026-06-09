@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "@/lib/i18n/hooks";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { updateService } from "@/app/actions/services";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,6 @@ import { Flag } from "lucide-react";
 // import { generateServiceAction } from '@/app/actions/genkit';
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import Link from "next/link";
 
 export interface ServiceData {
     id: string;
@@ -210,12 +209,12 @@ export function EditServiceForm({
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Link href="/admin/pm/services">
+                    <a href="/admin/pm/services">
                         <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             {t("cancel")}
                         </Button>
-                    </Link>
+                    </a>
                 </div>
             </div>
 

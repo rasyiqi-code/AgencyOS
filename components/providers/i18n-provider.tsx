@@ -1,7 +1,9 @@
-'use client'
-
+/**
+ * Provider i18n custom — pengganti NextIntlClientProvider
+ * Membungkus component tree dengan context locale dan messages
+ */
 import type { ReactNode } from 'react'
-import { NextIntlClientProvider } from 'next-intl'
+import { I18nContext } from '@/lib/i18n/context'
 
 export function I18nProvider({
   locale,
@@ -13,8 +15,8 @@ export function I18nProvider({
   children: ReactNode
 }) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <I18nContext.Provider value={{ locale, messages }}>
       {children}
-    </NextIntlClientProvider>
+    </I18nContext.Provider>
   )
 }

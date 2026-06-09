@@ -3,7 +3,7 @@
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Database, Cloud, Zap, Lock, Brain, LayoutTemplate } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function SocialProofContent() {
     const t = useTranslations("SocialProof");

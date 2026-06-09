@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 /**
@@ -24,7 +22,7 @@ interface ProductCardProps {
     };
 }
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -52,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
         : t("oneTime");
 
     return (
-        <Link href={`/products/${product.slug}`} className="h-full block">
+        <a href={`/products/${product.slug}`} className="h-full block">
             <motion.div
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
@@ -158,6 +156,6 @@ export function ProductCard({ product }: ProductCardProps) {
                     </div>
                 </div>
             </motion.div>
-        </Link>
+        </a>
     );
 }

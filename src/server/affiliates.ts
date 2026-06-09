@@ -223,3 +223,54 @@ export const processPayoutFn = createServerFn({ method: 'POST' })
       return { success: false, error: (error as Error).message || "Internal Server Error" }
     }
   })
+
+// 7. Mengambil daftar developer tim (Squad Developers)
+export const getSquadDevelopersFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    await requireAdmin()
+
+    const profiles = await prisma.squadProfile.findMany({
+      orderBy: { name: 'asc' },
+      select: {
+        userId: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    })
+
+    const developers = profiles.map(p => ({
+      id: p.userId,
+      displayName: `${p.name} (${p.role})`,
+      primaryEmail: p.email,
+    }))
+
+    return { success: true, data: developers }
+  })
+
+// 8. Memperbarui informasi rekening bank afiliasi
+const updateBankDetailsSchema = z.object({
+  bankName: z.string(),
+  accountNumber: z.string(),
+  accountHolder: z.string()
+})
+
+export const updateBankDetailsFn = createServerFn({ method: 'POST' })
+  .validator(updateBankDetailsSchema)
+  .handler(async ({ data }) => {
+    const user = await getCurrentUser()
+    if (!user) throw new Error('Unauthorized')
+
+    const { bankName, accountNumber, accountHolder } = data
+    if (!bankName || !accountNumber || !accountHolder) throw new Error("Missing required fields")
+
+    const bankInfo = { bankName, accountNumber, accountHolder }
+
+    await prisma.affiliateProfile.update({
+      where: { userId: user.id },
+      data: { bankInfo }
+    })
+
+    return { success: true, data: bankInfo }
+  })
+

@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { ExternalLink, Maximize2, Github, Smartphone, Monitor, Code } from "lucide-react";
 
 interface PortfolioCardProps {
@@ -74,12 +72,12 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
 
                     {/* Floating Expand Button */}
-                    <Link
+                    <a
                         href={previewUrl}
                         className="absolute top-4 right-4 p-2.5 rounded-full bg-black/40 backdrop-blur-xl text-white/50 hover:text-brand-yellow hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 border border-white/10"
                     >
                         <Maximize2 className="w-4 h-4" />
-                    </Link>
+                    </a>
 
                     {/* Live Indicator Badge */}
                     <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-xl rounded-full border border-white/10 shadow-lg">
@@ -121,14 +119,14 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
                         </div>
                     </div>
                     
-                    <Link
+                    <a
                         href={externalUrl || previewUrl}
                         target={externalUrl ? "_blank" : undefined}
                         className="flex items-center gap-2 px-6 py-2 bg-white/5 hover:bg-brand-yellow text-white hover:text-black rounded-full text-[11px] font-black transition-all duration-500 border border-white/10 hover:border-brand-yellow shadow-lg group/btn"
                     >
                         {ctaText}
                         <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
-                    </Link>
+                    </a>
                 </div>
             </div>
 

@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 /**
@@ -74,7 +72,7 @@ function RecommendationCard({ product }: { product: RecommendedProduct }) {
         : "One Time";
 
     return (
-        <Link href={`/products/${product.slug}`}>
+        <a href={`/products/${product.slug}`}>
             <div
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
@@ -141,6 +139,6 @@ function RecommendationCard({ product }: { product: RecommendedProduct }) {
                     </div>
                 </div>
             </div>
-        </Link>
+        </a>
     );
 }

@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 // import { acceptMissionApplication } from "@/app/actions/squad";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { CheckCircle, Calendar, Clock, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";

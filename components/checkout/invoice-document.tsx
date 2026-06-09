@@ -3,8 +3,7 @@
 import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale/id";
 import { enUS as localeEn } from "date-fns/locale/en-US";
-import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 
 import { ExtendedEstimate, InvoiceItem } from "@/lib/shared/types";
 import { sanitizeHtml } from "@/lib/utils/sanitize";

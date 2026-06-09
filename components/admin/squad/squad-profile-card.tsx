@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Briefcase, Github, Linkedin, ExternalLink } from "lucide-react";
 import { ProfileActions } from "./profile-actions";
 import { SquadProfile, MissionApplication } from "@prisma/client";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 interface SquadProfileCardProps {
     profile: SquadProfile & { applications: MissionApplication[] };

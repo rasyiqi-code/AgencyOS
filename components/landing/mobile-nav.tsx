@@ -3,11 +3,9 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 
 interface NavItem {
     href: string;
@@ -68,7 +66,7 @@ export function MobileNav({
                 <div className="flex-1 overflow-y-auto py-6 px-4">
                     <div className="flex flex-col space-y-4">
                         {navItems.map((item) => (
-                            <Link
+                            <a
                                 key={item.href}
                                 href={item.href}
                                 onClick={() => setOpen(false)}
@@ -78,7 +76,7 @@ export function MobileNav({
                                     }`}
                             >
                                 {item.label}
-                            </Link>
+                            </a>
                         ))}
                     </div>
 
@@ -92,16 +90,16 @@ export function MobileNav({
                         </div>
 
                         <div className="space-y-3 px-4">
-                            <Link href={loginUrl} onClick={() => setOpen(false)} className="block">
+                            <a href={loginUrl} onClick={() => setOpen(false)} className="block">
                                 <Button variant="outline" className="w-full justify-start text-zinc-300 border-zinc-700 hover:bg-zinc-800 hover:text-white">
                                     {loginLabel}
                                 </Button>
-                            </Link>
-                            <Link href={startProjectUrl} onClick={() => setOpen(false)} className="block">
+                            </a>
+                            <a href={startProjectUrl} onClick={() => setOpen(false)} className="block">
                                 <Button className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold">
                                     {startProjectLabel}
                                 </Button>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </div>

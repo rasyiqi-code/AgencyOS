@@ -11,7 +11,7 @@ const IconMap: Record<string, React.ElementType> = {
     Flame, Globe, Infinity: InfinityIcon, Star, Crown
 };
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 interface Product {
     id: string;

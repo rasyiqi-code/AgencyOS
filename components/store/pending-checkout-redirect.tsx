@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useNavigate, useLocation } from "@tanstack/react-router";
 
 export function PendingCheckoutRedirect() {
     const router = useRouter();

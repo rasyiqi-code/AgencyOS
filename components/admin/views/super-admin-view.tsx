@@ -97,7 +97,7 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
                 {isDigital ? (
                     <>
-                        <Link to="/admin/products" className="group">
+                        <a href="/admin/products" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Products</h3>
@@ -105,9 +105,9 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
                                 </div>
                                 <p className="text-sm text-zinc-500">View and configure digital store files, pricing, and downloads.</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/digital-sales" className="group">
+                        <a href="/admin/digital-sales" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Digital Sales</h3>
@@ -115,11 +115,11 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
                                 </div>
                                 <p className="text-sm text-zinc-500">Review digital purchases, licenses generated, and payment status.</p>
                             </div>
-                        </Link>
+                        </a>
                     </>
                 ) : (
                     <>
-                        <Link to="/admin/pm/projects" className="group">
+                        <a href="/admin/pm/projects" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Projects</h3>
@@ -127,9 +127,9 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
                                 </div>
                                 <p className="text-sm text-zinc-500">View detailed registry, assign squads, and update status.</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/finance/orders" className="group">
+                        <a href="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Finance & Orders</h3>
@@ -137,11 +137,11 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
                                 </div>
                                 <p className="text-sm text-zinc-500">Track invoices, verify manual payments, and check revenue.</p>
                             </div>
-                        </Link>
+                        </a>
                     </>
                 )}
 
-                <Link to="/admin/system/settings" className="group">
+                <a href="/admin/system/settings" className="group">
                     <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-purple-400 transition-colors">System Settings</h3>
@@ -149,7 +149,7 @@ export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdmin
                         </div>
                         <p className="text-sm text-zinc-500">Configure global settings, integrations, and operational rules.</p>
                     </div>
-                </Link>
+                </a>
             </div>
         </div>
     );

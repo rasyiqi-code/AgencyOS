@@ -9,10 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Loader2, Tag, Check, XCircle } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { validateCouponAction } from "@/app/actions/coupons";
 

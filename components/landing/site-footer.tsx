@@ -1,10 +1,8 @@
 'use client';
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 
 import { getSystemSettings, getAffiliateName } from "@/src/server/settings";
 
@@ -78,12 +76,12 @@ export function SiteFooter() {
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-x-3 md:gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
-                    <Link href={`/${locale}/docs`} className="hover:text-white transition-colors">{t("docs")}</Link>
-                    <Link href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" className="hover:text-white transition-colors">Changelog</Link>
-                    <Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</Link>
-                    <Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</Link>
-                    <Link href="/affiliate/join" className="hover:text-white transition-colors">{t("partners")}</Link>
-                    <Link href={`/${locale}/contact`} className="hover:text-white transition-colors">{t("contactUs")}</Link>
+                    <a href={`/${locale}/docs`} className="hover:text-white transition-colors">{t("docs")}</a>
+                    <a href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" className="hover:text-white transition-colors">Changelog</a>
+                    <a href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</a>
+                    <a href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</a>
+                    <a href="/affiliate/join" className="hover:text-white transition-colors">{t("partners")}</a>
+                    <a href={`/${locale}/contact`} className="hover:text-white transition-colors">{t("contactUs")}</a>
                 </div>
             </div>
         </footer>

@@ -371,7 +371,7 @@ const createAssetSchema = z.object({
   content: z.string().optional(),
   imageUrl: z.string().optional(),
   category: z.string().optional(),
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional()
 })
 
 export const createAssetFn = createServerFn({ method: 'POST' })
@@ -413,4 +413,19 @@ export const deleteAssetFn = createServerFn({ method: 'POST' })
     await prisma.marketingAsset.delete({ where: { id } })
     return { success: true }
   })
+
+export const uploadAssetFn = createServerFn({ method: 'POST' })
+  .validator((data: FormData) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin()
+    const file = data.get("file") as File
+    if (!file) throw new Error("No file provided")
+
+    const { uploadFile } = await import("@/lib/integrations/storage")
+    const path = `marketing/assets/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`
+    const url = await uploadFile(file, path)
+
+    return { success: true, data: { url } }
+  })
+
 

@@ -1,10 +1,9 @@
 'use client';
-import Image from 'next/image';
 import { SafeImage } from '@/components/ui/safe-image';
 
 import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
-import { createDailyLog } from '@/app/actions/projects';
+import { useNavigate, useRouter } from '@tanstack/react-router';
+import { createDailyLogFn } from '@/src/server/pm';
 
 export type DailyLogMood = "on_track" | "delayed" | "shipped";
 import { Button } from '@/components/ui/button';
@@ -63,6 +62,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
         if (!content.trim()) return;
 
         const formData = new FormData();
+        formData.append('projectId', projectId);
         formData.append('content', content);
         formData.append('mood', mood);
         files.forEach(file => {
@@ -87,13 +87,13 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
         // Cleanup previews
         previews.forEach(url => URL.revokeObjectURL(url));
 
-        const result = await createDailyLog(projectId, formData);
-
-        if (result.error) {
-            toast.error('Failed to post update');
-        } else {
+        try {
+            await createDailyLogFn({ data: formData });
             toast.success('Update posted');
-            router.refresh();
+            router.invalidate();
+        } catch (error) {
+            toast.error('Failed to post update');
+            console.error(error);
         }
     };
 
@@ -142,9 +142,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
                                                     <SafeImage
                                                         src={img}
                                                         alt="Attachment"
-                                                        fill
-                                                        sizes="(max-width: 640px) 50vw, 33vw"
-                                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     />
                                                     <a href={img} target="_blank" rel="noopener noreferrer" className="absolute inset-0 bg-transparent" />
                                                 </div>
@@ -179,7 +177,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
                             <div className="flex flex-wrap gap-2">
                                 {previews.map((preview, index) => (
                                     <div key={preview} className="relative w-16 h-16 rounded-md overflow-hidden border border-white/10 group">
-                                        <Image src={preview} alt="preview" fill className="object-cover" sizes="64px" />
+                                        <img src={preview} alt="preview" className="w-full h-full object-cover" />
                                         <button
                                             type="button"
                                             onClick={() => removeFile(index)}

@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star, Award, Code2, Globe, Loader2 } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { useEffect, useState } from "react";
 
 interface Expert {
@@ -95,7 +93,7 @@ export function ExpertsPageContent() {
                                 <div className="relative mb-6">
                                     <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity" />
                                     <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-blue-500/50 transition-colors relative">
-                                        <Image 
+                                        <img 
                                             src={expert.image} 
                                             alt={expert.name} 
                                             fill 
@@ -144,9 +142,9 @@ export function ExpertsPageContent() {
                 </div>
 
                 <div className="mt-24 text-center">
-                    <Link href="/contact" className="inline-flex items-center gap-2 text-blue-500 font-bold hover:text-white transition-colors group">
+                    <a href="/contact" className="inline-flex items-center gap-2 text-blue-500 font-bold hover:text-white transition-colors group">
                         {t("cta")} <Star className="w-4 h-4 group-hover:rotate-45 transition-transform" />
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>

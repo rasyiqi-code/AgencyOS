@@ -99,7 +99,7 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
             <div className="grid gap-4 mt-6">
                 {isDigital ? (
                     <>
-                        <Link to="/admin/finance/orders" className="group">
+                        <a href="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-emerald-500 transition-colors">
@@ -109,9 +109,9 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">{t("digitalOrdersDesc")}</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/products" className="group">
+                        <a href="/admin/products" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-blue-500 transition-colors">
@@ -121,9 +121,9 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">Manage store files, prices, and settings.</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/licenses" className="group">
+                        <a href="/admin/licenses" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-purple-500 transition-colors">
@@ -133,11 +133,11 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">Track purchase activations and issues.</p>
                             </div>
-                        </Link>
+                        </a>
                     </>
                 ) : (
                     <>
-                        <Link to="/admin/finance/orders" className="group">
+                        <a href="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-emerald-400 transition-colors">{t("manageOrders")}</h3>
@@ -145,9 +145,9 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">{t("manageOrdersDesc")}</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/finance/quotes" className="group">
+                        <a href="/admin/finance/quotes" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-brand-yellow transition-colors">{t("quotes")}</h3>
@@ -155,9 +155,9 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">{t("quotesDesc")}</p>
                             </div>
-                        </Link>
+                        </a>
 
-                        <Link to="/admin/finance/subscriptions" className="group">
+                        <a href="/admin/finance/subscriptions" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-purple-400 transition-colors">
@@ -167,7 +167,7 @@ export function BillingDashboardView({ mode = 'services', locale = 'en', stats }
                                 </div>
                                 <p className="text-sm text-zinc-500 max-w-md">Monitor recurring monthly retainers and active SLAs.</p>
                             </div>
-                        </Link>
+                        </a>
                     </>
                 )}
             </div>

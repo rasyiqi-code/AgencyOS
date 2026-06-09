@@ -4,7 +4,7 @@ import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign, Loader2 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useNavigate, useLocation, useSearch } from "@tanstack/react-router";
 
 export function DashboardCurrencySwitcher() {
     const { currency, setCurrency } = useCurrency();

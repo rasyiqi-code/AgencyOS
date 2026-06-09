@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { Check, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 
 interface InvitationCardProps {

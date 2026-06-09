@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, Clock, Github, Rocket, Calendar } from "lucide-react";
 import type { ExtendedProject } from "@/lib/shared/types";
 import { useCurrency } from "@/components/providers/currency-provider";
@@ -17,7 +16,7 @@ export function MissionCard({ project }: { project: ExtendedProject }) {
     return (
         <div className="group block relative h-full">
             {/* Main Link Overlay */}
-            <Link
+            <a
                 href={`/dashboard/missions/${project.id}`}
                 className="absolute inset-0 z-0 rounded-2xl"
                 aria-label={`View details for ${project.title}`}
@@ -83,13 +82,13 @@ export function MissionCard({ project }: { project: ExtendedProject }) {
                                 </div>
                             </div>
                             {project.estimateId && (
-                                <Link
+                                <a
                                     href={`/checkout/${project.estimateId}?paymentType=REPAYMENT`}
                                     className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-black transition-colors whitespace-nowrap z-20 relative block text-center shadow-lg shadow-amber-500/20"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     {isId ? 'Lunasi Sekarang' : 'Pay Remaining'}
-                                </Link>
+                                </a>
                             )}
                         </div>
                     )}

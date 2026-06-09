@@ -11,8 +11,7 @@ import {
     CheckCircle2,
     Lock
 } from "lucide-react";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 export interface ClientDashboardContentProps {
@@ -191,9 +190,9 @@ export function ClientDashboardContent({ agencyName }: ClientDashboardContentPro
                     </p>
 
                     <div className="flex flex-wrap justify-center gap-6">
-                        <Link href="/dashboard" className="px-10 py-4 rounded-full bg-brand-yellow text-black font-extrabold hover:bg-white transition-all transform hover:scale-105">
+                        <a href="/dashboard" className="px-10 py-4 rounded-full bg-brand-yellow text-black font-extrabold hover:bg-white transition-all transform hover:scale-105">
                             {t("Cta.button")}
-                        </Link>
+                        </a>
                     </div>
                 </motion.div>
             </div>

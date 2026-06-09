@@ -49,7 +49,7 @@ export function ProjectDashboardView({ locale = 'en', stats }: ProjectDashboardV
             </div>
 
             <div className="grid gap-4 mt-6">
-                <Link to="/admin/pm/projects" className="group">
+                <a href="/admin/pm/projects" className="group">
                     <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">
@@ -61,7 +61,7 @@ export function ProjectDashboardView({ locale = 'en', stats }: ProjectDashboardV
                             {isId ? 'Tetapkan tim, perbarui status, dan tinjau spesifikasi.' : 'Assign squads, update statuses, and review specs.'}
                         </p>
                     </div>
-                </Link>
+                </a>
             </div>
         </div>
     );

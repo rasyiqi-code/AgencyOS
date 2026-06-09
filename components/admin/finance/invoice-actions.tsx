@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Mail, FileText, Loader2, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { useCurrency } from "@/components/providers/currency-provider";
 
 interface InvoiceActionsProps {

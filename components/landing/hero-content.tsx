@@ -3,10 +3,8 @@
 import React from "react";
 import { motion, Variants, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Zap, TrendingUp, Activity, BarChart3 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { TypingHeroTitle } from "./typing-hero-title";
 
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
@@ -82,7 +80,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                     >
                         {/* Status Widget */}
                         <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
-                            <Link href="/price-calculator">
+                            <a href="/price-calculator">
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium mb-4 hover:bg-brand-yellow/20 transition-colors cursor-pointer w-fit">
                                     <span className="relative flex h-2 w-2">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
@@ -90,7 +88,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     </span>
                                     {t("statusBadge", { brand: agencyName })}
                                 </div>
-                            </Link>
+                            </a>
                         </motion.div>
 
                         <motion.div
@@ -139,12 +137,12 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
                                 </Button>
 
-                                <Link href="/services">
+                                <a href="/services">
                                     <Button variant="outline" size="lg" className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-zinc-900/50 border-zinc-700 text-zinc-300 hover:bg-brand-yellow/10 hover:text-brand-yellow hover:border-brand-yellow/50 rounded-full transition-all backdrop-blur-sm">
                                         <Zap className="w-4 h-4 mr-1.5 text-brand-yellow" />
                                         {t("viewServices")}
                                     </Button>
-                                </Link>
+                                </a>
                             </div>
                         </motion.div>
 
@@ -344,7 +342,7 @@ function BadgeContent({ name, model, icon }: {
     return (
         <div className="flex items-center gap-1.5 group/badge">
             <div className="w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 bg-white/5 p-1 flex items-center justify-center">
-                <Image 
+                <img 
                     src={icon} 
                     alt={`${name} logo`} 
                     width={16} 

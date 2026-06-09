@@ -3,13 +3,11 @@
 
 
 import { motion, Variants } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
 import { Sparkles, ChevronDown, Check } from "lucide-react";
 
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 import { type Service } from "@/components/public/service-detail/types";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useState, useRef } from "react";
@@ -137,7 +135,7 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
 
             <div className="flex flex-col h-full">
                 {/* Visual Block */}
-                <Link href={`/services/${service.slug}`} className="relative overflow-hidden shrink-0 aspect-[16/9] block">
+                <a href={`/services/${service.slug}`} className="relative overflow-hidden shrink-0 aspect-[16/9] block">
                     {service.image ? (
                         <Image
                             src={service.image}
@@ -153,7 +151,7 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                         </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
-                </Link>
+                </a>
 
                 <div className="flex flex-col flex-grow p-4 md:p-8 relative z-10">
                     {/* Header Block */}
@@ -163,11 +161,11 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                                 {intervalLabel}
                             </div>
                         </div>
-                        <Link href={`/services/${service.slug}`}>
+                        <a href={`/services/${service.slug}`}>
                             <h3 className="font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-2 md:mb-3 text-lg md:text-2xl">
                                 {title}
                             </h3>
-                        </Link>
+                        </a>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mt-auto">
@@ -184,12 +182,12 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                             {displayFeatures.length > 3 && (
                                 <>
                                     <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
-                                    <Link
+                                    <a
                                         href={`/services/${service.slug}`}
                                         className="text-[8px] md:text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-1.5 md:mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity"
                                     >
                                         +{displayFeatures.length - 3} More <ChevronDown className="w-2.5 h-2.5" />
-                                    </Link>
+                                    </a>
                                 </>
                             )}
                         </div>

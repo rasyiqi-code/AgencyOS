@@ -3,7 +3,7 @@
 import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useSyncExternalStore } from "react";
 
 const listeners = new Set<() => void>();

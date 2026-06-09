@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/config/db";
 import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
-import { revalidatePath } from "next/cache";
 
 export async function createChangelog(data: { title: string; content: string; version: string; status: string }) {
     if (!await isAdmin()) throw new Error("Unauthorized");

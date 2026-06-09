@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 
 /**
  * Sebuah wrapper aman di atas `unstable_cache` Next.js.

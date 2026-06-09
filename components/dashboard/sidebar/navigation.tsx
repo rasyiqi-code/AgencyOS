@@ -2,7 +2,7 @@
 
 import { LayoutDashboard, Settings, Inbox, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare, Package, Users } from "lucide-react";
 import { SidebarLink, SidebarSectionHeader } from "./roles";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function DashboardSidebarNavigation() {
     const t = useTranslations("Dashboard.Sidebar");

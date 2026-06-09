@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { usePathname } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocation } from "@tanstack/react-router";
+import { useLocale } from "@/lib/i18n/hooks";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Loader2, Sparkles, CheckCircle2, Tag, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";

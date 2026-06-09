@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { AlertTriangle, Key, CreditCard, ArrowRight } from "lucide-react";
-import { isAIConfigured } from "@/app/genkit/ai";
+import { isAIConfigured } from "@/src/server/ai";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 
 export async function SystemAlerts() {
@@ -51,13 +50,13 @@ export async function SystemAlerts() {
                             </div>
                         </div>
                         <div className="shrink-0 self-end sm:self-center">
-                            <Link
+                            <a
                                 href="/admin/system/keys"
                                 className="inline-flex items-center gap-1 text-xs bg-amber-500 hover:bg-amber-400 text-black px-3.5 py-1.5 rounded-lg font-semibold uppercase tracking-wider transition-all duration-200 shadow-md shadow-amber-500/10 hover:shadow-amber-500/20"
                             >
                                 Atur AI Key
                                 <ArrowRight className="w-3 h-3" />
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 )}
@@ -79,13 +78,13 @@ export async function SystemAlerts() {
                             </div>
                         </div>
                         <div className="shrink-0 self-end sm:self-center">
-                            <Link
+                            <a
                                 href="/admin/system/payment"
                                 className="inline-flex items-center gap-1 text-xs bg-amber-500 hover:bg-amber-400 text-black px-3.5 py-1.5 rounded-lg font-semibold uppercase tracking-wider transition-all duration-200 shadow-md shadow-amber-500/10 hover:shadow-amber-500/20"
                             >
                                 Atur Gateway
                                 <ArrowRight className="w-3 h-3" />
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 )}

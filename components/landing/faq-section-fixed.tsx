@@ -6,12 +6,11 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { useTranslations, useMessages } from "next-intl";
+import { useTranslations, useMessages } from "@/lib/i18n/hooks";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
-import Image from "next/image";
 
 export function FAQSection() {
     const messages = useMessages();
@@ -126,7 +125,7 @@ export function FAQSection() {
                                 <div className="flex -space-x-2 shrink-0">
                                     {[1, 2, 3, 4].map((i) => (
                                         <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
-                                            <Image 
+                                            <img 
                                                 src={`/avatars/avatar-${i}.svg`} 
                                                 alt="UserAvatar" 
                                                 fill

@@ -204,3 +204,77 @@ export const getClientSettingsDataFn = createServerFn({ method: 'GET' })
     }
   })
 
+// 6. Membuat invoice perpanjangan langganan secara otomatis
+export const clientGenerateRenewalInvoiceFn = createServerFn({ method: 'POST' })
+  .validator((projectId: string) => projectId)
+  .handler(async ({ data: projectId }) => {
+    try {
+      const user = await requireClient()
+
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        include: { estimate: true, service: true }
+      })
+
+      if (!project || project.userId !== user.id) {
+        throw new Error("Project not found or unauthorized")
+      }
+
+      if (project.estimate?.status === "pending_payment" && project.estimate?.complexity === "Subscription Renewal") {
+        return { success: true, estimateId: project.estimate.id }
+      }
+
+      const oldEstimate = project.estimate
+
+      let amount = 0
+      if (project.service?.interval === 'monthly' || project.service?.interval === 'yearly') {
+        amount += project.service.price
+      }
+
+      const summaryText = oldEstimate?.summary || project.description || ""
+      const lines = summaryText.split('\n')
+      lines.forEach(line => {
+        if (line.includes('Monthly') || line.includes('Yearly')) {
+          const match = line.match(/\(\D*([\d.]+)\s+(Monthly|Yearly)\)/i)
+          if (match && match[1]) {
+            amount += parseFloat(match[1])
+          }
+        }
+      })
+
+      if (amount === 0 && project.totalAmount > 0) {
+        amount = project.totalAmount
+      }
+
+      const newEstimate = await prisma.estimate.create({
+        data: {
+          title: `Renewal: ${project.title}`,
+          prompt: "Subscription Renewal",
+          summary: "Otomatis dibuat oleh sistem untuk perpanjangan langganan. " + (project.description ? "\nTermasuk: \n" + project.description : ""),
+          screens: (oldEstimate?.screens || []) as any,
+          apis: (oldEstimate?.apis || []) as any,
+          totalHours: oldEstimate?.totalHours || 0,
+          totalCost: amount,
+          complexity: "Subscription Renewal",
+          status: "pending_payment",
+          serviceId: project.serviceId,
+          userId: project.userId,
+        }
+      })
+
+      await prisma.project.update({
+        where: { id: projectId },
+        data: {
+          estimateId: newEstimate.id,
+          subscriptionStatus: 'pending'
+        }
+      })
+
+      return { success: true, estimateId: newEstimate.id }
+    } catch (error) {
+      console.error("Failed to generate renewal invoice:", error)
+      throw error
+    }
+  })
+
+

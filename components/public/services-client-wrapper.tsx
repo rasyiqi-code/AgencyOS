@@ -3,10 +3,9 @@
 import { useEffect } from "react";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { ServiceCard } from "@/components/public/service-card";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Service {
@@ -87,10 +86,10 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
 
             <div className="container mx-auto px-4 py-8 sm:py-24 relative z-10">
                 <div className="mb-8 sm:mb-12 text-center max-w-2xl mx-auto">
-                    <Link href="/" className="inline-flex items-center text-[10px] sm:text-sm text-zinc-500 hover:text-white mb-4 sm:mb-6 transition-colors gap-1">
+                    <a href="/" className="inline-flex items-center text-[10px] sm:text-sm text-zinc-500 hover:text-white mb-4 sm:mb-6 transition-colors gap-1">
                         <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                         {st("backToHome")}
-                    </Link>
+                    </a>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 sm:mb-6 flex items-center justify-center gap-2 sm:gap-3">
                         <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-brand-yellow" />
                         {pageTitle || st("title")}

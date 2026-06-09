@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Copy, Check, Trash2, Calendar, HardDrive } from "lucide-react";
 import { format } from "date-fns";
-import Image from "next/image";
 
 interface MediaItem {
     key: string;
@@ -75,7 +74,7 @@ export function MediaList({
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded bg-zinc-950 border border-zinc-800 flex-shrink-0 flex items-center justify-center overflow-hidden relative shadow-sm">
                                                 {item.url && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(item.key) ? (
-                                                    <Image src={item.url} alt="" fill className="object-cover" unoptimized sizes="32px" />
+                                                    <img src={item.url} alt="" fill className="object-cover" unoptimized sizes="32px" />
                                                 ) : (
                                                     <span className="text-[10px] text-zinc-600 font-bold">FILE</span>
                                                 )}

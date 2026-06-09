@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Check, Copy, ExternalLink, Package, Globe, Layers } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 interface Product {
@@ -136,9 +135,9 @@ export function AffiliateLinksManager({
                                                     {product.description || "No description available."}
                                                 </p>
                                                 <div className="flex items-center gap-2 pt-1">
-                                                    <Link href={link} target="_blank" className="text-xs text-blue-500 hover:underline flex items-center gap-1">
+                                                    <a href={link} target="_blank" className="text-xs text-blue-500 hover:underline flex items-center gap-1">
                                                         Preview <ExternalLink className="h-3 w-3" />
-                                                    </Link>
+                                                    </a>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 w-full sm:w-auto">

@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/config/db";
-import { revalidatePath } from "next/cache";
 
 // --- Coupons ---
 

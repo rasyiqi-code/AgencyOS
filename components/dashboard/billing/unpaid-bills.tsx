@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowRight } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
@@ -51,12 +50,12 @@ export function UnpaidBills({ unpaidEstimates, projectsNeedingRenewal = [] }: { 
                                     <PriceDisplay amount={est.totalCost as number} baseCurrency={(((est.service as unknown as ServiceData)?.currency) as "USD" | "IDR") || 'USD'} />
                                 </span>
                             </div>
-                            <Link href={`/id/checkout/${est.id}`}>
+                            <a href={`/id/checkout/${est.id}`}>
                                 <Button className="bg-red-600 hover:bg-red-500 text-white w-full sm:w-auto">
                                     Bayar Sekarang
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Button>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 ))}

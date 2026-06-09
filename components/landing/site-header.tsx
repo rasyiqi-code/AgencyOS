@@ -1,12 +1,11 @@
 'use client';
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { Check, User, LogIn, Rocket } from "lucide-react";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 
 import { getUser, getSystemSettings } from "@/src/server/settings";
 import { LogoImage } from "./logo-image";
@@ -74,7 +73,7 @@ export function SiteHeader() {
             <header className="relative md:fixed top-0 w-full z-50 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-8">
-                        <Link href={`/${locale}`} className="flex items-center gap-2 group cursor-pointer">
+                        <a href={`/${locale}`} className="flex items-center gap-2 group cursor-pointer">
                             {/* Logo / Icon Section */}
                             {displayMode !== 'text' && (
                                 logoUrl ? (
@@ -99,24 +98,24 @@ export function SiteHeader() {
                                     {agencyName}
                                 </span>
                             )}
-                        </Link>
+                        </a>
 
                         <nav className="hidden md:flex items-center gap-8">
-                            <Link href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer">
+                            <a href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer">
                                 {t("priceCalculator")}
-                            </Link>
-                            <Link href={`/${locale}/services`} className="text-sm font-bold text-sky-500 hover:text-sky-400 transition-colors duration-200 cursor-pointer">
+                            </a>
+                            <a href={`/${locale}/services`} className="text-sm font-bold text-sky-500 hover:text-sky-400 transition-colors duration-200 cursor-pointer">
                                 {t("services")}
-                            </Link>
-                            <Link href={`/${locale}/products`} className="text-sm font-bold text-indigo-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer">
+                            </a>
+                            <a href={`/${locale}/products`} className="text-sm font-bold text-indigo-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer">
                                 {t("products")}
-                            </Link>
-                            <Link href={`/portfolio`} className="text-sm font-bold text-rose-500 hover:text-rose-400 transition-colors duration-200 cursor-pointer">
+                            </a>
+                            <a href={`/portfolio`} className="text-sm font-bold text-rose-500 hover:text-rose-400 transition-colors duration-200 cursor-pointer">
                                 Portfolio
-                            </Link>
-                            <Link href="/promosi" className="text-sm font-bold text-brand-yellow hover:text-brand-yellow/90 transition-colors duration-200 cursor-pointer">
+                            </a>
+                            <a href="/promosi" className="text-sm font-bold text-brand-yellow hover:text-brand-yellow/90 transition-colors duration-200 cursor-pointer">
                                 {t("promo")}
-                            </Link>
+                            </a>
                             <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-500 hover:text-orange-400 transition-colors duration-200 cursor-pointer">
                                 Blog
                             </a>
@@ -134,28 +133,28 @@ export function SiteHeader() {
                         <div className="flex items-center gap-1.5 md:gap-3">
                             {/* Tombol My Account / Login - ikon di mobile, teks di desktop */}
                             {user ? (
-                                <Link href={`/${locale}/dashboard`}>
+                                <a href={`/${locale}/dashboard`}>
                                     <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={t("myAccount")}>
                                         <User className="w-4 h-4 sm:hidden" />
                                         <span className="hidden sm:inline">{t("myAccount")}</span>
                                     </Button>
-                                </Link>
+                                </a>
                             ) : (
-                                <Link href="/handler/sign-in">
+                                <a href="/handler/sign-in">
                                     <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={tc("login")}>
                                         <LogIn className="w-4 h-4 sm:hidden" />
                                         <span className="hidden sm:inline">{tc("login")}</span>
                                     </Button>
-                                </Link>
+                                </a>
                             )}
 
                             {/* Tombol Start Project - ikon roket di mobile, teks di desktop */}
-                            <Link href={`/${locale}/price-calculator`}>
+                            <a href={`/${locale}/price-calculator`}>
                                 <Button className="h-8 sm:h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-3 sm:px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0" aria-label={t("startProject")}>
                                     <Rocket className="w-4 h-4 sm:hidden" />
                                     <span className="hidden sm:inline">{t("startProject")}</span>
                                 </Button>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -164,21 +163,21 @@ export function SiteHeader() {
             {/* Mobile Sub-Header Navigation - Sticky */}
             <div className="sticky top-0 z-40 md:hidden border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 overflow-x-auto no-scrollbar mask-gradient-x">
                 <div className="flex items-center gap-6 px-6 h-10 w-max mx-auto min-w-full">
-                    <Link href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    <a href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("priceCalculator")}
-                    </Link>
-                    <Link href={`/${locale}/services`} className="text-sm font-bold text-sky-500 hover:text-sky-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href={`/${locale}/services`} className="text-sm font-bold text-sky-500 hover:text-sky-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("services")}
-                    </Link>
-                    <Link href={`/${locale}/products`} className="text-sm font-bold text-indigo-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href={`/${locale}/products`} className="text-sm font-bold text-indigo-500 hover:text-indigo-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("products")}
-                    </Link>
-                    <Link href={`/portfolio`} className="text-sm font-bold text-rose-500 hover:text-rose-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href={`/portfolio`} className="text-sm font-bold text-rose-500 hover:text-rose-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         Portfolio
-                    </Link>
-                    <Link href="/promosi" className="text-sm font-bold text-brand-yellow hover:text-brand-yellow/90 transition-colors duration-200 cursor-pointer whitespace-nowrap">
+                    </a>
+                    <a href="/promosi" className="text-sm font-bold text-brand-yellow hover:text-brand-yellow/90 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("promo")}
-                    </Link>
+                    </a>
                     <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-orange-500 hover:text-orange-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         Blog
                     </a>

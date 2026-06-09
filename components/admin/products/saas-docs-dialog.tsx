@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { BookOpen, Copy, Key, Share2, Layers, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function SaaSDocsDialog() {
@@ -327,12 +326,12 @@ const userFeatures = FEATURES[payload.productId]; // productId berisi SLUG`}
                             Butuh bantuan integrasi custom? Hubungi tim support engineering AgencyOS.
                         </p>
                     </div>
-                    <Link
+                    <a
                         href="/contact"
                         className="w-full md:w-auto px-6 py-3 rounded-xl bg-white text-black text-xs font-black uppercase tracking-widest hover:bg-brand-yellow transition-colors text-center"
                     >
                         Hubungi Kami
-                    </Link>
+                    </a>
                 </div>
             </DialogContent>
         </Dialog>

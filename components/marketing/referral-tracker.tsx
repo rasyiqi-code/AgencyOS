@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearch } from "@tanstack/react-router";
 
 export function ReferralTracker() {
     const searchParams = useSearchParams();

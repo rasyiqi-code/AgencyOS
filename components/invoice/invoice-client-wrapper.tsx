@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Download, AlertTriangle, MoveHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
@@ -53,7 +53,7 @@ const thankYouQuotes = [
     "“Technology is best when it brings people together.” — Matt Mullenweg"
 ];
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true, gatewayStatus }: InvoiceClientWrapperProps) {
     const t = useTranslations("Invoice");

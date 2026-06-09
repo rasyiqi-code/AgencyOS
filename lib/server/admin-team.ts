@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { revalidatePath } from "next/cache";
 
 export async function grantPermission(userId: string, email: string, key: string) {
     if (!await isAdmin()) {

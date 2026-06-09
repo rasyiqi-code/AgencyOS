@@ -1,8 +1,7 @@
 "use client";
 
 import { Check, Sparkles, ChevronDown } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { sanitizeHtml } from "@/lib/utils/sanitize";

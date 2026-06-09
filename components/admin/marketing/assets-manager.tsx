@@ -13,9 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
-import Image from "next/image";
-import { getAdminAssetsFn as getAdminAssets, createAssetFn as createAsset, updateAssetFn as updateAsset, deleteAssetFn as deleteAsset } from "@/src/server/marketing";
-import { uploadAssetAction } from "@/app/actions/marketing-admin";
+import { getAdminAssetsFn as getAdminAssets, createAssetFn as createAsset, updateAssetFn as updateAsset, deleteAssetFn as deleteAsset, uploadAssetFn } from "@/src/server/marketing";
 // We should check how manual payment uploads. It uses a route handler.
 // We need an upload route for this. Or reuse /api/billing/proof if generic enough? 
 // Better creates a specific upload function/route or use a signed URL.
@@ -104,11 +102,11 @@ export function AssetsManager() {
                 const uploadFormData = new FormData();
                 uploadFormData.append("file", formData.file);
 
-                const result = await uploadAssetAction(uploadFormData);
-                if (result.success && result.data) {
+                const result = await uploadAssetFn({ data: uploadFormData });
+                if (result && result.data) {
                     imageUrl = result.data.url;
                 } else {
-                    throw new Error(result.error || "Upload failed");
+                    throw new Error("Upload failed");
                 }
             }
 
@@ -293,12 +291,10 @@ export function AssetsManager() {
                                         <div className="space-y-3">
                                             <div className="aspect-video relative rounded-lg overflow-hidden bg-zinc-950 border border-white/5">
                                                 {previewUrl ? (
-                                                    <Image
+                                                    <img
                                                         src={previewUrl}
                                                         alt="Preview"
-                                                        fill
-                                                        className="object-cover"
-                                                        unoptimized
+                                                        className="absolute inset-0 w-full h-full object-cover"
                                                     />
                                                 ) : (
                                                     <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-700">
@@ -386,12 +382,10 @@ export function AssetsManager() {
                                     <div className="px-3 md:p-4 pt-1 md:pt-1 pb-3 md:pb-4">
                                         {(asset.type === 'banner' || asset.type === 'banner_widget') && asset.imageUrl && (
                                             <div className="aspect-video relative rounded-lg overflow-hidden bg-black/50 border border-white/5 group-hover:border-white/10 transition-colors">
-                                                <Image
+                                                <img
                                                     src={asset.imageUrl}
                                                     alt={asset.title}
-                                                    fill
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    unoptimized
+                                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />
                                             </div>
                                         )}

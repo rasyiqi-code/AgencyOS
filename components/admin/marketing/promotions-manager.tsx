@@ -24,7 +24,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { getAdminPromotionsFn as getAdminPromotions, deletePromotionFn as deletePromotionAction, updatePromotionFn as updatePromotionAction, createPromotionFn as createPromotionAction } from "@/src/server/marketing";
 
@@ -165,7 +164,7 @@ export function PromotionsManager() {
                                 <TableRow key={promo.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
                                     <TableCell>
                                         <div className="relative h-12 w-20 overflow-hidden rounded-lg border border-white/10 bg-zinc-800">
-                                            <Image 
+                                            <img 
                                                 src={promo.imageUrl} 
                                                 alt={promo.title} 
                                                 fill 

@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 

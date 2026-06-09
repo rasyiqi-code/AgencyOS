@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Settings2, Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -171,9 +170,9 @@ export const columns: ColumnDef<ExtendedProject>[] = [
         cell: ({ row }) => (
             <div className="flex justify-center">
                 <Button variant="ghost" size="icon" asChild className="h-8 w-8 hover:text-white hover:bg-white/10 text-zinc-500" title="Manage Project">
-                    <Link href={`/admin/pm/${row.original.id}`}>
+                    <a href={`/admin/pm/${row.original.id}`}>
                         <Settings2 className="w-4 h-4" />
-                    </Link>
+                    </a>
                 </Button>
             </div>
         ),

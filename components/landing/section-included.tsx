@@ -1,7 +1,7 @@
 'use client';
 
 import { Smartphone, Search, ShieldCheck, Layout, FileText, RefreshCcw } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 
 export function SectionIncluded() {

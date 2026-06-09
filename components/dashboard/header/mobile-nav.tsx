@@ -10,8 +10,6 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/navigation";
-import Link from "next/link";
-import Image from "next/image";
 
 import { UserButton } from "@hexclave/next";
 import { useSafeUser } from "@/hooks/use-safe-user";
@@ -37,7 +35,7 @@ export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavPr
             <SheetContent side="left" className="w-[280px] bg-zinc-950 border-white/10 p-0 flex flex-col">
                 <SheetHeader className="p-6 border-b border-white/5 flex flex-row items-center justify-between gap-2 space-y-0">
                     <SheetTitle>
-                        <Link href="/" className="flex items-center gap-2 font-semibold">
+                        <a href="/" className="flex items-center gap-2 font-semibold">
                             {logoUrl ? (
                                 <div className="relative h-8 w-8 overflow-hidden rounded-full">
                                     <Image
@@ -55,7 +53,7 @@ export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavPr
                             <span className="text-lg tracking-tight text-white truncate max-w-[140px]">
                                 {agencyName}
                             </span>
-                        </Link>
+                        </a>
                     </SheetTitle>
                     <UserButton mockUser={mockUserFallback} />
                 </SheetHeader>

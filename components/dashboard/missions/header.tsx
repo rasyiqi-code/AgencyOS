@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Github, Globe } from "lucide-react";
-import Link from "next/link";
 import type { ExtendedProject } from "@/lib/shared/types";
 
 interface ProjectHeaderProps {
@@ -45,18 +44,18 @@ export function ProjectHeader({ project, children }: ProjectHeaderProps) {
 
                 <div className="flex items-center gap-2">
                     {project.repoUrl && (
-                        <Link href={project.repoUrl} target="_blank">
+                        <a href={project.repoUrl} target="_blank">
                             <Button variant="outline" size="icon" aria-label="View repository" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
                                 <Github className="w-3 h-3" />
                             </Button>
-                        </Link>
+                        </a>
                     )}
                     {project.deployUrl && (
-                        <Link href={project.deployUrl} target="_blank">
+                        <a href={project.deployUrl} target="_blank">
                             <Button variant="outline" size="icon" aria-label="View deployment" className="h-7 w-7 bg-zinc-900 border-white/10 text-zinc-400 hover:text-white">
                                 <Globe className="w-3 h-3" />
                             </Button>
-                        </Link>
+                        </a>
                     )}
                     {children}
                 </div>

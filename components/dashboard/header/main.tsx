@@ -3,8 +3,8 @@
 import { UserButton } from "@hexclave/next";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 import { ProjectSearch } from "@/components/admin/pm/project-search";
 import { ProjectFilter } from "@/components/admin/pm/project-filter";

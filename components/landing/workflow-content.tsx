@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { MessageSquare, Calculator, MousePointerClick } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function WorkflowContent() {
     const t = useTranslations("Workflow");

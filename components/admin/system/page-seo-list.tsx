@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useNavigate } from "@tanstack/react-router";
 
 interface PageSeo {
     id: string;
@@ -256,11 +255,11 @@ export function PageSeoList({ initialPages }: Props) {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Link href={page.path} target="_blank">
+                                        <a href={page.path} target="_blank">
                                             <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/10" aria-label="Open page">
                                                 <ExternalLink className="w-4 h-4" />
                                             </Button>
-                                        </Link>
+                                        </a>
                                         <Button onClick={() => handleEdit(page)} size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-blue-400 hover:bg-blue-950/20" aria-label="Edit SEO">
                                             <Pencil className="w-4 h-4" />
                                         </Button>

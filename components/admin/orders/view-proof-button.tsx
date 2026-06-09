@@ -3,7 +3,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FileText, Download } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/shared/utils";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, CheckCircle, Loader2, AlertTriangle, Tag, Check, XCircle } from "lucide-react";
@@ -10,7 +10,7 @@ import { PriceDisplay, useCurrency } from "@/components/providers/currency-provi
 import { Input } from "@/components/ui/input";
 import { validateCouponAction } from "@/app/actions/coupons";
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context, user, orderId, selectedAddons = [] }: {
     estimate: ExtendedEstimate,

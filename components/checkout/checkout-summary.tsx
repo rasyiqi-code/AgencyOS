@@ -22,7 +22,7 @@ const IconMap: Record<string, React.ElementType> = {
 };
 
 
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "@/lib/i18n/hooks";
 
 interface CheckoutSummaryProps {
     estimate: ExtendedEstimate;

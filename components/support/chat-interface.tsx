@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // import { sendMessage } from "@/app/actions/support";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 interface Message {
     id: string;

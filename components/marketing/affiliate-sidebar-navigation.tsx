@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 import { LayoutDashboard, Wallet, LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
 
@@ -32,7 +31,7 @@ export function AffiliateSidebarNavigation() {
             {items.map((item, _index) => {
                 const isActive = pathname === item.href;
                 return (
-                    <Link
+                    <a
                         key={item.href}
                         href={item.href}
                         className={cn(
@@ -42,7 +41,7 @@ export function AffiliateSidebarNavigation() {
                     >
                         <item.icon className="h-4 w-4" />
                         {item.title}
-                    </Link>
+                    </a>
                 );
             })}
         </nav>

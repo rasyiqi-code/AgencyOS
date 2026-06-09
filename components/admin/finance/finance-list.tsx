@@ -31,7 +31,7 @@ import { UnpaidButton } from "@/components/admin/orders/unpaid-button";
 import { ViewProofButton } from "@/components/admin/orders/view-proof-button";
 import { CancelOrderButton } from "@/components/admin/orders/cancel-button";
 import { DeleteOrderButton } from "@/components/admin/orders/delete-button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 import { formatPaymentMethod } from "@/lib/shared/utils";
 
 interface FinanceListProps {

@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus } from "lucide-react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "@tanstack/react-router"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export function AddChangelogDialog() {

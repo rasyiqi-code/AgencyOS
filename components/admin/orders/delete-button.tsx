@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { deleteDigitalOrderFn } from "@/src/server/digital-orders";
+import { deleteQuoteFn, deleteOrderFn } from "@/src/server/finance";
 
 export function DeleteOrderButton({ id, type = "service" }: { id: string, type?: "service" | "digital" }) {
     const [isPending, startTransition] = useTransition();
@@ -16,20 +18,18 @@ export function DeleteOrderButton({ id, type = "service" }: { id: string, type?:
         startTransition(async () => {
             try {
                 if (type === "digital") {
-                    // We'll import the action dynamically or pass it as a prop?
-                    // Better to use fetch for consistency if possible, or just a server action.
-                    const { deleteDigitalOrder } = await import("@/app/actions/digital-orders");
-                    const res = await deleteDigitalOrder(id);
-                    if (!res.success) throw new Error(res.error || "Failed");
+                    await deleteDigitalOrderFn({ data: id });
                 } else {
-                    const { deleteQuote, deleteOrder } = await import("@/app/actions/quotes");
                     const isOrderId = id.startsWith('ORDER-');
-                    const res = isOrderId ? await deleteOrder(id) : await deleteQuote(id);
-                    if (res.error) throw new Error(res.error);
+                    if (isOrderId) {
+                        await deleteOrderFn({ data: id });
+                    } else {
+                        await deleteQuoteFn({ data: { estimateId: id } });
+                    }
                 }
                 
                 toast.success("Transaction deleted permanently.");
-                router.refresh();
+                router.invalidate();
             } catch (error) {
                 toast.error("Failed to delete transaction.");
                 console.error(error);

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RecentEstimates } from "@/components/quote/recent-estimates";
 import { Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/i18n/hooks";
 
 export function QuoteForm({ isAdmin }: { isAdmin?: boolean }) {
     const router = useRouter();
