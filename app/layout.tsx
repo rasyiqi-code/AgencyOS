@@ -105,6 +105,8 @@ const MarketingPopup = nextDynamic(() => import("@/components/public/marketing-p
 const PushNotificationBanner = nextDynamic(() => import("@/components/public/push-notification-banner").then(mod => mod.PushNotificationBanner));
 const InstallPrompt = nextDynamic(() => import("@/components/pwa/install-prompt").then(mod => mod.InstallPrompt));
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{
