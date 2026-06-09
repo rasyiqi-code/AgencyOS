@@ -29,7 +29,8 @@ const nextConfig: NextConfig = {
     ],
   },
   images: {
-    formats: ['image/avif', 'image/webp'],
+    // OPTIMASI CPU: Hanya gunakan format WebP dan nonaktifkan AVIF guna menghemat CPU time Vercel Functions secara drastis
+    formats: ['image/webp'],
     minimumCacheTTL: 86400,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
