@@ -4,7 +4,7 @@ import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign, Loader2 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { useNavigate, useLocation, useSearch } from "@tanstack/react-router";
+import { useNavigate, useLocation, useSearch, useRouter } from "@tanstack/react-router";
 
 export function DashboardCurrencySwitcher() {
     const { currency, setCurrency } = useCurrency();
@@ -48,8 +48,8 @@ export function DashboardCurrencySwitcher() {
 
 export function DashboardLanguageSwitcher() {
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const { pathname } = useLocation();
+    const search = useSearch({ strict: false });
     const [mounted, setMounted] = useState(false);
     const [isPending, startTransition] = useTransition();
 
@@ -73,15 +73,13 @@ export function DashboardLanguageSwitcher() {
         }
 
         const newPath = segments.join('/') || '/';
-        const queryString = searchParams?.toString();
-        const newPathWithParams = queryString ? `${newPath}?${queryString}` : newPath;
 
         // Optimistic UI & Transition
-        startTransition(() => {
+        startTransition(async () => {
             // Set cookie for client-side persistence redundancy
             document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-            router.push(newPathWithParams);
-            router.refresh();
+            await router.navigate({ to: newPath, search: search as any });
+            router.invalidate();
         });
     };
 
