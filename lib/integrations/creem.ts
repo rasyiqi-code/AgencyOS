@@ -70,6 +70,7 @@ interface ExtendedCreemSDK extends CreemSDK {
 // Singleton instance (lazy-loaded) dengan pelacakan hash konfigurasi untuk auto-reset otomatis
 let creemInstance: CreemSDK | null = null;
 let creemConfigHash: string | null = null;
+let extendedCreemInstance: ExtendedCreemSDK | null = null;
 
 /**
  * Get Creem SDK instance (lazy-loaded dengan konfigurasi ter-update otomatis dari database)
@@ -107,6 +108,7 @@ export async function getCreem(): Promise<CreemSDK> {
  */
 export function resetCreemInstance() {
     creemInstance = null;
+    extendedCreemInstance = null;
     console.log("[Creem] Instance reset");
 }
 
@@ -146,12 +148,17 @@ async function manualRequest(endpoint: string, method: string, body?: Record<str
 }
 
 /**
- * Enhanced Creem SDK with monkey-patched methods
+ * Enhanced Creem SDK with monkey-patched methods (memoized/di-cache)
  */
 export async function creem(): Promise<ExtendedCreemSDK> {
     const sdk = await getCreem();
 
-    return {
+    // Jika instance extended sudah di-cache dan SDK dasar tidak berubah, gunakan cache
+    if (extendedCreemInstance && creemInstance === sdk) {
+        return extendedCreemInstance;
+    }
+
+    extendedCreemInstance = {
         ...sdk,
         products: {
             ...sdk.products,
@@ -202,4 +209,6 @@ export async function creem(): Promise<ExtendedCreemSDK> {
             }
         }
     };
+
+    return extendedCreemInstance;
 }

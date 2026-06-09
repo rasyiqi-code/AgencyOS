@@ -71,8 +71,15 @@ export async function broadcastPushNotification(
         
     await Promise.all(workers);
 
-    const successful = results.filter((r) => r.success).length;
-    const expired = results.filter((r) => r.expired).length;
+    // Gabungkan filter pencarian sukses & expired dalam satu kali iterasi reduce untuk optimasi performa
+    const { successful, expired } = results.reduce(
+        (acc, r) => {
+            if (r.success) acc.successful++;
+            else if (r.expired) acc.expired++;
+            return acc;
+        },
+        { successful: 0, expired: 0 }
+    );
     const failed = results.length - successful - expired;
 
     return {
