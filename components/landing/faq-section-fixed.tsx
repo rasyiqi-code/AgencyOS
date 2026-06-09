@@ -155,7 +155,8 @@ export function FAQSection() {
                                     "name": t(key),
                                     "acceptedAnswer": {
                                         "@type": "Answer",
-                                        "text": (t.raw("a" + i) as string).replace(/<\/?[^>]+(>|$)/g, "")
+                                        // Mengamankan pemanggilan agar tidak TypeError jika ada kunci yang belum diterjemahkan
+                                        "text": String(t.raw("a" + i) || "").replace(/<\/?[^>]+(>|$)/g, "")
                                     }
                                 };
                             })

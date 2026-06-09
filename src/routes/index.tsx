@@ -1,4 +1,5 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { Suspense } from 'react'
 import { SiteHeader } from '@/components/landing/site-header'
 import { LandingHero } from '@/components/landing/landing-hero'
 import { FAQSection } from '@/components/landing/faq-section-fixed'
@@ -75,32 +76,56 @@ function Home() {
       <SiteHeader />
       <LandingHero agencyName={agencyName} />
 
-      <ScrollAnimationWrapper>
-        <SectionStats />
-      </ScrollAnimationWrapper>
+      {/* Membungkus dengan Suspense agar kegagalan render di satu komponen tidak merusak seluruh halaman */}
+      <Suspense fallback={null}>
+        <ScrollAnimationWrapper>
+          <SectionStats />
+        </ScrollAnimationWrapper>
+      </Suspense>
 
-      <ScrollAnimationWrapper>
-        <ExpertProfile />
-      </ScrollAnimationWrapper>
+      <Suspense fallback={null}>
+        <ScrollAnimationWrapper>
+          <ExpertProfile />
+        </ScrollAnimationWrapper>
+      </Suspense>
 
-      <ScrollAnimationWrapper delay={0.1}>
-        <SocialProof />
-      </ScrollAnimationWrapper>
+      <Suspense fallback={null}>
+        <ScrollAnimationWrapper delay={0.1}>
+          <SocialProof />
+        </ScrollAnimationWrapper>
+      </Suspense>
 
-      <Comparison />
-      <SectionSolutions />
-      <FinancialLogic />
-      <Workflow />
+      <Suspense fallback={null}>
+        <Comparison />
+      </Suspense>
 
-      <ScrollAnimationWrapper>
-        <Testimonials />
-      </ScrollAnimationWrapper>
+      <Suspense fallback={null}>
+        <SectionSolutions />
+      </Suspense>
 
-      <ScrollAnimationWrapper>
-        <SectionGuarantee />
-      </ScrollAnimationWrapper>
+      <Suspense fallback={null}>
+        <FinancialLogic />
+      </Suspense>
 
-      <FAQSection />
+      <Suspense fallback={null}>
+        <Workflow />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <ScrollAnimationWrapper>
+          <Testimonials />
+        </ScrollAnimationWrapper>
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <ScrollAnimationWrapper>
+          <SectionGuarantee />
+        </ScrollAnimationWrapper>
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <FAQSection />
+      </Suspense>
       <SiteFooter />
     </main>
   )
