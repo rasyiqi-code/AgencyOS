@@ -81,7 +81,10 @@ export function MarketingPopup() {
     }, [pathname, locale]);
 
     useEffect(() => {
-        checkPopup();
+        const load = async () => {
+            await checkPopup();
+        };
+        load();
     }, [checkPopup]);
 
     const handleDismiss = () => {

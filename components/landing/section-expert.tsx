@@ -1,12 +1,11 @@
-import { getTranslations } from "next-intl/server";
-import Image from "next/image";
-import { getSystemSettings } from "@/lib/server/settings";
+'use client';
 
-export async function ExpertProfile() {
-    const t = await getTranslations("Expert");
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+
+export function ExpertProfile() {
+    const t = useTranslations("Expert");
+    const agencyName = "Agency OS";
 
     return (
         <section className="py-16 md:py-24 bg-black overflow-hidden">

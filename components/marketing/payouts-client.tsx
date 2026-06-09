@@ -54,7 +54,10 @@ export function PayoutsClient({ initialBalance, totalEarnings, paidEarnings }: P
     }, []);
 
     useEffect(() => {
-        fetchRequests();
+        const load = async () => {
+            await fetchRequests();
+        };
+        load();
     }, [fetchRequests]);
 
     const handleRequestPayout = async () => {

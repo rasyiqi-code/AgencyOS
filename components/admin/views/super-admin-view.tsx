@@ -1,72 +1,20 @@
-import { prisma } from "@/lib/config/db";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Layers, Users, Zap, ArrowUpRight, ArrowRight, Package } from "lucide-react";
 
 interface SuperAdminDashboardViewProps {
     mode?: string;
+    stats: {
+        revenue: number;
+        activeCount: number;
+        pendingCount: number;
+        totalClients: number;
+    };
 }
 
-export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminDashboardViewProps) {
+export function SuperAdminDashboardView({ mode = 'services', stats }: SuperAdminDashboardViewProps) {
     const isDigital = mode === 'digital';
-
-    let stats = {
-        revenue: 0,
-        activeCount: 0,
-        pendingCount: 0,
-        totalClients: 0
-    };
-
-    if (isDigital) {
-        // Ambil data untuk Produk Digital
-        const [revenueResult, activeCount, pendingCount, totalClientsResult] = await Promise.all([
-            prisma.digitalOrder.aggregate({
-                where: { status: 'PAID' },
-                _sum: { amount: true }
-            }),
-            prisma.product.count({
-                where: { isActive: true }
-            }),
-            prisma.digitalOrder.count({
-                where: { status: 'PENDING' }
-            }),
-            prisma.digitalOrder.groupBy({
-                by: ['userEmail'],
-            })
-        ]);
-
-        stats = {
-            revenue: revenueResult._sum.amount || 0,
-            activeCount,
-            pendingCount,
-            totalClients: totalClientsResult.length
-        };
-    } else {
-        // Ambil data Jasa Agensi (Services)
-        const [revenueResult, activeCount, pendingCount, totalClientsResult] = await Promise.all([
-            prisma.estimate.aggregate({
-                where: { status: 'paid' },
-                _sum: { totalCost: true }
-            }),
-            prisma.project.count({
-                where: { status: { in: ['queue', 'dev'] } }
-            }),
-            prisma.estimate.count({
-                where: { status: 'pending_payment' }
-            }),
-            prisma.project.groupBy({
-                by: ['userId'],
-            })
-        ]);
-
-        stats = {
-            revenue: revenueResult._sum.totalCost || 0,
-            activeCount,
-            pendingCount,
-            totalClients: totalClientsResult.length
-        };
-    }
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
@@ -149,7 +97,7 @@ export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminD
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
                 {isDigital ? (
                     <>
-                        <Link href="/admin/products" className="group">
+                        <Link to="/admin/products" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Products</h3>
@@ -159,7 +107,7 @@ export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminD
                             </div>
                         </Link>
 
-                        <Link href="/admin/digital-sales" className="group">
+                        <Link to="/admin/digital-sales" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Digital Sales</h3>
@@ -171,7 +119,7 @@ export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminD
                     </>
                 ) : (
                     <>
-                        <Link href="/admin/pm/projects" className="group">
+                        <Link to="/admin/pm/projects" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Projects</h3>
@@ -181,7 +129,7 @@ export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminD
                             </div>
                         </Link>
 
-                        <Link href="/admin/finance/orders" className="group">
+                        <Link to="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Finance & Orders</h3>
@@ -193,7 +141,7 @@ export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminD
                     </>
                 )}
 
-                <Link href="/admin/system/settings" className="group">
+                <Link to="/admin/system/settings" className="group">
                     <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-purple-400 transition-colors">System Settings</h3>

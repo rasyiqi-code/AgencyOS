@@ -127,13 +127,14 @@ export interface ExtendedEstimate {
         description: string;
         price: number;
         currency?: string | null;
-        features: unknown;
-        features_id?: unknown;
+        // Menggunakan any agar serializable oleh TanStack Start
+        features: any;
+        features_id?: any;
         image: string | null;
         interval: string;
         priceType: string;
-        addons?: unknown;
-        addons_id?: unknown;
+        addons?: any;
+        addons_id?: any;
     } | null;
     project?: {
         id: string;
@@ -162,12 +163,13 @@ export interface ExtendedProject {
         description: string;
         price: number;
         currency?: string | null;
-        features: unknown;
-        features_id?: unknown;
+        // Menggunakan any agar serializable oleh TanStack Start
+        features: any;
+        features_id?: any;
         image: string | null;
         interval: string;
-        addons?: unknown;
-        addons_id?: unknown;
+        addons?: any;
+        addons_id?: any;
     } | null;
     briefs: ProjectBrief[];
     feedback: FeedbackItem[];

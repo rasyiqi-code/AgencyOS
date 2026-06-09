@@ -1,5 +1,5 @@
 import { HexclaveServerApp } from "@hexclave/next";
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from "../cache";
 
 export const hexclaveServerApp = new HexclaveServerApp({
     tokenStore: "nextjs-cookie",

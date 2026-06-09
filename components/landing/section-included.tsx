@@ -1,14 +1,12 @@
+'use client';
+
 import { Smartphone, Search, ShieldCheck, Layout, FileText, RefreshCcw } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
-import { getSystemSettings } from "@/lib/server/settings";
 
-
-export async function SectionIncluded() {
-    const t = await getTranslations("Included");
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+export function SectionIncluded() {
+    const t = useTranslations("Included");
+    const agencyName = "Agency OS";
 
     const features = [
         { icon: Smartphone, title: t("f1"), desc: t("f1Desc") },

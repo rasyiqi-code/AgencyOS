@@ -1,8 +1,10 @@
-import { ShieldCheck } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+'use client';
 
-export async function SectionGuarantee() {
-    const t = await getTranslations("Guarantee");
+import { ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+export function SectionGuarantee() {
+    const t = useTranslations("Guarantee");
 
     return (
         <section className="py-20 sm:py-32 bg-black relative overflow-hidden">

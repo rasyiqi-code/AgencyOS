@@ -1,14 +1,13 @@
-import { Check, X, Info, Building2, Rocket } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+'use client';
 
-import { getSystemSettings } from "@/lib/server/settings";
+import { Check, X, Info, Building2, Rocket } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { ScrollHint } from "./scroll-hint";
 
-export async function FinancialLogic() {
-    const t = await getTranslations("Financial");
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
+export function FinancialLogic() {
+    const t = useTranslations("Financial");
+    const agencyName = "Agency OS";
 
     return (
         <section className="py-24 bg-brand-yellow relative overflow-hidden">

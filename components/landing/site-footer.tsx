@@ -1,34 +1,46 @@
-import Link from "next/link";
-import { Check } from "lucide-react";
-import { getTranslations, getLocale } from "next-intl/server";
-import { getAffiliateName } from "@/lib/server/affiliates";
-import { getSystemSettings } from "@/lib/server/settings";
+'use client';
 
-import { cookies } from "next/headers";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Check } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 
-export async function SiteFooter() {
-    const t = await getTranslations("Footer");
-    const locale = await getLocale();
+import { getSystemSettings, getAffiliateName } from "@/src/server/settings";
 
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"]);
-    const agencyName = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_NAME")?.value || "Agency OS";
-    const companyName = settings.find((s: { key: string; value: string }) => s.key === "COMPANY_NAME")?.value || "AgencyOS";
-    const logoUrl = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO")?.value;
-    const logoDisplayMode = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both";
+export function SiteFooter() {
+    const [settings, setSettings] = useState<{ agencyName: string; companyName: string; logoUrl?: string; logoDisplayMode: string }>({
+        agencyName: "Agency OS",
+        companyName: "AgencyOS",
+        logoUrl: undefined,
+        logoDisplayMode: "both",
+    });
+    const [affiliateName, setAffiliateName] = useState<string | null>(null);
 
+    useEffect(() => {
+        getSystemSettings(["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"]).then(
+            (s: { key: string; value: string }[]) => {
+                setSettings({
+                    agencyName: s.find(x => x.key === "AGENCY_NAME")?.value || "Agency OS",
+                    companyName: s.find(x => x.key === "COMPANY_NAME")?.value || "AgencyOS",
+                    logoUrl: s.find(x => x.key === "AGENCY_LOGO")?.value,
+                    logoDisplayMode: s.find(x => x.key === "AGENCY_LOGO_DISPLAY")?.value || "both",
+                });
+            }
+        );
+        const match = document.cookie.match(/(?:^| )agencyos_affiliate_id=([^;]+)/);
+        const affiliateCode = match?.[1];
+        if (affiliateCode) {
+            getAffiliateName(affiliateCode).then(setAffiliateName);
+        }
+    }, []);
+
+    const t = useTranslations("Footer");
+    const locale = useLocale();
+
+    const { agencyName, companyName, logoUrl, logoDisplayMode } = settings;
     const showLogo = logoDisplayMode === "both" || logoDisplayMode === "logo";
     const showText = logoDisplayMode === "both" || logoDisplayMode === "text";
-
-    // Check for affiliate cookie
-    const cookieStore = await cookies();
-    const affiliateCode = cookieStore.get("agencyos_affiliate_id")?.value;
-    let affiliateName = null;
-
-    if (affiliateCode) {
-        affiliateName = await getAffiliateName(affiliateCode);
-    }
 
     return (
         <footer className="border-t border-white/5 bg-black py-8 md:py-6 text-zinc-400">

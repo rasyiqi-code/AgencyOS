@@ -1,55 +1,54 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Zap, ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
-import Link from "next/link";
-import { prisma } from "@/lib/config/db";
-import { getTranslations } from "next-intl/server";
-import { paymentService } from "@/lib/server/payment-service";
+import { Link } from "@tanstack/react-router";
+
+// Kamus terjemahan lokal untuk menghindari ketergantungan pada next-intl di bundel client
+const translationDict = {
+  id: {
+    title: "Finance Command",
+    revenue: "Total Pendapatan",
+    lifetime: "Pendapatan Seumur Hidup",
+    pending: "Pesanan Tertunda",
+    needsAction: "Butuh Tindakan Invoice",
+    manageOrders: "Kelola Invoice & Pesanan",
+    manageOrdersDesc: "Akses penuh ke riwayat pesanan layanan dan verifikasi pembayaran.",
+    digitalOrders: "Pesanan Produk Digital",
+    digitalOrdersDesc: "Pantau transaksi untuk plugin, template, dan unduhan digital.",
+    quotes: "Penawaran Harga (Quotes)",
+    quotesDesc: "Review dan negosiasi penawaran harga dari calon klien atas layanan Anda."
+  },
+  en: {
+    title: "Finance Command",
+    revenue: "Total Revenue",
+    lifetime: "Lifetime Revenue",
+    pending: "Pending Orders",
+    needsAction: "Needs Invoice Action",
+    manageOrders: "Manage Invoices & Orders",
+    manageOrdersDesc: "Full access to service order history and payment verification.",
+    digitalOrders: "Digital Product Orders",
+    digitalOrdersDesc: "Monitor transactions for plugins, templates, and digital downloads.",
+    quotes: "Quotes (Price Offers)",
+    quotesDesc: "Review and negotiate price offers from prospective clients."
+  }
+};
 
 interface BillingDashboardViewProps {
     mode?: string;
+    locale?: string;
+    stats: {
+        revenue: number;
+        pendingOrders: number;
+        revenueIDR: number;
+    };
 }
 
-export async function BillingDashboardView({ mode = 'services' }: BillingDashboardViewProps) {
-    const t = await getTranslations("Admin.Finance.Dashboard");
-    const isDigital = mode === 'digital';
+export function BillingDashboardView({ mode = 'services', locale = 'en', stats }: BillingDashboardViewProps) {
+    const isId = locale.startsWith('id');
+    const t = (key: keyof typeof translationDict.en) => {
+        return isId ? translationDict.id[key] : translationDict.en[key];
+    };
     
-    // Fetch Finance Specific Stats berdasarkan mode
-    const stats = await prisma.$transaction(async (tx) => {
-        if (isDigital) {
-            // Digital Revenue
-            const digitalRevenue = await tx.digitalOrder.aggregate({
-                where: { status: 'PAID' },
-                _sum: { amount: true }
-            });
-
-            const pendingDigital = await tx.digitalOrder.count({
-                where: { status: 'PENDING' }
-            });
-
-            return { 
-                revenue: digitalRevenue._sum.amount || 0, 
-                pendingOrders: pendingDigital 
-            };
-        } else {
-            // Service Revenue
-            const serviceRevenue = await tx.estimate.aggregate({
-                where: { status: 'paid' },
-                _sum: { totalCost: true }
-            });
-
-            const pendingOrders = await tx.estimate.count({
-                where: { status: 'pending_payment' }
-            });
-
-            return { 
-                revenue: serviceRevenue._sum.totalCost || 0, 
-                pendingOrders
-            };
-        }
-    });
-
-    const { rate } = await paymentService.convertToIDR(1);
-    const revenueIDR = stats.revenue * rate;
+    const isDigital = mode === 'digital';
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
@@ -72,7 +71,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                                 {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(stats.revenue)}
                             </div>
                             <div className="text-sm font-bold text-zinc-500 mt-1">
-                                ≈ {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(revenueIDR)}
+                                ≈ {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(stats.revenueIDR)}
                             </div>
                         </div>
                         <p className="text-[10px] text-emerald-500 mt-3 flex items-center font-bold uppercase tracking-widest">
@@ -100,7 +99,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
             <div className="grid gap-4 mt-6">
                 {isDigital ? (
                     <>
-                        <Link href="/admin/finance/digital-orders" className="group">
+                        <Link to="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-emerald-500 transition-colors">
@@ -112,7 +111,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                             </div>
                         </Link>
 
-                        <Link href="/admin/products" className="group">
+                        <Link to="/admin/products" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-blue-500 transition-colors">
@@ -124,7 +123,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                             </div>
                         </Link>
 
-                        <Link href="/admin/licenses" className="group">
+                        <Link to="/admin/licenses" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-purple-500 transition-colors">
@@ -138,7 +137,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                     </>
                 ) : (
                     <>
-                        <Link href="/admin/finance/orders" className="group">
+                        <Link to="/admin/finance/orders" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-emerald-400 transition-colors">{t("manageOrders")}</h3>
@@ -148,7 +147,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                             </div>
                         </Link>
 
-                        <Link href="/admin/finance/quotes" className="group">
+                        <Link to="/admin/finance/quotes" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-brand-yellow transition-colors">{t("quotes")}</h3>
@@ -158,7 +157,7 @@ export async function BillingDashboardView({ mode = 'services' }: BillingDashboa
                             </div>
                         </Link>
 
-                        <Link href="/admin/finance/subscriptions" className="group">
+                        <Link to="/admin/finance/subscriptions" className="group">
                             <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
                                 <div className="flex items-center justify-between mb-2">
                                     <h3 className="font-bold text-white group-hover:text-purple-400 transition-colors">

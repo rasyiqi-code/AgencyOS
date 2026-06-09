@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { calculateProjectQuote, type QuoteParams } from "@/lib/shared/pricing";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -28,12 +28,8 @@ export function QuoteCalculator() {
         }
     });
 
-    const [quote, setQuote] = useState(calculateProjectQuote(params));
+    const quote = calculateProjectQuote(params);
     const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        setQuote(calculateProjectQuote(params));
-    }, [params]);
 
     const handleFeatureToggle = (key: keyof typeof params.features) => {
         setParams(prev => ({
@@ -194,7 +190,7 @@ export function QuoteCalculator() {
                             const { id } = await response.json();
 
                             // 2. Redirect to Checkout
-                            window.location.href = `/checkout/${id}`;
+                            window.location.assign(`/checkout/${id}`);
 
                         } catch (error) {
                             console.error("Quote error:", error);

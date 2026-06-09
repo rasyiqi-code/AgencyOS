@@ -1,20 +1,23 @@
-import { getTranslations, getLocale } from "next-intl/server";
-import { prisma } from "@/lib/config/db";
+'use client';
+
+import { useState, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { getServices } from "@/src/server/services";
+
 import { ProductList } from "./product-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-export async function ProductCatalog() {
-    const t = await getTranslations("ProductCatalog");
-    const locale = await getLocale();
+export function ProductCatalog() {
+    const [services, setServices] = useState<any[]>([]);
 
-    // Fetch active services from DB
-    const services = await prisma.service.findMany({
-        where: { isActive: true },
-        take: 3,
-        orderBy: { price: 'asc' }
-    });
+    useEffect(() => {
+        getServices().then(setServices);
+    }, []);
+
+    const t = useTranslations("ProductCatalog");
+    const locale = useLocale();
 
     return (
         <section className="py-24 bg-black">

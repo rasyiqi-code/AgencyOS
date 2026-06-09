@@ -27,11 +27,16 @@ export function HeroContent({ agencyName }: HeroContentProps) {
     const repeatCount = (isMobile || shouldReduceMotion) ? 0 : 2;
 
     React.useEffect(() => {
-        setMounted(true);
-        setIsMobile(window.innerWidth < 1024);
+        const timer = setTimeout(() => {
+            setMounted(true);
+            setIsMobile(window.innerWidth < 1024);
+        }, 0);
         const handleResize = () => setIsMobile(window.innerWidth < 1024);
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
 
@@ -302,7 +307,10 @@ function BadgeWrapper({ children, delay, duration = 8, className, isMobile }: {
     // Gunakan deteksi prefensi motion untuk serverless/client-side match
     const [reduced, setReduced] = React.useState(false);
     React.useEffect(() => {
-        setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        const timer = setTimeout(() => {
+            setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     return (

@@ -31,10 +31,12 @@ export function ProjectsDataTable<TData, TValue>({
     const [isLoading, setIsLoading] = React.useState(false);
 
     // Sync with initial data when server props change (filters, etc.)
-    React.useEffect(() => {
+    const [prevInitialData, setPrevInitialData] = React.useState(initialData);
+    if (initialData !== prevInitialData) {
+        setPrevInitialData(initialData);
         setData(initialData);
         setPage(1);
-    }, [initialData]);
+    }
 
     const hasMore = data.length < totalCount;
 

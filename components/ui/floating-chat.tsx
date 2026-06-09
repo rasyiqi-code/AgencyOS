@@ -45,8 +45,11 @@ export function FloatingChatWidget() {
     // Local state for expanded/collapsed only, visibility is global
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // Random CS Name Logic
-    const [csName, setCsName] = useState("Sarah");
+    // Menginisialisasi nama CS secara acak pada render pertama
+    const [csName] = useState(() => {
+        const names = ["Sarah", "Clara", "Amanda", "Bella", "Dian", "Maya", "Siska", "Lia", "Nabila"];
+        return names[Math.floor(Math.random() * names.length)];
+    });
     
     const pathname = usePathname();
 
@@ -58,28 +61,13 @@ export function FloatingChatWidget() {
 
     // AI Chat State
     const [input, setInput] = useState("");
-    const [messages, setMessages] = useState<Message[]>([
+    const [messages, setMessages] = useState<Message[]>(() => [
         {
             id: "welcome-1",
             role: "assistant",
-            content: "Hi there! How can I help you today?",
+            content: `Hi there! I'm ${csName}. How can I help you today?`,
         },
     ]);
-
-    // Initialize CS Name and Welcome Message
-    useEffect(() => {
-        const names = ["Sarah", "Clara", "Amanda", "Bella", "Dian", "Maya", "Siska", "Lia", "Nabila"];
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        setCsName(randomName);
-        
-        setMessages([
-            {
-                id: "welcome-1",
-                role: "assistant",
-                content: `Hi there! I'm ${randomName}. How can I help you today?`,
-            }
-        ]);
-    }, []);
 
     const [isLoading, setIsLoading] = useState(false);
     const [aiAvailable, setAiAvailable] = useState(true);

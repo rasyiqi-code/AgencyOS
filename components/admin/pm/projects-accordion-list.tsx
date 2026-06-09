@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, Settings2, Loader2, ChevronDown, Calendar, User, FileText } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
 import { type ExtendedProject } from "@/lib/shared/types";
 
 // ============================================
@@ -133,10 +132,10 @@ function ProjectAccordionItem({ project }: { project: ExtendedProject }) {
                         {/* Action button */}
                         <div className="flex justify-start lg:justify-end shrink-0 pt-2 lg:pt-0">
                             <Button variant="outline" size="sm" asChild className="h-8 px-4 text-xs border-zinc-700 hover:bg-zinc-800 hover:text-white text-zinc-400 gap-2 w-full lg:w-auto">
-                                <Link href={`/admin/pm/${project.id}`}>
+                                <a href={`/admin/pm/projects/${project.id}`}>
                                     <Settings2 className="w-3.5 h-3.5" />
                                     Manage Project
-                                </Link>
+                                </a>
                             </Button>
                         </div>
                     </div>
@@ -212,10 +211,12 @@ export function ProjectAccordionList({
     const [isLoading, setIsLoading] = React.useState(false);
 
     // Sync with initial data when server props change (filters, etc.)
-    React.useEffect(() => {
+    const [prevInitialData, setPrevInitialData] = React.useState(initialData);
+    if (initialData !== prevInitialData) {
+        setPrevInitialData(initialData);
         setData(initialData);
         setPage(1);
-    }, [initialData]);
+    }
 
     const hasMore = data.length < totalCount;
 

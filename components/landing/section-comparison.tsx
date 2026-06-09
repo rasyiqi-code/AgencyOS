@@ -1,14 +1,11 @@
+'use client';
+
 import { Check, X } from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import { getSystemSettings } from "@/lib/server/settings";
+import { useTranslations } from "next-intl";
 
-export async function Comparison() {
-    const t = await getTranslations("Comparison");
-
-    // Fetch Agency Name
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+export function Comparison() {
+    const t = useTranslations("Comparison");
+    const agencyName = "Agency OS";
 
     return (
         <section className="py-16 bg-brand-yellow relative overflow-hidden">

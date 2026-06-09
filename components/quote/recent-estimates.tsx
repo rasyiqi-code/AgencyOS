@@ -51,7 +51,10 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
     };
 
     useEffect(() => {
-        fetchEstimates();
+        const load = async () => {
+            await fetchEstimates();
+        };
+        load();
     }, []);
 
     const handleDelete = async (id: string) => {

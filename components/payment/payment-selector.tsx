@@ -177,7 +177,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
         if (selectedMethod.id === 'cc') {
             try {
                 const data = await initiateCreemPayment(orderId);
-                window.location.href = data.checkout_url;
+                window.location.assign(data.checkout_url);
             } catch (error: unknown) {
                 toast.error(error instanceof Error ? error.message : "Payment initialization failed");
                 setLoading(false);

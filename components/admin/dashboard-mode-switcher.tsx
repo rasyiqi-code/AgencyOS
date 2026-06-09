@@ -1,22 +1,20 @@
-"use client";
-
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Briefcase, Cpu } from "lucide-react";
 
 /**
  * Komponen Switcher untuk memilih antara tampilan dashboard Jasa Agensi dan Produk Digital.
- * Memperbarui parameter URL (?mode=...) secara reaktif.
+ * Memperbarui parameter URL (?mode=...) secara reaktif menggunakan TanStack Router.
  */
 export function DashboardModeSwitcher() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const currentMode = searchParams.get("mode") || "services";
+    const navigate = useNavigate();
+    const search = useSearch({ strict: false }) as any;
+    const currentMode = search?.mode || "services";
 
     const handleModeChange = (val: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("mode", val);
-        router.push(`?${params.toString()}`);
+        navigate({
+            search: (prev: any) => ({ ...prev, mode: val }),
+        });
     };
 
     return (
@@ -34,3 +32,4 @@ export function DashboardModeSwitcher() {
         </Tabs>
     );
 }
+

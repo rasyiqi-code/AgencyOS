@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import {
     Dialog,
@@ -42,18 +42,19 @@ export function MediaLibraryPicker({ onSelect, prefix = "services/" }: { onSelec
         }
     }, [prefix]);
 
-    useEffect(() => {
-        if (isOpen) {
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
+        if (open) {
             fetchFiles();
         }
-    }, [isOpen, fetchFiles]);
+    };
 
     const filteredFiles = files.filter(file =>
         file.key.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
                 <button
                     type="button"

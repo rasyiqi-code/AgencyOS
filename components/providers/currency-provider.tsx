@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { setCookie } from 'cookies-next';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@tanstack/react-router';
 
 type Currency = 'USD' | 'IDR';
 
@@ -87,8 +87,8 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
         setCookie('NEXT_LOCALE', l);
         // Sync with LocalStorage (optional, but good for backup)
         localStorage.setItem('agency-os-locale', l);
-        // Refresh to re-render Server Components with new locale
-        router.refresh();
+        // Invalidate router to re-render with new locale
+        router.invalidate();
     };
 
     return (

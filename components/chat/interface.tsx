@@ -55,7 +55,10 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const messagesRef = useRef(messages);
-    messagesRef.current = messages;
+
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
 
     useEffect(() => {
         if (scrollRef.current) {

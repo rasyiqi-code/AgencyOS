@@ -1,19 +1,36 @@
+'use client';
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Check, User, LogIn, Rocket } from "lucide-react";
 
-import { getTranslations, getLocale } from "next-intl/server";
+import { useTranslations, useLocale } from "next-intl";
 
-import { getSystemSettings } from "@/lib/server/settings";
+import { getUser, getSystemSettings } from "@/src/server/settings";
 import { LogoImage } from "./logo-image";
 
-export async function SiteHeader() {
-    const user = await hexclaveServerApp.getUser();
-    const t = await getTranslations("Navigation");
-    const tc = await getTranslations("Common");
-    const locale = await getLocale();
+export function SiteHeader() {
+    const [user, setUser] = useState<unknown>(null);
+    const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
+    const [agencyName, setAgencyName] = useState("Agency OS");
+    const [displayMode, setDisplayMode] = useState("both");
+
+    useEffect(() => {
+        getUser().then(setUser);
+        getSystemSettings(["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"]).then(
+            (settings: { key: string; value: string }[]) => {
+                setLogoUrl(settings.find(s => s.key === "AGENCY_LOGO")?.value);
+                setAgencyName(settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS");
+                setDisplayMode(settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both");
+            }
+        );
+    }, []);
+
+    const t = useTranslations("Navigation");
+    const tc = useTranslations("Common");
+    const locale = useLocale();
 
     // Blog URL Logic
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
@@ -36,14 +53,6 @@ export async function SiteHeader() {
     }
 
     const blogUrl = `http://blog.${blogHostname}`;
-
-    // Fetch Logo
-    // Fetch Logo & Brand
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"]);
-    const logoUrl = settings.find(s => s.key === "AGENCY_LOGO")?.value;
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
-    const displayMode = settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both"; // 'both', 'logo', 'text'
 
 
     // Actually, "Text Only" usually implies just the text name.

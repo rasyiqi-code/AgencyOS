@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -44,18 +44,15 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
     const [isValidating, setIsValidating] = useState(false);
     const [couponStatus, setCouponStatus] = useState<"idle" | "valid" | "invalid">("idle");
     const couponTimer = useRef<ReturnType<typeof setTimeout>>(null);
-    const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
-    const router = useRouter();
-
-    // Read affiliate cookie on mount
-    useEffect(() => {
+    // Membaca cookie affiliate saat komponen dimuat (menghindari useEffect setState)
+    const [affiliateCode] = useState<string | null>(() => {
         if (typeof document !== 'undefined') {
             const match = document.cookie.match(new RegExp('(^| )agencyos_affiliate_id=([^;]+)'));
-            if (match) {
-                setAffiliateCode(match[2]);
-            }
+            return match ? match[2] : null;
         }
-    }, []);
+        return null;
+    });
+    const router = useRouter();
 
     const handleValidateCoupon = (code: string) => {
         setCouponInput(code);

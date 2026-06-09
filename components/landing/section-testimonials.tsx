@@ -1,8 +1,10 @@
-import { getTranslations } from "next-intl/server";
+'use client';
+
+import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { TestimonialCard } from "./testimonial-card";
-import { getSystemSettings } from "@/lib/server/settings";
-import { getActiveTestimonials } from "@/lib/server/testimonials";
-import { SystemSetting } from "@prisma/client";
+
+import { getSystemSettings, getActiveTestimonials } from "@/src/server/settings";
 
 interface DBTestimonial {
     id: string;
@@ -14,34 +16,40 @@ interface DBTestimonial {
     createdAt: Date;
 }
 
-export async function Testimonials() {
-    const t = await getTranslations("Testimonials");
-    // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
+export function Testimonials() {
+    const t = useTranslations("Testimonials");
+    const [agencyName, setAgencyName] = useState("Agency OS");
+    const [reviews, setReviews] = useState<{ name: string; role: string; text: string; image: string }[]>([]);
 
-    // Fetch active testimonials from DB (cached)
-    const dbTestimonials = await getActiveTestimonials(10);
+    useEffect(() => {
+        Promise.all([
+            getSystemSettings(["AGENCY_NAME"]),
+            getActiveTestimonials(10),
+        ]).then(([settings, dbTestimonials]) => {
+            const name = (settings as { key: string; value: string }[]).find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+            setAgencyName(name);
 
-    // Fallback to static if no DB data
-    let reviews: { name: string; role: string; text: string; image: string }[] = [];
-
-    if (dbTestimonials.length > 0) {
-        reviews = (dbTestimonials as unknown as DBTestimonial[]).map(item => ({
-            name: item.name,
-            role: item.role,
-            text: item.content,
-            image: item.avatar || ""
-        }));
-    } else {
-        // Use static fallback from translations if DB is empty
-        reviews = [0, 1, 2, 3, 4].map((i) => ({
-            name: t(`reviews.${i}.name`),
-            role: t(`reviews.${i}.role`),
-            text: t(`reviews.${i}.text`, { brand: agencyName }),
-            image: `https://i.pravatar.cc/64?u=user${i + 1}`
-        }));
-    }
+            if ((dbTestimonials as unknown[]).length > 0) {
+                setReviews(
+                    (dbTestimonials as unknown as DBTestimonial[]).map(item => ({
+                        name: item.name,
+                        role: item.role,
+                        text: item.content,
+                        image: item.avatar || "",
+                    }))
+                );
+            } else {
+                setReviews(
+                    [0, 1, 2, 3, 4].map(i => ({
+                        name: t(`reviews.${i}.name`),
+                        role: t(`reviews.${i}.role`),
+                        text: t(`reviews.${i}.text`, { brand: name }),
+                        image: `https://i.pravatar.cc/64?u=user${i + 1}`,
+                    }))
+                );
+            }
+        });
+    }, []);
 
     // Duplicate list to ensure smooth marquee if few items
     // Minimum 3 sets
