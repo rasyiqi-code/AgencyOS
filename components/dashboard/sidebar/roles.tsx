@@ -70,7 +70,8 @@ export function SidebarSuperAdmin() {
             cleanPath.startsWith("/admin/digital-sales") ||
             cleanPath.startsWith("/admin/licenses") ||
             cleanPath.startsWith("/admin/finance/digital-orders") ||
-            cleanPath.startsWith("/admin/portfolio")
+            cleanPath.startsWith("/admin/portfolio") ||
+            cleanPath.startsWith("/admin/marketing")
         ) {
             mode = "digital";
         } else {
