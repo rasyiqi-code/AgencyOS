@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getCookie, getRequest } from '@tanstack/react-start/server'
+import { getCookie } from '@tanstack/react-start/server'
 import type enMessages from '../../messages/en.json'
 
 type Messages = typeof enMessages
@@ -34,16 +34,17 @@ export function getCurrentLocaleIsomorphic(): string {
     return cookieValue === 'id' ? 'id' : 'en'
   } else {
     try {
-      const request = getRequest()
-      if (request) {
-        const reqUrl = new URL(request.url)
+      // Membaca getRequest secara dinamis hanya di server untuk menghindari import protection di client
+      const req = (globalThis as any).require ? (globalThis as any).require('@tanstack/react-start/server').getRequest() : null
+      if (req) {
+        const reqUrl = new URL(req.url)
         const match = /^\/(id|en)(?:\/|$)/.exec(reqUrl.pathname)
         if (match) return match[1]
         
-        const cookieHeader = request.headers.get('cookie') || ''
+        const cookieHeader = req.headers.get('cookie') || ''
         const cookieValue = cookieHeader
           .split('; ')
-          .find(row => row.trim().startsWith('NEXT_LOCALE='))
+          .find((row: string) => row.trim().startsWith('NEXT_LOCALE='))
           ?.split('=')[1]
         return cookieValue === 'id' ? 'id' : 'en'
       }
