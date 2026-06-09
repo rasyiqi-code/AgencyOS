@@ -71,7 +71,8 @@ export function SidebarSuperAdmin() {
             cleanPath.startsWith("/admin/licenses") ||
             cleanPath.startsWith("/admin/finance/digital-orders") ||
             cleanPath.startsWith("/admin/portfolio") ||
-            cleanPath.startsWith("/admin/marketing")
+            cleanPath.startsWith("/admin/marketing") ||
+            cleanPath.startsWith("/admin/testimonials")
         ) {
             mode = "digital";
         } else {
@@ -98,6 +99,8 @@ export function SidebarSuperAdmin() {
                     <SidebarLink href="/admin/marketing/promotions?mode=digital" icon={Megaphone} label="Visual Promos" />
                     <SidebarLink href="/admin/marketing/popups?mode=digital" icon={LayoutTemplate} label="PopUp Banners" />
                     <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
+                    <SidebarLink href="/admin/portfolio?mode=digital" icon={Images} label="Portfolio Admin" />
+                    <SidebarLink href="/admin/testimonials?mode=digital" icon={MessageSquare} label="Testimonials" />
 
                     {/* DISCOUNTS & OFFERS */}
                     <SidebarSectionHeader>Discounts & Offers</SidebarSectionHeader>
@@ -119,8 +122,6 @@ export function SidebarSuperAdmin() {
                     <SidebarSectionHeader>Digital Products</SidebarSectionHeader>
                     <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
                     <SidebarLink href="/admin/licenses?mode=digital" icon={Key} label="Licenses" />
-                    <SidebarLink href="/admin/portfolio?mode=digital" icon={Images} label="Portfolio Admin" />
-                    <SidebarLink href="/admin/testimonials?mode=digital" icon={MessageSquare} label="Testimonials" />
                 </>
             ) : (
                 <>
