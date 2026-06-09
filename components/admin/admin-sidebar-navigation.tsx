@@ -14,6 +14,11 @@ export function AdminSidebarNavigation({ pmAccess, financeAccess }: Props) {
     // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
     const cleanPath = pathname.replace(/^\/(en|id)/, "");
 
+    // Priority: Super Admin (Both) - Selalu tampilkan sidebar penuh agar tidak terjebak
+    if (pmAccess && financeAccess) {
+        return <SidebarSuperAdmin />;
+    }
+
     // 1. Finance View
     if (cleanPath.startsWith("/admin/finance")) {
         // Validation: Ensure user actually has access
@@ -32,11 +37,6 @@ export function AdminSidebarNavigation({ pmAccess, financeAccess }: Props) {
 
     // 3. Default / Command Center View
     // This usually means they are at /admin root or trying to access something general
-
-    // Priority: Super Admin (Both)
-    if (pmAccess && financeAccess) {
-        return <SidebarSuperAdmin />;
-    }
 
     // Fallback: If they are here but only have one role, show their specific sidebar
     // regardless of the URL (to avoid showing empty or wrong sidebar)

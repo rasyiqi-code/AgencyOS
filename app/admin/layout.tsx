@@ -85,7 +85,6 @@ export default async function AdminLayout({
 
             <SidebarContentWrapper>
                 <DashboardHeader
-                    allowedToSwitchViews={pmAccess && financeAccess}
                     agencyName={agencyName}
                     logoUrl={logoUrl ?? undefined}
                     navChildren={<AdminSidebarNavigation pmAccess={pmAccess} financeAccess={financeAccess} />}

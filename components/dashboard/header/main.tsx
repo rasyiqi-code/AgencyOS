@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { DashboardViewSwitcher } from "@/components/admin/dashboard-view-switcher";
 import { ProjectSearch } from "@/components/admin/pm/project-search";
 import { ProjectFilter } from "@/components/admin/pm/project-filter";
 import { useSafeUser } from "@/hooks/use-safe-user";
@@ -64,11 +63,7 @@ export function DashboardHeader({
                         <span className="hidden sm:inline">{t("back")}</span>
                     </Button>
                 )}
-                {isAdminPage && allowedToSwitchViews && (
-                    <div className="ml-2 border-l border-white/10 pl-2 sm:pl-4 shrink-0">
-                        <DashboardViewSwitcher />
-                    </div>
-                )}
+
 
                 {isProjectPage && (
                     <>
