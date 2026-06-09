@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, CheckCircle2, Key, Mail } from "lucide-react";
 import { toast } from "sonner";
-import { saveResendConfig } from "@/app/actions/system-admin";
+import { saveResendConfigFn } from "@/src/server/settings";
 
 interface Props {
     currentKey: string | null;
@@ -30,7 +30,12 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
 
         setIsLoading(true);
         try {
-            await saveResendConfig(apiKey, targetEmail || undefined);
+            await saveResendConfigFn({
+                data: {
+                    resendKey: apiKey,
+                    adminEmail: targetEmail || undefined
+                }
+            });
             toast.success("Email configuration updated successfully");
         } catch {
             toast.error("An error occurred");
