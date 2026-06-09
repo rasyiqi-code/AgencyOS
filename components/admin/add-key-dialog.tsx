@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { verifyAndSaveGoogleKey } from "@/app/actions/system-keys";
+import { verifyAndSaveGoogleKeyFn } from "@/src/server/keys";
 
 export function AddKeyDialog() {
     const [open, setOpen] = useState(false);
@@ -22,7 +22,7 @@ export function AddKeyDialog() {
         setIsLoading(true);
 
         try {
-            await verifyAndSaveGoogleKey(key, label, modelId);
+            await verifyAndSaveGoogleKeyFn({ data: { key, label, modelId } });
             toast.success("Key Verified & Saved!");
             setOpen(false);
             setLabel("");
