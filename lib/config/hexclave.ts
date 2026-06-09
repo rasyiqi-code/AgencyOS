@@ -1,8 +1,16 @@
-import { HexclaveServerApp } from "@hexclave/tanstack-start";
+import { HexclaveServerApp, HexclaveClientApp } from "@hexclave/tanstack-start";
 import { unstable_cache } from "../cache";
 
+// Inisialisasi untuk sisi browser/client
+export const hexclaveClientApp = new HexclaveClientApp({
+    projectId: import.meta.env.VITE_HEXCLAVE_PROJECT_ID || import.meta.env.VITE_STACK_PROJECT_ID || process.env.HEXCLAVE_PROJECT_ID,
+    tokenStore: "cookie",
+    redirectMethod: "window",
+});
+
+// Inisialisasi untuk sisi server (server functions)
 export const hexclaveServerApp = new HexclaveServerApp({
-    tokenStore: "nextjs-cookie",
+    tokenStore: "cookie",
 });
 
 // Cache list user selama 5 menit untuk mencegah bottleneck download massal user auth provider eksternal

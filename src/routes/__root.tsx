@@ -10,7 +10,7 @@ import { QueryProvider } from '@/components/providers/query-provider'
 import { CurrencyProvider } from '@/components/providers/currency-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { HexclaveProvider, HexclaveTheme } from '@hexclave/tanstack-start'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
+import { hexclaveClientApp } from '@/lib/config/hexclave'
 import { I18nProvider } from '@/components/providers/i18n-provider'
 import enMessages from '@/messages/en.json'
 import { getLocaleMessages } from '@/src/lib/i18n'
@@ -83,7 +83,7 @@ function RootDocument({
       <body className="bg-black text-white antialiased relative">
         <QueryProvider>
           <CurrencyProvider initialLocale={i18n.locale}>
-            <HexclaveProvider app={hexclaveServerApp}>
+            <HexclaveProvider app={hexclaveClientApp}>
               <HexclaveTheme>
                 <I18nProvider locale={i18n.locale} messages={i18n.messages}>
                   {children}
