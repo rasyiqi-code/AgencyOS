@@ -1,34 +1,37 @@
 import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
 
+// OPTIMASI M3: Definisikan schema Zod sekali sebagai konstanta modul agar tidak diduplikasi di RAM
+const serviceOutputSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    features: z.array(z.string()),
+    title_id: z.string(),
+    description_id: z.string(),
+    features_id: z.array(z.string()),
+    recommended_price: z.number(),
+    priceType: z.enum(['FIXED', 'STARTING_AT']),
+    currency: z.enum(['USD', 'IDR']),
+    interval: z.enum(['one_time', 'monthly', 'yearly']),
+    addons: z.array(z.object({
+        name: z.string(),
+        price: z.number(),
+        interval: z.enum(['one_time', 'monthly', 'yearly']),
+        currency: z.enum(['USD', 'IDR'])
+    })),
+    addons_id: z.array(z.object({
+        name: z.string(),
+        price: z.number(),
+        interval: z.enum(['one_time', 'monthly', 'yearly']),
+        currency: z.enum(['USD', 'IDR'])
+    }))
+});
+
 export const serviceGeneratorFlow = ai.defineFlow(
     {
         name: 'serviceGeneratorFlow',
         inputSchema: z.string(),
-        outputSchema: z.object({
-            title: z.string(),
-            description: z.string(),
-            features: z.array(z.string()),
-            title_id: z.string(),
-            description_id: z.string(),
-            features_id: z.array(z.string()),
-            recommended_price: z.number(),
-            priceType: z.enum(['FIXED', 'STARTING_AT']),
-            currency: z.enum(['USD', 'IDR']),
-            interval: z.enum(['one_time', 'monthly', 'yearly']),
-            addons: z.array(z.object({
-                name: z.string(),
-                price: z.number(),
-                interval: z.enum(['one_time', 'monthly', 'yearly']),
-                currency: z.enum(['USD', 'IDR'])
-            })),
-            addons_id: z.array(z.object({
-                name: z.string(),
-                price: z.number(),
-                interval: z.enum(['one_time', 'monthly', 'yearly']),
-                currency: z.enum(['USD', 'IDR'])
-            }))
-        }),
+        outputSchema: serviceOutputSchema,
     },
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
@@ -81,30 +84,7 @@ export const serviceGeneratorFlow = ai.defineFlow(
             Return strictly valid JSON matching the schema.
             `,
             output: {
-                schema: z.object({
-                    title: z.string(),
-                    description: z.string(),
-                    features: z.array(z.string()),
-                    title_id: z.string(),
-                    description_id: z.string(),
-                    features_id: z.array(z.string()),
-                    recommended_price: z.number(),
-                    priceType: z.enum(['FIXED', 'STARTING_AT']),
-                    currency: z.enum(['USD', 'IDR']),
-                    interval: z.enum(['one_time', 'monthly', 'yearly']),
-                    addons: z.array(z.object({
-                        name: z.string(),
-                        price: z.number(),
-                        interval: z.enum(['one_time', 'monthly', 'yearly']),
-                        currency: z.enum(['USD', 'IDR'])
-                    })),
-                    addons_id: z.array(z.object({
-                        name: z.string(),
-                        price: z.number(),
-                        interval: z.enum(['one_time', 'monthly', 'yearly']),
-                        currency: z.enum(['USD', 'IDR'])
-                    }))
-                })
+                schema: serviceOutputSchema
             }
         });
 

@@ -45,8 +45,9 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
             if (!isDeleting) {
                 if (displayText === currentTarget) {
                     onStateChange?.("full");
-                    // Pause selama 1800ms (3 x 600ms) agar baris bawah sempat ganti 3 kali
-                    setTimeout(() => setIsDeleting(true), 1800);
+                    // Pause selama 1800ms dengan menyetel typingSpeed iterasi berikutnya
+                    setIsDeleting(true);
+                    setTypingSpeed(1800);
                 } else {
                     onStateChange?.("typing");
                     setDisplayText(currentTarget.slice(0, displayText.length + 1));

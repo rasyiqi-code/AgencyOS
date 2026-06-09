@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,6 +21,10 @@ export function HeroContent({ agencyName }: HeroContentProps) {
     const { setIsMenuOpen } = useFloatingChat();
     const [isMobile, setIsMobile] = React.useState(false);
     const [mounted, setMounted] = React.useState(false);
+    const shouldReduceMotion = !!useReducedMotion();
+    
+    // Batasi pengulangan maksimal 2 kali untuk mencegah pembebanan CPU terus-menerus di background
+    const repeatCount = (isMobile || shouldReduceMotion) ? 0 : 2;
 
     React.useEffect(() => {
         setMounted(true);
@@ -149,7 +153,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     className="flex whitespace-nowrap gap-8"
                                     animate={{ x: "-50%" }}
                                     transition={{
-                                        repeat: isMobile ? 0 : Infinity,
+                                        repeat: (isMobile || shouldReduceMotion) ? 0 : Infinity,
                                         ease: "linear",
                                         duration: 20,
                                     }}
@@ -180,7 +184,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
 
                             {/* Business Visuals Masking Layer (Bottom) */}
-                            {mounted && <BusinessVisuals isMobile={isMobile} />}
+                            {mounted && <BusinessVisuals isMobile={isMobile} repeatCount={repeatCount} shouldReduceMotion={shouldReduceMotion} />}
 
                             {/* Floating AI Model Badges - Background Layer (Middle) */}
                             <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-40">
@@ -259,7 +263,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     transition={{
                                         y: { duration: 1.2, delay: 1.2 },
-                                        opacity: { duration: 2, repeat: isMobile ? 0 : Infinity, ease: "easeInOut" }
+                                        opacity: { duration: 2, repeat: repeatCount, ease: "easeInOut" }
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none"
                                 >
@@ -273,7 +277,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     }}
                                     transition={{
                                         y: { duration: 1.2, delay: 1.4 },
-                                        opacity: { duration: 2.5, repeat: isMobile ? 0 : Infinity, ease: "easeInOut", delay: 0.2 }
+                                        opacity: { duration: 2.5, repeat: repeatCount, ease: "easeInOut", delay: 0.2 }
                                     }}
                                     className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none mt-2"
                                 >
@@ -295,18 +299,24 @@ function BadgeWrapper({ children, delay, duration = 8, className, isMobile }: {
     className?: string;
     isMobile: boolean;
 }) {
+    // Gunakan deteksi prefensi motion untuk serverless/client-side match
+    const [reduced, setReduced] = React.useState(false);
+    React.useEffect(() => {
+        setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    }, []);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ 
                 opacity: 1, 
-                y: isMobile ? 0 : [0, -10, 0] 
+                y: (isMobile || reduced) ? 0 : [0, -10, 0] 
             }}
             transition={{
                 opacity: { duration: 0.5, delay },
                 y: { 
                     duration: duration, 
-                    repeat: isMobile ? 0 : Infinity, 
+                    repeat: (isMobile || reduced) ? 0 : Infinity, 
                     ease: "easeInOut",
                     delay: delay
                 }
@@ -343,7 +353,11 @@ function BadgeContent({ name, model, icon }: {
     );
 }
 
-const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
+const BusinessVisuals = ({ isMobile, repeatCount, shouldReduceMotion }: { 
+    isMobile: boolean; 
+    repeatCount: number; 
+    shouldReduceMotion: boolean; 
+}) => {
 
     return (
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -396,7 +410,7 @@ const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
                     transition={{
                         duration: isMobile ? 2 : 3,
                         ease: "easeInOut",
-                        repeat: isMobile ? 0 : Infinity,
+                        repeat: repeatCount,
                         repeatType: "loop",
                         repeatDelay: 1
                     }}
@@ -413,7 +427,7 @@ const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
                     transition={{
                         duration: isMobile ? 6 : 4,
                         ease: "easeInOut",
-                        repeat: isMobile ? 0 : Infinity,
+                        repeat: repeatCount,
                         repeatType: "loop"
                     }}
                 />
@@ -423,12 +437,12 @@ const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
             <div className="absolute inset-0">
                 <motion.div
                     animate={{
-                        y: isMobile ? 0 : [-10, 10, -10],
-                        opacity: isMobile ? 0.15 : [0.1, 0.3, 0.1]
+                        y: (isMobile || shouldReduceMotion) ? 0 : [-10, 10, -10],
+                        opacity: (isMobile || shouldReduceMotion) ? 0.15 : [0.1, 0.3, 0.1]
                     }}
                     transition={{
                         duration: 4,
-                        repeat: isMobile ? 0 : Infinity,
+                        repeat: (isMobile || shouldReduceMotion) ? 0 : Infinity,
                         ease: "easeInOut"
                     }}
                     className="absolute top-[20%] left-[10%] text-brand-yellow"
@@ -438,12 +452,12 @@ const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
 
                 <motion.div
                     animate={{
-                        y: isMobile ? 0 : [10, -10, 10],
-                        opacity: isMobile ? 0.1 : [0.05, 0.2, 0.05]
+                        y: (isMobile || shouldReduceMotion) ? 0 : [10, -10, 10],
+                        opacity: (isMobile || shouldReduceMotion) ? 0.1 : [0.05, 0.2, 0.05]
                     }}
                     transition={{
                         duration: 6,
-                        repeat: isMobile ? 0 : Infinity,
+                        repeat: (isMobile || shouldReduceMotion) ? 0 : Infinity,
                         ease: "easeInOut"
                     }}
                     className="absolute bottom-[30%] right-[15%] text-brand-yellow"
@@ -453,12 +467,12 @@ const BusinessVisuals = ({ isMobile }: { isMobile: boolean }) => {
 
                 <motion.div
                     animate={{
-                        scale: isMobile ? 1 : [1, 1.1, 1],
-                        opacity: isMobile ? 0.15 : [0.1, 0.2, 0.1]
+                        scale: (isMobile || shouldReduceMotion) ? 1 : [1, 1.1, 1],
+                        opacity: (isMobile || shouldReduceMotion) ? 0.15 : [0.1, 0.2, 0.1]
                     }}
                     transition={{
                         duration: 5,
-                        repeat: isMobile ? 0 : Infinity,
+                        repeat: (isMobile || shouldReduceMotion) ? 0 : Infinity,
                         ease: "easeInOut"
                     }}
                     className="absolute top-[40%] right-[10%] text-brand-yellow"

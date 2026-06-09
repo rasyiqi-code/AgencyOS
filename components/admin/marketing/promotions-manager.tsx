@@ -46,19 +46,6 @@ export function PromotionsManager() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingPromo, setEditingPromo] = useState<Promotion | null>(null);
 
-    // Form states
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        imageUrl: "",
-        ctaText: "",
-        ctaUrl: "",
-        couponCode: "",
-        isActive: true,
-        startDate: "",
-        endDate: "",
-    });
-
     useEffect(() => {
         fetchPromotions();
     }, []);
@@ -78,56 +65,10 @@ export function PromotionsManager() {
     const handleOpenDialog = (promo?: Promotion) => {
         if (promo) {
             setEditingPromo(promo);
-            setFormData({
-                title: promo.title,
-                description: promo.description || "",
-                imageUrl: promo.imageUrl,
-                ctaText: promo.ctaText || "",
-                ctaUrl: promo.ctaUrl || "",
-                couponCode: promo.couponCode || "",
-                isActive: promo.isActive,
-                startDate: promo.startDate ? new Date(promo.startDate).toISOString().slice(0, 16) : "",
-                endDate: promo.endDate ? new Date(promo.endDate).toISOString().slice(0, 16) : "",
-            });
         } else {
             setEditingPromo(null);
-            setFormData({
-                title: "",
-                description: "",
-                imageUrl: "",
-                ctaText: "",
-                ctaUrl: "",
-                couponCode: "",
-                isActive: true,
-                startDate: "",
-                endDate: "",
-            });
         }
         setIsDialogOpen(true);
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const method = editingPromo ? "PATCH" : "POST";
-        const url = editingPromo ? `/api/marketing/promotions/${editingPromo.id}` : "/api/marketing/promotions";
-
-        try {
-            const res = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            if (res.ok) {
-                toast.success(editingPromo ? "Promosi diperbarui" : "Promosi dibuat");
-                setIsDialogOpen(false);
-                fetchPromotions();
-            } else {
-                toast.error("Terjadi kesalahan");
-            }
-        } catch {
-            toast.error("Gagal menyimpan data");
-        }
     };
 
     const handleDelete = async (id: string) => {
@@ -297,114 +238,188 @@ export function PromotionsManager() {
                 </Table>
             </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-2xl bg-zinc-950 border-white/10 text-white shadow-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-bold">{editingPromo ? "Edit Promosi" : "Tambah Promosi Baru"}</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={handleSubmit} className="space-y-6 py-4">
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">Judul Promo</Label>
-                                <Input 
-                                    required 
-                                    value={formData.title} 
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                    placeholder="Contoh: Diskon Lebaran 50%"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">URL Gambar Poster</Label>
-                                <Input 
-                                    required 
-                                    value={formData.imageUrl} 
-                                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                    placeholder="https://..."
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label className="text-zinc-400">Deskripsi Singkat</Label>
-                            <Textarea 
-                                value={formData.description} 
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 min-h-[100px] resize-none"
-                                placeholder="Jelaskan detail promo..."
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">CTA Text (Tombol)</Label>
-                                <Input 
-                                    value={formData.ctaText} 
-                                    onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                    placeholder="Lihat Detail / Beli Sekarang"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">CTA URL (Tautan)</Label>
-                                <Input 
-                                    value={formData.ctaUrl} 
-                                    onChange={(e) => setFormData({ ...formData, ctaUrl: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                    placeholder="/products/..."
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-6">
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">Kode Kupon</Label>
-                                <Input 
-                                    value={formData.couponCode} 
-                                    onChange={(e) => setFormData({ ...formData, couponCode: e.target.value.toUpperCase() })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11 font-mono font-bold"
-                                    placeholder="PROMO2024"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">Mulai</Label>
-                                <Input 
-                                    type="datetime-local"
-                                    value={formData.startDate} 
-                                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-zinc-400">Berakhir</Label>
-                                <Input 
-                                    type="datetime-local"
-                                    value={formData.endDate} 
-                                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                    className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 py-2 px-4 rounded-xl bg-white/5 border border-white/5">
-                            <Switch 
-                                checked={formData.isActive} 
-                                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
-                                className="data-[state=checked]:bg-brand-yellow"
-                            />
-                            <Label className="text-sm font-medium">Aktifkan Promosi Sekarang</Label>
-                        </div>
-
-                        <DialogFooter className="gap-2">
-                            <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)} className="text-zinc-400 hover:text-white">Batal</Button>
-                            <Button type="submit" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold px-8 h-11">
-                                {editingPromo ? "Simpan Perubahan" : "Buat Promosi"}
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            {isDialogOpen && (
+                <PromotionDialog 
+                    key={editingPromo?.id || "new-promo"}
+                    isOpen={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                    editingPromo={editingPromo}
+                    onSaveSuccess={() => {
+                        setIsDialogOpen(false);
+                        fetchPromotions();
+                    }}
+                />
+            )}
         </div>
+    );
+}
+
+interface PromotionDialogProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    editingPromo: Promotion | null;
+    onSaveSuccess: () => void;
+}
+
+function PromotionDialog({ isOpen, onOpenChange, editingPromo, onSaveSuccess }: PromotionDialogProps) {
+    const [formData, setFormData] = useState(() => {
+        if (editingPromo) {
+            return {
+                title: editingPromo.title,
+                description: editingPromo.description || "",
+                imageUrl: editingPromo.imageUrl,
+                ctaText: editingPromo.ctaText || "",
+                ctaUrl: editingPromo.ctaUrl || "",
+                couponCode: editingPromo.couponCode || "",
+                isActive: editingPromo.isActive,
+                startDate: editingPromo.startDate ? new Date(editingPromo.startDate).toISOString().slice(0, 16) : "",
+                endDate: editingPromo.endDate ? new Date(editingPromo.endDate).toISOString().slice(0, 16) : "",
+            };
+        }
+        return {
+            title: "",
+            description: "",
+            imageUrl: "",
+            ctaText: "",
+            ctaUrl: "",
+            couponCode: "",
+            isActive: true,
+            startDate: "",
+            endDate: "",
+        };
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const method = editingPromo ? "PATCH" : "POST";
+        const url = editingPromo ? `/api/marketing/promotions/${editingPromo.id}` : "/api/marketing/promotions";
+
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                toast.success(editingPromo ? "Promosi diperbarui" : "Promosi dibuat");
+                onSaveSuccess();
+            } else {
+                toast.error("Terjadi kesalahan");
+            }
+        } catch {
+            toast.error("Gagal menyimpan data");
+        }
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-2xl bg-zinc-950 border-white/10 text-white shadow-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold">{editingPromo ? "Edit Promosi" : "Tambah Promosi Baru"}</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6 py-4">
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">Judul Promo</Label>
+                            <Input 
+                                required 
+                                value={formData.title} 
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                                placeholder="Contoh: Diskon Lebaran 50%"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">URL Gambar Poster</Label>
+                            <Input 
+                                required 
+                                value={formData.imageUrl} 
+                                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                                placeholder="https://..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-400">Deskripsi Singkat</Label>
+                        <Textarea 
+                            value={formData.description} 
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 min-h-[100px] resize-none"
+                            placeholder="Jelaskan detail promo..."
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">CTA Text (Tombol)</Label>
+                            <Input 
+                                value={formData.ctaText} 
+                                onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                                placeholder="Lihat Detail / Beli Sekarang"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">CTA URL (Tautan)</Label>
+                            <Input 
+                                value={formData.ctaUrl} 
+                                onChange={(e) => setFormData({ ...formData, ctaUrl: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                                placeholder="/products/..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">Kode Kupon</Label>
+                            <Input 
+                                value={formData.couponCode} 
+                                onChange={(e) => setFormData({ ...formData, couponCode: e.target.value.toUpperCase() })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11 font-mono font-bold"
+                                placeholder="PROMO2024"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">Mulai</Label>
+                            <Input 
+                                type="datetime-local"
+                                value={formData.startDate} 
+                                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label className="text-zinc-400">Berakhir</Label>
+                            <Input 
+                                type="datetime-local"
+                                value={formData.endDate} 
+                                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                                className="bg-zinc-900 border-white/5 focus:border-brand-yellow/50 h-11"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 py-2 px-4 rounded-xl bg-white/5 border border-white/5">
+                        <Switch 
+                            checked={formData.isActive} 
+                            onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                            className="data-[state=checked]:bg-brand-yellow"
+                        />
+                        <Label className="text-sm font-medium">Aktifkan Promosi Sekarang</Label>
+                    </div>
+
+                    <DialogFooter className="gap-2">
+                        <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="text-zinc-400 hover:text-white">Batal</Button>
+                        <Button type="submit" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold px-8 h-11">
+                            {editingPromo ? "Simpan Perubahan" : "Buat Promosi"}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }

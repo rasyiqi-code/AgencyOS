@@ -1,4 +1,5 @@
 import { useUser } from "@hexclave/next";
+import { useMemo } from "react";
 
 /**
  * A custom hook that wraps Stack Auth's `useUser()` hook to centralize user data normalization.
@@ -8,12 +9,18 @@ import { useUser } from "@hexclave/next";
 export function useSafeUser() {
     const user = useUser();
 
-    const mockUserFallback = user?.profileImageUrl === "" ? {
-        ...user,
-        displayName: user.displayName || undefined,
-        primaryEmail: user.primaryEmail || undefined,
-        profileImageUrl: undefined
-    } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string } : undefined;
+    // OPTIMASI H7: Membungkus mockUserFallback dengan useMemo agar tidak membuat referensi objek baru pada tiap siklus rendering
+    const mockUserFallback = useMemo(() => {
+        if (user?.profileImageUrl === "") {
+            return {
+                ...user,
+                displayName: user.displayName || undefined,
+                primaryEmail: user.primaryEmail || undefined,
+                profileImageUrl: undefined
+            } as unknown as { displayName?: string; primaryEmail?: string; profileImageUrl?: string };
+        }
+        return undefined;
+    }, [user]);
 
     return {
         user,

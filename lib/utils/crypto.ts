@@ -17,9 +17,9 @@ export function secureRandomInt(min: number, max: number): number {
  */
 export function secureRandomAlphanumeric(length: number): string {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const result = new Array(length);
     for (let i = 0; i < length; i++) {
-        result += chars[crypto.randomInt(0, chars.length)];
+        result[i] = chars[crypto.randomInt(0, chars.length)];
     }
-    return result;
+    return result.join('');
 }

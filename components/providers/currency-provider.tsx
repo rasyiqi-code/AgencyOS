@@ -27,13 +27,11 @@ export const useCurrency = () => useContext(CurrencyContext);
 export function CurrencyProvider({ children, initialLocale = 'en-US' }: { children: React.ReactNode, initialLocale?: string }) {
     const [currency, setCurrency] = useState<Currency>('USD');
     const [locale, setLocale] = useState(initialLocale);
-    const [mounted, setMounted] = useState(false);
     const [rate, setRate] = useState(16000); // Default fallback
     const router = useRouter();
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setMounted(true);
 
             // Sync with localStorage on client mount
             if (typeof window !== 'undefined') {
@@ -77,10 +75,6 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
 
         return () => clearTimeout(timer);
     }, []);
-
-    if (!mounted) {
-        return null; // or return children with default USD to avoid flash, but returning null ensures clean hydration
-    }
 
     const updateCurrency = (c: Currency) => {
         setCurrency(c);

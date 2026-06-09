@@ -98,20 +98,33 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let accumulatedContent = '';
+            let lastUpdateTime = 0;
+            const THROTTLE_MS = 80; // Batasi update state maksimal sekali per 80ms
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                if (done) {
+                    // Pastikan konten diperbarui secara penuh setelah streaming selesai
+                    setMessages(prev => prev.map(m =>
+                        m.id === assistantId
+                            ? { ...m, content: accumulatedContent }
+                            : m
+                    ));
+                    break;
+                }
 
                 const text = decoder.decode(value, { stream: true });
                 accumulatedContent += text;
 
-                // Update the last message (assistant)
-                setMessages(prev => prev.map(m =>
-                    m.id === assistantId
-                        ? { ...m, content: accumulatedContent }
-                        : m
-                ));
+                const now = Date.now();
+                if (now - lastUpdateTime > THROTTLE_MS) {
+                    setMessages(prev => prev.map(m =>
+                        m.id === assistantId
+                            ? { ...m, content: accumulatedContent }
+                            : m
+                    ));
+                    lastUpdateTime = now;
+                }
             }
 
         } catch (error) {

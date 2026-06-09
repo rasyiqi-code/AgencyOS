@@ -79,16 +79,15 @@ export const consultantFlow = ai.defineFlow(
             }));
 
         // Ensure history starts with a user message (Gemini requirement)
-        while (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
-            historyMessages.shift();
-        }
+        const firstUserIndex = historyMessages.findIndex((m) => m.role === 'user');
+        const cleanedHistory = firstUserIndex !== -1 ? historyMessages.slice(firstUserIndex) : [];
 
         const { stream } = await ai.generateStream({
             model: `googleai/${model}`,
             config: { apiKey },
             messages: [
                 { role: 'system', content: [{ text: systemPrompt }] },
-                ...historyMessages,
+                ...cleanedHistory,
             ],
             prompt: typedMessages[typedMessages.length - 1].content,
         });

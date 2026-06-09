@@ -178,8 +178,11 @@ function TechRotator() {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setIndex((prev) => (prev + 1) % TECH_STACK.length);
-        }, 2000);
+            // OPTIMASI H2: Hanya lakukan rotasi jika tab aktif/kelihatan untuk menghemat CPU
+            if (!document.hidden) {
+                setIndex((prev) => (prev + 1) % TECH_STACK.length);
+            }
+        }, 3000); // Naikkan waktu rotasi ke 3 detik
         return () => clearInterval(timer);
     }, []);
 

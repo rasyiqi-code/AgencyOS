@@ -10,12 +10,23 @@ interface FloatingChatStore {
     setIsMenuOpen: (open: boolean) => void;
 }
 
-export const useFloatingChat = create<FloatingChatStore>((set) => ({
-    isOpen: false,
-    isMenuOpen: false,
-    mode: 'ai',
-    openChat: (mode = 'ai') => set({ isOpen: true, mode, isMenuOpen: false }),
-    closeChat: () => set({ isOpen: false, isMenuOpen: false }),
-    toggleChat: () => set((state) => ({ isOpen: !state.isOpen, isMenuOpen: false })),
-    setIsMenuOpen: (open) => set({ isMenuOpen: open, isOpen: false }),
-}));
+export const useFloatingChat = create<FloatingChatStore>((set) => {
+    // OPTIMASI H6: Definisikan aksi sekali saat inisialisasi agar referensi fungsi tetap stabil secara permanen
+    const actions = {
+        openChat: (mode: 'ai' | 'human_onboarding' | 'human_chat' = 'ai') => 
+            set({ isOpen: true, mode, isMenuOpen: false }),
+        closeChat: () => 
+            set({ isOpen: false, isMenuOpen: false }),
+        toggleChat: () => 
+            set((state) => ({ isOpen: !state.isOpen, isMenuOpen: false })),
+        setIsMenuOpen: (open: boolean) => 
+            set({ isMenuOpen: open, isOpen: false }),
+    };
+
+    return {
+        isOpen: false,
+        isMenuOpen: false,
+        mode: 'ai',
+        ...actions,
+    };
+});

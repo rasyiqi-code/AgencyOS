@@ -10,67 +10,36 @@ export const ai = genkit({
     plugins: [googleAI({ apiKey: false })], // Expect apiKey at call time
 });
 
-const inFlightAIRequests = new Map<string, Promise<unknown>>();
+// OPTIMASI M2: Menyederhanakan caching dengan langsung menggunakan unstable_cache bawaan Next.js, menghapus in-flight Map redundant yang boros memori.
 
-/**
- * Helper to check AI availability.
- */
-export const isAIConfigured = async () => {
-    const cacheKey = "is-ai-configured";
-    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey) as Promise<boolean>;
+export const isAIConfigured = unstable_cache(
+    async () => {
+        try {
+            const key = await prisma.systemKey.findFirst({
+                where: { isActive: true, provider: 'google' }
+            });
+            return !!key;
+        } catch {
+            return false;
+        }
+    },
+    ["is-ai-configured"],
+    { tags: ["system-keys"], revalidate: 3600 }
+);
 
-    const request = (async () => {
-        return unstable_cache(
-            async () => {
-                try {
-                    const key = await prisma.systemKey.findFirst({
-                        where: { isActive: true, provider: 'google' }
-                    });
-                    return !!key;
-                } catch {
-                    return false;
-                }
-            },
-            [cacheKey],
-            { tags: ["system-keys"], revalidate: 3600 }
-        )();
-    })();
+export const getActiveAIConfig = unstable_cache(
+    async () => {
+        const key = await prisma.systemKey.findFirst({
+            where: { isActive: true, provider: 'google' }
+        });
 
-    inFlightAIRequests.set(cacheKey, request);
-    try {
-        return await (request as Promise<boolean>);
-    } finally {
-        inFlightAIRequests.delete(cacheKey);
-    }
-};
+        if (!key) throw new Error("AI is not configured.");
 
-export const getActiveAIConfig = async () => {
-    const cacheKey = "active-ai-config";
-    if (inFlightAIRequests.has(cacheKey)) return inFlightAIRequests.get(cacheKey) as Promise<{ apiKey: string; model: string }>;
-
-    const request = (async () => {
-        return unstable_cache(
-            async () => {
-                const key = await prisma.systemKey.findFirst({
-                    where: { isActive: true, provider: 'google' }
-                });
-
-                if (!key) throw new Error("AI is not configured.");
-
-                return {
-                    apiKey: key.key,
-                    model: key.modelId || 'gemini-1.5-flash'
-                };
-            },
-            [cacheKey],
-            { tags: ["system-keys"], revalidate: 3600 }
-        )();
-    })();
-
-    inFlightAIRequests.set(cacheKey, request);
-    try {
-        return await (request as Promise<{ apiKey: string; model: string }>);
-    } finally {
-        inFlightAIRequests.delete(cacheKey);
-    }
-};
+        return {
+            apiKey: key.key,
+            model: key.modelId || 'gemini-1.5-flash'
+        };
+    },
+    ["active-ai-config"],
+    { tags: ["system-keys"], revalidate: 3600 }
+);

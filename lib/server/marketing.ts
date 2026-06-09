@@ -151,13 +151,13 @@ export async function deleteSubscriber(id: string) {
 }
 
 export async function getPromotionCoupon(context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
-    // Ambil kupon aktif terbaru (bisa difilter lebih lanjut jika perlu)
+    // Ambil kupon aktif terbaik dengan diskon terbesar
     return await prisma.coupon.findFirst({
         where: {
             isActive: true,
             ...(context ? { appliesTo: { has: context } } : {})
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { discountValue: "desc" },
     });
 }
 

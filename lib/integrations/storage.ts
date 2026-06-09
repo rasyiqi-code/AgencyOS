@@ -40,14 +40,7 @@ export async function getClient() {
     // Ensure protocol
     cleanEndpoint = `https://${cleanEndpoint}`;
 
-    console.log("[Storage] Initializing R2 Client", {
-        originalEndpoint: endpoint,
-        cleanEndpoint,
-        bucketName,
-        accessKeyId: accessKeyId?.slice(0, 4) + '...' + accessKeyId?.slice(-4),
-        secretLength: secretAccessKey?.length,
-        forcePathStyle: true
-    });
+    console.log("[Storage] Initializing R2 Client");
 
     s3ClientInstance = new S3Client({
         region: "auto",

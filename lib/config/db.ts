@@ -13,8 +13,12 @@ const globalForPrisma = globalThis as unknown as {
 
 // Konfigurasi pool koneksi: Serverless Vercel membutuhkan ukuran pool sangat kecil (maksimal 2)
 // untuk menghindari pool exhaustion karena banyaknya container asinkron yang terisolasi.
-const poolMax = process.env.DATABASE_POOL_SIZE
+const parsedPoolSize = process.env.DATABASE_POOL_SIZE
     ? parseInt(process.env.DATABASE_POOL_SIZE, 10)
+    : NaN;
+
+const poolMax = (!isNaN(parsedPoolSize) && parsedPoolSize > 0)
+    ? parsedPoolSize
     : (isDev ? 10 : (isServerless ? 2 : 5));
 
 const idleTimeout = isServerless ? 10000 : 30000; // 10 detik di serverless agar cepat membebaskan koneksi

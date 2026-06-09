@@ -57,35 +57,36 @@ export default async function proxy(request: NextRequest) {
                     const cachedGeo = ipCache.get(ip);
                     if (cachedGeo && cachedGeo.expiry > Date.now()) {
                         geoCountry = cachedGeo.countryCode;
-                        console.log(`[Middleware] Menggunakan cache geolokasi untuk IP: ${ip} -> ${geoCountry}`);
                     } else {
                         const controller = new AbortController();
                         const timeoutId = setTimeout(() => controller.abort(), 500);
 
-                        const ipRes = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
-                            signal: controller.signal
-                        });
-                        clearTimeout(timeoutId);
+                        try {
+                            const ipRes = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
+                                signal: controller.signal
+                            });
 
-                        if (ipRes.ok) {
-                            const data = await ipRes.json();
-                            if (data.countryCode) {
-                                const code: string = data.countryCode;
-                                geoCountry = code;
-                                // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
-                                // Batasi ukuran cache sebelum menyimpan entri baru untuk mencegah kebocoran memori (memory leak)
-                                if (ipCache.size >= MAX_CACHE_SIZE) {
-                                    const oldestKey = ipCache.keys().next().value;
-                                    if (oldestKey !== undefined) {
-                                        ipCache.delete(oldestKey);
+                            if (ipRes.ok) {
+                                const data = await ipRes.json();
+                                if (data.countryCode) {
+                                    const code: string = data.countryCode;
+                                    geoCountry = code;
+                                    // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
+                                    // Batasi ukuran cache sebelum menyimpan entri baru untuk mencegah kebocoran memori (memory leak)
+                                    if (ipCache.size >= MAX_CACHE_SIZE) {
+                                        const oldestKey = ipCache.keys().next().value;
+                                        if (oldestKey !== undefined) {
+                                            ipCache.delete(oldestKey);
+                                        }
                                     }
+                                    ipCache.set(ip, {
+                                        countryCode: code,
+                                        expiry: Date.now() + CACHE_TTL
+                                    });
                                 }
-                                ipCache.set(ip, {
-                                    countryCode: code,
-                                    expiry: Date.now() + CACHE_TTL
-                                });
-                                console.log(`[Middleware] IP-API detected: ${geoCountry} for IP: ${ip} (Disimpan ke cache)`);
                             }
+                        } finally {
+                            clearTimeout(timeoutId);
                         }
                     }
                 }

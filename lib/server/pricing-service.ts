@@ -10,43 +10,39 @@ export interface PricingConfig {
     };
 }
 
-const KEYS = {
-    BASE_RATE: "pricing_base_rate",
-    MULT_LOW: "pricing_multiplier_low",
-    MULT_MED: "pricing_multiplier_medium",
-    MULT_HIGH: "pricing_multiplier_high"
-};
+const CONFIG_KEY = "pricing_config";
 
 export class PricingService {
     async getConfig(): Promise<PricingConfig> {
-        // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
-        // 🎯 Why: Reduces database load by caching frequently accessed pricing settings.
-        // 📊 Impact: Eliminates a database query on pricing config initialization.
-        const settings = await getSystemSettings(Object.values(KEYS));
+        // OPTIMASI M5: Ambil konfigurasi dalam satu kueri baris tunggal berbasis JSON untuk menghemat resource
+        const settings = await getSystemSettings([CONFIG_KEY]);
+        const configSetting = settings.find((x: { key: string; value: string }) => x.key === CONFIG_KEY);
 
-        const getVal = (key: string, def: number) => {
-            const s = settings.find((x: { key: string; value: string }) => x.key === key);
-            return s ? parseFloat(s.value) : def;
-        };
+        if (configSetting) {
+            try {
+                return JSON.parse(configSetting.value) as PricingConfig;
+            } catch {
+                // Abaikan parsing error, fallback ke default
+            }
+        }
 
         return {
-            baseRate: getVal(KEYS.BASE_RATE, 15),
+            baseRate: 15,
             multipliers: {
-                Low: getVal(KEYS.MULT_LOW, 1.0),
-                Medium: getVal(KEYS.MULT_MED, 1.25),
-                High: getVal(KEYS.MULT_HIGH, 1.5)
+                Low: 1.0,
+                Medium: 1.25,
+                High: 1.5
             }
         };
     }
 
     async saveConfig(config: PricingConfig) {
-        const ops = [
-            prisma.systemSetting.upsert({ where: { key: KEYS.BASE_RATE }, update: { value: config.baseRate.toString() }, create: { key: KEYS.BASE_RATE, value: config.baseRate.toString() } }),
-            prisma.systemSetting.upsert({ where: { key: KEYS.MULT_LOW }, update: { value: config.multipliers.Low.toString() }, create: { key: KEYS.MULT_LOW, value: config.multipliers.Low.toString() } }),
-            prisma.systemSetting.upsert({ where: { key: KEYS.MULT_MED }, update: { value: config.multipliers.Medium.toString() }, create: { key: KEYS.MULT_MED, value: config.multipliers.Medium.toString() } }),
-            prisma.systemSetting.upsert({ where: { key: KEYS.MULT_HIGH }, update: { value: config.multipliers.High.toString() }, create: { key: KEYS.MULT_HIGH, value: config.multipliers.High.toString() } }),
-        ];
-        await prisma.$transaction(ops);
+        // Simpan seluruh konfigurasi sebagai JSON string dalam satu operasi upsert tunggal untuk efisiensi kueri
+        await prisma.systemSetting.upsert({
+            where: { key: CONFIG_KEY },
+            update: { value: JSON.stringify(config) },
+            create: { key: CONFIG_KEY, value: JSON.stringify(config) }
+        });
     }
 }
 

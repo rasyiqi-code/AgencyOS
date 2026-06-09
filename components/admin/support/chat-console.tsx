@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChatInterface } from "@/components/support/chat-interface";
 import { cn } from "@/lib/shared/utils";
 import { User, Search, ArrowLeft } from "lucide-react";
@@ -35,13 +35,18 @@ export function ChatConsole({ tickets }: ChatConsoleProps) {
     const [search, setSearch] = useState("");
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
 
-    const selectedTicket = tickets.find(t => t.id === selectedTicketId);
+    const selectedTicket = useMemo(() => {
+        return tickets.find(t => t.id === selectedTicketId);
+    }, [tickets, selectedTicketId]);
 
-    const filteredTickets = tickets.filter(t =>
-    (t.name?.toLowerCase().includes(search.toLowerCase()) ||
-        t.email?.toLowerCase().includes(search.toLowerCase()) ||
-        t.id.includes(search))
-    );
+    const filteredTickets = useMemo(() => {
+        const query = search.toLowerCase();
+        return tickets.filter(t =>
+            (t.name?.toLowerCase().includes(query) ||
+                t.email?.toLowerCase().includes(query) ||
+                t.id.includes(query))
+        );
+    }, [tickets, search]);
 
     const handleSelectTicket = (id: string) => {
         setSelectedTicketId(id);

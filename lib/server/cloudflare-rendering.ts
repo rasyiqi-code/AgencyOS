@@ -76,23 +76,29 @@ export function enhanceHtml(html: string, url: string, localBaseUrl?: string): s
             ? `${cleanedLocalBaseUrl}/api/proxy/asset?url=` 
             : (defaultLocalBase ? `${defaultLocalBase}/api/proxy/asset?url=` : `/api/proxy/asset?url=`);
         
-        // 1. Rewrite relative fonts to be absolute Local Proxy URLs
-        enhancedHtml = enhancedHtml.replace(/(href|src)="\/([^/][^"]+\.(?:woff2?|ttf|otf)(?:\?.*)?)"/g, `$1="${proxyUrl}${origin}/$2"`);
+        // OPTIMASI H9: Gabungkan 3 operasi regex replace terpisah menjadi single pass replacement untuk menghemat memori & CPU
+        const combinedRegex = /(?:(href|src)="\/([^/][^"]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)"|(href|src)="(https?:\/\/[^"]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)"|url\(['"]?([^'")]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)(?=['"]?\)))/g;
         
-        // 2. Bungkus font eksternal absolut dalam Proxy absolut
-        // Hindari pembungkusan ganda jika sudah dibungkus dalam URL proxy sebelumnya menggunakan callback JS untuk mencegah bahaya ReDoS (CPU Hang)
-        const fontRegex = /(href|src)="(https?:\/\/[^"]+\.(?:woff2?|ttf|otf)(?:\?[^"]*)?)"/g;
-        enhancedHtml = enhancedHtml.replace(fontRegex, (match, attr, fontUrl) => {
-            if (fontUrl.includes("/api/proxy")) {
-                return match;
+        enhancedHtml = enhancedHtml.replace(combinedRegex, (match, attrRel, pathRel, attrAbs, urlAbs, pathUrl) => {
+            if (attrRel && pathRel) {
+                // 1. Rewrite relative fonts to be absolute Local Proxy URLs
+                return `${attrRel}="${proxyUrl}${origin}/${pathRel}"`;
             }
-            return `${attr}="${proxyUrl}${fontUrl}"`;
-        });
-
-        // 3. Rewrite url() patterns in internal <style> blocks
-        enhancedHtml = enhancedHtml.replace(/url\(['"]?([^'")]+\.(?:woff2?|ttf|otf)(?:\?.*)?)(?=['"]?\))/g, (match, path) => {
-            const absoluteFontUrl = path.startsWith('http') ? path : (path.startsWith('/') ? `${origin}${path}` : `${baseDir}${path}`);
-            return `url("${proxyUrl}${absoluteFontUrl}"`;
+            if (attrAbs && urlAbs) {
+                // 2. Bungkus font eksternal absolut dalam Proxy absolut
+                if (urlAbs.includes("/api/proxy")) {
+                    return match;
+                }
+                return `${attrAbs}="${proxyUrl}${urlAbs}"`;
+            }
+            if (pathUrl) {
+                // 3. Rewrite url() patterns in internal <style> blocks
+                const absoluteFontUrl = pathUrl.startsWith('http') 
+                    ? pathUrl 
+                    : (pathUrl.startsWith('/') ? `${origin}${pathUrl}` : `${baseDir}${pathUrl}`);
+                return `url("${proxyUrl}${absoluteFontUrl}"`;
+            }
+            return match;
         });
 
         return enhancedHtml;

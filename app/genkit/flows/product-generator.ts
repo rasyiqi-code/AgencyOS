@@ -1,18 +1,21 @@
 import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
 
+// OPTIMASI M3: Definisikan schema Zod sekali sebagai konstanta modul agar tidak diduplikasi di RAM
+const productOutputSchema = z.object({
+    name: z.string(),
+    name_id: z.string(),
+    description: z.string(),
+    description_id: z.string(),
+    slug: z.string(),
+    recommended_price: z.number(),
+});
+
 export const productGeneratorFlow = ai.defineFlow(
     {
         name: 'productGeneratorFlow',
         inputSchema: z.string(),
-        outputSchema: z.object({
-            name: z.string(),
-            name_id: z.string(),
-            description: z.string(),
-            description_id: z.string(),
-            slug: z.string(),
-            recommended_price: z.number(),
-        }),
+        outputSchema: productOutputSchema,
     },
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
@@ -42,14 +45,7 @@ export const productGeneratorFlow = ai.defineFlow(
             Return strictly valid JSON matching the schema.
             `,
             output: {
-                schema: z.object({
-                    name: z.string(),
-                    name_id: z.string(),
-                    description: z.string(),
-                    description_id: z.string(),
-                    slug: z.string(),
-                    recommended_price: z.number(),
-                })
+                schema: productOutputSchema
             }
         });
 

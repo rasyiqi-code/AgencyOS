@@ -4,6 +4,9 @@ interface StreamResponse {
     output?: Promise<unknown>;
 }
 
+// OPTIMASI H4: TextEncoder dideklarasikan sekali di lingkup modul agar tidak dibuat ulang di setiap chunk
+const textEncoder = new TextEncoder();
+
 export function toReadableStream(
     response: StreamResponse,
     options?: {
@@ -15,7 +18,7 @@ export function toReadableStream(
         async start(controller) {
             function enqueue(data: { message?: unknown; result?: { output: unknown }; error?: { message: string } }) {
                 const out = `data: ${JSON.stringify(data)}\n\n`;
-                controller.enqueue(new TextEncoder().encode(out));
+                controller.enqueue(textEncoder.encode(out));
             }
 
             try {
@@ -48,9 +51,8 @@ export function toReadableStream(
                 console.error((e as Error).stack);
                 enqueue({ error: { message: (e as Error).message } });
             } finally {
-                setTimeout(() => {
-                    controller.close();
-                }, 100);
+                // OPTIMASI H3: Langsung tutup controller tanpa delay buatan 100ms
+                controller.close();
             }
         },
     });

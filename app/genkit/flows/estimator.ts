@@ -2,27 +2,30 @@ import { z } from 'genkit';
 import { ai, getActiveAIConfig } from '../ai';
 import { pricingService } from '@/lib/server/pricing-service';
 
+// OPTIMASI M3: Definisikan schema Zod sekali sebagai konstanta modul agar tidak diduplikasi di RAM
+const estimateOutputSchema = z.object({
+    title: z.string(),
+    summary: z.string(),
+    complexity: z.string(),
+    screens: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+        hours: z.number()
+    })),
+    apis: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+        hours: z.number()
+    })),
+    totalHours: z.number(),
+    totalCost: z.number()
+});
+
 export const estimateFlow = ai.defineFlow(
     {
         name: 'estimateFlow',
         inputSchema: z.string(),
-        outputSchema: z.object({
-            title: z.string(),
-            summary: z.string(),
-            complexity: z.string(),
-            screens: z.array(z.object({
-                title: z.string(),
-                description: z.string(),
-                hours: z.number()
-            })),
-            apis: z.array(z.object({
-                title: z.string(),
-                description: z.string(),
-                hours: z.number()
-            })),
-            totalHours: z.number(),
-            totalCost: z.number()
-        }),
+        outputSchema: estimateOutputSchema,
     },
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
@@ -59,23 +62,7 @@ export const estimateFlow = ai.defineFlow(
             7. User Pricing Constraints: If the user mentions a specific budget or desired total cost, adjust the \`totalHours\` and/or complexity to approximate that cost if reasonably possible.
             `,
             output: {
-                schema: z.object({
-                    title: z.string(),
-                    summary: z.string(),
-                    complexity: z.string(),
-                    screens: z.array(z.object({
-                        title: z.string(),
-                        description: z.string(),
-                        hours: z.number()
-                    })),
-                    apis: z.array(z.object({
-                        title: z.string(),
-                        description: z.string(),
-                        hours: z.number()
-                    })),
-                    totalHours: z.number(),
-                    totalCost: z.number()
-                })
+                schema: estimateOutputSchema
             }
         });
 

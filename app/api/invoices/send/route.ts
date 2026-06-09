@@ -80,11 +80,21 @@ export async function POST(req: NextRequest) {
 
         // Trigger Push Notification (Tujuannya follow-up invoice)
         // Kita kirim ke semua subscribers karena targetnya guest/pendaftar umum yang mungkin lupa checkout
-        await broadcastPushNotification([], {
-            title: "Invoice Baru Terbit! 📄",
-            body: `Invoice #${estimateId.slice(-8).toUpperCase()} untuk ${estimate.service?.title || "layanan kami"} telah dikirim ke email Anda.`,
-            url: paymentLink || `${appUrl}/products`
-        }).catch(err => console.error("Auto Push Invoice Error:", err));
+        const subscriptions = await prisma.pushSubscription.findMany();
+        if (subscriptions.length > 0) {
+            const pushSubs = subscriptions.map((s) => ({
+                endpoint: s.endpoint,
+                keys: {
+                    p256dh: s.p256dh,
+                    auth: s.auth
+                }
+            }));
+            await broadcastPushNotification(pushSubs, {
+                title: "Invoice Baru Terbit! 📄",
+                body: `Invoice #${estimateId.slice(-8).toUpperCase()} untuk ${estimate.service?.title || "layanan kami"} telah dikirim ke email Anda.`,
+                url: paymentLink || `${appUrl}/products`
+            }).catch(err => console.error("Auto Push Invoice Error:", err));
+        }
 
         return NextResponse.json({ success: true, message: `Invoice sent to ${stackUser.primaryEmail}` });
     } catch (error) {
