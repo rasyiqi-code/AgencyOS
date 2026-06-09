@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Save, Pencil, X } from "lucide-react";
-import { updateBankDetails } from "@/app/actions/affiliates";
+import { updateBankDetailsFn } from "@/src/server/affiliates";
 
 interface BankSettingsProps {
     initialData?: {
@@ -36,7 +36,13 @@ export function BankSettingsCard({ initialData }: BankSettingsProps) {
         setLoading(true);
 
         try {
-            const result = await updateBankDetails(formData.bankName, formData.accountNumber, formData.accountHolder);
+            const result = await updateBankDetailsFn({
+                data: {
+                    bankName: formData.bankName,
+                    accountNumber: formData.accountNumber,
+                    accountHolder: formData.accountHolder
+                }
+            });
 
             if (!result.success) throw new Error("Failed to save");
 
