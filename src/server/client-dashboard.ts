@@ -3,6 +3,8 @@ import { prisma } from '@/lib/config/db'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { z } from 'zod'
 
+import { getCookie } from '@tanstack/react-start/server'
+
 // Helper untuk otentikasi client
 async function requireClient() {
   const user = await hexclaveServerApp.getUser()
@@ -11,18 +13,16 @@ async function requireClient() {
 }
 
 // Helper untuk mendeteksi locale dari cookie
-function getLocaleFromRequest(request: Request) {
-  const cookieHeader = request.headers.get('cookie') || ''
-  const match = cookieHeader.match(/NEXT_LOCALE=([^;]+)/)
-  return match ? match[1] : 'en'
+function getLocale() {
+  return getCookie('NEXT_LOCALE') || 'en'
 }
 
 // 1. Ambil data billing client
 export const getClientBillingDataFn = createServerFn({ method: 'GET' })
-  .handler(async ({ request }) => {
+  .handler(async () => {
     try {
       const user = await requireClient()
-      const locale = getLocaleFromRequest(request)
+      const locale = getLocale()
 
       const orders = await prisma.order.findMany({
         where: {
@@ -91,10 +91,10 @@ export const getClientBillingDataFn = createServerFn({ method: 'GET' })
 
 // 2. Ambil data quotes client
 export const getClientQuotesFn = createServerFn({ method: 'GET' })
-  .handler(async ({ request }) => {
+  .handler(async () => {
     try {
       const user = await requireClient()
-      const locale = getLocaleFromRequest(request)
+      const locale = getLocale()
       const estimates = await prisma.estimate.findMany({
         where: {
           project: {
@@ -121,10 +121,10 @@ export const getClientQuotesFn = createServerFn({ method: 'GET' })
 // 3. Ambil data missions client
 export const getClientMissionsFn = createServerFn({ method: 'GET' })
   .validator(z.object({ q: z.string().optional() }))
-  .handler(async ({ data: { q }, request }) => {
+  .handler(async ({ data: { q } }) => {
     try {
       const user = await requireClient()
-      const locale = getLocaleFromRequest(request)
+      const locale = getLocale()
 
       const allProjects = await prisma.project.findMany({
         where: {
@@ -161,10 +161,10 @@ export const getClientMissionsFn = createServerFn({ method: 'GET' })
 
 // 4. Ambil data services client
 export const getClientServicesFn = createServerFn({ method: 'GET' })
-  .handler(async ({ request }) => {
+  .handler(async () => {
     try {
       await requireClient()
-      const locale = getLocaleFromRequest(request)
+      const locale = getLocale()
 
       const services = await prisma.service.findMany({
         where: { isActive: true },

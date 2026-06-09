@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getCookie } from '@tanstack/react-start/server'
 import { prisma } from '@/lib/config/db'
 import { isAdmin } from '@/lib/shared/auth-helpers'
 import { Prisma } from '@prisma/client'
@@ -50,14 +51,11 @@ export const getAdminTicketsFn = createServerFn({ method: 'GET' })
   })
 
 export const getSupportTickets = createServerFn({ method: 'GET' })
-  .handler(async ({ request }) => {
+  .handler(async () => {
     try {
       const user = await hexclaveServerApp.getUser()
       if (!user) throw new Error('Unauthorized')
-
-      const cookieHeader = request?.headers.get('cookie') || ''
-      const match = cookieHeader.match(/NEXT_LOCALE=([^;]+)/)
-      const locale = match ? match[1] : 'en'
+      const locale = getCookie('NEXT_LOCALE') || 'en'
 
       const rawTickets = await prisma.ticket.findMany({
         where: { userId: user.id, type: 'ticket' },
