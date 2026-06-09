@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        console.log(`[AssetProxy] Requesting: ${assetUrl}`);
+
         const origin = new URL(assetUrl).origin;
         const response = await fetch(assetUrl, {
             headers: {
@@ -83,7 +83,6 @@ export async function GET(req: NextRequest) {
         }
 
         // OPTIMASI: Mengalirkan (stream) body secara langsung alih-alih memuat seluruh file ke RAM
-        console.log(`[AssetProxy] Status Remote: ${response.status}, Tipe: ${contentType} (Streaming langsung)`);
 
         return new NextResponse(response.body, {
             status: response.status,

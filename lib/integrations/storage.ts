@@ -40,7 +40,7 @@ export async function getClient() {
     // Ensure protocol
     cleanEndpoint = `https://${cleanEndpoint}`;
 
-    console.log("[Storage] Initializing R2 Client");
+
 
     s3ClientInstance = new S3Client({
         region: "auto",
@@ -127,7 +127,7 @@ export async function uploadFile(
             if (!domain.startsWith("http")) domain = `https://${domain}`;
             if (domain.endsWith("/")) domain = domain.slice(0, -1);
             const finalUrl = `${domain}/${path}`;
-            console.log("R2 Upload Success. Public URL:", finalUrl);
+
             return finalUrl;
         } else {
             console.warn("R2 Public Domain not set (key: r2_public_domain). Falling back to internal proxy.");
@@ -177,6 +177,6 @@ export async function deleteFile(key: string): Promise<void> {
             Key: key,
         }));
 
-        console.log("[Storage] Deleted file:", key);
+
     });
 }

@@ -80,7 +80,7 @@ export class PaymentGatewayService {
             update: { value: JSON.stringify(config) },
             create: { key: "midtrans_config", value: JSON.stringify(config) }
         });
-        console.log("[PaymentGateway] Midtrans config saved to database");
+
     }
 
     /**
@@ -92,7 +92,7 @@ export class PaymentGatewayService {
             update: { value: JSON.stringify(config) },
             create: { key: "creem_config", value: JSON.stringify(config) }
         });
-        console.log("[PaymentGateway] Creem config saved to database");
+
     }
 
     /**

@@ -1,5 +1,5 @@
 
-import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { getCachedUsers } from "@/lib/config/hexclave";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { NextResponse } from "next/server";
 
@@ -9,7 +9,7 @@ export async function GET() {
     }
 
     try {
-        const users = await hexclaveServerApp.listUsers();
+        const users = await getCachedUsers();
         // Simply return the list of users with relevant fields
         const simplifiedUsers = users.map((u: { id: string; displayName?: string | null; primaryEmail?: string | null }) => ({
             id: u.id,

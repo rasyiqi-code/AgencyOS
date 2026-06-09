@@ -287,7 +287,7 @@ export function FloatingChatWidget() {
     };
 
     const startHumanHandoff = async () => {
-        console.log("Starting human handoff, user state:", user ? "logged in" : "guest");
+
         if (user) {
             // Already logged in, initiate chat directly
             try {
@@ -298,7 +298,7 @@ export function FloatingChatWidget() {
             }
         } else {
             // Guest, show form
-            console.log("Switching to human_onboarding mode");
+
             setMode("human_onboarding");
         }
     };

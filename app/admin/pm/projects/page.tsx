@@ -1,7 +1,5 @@
-
-
 import { prisma } from "@/lib/config/db";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { hexclaveServerApp, getCachedUsers } from "@/lib/config/hexclave";
 import { Layers } from "lucide-react";
 import { Prisma } from "@prisma/client";
 import { ProjectAccordionList } from "@/components/admin/pm/projects-accordion-list";
@@ -46,7 +44,7 @@ export default async function AdminProjectsPage({
             matchedUserIds = [query];
         } else {
             try {
-                const allUsers = await hexclaveServerApp.listUsers();
+                const allUsers = await getCachedUsers() as unknown as StackUser[];
                 matchedUserIds = allUsers
                     .filter((u: StackUser) =>
                         (u.displayName && u.displayName.toLowerCase().includes(query.toLowerCase())) ||

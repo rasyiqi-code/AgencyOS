@@ -98,7 +98,7 @@ export async function getCreem(): Promise<CreemSDK> {
         }) as CreemSDK;
         creemConfigHash = configHash;
 
-        console.log(`[Creem] SDK initialized (${config.isProduction ? 'LIVE' : 'TEST'} mode)`);
+
     }
     return creemInstance;
 }
@@ -109,7 +109,7 @@ export async function getCreem(): Promise<CreemSDK> {
 export function resetCreemInstance() {
     creemInstance = null;
     extendedCreemInstance = null;
-    console.log("[Creem] Instance reset");
+
 }
 
 /**

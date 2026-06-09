@@ -1,8 +1,15 @@
 "use client";
 
 import { Bonus, Coupon } from "@/lib/shared/types";
-import { Gift, Check, ShieldCheck, Download, Package } from "lucide-react";
-import * as LucideIcons from "lucide-react";
+import { 
+    Gift, Check, ShieldCheck, Download, Package, Zap, Layers, PlusCircle, 
+    Flame, Globe, Infinity as InfinityIcon, Star, Crown 
+} from "lucide-react";
+
+const IconMap: Record<string, React.ElementType> = {
+    Gift, Check, ShieldCheck, Download, Package, Zap, Layers, PlusCircle, 
+    Flame, Globe, Infinity: InfinityIcon, Star, Crown
+};
 
 import { useTranslations } from "next-intl";
 
@@ -78,8 +85,8 @@ export function DigitalCheckoutSummary({ product, bonuses }: DigitalCheckoutSumm
                     <div className="grid gap-3">
                         {bonuses.length > 0 ? (
                             bonuses.map((bonus, i) => {
-                                const iconName = (bonus.icon || "Check") as keyof typeof LucideIcons;
-                                const Icon = (LucideIcons[iconName] as unknown as React.ElementType) || Check;
+                                const iconName = bonus.icon || "Check";
+                                const Icon = IconMap[iconName] || Check;
                                 return (
                                     <div key={i} className="flex items-center gap-3 text-zinc-300">
                                         <div className="w-5 h-5 rounded-full bg-lime-500/20 flex items-center justify-center shrink-0">

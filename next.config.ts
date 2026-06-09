@@ -20,9 +20,7 @@ const nextConfig: NextConfig = {
     },
     optimizePackageImports: [
       'lucide-react',
-      '@radix-ui/react-icons',
       'date-fns',
-      'lodash',
       'framer-motion',
       'clsx',
       'tailwind-merge',

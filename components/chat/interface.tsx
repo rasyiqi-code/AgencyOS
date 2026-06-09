@@ -1,6 +1,9 @@
 'use client';
 
-import ReactMarkdown from 'react-markdown';
+import dynamic from 'next/dynamic';
+
+// Lazy load ReactMarkdown — hanya dibutuhkan saat pesan assistant dirender
+const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
 import remarkGfm from 'remark-gfm';
 
 import { Button } from '@/components/ui/button';

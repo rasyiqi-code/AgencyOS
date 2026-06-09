@@ -22,59 +22,67 @@ export function ServiceWorkerRegistrar() {
             return;
         }
 
+        // Referensi interval untuk cleanup saat unmount
+        let updateInterval: ReturnType<typeof setInterval> | null = null;
+
+        /**
+         * Mendaftarkan service worker dan setup listener update.
+         */
+        async function registerServiceWorker(): Promise<void> {
+            try {
+                const registration = await navigator.serviceWorker.register("/sw.js", {
+                    scope: "/",
+                });
+
+                // Cek update saat pertama kali
+                registration.update();
+
+                // Listener: SW baru ditemukan (update available)
+                registration.addEventListener("updatefound", () => {
+                    const newWorker = registration.installing;
+                    if (!newWorker) return;
+
+                    newWorker.addEventListener("statechange", () => {
+                        // SW baru sudah terinstall dan siap diaktifkan
+                        if (
+                            newWorker.state === "installed" &&
+                            navigator.serviceWorker.controller
+                        ) {
+                            // Ada versi baru — tampilkan notifikasi ke user
+                            showUpdateNotification(registration);
+                        }
+                    });
+                });
+
+                // Periodic update check (setiap 1 jam) — disimpan untuk cleanup
+                updateInterval = setInterval(
+                    () => {
+                        registration.update();
+                    },
+                    60 * 60 * 1000
+                );
+            } catch (error) {
+                console.error("[PWA] Gagal mendaftarkan Service Worker:", error);
+            }
+        }
+
         // Jalankan registrasi setelah halaman benar-benar selesai loading
         if (document.readyState === "complete") {
             registerServiceWorker();
         } else {
             window.addEventListener("load", registerServiceWorker);
-            return () => window.removeEventListener("load", registerServiceWorker);
         }
+
+        // Cleanup: hapus event listener dan interval saat unmount
+        return () => {
+            window.removeEventListener("load", registerServiceWorker);
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        };
     }, []);
 
     return null;
-}
-
-/**
- * Mendaftarkan service worker dan setup listener update.
- */
-async function registerServiceWorker(): Promise<void> {
-    try {
-        const registration = await navigator.serviceWorker.register("/sw.js", {
-            scope: "/",
-        });
-
-        console.log("[PWA] Service Worker terdaftar, scope:", registration.scope);
-
-        // Cek update saat pertama kali
-        registration.update();
-
-        // Listener: SW baru ditemukan (update available)
-        registration.addEventListener("updatefound", () => {
-            const newWorker = registration.installing;
-            if (!newWorker) return;
-
-            newWorker.addEventListener("statechange", () => {
-                // SW baru sudah terinstall dan siap diaktifkan
-                if (
-                    newWorker.state === "installed" &&
-                    navigator.serviceWorker.controller
-                ) {
-                    // Ada versi baru — tampilkan notifikasi ke user
-                    showUpdateNotification(registration);
-                }
-            });
-        });
-
-        // Periodic update check (setiap 1 jam)
-        setInterval(
-            () => {
-                registration.update();
-            },
-            60 * 60 * 1000
-        );
-    } catch (error) {
-        console.error("[PWA] Gagal mendaftarkan Service Worker:", error);
-    }
 }
 
 /**
@@ -101,3 +109,4 @@ function showUpdateNotification(
         },
     });
 }
+

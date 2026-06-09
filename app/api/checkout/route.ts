@@ -309,10 +309,13 @@ export async function POST(req: Request) {
         return NextResponse.json({ orderId });
     } catch (error) {
         console.error("[MIDTRANS_CHECKOUT_ERROR]", error);
+        const isProd = process.env.NODE_ENV === "production";
         return NextResponse.json({
-            error: error instanceof Error ? error.message : "Internal Error",
-            debugSteps,
-            details: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+            error: isProd ? "Internal Error" : (error instanceof Error ? error.message : "Internal Error"),
+            ...(isProd ? {} : {
+                debugSteps,
+                details: JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+            })
         }, { status: 500 });
     }
 }

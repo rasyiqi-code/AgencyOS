@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { getCachedUsers } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -26,7 +26,7 @@ export async function GET() {
         }
         let stackUsers: StackUser[] = [];
         try {
-            stackUsers = await hexclaveServerApp.listUsers() as unknown as StackUser[];
+            stackUsers = await getCachedUsers() as unknown as StackUser[];
         } catch (e) {
             console.error("Failed to list stack users:", e);
         }
@@ -43,7 +43,11 @@ export async function GET() {
             };
         });
 
-        return NextResponse.json(formattedExperts);
+        return NextResponse.json(formattedExperts, {
+            headers: {
+                "Cache-Control": "public, max-age=3600"
+            }
+        });
     } catch (error) {
         console.error("Failed to fetch experts:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     }
 
     try {
-        console.log(`[PAYMENT_STATUS] Checking Order ${orderId}`);
+
         const order = await prisma.order.findUnique({
             where: { id: orderId },
             select: {
@@ -107,14 +107,14 @@ export async function GET(req: Request) {
         // 2. Creem Check
         if (order.status === 'pending') {
             const checkoutId = searchParams.get('checkout_id') || order.transactionId;
-            console.log(`[PAYMENT_STATUS] Checking Creem for Order ${orderId}, Checkout: ${checkoutId}`);
+
 
             if (checkoutId) {
                 try {
                     const creem = await getCreem();
                     const creemStatus = await creem.checkouts.get({ checkoutId });
 
-                    console.log("[PAYMENT_STATUS] Creem Status:", JSON.stringify(creemStatus, null, 2));
+
 
                     const status = creemStatus.status as string;
                     if (status === 'completed' || status === 'paid') {

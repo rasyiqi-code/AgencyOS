@@ -17,7 +17,7 @@ export function InvoicePayButton({ orderId, snapToken, amount }: InvoicePayButto
 
     const handlePayment = async () => {
         setIsLoading(true);
-        console.log(`Debug: Processing payment for Order #${orderId}, Amount: ${amount}`);
+
         try {
             const token = snapToken;
 
@@ -32,13 +32,13 @@ export function InvoicePayButton({ orderId, snapToken, amount }: InvoicePayButto
                 window.snap.pay(token, {
                     onSuccess: async (result: unknown) => {
                         toast.success("Pembayaran berhasil!");
-                        console.log("Success", result);
+
                         // Refresh page to show paid status
                         window.location.reload();
                     },
                     onPending: (result: unknown) => {
                         toast.info("Pembayaran menunggu verifikasi.");
-                        console.log("Pending", result);
+
                     },
                     onError: (result: unknown) => {
                         toast.error("Pembayaran gagal.");

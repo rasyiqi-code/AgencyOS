@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
 
 export function PushNotificationBanner() {
-    console.log("PushNotificationBanner initialized");
     const { isSupported, isSubscribed, permission, subscribe } = usePushNotifications();
 
     useEffect(() => {

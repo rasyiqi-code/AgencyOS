@@ -15,9 +15,14 @@ export async function GET() {
     try {
         const services = await prisma.service.findMany({
             where: { isActive: true },
-            orderBy: { price: 'asc' }
+            orderBy: { price: 'asc' },
+            take: 50
         });
-        return NextResponse.json(services);
+        return NextResponse.json(services, {
+            headers: {
+                "Cache-Control": "public, max-age=3600"
+            }
+        });
     } catch (error) {
         console.error("Service API Error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

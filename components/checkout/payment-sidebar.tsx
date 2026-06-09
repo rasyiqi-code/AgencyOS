@@ -29,8 +29,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
     orderId?: string | null,
     selectedAddons?: ServiceAddon[]
 }) {
-    console.log("DEBUG CHECKOUT - priceType:", estimate.service?.priceType);
-    console.log("DEBUG CHECKOUT - status:", estimate.status);
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
     const [isProcessing, setIsProcessing] = useState(false);

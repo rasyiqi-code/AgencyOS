@@ -84,8 +84,7 @@ export async function createManualQuote(formData: FormData) {
         // Auto-fetch name from Stack Auth if not provided and not offline
         if (!finalClientName && userId !== 'OFFLINE') {
             try {
-                const users = await hexclaveServerApp.listUsers({ limit: 100 });
-                const user = users.find(u => u.id === userId);
+                const user = await hexclaveServerApp.getUser(userId);
                 const fetchedName = user?.displayName || user?.primaryEmail || null;
                 if (fetchedName) finalClientName = fetchedName;
             } catch (e) {

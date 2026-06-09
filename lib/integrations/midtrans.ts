@@ -71,7 +71,7 @@ export async function getSnap(): Promise<MidtransSnap> {
         });
         snapConfigHash = configHash;
 
-        console.log(`[Midtrans] Snap initialized (${config.isProduction ? 'PRODUCTION' : 'SANDBOX'} mode)`);
+
     }
     return snapInstance;
 }
@@ -97,7 +97,7 @@ export async function getCore(): Promise<MidtransCore> {
         });
         coreConfigHash = configHash;
 
-        console.log(`[Midtrans] CoreApi initialized (${config.isProduction ? 'PRODUCTION' : 'SANDBOX'} mode)`);
+
     }
     return coreInstance;
 }
@@ -108,7 +108,7 @@ export async function getCore(): Promise<MidtransCore> {
 export function resetMidtransInstances() {
     snapInstance = null;
     coreInstance = null;
-    console.log("[Midtrans] Instances reset");
+
 }
 
 // Legacy exports removed - use getSnap() and getCore() instead

@@ -20,12 +20,18 @@ export async function GET(request: Request) {
     }
 
     try {
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '50');
+        const skip = (page - 1) * limit;
+
         const tickets = await prisma.ticket.findMany({
             where: {
                 userId: user.id,
                 ...(type ? { type } : {})
             } as Prisma.TicketWhereInput,
             orderBy: { updatedAt: 'desc' },
+            take: limit,
+            skip,
             include: {
                 messages: {
                     take: 1,

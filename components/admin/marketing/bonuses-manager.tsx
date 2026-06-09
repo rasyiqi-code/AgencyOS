@@ -5,10 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, Gift } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import * as LucideIcons from "lucide-react";
+import { 
+    Plus, Trash2, Gift, Zap, Check, ShieldCheck, Layers, PlusCircle, Download, 
+    Flame, Globe, Infinity as InfinityIcon, Star, Crown, CheckCircle2, Award, 
+    Heart, HelpCircle, BookOpen, Sparkles, Trophy, Lightbulb, Clock, Compass 
+} from "lucide-react";
+
+const IconMap: Record<string, React.ElementType> = {
+    Plus, Trash2, Gift, Zap, Check, ShieldCheck, Layers, PlusCircle, Download, 
+    Flame, Globe, Infinity: InfinityIcon, Star, Crown, CheckCircle2, Award, 
+    Heart, HelpCircle, BookOpen, Sparkles, Trophy, Lightbulb, Clock, Compass
+};
 
 interface Bonus {
     id: string;
@@ -221,7 +230,7 @@ export function BonusesManager() {
                             ) : (
                                 bonuses.map((bonus) => {
                                     // Dynamic access to Lucide icons
-                                    const IconComponent = (LucideIcons as unknown as Record<string, React.ElementType>)[bonus.icon || 'Gift'] || Gift;
+                                    const IconComponent = IconMap[bonus.icon || 'Gift'] || Gift;
 
                                     return (
                                         <TableRow key={bonus.id} className="border-white/5">
@@ -281,7 +290,7 @@ export function BonusesManager() {
                         <div className="text-center py-8 text-zinc-500 text-sm">Bonus tidak ditemukan.</div>
                     ) : (
                         bonuses.map((bonus) => {
-                            const IconComponent = (LucideIcons as unknown as Record<string, React.ElementType>)[bonus.icon || 'Gift'] || Gift;
+                            const IconComponent = IconMap[bonus.icon || 'Gift'] || Gift;
                             return (
                                 <div key={bonus.id} className="p-3 space-y-3">
                                     <div className="flex justify-between items-start">

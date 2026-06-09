@@ -6,7 +6,11 @@ export async function GET(req: Request) {
         const { searchParams } = new URL(req.url);
         const admin = searchParams.get("admin") === "true";
         const promotions = await getPromotions(!admin);
-        return NextResponse.json(promotions);
+        const res = NextResponse.json(promotions);
+        if (!admin) {
+            res.headers.set("Cache-Control", "public, max-age=3600");
+        }
+        return res;
     } catch (error) {
         console.error("Promotions API error:", error);
         return NextResponse.json({ error: (error as Error).message }, { status: 500 });

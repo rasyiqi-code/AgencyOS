@@ -12,12 +12,17 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const productId = searchParams.get('productId');
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '50');
+        const skip = (page - 1) * limit;
 
         const where = productId ? { productId } : {};
 
         const licenses = await prisma.license.findMany({
             where,
             orderBy: { createdAt: 'desc' },
+            take: limit,
+            skip,
             include: {
                 product: {
                     select: { name: true, slug: true }

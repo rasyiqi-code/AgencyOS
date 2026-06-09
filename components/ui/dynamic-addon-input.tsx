@@ -63,7 +63,7 @@ export function DynamicAddonInput({ name, defaultValue = [], className, currency
             {addons.length > 0 && (
                 <ul className="space-y-2">
                     {addons.map((addon, index) => (
-                        <li key={index} className="flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200">
+                        <li key={`${addon.name}-${index}`} className="flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200">
                             <div className="flex-1 flex items-center justify-between gap-2 bg-zinc-900/40 border border-white/5 rounded-lg px-3 py-2 text-sm text-zinc-300">
                                 <div className="flex items-center gap-2">
                                     <GripVertical className="w-4 h-4 text-zinc-600 cursor-move opacity-50" />

@@ -70,16 +70,15 @@ export async function POST(req: NextRequest) {
         // 1. CHECK: Has a dynamic product already been created for this Order? (Use Metadata)
         if ((paymentMetadata as Record<string, string>).creemProductId) {
             productId = (paymentMetadata as Record<string, string>).creemProductId as string;
-            console.log("Reusing existing Dynamic Creem Product ID:", productId);
+
         }
         // 2. CHECK: Use synced Creem Product ID if available (Official Services)
         else if (creemProductIdFromService) {
             productId = creemProductIdFromService;
-            console.log("Using synced Official Creem Product ID:", productId);
+
         }
         else {
-            // 3. FALLBACK: Create a NEW dynamic product
-            console.log("Creating NEW Dynamic Creem Product for Order:", orderId);
+            // FALLBACK: Create a NEW dynamic product
             const { resetCreemInstance } = await import("@/lib/integrations/creem");
             resetCreemInstance(); // Safety: Ensure fresh config
 
@@ -114,7 +113,7 @@ export async function POST(req: NextRequest) {
                     data: updateData
                 });
             }
-            console.log("Saved new Dynamic Product ID to Order Metadata:", productId);
+
         }
 
         // 2. Create Checkout Session

@@ -27,7 +27,11 @@ export async function GET(req: Request) {
                 orderBy: { createdAt: "desc" },
             });
 
-        return NextResponse.json({ success: true, data: testimonials });
+        const res = NextResponse.json({ success: true, data: testimonials });
+        if (onlyActive) {
+            res.headers.set("Cache-Control", "public, max-age=3600");
+        }
+        return res;
     } catch {
         return NextResponse.json({ success: false, error: "Failed to fetch testimonials" }, { status: 500 });
     }

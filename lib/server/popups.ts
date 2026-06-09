@@ -8,6 +8,7 @@ export const getPopUps = cache(async () => {
         async () => {
             return await prisma.popUp.findMany({
                 orderBy: { createdAt: "desc" },
+                take: 100,
             });
         },
         ["popups-all"],
@@ -21,6 +22,7 @@ export const getActivePopUps = cache(async () => {
             return await prisma.popUp.findMany({
                 where: { isActive: true },
                 orderBy: { createdAt: "desc" },
+                take: 100,
             });
         },
         ["popups-active"],

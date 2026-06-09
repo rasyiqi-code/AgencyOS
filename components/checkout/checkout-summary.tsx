@@ -1,8 +1,25 @@
 "use client";
 
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Gift, Zap, Check, ShieldCheck } from "lucide-react";
-import * as LucideIcons from "lucide-react";
+import { 
+    Gift, Zap, Check, ShieldCheck, Layers, PlusCircle, Download, Flame, Globe, 
+    Infinity as InfinityIcon, Star, Crown 
+} from "lucide-react";
+
+const IconMap: Record<string, React.ElementType> = {
+    Check,
+    Gift,
+    Zap,
+    ShieldCheck,
+    Layers,
+    PlusCircle,
+    Download,
+    Flame,
+    Globe,
+    Infinity: InfinityIcon,
+    Star,
+    Crown
+};
 
 
 import { useTranslations, useLocale } from "next-intl";
@@ -70,7 +87,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                 {serviceFeatures && serviceFeatures.length > 0 && (
                     <div className="pt-6 border-t border-white/5">
                         <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <LucideIcons.Layers className="w-4 h-4 text-lime-400" />
+                            <Layers className="w-4 h-4 text-lime-400" />
                             {t("deliverables")}
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
@@ -88,7 +105,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                 {serviceAddons && serviceAddons.length > 0 && (
                     <div className="pt-6 border-t border-white/5">
                         <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <LucideIcons.PlusCircle className="w-4 h-4 text-blue-400" />
+                            <PlusCircle className="w-4 h-4 text-blue-400" />
                             {isId ? "Add-ons Tersedia" : "Available Add-ons"}
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
@@ -126,8 +143,8 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                         {bonuses.length > 0 ? (
                             bonuses.map((bonus, i) => {
                                 // Dynamic Bonus Icon
-                                const iconName = (bonus.icon || "Check") as keyof typeof LucideIcons;
-                                const Icon = (LucideIcons[iconName] as unknown as React.ElementType) || Check;
+                                const iconName = bonus.icon || "Check";
+                                const Icon = IconMap[iconName] || Check;
                                 return (
                                     <div key={i} className="flex items-center gap-3 text-zinc-300">
                                         <div className="w-5 h-5 rounded-full bg-lime-500/20 flex items-center justify-center shrink-0">

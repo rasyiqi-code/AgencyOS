@@ -18,25 +18,25 @@ export function EmbeddedPayment({ snapToken }: EmbeddedPaymentProps) {
 
         const initSnap = () => {
             if (window.snap) {
-                console.log("Initializing Snap Embed for token:", snapToken);
+
                 try {
                     window.snap.embed(snapToken, {
                         embedId: 'snap-container',
                         onSuccess: async (result: unknown) => {
                             toast.success("Pembayaran berhasil!");
-                            console.log("Success", result);
+
                             window.location.reload();
                         },
                         onPending: (result: unknown) => {
                             toast.info("Pembayaran menunggu verifikasi.");
-                            console.log("Pending", result);
+
                         },
                         onError: (result: unknown) => {
                             toast.error("Pembayaran gagal.");
                             console.error("Error", result);
                         },
                         onClose: () => {
-                            console.log("Widget closed");
+
                         }
                     });
                     isEmbedInitialized.current = true;

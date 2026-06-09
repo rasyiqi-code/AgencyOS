@@ -1,4 +1,4 @@
-import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { getCachedUsers } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { ClientsDataTable } from "@/components/admin/clients/clients-data-table";
 import { clientColumns } from "@/components/admin/clients/client-columns";
@@ -12,7 +12,7 @@ export default async function AdminClientsPage() {
     // ... inside function
     let users: StackUser[] = [];
     try {
-        users = await hexclaveServerApp.listUsers();
+        users = await getCachedUsers() as unknown as StackUser[];
     } catch (error) {
         console.error("Failed to fetch users:", error);
     }
