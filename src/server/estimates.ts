@@ -421,3 +421,41 @@ export const scheduleEmailFn = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
+// 5. Menghapus penawaran/quote beserta proyek terkait
+export const deleteQuoteFn = createServerFn({ method: 'POST' })
+  .validator((id: string) => id)
+  .handler(async ({ data: estimateId }) => {
+    const user = await hexclaveServerApp.getUser()
+    if (!user) throw new Error("Unauthorized")
+
+    try {
+      const estimate = await prisma.estimate.findUnique({
+        where: { id: estimateId },
+        include: { project: true },
+      })
+
+      if (!estimate) return { error: "Quote not found" }
+
+      const isGlobalAdmin = await isAdmin()
+      if (!isGlobalAdmin && estimate.project?.userId !== user.id) {
+        return { error: "Unauthorized: you can only delete your own quotes" }
+      }
+
+      if (estimate.project) {
+        await prisma.project.delete({
+          where: { id: estimate.project.id },
+        })
+      }
+
+      await prisma.estimate.delete({
+        where: { id: estimateId },
+      })
+
+      return { success: true }
+    } catch (error) {
+      console.error("Error deleting quote:", error)
+      return { error: "Failed to delete quote" }
+    }
+  })
+
+
