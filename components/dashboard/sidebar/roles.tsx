@@ -138,6 +138,14 @@ export function SidebarSuperAdmin() {
                     <SidebarLink href="/admin/finance/orders?mode=services" icon={ShoppingCart} label="Client Invoices" />
                     <SidebarLink href="/admin/finance/quotes?mode=services" icon={MessageSquare} label="Quotes & Estimates" />
                     <SidebarLink href="/admin/finance/subscriptions?mode=services" icon={Repeat} label="Subscriptions" />
+
+                    {/* 3. PEMASARAN & AUDIENS (SERVICES) */}
+                    <SidebarSectionHeader>Campaigns & Leads</SidebarSectionHeader>
+                    <SidebarLink href="/admin/marketing/promotions?mode=services" icon={Megaphone} label="Visual Promos" />
+                    <SidebarLink href="/admin/portfolio?mode=services" icon={Images} label="Portfolio Admin" />
+                    <SidebarLink href="/admin/testimonials?mode=services" icon={MessageSquare} label="Testimonials" />
+                    <SidebarLink href="/admin/marketing/leads?mode=services" icon={UserPlus} label="Contact Leads" />
+                    <SidebarLink href="/admin/marketing/subscribers?mode=services" icon={Mail} label="Newsletter Subs" />
                 </>
             )}
 
