@@ -188,6 +188,8 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
                             type="button"
                             variant="ghost"
                             size="icon"
+                            aria-label="Attach file"
+                            title="Attach file"
                             className="h-9 w-9 text-zinc-400 hover:text-white"
                             onClick={() => document.getElementById('file-upload')?.click()}
                         >
@@ -204,6 +206,8 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
                     <Button
                         type="submit"
                         size="icon"
+                        aria-label="Send message"
+                        title="Send message"
                         className="h-9 w-9 bg-white text-black hover:bg-zinc-200"
                         disabled={(!newMessage.trim() && !file) || sending}
                     >

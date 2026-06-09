@@ -20,6 +20,8 @@ export function SidebarToggle() {
         <Button
             variant="ghost"
             size="icon"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             onClick={toggle}
             className={cn(
                 "h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/5 transition-all duration-300",
