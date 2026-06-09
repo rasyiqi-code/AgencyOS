@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/config/db";
 import { cache } from "react";
+import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 
 /**
  * Fetch SEO metadata for a specific path with caching and memoization.

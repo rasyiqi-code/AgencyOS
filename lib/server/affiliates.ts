@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/config/db";
+import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 
 /**
  * Fetch affiliate name by referral code dengan caching bawaan Next.js.

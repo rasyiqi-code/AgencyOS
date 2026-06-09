@@ -1,4 +1,6 @@
 
+import { unstable_cache } from "@/lib/cache";
+
 /**
  * Sebuah wrapper aman di atas `unstable_cache` Next.js.
  * 
