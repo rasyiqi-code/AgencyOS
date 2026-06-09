@@ -19,11 +19,11 @@ export function safeUnstableCache<Args extends unknown[], Return>(
         tags?: string[];
     }
 ): (...args: Args) => Promise<Return> {
-    const cachedFn = unstable_cache(cb, keyParts, options);
+    const cachedFn = unstable_cache(cb as any, keyParts || [], options as any);
 
     return (async (...args: Args) => {
         try {
-            return await cachedFn(...args);
+            return await cachedFn(...args) as Return;
         } catch (error: unknown) {
             const isMissingCache = error instanceof Error && 
                 (error.message.includes("incrementalCache missing") || 
