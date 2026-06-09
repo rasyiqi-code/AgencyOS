@@ -8,7 +8,7 @@ import { Download, CheckCircle, Loader2, AlertTriangle, Tag, Check, XCircle } fr
 import { ExtendedEstimate, Coupon, ServiceAddon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { Input } from "@/components/ui/input";
-import { validateCouponAction } from "@/app/actions/coupons";
+import { validateCouponFn } from "@/src/server/marketing";
 
 import { useTranslations } from "@/lib/i18n/hooks";
 
@@ -33,7 +33,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
     const ti = useTranslations("Invoice");
     const [isProcessing, setIsProcessing] = useState(false);
     const [countdown, setCountdown] = useState(5);
-    const router = useRouter();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (estimate.status === 'paid' && orderId && countdown > 0) {
@@ -46,9 +46,9 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
 
     useEffect(() => {
         if (countdown <= 0 && estimate.status === 'paid' && orderId) {
-            router.push(`/invoices/${orderId}`);
+            navigate({ to: `/invoices/${orderId}` });
         }
-    }, [countdown, estimate.status, orderId, router]);
+    }, [countdown, estimate.status, orderId, navigate]);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
     const [couponInput, setCouponInput] = useState("");
     const [isValidating, setIsValidating] = useState(false);
@@ -82,7 +82,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
         couponTimer.current = setTimeout(async () => {
             setIsValidating(true);
             try {
-                const result = await validateCouponAction(code, context);
+                const result = await validateCouponFn({ data: { code, context: context as any } });
                 if (result.valid && result.coupon) {
                     setCouponStatus("valid");
                     onApplyCoupon(result.coupon);

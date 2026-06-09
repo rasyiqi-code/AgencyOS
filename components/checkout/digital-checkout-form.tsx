@@ -14,7 +14,7 @@ import { Loader2, Tag, Check, XCircle } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
 import { useTranslations } from "@/lib/i18n/hooks";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import { validateCouponAction } from "@/app/actions/coupons";
+import { validateCouponFn } from "@/src/server/marketing";
 
 interface Product {
     id: string;
@@ -52,7 +52,7 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
         }
         return null;
     });
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const handleValidateCoupon = (code: string) => {
         setCouponInput(code);
@@ -67,7 +67,7 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
         couponTimer.current = setTimeout(async () => {
             setIsValidating(true);
             try {
-                const result = await validateCouponAction(code, "DIGITAL");
+                const result = await validateCouponFn({ data: { code, context: "DIGITAL" } });
                 if (result.valid && result.coupon) {
                     setCouponStatus("valid");
                     onApplyCoupon(result.coupon);
@@ -120,7 +120,7 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
             // 2. Redirect ke halaman invoice digital untuk pembayaran
             if (result.redirectUrl) {
                 toast.success(t('orderCreated'));
-                router.push(result.redirectUrl);
+                navigate({ to: result.redirectUrl });
             } else {
                 throw new Error(t('failRedirect'));
             }
