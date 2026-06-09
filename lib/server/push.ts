@@ -49,11 +49,27 @@ export async function sendPushNotification(
 
 export async function broadcastPushNotification(
     subscriptions: webpush.PushSubscription[],
-    payload: PushMessagePayload
+    payload: PushMessagePayload,
+    concurrencyLimit = 20
 ) {
-    const results = await Promise.all(
-        subscriptions.map((sub) => sendPushNotification(sub, payload))
-    );
+    const results: Array<{ success: boolean; expired?: boolean; error?: unknown }> = [];
+    const queue = [...subscriptions];
+    
+    // OPTIMASI: Inisialisasi pool worker untuk membatasi jumlah eksekusi paralel.
+    // Membantu mencegah kehabisan soket TCP dan memori RAM saat jumlah pelanggan sangat besar.
+    const workers = Array(Math.min(concurrencyLimit, queue.length))
+        .fill(null)
+        .map(async () => {
+            while (queue.length > 0) {
+                const sub = queue.shift();
+                if (sub) {
+                    const res = await sendPushNotification(sub, payload);
+                    results.push(res);
+                }
+            }
+        });
+        
+    await Promise.all(workers);
 
     const successful = results.filter((r) => r.success).length;
     const expired = results.filter((r) => r.expired).length;

@@ -1,5 +1,4 @@
 import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
 
 // Singleton to avoid re-initializing

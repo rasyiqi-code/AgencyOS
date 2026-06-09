@@ -75,25 +75,25 @@ export async function GET(req: NextRequest) {
 
         const contentType = response.headers.get("content-type") || "application/octet-stream";
         
-        // Validate Content-Type
+        // Validasi Content-Type
         const isAllowedContentType = ALLOWED_CONTENT_TYPES.some(type => contentType.toLowerCase().startsWith(type));
         if (!isAllowedContentType) {
-            console.error(`[AssetProxy] Blocked request for invalid content type: ${contentType}`);
+            console.error(`[AssetProxy] Permintaan diblokir karena tipe konten tidak valid: ${contentType}`);
             return new NextResponse("Forbidden: Invalid content type", { status: 403, headers });
         }
 
-        const buffer = await response.arrayBuffer();
+        // OPTIMASI: Mengalirkan (stream) body secara langsung alih-alih memuat seluruh file ke RAM
+        console.log(`[AssetProxy] Status Remote: ${response.status}, Tipe: ${contentType} (Streaming langsung)`);
 
-        console.log(`[AssetProxy] Remote Status: ${response.status}, Type: ${contentType}`);
-
-        return new NextResponse(buffer, {
+        return new NextResponse(response.body, {
+            status: response.status,
             headers: {
                 ...headers,
                 "Content-Type": contentType,
             },
         });
     } catch (error) {
-        console.error("[AssetProxy] Fatal Error:", error);
+        console.error("[AssetProxy] Error Fatal:", error);
         return new NextResponse("Internal Proxy Error", { status: 500, headers });
     }
 }

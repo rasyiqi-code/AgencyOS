@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { unstable_cache } from "next/cache";
+import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 import { SystemSetting } from "@prisma/client";
 import { cache } from "react";
 

@@ -8,7 +8,7 @@ describe("safeUnstableCache", () => {
         
         // Mock unstable_cache bawaan Next.js agar mengembalikan wrapper fungsi asli
         const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation(
-            (cb) => cb as any
+            (cb) => cb
         );
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
@@ -24,11 +24,12 @@ describe("safeUnstableCache", () => {
         const mockFn = mock(async () => "fallback_database_value");
 
         // Mock unstable_cache agar melempar error invariant Next.js 15+
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((() => {
-            return async () => {
+        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((cb) => {
+            if (!cb) throw new Error("Callback required");
+            return (async () => {
                 throw new Error("Invariant: incrementalCache missing in unstable_cache");
-            };
-        }) as any);
+            }) as unknown as typeof cb;
+        });
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
         const result = await cached();
@@ -43,11 +44,12 @@ describe("safeUnstableCache", () => {
         const mockFn = mock(async () => "database_value");
 
         // Mock unstable_cache agar melempar database error biasa
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((() => {
-            return async () => {
+        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((cb) => {
+            if (!cb) throw new Error("Callback required");
+            return (async () => {
                 throw new Error("Prisma: Connection failed");
-            };
-        }) as any);
+            }) as unknown as typeof cb;
+        });
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
 

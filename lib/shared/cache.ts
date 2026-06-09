@@ -10,20 +10,20 @@ import { unstable_cache } from "next/cache";
  * Wrapper ini menangkap error tersebut dan secara otomatis mem-bypass cache (langsung mengeksekusi
  * fungsi database/aslinya) agar aplikasi tidak crash dan API tetap berjalan dengan normal.
  */
-export function safeUnstableCache<T extends (...args: any[]) => Promise<any>>(
-    cb: T,
+export function safeUnstableCache<Args extends unknown[], Return>(
+    cb: (...args: Args) => Promise<Return>,
     keyParts?: string[],
     options?: {
         revalidate?: number | false;
         tags?: string[];
     }
-): T {
+): (...args: Args) => Promise<Return> {
     const cachedFn = unstable_cache(cb, keyParts, options);
 
-    return (async (...args: any[]) => {
+    return (async (...args: Args) => {
         try {
             return await cachedFn(...args);
-        } catch (error: any) {
+        } catch (error: unknown) {
             const isMissingCache = error instanceof Error && 
                 (error.message.includes("incrementalCache missing") || 
                  error.message.includes("Invariant:"));
@@ -37,5 +37,5 @@ export function safeUnstableCache<T extends (...args: any[]) => Promise<any>>(
             }
             throw error;
         }
-    }) as unknown as T;
+    });
 }
