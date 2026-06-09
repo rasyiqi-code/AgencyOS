@@ -13,6 +13,7 @@ import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "./currency
 import { MobileNav } from "./mobile-nav";
 import { MobileConfigMenu } from "./mobile-config-menu";
 import { MobileProjectActions } from "@/components/admin/pm/mobile-project-actions";
+import { DashboardModeSwitcher } from "@/components/admin/dashboard-mode-switcher";
 
 interface DashboardHeaderProps {
     allowedToSwitchViews?: boolean;
@@ -41,6 +42,7 @@ export function DashboardHeader({
 
     // Periksa apakah kita tidak berada di halaman utama dashboard atau halaman utama admin
     const showBackButton = cleanPath !== "/dashboard" && cleanPath !== "/admin";
+    const isAdminPage = cleanPath.startsWith("/admin");
     const isProjectPage = cleanPath === "/admin/pm/projects";
 
     return (
@@ -77,6 +79,13 @@ export function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+                {/* Switcher Mode Dasbor untuk Admin */}
+                {isAdminPage && (
+                    <div className="mr-1 sm:mr-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <DashboardModeSwitcher />
+                    </div>
+                )}
+
                 <div className="hidden md:block">
                     <UserButton mockUser={mockUserFallback} />
                 </div>

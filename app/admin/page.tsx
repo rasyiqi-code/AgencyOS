@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { SuperAdminDashboardView } from "@/components/admin/views/super-admin-view";
 import { BillingDashboardView } from "@/components/admin/views/billing-view";
 import { ProjectDashboardView } from "@/components/admin/views/project-view";
-import { DashboardModeSwitcher } from "@/components/admin/dashboard-mode-switcher";
 
 interface PageProps {
     searchParams: Promise<{ view?: string; mode?: string }>;
@@ -43,11 +42,6 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     if (isProjectAdmin && isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
-                {requestedView !== 'project' && (
-                    <div className="flex justify-end pt-2">
-                        <DashboardModeSwitcher />
-                    </div>
-                )}
                 {requestedView === 'finance' ? (
                     <BillingDashboardView mode={mode} />
                 ) : requestedView === 'project' ? (
@@ -64,9 +58,6 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     if (isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
-                <div className="flex justify-end pt-2">
-                    <DashboardModeSwitcher />
-                </div>
                 <BillingDashboardView mode={mode} />
             </div>
         );
