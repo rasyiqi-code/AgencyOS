@@ -22,19 +22,20 @@ export function Testimonials() {
     const [reviews, setReviews] = useState<{ name: string; role: string; text: string; image: string }[]>([]);
 
     useEffect(() => {
+        // Mengamankan pemanggilan Promise.all dengan catch block agar jika salah satu server function gagal, aplikasi tidak crash
         Promise.all([
-            getSystemSettings({ data: ["AGENCY_NAME"] }),
-            getActiveTestimonials({ data: 10 }),
+            getSystemSettings({ data: ["AGENCY_NAME"] }).catch(() => [{ key: "AGENCY_NAME", value: "Agency OS" }]),
+            getActiveTestimonials({ data: 10 }).catch(() => []),
         ]).then(([settings, dbTestimonials]) => {
             const name = (settings as { key: string; value: string }[]).find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
             setAgencyName(name);
 
-            if ((dbTestimonials as unknown[]).length > 0) {
+            if (dbTestimonials && (dbTestimonials as unknown[]).length > 0) {
                 setReviews(
                     (dbTestimonials as unknown as DBTestimonial[]).map(item => ({
-                        name: item.name,
-                        role: item.role,
-                        text: item.content,
+                        name: item.name || "User",
+                        role: item.role || "Client",
+                        text: item.content || "",
                         image: item.avatar || "",
                     }))
                 );
@@ -48,6 +49,16 @@ export function Testimonials() {
                     }))
                 );
             }
+        }).catch((err) => {
+            console.error("Gagal memuat testimoni, menggunakan fallback statis:", err);
+            setReviews(
+                [0, 1, 2, 3, 4].map(i => ({
+                    name: t(`reviews.${i}.name`),
+                    role: t(`reviews.${i}.role`),
+                    text: t(`reviews.${i}.text`, { brand: "Agency OS" }),
+                    image: `https://i.pravatar.cc/64?u=user${i + 1}`,
+                }))
+            );
         });
     }, []);
 

@@ -34,13 +34,13 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
                             <Avatar className="w-10 h-10 border border-white/10 ring-2 ring-white/5">
-                                <AvatarImage src={review.image} alt={review.name} className="object-cover" />
+                                <AvatarImage src={review.image} alt={review.name || "User"} className="object-cover" />
                                 <AvatarFallback className="bg-zinc-800 text-white font-bold text-sm">
-                                    {review.name.charAt(0)}
+                                    {(review.name || "U").charAt(0)}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
-                                <div className="text-white font-semibold text-sm">{review.name}</div>
+                                <div className="text-white font-semibold text-sm">{review.name || "User"}</div>
                                 <div className="text-zinc-500 text-xs">{review.role}</div>
                             </div>
                         </div>
@@ -62,13 +62,13 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-4">
                             <Avatar className="w-12 h-12 border border-white/10 ring-2 ring-white/5">
-                                <AvatarImage src={review.image} alt={review.name} className="object-cover" />
+                                <AvatarImage src={review.image} alt={review.name || "User"} className="object-cover" />
                                 <AvatarFallback className="bg-zinc-800 text-white font-bold text-lg">
-                                    {review.name.charAt(0)}
+                                    {(review.name || "U").charAt(0)}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
-                                <DialogTitle className="text-white font-semibold text-base">{review.name}</DialogTitle>
+                                <DialogTitle className="text-white font-semibold text-base">{review.name || "User"}</DialogTitle>
                                 <DialogDescription className="text-zinc-500 text-sm">{review.role}</DialogDescription>
                             </div>
                         </div>
