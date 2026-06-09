@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/lib/config/db'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { isAdmin } from '@/lib/shared/auth-helpers'
+import { z } from 'zod'
 
 // Memastikan user adalah admin sebelum menjalankan query
 async function requireAdmin() {
@@ -212,6 +213,20 @@ export const deleteTestimonialFn = createServerFn({ method: 'POST' })
       where: { id },
     })
     return { success: true }
+  })
+
+const simulateWebhookSchema = z.object({
+  url: z.string(),
+  payload: z.record(z.string(), z.unknown())
+})
+
+// Simulasi webhook untuk testing
+export const simulateWebhookFn = createServerFn({ method: 'POST' })
+  .validator(simulateWebhookSchema)
+  .handler(async ({ data }) => {
+    await requireAdmin()
+    const { triggerExternalWebhook } = await import("@/lib/server/webhook-trigger")
+    return await triggerExternalWebhook(data.url, data.payload)
   })
 
 
