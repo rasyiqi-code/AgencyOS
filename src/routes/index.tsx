@@ -1,5 +1,4 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
-import { lazy, Suspense } from 'react'
 import { SiteHeader } from '@/components/landing/site-header'
 import { LandingHero } from '@/components/landing/landing-hero'
 import { FAQSection } from '@/components/landing/faq-section-fixed'
@@ -9,16 +8,17 @@ import { getSystemSettings } from '@/lib/server/settings'
 import { getPageSeo } from '@/lib/server/seo'
 import type { SystemSetting } from '@prisma/client'
 
-const SectionStats = lazy(() => import('@/components/landing/section-stats').then(m => ({ default: m.SectionStats })))
-const ExpertProfile = lazy(() => import('@/components/landing/section-expert').then(m => ({ default: m.ExpertProfile })))
-const SocialProof = lazy(() => import('@/components/landing/section-social-proof').then(m => ({ default: m.SocialProof })))
-const Comparison = lazy(() => import('@/components/landing/section-comparison').then(m => ({ default: m.Comparison })))
-const SectionSolutions = lazy(() => import('@/components/landing/section-solutions').then(m => ({ default: m.SectionSolutions })))
-const FinancialLogic = lazy(() => import('@/components/landing/section-financial').then(m => ({ default: m.FinancialLogic })))
-const Workflow = lazy(() => import('@/components/landing/section-workflow').then(m => ({ default: m.Workflow })))
-const Testimonials = lazy(() => import('@/components/landing/section-testimonials').then(m => ({ default: m.Testimonials })))
-const SectionGuarantee = lazy(() => import('@/components/landing/section-guarantee').then(m => ({ default: m.SectionGuarantee })))
-const ScrollAnimationWrapper = lazy(() => import('@/components/ui/scroll-animation-wrapper').then(m => ({ default: m.ScrollAnimationWrapper })))
+// Impor komponen secara statis untuk menghindari masalah hidrasi (hydration) pada rendering di sisi server (SSR)
+import { SectionStats } from '@/components/landing/section-stats'
+import { ExpertProfile } from '@/components/landing/section-expert'
+import { SocialProof } from '@/components/landing/section-social-proof'
+import { Comparison } from '@/components/landing/section-comparison'
+import { SectionSolutions } from '@/components/landing/section-solutions'
+import { FinancialLogic } from '@/components/landing/section-financial'
+import { Workflow } from '@/components/landing/section-workflow'
+import { Testimonials } from '@/components/landing/section-testimonials'
+import { SectionGuarantee } from '@/components/landing/section-guarantee'
+import { ScrollAnimationWrapper } from '@/components/ui/scroll-animation-wrapper'
 
 const loader = async () => {
   const settings = await getSystemSettings(['AGENCY_NAME', 'AGENCY_LOGO', 'CONTACT_PHONE'])
@@ -75,51 +75,34 @@ function Home() {
       <SiteHeader />
       <LandingHero agencyName={agencyName} />
 
-      <Suspense fallback={null}>
-        <ScrollAnimationWrapper>
-          <SectionStats />
-        </ScrollAnimationWrapper>
-      </Suspense>
+      <ScrollAnimationWrapper>
+        <SectionStats />
+      </ScrollAnimationWrapper>
 
-      <Suspense fallback={null}>
-        <ScrollAnimationWrapper>
-          <ExpertProfile />
-        </ScrollAnimationWrapper>
-      </Suspense>
+      <ScrollAnimationWrapper>
+        <ExpertProfile />
+      </ScrollAnimationWrapper>
 
-      <Suspense fallback={null}>
-        <ScrollAnimationWrapper delay={0.1}>
-          <SocialProof />
-        </ScrollAnimationWrapper>
-      </Suspense>
+      <ScrollAnimationWrapper delay={0.1}>
+        <SocialProof />
+      </ScrollAnimationWrapper>
 
-      <Suspense fallback={null}>
-        <Comparison />
-      </Suspense>
-      <Suspense fallback={null}>
-        <SectionSolutions />
-      </Suspense>
-      <Suspense fallback={null}>
-        <FinancialLogic />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Workflow />
-      </Suspense>
+      <Comparison />
+      <SectionSolutions />
+      <FinancialLogic />
+      <Workflow />
 
-      <Suspense fallback={null}>
-        <ScrollAnimationWrapper>
-          <Testimonials />
-        </ScrollAnimationWrapper>
-      </Suspense>
+      <ScrollAnimationWrapper>
+        <Testimonials />
+      </ScrollAnimationWrapper>
 
-      <Suspense fallback={null}>
-        <ScrollAnimationWrapper>
-          <SectionGuarantee />
-        </ScrollAnimationWrapper>
-      </Suspense>
+      <ScrollAnimationWrapper>
+        <SectionGuarantee />
+      </ScrollAnimationWrapper>
 
       <FAQSection />
       <SiteFooter />
     </main>
   )
 }
+
