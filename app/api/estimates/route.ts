@@ -45,29 +45,6 @@ export async function GET(req: NextRequest) {
     }
 }
 
-export async function DELETE(req: NextRequest) {
-    if (!await isAdmin()) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    try {
-        const { searchParams } = new URL(req.url);
-        const id = searchParams.get('id');
-
-        if (!id) {
-            return NextResponse.json({ error: "ID is required" }, { status: 400 });
-        }
-
-        await prisma.estimate.delete({
-            where: { id }
-        });
-
-        return NextResponse.json({ success: true });
-    } catch {
-        return NextResponse.json({ error: "Failed to delete estimate" }, { status: 500 });
-    }
-}
-
 export async function POST(req: Request) {
     try {
         const body = await req.json();

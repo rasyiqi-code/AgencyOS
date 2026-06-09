@@ -58,16 +58,16 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
         if (!confirm(t("deleteConfirm"))) return;
 
         try {
-            const res = await fetch(`/api/estimates?id=${id}`, {
-                method: "DELETE"
-            });
+            const { deleteQuote } = await import("@/app/actions/quotes");
+            const res = await deleteQuote(id);
 
-            if (!res.ok) throw new Error("Failed to delete");
+            if (res.error) throw new Error(res.error);
 
             setEstimates(prev => prev.filter(e => e.id !== id));
             toast.success(t("deleteSuccess"));
-        } catch {
+        } catch (error) {
             toast.error(t("deleteError"));
+            console.error(error);
         }
     };
 

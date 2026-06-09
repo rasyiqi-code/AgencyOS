@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
 import { randomBytes } from "crypto";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { generateKey } from "@/lib/utils/crypto";
 
 export async function GET(req: Request) {
     // Auth check: hanya admin yang boleh melihat semua license
@@ -51,9 +52,8 @@ export async function POST(req: Request) {
             return new NextResponse("Product ID required", { status: 400 });
         }
 
-        // Generate a unique key
-        // Format: KEY-AAAA-BBBB-CCCC
-        const key = `KEY-${randomBytes(6).toString('hex').toUpperCase().match(/.{1,4}/g)?.join('-')}`;
+        // Generate a unique key using the centralized generator
+        const key = generateKey();
 
         const license = await prisma.license.create({
             data: {

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { isAdmin } from "@/lib/shared/auth-helpers";
 
 export async function setQuotePrice(formData: FormData) {
     const id = formData.get("estimateId") as string;
@@ -182,3 +183,27 @@ export async function deleteQuote(estimateId: string, userId?: string) {
         return { error: "Failed to delete quote" };
     }
 }
+
+/**
+ * Hapus regular order secara permanen (untuk admin).
+ */
+export async function deleteOrder(orderId: string) {
+    if (!orderId) return { error: "Missing order ID" };
+
+    try {
+        if (!await isAdmin()) {
+            return { error: "Unauthorized" };
+        }
+
+        await prisma.order.delete({
+            where: { id: orderId }
+        });
+
+        revalidatePath("/admin/finance/quotes"); // atau path order list
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting order:", error);
+        return { error: "Failed to delete order" };
+    }
+}
+

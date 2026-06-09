@@ -55,14 +55,11 @@ export function LicenseList({ licenses }: LicenseListProps) {
         if (!confirm("Yakin ingin menghapus lisensi ini?")) return;
 
         try {
-            const res = await fetch(`/api/admin/licenses/${id}`, {
-                method: "DELETE",
-            });
+            const { deleteLicense } = await import("@/app/actions/licenses");
+            const res = await deleteLicense(id);
 
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Gagal menghapus lisensi");
+            if (!res.success) {
+                throw new Error(res.error || "Gagal menghapus lisensi");
             }
 
             toast.success("Lisensi berhasil dihapus");

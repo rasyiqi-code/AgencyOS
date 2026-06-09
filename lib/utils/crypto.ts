@@ -23,3 +23,15 @@ export function secureRandomAlphanumeric(length: number): string {
     }
     return result.join('');
 }
+
+/**
+ * Generates a unique license key: AGE-AAAA-BBBB-CCCC
+ */
+export function generateKey(): string {
+    const bytes = crypto.randomBytes(12);
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const segment = (offset: number) =>
+        Array.from({ length: 4 }, (_, i) => chars[bytes[offset + i] % chars.length]).join("");
+    return `AGE-${segment(0)}-${segment(4)}-${segment(8)}`;
+}
+

@@ -2,26 +2,10 @@
 
 import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
-import { randomBytes } from "crypto";
 import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
+import { generateKey } from "@/lib/utils/crypto";
 
-// Cast prisma untuk akses model baru (DigitalOrder relation di License)
-// Prisma client telah di-generate, namun TS server mungkin belum mengenali tipe baru
 const db = prisma;
-
-/**
- * Custom key generator: AGE-AAAA-BBBB-CCCC
- * Format unik untuk license key produk digital.
- * Menggunakan crypto.randomBytes() untuk keamanan yang lebih baik.
- */
-function generateKey() {
-    // Generate 12 bytes random yang cryptographically secure
-    const bytes = randomBytes(12);
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const segment = (offset: number) =>
-        Array.from({ length: 4 }, (_, i) => chars[bytes[offset + i] % chars.length]).join("");
-    return `AGE-${segment(0)}-${segment(4)}-${segment(8)}`;
-}
 
 /**
  * Generate lisensi setelah order berhasil dibayar.
@@ -137,5 +121,26 @@ export async function getClientLicenses() {
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Unknown error";
         return { success: false, error: message, licenses: [] };
+    }
+}
+
+/**
+ * Hapus lisensi secara permanen (untuk admin).
+ */
+export async function deleteLicense(licenseId: string) {
+    try {
+        if (!await isAdmin()) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        await prisma.license.delete({
+            where: { id: licenseId }
+        });
+
+        revalidatePath("/admin/licenses");
+        return { success: true };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return { success: false, error: message };
     }
 }

@@ -22,10 +22,10 @@ export function DeleteOrderButton({ id, type = "service" }: { id: string, type?:
                     const res = await deleteDigitalOrder(id);
                     if (!res.success) throw new Error(res.error || "Failed");
                 } else {
-                    const res = await fetch(`/api/estimates/${id}`, {
-                        method: "DELETE"
-                    });
-                    if (!res.ok) throw new Error("Failed");
+                    const { deleteQuote, deleteOrder } = await import("@/app/actions/quotes");
+                    const isOrderId = id.startsWith('ORDER-');
+                    const res = isOrderId ? await deleteOrder(id) : await deleteQuote(id);
+                    if (res.error) throw new Error(res.error);
                 }
                 
                 toast.success("Transaction deleted permanently.");
