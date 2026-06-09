@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Key, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { createAgencyKey, deleteAgencyKey, toggleAgencyKey } from "@/app/actions/system-keys";
+import { createAgencyKeyFn, deleteAgencyKeyFn, toggleAgencyKeyFn } from "@/src/server/keys";
 import { SystemKey } from "@prisma/client";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
         if (!newLabel) return;
         
         try {
-            await createAgencyKey(newLabel);
+            await createAgencyKeyFn({ data: newLabel });
             toast.success("New SaaS Key generated!");
             setIsAddOpen(false);
             setNewLabel("");
@@ -38,7 +38,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
     const handleDelete = async (id: string) => {
         setIsDeleting(true);
         try {
-            await deleteAgencyKey(id);
+            await deleteAgencyKeyFn({ data: id });
             toast.success("Key deleted successfully");
         } catch {
             toast.error("Failed to delete key");
@@ -145,7 +145,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                             </TableCell>
                             <TableCell>
                                 <button 
-                                    onClick={() => toggleAgencyKey(key.id, !key.isActive)}
+                                    onClick={() => toggleAgencyKeyFn({ data: { id: key.id, isActive: !key.isActive } })}
                                     className="hover:opacity-80 transition-opacity"
                                 >
                                     {key.isActive ? (
