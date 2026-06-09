@@ -1,9 +1,10 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Settings2, Loader2, Save, Github, Globe } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+;
 import { updateProjectFn } from "@/src/server/pm";
 
 interface TechnicalAssetManagerProps {

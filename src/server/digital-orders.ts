@@ -1,4 +1,7 @@
+import { createServerFn } from '@tanstack/react-start'
 import { prisma } from "@/lib/config/db"
+import { hexclaveServerApp } from "@/lib/config/hexclave"
+import { isAdmin } from "@/lib/shared/auth-helpers"
 import { generateLicenseForOrder } from "./licenses"
 import { processAffiliateCommission } from "@/lib/affiliate/commission"
 import { notifyNewDigitalOrder, notifyPaymentSuccess } from "@/lib/email/admin-notifications"
@@ -138,3 +141,24 @@ export async function completeDigitalOrder(
     return { success: false, error: message }
   }
 }
+
+async function requireAdmin() {
+  const user = await hexclaveServerApp.getUser()
+  if (!user) throw new Error('Unauthorized')
+  const hasAccess = await isAdmin()
+  if (!hasAccess) throw new Error('Forbidden')
+  return user
+}
+
+// Mengambil semua pesanan produk digital untuk dashboard admin
+export const getDigitalOrdersFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    await requireAdmin()
+    return await db.digitalOrder.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        product: { select: { name: true, slug: true } },
+        license: { select: { key: true, status: true } },
+      },
+    })
+  })

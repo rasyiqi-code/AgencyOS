@@ -107,7 +107,6 @@ function AdminProjectDetailRoute() {
                       <SafeImage
                         src={project.service.image}
                         alt={project.service.title}
-                        fill
                         sizes="(max-width: 768px) 100vw, 160px"
                         className="object-cover"
                       />

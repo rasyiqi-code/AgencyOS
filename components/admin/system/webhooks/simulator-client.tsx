@@ -47,7 +47,7 @@ export function WebhookSimulator({ products }: { products: Product[] }) {
             const result = await simulateWebhookFn({ data: {
                 url: activeProduct.externalWebhookUrl,
                 payload: parsedPayload
-            });
+            } });
 
             setLastResult(result as { success: boolean; error?: string; status?: number });
             if (result.success) {

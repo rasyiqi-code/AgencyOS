@@ -1,11 +1,11 @@
 "use client";
 
+
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/hooks";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { createAdminServiceFn } from "@/src/server/pm";
-import { useNavigate } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
@@ -96,14 +96,14 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
         }
 
         try {
-            const result = await createAdminServiceFn({ data: formData);
+            const result = await createAdminServiceFn({ data: formData });
 
-            if (result.error) {
-                throw new Error(result.error);
+            if ((result as any).error) {
+                throw new Error((result as any).error);
             }
 
             toast.success(tAdmin("publishSuccess"));
-            navigate({ to: "/admin/pm/services");
+            navigate({ to: "/admin/pm/services" });
             window.location.reload();
         } catch (error) {
             console.error("SERVICE CREATE ERROR:", error);

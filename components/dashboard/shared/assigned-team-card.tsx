@@ -62,7 +62,7 @@ export function AssignedTeamCard({
                                                         if (confirm("Remove this member from the mission?")) {
                                                             try {
                                                                 const result = await removeTeamMemberFn({ data: { projectId, squadId: profile.id } });
-                                                                if (result.error) throw new Error("Failed");
+                                                                if ((result as any).error) throw new Error("Failed");
                                                                 window.location.reload();
                                                             } catch (e) {
                                                                 console.error("Failed to remove member", e);

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/navigation";
 
-import { UserButton } from "@hexclave/next";
+import { UserButton } from "@hexclave/tanstack-start";
 import { useSafeUser } from "@/hooks/use-safe-user";
 
 interface MobileNavProps {
@@ -38,10 +38,10 @@ export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavPr
                         <a href="/" className="flex items-center gap-2 font-semibold">
                             {logoUrl ? (
                                 <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                                    <Image
+                                    <img
                                         src={logoUrl}
                                         alt={agencyName}
-                                        fill
+                                        
                                         className="object-contain"
                                     />
                                 </div>

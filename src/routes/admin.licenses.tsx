@@ -69,7 +69,7 @@ function AdminLicensesRoute() {
   // Menghitung statistik lisensi
   const totalLicenses = licenses.length
   const activeLicenses = licenses.filter(l => l.status === 'active').length
-  const licensedProductIds = Array.from(new Set(licenses.map(l => l.productId).filter(Boolean)))
+  const licensedProductIds = Array.from(new Set(licenses.map(l => l.product?.slug).filter(Boolean)))
 
   const isId = true
 

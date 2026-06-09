@@ -167,7 +167,7 @@ export function PromotionsManager() {
                                             <img 
                                                 src={promo.imageUrl} 
                                                 alt={promo.title} 
-                                                fill 
+                                                 
                                                 className="object-cover"
                                             />
                                         </div>

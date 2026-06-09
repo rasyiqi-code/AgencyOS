@@ -8,7 +8,11 @@ import { Package } from 'lucide-react'
 import { SaaSDocsDialog } from '@/components/admin/products/saas-docs-dialog'
 import { type Product } from '@prisma/client'
 
-type ProductWithCount = Product & { _count?: { licenses: number } }
+type ProductWithCount = Omit<Product, 'createdAt' | 'updatedAt'> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  _count?: { licenses: number };
+}
 
 export const Route = createFileRoute('/admin/products')({
   loader: async () => {
@@ -60,7 +64,7 @@ function AdminProductsRoute() {
         topProduct={topProduct ? { name: topProduct.name, licenses: topProduct._count?.licenses || 0 } : null}
       />
 
-      <ProductList products={products} />
+      <ProductList products={products as any} />
     </div>
   )
 }

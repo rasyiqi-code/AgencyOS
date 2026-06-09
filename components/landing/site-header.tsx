@@ -18,7 +18,7 @@ export function SiteHeader() {
 
     useEffect(() => {
         getUser().then(setUser);
-        getSystemSettings(["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"]).then(
+        getSystemSettings({ data: ["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"] }).then(
             (settings: { key: string; value: string }[]) => {
                 setLogoUrl(settings.find(s => s.key === "AGENCY_LOGO")?.value);
                 setAgencyName(settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS");

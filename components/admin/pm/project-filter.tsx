@@ -1,4 +1,6 @@
 "use client";
+import { useRouter, usePathname, useSearchParams } from "@/lib/router/hooks";
+
 
 import {
     Select,
@@ -16,7 +18,7 @@ export function ProjectFilter() {
     const { replace } = useRouter();
 
     const handleFilter = (status: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams.toString());
         params.set("page", "1");
 
         if (status && status !== "all") {

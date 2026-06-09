@@ -112,7 +112,7 @@ export function TechLoader() {
                 </div>
             </div>
 
-            <style jsx global>{`
+            <style>{`
         @keyframes scan {
           from { transform: translateY(-100%); }
           to { transform: translateY(1000%); }

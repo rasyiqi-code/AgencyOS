@@ -99,7 +99,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
                                 <TypingHeroTitle
                                     prefix={t("title1")}
-                                    targets={t.raw("typing.build")}
+                                    targets={t.raw("typing.build") as string[]}
                                     mode="typing"
                                     onStateChange={setTypingStatus}
                                 />
@@ -107,7 +107,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                             <div className="text-2xl md:text-4xl xl:text-5xl font-semibold tracking-tight leading-[1.1] opacity-80">
                                 <TypingHeroTitle
                                     prefix={t("forYour")}
-                                    targets={t.raw("typing.audience")}
+                                    targets={t.raw("typing.audience") as string[]}
                                     mode="rapid"
                                     isPaused={typingStatus !== "full"}
                                 />
@@ -343,7 +343,7 @@ function BadgeContent({ name, model, icon }: {
                     width={16} 
                     height={16} 
                     className="object-contain" 
-                    priority 
+                     
                 />
             </div>
             <div>

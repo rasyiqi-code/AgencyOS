@@ -38,7 +38,7 @@ export const savePortfolioFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     try {
       await requireAdmin()
-      const result = await savePortfolio(data.item, data.html)
+      const result = await savePortfolio(data.item as any, data.html)
       return { success: true, data: JSON.parse(JSON.stringify(result)) }
     } catch (error) {
       return { success: false, error: (error as Error).message }

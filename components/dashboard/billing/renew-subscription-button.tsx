@@ -25,7 +25,7 @@ export function ClientRenewButton({
                 toast.success("Invoice generated! Redirecting to checkout...");
                 navigate({ to: `/id/checkout/${result.estimateId}` });
             } else {
-                toast.error(result.error || "Failed to process renewal.");
+                toast.error((result as any).error || "Failed to process renewal.");
                 setIsLoading(false);
             }
         } catch {

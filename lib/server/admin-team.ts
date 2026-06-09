@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 import { prisma } from "@/lib/config/db";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 
@@ -20,9 +21,7 @@ export async function grantPermission(userId: string, email: string, key: string
         },
         update: {}
     });
-
-    revalidatePath('/admin/team');
-    return { success: true };
+return { success: true };
 }
 
 export async function revokePermission(userId: string, key: string) {
@@ -42,7 +41,5 @@ export async function revokePermission(userId: string, key: string) {
     } catch {
         // Ignore
     }
-
-    revalidatePath('/admin/team');
-    return { success: true };
+return { success: true };
 }

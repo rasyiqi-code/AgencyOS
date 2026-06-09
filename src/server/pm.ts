@@ -375,7 +375,7 @@ export const deleteProjectFileFn = createServerFn({ method: 'POST' })
 
     await prisma.project.update({
       where: { id: projectId },
-      data: { files: updatedFiles }
+      data: { files: updatedFiles as any }
     })
 
     return { success: true }
@@ -445,7 +445,7 @@ export const uploadProjectFileFn = createServerFn({ method: 'POST' })
 
     await prisma.project.update({
       where: { id: projectId },
-      data: { files: updatedFiles }
+      data: { files: updatedFiles as any }
     })
 
     return { success: true, file: newFile }

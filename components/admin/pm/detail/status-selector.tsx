@@ -1,3 +1,4 @@
+import { useRouter } from "@/lib/router/hooks";
 import {
     Select,
     SelectContent,
@@ -8,7 +9,7 @@ import {
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { updateProjectStatusFn } from "@/src/server/pm";
-import { useRouter } from "@tanstack/react-router";
+;
 
 interface StatusSelectorProps {
     projectId: string;

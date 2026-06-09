@@ -72,10 +72,10 @@ function PortfolioPreview({ slug, html: directHtml, imageUrl, externalUrl }: { s
     return (
         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/5 bg-zinc-900 relative group/preview shadow-2xl">
             {imageUrl ? (
-                <Image
+                <img
                     src={imageUrl}
                     alt="Preview"
-                    fill
+                    
                     className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 />

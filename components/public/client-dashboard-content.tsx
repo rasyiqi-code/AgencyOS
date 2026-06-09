@@ -74,7 +74,7 @@ export function ClientDashboardContent({ agencyName }: ClientDashboardContentPro
                     >
                         {t.rich("title", {
                             yellow: (chunks) => <span className="text-brand-yellow">{chunks}</span>,
-                            brand: agencyName
+                            brand: () => agencyName
                         })}
                     </motion.h1>
                     <motion.p
@@ -121,7 +121,7 @@ export function ClientDashboardContent({ agencyName }: ClientDashboardContentPro
                             <h2 className="text-3xl md:text-5xl font-bold mb-6">
                                 {t.rich("Philosophy.title", {
                                     red: (chunks) => <span className="text-red-500">{chunks}</span>,
-                                    brand: agencyName
+                                    brand: () => agencyName
                                 })}
                             </h2>
                             <p className="text-zinc-400 text-lg leading-relaxed mb-8">
@@ -155,19 +155,19 @@ export function ClientDashboardContent({ agencyName }: ClientDashboardContentPro
                             <ul className="space-y-4">
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way1")) }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way1") as string) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way2")) }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way2") as string) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way3")) }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way3") as string) }} />
                                 </li>
                                 <li className="flex gap-3 text-zinc-300 text-sm">
                                     <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full mt-2 shrink-0" />
-                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way4")) }} />
+                                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.raw("Philosophy.way4") as string) }} />
                                 </li>
                             </ul>
                         </div>

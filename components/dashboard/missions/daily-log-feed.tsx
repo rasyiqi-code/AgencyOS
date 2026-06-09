@@ -1,8 +1,10 @@
 'use client';
+import { useRouter } from "@/lib/router/hooks";
+
 import { SafeImage } from '@/components/ui/safe-image';
 
 import { useState, useTransition } from 'react';
-import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useNavigate } from "@tanstack/react-router";
 import { createDailyLogFn } from '@/src/server/pm';
 
 export type DailyLogMood = "on_track" | "delayed" | "shipped";

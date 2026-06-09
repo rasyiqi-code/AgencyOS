@@ -1,4 +1,4 @@
-import { HexclaveServerApp } from "@hexclave/next";
+import { HexclaveServerApp } from "@hexclave/tanstack-start";
 import { unstable_cache } from "../cache";
 
 export const hexclaveServerApp = new HexclaveServerApp({

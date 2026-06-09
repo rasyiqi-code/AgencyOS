@@ -15,7 +15,7 @@ export const Route = createFileRoute('/affiliate/join')({
       where: { userId: user.id },
     })
     // Mengarahkan ke rute index /affiliate/
-    if (existing) throw redirect({ to: '/affiliate/' })
+    if (existing) throw redirect({ to: '/affiliate' })
   },
   component: AffiliateJoinPage,
 })

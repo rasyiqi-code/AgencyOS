@@ -128,7 +128,6 @@ function MissionDetailPage() {
                       <SafeImage
                         src={project.service.image}
                         alt={project.service.title}
-                        fill
                         sizes="(max-width: 768px) 100vw, 192px"
                         className="object-cover"
                       />

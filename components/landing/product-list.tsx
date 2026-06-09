@@ -137,11 +137,11 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                 {/* Visual Block */}
                 <a href={`/services/${service.slug}`} className="relative overflow-hidden shrink-0 aspect-[16/9] block">
                     {service.image ? (
-                        <Image
+                        <img
                             src={service.image}
                             alt={title || "Service"}
-                            fill
-                            unoptimized={true}
+                            
+                            
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 100vw, 33vw"
                         />

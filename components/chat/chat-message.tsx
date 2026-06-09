@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Bot } from 'lucide-react';
 
 // Lazy load ReactMarkdown — hanya dibutuhkan saat pesan assistant dirender
-const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
+import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface Message {

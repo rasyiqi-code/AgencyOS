@@ -1,4 +1,6 @@
 "use client";
+import { useRouter, usePathname, useSearchParams } from "@/lib/router/hooks";
+
 
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -11,7 +13,7 @@ export function ProjectSearch() {
     const { replace } = useRouter();
 
     const handleSearch = useDebouncedCallback((term: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams.toString());
         params.set("page", "1");
 
         if (term) {

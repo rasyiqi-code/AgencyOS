@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 "use server";
 
 import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
@@ -93,10 +94,6 @@ export async function savePortfolio(item: Omit<PortfolioItem, "id" | "createdAt"
             },
         });
 
-        revalidatePath("/portfolio", "page");
-        revalidatePath("/admin/portfolio", "page");
-        revalidatePath(`/view-design/${cleanSlug}`, "page");
-        (revalidateTag as unknown as (tag: string) => void)("portfolios");
 
         return newItem as unknown as PortfolioItem;
     } catch (error) {
@@ -111,10 +108,6 @@ export async function deletePortfolio(id: string) {
             where: { id },
         });
 
-        revalidatePath("/portfolio", "page");
-        revalidatePath("/admin/portfolio", "page");
-        revalidatePath(`/view-design/${item.slug}`, "page");
-        (revalidateTag as unknown as (tag: string) => void)("portfolios");
     } catch (error) {
         console.error("[Portfolios] Delete failed:", error);
         throw error;

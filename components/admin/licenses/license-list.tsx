@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import {
     Table,
@@ -12,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Copy, Key, Trash2, Box } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { useRouter } from "@tanstack/react-router";
+;
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/shared/utils";
 import {

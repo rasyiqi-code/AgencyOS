@@ -110,11 +110,11 @@ export function ProductImageUpload({ value, onChange, onRemove }: ProductImageUp
             >
                 {preview && !hasError ? (
                     <>
-                        <Image
+                        <img
                             src={preview}
                             alt="Preview"
-                            fill
-                            unoptimized={true}
+                            
+                            
                             className="object-cover"
                             onError={() => setHasError(true)}
                         />

@@ -48,10 +48,10 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
             <div className="p-3">
                 <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/5 bg-zinc-900 relative group/preview shadow-2xl">
                     {imageUrl ? (
-                        <Image
+                        <img
                             src={imageUrl}
                             alt={title}
-                            fill
+                            
                             className="object-cover transition-transform duration-1000 group-hover/preview:scale-110 opacity-80 group-hover:opacity-100"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />

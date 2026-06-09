@@ -59,11 +59,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 {/* Visual Block */}
                 <div className="relative aspect-[16/9] overflow-hidden shrink-0">
                     {service.image ? (
-                        <Image
+                        <img
                             src={service.image}
                             alt={displayTitle}
-                            fill
-                            unoptimized={true}
+                            
+                            
                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />

@@ -128,7 +128,7 @@ export function FAQSection() {
                                             <img 
                                                 src={`/avatars/avatar-${i}.svg`} 
                                                 alt="UserAvatar" 
-                                                fill
+                                                
                                                 className="object-cover" 
                                             />
                                         </div>

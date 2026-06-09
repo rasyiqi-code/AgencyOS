@@ -1,10 +1,12 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useCurrency } from "@/components/providers/currency-provider";
 import { Button } from "@/components/ui/button";
 import { Globe, DollarSign, Loader2 } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
-import { useNavigate, useLocation, useSearch, useRouter } from "@tanstack/react-router";
+import { useNavigate, useLocation, useSearch } from "@tanstack/react-router";
 
 export function DashboardCurrencySwitcher() {
     const { currency, setCurrency } = useCurrency();
@@ -78,7 +80,7 @@ export function DashboardLanguageSwitcher() {
         startTransition(async () => {
             // Set cookie for client-side persistence redundancy
             document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-            await router.navigate({ to: newPath, search: search as any });
+            router.push(newPath);
             router.invalidate();
         });
     };

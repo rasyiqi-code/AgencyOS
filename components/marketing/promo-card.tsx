@@ -37,12 +37,12 @@ export function PromoCard({ promotion }: { promotion: Promotion }) {
         >
             {/* Poster Image - Natural Height */}
             <div className="relative w-full overflow-hidden">
-                <Image
+                <img
                     src={promotion.imageUrl}
                     alt={promotion.title}
                     width={600}
                     height={800}
-                    unoptimized
+                    
                     className="w-full h-auto transition-transform duration-700 group-hover:scale-105 object-cover"
                     loading="lazy"
                 />

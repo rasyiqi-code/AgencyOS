@@ -33,7 +33,7 @@ function ClientServicesPage() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
-        {processedServices.map((service) => (
+        {processedServices.map((service: any) => (
           <ServiceCard key={service.id} service={service as DashboardService} />
         ))}
 

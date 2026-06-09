@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useRef, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
@@ -114,7 +116,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
 
                 <div className="bg-white text-black rounded-lg shadow-2xl overflow-hidden min-h-[800px] relative">
                     {/* Print Styles */}
-                    <style jsx global>{`
+                    <style>{`
                         @media print {
                             @page { margin: 2cm; size: auto; }
                             body { background: white !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -138,7 +140,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                         <div className="pb-8 mb-4 relative z-10">
                             <div className="flex justify-between items-baseline">
                                 <div className="flex items-end gap-4">
-                                    <Image
+                                    <img
                                         src="/logo.png"
                                         alt="Logo"
                                         width={40}

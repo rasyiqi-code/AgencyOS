@@ -1,4 +1,6 @@
 "use client";
+import { usePathname } from "@/lib/router/hooks";
+
 
 import { useLocation } from "@tanstack/react-router";
 import { CreditCard, LayoutGrid, Key, Cloud, DollarSign, TrendingUp, Mail, Share2, Globe, FileText } from "lucide-react";

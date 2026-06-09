@@ -44,7 +44,7 @@ export async function getRepoDetails(owner: string, repo: string): Promise<GitHu
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            next: { revalidate: 60 } // Cache for 1 minute
+             // Cache for 1 minute
         });
 
         if (!res.ok) return null;
@@ -63,7 +63,7 @@ export async function getRecentCommits(owner: string, repo: string, limit = 5): 
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            next: { revalidate: 60 }
+            
         });
 
         if (!res.ok) return [];

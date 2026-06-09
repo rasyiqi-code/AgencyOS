@@ -1,7 +1,7 @@
 import {
   createMiddleware,
-  redirect as startRedirect,
 } from '@tanstack/react-start'
+import { redirect as startRedirect } from '@tanstack/react-router'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 
 export const authMiddleware = createMiddleware().server(

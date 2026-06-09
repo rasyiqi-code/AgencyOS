@@ -1,12 +1,13 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { Button } from "@/components/ui/button";
 import { Trash2, Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { useNavigate, useRouter } from "@tanstack/react-router";
-import { deleteDigitalOrderFn } from "@/src/server/digital-orders";
-import { deleteQuoteFn, deleteOrderFn } from "@/src/server/finance";
+import { useNavigate } from "@tanstack/react-router";
+import { deleteDigitalOrderFn, deleteQuoteFn, deleteOrderFn } from "@/src/server/finance";
 
 export function DeleteOrderButton({ id, type = "service" }: { id: string, type?: "service" | "digital" }) {
     const [isPending, startTransition] = useTransition();

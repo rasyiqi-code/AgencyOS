@@ -1,11 +1,13 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Edit2, Check, X, Loader2 } from "lucide-react";
 import { updateQuotePriceFn } from "@/src/server/finance";
-import { useRouter } from "@tanstack/react-router";
+;
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
 interface PriceEditorProps {

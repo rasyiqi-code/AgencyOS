@@ -325,7 +325,7 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                                                     }
                                                                 });
 
-                                                                if (result.error || !result.data) throw new Error("Failed to create project");
+                                                                if ((result as any).error || !result.data) throw new Error("Failed to create project");
 
                                                                 toast.success("Project created successfully", { id: toastId });
                                                                 navigate({ to: `/dashboard/projects/${result.data.id}` });

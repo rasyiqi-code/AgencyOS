@@ -395,7 +395,7 @@ function ConfirmPaymentButton({ orderId }: { orderId: string }) {
                     toast.success("Payment confirmed successfully!");
                     window.location.reload();
                 } else {
-                    toast.error(res.error || "Failed to confirm payment");
+                    toast.error((res as any).error || "Failed to confirm payment");
                 }
             } catch {
                 toast.error("An error occurred");
@@ -431,7 +431,7 @@ function CancelOrderButton({ orderId }: { orderId: string }) {
                     toast.success("Order cancelled successfully!");
                     window.location.reload();
                 } else {
-                    toast.error(res.error || "Failed to cancel order");
+                    toast.error((res as any).error || "Failed to cancel order");
                 }
             } catch {
                 toast.error("An error occurred");

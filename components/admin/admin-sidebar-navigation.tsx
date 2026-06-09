@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function AdminSidebarNavigation({ pmAccess, financeAccess }: Props) {
-    const pathname = usePathname();
+    const pathname = useLocation().pathname;
 
     // Normalize path to ignore locale (e.g. /id/admin... -> /admin...)
     const cleanPath = pathname.replace(/^\/(en|id)/, "");

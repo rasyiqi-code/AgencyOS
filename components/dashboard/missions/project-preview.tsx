@@ -21,9 +21,8 @@ export function ProjectPreview({ url }: ProjectPreviewProps) {
                 <SafeImage
                     src={url}
                     alt="Project Preview"
-                    fill
                     sizes="(max-width: 768px) 100vw, 300px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <a
                     href={url}

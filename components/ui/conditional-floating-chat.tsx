@@ -1,4 +1,6 @@
 "use client";
+import { usePathname } from "@/lib/router/hooks";
+
 
 import { useLocation } from "@tanstack/react-router";
 import { FloatingChatWidget } from "./floating-chat";

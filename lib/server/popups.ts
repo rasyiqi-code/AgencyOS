@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 import { prisma } from "@/lib/config/db";
 import { safeUnstableCache as unstable_cache } from "@/lib/shared/cache";
 import { cache } from "react";
@@ -54,8 +55,6 @@ export async function createPopUp(data: {
             targetingLocales: data.targetingLocales || [],
         },
     });
-    revalidatePath("/admin/marketing");
-    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }
 
@@ -64,15 +63,11 @@ export async function updatePopUp(id: string, data: Partial<Parameters<typeof cr
         where: { id },
         data,
     });
-    revalidatePath("/admin/marketing");
-    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }
 
 export async function deletePopUp(id: string) {
     await prisma.popUp.deleteMany({ where: { id } });
-    revalidatePath("/admin/marketing");
-    (revalidateTag as unknown as (tag: string) => void)("popups");
 }
 
 export async function togglePopUpStatus(id: string, isActive: boolean) {
@@ -80,7 +75,5 @@ export async function togglePopUpStatus(id: string, isActive: boolean) {
         where: { id },
         data: { isActive },
     });
-    revalidatePath("/admin/marketing");
-    (revalidateTag as unknown as (tag: string) => void)("popups");
     return popup;
 }

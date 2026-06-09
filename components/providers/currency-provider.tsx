@@ -1,8 +1,8 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { setCookie } from 'cookies-next';
-import { useRouter } from '@tanstack/react-router';
 
 type Currency = 'USD' | 'IDR';
 
@@ -84,7 +84,7 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
     const updateLocale = (l: string) => {
         setLocale(l);
         // Sync with Cookie for Server Components
-        setCookie('NEXT_LOCALE', l);
+        document.cookie = `NEXT_LOCALE=${l}; path=/; max-age=31536000`;
         // Sync with LocalStorage (optional, but good for backup)
         localStorage.setItem('agency-os-locale', l);
         // Invalidate router to re-render with new locale

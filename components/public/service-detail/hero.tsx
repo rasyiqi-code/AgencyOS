@@ -64,10 +64,10 @@ export function ServiceHero({ service, displayTitle, intervalLabel, selectedAddo
                     <div className="w-[200px] md:w-[320px] lg:w-[380px] shrink-0 space-y-3 md:space-y-4">
                         {service.image ? (
                             <div className="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden border border-white/10 shadow-xl group">
-                                <Image
+                                <img
                                     src={service.image}
                                     alt={displayTitle}
-                                    fill
+                                    
                                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

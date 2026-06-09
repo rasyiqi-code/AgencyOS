@@ -56,7 +56,7 @@ export function LicenseCard({ license }: LicenseCardProps) {
                 setCurrentKey(result.license.key);
                 toast.success("License key berhasil di-regenerasi!");
             } else {
-                toast.error(result.error || "Gagal regenerasi");
+                toast.error((result as any).error || "Gagal regenerasi");
             }
         } catch {
             toast.error("Terjadi kesalahan saat regenerasi");

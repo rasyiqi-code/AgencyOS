@@ -67,7 +67,7 @@ export function PushManager() {
                 setBody("");
                 fetchStats();
             } else {
-                toast.error(result.error || "Gagal mengirim broadcast");
+                toast.error((result as any).error || "Gagal mengirim broadcast");
             }
         } catch {
             toast.error("Terjadi kesalahan jaringan");

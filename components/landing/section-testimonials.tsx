@@ -23,8 +23,8 @@ export function Testimonials() {
 
     useEffect(() => {
         Promise.all([
-            getSystemSettings(["AGENCY_NAME"]),
-            getActiveTestimonials(10),
+            getSystemSettings({ data: ["AGENCY_NAME"] }),
+            getActiveTestimonials({ data: 10 }),
         ]).then(([settings, dbTestimonials]) => {
             const name = (settings as { key: string; value: string }[]).find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
             setAgencyName(name);

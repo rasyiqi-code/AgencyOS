@@ -1,4 +1,4 @@
-import { useUser } from "@hexclave/next";
+import { useUser } from "@hexclave/tanstack-start";
 import { useMemo } from "react";
 
 /**

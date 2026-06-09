@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useState } from "react";
 import { UserSelector } from "./user-selector";
@@ -8,7 +10,7 @@ import { createManualQuoteFn } from "@/src/server/finance";
 import type { Service } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCurrency } from "@/components/providers/currency-provider";
-import { useRouter } from "@tanstack/react-router";
+;
 import { toast } from "sonner";
 
 interface UserAccount {

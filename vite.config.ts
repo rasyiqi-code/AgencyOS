@@ -8,7 +8,6 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     alias: [
-      { find: 'next/navigation', replacement: path.resolve(__dirname, 'src/lib/next-navigation-shim.ts') },
       { find: 'react-dom/server', replacement: path.resolve(__dirname, 'src/lib/react-dom-server-shim.ts') },
     ],
   },
@@ -16,7 +15,7 @@ export default defineConfig({
     port: 3000,
   },
   ssr: {
-    noExternal: ['@hexclave/next'],
+    noExternal: ['@hexclave/tanstack-start'],
   },
   plugins: [
     tanstackStart(),

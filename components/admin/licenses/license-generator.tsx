@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import React, { useState } from "react";
 import { Product } from "@prisma/client";
@@ -8,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+;
 import { Loader2, Plus } from "lucide-react";
 import { createManualLicenseFn } from "@/src/server/products";
 

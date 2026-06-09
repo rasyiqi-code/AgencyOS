@@ -71,11 +71,11 @@ export function ServiceImageUpload({ defaultValue }: { defaultValue?: string | n
                 onClick={() => inputRef.current?.click()}
             >
                 {preview && !hasError ? (
-                    <Image
+                    <img
                         src={preview}
                         alt="Preview"
-                        fill
-                        unoptimized={true}
+                        
+                        
                         className="object-cover"
                         onError={() => setHasError(true)}
                     />

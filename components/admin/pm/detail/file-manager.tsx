@@ -1,3 +1,4 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { uploadProjectFileFn, deleteProjectFileFn } from "@/src/server/pm";
@@ -12,7 +13,7 @@ import {
     Eye
 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+;
 import {
     Dialog,
     DialogContent,

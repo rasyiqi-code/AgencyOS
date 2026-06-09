@@ -10,8 +10,8 @@ import { useParams } from "@tanstack/react-router";
 export function SectionCustomRequest() {
     const t = useTranslations("CustomCTA");
     const { setIsMenuOpen } = useFloatingChat();
-    const params = useParams();
-    const locale = params?.locale as string || "id";
+    const params = useParams({ strict: false }) as Record<string, string>;
+    const locale = params?.locale || "id";
 
     return (
         <section className="py-12 sm:py-16 bg-zinc-950 border-y border-white/5 relative overflow-hidden">

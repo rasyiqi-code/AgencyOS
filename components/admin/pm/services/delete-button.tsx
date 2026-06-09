@@ -1,5 +1,6 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useTransition } from "react";
-import { useRouter } from "@tanstack/react-router";
+;
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";

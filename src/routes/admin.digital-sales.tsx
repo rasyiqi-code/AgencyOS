@@ -29,7 +29,7 @@ interface DigitalOrder {
 
 function DigitalSalesPage() {
   const result = Route.useLoaderData()
-  const orders = (result.orders || []) as DigitalOrder[]
+  const orders = (result || []) as any[]
 
   return (
     <div className="space-y-6 py-6">

@@ -18,7 +18,7 @@ export function FooterInfo({ trustedAvatars }: FooterInfoProps) {
                     {trustedAvatars.length > 0 ? (
                         trustedAvatars.map((url, i) => (
                             <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
-                                <img src={url} alt={`Client ${i}`} fill className="object-cover" />
+                                <img src={url} alt={`Client ${i}`}  className="object-cover" />
                             </div>
                         ))
                     ) : (

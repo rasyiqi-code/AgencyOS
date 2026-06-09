@@ -1,8 +1,9 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Loader2, X, RefreshCw, Eye } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+;
 import { uploadProjectPreviewFn, updateProjectFn } from "@/src/server/pm";
 
 interface PreviewUploaderProps {

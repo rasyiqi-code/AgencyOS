@@ -13,7 +13,7 @@ export function DashboardModeSwitcher() {
 
     const handleModeChange = (val: string) => {
         navigate({
-            search: (prev: Record<string, string | undefined>) => ({ ...prev, mode: val }),
+            search: { ...search, mode: val } as any,
         });
     };
 

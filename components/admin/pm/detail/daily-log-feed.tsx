@@ -1,6 +1,7 @@
+import { useRouter } from "@/lib/router/hooks";
 import { SafeImage } from '@/components/ui/safe-image';
 import { useState, useTransition } from 'react';
-import { useRouter } from '@tanstack/react-router';
+;
 import { createDailyLogFn } from '@/src/server/pm';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';

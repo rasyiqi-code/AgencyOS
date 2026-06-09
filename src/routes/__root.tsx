@@ -9,7 +9,7 @@ import {
 import { QueryProvider } from '@/components/providers/query-provider'
 import { CurrencyProvider } from '@/components/providers/currency-provider'
 import { Toaster } from '@/components/ui/sonner'
-import { HexclaveProvider, HexclaveTheme } from '@hexclave/next'
+import { HexclaveProvider, HexclaveTheme } from '@hexclave/tanstack-start'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { I18nProvider } from '@/components/providers/i18n-provider'
 import enMessages from '@/messages/en.json'

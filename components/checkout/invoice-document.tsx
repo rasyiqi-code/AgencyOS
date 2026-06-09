@@ -72,7 +72,7 @@ function AuthenticitySticker({ id }: { id: string }) {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @keyframes shimmer {
                     100% { transform: translateX(100%); }
                 }
@@ -146,7 +146,7 @@ export function InvoiceDocument({
 
     return (
         <div ref={refAction} className="p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
-            <style jsx global>{`
+            <style>{`
                 @media print {
                     @page {
                         margin: 2cm;
@@ -212,7 +212,7 @@ export function InvoiceDocument({
             <div className="pb-8 mb-4 relative z-10">
                 <div className="flex justify-between items-baseline">
                     <div className="flex items-end gap-4">
-                        <Image
+                        <img
                             src="/logo.png"
                             alt="Logo"
                             width={40}

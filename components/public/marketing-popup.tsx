@@ -1,4 +1,6 @@
 "use client";
+import { usePathname } from "@/lib/router/hooks";
+
 
 import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "@tanstack/react-router";

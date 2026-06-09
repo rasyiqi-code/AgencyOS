@@ -1,11 +1,13 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { Button } from "@/components/ui/button";
 import { Trash2, Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "@/lib/i18n/hooks";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { cancelEstimateFn } from "@/src/server/estimates";
 
 export function CancelOrderButton({ estimateId }: { estimateId: string }) {

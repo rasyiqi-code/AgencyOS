@@ -47,11 +47,11 @@ export function MediaGrid({ files, onCopy, onDelete, copiedUrl, formatSize, getF
                     </div>
                     <div className="aspect-square relative bg-zinc-900">
                         {isImage(file.key) ? (
-                            <Image
+                            <img
                                 src={file.url}
                                 alt={file.key}
-                                fill
-                                unoptimized={true}
+                                
+                                
                                 className="object-cover"
                                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 16vw"
                             />

@@ -13,12 +13,22 @@ export const Route = createFileRoute('/admin/finance/orders')({
 })
 
 function AdminFinanceOrdersRoute() {
-  const initialData = Route.useLoaderData() as FinanceData[]
+  const rawLoaderData = Route.useLoaderData() as any[]
+  const initialData = rawLoaderData.map(o => ({
+    ...o,
+    createdAt: new Date(o.createdAt),
+  })) as unknown as FinanceData[]
 
   // Sinkronisasi data menggunakan React Query
   const { data } = useQuery<FinanceData[]>({
     queryKey: ['admin-finance-orders'],
-    queryFn: () => getAdminFinanceOrdersFn() as Promise<FinanceData[]>,
+    queryFn: async () => {
+      const res = await getAdminFinanceOrdersFn() as any[]
+      return res.map(o => ({
+        ...o,
+        createdAt: new Date(o.createdAt),
+      })) as unknown as FinanceData[]
+    },
     initialData,
   })
 

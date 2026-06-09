@@ -42,7 +42,7 @@ export async function checkAccess(email: string) {
       headers: {
         'Authorization': \`Bearer \${process.env.AGENCY_OS_API_KEY}\`,
       },
-      next: { revalidate: 3600 } // Cache for 1 hour
+       // Cache for 1 hour
     }
   );
   

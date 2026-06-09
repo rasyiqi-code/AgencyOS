@@ -33,7 +33,7 @@ function AdminProjectsRoute() {
   // Sinkronisasi data menggunakan React Query
   const { data } = useQuery<ProjectsLoaderData>({
     queryKey: ['admin-projects', query, status],
-    queryFn: () => getAdminProjectsFn({ data: { query, status } }) as Promise<ProjectsLoaderData>,
+    queryFn: () => getAdminProjectsFn({ data: { query, status } }) as unknown as Promise<ProjectsLoaderData>,
     initialData: initialData ?? undefined,
   })
 

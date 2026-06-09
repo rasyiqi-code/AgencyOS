@@ -1,6 +1,7 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useState } from "react";
 import { useTranslations } from "@/lib/i18n/hooks";
-import { useRouter, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { createAdminServiceFn } from "@/src/server/pm";
 import { Input } from "@/components/ui/input";

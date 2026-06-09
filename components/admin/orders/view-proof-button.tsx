@@ -97,7 +97,7 @@ export function ViewProofButton({ estimate }: ViewProofButtonProps) {
                         <iframe src={displayUrl} className="w-full h-full border-none" />
                     ) : (
                         <div className="relative">
-                            <Image
+                            <img
                                 src={displayUrl}
                                 alt="Payment Proof"
                                 width={800}

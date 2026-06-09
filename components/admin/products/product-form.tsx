@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useState, ReactNode } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -17,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useRouter } from "@tanstack/react-router";
+;
 import { Loader2, Plus, Languages, Sparkles, Pencil } from "lucide-react";
 import { ProductImageUpload } from "./product-image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

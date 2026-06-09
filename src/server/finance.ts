@@ -114,8 +114,8 @@ export const getAdminFinanceOrdersFn = createServerFn({ method: 'GET' })
         isLegacyMismatched: o.currency === 'IDR' && o.amount < 5000,
         exchangeRate: o.exchangeRate && o.exchangeRate !== 1 ? o.exchangeRate : undefined,
         transactionAmount: o.amount,
-        screens: (estimate?.screens || []) as Record<string, unknown>[],
-        apis: (estimate?.apis || []) as Record<string, unknown>[],
+        screens: (estimate?.screens || []) as any[],
+        apis: (estimate?.apis || []) as any[],
         estimateId: estimate?.id || null
       }
     })
@@ -221,7 +221,7 @@ export const getAdminFinanceQuotesFn = createServerFn({ method: 'GET' })
       estimates: estimates.map(e => ({
         ...e,
         createdAt: e.createdAt.toISOString(),
-        updatedAt: e.updatedAt.toISOString(),
+        updatedAt: e.createdAt.toISOString(),
         project: e.project ? {
           ...e.project,
           createdAt: e.project.createdAt.toISOString(),
@@ -439,7 +439,7 @@ export const getAdminFinanceSubscriptionsFn = createServerFn({ method: 'GET' })
       estimate: p.estimate ? {
         ...p.estimate,
         createdAt: p.estimate.createdAt.toISOString(),
-        updatedAt: p.estimate.updatedAt.toISOString()
+        updatedAt: p.estimate.createdAt.toISOString()
       } : null
     }))
   })

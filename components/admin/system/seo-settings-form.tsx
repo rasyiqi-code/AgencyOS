@@ -225,10 +225,10 @@ export function SeoSettingsForm({ initialData }: Props) {
                             {/* Preview */}
                             <div className="relative w-16 h-16 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                                 {faviconUrl ? (
-                                    <Image
+                                    <img
                                         src={faviconUrl}
                                         alt="Favicon Preview"
-                                        fill
+                                        
                                         className="object-contain p-2"
                                     />
                                 ) : (
@@ -274,10 +274,10 @@ export function SeoSettingsForm({ initialData }: Props) {
                             {/* Preview */}
                             <div className="relative w-32 h-20 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                                 {ogImageUrl ? (
-                                    <Image
+                                    <img
                                         src={ogImageUrl}
                                         alt="OG Preview"
-                                        fill
+                                        
                                         className="object-cover"
                                     />
                                 ) : (

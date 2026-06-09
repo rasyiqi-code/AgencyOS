@@ -104,7 +104,7 @@ export const clientColumns: ColumnDef<ClientUser>[] = [
             }
 
             return (
-                <NextLink
+                <a
                     href={`/admin/pm/projects?query=${row.original.id}`}
                     className="group flex items-center gap-1.5 w-fit hover:bg-zinc-800/50 px-2 py-1 rounded transition-colors"
                 >
@@ -118,7 +118,7 @@ export const clientColumns: ColumnDef<ClientUser>[] = [
                         {projects.length === 1 ? 'Project' : 'Projects'}
                     </span>
                     <ArrowUpRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 transition-colors opacity-0 group-hover:opacity-100" />
-                </NextLink>
+                </a>
             );
         },
     },

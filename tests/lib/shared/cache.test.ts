@@ -1,14 +1,14 @@
 import { describe, expect, it, mock, spyOn } from "bun:test";
 import { safeUnstableCache } from "@/lib/shared/cache";
-import * as nextCache from "next/cache";
+import * as cacheModule from "@/lib/cache";
 
 describe("safeUnstableCache", () => {
     it("should resolve the cached function value successfully on happy path", async () => {
         const mockFn = mock(async () => "database_value");
         
-        // Mock unstable_cache bawaan Next.js agar mengembalikan wrapper fungsi asli
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation(
-            (cb) => cb
+        // Mock unstable_cache dari modul cache lokal agar mengembalikan wrapper fungsi asli
+        const unstableCacheSpy = spyOn(cacheModule, "unstable_cache").mockImplementation(
+            ((cb: any) => cb) as any
         );
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
@@ -23,13 +23,13 @@ describe("safeUnstableCache", () => {
     it("should fallback to raw function call when unstable_cache throws incrementalCache missing error", async () => {
         const mockFn = mock(async () => "fallback_database_value");
 
-        // Mock unstable_cache agar melempar error invariant Next.js 15+
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((cb) => {
+        // Mock unstable_cache agar melempar error invariant
+        const unstableCacheSpy = spyOn(cacheModule, "unstable_cache").mockImplementation(((cb: any) => {
             if (!cb) throw new Error("Callback required");
-            return (async () => {
+            return async () => {
                 throw new Error("Invariant: incrementalCache missing in unstable_cache");
-            }) as unknown as typeof cb;
-        });
+            };
+        }) as any);
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
         const result = await cached();
@@ -44,12 +44,12 @@ describe("safeUnstableCache", () => {
         const mockFn = mock(async () => "database_value");
 
         // Mock unstable_cache agar melempar database error biasa
-        const unstableCacheSpy = spyOn(nextCache, "unstable_cache").mockImplementation((cb) => {
+        const unstableCacheSpy = spyOn(cacheModule, "unstable_cache").mockImplementation(((cb: any) => {
             if (!cb) throw new Error("Callback required");
-            return (async () => {
+            return async () => {
                 throw new Error("Prisma: Connection failed");
-            }) as unknown as typeof cb;
-        });
+            };
+        }) as any);
 
         const cached = safeUnstableCache(mockFn, ["test-key"]);
 

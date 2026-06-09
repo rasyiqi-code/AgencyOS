@@ -37,7 +37,7 @@ const createManualLicenseSchema = z.object({
   expiresAt: z.string().optional().nullable(),
   status: z.string().optional().default('active'),
   userId: z.string().optional().nullable(),
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional()
 })
 
 // 1. Mengambil Semua Produk Digital
@@ -191,7 +191,7 @@ export const createManualLicenseFn = createServerFn({ method: 'POST' })
         expiresAt: expiresAt ? new Date(expiresAt) : null,
         status: status || 'active',
         userId: userId || undefined,
-        metadata: metadata || undefined
+        metadata: (metadata || undefined) as any
       },
     })
 

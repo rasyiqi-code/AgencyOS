@@ -49,12 +49,12 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
             {/* Background Image Overlay */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
                 {service.image && (
-                    <Image
+                    <img
                         src={service.image}
                         alt={displayTitle}
-                        fill
+                        
                         className="object-cover opacity-20 blur-[120px] scale-125"
-                        unoptimized={true}
+                        
                     />
                 )}
                 <div className="absolute inset-0 bg-zinc-950/60" />

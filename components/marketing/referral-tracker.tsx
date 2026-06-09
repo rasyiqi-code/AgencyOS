@@ -1,4 +1,6 @@
 "use client";
+import { useSearchParams } from "@/lib/router/hooks";
+
 
 import { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";

@@ -62,7 +62,7 @@ export function ScheduleDialog({ estimate, trigger }: ScheduleDialogProps) {
                 totalCost: estimate.totalCost,
                 totalHours: estimate.totalHours,
                 link: window.location.href
-            });
+            } });
 
             toast.success("Request sent! We'll contact you shortly.");
             setOpen(false);

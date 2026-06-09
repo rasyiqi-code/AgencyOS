@@ -1,6 +1,8 @@
 "use client";
+import { useRouter, usePathname } from "@/lib/router/hooks";
 
-import { UserButton } from "@hexclave/next";
+
+import { UserButton } from "@hexclave/tanstack-start";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useLocation, useNavigate } from "@tanstack/react-router";

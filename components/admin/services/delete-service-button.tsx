@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useTransition } from "react";
 import { useNavigate } from "@tanstack/react-router";
@@ -25,9 +27,9 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
 
         startTransition(async () => {
             try {
-                const result = await deleteAdminServiceFn({ data: serviceId);
+                const result = await deleteAdminServiceFn({ data: serviceId });
 
-                if (result.error) {
+                if ((result as any).error) {
                     if (element) element.style.display = '';
                     throw new Error("Failed to delete service");
                 }

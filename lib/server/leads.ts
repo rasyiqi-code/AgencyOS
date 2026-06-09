@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 import { prisma } from "@/lib/config/db";
 
 export async function createLead(data: {
@@ -14,8 +15,7 @@ export async function createLead(data: {
     const lead = await prisma.lead.create({
         data,
     });
-    revalidatePath("/admin/marketing");
-    return lead;
+return lead;
 }
 
 export async function getLeads(limit?: number) {
@@ -30,5 +30,4 @@ export async function deleteLead(id: string) {
     await prisma.lead.delete({
         where: { id },
     });
-    revalidatePath("/admin/marketing");
 }

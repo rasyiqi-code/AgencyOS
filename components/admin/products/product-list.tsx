@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import {
     Table,
@@ -12,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductForm } from "./product-form";
 import { Pencil, Trash2, Key, ExternalLink, Package } from "lucide-react";
-import { useRouter } from "@tanstack/react-router";
+;
 import { toast } from "sonner";
 import { Product } from "@prisma/client";
 import { cn } from "@/lib/shared/utils";
@@ -67,7 +69,7 @@ export function ProductList({ products }: ProductListProps) {
                                 <div className="flex items-center gap-3">
                                     {product.image ? (
                                         <div className="w-10 h-10 rounded-xl overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
-                                            <Image
+                                            <img
                                                 src={product.image}
                                                 alt={product.name}
                                                 width={40}
@@ -185,7 +187,7 @@ export function ProductList({ products }: ProductListProps) {
                                         <div className="flex items-center gap-4">
                                             {product.image ? (
                                                 <div className="w-12 h-12 rounded-2xl overflow-hidden bg-zinc-800 border border-white/10 shrink-0 group-hover/row:border-brand-yellow/30 transition-colors">
-                                                    <Image
+                                                    <img
                                                         src={product.image}
                                                         alt={product.name}
                                                         width={48}

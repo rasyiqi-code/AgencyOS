@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 import { prisma } from "@/lib/config/db";
 import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
 
@@ -13,9 +14,6 @@ export async function createChangelog(data: { title: string; content: string; ve
             publishedAt: new Date()
         }
     });
-
-    revalidatePath('/changelog');
-    revalidatePath('/admin/changelog');
     return { success: true };
 }
 
@@ -26,9 +24,6 @@ export async function updateChangelog(id: string, data: { title: string; content
         where: { id },
         data
     });
-
-    revalidatePath('/changelog');
-    revalidatePath('/admin/changelog');
     return { success: true };
 }
 
@@ -38,8 +33,5 @@ export async function deleteChangelog(id: string) {
     await prisma.changelog.delete({
         where: { id }
     });
-
-    revalidatePath('/changelog');
-    revalidatePath('/admin/changelog');
     return { success: true };
 }

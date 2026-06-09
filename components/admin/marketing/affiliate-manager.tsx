@@ -161,7 +161,7 @@ export function AffiliateManager() {
                             const val = e.target.value;
                             if (!val) return;
                             try {
-                                await updateSystemSetting("RESEND_API_KEY", val);
+                                await updateSystemSetting({ data: { key: "RESEND_API_KEY", value: val } });
                                 toast.success("API Key diperbarui");
                                 e.target.value = "";
                             } catch {
@@ -185,7 +185,7 @@ export function AffiliateManager() {
                                 const val = e.target.value;
                                 if (!val) return;
                                 try {
-                                    await updateSystemSetting("affiliate_default_commission_rate", val);
+                                    await updateSystemSetting({ data: { key: "affiliate_default_commission_rate", value: val } });
                                     toast.success("Komisi dasar diperbarui");
                                 } catch {
                                     toast.error("Gagal memperbarui");

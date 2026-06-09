@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,9 +11,10 @@ import { useSafeUser } from "@/hooks/use-safe-user";
 import { toast } from "sonner";
 import { useTranslations } from "@/lib/i18n/hooks";
 import remarkGfm from "remark-gfm";
-
-const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 import { useLocation } from "@tanstack/react-router";
+
+// Lazy load ReactMarkdown untuk mengurangi bundle size awal
+const ReactMarkdown = lazy(() => import("react-markdown"));
 import {
     Sheet,
     SheetContent,
@@ -49,7 +50,7 @@ export function FloatingChatWidget() {
         return names[Math.floor(Math.random() * names.length)];
     });
     
-    const pathname = usePathname();
+    const { pathname } = useLocation();
 
     // Helper handlers to replace local setters
     const setMode = (newMode: ChatMode) => openChat(newMode);
@@ -573,25 +574,27 @@ export function FloatingChatWidget() {
                                             "prose prose-sm max-w-none break-words",
                                             m.role === "user" ? "prose-black" : "prose-invert"
                                         )}>
-                                            <ReactMarkdown
-                                                remarkPlugins={[remarkGfm]}
-                                                components={{
-                                                    a: ({ ...props }) => {
-                                                        const isInternal = props.href?.startsWith("/");
-                                                        if (isInternal) {
-                                                            return <a href={props.href!} className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
-                                                        }
-                                                        return <a target="_blank" rel="noopener noreferrer" className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
-                                                    },
-                                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                                                    ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
-                                                    ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
-                                                    li: ({ children }) => <li className="mb-1">{children}</li>,
-                                                    strong: ({ children }) => <strong className={cn("font-bold", m.role === "user" ? "text-black" : "text-white")}>{children}</strong>,
-                                                }}
-                                            >
-                                                {m.content}
-                                            </ReactMarkdown>
+                                            <Suspense fallback={<span>{m.content}</span>}>
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    components={{
+                                                        a: ({ ...props }) => {
+                                                            const isInternal = props.href?.startsWith("/");
+                                                            if (isInternal) {
+                                                                return <a href={props.href!} className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
+                                                            }
+                                                            return <a target="_blank" rel="noopener noreferrer" className={cn("underline font-bold transition-colors", m.role === "user" ? "text-black hover:text-zinc-700" : "text-brand-yellow hover:text-white")} {...props} />;
+                                                        },
+                                                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                        ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                        ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                        li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                        strong: ({ children }) => <strong className={cn("font-bold", m.role === "user" ? "text-black" : "text-white")}>{children}</strong>,
+                                                    }}
+                                                >
+                                                    {m.content}
+                                                </ReactMarkdown>
+                                            </Suspense>
                                         </div>
                                     </div>
                                 </div>

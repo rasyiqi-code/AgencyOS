@@ -1,3 +1,4 @@
+// revalidatePath/revalidateTag tidak diperlukan di TanStack Start
 import { prisma } from "@/lib/config/db";
 
 // --- Coupons ---
@@ -27,13 +28,11 @@ export async function createCoupon(data: {
             appliesTo: data.appliesTo || ["DIGITAL", "SERVICE", "CALCULATOR"],
         },
     });
-    revalidatePath("/admin/marketing");
-    return coupon;
+return coupon;
 }
 
 export async function deleteCoupon(id: string) {
     await prisma.coupon.delete({ where: { id } });
-    revalidatePath("/admin/marketing");
 }
 
 export async function validateCoupon(code: string, context?: "DIGITAL" | "SERVICE" | "CALCULATOR") {
@@ -98,13 +97,11 @@ export async function createBonus(data: {
             appliesTo: data.appliesTo || ["DIGITAL", "SERVICE", "CALCULATOR"]
         },
     });
-    revalidatePath("/admin/marketing");
-    return bonus;
+return bonus;
 }
 
 export async function deleteBonus(id: string) {
     await prisma.marketingBonus.delete({ where: { id } });
-    revalidatePath("/admin/marketing");
 }
 
 export async function toggleBonusStatus(id: string, isActive: boolean) {
@@ -112,8 +109,7 @@ export async function toggleBonusStatus(id: string, isActive: boolean) {
         where: { id },
         data: { isActive },
     });
-    revalidatePath("/admin/marketing");
-    return bonus;
+return bonus;
 }
 
 // --- Subscribers ---
@@ -189,8 +185,6 @@ export async function createPromotion(data: {
     const promotion = await prisma.promotion.create({
         data,
     });
-    revalidatePath("/admin/marketing");
-    revalidatePath("/promosi");
     return promotion;
 }
 
@@ -209,16 +203,11 @@ export async function updatePromotion(id: string, data: Partial<{
         where: { id },
         data,
     });
-
-    revalidatePath("/admin/marketing");
-    revalidatePath("/promosi");
     return promotion;
 }
 
 export async function deletePromotion(id: string) {
     await prisma.promotion.delete({ where: { id } });
-    revalidatePath("/admin/marketing");
-    revalidatePath("/promosi");
 }
 
 

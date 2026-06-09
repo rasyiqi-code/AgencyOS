@@ -1,3 +1,4 @@
+import { useRouter } from "@/lib/router/hooks";
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -7,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { generateRenewalInvoiceFn } from "@/src/server/finance"
 import { RefreshCcw, Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useRouter } from "@tanstack/react-router"
+
 
 export function RenewSubscriptionButton({ 
     projectId, 

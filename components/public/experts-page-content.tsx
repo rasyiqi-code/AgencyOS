@@ -96,7 +96,7 @@ export function ExpertsPageContent() {
                                         <img 
                                             src={expert.image} 
                                             alt={expert.name} 
-                                            fill 
+                                             
                                             className="object-cover" 
                                             sizes="96px"
                                         />

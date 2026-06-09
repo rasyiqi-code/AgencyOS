@@ -1,7 +1,9 @@
 "use client"
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useState } from "react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Globe, ExternalLink, Pencil, Save, X, Loader2 } from "lucide-react";

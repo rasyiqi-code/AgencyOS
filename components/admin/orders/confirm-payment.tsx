@@ -1,8 +1,10 @@
 "use client";
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { confirmPaymentFn } from "@/src/server/estimates";

@@ -26,9 +26,9 @@ export function ProjectAssets({ projectId, initialFiles }: { projectId: string, 
         formData.append("projectId", projectId);
 
         try {
-            const result = formData.append("projectId", projectId); await uploadProjectFileFn({ data: formData });
+            const result = await uploadProjectFileFn({ data: formData });
 
-            if (result.error) throw new Error("Failed to upload");
+            if ((result as any)?.error) throw new Error("Failed to upload");
 
             toast.success("File uploaded successfully");
         } catch (error) {

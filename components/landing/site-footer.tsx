@@ -16,7 +16,7 @@ export function SiteFooter() {
     const [affiliateName, setAffiliateName] = useState<string | null>(null);
 
     useEffect(() => {
-        getSystemSettings(["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"]).then(
+        getSystemSettings({ data: ["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"] }).then(
             (s: { key: string; value: string }[]) => {
                 setSettings({
                     agencyName: s.find(x => x.key === "AGENCY_NAME")?.value || "Agency OS",
@@ -29,7 +29,7 @@ export function SiteFooter() {
         const match = document.cookie.match(/(?:^| )agencyos_affiliate_id=([^;]+)/);
         const affiliateCode = match?.[1];
         if (affiliateCode) {
-            getAffiliateName(affiliateCode).then(setAffiliateName);
+            getAffiliateName({ data: affiliateCode }).then(setAffiliateName);
         }
     }, []);
 
@@ -47,10 +47,10 @@ export function SiteFooter() {
                     {showLogo && (
                         logoUrl ? (
                             <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/10">
-                                <Image
+                                <img
                                     src={logoUrl}
                                     alt={agencyName}
-                                    fill
+                                    
                                     className="object-cover"
                                     sizes="32px"
                                 />

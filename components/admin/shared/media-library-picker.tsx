@@ -107,11 +107,11 @@ export function MediaLibraryPicker({ onSelect, prefix = "services/" }: { onSelec
                                     }}
                                     className="group relative aspect-video rounded-xl border border-white/5 bg-black/40 overflow-hidden hover:border-brand-yellow/50 transition-all focus:outline-none focus:ring-2 focus:ring-brand-yellow/50"
                                 >
-                                    <Image
+                                    <img
                                         src={file.url}
                                         alt={file.key}
-                                        fill
-                                        unoptimized={true}
+                                        
+                                        
                                         className="object-cover transition-transform group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

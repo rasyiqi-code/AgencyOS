@@ -1,9 +1,8 @@
+// Mock cache module lokal
 import { mock } from "bun:test";
 
-mock.module("next/cache", () => ({
+mock.module("@/lib/cache", () => ({
     unstable_cache: (fn: unknown) => fn,
-    revalidatePath: mock(() => {}),
-    revalidateTag: mock(() => {})
 }));
 
 mock.module("@/lib/server/settings", () => ({

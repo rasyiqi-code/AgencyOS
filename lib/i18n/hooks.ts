@@ -5,38 +5,64 @@
 import React, { useContext, useCallback } from 'react'
 import { I18nContext } from './context'
 
-type RichValues = Record<string, (chunk: React.ReactNode) => React.ReactNode>
+type RichValues = Record<
+  string,
+  React.ReactNode | ((chunk: React.ReactNode) => React.ReactNode)
+>
 
 /**
  * Mem-parse string i18n yang memiliki tag (contoh: <strong>text</strong>)
- * secara aman dan merendernya menggunakan React elements.
+ * dan variabel (contoh: {code}) secara aman dan merendernya menggunakan React elements.
  */
 function parseRichText(text: string, values: RichValues): React.ReactNode[] {
   const result: React.ReactNode[] = []
   let lastIndex = 0
-  const tagRegex = /<(\w+)>(.*?)<\/\1>/g
+  // regex untuk mencocokkan tag <tag>content</tag> atau placeholder {variable}
+  const regex = /<(\w+)>(.*?)<\/\1>|\{(\w+)\}/g
   let match
   
-  while ((match = tagRegex.exec(text)) !== null) {
-    const [_, tagName, content] = match
+  while ((match = regex.exec(text)) !== null) {
     const matchIndex = match.index
     
-    // Tambahkan teks biasa sebelum tag
+    // Tambahkan teks biasa sebelum kecocokan
     if (matchIndex > lastIndex) {
       result.push(text.substring(lastIndex, matchIndex))
     }
     
-    // Parse content secara rekursif
-    const childNodes = parseRichText(content, values)
-    
-    // Panggil render function jika terdaftar di values
-    if (tagName in values) {
-      result.push(values[tagName](childNodes.length === 1 ? childNodes[0] : childNodes))
-    } else {
-      result.push(childNodes.length === 1 ? childNodes[0] : childNodes)
+    if (match[1]) {
+      // Ini adalah tag HTML: match[1] = nama tag, match[2] = konten di dalam tag
+      const tagName = match[1]
+      const content = match[2]
+      
+      const childNodes = parseRichText(content, values)
+      const children = childNodes.length === 1 ? childNodes[0] : childNodes
+      
+      if (tagName in values) {
+        const val = values[tagName]
+        if (typeof val === 'function') {
+          result.push((val as Function)(children))
+        } else {
+          result.push(val)
+        }
+      } else {
+        result.push(children)
+      }
+    } else if (match[3]) {
+      // Ini adalah placeholder variabel {name}: match[3] = nama variabel
+      const varName = match[3]
+      if (varName in values) {
+        const val = values[varName]
+        if (typeof val === 'function') {
+          result.push((val as Function)(null))
+        } else {
+          result.push(val)
+        }
+      } else {
+        result.push(`{${varName}}`)
+      }
     }
     
-    lastIndex = tagRegex.lastIndex
+    lastIndex = regex.lastIndex
   }
   
   if (lastIndex < text.length) {

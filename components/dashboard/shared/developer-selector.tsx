@@ -1,3 +1,4 @@
+import { useRouter } from "@/lib/router/hooks";
 
 "use client";
 
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { UserCheck, Loader2 } from "lucide-react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { updateProjectFn } from "@/src/server/pm";
 import { getSquadDevelopersFn } from "@/src/server/affiliates";
 

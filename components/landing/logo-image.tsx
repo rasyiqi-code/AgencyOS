@@ -23,14 +23,14 @@ export function LogoImage({ src, alt, width, height, className, priority }: Logo
     };
 
     return (
-        <Image
+        <img
             src={imgSrc}
             alt={alt}
             width={width}
             height={height}
             className={className}
-            priority={priority}
-            unoptimized // Keep unoptimized to avoid Vercel edge function timeouts on external media
+            
+             // Keep  to avoid Vercel edge function timeouts on external media
             onError={handleError}
             style={{ width: 'auto' }}
         />

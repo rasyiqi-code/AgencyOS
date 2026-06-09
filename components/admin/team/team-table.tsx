@@ -1,4 +1,6 @@
 "use client"
+import { useRouter } from "@/lib/router/hooks";
+
 
 import { useState } from "react"
 import {
@@ -13,7 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { toast } from "sonner"
-import { useRouter } from "@tanstack/react-router"
+
 import { manageTeamPermissionFn as manageTeamPermission } from "@/src/server/team"
 
 interface TeamMember {

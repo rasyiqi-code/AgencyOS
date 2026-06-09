@@ -1,4 +1,6 @@
 "use client";
+import { usePathname } from "@/lib/router/hooks";
+
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -47,7 +49,7 @@ export function MobileNav({
                     <SheetTitle className="text-white flex items-center gap-2">
                         {logoUrl ? (
                             <div className="h-7 w-auto">
-                                <Image
+                                <img
                                     src={logoUrl}
                                     alt={agencyName}
                                     width={120}

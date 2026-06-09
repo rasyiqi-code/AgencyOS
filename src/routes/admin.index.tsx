@@ -16,13 +16,14 @@ const adminSearchSchema = z.object({
 
 export const Route = createFileRoute('/admin/')({
   validateSearch: (search) => adminSearchSchema.parse(search),
-  loader: async ({ search }) => {
+  loaderDeps: ({ search: { view, mode } }) => ({ view, mode }),
+  loader: async ({ deps }) => {
     // Memeriksa peran admin saat ini
     const isProjectAdmin = await canManageProjects()
     const isBillingAdmin = await canManageBilling()
 
-    const mode = search.mode || 'services'
-    const view = search.view
+    const mode = deps.mode || 'services'
+    const view = deps.view
 
     let activeView = 'fallback'
     if (isProjectAdmin && isBillingAdmin) {
@@ -41,9 +42,9 @@ export const Route = createFileRoute('/admin/')({
     let projectStats = null
 
     if (activeView === 'super') {
-      superAdminStats = await getSuperAdminDashboardData(mode)
+      superAdminStats = await getSuperAdminDashboardData({ data: mode })
     } else if (activeView === 'finance') {
-      billingStats = await getBillingDashboardData(mode)
+      billingStats = await getBillingDashboardData({ data: mode })
     } else if (activeView === 'project') {
       projectStats = await getProjectDashboardData()
     }
@@ -58,7 +59,7 @@ export const Route = createFileRoute('/admin/')({
       billingStats,
       projectStats,
       locale,
-      search,
+      search: { view, mode },
     }
   },
   component: AdminHome,
@@ -81,7 +82,7 @@ function AdminHome() {
 
   const handleViewChange = (val: string) => {
     navigate({
-      search: (prev: Record<string, string | undefined>) => ({ ...prev, view: val === 'super' ? undefined : val }),
+      search: { ...search, view: val === 'super' ? undefined : val } as any,
     })
   }
 
