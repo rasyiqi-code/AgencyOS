@@ -8,10 +8,10 @@ export const hexclaveClientApp = new HexclaveClientApp({
     redirectMethod: "window",
 });
 
-// Inisialisasi untuk sisi server (server functions)
-export const hexclaveServerApp = new HexclaveServerApp({
-    tokenStore: "cookie",
-});
+// Inisialisasi untuk sisi server (server functions) secara aman agar tidak crash di browser
+export const hexclaveServerApp = typeof window === "undefined"
+    ? new HexclaveServerApp({ tokenStore: "cookie" })
+    : {} as HexclaveServerApp;
 
 // Cache list user selama 5 menit untuk mencegah bottleneck download massal user auth provider eksternal
 export const getCachedUsers = unstable_cache(
