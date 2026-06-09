@@ -52,7 +52,8 @@ export function HeroContent({ agencyName }: HeroContentProps) {
     };
 
     const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 30 },
+        // Menggunakan opacity awal 1 agar dijamin terlihat sejak pemuatan pertama (SSR)
+        hidden: { opacity: 1, y: 0 },
         visible: {
             opacity: 1,
             y: 0,
@@ -75,7 +76,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                     {/* Left Column: Content */}
                     <motion.div
                         variants={containerVariants}
-                        initial="hidden"
+                        initial="visible"
                         animate="visible"
                         className="relative space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1"
                     >
@@ -177,7 +178,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
 
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            initial={{ opacity: 1, scale: 1, y: 0 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{
                                 duration: isMobile ? 0.8 : 1.2,

@@ -7,7 +7,7 @@ import { useTranslations } from "@/lib/i18n/hooks";
 export function WorkflowContent() {
     const t = useTranslations("Workflow");
     const containerVariants: Variants = {
-        hidden: { opacity: 0 },
+        hidden: { opacity: 1 },
         visible: {
             opacity: 1,
             transition: {
@@ -17,7 +17,7 @@ export function WorkflowContent() {
     };
 
     const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 30 },
+        hidden: { opacity: 1, y: 0 },
         visible: {
             opacity: 1,
             y: 0,
@@ -43,7 +43,7 @@ export function WorkflowContent() {
     return (
         <div className="container mx-auto px-4">
             <motion.div
-                initial="hidden"
+                initial="visible"
                 animate="visible"
                 variants={containerVariants}
                 className="space-y-12 md:space-y-16"

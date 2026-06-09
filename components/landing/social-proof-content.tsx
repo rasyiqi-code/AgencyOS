@@ -8,7 +8,7 @@ import { useTranslations } from "@/lib/i18n/hooks";
 export function SocialProofContent() {
     const t = useTranslations("SocialProof");
     const containerVariants: Variants = {
-        hidden: { opacity: 0 },
+        hidden: { opacity: 1 },
         visible: {
             opacity: 1,
             transition: {
@@ -19,7 +19,7 @@ export function SocialProofContent() {
     };
 
     const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 1, y: 0 },
         visible: {
             opacity: 1,
             y: 0,
@@ -39,7 +39,7 @@ export function SocialProofContent() {
     return (
         <motion.div
             ref={scrollRef}
-            initial="hidden"
+            initial="visible"
             animate="visible"
             variants={containerVariants}
             className="container mx-auto px-4 overflow-hidden"
