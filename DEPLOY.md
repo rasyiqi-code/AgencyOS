@@ -9,7 +9,7 @@ This guide describes how to deploy the Agency OS MVP to a Virtual Private Server
 3.  **Docker**: Installed on the VPS.
     - [Get Docker](https://docs.docker.com/get-docker/)
     - [Get Docker Compose](https://docs.docker.com/compose/install/)
-4.  **Stack Auth Project**: A project created in [Stack Auth Dashboard](https://app.stack-auth.com/).
+4.  **Hexclave Project**: A project created in [Hexclave Dashboard](https://hexclave.com/).
 
 ## Deployment Steps
 
@@ -23,10 +23,10 @@ In your Dokploy project settings, add the following environment variables:
 # Database (Internal Docker URL)
 DATABASE_URL="postgresql://postgres:postgres_password_change_me@db:5432/agency_os?schema=public"
 
-# Stack Auth (From Dashboard)
-NEXT_PUBLIC_STACK_PROJECT_ID="your_project_id"
-NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY="your_public_key"
-STACK_SECRET_SERVER_KEY="your_secret_key"
+# Hexclave (From Dashboard)
+NEXT_PUBLIC_HEXCLAVE_PROJECT_ID="your_project_id"
+NEXT_PUBLIC_HEXCLAVE_PUBLISHABLE_CLIENT_KEY="your_public_key"
+HEXCLAVE_SECRET_SERVER_KEY="your_secret_key"
 
 # App
 NEXT_PUBLIC_APP_URL="https://your-domain.com"
