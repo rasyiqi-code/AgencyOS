@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useTransition, useCallback } from "react";
+import { useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toggleTestimonialStatus, deleteTestimonial } from "@/app/actions/testimonials";
 import {
@@ -35,64 +36,70 @@ interface Testimonial {
 }
 
 export default function AdminTestimonialsPage() {
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [isPending, startTransition] = useTransition();
+    const queryClient = useQueryClient();
 
-    const loadData = useCallback(async () => {
-        try {
+    // Mengambil data testimonials menggunakan useQuery
+    const { data: testimonials = [], isLoading: loading, error } = useQuery<Testimonial[]>({
+        queryKey: ["testimonials"],
+        queryFn: async () => {
             const res = await fetch("/api/testimonials", { cache: "no-store" });
+            if (!res.ok) throw new Error("Gagal memuat testimonial");
             const result = await res.json();
-            if (result.success && result.data) {
-                setTestimonials(result.data);
+            if (!result.success || !result.data) {
+                throw new Error(result.error || "Gagal memuat testimonial");
             }
-        } catch {
-            toast.error("Failed to load testimonials");
+            return result.data;
         }
-        setLoading(false);
-    }, []);
+    });
 
+    // Menangani pesan error jika fetch gagal
     useEffect(() => {
-        const init = async () => {
-            await loadData();
-        };
-        init();
-    }, [loadData]);
+        if (error) {
+            toast.error("Gagal memuat testimonial");
+        }
+    }, [error]);
 
-    async function toggleStatus(id: string, currentStatus: boolean) {
-        startTransition(async () => {
-            try {
-                const result = await toggleTestimonialStatus(id, !currentStatus);
+    // Mutasi untuk mengubah status testimonial (Approve/Hide)
+    const toggleStatusMutation = useMutation({
+        mutationFn: async ({ id, currentStatus }: { id: string; currentStatus: boolean }) => {
+            const result = await toggleTestimonialStatus(id, !currentStatus);
+            if (!result.success) throw new Error("Gagal memperbarui status");
+            return result;
+        },
+        onSuccess: (_, variables) => {
+            toast.success(`Testimonial berhasil ${!variables.currentStatus ? 'disetujui' : 'disembunyikan'}`);
+            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+        },
+        onError: () => {
+            toast.error("Gagal memperbarui status");
+        }
+    });
 
-                if (result.success) {
-                    toast.success(`Testimonial ${!currentStatus ? 'approved' : 'hidden'}`);
-                    loadData();
-                } else {
-                    toast.error("Failed to update status");
-                }
-            } catch {
-                toast.error("Failed to update status");
-            }
-        });
+    // Mutasi untuk menghapus testimonial
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const result = await deleteTestimonial(id);
+            if (!result.success) throw new Error("Gagal menghapus");
+            return result;
+        },
+        onSuccess: () => {
+            toast.success("Testimonial berhasil dihapus");
+            queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+        },
+        onError: () => {
+            toast.error("Gagal menghapus");
+        }
+    });
+
+    const isPending = toggleStatusMutation.isPending || deleteMutation.isPending;
+
+    function toggleStatus(id: string, currentStatus: boolean) {
+        toggleStatusMutation.mutate({ id, currentStatus });
     }
 
-    async function remove(id: string) {
-        if (!confirm("Are you sure you want to delete this testimonial?")) return;
-
-        startTransition(async () => {
-            try {
-                const result = await deleteTestimonial(id);
-
-                if (result.success) {
-                    toast.success("Testimonial deleted");
-                    loadData();
-                } else {
-                    toast.error("Failed to delete");
-                }
-            } catch {
-                toast.error("Failed to delete");
-            }
-        });
+    function remove(id: string) {
+        if (!confirm("Apakah Anda yakin ingin menghapus testimonial ini?")) return;
+        deleteMutation.mutate(id);
     }
 
     return (

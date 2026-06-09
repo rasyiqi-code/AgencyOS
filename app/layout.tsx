@@ -9,6 +9,7 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Toaster } from "@/components/ui/sonner";
 import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
 import { CurrencyProvider } from "@/components/providers/currency-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { PendingCheckoutRedirect } from "@/components/store/pending-checkout-redirect";
@@ -230,24 +231,26 @@ export default async function RootLayout({
           />
         )}
         <NextIntlClientProvider messages={messages}>
-          <CurrencyProvider initialLocale={locale}>
-            <HexclaveProvider app={hexclaveServerApp}>
-              <HexclaveTheme>
-                {children}
-                <ScrollRestorer />
-                <ReferralTracker />
-                <PendingCheckoutRedirect />
-                <Suspense fallback={null}>
-                  <ConditionalFloatingChat />
-                </Suspense>
-                <Toaster />
-                <ServiceWorkerRegistrar />
-                <InstallPrompt />
-                <MarketingPopup />
-                <PushNotificationBanner />
-              </HexclaveTheme>
-            </HexclaveProvider>
-          </CurrencyProvider>
+          <QueryProvider>
+            <CurrencyProvider initialLocale={locale}>
+              <HexclaveProvider app={hexclaveServerApp}>
+                <HexclaveTheme>
+                  {children}
+                  <ScrollRestorer />
+                  <ReferralTracker />
+                  <PendingCheckoutRedirect />
+                  <Suspense fallback={null}>
+                    <ConditionalFloatingChat />
+                  </Suspense>
+                  <Toaster />
+                  <ServiceWorkerRegistrar />
+                  <InstallPrompt />
+                  <MarketingPopup />
+                  <PushNotificationBanner />
+                </HexclaveTheme>
+              </HexclaveProvider>
+            </CurrencyProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

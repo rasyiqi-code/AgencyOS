@@ -4,63 +4,109 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, RefreshCw, Save, DollarSign, Clock } from "lucide-react";
 import { getCurrencyConfig, saveCurrencyConfig, forceUpdateCurrencyRates } from "@/app/actions/system-admin";
 
+interface CurrencyConfig {
+    apiKey?: string | null;
+    intervalHours?: number | null;
+}
+
+interface CurrencyRates {
+    base: string;
+    rates: Record<string, number>;
+    lastUpdated: number;
+}
+
+interface CurrencyData {
+    config: CurrencyConfig | null;
+    rates: CurrencyRates | null;
+}
+
 export default function CurrencySettingsPage() {
-    const [loading, setLoading] = useState(false);
-    const [fetching, setFetching] = useState(false);
-
-    const [apiKey, setApiKey] = useState("");
-    const [intervalHours, setIntervalHours] = useState(24);
-
-    const [rates, setRates] = useState<{ base: string; rates: Record<string, number>; lastUpdated: number } | null>(null);
-
-    const loadData = async () => {
-        try {
-            const data = await getCurrencyConfig();
-            if (data.config) {
-                setApiKey(data.config.apiKey || "");
-                setIntervalHours(data.config.intervalHours || 24);
-            }
-            if (data.rates) {
-                setRates(data.rates);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Failed to load settings");
+    // Mengambil data konfigurasi mata uang dan kurs menggunakan useQuery
+    const { data: currencyData, isLoading, error } = useQuery<CurrencyData>({
+        queryKey: ["currencyConfig"],
+        queryFn: async () => {
+            return await getCurrencyConfig();
         }
-    };
+    });
 
-    useEffect(() => {
-        loadData();
-    }, []);
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-yellow" />
+            </div>
+        );
+    }
 
-    const handleSave = async () => {
-        setLoading(true);
-        try {
+    if (error || !currencyData) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-red-500 font-bold">Gagal memuat pengaturan mata uang.</p>
+            </div>
+        );
+    }
+
+    return (
+        <CurrencySettingsForm
+            initialConfig={currencyData.config}
+            initialRates={currencyData.rates}
+        />
+    );
+}
+
+interface CurrencySettingsFormProps {
+    initialConfig: CurrencyConfig | null;
+    initialRates: CurrencyRates | null;
+}
+
+function CurrencySettingsForm({ initialConfig, initialRates }: CurrencySettingsFormProps) {
+    const queryClient = useQueryClient();
+
+    // Inisialisasi state langsung dari data props yang sudah selesai di-fetch (menghindari useEffect setState)
+    const [apiKey, setApiKey] = useState(initialConfig?.apiKey || "");
+    const [intervalHours, setIntervalHours] = useState(initialConfig?.intervalHours || 24);
+
+    // Mutasi untuk menyimpan konfigurasi
+    const saveMutation = useMutation({
+        mutationFn: async () => {
             await saveCurrencyConfig(apiKey, Number(intervalHours));
-            toast.success("Settings saved");
-            loadData();
-        } catch {
-            toast.error("Error saving settings");
-        } finally {
-            setLoading(false);
+        },
+        onSuccess: () => {
+            toast.success("Pengaturan berhasil disimpan");
+            queryClient.invalidateQueries({ queryKey: ["currencyConfig"] });
+        },
+        onError: () => {
+            toast.error("Gagal menyimpan pengaturan");
         }
+    });
+
+    // Mutasi untuk memperbarui kurs secara paksa
+    const forceUpdateMutation = useMutation({
+        mutationFn: async () => {
+            return await forceUpdateCurrencyRates();
+        },
+        onSuccess: () => {
+            toast.success("Kurs berhasil diperbarui!");
+            queryClient.invalidateQueries({ queryKey: ["currencyConfig"] });
+        },
+        onError: (e) => {
+            toast.error(e instanceof Error ? e.message : "Gagal memperbarui kurs");
+        }
+    });
+
+    const loading = saveMutation.isPending;
+    const fetching = forceUpdateMutation.isPending;
+
+    const handleSave = () => {
+        saveMutation.mutate();
     };
 
-    const handleForceUpdate = async () => {
-        setFetching(true);
-        try {
-            const newRates = await forceUpdateCurrencyRates();
-            setRates(newRates);
-            toast.success("Rates updated successfully!");
-        } catch (e) {
-            toast.error(e instanceof Error ? e.message : "Failed to update rates");
-        } finally {
-            setFetching(false);
-        }
+    const handleForceUpdate = () => {
+        forceUpdateMutation.mutate();
     };
 
     return (
@@ -131,14 +177,14 @@ export default function CurrencySettingsPage() {
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center py-8 bg-black/30 rounded-lg border border-white/5 mb-6">
-                        {rates ? (
+                        {initialRates ? (
                             <>
                                 <div className="text-4xl font-mono font-bold text-white mb-2">
-                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rates.rates.IDR)}
+                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(initialRates.rates.IDR)}
                                 </div>
-                                <div className="text-sm text-zinc-500 font-mono">1 USD = {rates.rates.IDR} IDR</div>
+                                <div className="text-sm text-zinc-500 font-mono">1 USD = {initialRates.rates.IDR} IDR</div>
                                 <div className="mt-4 text-xs text-zinc-600 bg-zinc-900/50 px-3 py-1 rounded-full border border-white/5">
-                                    Updated: {new Date(rates.lastUpdated).toLocaleString()}
+                                    Updated: {new Date(initialRates.lastUpdated).toLocaleString()}
                                 </div>
                             </>
                         ) : (
