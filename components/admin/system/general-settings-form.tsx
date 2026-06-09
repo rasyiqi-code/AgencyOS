@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Globe, Save } from "lucide-react";
 import { toast } from "sonner";
-import { saveContactSettings } from "@/app/actions/system-admin";
+import { saveContactSettingsFn } from "@/src/server/settings";
+import { SafeImage } from "@/components/ui/safe-image";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -64,18 +65,20 @@ export function GeneralSettingsForm({ initialData }: Props) {
     async function handleSave() {
         setIsLoading(true);
         try {
-            await saveContactSettings({
-                email: data.email || undefined,
-                phone: data.phone || undefined,
-                telegram: data.telegram || undefined,
-                address: data.address || undefined,
-                agencyName: data.agencyName || undefined,
-                companyName: data.companyName || undefined,
-                logoUrl: data.logoUrl || undefined,
-                logoDisplayMode: data.logoDisplayMode || undefined,
-                servicesTitle: data.servicesTitle || undefined,
-                servicesSubtitle: data.servicesSubtitle || undefined,
-                hours: data.hours || undefined,
+            await saveContactSettingsFn({
+                data: {
+                    email: data.email || undefined,
+                    phone: data.phone || undefined,
+                    telegram: data.telegram || undefined,
+                    address: data.address || undefined,
+                    agencyName: data.agencyName || undefined,
+                    companyName: data.companyName || undefined,
+                    logoUrl: data.logoUrl || undefined,
+                    logoDisplayMode: data.logoDisplayMode || undefined,
+                    servicesTitle: data.servicesTitle || undefined,
+                    servicesSubtitle: data.servicesSubtitle || undefined,
+                    hours: data.hours || undefined,
+                }
             });
             toast.success("General settings updated successfully");
         } catch {
@@ -109,11 +112,10 @@ export function GeneralSettingsForm({ initialData }: Props) {
                             {/* Preview */}
                             <div className="relative w-16 h-16 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                                 {data.logoUrl ? (
-                                    <Image
+                                    <SafeImage
                                         src={data.logoUrl}
                                         alt="Logo"
-                                        fill
-                                        className="object-contain"
+                                        className="object-contain w-full h-full"
                                     />
                                 ) : (
                                     <Globe className="w-6 h-6 text-zinc-600" />
