@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Save, Eye, EyeOff, Loader2, CreditCard, Store } from "lucide-react";
 import { toast } from "sonner";
-import { savePaymentConfig } from "@/app/actions/system-admin";
+import { savePaymentConfigFn } from "@/src/server/settings";
 
 interface PaymentGatewayConfig {
     midtrans?: {
@@ -48,7 +48,12 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
     const handleSaveMidtrans = async () => {
         setSavingMidtrans(true);
         try {
-            await savePaymentConfig("midtrans", midtransConfig);
+            await savePaymentConfigFn({
+                data: {
+                    gateway: "midtrans",
+                    config: midtransConfig as any
+                }
+            });
             toast.success("Midtrans configuration saved successfully");
         } catch (error) {
             console.error(error);
@@ -61,7 +66,12 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
     const handleSaveCreem = async () => {
         setSavingCreem(true);
         try {
-            await savePaymentConfig("creem", creemConfig);
+            await savePaymentConfigFn({
+                data: {
+                    gateway: "creem",
+                    config: creemConfig as any
+                }
+            });
             toast.success("Creem configuration saved successfully");
         } catch (error) {
             console.error(error);
