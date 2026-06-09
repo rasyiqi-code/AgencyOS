@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from "@/lib/i18n/hooks";
+import { SafeImage } from "@/components/ui/safe-image";
 
 export function ExpertProfile() {
     const t = useTranslations("Expert");
@@ -19,12 +20,10 @@ export function ExpertProfile() {
 
                     <div className="shrink-0 relative group">
                         <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden bg-zinc-900 relative z-10 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)] border border-white/5">
-                            <Image
+                            <SafeImage
                                 src="/expert-photo.png"
                                 alt="Rasyiqi"
-                                fill
-                                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                                sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
+                                className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                             />
                         </div>
 

@@ -9,6 +9,7 @@ import { TypingHeroTitle } from "./typing-hero-title";
 
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 import { cn } from "@/lib/shared/utils";
+import { SafeImage } from "@/components/ui/safe-image";
 
 interface HeroContentProps {
     agencyName: string;
@@ -244,16 +245,10 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 )}
                             </div>
 
-                            <Image
+                            <SafeImage
                                 src="/expert.png"
                                 alt={t("heroImageAlt", { brand: agencyName })}
-                                fill
-                                className="object-contain object-bottom relative z-10"
-                                priority
-                                loading="eager"
-                                decoding="sync"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                fetchPriority="high"
+                                className="absolute inset-0 w-full h-full object-contain object-bottom z-10"
                             />
 
                             {/* Accent Tagline Layer (Top) */}
