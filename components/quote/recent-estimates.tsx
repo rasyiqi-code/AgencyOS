@@ -60,8 +60,8 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
         if (!confirm(t("deleteConfirm"))) return;
 
         try {
-            const { deleteQuote } = await import("@/app/actions/quotes");
-            const res = await deleteQuote(id);
+            const { deleteQuoteFn } = await import("@/src/server/estimates");
+            const res = await deleteQuoteFn({ data: id });
 
             if (res.error) throw new Error(res.error);
 

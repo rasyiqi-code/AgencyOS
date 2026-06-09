@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { scheduleEmail } from "@/app/actions/email";
+import { scheduleEmailFn } from "@/src/server/estimates";
 
 // Check if Dialog exists, otherwise we might need to install it or use Sheet. 
 // Given the previous step installed Sheet manually, I should check if Dialog is available.
@@ -53,7 +53,7 @@ export function ScheduleDialog({ estimate, trigger }: ScheduleDialogProps) {
         setLoading(true);
 
         try {
-            await scheduleEmail({
+            await scheduleEmailFn({ data: {
                 name,
                 email,
                 phone,

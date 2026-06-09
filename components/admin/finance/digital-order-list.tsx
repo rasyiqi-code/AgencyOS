@@ -33,7 +33,7 @@ import { useTranslations } from "@/lib/i18n/hooks";
 import { useNavigate } from "@tanstack/react-router";
 import { formatPaymentMethod } from "@/lib/shared/utils";
 import { DeleteOrderButton } from "@/components/admin/orders/delete-button";
-import { confirmDigitalOrder, cancelDigitalOrder } from "@/app/actions/digital-orders";
+import { confirmDigitalOrderFn, cancelDigitalOrderFn } from "@/src/server/finance";
 
 
 export interface DigitalOrderWithRelations {
@@ -382,7 +382,7 @@ function DetailItem({ label, value, onCopy, isMono, isBadge, isUpper }: {
 
 function ConfirmPaymentButton({ orderId }: { orderId: string }) {
     const [isPending, startTransition] = React.useTransition();
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const handleConfirm = async (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -390,10 +390,10 @@ function ConfirmPaymentButton({ orderId }: { orderId: string }) {
 
         startTransition(async () => {
             try {
-                const res = await confirmDigitalOrder(orderId);
+                const res = await confirmDigitalOrderFn({ data: orderId });
                 if (res.success) {
                     toast.success("Payment confirmed successfully!");
-                    router.refresh();
+                    window.location.reload();
                 } else {
                     toast.error(res.error || "Failed to confirm payment");
                 }
@@ -418,7 +418,7 @@ function ConfirmPaymentButton({ orderId }: { orderId: string }) {
 
 function CancelOrderButton({ orderId }: { orderId: string }) {
     const [isPending, startTransition] = React.useTransition();
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const handleCancel = async (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -426,10 +426,10 @@ function CancelOrderButton({ orderId }: { orderId: string }) {
 
         startTransition(async () => {
             try {
-                const res = await cancelDigitalOrder(orderId);
+                const res = await cancelDigitalOrderFn({ data: orderId });
                 if (res.success) {
                     toast.success("Order cancelled successfully!");
-                    router.refresh();
+                    window.location.reload();
                 } else {
                     toast.error(res.error || "Failed to cancel order");
                 }
