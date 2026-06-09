@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { prisma } from '@/lib/config/db'
 import { redirect } from '@tanstack/react-router'
 import { JoinAffiliateButton } from '@/components/marketing/join-affiliate-button'
-import { DollarSign, BarChart3, Zap, Share2, CheckCircle } from 'lucide-react'
+import { DollarSign, BarChart3, Zap, Share2 } from 'lucide-react'
 
 export const Route = createFileRoute('/affiliate/join')({
   beforeLoad: async () => {

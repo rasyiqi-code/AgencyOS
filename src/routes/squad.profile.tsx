@@ -50,8 +50,7 @@ function SquadProfilePage() {
           {profile.bio && <p className="text-zinc-300">{profile.bio}</p>}
           <div className="flex items-center gap-2 text-sm text-zinc-500">
             <Award className="w-4 h-4" />
-            {/* Menggunakan casting any karena field rating belum dideklarasikan di schema Prisma SquadProfile */}
-            Rating: {(profile as any).rating ? `${(profile as any).rating.toFixed(1)} / 5.0` : 'N/A'}
+            Rating: {(profile as unknown as { rating?: number }).rating ? `${(profile as unknown as { rating: number }).rating.toFixed(1)} / 5.0` : 'N/A'}
           </div>
         </div>
       ) : (

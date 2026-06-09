@@ -30,8 +30,14 @@ import { Route as DashboardSupportRouteImport } from './routes/dashboard.support
 import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-products'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
+import { Route as AdminTeamRouteImport } from './routes/admin.team'
+import { Route as AdminSupportRouteImport } from './routes/admin.support'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminPortfolioRouteImport } from './routes/admin.portfolio'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLicensesRouteImport } from './routes/admin.licenses'
+import { Route as AdminDigitalSalesRouteImport } from './routes/admin.digital-sales'
+import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
@@ -159,14 +165,44 @@ const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
   path: '/testimonials',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTeamRoute = AdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSupportRoute = AdminSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
   path: '/products',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLicensesRoute = AdminLicensesRouteImport.update({
   id: '/licenses',
   path: '/licenses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDigitalSalesRoute = AdminDigitalSalesRouteImport.update({
+  id: '/digital-sales',
+  path: '/digital-sales',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientsRoute = AdminClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPmIndexRoute = AdminPmIndexRouteImport.update({
@@ -286,8 +322,14 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/support': typeof AdminSupportRoute
+  '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -327,8 +369,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/support': typeof AdminSupportRoute
+  '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -374,8 +422,14 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
+  '/admin/clients': typeof AdminClientsRoute
+  '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/support': typeof AdminSupportRoute
+  '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -422,8 +476,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/squad'
     | '/support'
+    | '/admin/clients'
+    | '/admin/digital-sales'
     | '/admin/licenses'
+    | '/admin/media'
+    | '/admin/portfolio'
     | '/admin/products'
+    | '/admin/support'
+    | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -463,8 +523,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/clients'
+    | '/admin/digital-sales'
     | '/admin/licenses'
+    | '/admin/media'
+    | '/admin/portfolio'
     | '/admin/products'
+    | '/admin/support'
+    | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -509,8 +575,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/squad'
     | '/support'
+    | '/admin/clients'
+    | '/admin/digital-sales'
     | '/admin/licenses'
+    | '/admin/media'
+    | '/admin/portfolio'
     | '/admin/products'
+    | '/admin/support'
+    | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -709,6 +781,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestimonialsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/team': {
+      id: '/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AdminTeamRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/support': {
+      id: '/admin/support'
+      path: '/support'
+      fullPath: '/admin/support'
+      preLoaderRoute: typeof AdminSupportRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -716,11 +802,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/portfolio': {
+      id: '/admin/portfolio'
+      path: '/portfolio'
+      fullPath: '/admin/portfolio'
+      preLoaderRoute: typeof AdminPortfolioRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/licenses': {
       id: '/admin/licenses'
       path: '/licenses'
       fullPath: '/admin/licenses'
       preLoaderRoute: typeof AdminLicensesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/digital-sales': {
+      id: '/admin/digital-sales'
+      path: '/digital-sales'
+      fullPath: '/admin/digital-sales'
+      preLoaderRoute: typeof AdminDigitalSalesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clients': {
+      id: '/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/pm/': {
@@ -900,8 +1014,14 @@ const AdminPmServicesRouteWithChildren = AdminPmServicesRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminClientsRoute: typeof AdminClientsRoute
+  AdminDigitalSalesRoute: typeof AdminDigitalSalesRoute
   AdminLicensesRoute: typeof AdminLicensesRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminPortfolioRoute: typeof AdminPortfolioRoute
   AdminProductsRoute: typeof AdminProductsRoute
+  AdminSupportRoute: typeof AdminSupportRoute
+  AdminTeamRoute: typeof AdminTeamRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminFinanceOrdersRoute: typeof AdminFinanceOrdersRoute
@@ -925,8 +1045,14 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminClientsRoute: AdminClientsRoute,
+  AdminDigitalSalesRoute: AdminDigitalSalesRoute,
   AdminLicensesRoute: AdminLicensesRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminPortfolioRoute: AdminPortfolioRoute,
   AdminProductsRoute: AdminProductsRoute,
+  AdminSupportRoute: AdminSupportRoute,
+  AdminTeamRoute: AdminTeamRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminFinanceOrdersRoute: AdminFinanceOrdersRoute,

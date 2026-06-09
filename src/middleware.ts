@@ -1,12 +1,11 @@
 import {
   createMiddleware,
-  createServerFn,
   redirect as startRedirect,
 } from '@tanstack/react-start'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 
 export const authMiddleware = createMiddleware().server(
-  async ({ next, request }) => {
+  async ({ next }) => {
     const user = await hexclaveServerApp.getUser()
     if (!user) {
       throw startRedirect({ href: '/handler/sign-in' })

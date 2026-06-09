@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { getSquadData } from '@/src/server/squad'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Code } from 'lucide-react'
@@ -9,6 +9,14 @@ export const Route = createFileRoute('/squad/')({
   component: SquadPage,
 })
 
+interface SquadApplication {
+  id: string
+  status: string
+  mission?: {
+    title: string
+  } | null
+}
+
 function SquadPage() {
   const data = Route.useLoaderData()
   if (!data) return null
@@ -16,7 +24,7 @@ function SquadPage() {
   const { profile, availableMissions } = data
 
   // Memfilter aplikasi bertipe 'invited'
-  const invitedMissions = profile?.applications?.filter((app: any) => app.status === 'invited') || []
+  const invitedMissions = (profile?.applications as SquadApplication[] | undefined)?.filter((app) => app.status === 'invited') || []
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -34,7 +42,7 @@ function SquadPage() {
               <h2 className="text-sm font-semibold text-white">Pending Invitations</h2>
             </div>
             <div className="grid gap-3">
-              {invitedMissions.map((app: any) => (
+              {invitedMissions.map((app) => (
                 <InvitationCard
                   key={app.id}
                   applicationId={app.id}

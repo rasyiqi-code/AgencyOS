@@ -13,8 +13,8 @@ import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { manageTeamPermission } from "@/app/actions/affiliates"
+import { useRouter } from "@tanstack/react-router"
+import { manageTeamPermissionFn as manageTeamPermission } from "@/src/server/team"
 
 interface TeamMember {
     id: string
@@ -46,14 +46,21 @@ export function TeamTable({ data, currentUserId }: TeamTableProps) {
         setLoading(loadingKey)
 
         try {
-            const result = await manageTeamPermission(userId, email, role, currentValue ? 'revoke' : 'grant');
+            const result = await manageTeamPermission({
+                data: {
+                    userId,
+                    email,
+                    key: role,
+                    action: currentValue ? 'revoke' : 'grant'
+                }
+            });
 
             if (!result.success) {
                 throw new Error(result.error || "Failed to update permission");
             }
 
             toast.success(`Role ${role} ${currentValue ? 'revoked for' : 'granted to'} ${email}`)
-            router.refresh()
+            router.invalidate()
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Failed to update permission")
             console.error(error)

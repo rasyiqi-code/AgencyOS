@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { redirect } from '@tanstack/react-router'
 import { AffiliateLinksManager } from '@/components/affiliate/affiliate-links-manager'

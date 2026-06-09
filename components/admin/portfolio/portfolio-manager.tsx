@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
+import { PortfolioItem } from "@/lib/portfolios/actions";
+import { savePortfolioFn as savePortfolio, deletePortfolioFn as deletePortfolio, getPortfolioHtmlFn as getPortfolioHtml, getRenderedHtmlFn as getRenderedHtml } from "@/src/server/portfolios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -53,9 +54,17 @@ function PortfolioPreview({ slug, html: directHtml, imageUrl, externalUrl }: { s
             const host = window.location.host;
             const localBaseUrl = `${protocol}//${host}`;
             
-            getRenderedHtml(externalUrl, localBaseUrl).then(setFetchedContent);
+            getRenderedHtml({ data: { url: externalUrl, localBaseUrl } }).then((res) => {
+                if (res.success) {
+                    setFetchedContent(res.html);
+                }
+            });
         } else if (slug) {
-            getPortfolioHtml(slug).then(setFetchedContent);
+            getPortfolioHtml({ data: slug }).then((res) => {
+                if (res.success) {
+                    setFetchedContent(res.html);
+                }
+            });
         }
     }, [slug, directHtml, externalUrl]);
 
@@ -126,7 +135,16 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
         setIsSaving(true);
         try {
-            const newItem = await savePortfolio({ title, slug, category, externalUrl, imageUrl, description }, html);
+            const res = await savePortfolio({
+                data: {
+                    item: { title, slug, category, externalUrl, imageUrl, description },
+                    html
+                }
+            });
+            if (!res.success || !res.data) {
+                throw new Error(res.error || "Failed to save portfolio");
+            }
+            const newItem = res.data;
             setItems([...items, newItem]);
             setIsModalOpen(false);
             // Reset form setelah berhasil
@@ -153,7 +171,10 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
         if (!confirm("Are you sure you want to delete this portfolio item?")) return;
 
         try {
-            await deletePortfolio(id);
+            const res = await deletePortfolio({ data: id });
+            if (!res.success) {
+                throw new Error(res.error || "Failed to delete");
+            }
             setItems(items.filter(i => i.id !== id));
             toast.success("Deleted successfully");
         } catch {

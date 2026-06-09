@@ -8,12 +8,12 @@ import { Briefcase, Cpu } from "lucide-react";
  */
 export function DashboardModeSwitcher() {
     const navigate = useNavigate();
-    const search = useSearch({ strict: false }) as any;
+    const search = useSearch({ strict: false }) as Record<string, string | undefined>;
     const currentMode = search?.mode || "services";
 
     const handleModeChange = (val: string) => {
         navigate({
-            search: (prev: any) => ({ ...prev, mode: val }),
+            search: (prev: Record<string, string | undefined>) => ({ ...prev, mode: val }),
         });
     };
 

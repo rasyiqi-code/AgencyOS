@@ -45,7 +45,7 @@ function AdminTestimonialsRoute() {
     const queryClient = useQueryClient()
 
     // Mengambil data testimonials menggunakan useQuery
-    const { data: testimonials = [], isLoading: loading, error } = useQuery<Testimonial[]>({
+    const { data: testimonials = [], isLoading: loading } = useQuery<Testimonial[]>({
         queryKey: ["testimonials"],
         queryFn: () => getAllTestimonialsFn(),
         initialData: initialData ?? undefined,

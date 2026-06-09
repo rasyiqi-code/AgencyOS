@@ -1,0 +1,91 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { getDigitalOrdersFn } from "@/src/server/digital-orders"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { ShoppingCart } from "lucide-react"
+
+export const Route = createFileRoute('/admin/digital-sales')({
+  loader: async () => {
+    return await getDigitalOrdersFn()
+  },
+  component: DigitalSalesPage,
+})
+
+interface DigitalOrder {
+  id: string
+  product?: {
+    name: string
+    slug: string
+  } | null
+  status: string
+  userEmail: string
+  createdAt: string | Date
+  amount: number
+  license?: {
+    key: string
+    status: string
+  } | null
+}
+
+function DigitalSalesPage() {
+  const result = Route.useLoaderData()
+  const orders = (result.orders || []) as DigitalOrder[]
+
+  return (
+    <div className="space-y-6 py-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+          <ShoppingCart className="w-6 h-6 text-brand-yellow" />
+          Digital Product Sales
+        </h1>
+        <p className="text-zinc-400 mt-1.5 text-sm">
+          Monitor semua transaksi pembelian produk digital.
+        </p>
+      </div>
+
+      {(orders.length === 0) ? (
+        <div className="text-center py-12 text-zinc-500 border border-dashed border-zinc-800 rounded-xl">
+          Belum ada transaksi produk digital.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {orders.map((order) => (
+            <Card key={order.id} className="border-zinc-800 bg-zinc-950 text-zinc-100">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base text-white">
+                    {order.product?.name || "Unknown Product"}
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className={
+                      order.status === 'PAID' ? "border-green-500 text-green-400"
+                        : order.status === 'PENDING' ? "border-yellow-500 text-yellow-400"
+                          : "border-red-500 text-red-400"
+                    }
+                  >
+                    {order.status}
+                  </Badge>
+                </div>
+                <CardDescription className="text-zinc-500 flex flex-col gap-1">
+                  <span className="text-[10px] font-mono text-zinc-600">ID: {order.id}</span>
+                  <span>{order.userEmail} • {new Date(order.createdAt).toLocaleDateString("id-ID")}</span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex items-center justify-between text-sm pt-0">
+                <div className="text-zinc-400">
+                  Amount: <span className="text-white font-semibold">${order.amount}</span>
+                </div>
+                {order.license && (
+                  <div className="text-zinc-400">
+                    License: <code className="text-brand-yellow text-xs">{order.license.key}</code>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

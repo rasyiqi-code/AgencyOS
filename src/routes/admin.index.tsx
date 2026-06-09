@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
 import { canManageProjects, canManageBilling } from '@/lib/shared/auth-helpers'
 import { getSuperAdminDashboardData, getBillingDashboardData, getProjectDashboardData } from '@/src/server/admin'
@@ -6,7 +6,6 @@ import { SuperAdminDashboardView } from '@/components/admin/views/super-admin-vi
 import { BillingDashboardView } from '@/components/admin/views/billing-view'
 import { ProjectDashboardView } from '@/components/admin/views/project-view'
 import { DashboardModeSwitcher } from '@/components/admin/dashboard-mode-switcher'
-import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // Schema untuk memvalidasi query search parameters
@@ -50,7 +49,7 @@ export const Route = createFileRoute('/admin/')({
     }
 
     // Deteksi locale secara aman
-    let locale = 'en'
+    const locale = 'en'
     return {
       isProjectAdmin,
       isBillingAdmin,
@@ -82,7 +81,7 @@ function AdminHome() {
 
   const handleViewChange = (val: string) => {
     navigate({
-      search: (prev: any) => ({ ...prev, view: val === 'super' ? undefined : val }),
+      search: (prev: Record<string, string | undefined>) => ({ ...prev, view: val === 'super' ? undefined : val }),
     })
   }
 

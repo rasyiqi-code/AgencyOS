@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getDashboardData } from '@/src/server/dashboard'
+import { type Order } from '@prisma/client'
 import { OverviewHeader } from '@/components/dashboard/header/overview'
 import { MissionCard } from '@/components/dashboard/missions/card'
 import { FinanceWidget } from '@/components/dashboard/widgets/finance'
@@ -64,8 +65,7 @@ function DashboardHome() {
         </div>
 
         <div className="space-y-6">
-          {/* Meng-cast nextInvoice ke any karena createdAt bertipe string setelah serialisasi server function */}
-          <FinanceWidget totalInvestment={totalInvestment} nextInvoice={nextInvoice as any} />
+          <FinanceWidget totalInvestment={totalInvestment} nextInvoice={nextInvoice as unknown as Order} />
 
           <div>
             <h3 className="text-sm font-semibold text-zinc-400 mb-3 uppercase tracking-wider">Quick Actions</h3>

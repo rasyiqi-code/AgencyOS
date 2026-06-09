@@ -1,43 +1,92 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getCookie } from '@tanstack/react-start/server'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { prisma } from '@/lib/config/db'
-import type { Prisma } from '@prisma/client'
+import { isAdmin } from '@/lib/shared/auth-helpers'
+import { Prisma } from '@prisma/client'
+import { hexclaveServerApp } from '@/lib/config/hexclave'
 
-type TicketWithMessages = Prisma.TicketGetPayload<{
-  include: { messages: { take: 1; orderBy: { createdAt: 'desc' } } }
-}>
+async function requireAdmin() {
+  const hasAccess = await isAdmin()
+  if (!hasAccess) throw new Error('Unauthorized')
+}
 
-export const getSupportTickets = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    const user = await hexclaveServerApp.getUser()
-    if (!user) return null
+export const getAdminTicketsFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    try {
+      await requireAdmin()
 
-    const cookieLocale = getCookie('NEXT_LOCALE')
-    const locale = cookieLocale?.slice(0, 2) === 'id' ? 'id' : 'en'
+      const rawTickets = await prisma.ticket.findMany({
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          messages: {
+            orderBy: { createdAt: 'asc' }
+          }
+        }
+      })
 
-    const tickets = await prisma.ticket.findMany({
-      where: { userId: user.id, type: 'ticket' } as Prisma.TicketWhereInput,
-      orderBy: { updatedAt: 'desc' },
-      include: {
-        messages: {
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-        },
-      },
-    }) as TicketWithMessages[]
-
-    return {
-      locale,
-      tickets: tickets.map(t => ({
+      // Format data agar serializable
+      const allTickets = rawTickets.map(t => ({
         ...t,
+        type: t.type,
         createdAt: t.createdAt.toISOString(),
         updatedAt: t.updatedAt.toISOString(),
         messages: t.messages.map(m => ({
           ...m,
           createdAt: m.createdAt.toISOString(),
-        })),
-      })),
+          attachments: m.attachments as Prisma.JsonValue
+        }))
+      }))
+
+      const liveChatTickets = allTickets.filter(t => t.type === 'chat')
+      const supportTickets = allTickets.filter(t => t.type === 'ticket')
+
+      return {
+        success: true,
+        liveChatTickets: JSON.parse(JSON.stringify(liveChatTickets)),
+        supportTickets: JSON.parse(JSON.stringify(supportTickets))
+      }
+    } catch (error) {
+      return { success: false, error: (error as Error).message, liveChatTickets: [], supportTickets: [] }
     }
-  },
-)
+  })
+
+export const getSupportTickets = createServerFn({ method: 'GET' })
+  .handler(async ({ request }) => {
+    try {
+      const user = await hexclaveServerApp.getUser()
+      if (!user) throw new Error('Unauthorized')
+
+      const cookieHeader = request?.headers.get('cookie') || ''
+      const match = cookieHeader.match(/NEXT_LOCALE=([^;]+)/)
+      const locale = match ? match[1] : 'en'
+
+      const rawTickets = await prisma.ticket.findMany({
+        where: { userId: user.id, type: 'ticket' },
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          messages: {
+            take: 1,
+            orderBy: { createdAt: 'desc' }
+          }
+        }
+      })
+
+      const tickets = rawTickets.map(t => ({
+        ...t,
+        createdAt: t.createdAt.toISOString(),
+        updatedAt: t.updatedAt.toISOString(),
+        messages: t.messages.map(m => ({
+          ...m,
+          createdAt: m.createdAt.toISOString()
+        }))
+      }))
+
+      return {
+        success: true,
+        locale,
+        tickets: JSON.parse(JSON.stringify(tickets))
+      }
+    } catch (error) {
+      return { success: false, error: (error as Error).message, locale: 'en', tickets: [] }
+    }
+  })
+
