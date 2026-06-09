@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
-import { clientGenerateRenewalInvoice } from "@/app/dashboard/(client)/billing/actions";
+import { clientGenerateRenewalInvoiceFn } from "@/src/server/client-dashboard";
 
 
 export function ClientRenewButton({ 
@@ -14,16 +14,16 @@ export function ClientRenewButton({
     projectId: string; 
 }) {
     const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const handleRenew = async () => {
         setIsLoading(true);
         try {
-            const result = await clientGenerateRenewalInvoice(projectId);
+            const result = await clientGenerateRenewalInvoiceFn({ data: projectId });
 
             if (result.success && result.estimateId) {
                 toast.success("Invoice generated! Redirecting to checkout...");
-                router.push(`/id/checkout/${result.estimateId}`);
+                navigate({ to: `/id/checkout/${result.estimateId}` });
             } else {
                 toast.error(result.error || "Failed to process renewal.");
                 setIsLoading(false);
@@ -33,6 +33,7 @@ export function ClientRenewButton({
             setIsLoading(false);
         }
     };
+
 
     return (
         <Button 
