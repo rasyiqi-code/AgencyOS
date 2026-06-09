@@ -130,7 +130,6 @@ export function SidebarSuperAdmin() {
                     <SidebarLink href="/admin/pm/projects?mode=services" icon={Layers} label={t("missionBoard")} />
                     <SidebarLink href="/admin/pm/services?mode=services" icon={Package} label={t("serviceCatalog")} />
                     <SidebarLink href="/admin/clients?mode=services" icon={Users} label={t("clients")} />
-                    <SidebarLink href="/admin/squad?mode=services" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
                     <SidebarLink href="/admin/support?mode=services" icon={Mail} label={t("supportInbox")} />
 
                     {/* 2. KEUANGAN & TRANSAKSI AGENSI */}
