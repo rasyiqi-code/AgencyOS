@@ -8,7 +8,6 @@ import { Download, CheckCircle, Loader2, AlertTriangle, Tag, Check, XCircle } fr
 import { ExtendedEstimate, Coupon, ServiceAddon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 import { validateCouponAction } from "@/app/actions/coupons";
 
 import { useTranslations } from "next-intl";

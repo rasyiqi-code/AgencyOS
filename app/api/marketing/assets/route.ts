@@ -97,42 +97,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-export async function POST(req: NextRequest) {
-    try {
-        const user = await hexclaveServerApp.getUser();
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
-        const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-        const superAdminId = process.env.SUPER_ADMIN_ID;
-        const isSuperAdmin = (user.primaryEmail && adminEmails.includes(user.primaryEmail)) || user.id === superAdminId;
-
-        if (!isSuperAdmin) {
-            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-        }
-
-        const body = await req.json();
-        const { type, title, content, imageUrl, category, metadata } = body;
-
-        const asset = await prisma.marketingAsset.create({
-            data: {
-                type,
-                title,
-                content,
-                imageUrl,
-                category,
-                metadata
-            }
-        });
-
-        return NextResponse.json(asset);
-    } catch (error) {
-        console.error("Create Marketing Asset Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
-}
-
 export async function OPTIONS() {
     return new NextResponse(null, {
         headers: {

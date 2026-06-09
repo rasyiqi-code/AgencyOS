@@ -5,6 +5,7 @@ import { Loader2, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
+import { getPayoutRequests, processPayout } from "@/app/actions/affiliates";
 
 interface PayoutReq {
     id: string;
@@ -30,9 +31,9 @@ export function PayoutRequests() {
 
     const fetchRequests = useCallback(async () => {
         try {
-            const res = await fetch("/api/admin/affiliates/payout");
-            if (res.ok) {
-                const data = await res.json();
+            const result = await getPayoutRequests();
+            if (result.success) {
+                const data = result.data as unknown as { requests: PayoutReq[] };
                 setRequests(data.requests);
             }
         } catch {
@@ -53,18 +54,13 @@ export function PayoutRequests() {
 
         setProcessingId(requestId);
         try {
-            const res = await fetch("/api/admin/affiliates/payout", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ requestId, action, notes }),
-            });
+            const result = await processPayout(requestId, action, notes || undefined);
 
-            if (res.ok) {
+            if (result.success) {
                 toast.success(`Payout ${action === 'approved' ? 'disetujui' : 'ditolak'}!`);
                 fetchRequests();
             } else {
-                const data = await res.json();
-                toast.error(data.error || "Gagal memproses aksi");
+                toast.error(result.error || "Gagal memproses aksi");
             }
         } catch {
             toast.error("Terjadi kesalahan");

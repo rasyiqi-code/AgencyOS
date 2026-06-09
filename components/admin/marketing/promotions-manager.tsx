@@ -26,6 +26,7 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { getAdminPromotions, deletePromotionAction, updatePromotionAction, createPromotionAction } from "@/app/actions/marketing-admin";
 
 interface Promotion {
     id: string;
@@ -36,8 +37,8 @@ interface Promotion {
     ctaUrl: string | null;
     couponCode: string | null;
     isActive: boolean;
-    startDate: string | null;
-    endDate: string | null;
+    startDate: string | Date | null;
+    endDate: string | Date | null;
 }
 
 export function PromotionsManager() {
@@ -52,9 +53,12 @@ export function PromotionsManager() {
 
     const fetchPromotions = async () => {
         try {
-            const res = await fetch("/api/marketing/promotions?admin=true");
-            const data = await res.json();
-            setPromotions(data);
+            const data = await getAdminPromotions();
+            setPromotions(data.map((p: Promotion) => ({
+                ...p,
+                startDate: p.startDate instanceof Date ? p.startDate.toISOString() : p.startDate,
+                endDate: p.endDate instanceof Date ? p.endDate.toISOString() : p.endDate,
+            })));
         } catch {
             toast.error("Gagal memuat data promosi");
         } finally {
@@ -75,11 +79,9 @@ export function PromotionsManager() {
         if (!confirm("Yakin ingin menghapus promosi ini?")) return;
 
         try {
-            const res = await fetch(`/api/marketing/promotions/${id}`, { method: "DELETE" });
-            if (res.ok) {
-                toast.success("Promosi dihapus");
-                fetchPromotions();
-            }
+            await deletePromotionAction(id);
+            toast.success("Promosi dihapus");
+            fetchPromotions();
         } catch {
             toast.error("Gagal menghapus");
         }
@@ -87,11 +89,7 @@ export function PromotionsManager() {
 
     const toggleStatus = async (promo: Promotion) => {
         try {
-            await fetch(`/api/marketing/promotions/${promo.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ isActive: !promo.isActive }),
-            });
+            await updatePromotionAction(promo.id, { isActive: !promo.isActive });
             fetchPromotions();
         } catch {
             toast.error("Gagal mengubah status");
@@ -274,8 +272,6 @@ function PromotionDialog({ isOpen, onOpenChange, editingPromo, onSaveSuccess }: 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const method = editingPromo ? "PATCH" : "POST";
-        const url = editingPromo ? `/api/marketing/promotions/${editingPromo.id}` : "/api/marketing/promotions";
 
         const payload = {
             title: titleRef.current?.value || "",
@@ -285,23 +281,18 @@ function PromotionDialog({ isOpen, onOpenChange, editingPromo, onSaveSuccess }: 
             ctaUrl: ctaUrlRef.current?.value || "",
             couponCode: couponCodeRef.current?.value || "",
             isActive,
-            startDate: startDateRef.current?.value ? new Date(startDateRef.current.value).toISOString() : null,
-            endDate: endDateRef.current?.value ? new Date(endDateRef.current.value).toISOString() : null,
+            startDate: startDateRef.current?.value ? new Date(startDateRef.current.value).toISOString() : undefined,
+            endDate: endDateRef.current?.value ? new Date(endDateRef.current.value).toISOString() : undefined,
         };
 
         try {
-            const res = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-
-            if (res.ok) {
-                toast.success(editingPromo ? "Promosi diperbarui" : "Promosi dibuat");
-                onSaveSuccess();
+            if (editingPromo) {
+                await updatePromotionAction(editingPromo.id, payload);
             } else {
-                toast.error("Terjadi kesalahan");
+                await createPromotionAction(payload);
             }
+            toast.success(editingPromo ? "Promosi diperbarui" : "Promosi dibuat");
+            onSaveSuccess();
         } catch {
             toast.error("Gagal menyimpan data");
         }

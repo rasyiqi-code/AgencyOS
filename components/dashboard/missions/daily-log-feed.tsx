@@ -4,6 +4,7 @@ import { SafeImage } from '@/components/ui/safe-image';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { createDailyLog } from '@/app/actions/projects';
 
 export type DailyLogMood = "on_track" | "delayed" | "shipped";
 import { Button } from '@/components/ui/button';
@@ -86,12 +87,9 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
         // Cleanup previews
         previews.forEach(url => URL.revokeObjectURL(url));
 
-        const response = await fetch(`/api/projects/${projectId}/daily-log`, {
-            method: 'POST',
-            body: formData, // Send FormData instead of JSON
-        });
+        const result = await createDailyLog(projectId, formData);
 
-        if (!response.ok) {
+        if (result.error) {
             toast.error('Failed to post update');
         } else {
             toast.success('Update posted');

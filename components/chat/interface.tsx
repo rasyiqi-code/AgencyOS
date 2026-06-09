@@ -14,6 +14,7 @@ import { Send, Bot, User, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { createProjectFromBrief } from "@/app/actions/projects";
 
 interface ChatInterfaceProps {
     onBriefGenerated?: (brief: { title: string; description: string }) => void;
@@ -313,20 +314,15 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                                         onClick={async () => {
                                                             const toastId = toast.loading("Creating project...");
                                                             try {
-                                                                const response = await fetch("/api/projects/create-from-brief", {
-                                                                    method: "POST",
-                                                                    headers: { "Content-Type": "application/json" },
-                                                                    body: JSON.stringify({
-                                                                        title: action.title,
-                                                                        brief: action.description
-                                                                    }),
+                                                                const result = await createProjectFromBrief({
+                                                                    title: action.title,
+                                                                    brief: action.description
                                                                 });
 
-                                                                if (!response.ok) throw new Error("Failed to create project");
+                                                                if (result.error || !result.data) throw new Error("Failed to create project");
 
-                                                                const project = await response.json();
                                                                 toast.success("Project created successfully", { id: toastId });
-                                                                router.push(`/dashboard/projects/${project.id}`);
+                                                                router.push(`/dashboard/projects/${result.data.id}`);
                                                             } catch (error) {
                                                                 toast.error("Failed to create project", { id: toastId });
                                                                 console.error(error);

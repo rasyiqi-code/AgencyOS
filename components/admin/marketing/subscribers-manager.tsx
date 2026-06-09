@@ -7,12 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { format } from "date-fns";
 import { Trash2, Search, Mail, User } from "lucide-react";
 import { toast } from "sonner";
+import { getSubscribersAction, deleteSubscriberAction } from "@/app/actions/marketing-admin";
 
 interface Subscriber {
     id: string;
     email: string;
     name: string | null;
-    createdAt: string;
+    createdAt: string | Date;
 }
 
 export function SubscribersManager() {
@@ -26,10 +27,9 @@ export function SubscribersManager() {
 
     const loadSubscribers = async () => {
         try {
-            const response = await fetch('/api/admin/marketing/subscribers');
-            if (!response.ok) throw new Error("Failed to load");
-            const data = await response.json();
-            setSubscribers(data);
+            const result = await getSubscribersAction();
+            if (!result.success) throw new Error(result.error);
+            setSubscribers(result.data!);
         } catch {
             toast.error("Gagal memuat pelanggan");
         } finally {
@@ -40,10 +40,8 @@ export function SubscribersManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) return;
         try {
-            const response = await fetch(`/api/admin/marketing/subscribers?id=${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error("Failed to delete");
+            const result = await deleteSubscriberAction(id);
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Pelanggan berhasil dihapus");
             loadSubscribers();

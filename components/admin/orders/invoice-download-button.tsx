@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { useReactToPrint } from "react-to-print";
+import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { InvoiceDocument } from "@/components/checkout/invoice-document";
@@ -22,10 +21,13 @@ export function InvoiceDownloadButton({ estimate }: InvoiceDownloadButtonProps) 
 
     const fileName = `Invoice-${invoiceId}-${projectTitle.replace(/[^a-z0-9]/gi, '_')}-${dateStr}`;
 
-    const handlePrint = useReactToPrint({
-        contentRef: componentRef,
-        documentTitle: fileName,
-    });
+    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
+
+    useEffect(() => {
+        import("react-to-print").then((mod) => {
+            setHandlePrint(() => mod.useReactToPrint({ contentRef: componentRef, documentTitle: fileName }));
+        });
+    }, [fileName]);
 
     return (
         <>

@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
+import { updateSystemSetting } from "@/app/actions/system-admin";
+import { getAffiliates, updateAffiliate } from "@/app/actions/affiliates";
 
 interface Affiliate {
     id: string;
@@ -33,6 +35,8 @@ interface Stats {
     totalEarnings: number;
 }
 
+type AffiliateData = { affiliates: Affiliate[], stats: Stats, defaultRate: number, resendApiKey?: string };
+
 /**
  * Komponen admin untuk mengelola affiliates.
  * Menampilkan stats dan tabel affiliates dengan inline edit commission rate & status.
@@ -48,10 +52,9 @@ export function AffiliateManager() {
 
     const fetchData = useCallback(async () => {
         try {
-            const res = await fetch("/api/admin/affiliates");
-            if (res.ok) {
-                const json = await res.json();
-                setData(json);
+            const result = await getAffiliates();
+            if (result.success) {
+                setData(result.data as unknown as AffiliateData);
             }
         } catch (error) {
             console.error("Failed to fetch affiliates", error);
@@ -80,19 +83,14 @@ export function AffiliateManager() {
     const saveEdit = async (id: string) => {
         setSaving(true);
         try {
-            const res = await fetch(`/api/admin/affiliates/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ commissionRate: editRate, status: editStatus }),
-            });
+            const result = await updateAffiliate(id, editRate, editStatus);
 
-            if (res.ok) {
+            if (result.success) {
                 toast.success("Mitra berhasil diperbarui!");
                 setEditingId(null);
                 fetchData();
             } else {
-                const errData = await res.json();
-                toast.error(errData.error || "Gagal memperbarui");
+                toast.error(result.error || "Gagal memperbarui");
             }
         } catch {
             toast.error("Terjadi kesalahan");
@@ -157,13 +155,9 @@ export function AffiliateManager() {
                             const val = e.target.value;
                             if (!val) return;
                             try {
-                                await fetch("/api/admin/system/settings", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ key: "RESEND_API_KEY", value: val })
-                                });
+                                await updateSystemSetting("RESEND_API_KEY", val);
                                 toast.success("API Key diperbarui");
-                                e.target.value = ""; // Clear input for security
+                                e.target.value = "";
                             } catch {
                                 toast.error("Gagal memperbarui");
                             }
@@ -185,11 +179,7 @@ export function AffiliateManager() {
                                 const val = e.target.value;
                                 if (!val) return;
                                 try {
-                                    await fetch("/api/admin/system/settings", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ key: "affiliate_default_commission_rate", value: val })
-                                    });
+                                    await updateSystemSetting("affiliate_default_commission_rate", val);
                                     toast.success("Komisi dasar diperbarui");
                                 } catch {
                                     toast.error("Gagal memperbarui");

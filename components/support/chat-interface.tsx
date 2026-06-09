@@ -49,6 +49,7 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
     // Fast Polling for Realtime Feel (3s)
     useEffect(() => {
         const interval = setInterval(async () => {
+            if (document.hidden) return;
             try {
                 const res = await fetch(`/api/support/ticket/${ticket.id}`);
                 const data = await res.json();

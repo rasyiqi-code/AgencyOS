@@ -12,8 +12,12 @@ export async function GET() {
             base: "USD",
             rates: { IDR: 16000 },
             lastUpdated: 0
+        }, {
+            headers: { "Cache-Control": "public, max-age=3600" }
         });
     }
 
-    return NextResponse.json(rates);
+    return NextResponse.json(rates, {
+        headers: { "Cache-Control": "public, max-age=3600" }
+    });
 }

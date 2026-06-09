@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDistanceToNow } from "date-fns"
 import { cn } from "@/lib/shared/utils"
+import { getNotifications, markNotificationRead } from "@/app/actions/system-admin"
 
 interface Notification {
     id: string
@@ -14,8 +15,8 @@ interface Notification {
     content: string
     type: string
     isRead: boolean
-    createdAt: string
-    link?: string
+    createdAt: string | Date
+    link?: string | null
 }
 
 export function NotificationPopover() {
@@ -24,12 +25,13 @@ export function NotificationPopover() {
 
     const fetchNotifications = useCallback(async () => {
         try {
-            const res = await fetch("/api/notifications")
-            if (res.ok) {
-                const data = await res.json()
-                setNotifications(data)
-                setUnreadCount(data.filter((n: Notification) => !n.isRead).length)
-            }
+            const data = await getNotifications()
+            const serialized = data.map((n: Notification) => ({
+                ...n,
+                createdAt: n.createdAt instanceof Date ? n.createdAt.toISOString() : n.createdAt,
+            }))
+            setNotifications(serialized)
+            setUnreadCount(serialized.filter((n: Notification) => !n.isRead).length)
         } catch (err) {
             console.error("Failed to fetch notifications", err)
         }
@@ -41,7 +43,10 @@ export function NotificationPopover() {
         }, 0)
 
         // Poll every 1 minute
-        const interval = setInterval(fetchNotifications, 60000)
+        const interval = setInterval(() => {
+            if (document.hidden) return;
+            fetchNotifications()
+        }, 60000)
 
         return () => {
             clearTimeout(initTimeout)
@@ -51,10 +56,7 @@ export function NotificationPopover() {
 
     const markAsRead = async (id: string) => {
         try {
-            await fetch("/api/notifications", {
-                method: "PATCH",
-                body: JSON.stringify({ id })
-            })
+            await markNotificationRead(id)
             fetchNotifications()
         } catch (err) {
             console.error(err)
@@ -63,10 +65,7 @@ export function NotificationPopover() {
 
     const markAllAsRead = async () => {
         try {
-            await fetch("/api/notifications", {
-                method: "PATCH",
-                body: JSON.stringify({ all: true })
-            })
+            await markNotificationRead(undefined, true)
             fetchNotifications()
         } catch (err) {
             console.error(err)

@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { cancelEstimate } from "@/app/actions/estimates";
 
 export function CancelOrderButton({ estimateId }: { estimateId: string }) {
     const [isPending, startTransition] = useTransition();
@@ -17,10 +18,8 @@ export function CancelOrderButton({ estimateId }: { estimateId: string }) {
 
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/estimates/${estimateId}/cancel`, {
-                    method: "POST"
-                });
-                if (!res.ok) throw new Error("Failed");
+                const result = await cancelEstimate(estimateId);
+                if (result.error) throw new Error("Failed");
                 toast.success(t("successCancel"));
                 router.refresh();
             } catch (error) {

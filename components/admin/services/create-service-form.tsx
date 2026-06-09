@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { createService } from "@/app/actions/services";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
@@ -95,11 +96,10 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
         }
 
         try {
-            const res = await fetch("/api/services", { method: "POST", body: formData });
-            const data = await res.json();
+            const result = await createService(formData);
 
-            if (!res.ok) {
-                throw new Error(data.error || "Failed to create service");
+            if (result.error) {
+                throw new Error(result.error);
             }
 
             toast.success(tAdmin("publishSuccess"));

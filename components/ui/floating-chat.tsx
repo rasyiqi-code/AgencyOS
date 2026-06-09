@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,10 +10,11 @@ import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react
 import { cn } from "@/lib/shared/utils";
 import { useSafeUser } from "@/hooks/use-safe-user";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import remarkGfm from "remark-gfm";
+
+const ReactMarkdown = dynamic(() => import("react-markdown"), { ssr: false });
 import { usePathname } from "next/navigation";
 import {
     Sheet,
@@ -139,6 +141,7 @@ export function FloatingChatWidget() {
         if (mode !== "human_chat" || !ticketId) return;
 
         const interval = setInterval(async () => {
+            if (document.hidden) return;
             try {
                 const res = await fetch(`/api/support/ticket/${ticketId}`);
                 if (res.ok) {

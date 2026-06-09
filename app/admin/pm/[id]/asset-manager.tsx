@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Settings2, Loader2, Save, Github, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { updateProject } from "@/app/actions/projects";
 
 interface TechnicalAssetManagerProps {
     project: {
@@ -32,16 +33,12 @@ export function TechnicalAssetManager({ project }: TechnicalAssetManagerProps) {
     const handleSave = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/projects/${project.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...form,
-                    repoUrl: form.repoOwner && form.repoName ? `https://github.com/${form.repoOwner}/${form.repoName}` : null
-                }),
+            const result = await updateProject(project.id, {
+                ...form,
+                repoUrl: form.repoOwner && form.repoName ? `https://github.com/${form.repoOwner}/${form.repoName}` : null
             });
 
-            if (!res.ok) throw new Error("Failed to update assets");
+            if (result.error) throw new Error("Failed to update assets");
 
             toast.success("Technical assets updated");
             setIsEditing(false);

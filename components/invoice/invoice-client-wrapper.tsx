@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useReactToPrint } from "react-to-print";
 import { Download, AlertTriangle, MoveHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
@@ -73,6 +72,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         if (isPaid) return;
 
         const interval = setInterval(async () => {
+            if (document.hidden) return;
             try {
                 const res = await fetch(`/api/payment/status?orderId=${order.id}&mode=json`);
                 const data = await res.json();
@@ -88,10 +88,13 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         return () => clearInterval(interval);
     }, [isPaid, order.id, router]);
 
-    const handlePrint = useReactToPrint({
-        contentRef: componentRef,
-        documentTitle: `Invoice-${order.id}`,
-    });
+    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
+
+    useEffect(() => {
+        import("react-to-print").then((mod) => {
+            setHandlePrint(() => mod.useReactToPrint({ contentRef: componentRef, documentTitle: `Invoice-${order.id}` }));
+        });
+    }, [order.id]);
 
     // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
     // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR

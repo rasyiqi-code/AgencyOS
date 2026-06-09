@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Bell, Send, Loader2, Info } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,15 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { getPushStatsAction, broadcastPushAction } from "@/app/actions/marketing-admin";
 
 export function PushManager() {
     const [isPending, setIsPending] = useState(false);
     const [stats, setStats] = useState({ subscribers: 0, engagement: 0 });
-    const [formData, setFormData] = useState({
-        title: "",
-        body: "",
-        url: typeof window !== 'undefined' ? window.location.origin : "https://crediblemark.com",
-    });
+    const [title, setTitle] = useState("");
+    const [body, setBody] = useState("");
+    const urlRef = useRef<HTMLInputElement>(null);
+    const defaultUrl = typeof window !== 'undefined' ? window.location.origin : "https://crediblemark.com";
 
     useEffect(() => {
         fetchStats();
@@ -24,10 +24,9 @@ export function PushManager() {
 
     const fetchStats = async () => {
         try {
-            const res = await fetch("/api/admin/push/stats");
-            const data = await res.json();
-            if (res.ok) {
-                setStats(data);
+            const result = await getPushStatsAction();
+            if (result.success && result.data) {
+                setStats(result.data);
             }
         } catch {
             console.error("Failed to fetch notification stats");
@@ -36,7 +35,7 @@ export function PushManager() {
 
     const handleBroadcast = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.title || !formData.body) {
+        if (!title || !body) {
             toast.error("Judul dan Isi wajib diisi");
             return;
         }
@@ -47,19 +46,21 @@ export function PushManager() {
 
         setIsPending(true);
         try {
-            const res = await fetch("/api/admin/push/broadcast", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+            const payload = {
+                title,
+                body,
+                url: urlRef.current?.value || defaultUrl,
+            };
+            const result = await broadcastPushAction(payload);
 
-            const data = await res.json();
-            if (res.ok) {
-                toast.success(`Berhasil! Terkirim: ${data.successful}, Gagal/Expired: ${data.failed + data.expired}`);
-                setFormData({ ...formData, title: "", body: "" });
-                fetchStats(); // Update stats after broadcast
+            if (result.success && result.data && 'successful' in result.data) {
+                const d = result.data;
+                toast.success(`Berhasil! Terkirim: ${d.successful}, Gagal/Expired: ${d.failed + d.expired}`);
+                setTitle("");
+                setBody("");
+                fetchStats();
             } else {
-                toast.error(data.error || "Gagal mengirim broadcast");
+                toast.error(result.error || "Gagal mengirim broadcast");
             }
         } catch {
             toast.error("Terjadi kesalahan jaringan");
@@ -90,8 +91,8 @@ export function PushManager() {
                                     <Label htmlFor="title" className="text-xs font-semibold text-zinc-400">Judul Notifikasi</Label>
                                     <Input
                                         id="title"
-                                        value={formData.title}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
                                         placeholder="Contoh: Tips Bisnis Baru ✨"
                                         className="bg-white/5 border-white/10 rounded-xl h-12 focus-visible:ring-brand-yellow text-sm font-medium"
                                     />
@@ -101,8 +102,8 @@ export function PushManager() {
                                     <Label htmlFor="body" className="text-xs font-semibold text-zinc-400">Isi Pesan</Label>
                                     <Textarea
                                         id="body"
-                                        value={formData.body}
-                                        onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+                                        value={body}
+                                        onChange={(e) => setBody(e.target.value)}
                                         placeholder="Tuliskan isi pesan singkat dan menarik di sini..."
                                         className="bg-white/5 border-white/10 rounded-xl min-h-[120px] focus-visible:ring-brand-yellow text-sm font-medium leading-relaxed"
                                     />
@@ -112,8 +113,8 @@ export function PushManager() {
                                     <Label htmlFor="url" className="text-xs font-semibold text-zinc-400">URL Tujuan (Opsional)</Label>
                                     <Input
                                         id="url"
-                                        value={formData.url}
-                                        onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                                        ref={urlRef}
+                                        defaultValue={defaultUrl}
                                         placeholder="https://crediblemark.com/blog/tips-1"
                                         className="bg-white/5 border-white/10 rounded-xl h-12 focus-visible:ring-brand-yellow text-sm font-medium"
                                     />
@@ -161,10 +162,10 @@ export function PushManager() {
                                 </div>
                                 <div className="space-y-1.5 relative z-10">
                                     <div className="text-sm md:text-base font-bold text-white truncate tracking-tight">
-                                        {formData.title || "Judul Notifikasi Anda"}
+                                        {title || "Judul Notifikasi Anda"}
                                     </div>
                                     <div className="text-xs md:text-sm text-zinc-400 line-clamp-3 leading-relaxed font-medium">
-                                        {formData.body || "Isi pesan akan tampil di sini saat Anda mengetiknya..."}
+                                        {body || "Isi pesan akan tampil di sini saat Anda mengetiknya..."}
                                     </div>
                                 </div>
                             </div>

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, CheckCircle2, Key, Mail } from "lucide-react";
 import { toast } from "sonner";
-// import { saveResendKey, saveAdminTargetEmail } from "@/app/actions/email";
+import { saveResendConfig } from "@/app/actions/system-admin";
 
 interface Props {
     currentKey: string | null;
@@ -30,18 +30,7 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
 
         setIsLoading(true);
         try {
-            // Save Key
-            // Save Configuration
-            const res = await fetch("/api/system/email", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    resendKey: apiKey,
-                    adminEmail: targetEmail || undefined
-                })
-            });
-
-            if (!res.ok) throw new Error("Failed");
+            await saveResendConfig(apiKey, targetEmail || undefined);
             toast.success("Email configuration updated successfully");
         } catch {
             toast.error("An error occurred");

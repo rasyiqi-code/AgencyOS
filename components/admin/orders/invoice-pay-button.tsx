@@ -12,7 +12,7 @@ interface InvoicePayButtonProps {
     amount: number;
 }
 
-export function InvoicePayButton({ orderId, snapToken, amount }: InvoicePayButtonProps) {
+export function InvoicePayButton({ snapToken }: InvoicePayButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handlePayment = async () => {
@@ -30,13 +30,13 @@ export function InvoicePayButton({ orderId, snapToken, amount }: InvoicePayButto
 
             if (window.snap) {
                 window.snap.pay(token, {
-                    onSuccess: async (result: unknown) => {
+                    onSuccess: async (_result: unknown) => {
                         toast.success("Pembayaran berhasil!");
 
                         // Refresh page to show paid status
                         window.location.reload();
                     },
-                    onPending: (result: unknown) => {
+                    onPending: (_result: unknown) => {
                         toast.info("Pembayaran menunggu verifikasi.");
 
                     },

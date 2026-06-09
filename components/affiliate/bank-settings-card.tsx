@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-// import { updateBankDetails } from "@/app/actions/affiliate"; // REMOVED
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Save, Pencil, X } from "lucide-react";
+import { updateBankDetails } from "@/app/actions/affiliates";
 
 interface BankSettingsProps {
     initialData?: {
@@ -36,13 +36,9 @@ export function BankSettingsCard({ initialData }: BankSettingsProps) {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/affiliate/bank", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            });
+            const result = await updateBankDetails(formData.bankName, formData.accountNumber, formData.accountHolder);
 
-            if (!res.ok) throw new Error("Failed to save");
+            if (!result.success) throw new Error("Failed to save");
 
             toast.success("Bank details saved successfully");
             setIsEditing(false); // Lock after save

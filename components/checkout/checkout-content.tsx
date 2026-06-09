@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
+import { useRef, useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
@@ -51,11 +50,13 @@ export function CheckoutContent({
     const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
+    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
 
-    const handlePrint = useReactToPrint({
-        contentRef: invoiceRef,
-        documentTitle: `Invoice-${estimate.id}`,
-    });
+    useEffect(() => {
+        import("react-to-print").then((mod) => {
+            setHandlePrint(() => mod.useReactToPrint({ contentRef: invoiceRef, documentTitle: `Invoice-${estimate.id}` }));
+        });
+    }, [estimate.id]);
 
     // Calculate the TRUE base cost (estimate.totalCost minus any addons that are already baked into it)
     const initiallyIncludedAddonsTotal = initiallyIncludedAddons.reduce((sum: number, addon) => sum + (addon.price || 0), 0);

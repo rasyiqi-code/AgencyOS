@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { getLeadsAction, deleteLeadAction } from "@/app/actions/marketing-admin";
 
 interface Lead {
     id: string;
@@ -28,7 +29,7 @@ interface Lead {
     source: string;
     path: string | null;
     locale: string | null;
-    createdAt: string;
+    createdAt: string | Date;
 }
 
 export function LeadsManager() {
@@ -44,10 +45,9 @@ export function LeadsManager() {
 
     const loadLeads = async () => {
         try {
-            const response = await fetch('/api/admin/marketing/leads');
-            if (!response.ok) throw new Error("Failed to load");
-            const data = await response.json();
-            setLeads(data);
+            const result = await getLeadsAction();
+            if (!result.success) throw new Error(result.error);
+            setLeads(result.data!);
         } catch {
             toast.error("Gagal memuat leads");
         } finally {
@@ -58,10 +58,8 @@ export function LeadsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus lead ini?")) return;
         try {
-            const response = await fetch(`/api/admin/marketing/leads?id=${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error("Failed to delete");
+            const result = await deleteLeadAction(id);
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Lead berhasil dihapus");
             loadLeads();

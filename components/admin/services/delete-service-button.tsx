@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { deleteService } from "@/app/actions/services";
 
 export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
     const router = useRouter();
@@ -24,12 +25,9 @@ export function DeleteServiceButton({ serviceId }: { serviceId: string }) {
 
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/services/${serviceId}`, {
-                    method: "DELETE"
-                });
+                const result = await deleteService(serviceId);
 
-                if (!res.ok) {
-                    // Revert optimistic update if it fails
+                if (result.error) {
                     if (element) element.style.display = '';
                     throw new Error("Failed to delete service");
                 }

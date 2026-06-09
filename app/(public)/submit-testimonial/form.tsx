@@ -2,6 +2,7 @@
 
 import { useTransition, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { submitTestimonial } from "@/app/actions/testimonials";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -32,13 +33,7 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
 
         startTransition(async () => {
             try {
-                const res = await fetch("/api/testimonials", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, role, content, avatar: userAvatar }),
-                });
-
-                const result = await res.json();
+                const result = await submitTestimonial(formData);
 
                 if (result.success) {
                     setSubmitted(true);

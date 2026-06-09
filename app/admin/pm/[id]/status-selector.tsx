@@ -7,9 +7,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-// import { updateProjectStatus } from "@/app/actions/admin";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { updateProjectStatus } from "@/app/actions/projects";
 
 export default function StatusSelector({
     projectId,
@@ -23,12 +23,8 @@ export default function StatusSelector({
     function onValueChange(value: string) {
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/projects/${projectId}/status`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: value }),
-                });
-                if (!res.ok) throw new Error("Failed");
+                const result = await updateProjectStatus(projectId, value);
+                if (result.error) throw new Error("Failed");
                 toast.success("Status updated");
             } catch (error) {
                 console.error("Failed to update status", error);

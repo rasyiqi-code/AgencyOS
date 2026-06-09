@@ -44,6 +44,8 @@ model Project {
   @@index([serviceId])
   @@index([developerId])
   @@index([status])
+  @@index([paymentStatus])
+  @@index([userId, status])
 }
 
 model Order {
@@ -68,6 +70,7 @@ model Order {
   @@index([userId])
   @@index([status])
   @@index([userId, status])
+  @@index([projectId, type, status])
 }
 
 model Brief {
@@ -527,6 +530,7 @@ model DigitalOrder {
 
   @@index([productId])
   @@index([userId])
+  @@index([status])
   @@index([userEmail, status])
   @@index([createdAt])
 }

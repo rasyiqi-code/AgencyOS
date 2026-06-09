@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { getAffiliateStats } from "@/app/actions/affiliates";
 
 interface MarketingAsset {
     id: string;
@@ -33,11 +34,11 @@ export default function MarketingKitPage() {
         }).catch(() => { });
 
         // We can fetch from session or dedicated endpoint
-        fetch("/api/marketing/affiliate/stats").then(res => {
-            if (res.ok) return res.json();
-            return null;
-        }).then(data => {
-            if (data && data.referralCode) setReferralCode(data.referralCode);
+        getAffiliateStats().then(result => {
+            if (result.success) {
+                const data = result.data as { referralCode?: string };
+                if (data.referralCode) setReferralCode(data.referralCode);
+            }
         }).catch(err => console.error(err));
 
         // Fetch assets

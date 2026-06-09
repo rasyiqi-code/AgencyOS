@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText, Upload, Loader2, Download, Paperclip } from "lucide-react";
-// import { uploadProjectFile } from "@/app/actions/project";
 import { toast } from "sonner";
 import Link from "next/link";
+import { uploadProjectFile } from "@/app/actions/projects";
 
 interface ProjectFile {
     name: string;
@@ -27,22 +27,16 @@ export function ProjectAssets({ projectId, initialFiles }: { projectId: string, 
         formData.append("projectId", projectId);
 
         try {
-            const res = await fetch(`/api/projects/${projectId}/files`, {
-                method: "POST",
-                body: formData,
-            });
+            const result = await uploadProjectFile(projectId, formData);
 
-            if (!res.ok) throw new Error("Failed to upload");
+            if (result.error) throw new Error("Failed to upload");
 
-            // Allow time for revalidation or handle state update locally if needed
-            // router.refresh(); // In client component, we might rely on parent or just toast for now
             toast.success("File uploaded successfully");
         } catch (error) {
             console.error(error);
             toast.error("Failed to upload file");
         } finally {
             setIsUploading(false);
-            // Reset input
             e.target.value = "";
         }
     }

@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useReactToPrint } from "react-to-print";
 import Image from "next/image";
 import { Download, CheckCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,6 +79,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
         if (isPaid) return;
 
         const interval = setInterval(async () => {
+            if (document.hidden) return;
             try {
                 const res = await fetch(`/api/digital-payment/status?orderId=${order.id}&mode=json`);
                 const data = await res.json();
@@ -95,10 +95,13 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
         return () => clearInterval(interval);
     }, [isPaid, order.id, router]);
 
-    const handlePrint = useReactToPrint({
-        contentRef: componentRef,
-        documentTitle: `Invoice-${order.id}`,
-    });
+    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
+
+    useEffect(() => {
+        import("react-to-print").then((mod) => {
+            setHandlePrint(() => mod.useReactToPrint({ contentRef: componentRef, documentTitle: `Invoice-${order.id}` }));
+        });
+    }, [order.id]);
 
     return (
         <div className="flex flex-col xl:flex-row gap-8 items-start">

@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { Trash2, Plus, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
+import { getCouponsAction, createCouponAction, deleteCouponAction } from "@/app/actions/marketing-admin";
 
 interface Coupon {
     id: string;
@@ -42,10 +43,9 @@ export function CouponsManager() {
 
     const loadCoupons = async () => {
         try {
-            const response = await fetch('/api/admin/marketing/coupons');
-            if (!response.ok) throw new Error("Failed to load");
-            const data = await response.json();
-            setCoupons(data);
+            const result = await getCouponsAction();
+            if (!result.success) throw new Error(result.error);
+            setCoupons(result.data!);
         } catch {
             toast.error("Gagal memuat kupon");
         } finally {
@@ -60,20 +60,16 @@ export function CouponsManager() {
         }
 
         try {
-            const response = await fetch('/api/admin/marketing/coupons', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    code: newCoupon.code,
-                    discountType: newCoupon.discountType,
-                    discountValue: parseFloat(newCoupon.discountValue),
-                    maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
-                    expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
-                    appliesTo: newCoupon.appliesTo,
-                })
+            const result = await createCouponAction({
+                code: newCoupon.code,
+                discountType: newCoupon.discountType,
+                discountValue: parseFloat(newCoupon.discountValue),
+                maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
+                expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
+                appliesTo: newCoupon.appliesTo,
             });
 
-            if (!response.ok) throw new Error("Failed to create");
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Kupon berhasil dibuat");
             setNewCoupon({ code: "", discountType: "percentage", discountValue: "", maxUses: "", expiresAt: "", appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"] });
@@ -86,10 +82,8 @@ export function CouponsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus kupon ini?")) return;
         try {
-            const response = await fetch(`/api/admin/marketing/coupons?id=${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error("Failed to delete");
+            const result = await deleteCouponAction(id);
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Kupon berhasil dihapus");
             loadCoupons();

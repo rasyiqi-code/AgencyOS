@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { updateService } from "@/app/actions/services";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
@@ -124,14 +125,10 @@ export function EditServiceForm({
         }
 
         try {
-            const res = await fetch(`/api/services/${service.id}`, {
-                method: "PUT",
-                body: formData,
-            });
+            const result = await updateService(service.id, formData);
 
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || "Failed to update service");
+            if (result.error) {
+                throw new Error(typeof result.error === 'string' ? result.error : "Failed to update service");
             }
 
             toast.success(tAdmin("updateSuccess"));

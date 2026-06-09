@@ -1,7 +1,6 @@
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/config/db";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { getActiveTestimonials } from "@/lib/server/testimonials";
 
 export async function GET(req: Request) {
@@ -39,67 +38,3 @@ export async function GET(req: Request) {
 
 
 
-export async function POST(req: Request) {
-    try {
-        const user = await hexclaveServerApp.getUser();
-        if (!user) {
-            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        }
-
-        const body = await req.json();
-        const { name, role, content } = body;
-
-        const testimonial = await prisma.testimonial.create({
-            data: {
-                name,
-                role,
-                content,
-                avatar: user.profileImageUrl, // Enforce authenticated avatar
-                isActive: false, // Requires approval
-            },
-        });
-
-        return NextResponse.json({ success: true, data: testimonial });
-    } catch {
-        return NextResponse.json({ success: false, error: "Failed to create testimonial" }, { status: 500 });
-    }
-}
-
-export async function PATCH(req: Request) {
-    try {
-        const body = await req.json();
-        const { id, isActive } = body;
-
-        if (!id) {
-            return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
-        }
-
-        const testimonial = await prisma.testimonial.update({
-            where: { id },
-            data: { isActive },
-        });
-
-        return NextResponse.json({ success: true, data: testimonial });
-    } catch {
-        return NextResponse.json({ success: false, error: "Failed to update testimonial" }, { status: 500 });
-    }
-}
-
-export async function DELETE(req: Request) {
-    try {
-        const { searchParams } = new URL(req.url);
-        const id = searchParams.get("id");
-
-        if (!id) {
-            return NextResponse.json({ success: false, error: "ID is required" }, { status: 400 });
-        }
-
-        await prisma.testimonial.delete({
-            where: { id },
-        });
-
-        return NextResponse.json({ success: true });
-    } catch {
-        return NextResponse.json({ success: false, error: "Failed to delete testimonial" }, { status: 500 });
-    }
-}

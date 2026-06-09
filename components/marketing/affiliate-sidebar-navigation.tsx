@@ -29,7 +29,7 @@ export function AffiliateSidebarNavigation() {
 
     return (
         <nav className="grid items-start gap-2 text-sm font-medium lg:px-4">
-            {items.map((item, index) => {
+            {items.map((item, _index) => {
                 const isActive = pathname === item.href;
                 return (
                     <Link

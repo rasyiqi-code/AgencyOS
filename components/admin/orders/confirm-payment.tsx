@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-// import { confirmOrder } from "@/app/actions/admin";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { confirmPayment } from "@/app/actions/estimates";
 
 export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: string, paymentType?: string | null }) {
     const [isPending, startTransition] = useTransition();
@@ -19,10 +19,8 @@ export function ConfirmPaymentButton({ estimateId, paymentType }: { estimateId: 
 
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/estimates/${estimateId}/confirm`, {
-                    method: "POST"
-                });
-                if (!res.ok) throw new Error("Failed");
+                const result = await confirmPayment(estimateId);
+                if (result.error) throw new Error("Failed");
                 toast.success(`Payment confirmed. Project status updated.`);
                 router.refresh();
             } catch (error) {

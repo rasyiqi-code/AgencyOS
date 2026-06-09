@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
 import Image from "next/image";
+import { getAdminAssets, createAsset, updateAsset, deleteAsset } from "@/app/actions/marketing-admin";
+import { uploadAssetAction } from "@/app/actions/marketing-admin";
 // We should check how manual payment uploads. It uses a route handler.
 // We need an upload route for this. Or reuse /api/billing/proof if generic enough? 
 // Better creates a specific upload function/route or use a signed URL.
@@ -24,13 +26,13 @@ import Image from "next/image";
 
 interface MarketingAsset {
     id: string;
-    type: 'banner' | 'copy' | 'widget' | 'banner_widget';
+    type: string;
     title: string;
-    content?: string;
-    imageUrl?: string;
-    category?: string;
+    content?: string | null;
+    imageUrl?: string | null;
+    category?: string | null;
     isActive: boolean;
-    createdAt: string;
+    createdAt: string | Date;
 }
 
 export function AssetsManager() {
@@ -58,11 +60,8 @@ export function AssetsManager() {
 
     const fetchAssets = useCallback(async () => {
         try {
-            const res = await fetch("/api/marketing/assets?scope=admin");
-            if (res.ok) {
-                const data = await res.json();
-                setAssets(data);
-            }
+            const data = await getAdminAssets(1, 100);
+            setAssets(data);
         } catch (error) {
             console.error("Failed to fetch assets", error);
         } finally {
@@ -102,21 +101,11 @@ export function AssetsManager() {
                 const uploadFormData = new FormData();
                 uploadFormData.append("file", formData.file);
 
-                // We need an upload endpoint. 
-                // Let's reuse /api/billing/proof logic but create a new generic upload route or just put it here
-                // properly. For now, I'll simulate or use a new route.
-                // I will create `/api/upload` generic route later or specific `/api/admin/marketing/upload`.
-                // For now assuming `/api/admin/marketing/upload` exists.
-                const uploadRes = await fetch("/api/admin/marketing/upload", {
-                    method: "POST",
-                    body: uploadFormData
-                });
-
-                if (uploadRes.ok) {
-                    const json = await uploadRes.json();
-                    imageUrl = json.url;
+                const result = await uploadAssetAction(uploadFormData);
+                if (result.success && result.data) {
+                    imageUrl = result.data.url;
                 } else {
-                    throw new Error("Upload failed");
+                    throw new Error(result.error || "Upload failed");
                 }
             }
 
@@ -128,25 +117,18 @@ export function AssetsManager() {
                 imageUrl: imageUrl || undefined
             };
 
-            const url = editingAsset ? `/api/marketing/assets/${editingAsset.id}` : "/api/marketing/assets";
-            const method = editingAsset ? "PATCH" : "POST";
-
-            const res = await fetch(url, {
-                method: method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                toast.success(editingAsset ? "Aset berhasil diperbarui" : "Aset berhasil dibuat");
-                setIsDialogOpen(false);
-                setEditingAsset(null);
-                setFormData({ type: 'copy', title: '', content: '', category: '', file: null });
-                setPreviewUrl(null);
-                fetchAssets();
+            if (editingAsset) {
+                await updateAsset(editingAsset.id, payload);
             } else {
-                toast.error(editingAsset ? "Gagal memperbarui aset" : "Gagal membuat aset");
+                await createAsset(payload);
             }
+
+            toast.success(editingAsset ? "Aset berhasil diperbarui" : "Aset berhasil dibuat");
+            setIsDialogOpen(false);
+            setEditingAsset(null);
+            setFormData({ type: 'copy', title: '', content: '', category: '', file: null });
+            setPreviewUrl(null);
+            fetchAssets();
         } catch (error) {
             console.error(error);
             toast.error("Terjadi kesalahan");
@@ -158,7 +140,7 @@ export function AssetsManager() {
     const handleEdit = (asset: MarketingAsset) => {
         setEditingAsset(asset);
         setFormData({
-            type: asset.type,
+            type: asset.type as 'banner' | 'copy' | 'widget' | 'banner_widget',
             title: asset.title,
             content: asset.content || "",
             category: asset.category || "",
@@ -171,7 +153,7 @@ export function AssetsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus aset ini?")) return;
         try {
-            await fetch(`/api/marketing/assets/${id}`, { method: "DELETE" });
+            await deleteAsset(id);
             toast.success("Aset berhasil dihapus");
             fetchAssets();
         } catch {

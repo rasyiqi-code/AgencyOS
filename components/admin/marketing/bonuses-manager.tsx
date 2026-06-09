@@ -12,6 +12,7 @@ import {
     Flame, Globe, Infinity as InfinityIcon, Star, Crown, CheckCircle2, Award, 
     Heart, HelpCircle, BookOpen, Sparkles, Trophy, Lightbulb, Clock, Compass 
 } from "lucide-react";
+import { getBonusesAction, createBonusAction, deleteBonusAction, toggleBonusStatusAction } from "@/app/actions/marketing-admin";
 
 const IconMap: Record<string, React.ElementType> = {
     Plus, Trash2, Gift, Zap, Check, ShieldCheck, Layers, PlusCircle, Download, 
@@ -47,10 +48,9 @@ export function BonusesManager() {
 
     const loadBonuses = async () => {
         try {
-            const response = await fetch('/api/admin/marketing/bonuses');
-            if (!response.ok) throw new Error("Failed to load");
-            const data = await response.json();
-            setBonuses(data);
+            const result = await getBonusesAction();
+            if (!result.success) throw new Error(result.error);
+            setBonuses(result.data!);
         } catch {
             toast.error("Gagal memuat bonus");
         } finally {
@@ -65,19 +65,15 @@ export function BonusesManager() {
         }
 
         try {
-            const response = await fetch('/api/admin/marketing/bonuses', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: newBonus.title,
-                    description: newBonus.description || undefined,
-                    value: newBonus.value || undefined,
-                    icon: newBonus.icon || undefined,
-                    appliesTo: newBonus.appliesTo,
-                })
+            const result = await createBonusAction({
+                title: newBonus.title,
+                description: newBonus.description || undefined,
+                value: newBonus.value || undefined,
+                icon: newBonus.icon || undefined,
+                appliesTo: newBonus.appliesTo,
             });
 
-            if (!response.ok) throw new Error("Failed to create");
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Bonus berhasil dibuat");
             setNewBonus({ title: "", description: "", value: "", icon: "CheckCircle2", appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"] });
@@ -90,10 +86,8 @@ export function BonusesManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus bonus ini?")) return;
         try {
-            const response = await fetch(`/api/admin/marketing/bonuses?id=${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error("Failed to delete");
+            const result = await deleteBonusAction(id);
+            if (!result.success) throw new Error(result.error);
 
             toast.success("Bonus berhasil dihapus");
             loadBonuses();
@@ -104,12 +98,8 @@ export function BonusesManager() {
 
     const handleToggle = async (id: string, currentStatus: boolean) => {
         try {
-            const response = await fetch('/api/admin/marketing/bonuses', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, isActive: !currentStatus })
-            });
-            if (!response.ok) throw new Error("Failed to update");
+            const result = await toggleBonusStatusAction(id, !currentStatus);
+            if (!result.success) throw new Error(result.error);
 
             loadBonuses();
         } catch {

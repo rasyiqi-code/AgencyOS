@@ -22,12 +22,12 @@ export function EmbeddedPayment({ snapToken }: EmbeddedPaymentProps) {
                 try {
                     window.snap.embed(snapToken, {
                         embedId: 'snap-container',
-                        onSuccess: async (result: unknown) => {
+                        onSuccess: async (_result: unknown) => {
                             toast.success("Pembayaran berhasil!");
 
                             window.location.reload();
                         },
-                        onPending: (result: unknown) => {
+                        onPending: (_result: unknown) => {
                             toast.info("Pembayaran menunggu verifikasi.");
 
                         },

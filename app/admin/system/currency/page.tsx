@@ -6,24 +6,20 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2, RefreshCw, Save, DollarSign, Clock } from "lucide-react";
-import type { ExchangeRates } from "@/types/payment";
+import { getCurrencyConfig, saveCurrencyConfig, forceUpdateCurrencyRates } from "@/app/actions/system-admin";
 
 export default function CurrencySettingsPage() {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
 
-    // Config State
     const [apiKey, setApiKey] = useState("");
     const [intervalHours, setIntervalHours] = useState(24);
 
-    // Status State
-    const [rates, setRates] = useState<ExchangeRates | null>(null);
+    const [rates, setRates] = useState<{ base: string; rates: Record<string, number>; lastUpdated: number } | null>(null);
 
     const loadData = async () => {
         try {
-            const res = await fetch("/api/admin/system/currency");
-            const data = await res.json();
-
+            const data = await getCurrencyConfig();
             if (data.config) {
                 setApiKey(data.config.apiKey || "");
                 setIntervalHours(data.config.intervalHours || 24);
@@ -44,13 +40,7 @@ export default function CurrencySettingsPage() {
     const handleSave = async () => {
         setLoading(true);
         try {
-            const res = await fetch("/api/admin/system/currency", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ apiKey, intervalHours: Number(intervalHours) })
-            });
-
-            if (!res.ok) throw new Error("Failed to save");
+            await saveCurrencyConfig(apiKey, Number(intervalHours));
             toast.success("Settings saved");
             loadData();
         } catch {
@@ -63,18 +53,7 @@ export default function CurrencySettingsPage() {
     const handleForceUpdate = async () => {
         setFetching(true);
         try {
-            const res = await fetch("/api/admin/system/currency", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "force_update" })
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.message || "Update failed");
-            }
-
-            const newRates = await res.json();
+            const newRates = await forceUpdateCurrencyRates();
             setRates(newRates);
             toast.success("Rates updated successfully!");
         } catch (e) {

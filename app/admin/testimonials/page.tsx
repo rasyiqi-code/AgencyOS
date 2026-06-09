@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { toggleTestimonialStatus, deleteTestimonial } from "@/app/actions/testimonials";
 import {
     Table,
     TableBody,
@@ -61,12 +62,7 @@ export default function AdminTestimonialsPage() {
     async function toggleStatus(id: string, currentStatus: boolean) {
         startTransition(async () => {
             try {
-                const res = await fetch("/api/testimonials", {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id, isActive: !currentStatus }),
-                });
-                const result = await res.json();
+                const result = await toggleTestimonialStatus(id, !currentStatus);
 
                 if (result.success) {
                     toast.success(`Testimonial ${!currentStatus ? 'approved' : 'hidden'}`);
@@ -85,10 +81,7 @@ export default function AdminTestimonialsPage() {
 
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/testimonials?id=${id}`, {
-                    method: "DELETE",
-                });
-                const result = await res.json();
+                const result = await deleteTestimonial(id);
 
                 if (result.success) {
                     toast.success("Testimonial deleted");

@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { getPopUpsAction, createPopUpAction, updatePopUpAction, deletePopUpAction, togglePopUpStatusAction } from "@/app/actions/marketing-admin";
 
 interface PopUp {
     id: string;
@@ -48,7 +49,7 @@ interface PopUp {
     formHeadline_id: string | null;
     delay: number;
     couponCode: string | null;
-    createdAt: string;
+    createdAt: string | Date;
 }
 
 export function PopUpsManager() {
@@ -65,10 +66,9 @@ export function PopUpsManager() {
 
     const loadPopUps = async () => {
         try {
-            const response = await fetch('/api/admin/marketing/popups');
-            if (!response.ok) throw new Error("Failed to load");
-            const data = await response.json();
-            setPopups(data);
+            const result = await getPopUpsAction();
+            if (!result.success) throw new Error(result.error);
+            setPopups(result.data as PopUp[]);
         } catch {
             toast.error("Gagal memuat popups");
         } finally {
@@ -79,29 +79,31 @@ export function PopUpsManager() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-
-        // Process targeting strings into arrays
+        const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
         const payload = {
-            ...data,
-            delay: parseInt(data.delay as string) || 0,
-            isActive: data.isActive === 'on',
-            showFormLead: data.showFormLead === 'on',
-            targetingPaths: (data.targetingPaths as string).split(',').map(p => p.trim()).filter(p => p),
-            targetingLocales: (data.targetingLocales as string).split(',').map(l => l.trim()).filter(l => l),
+            headline: raw.headline,
+            headline_id: raw.headline_id || undefined,
+            description: raw.description,
+            description_id: raw.description_id || undefined,
+            ctaText: raw.ctaText || undefined,
+            ctaText_id: raw.ctaText_id || undefined,
+            ctaUrl: raw.ctaUrl || undefined,
+            couponCode: raw.couponCode || undefined,
+            formHeadline: raw.formHeadline || undefined,
+            formHeadline_id: raw.formHeadline_id || undefined,
+            delay: parseInt(raw.delay) || 0,
+            isActive: raw.isActive === 'on',
+            showFormLead: raw.showFormLead === 'on',
+            targetingPaths: raw.targetingPaths.split(',').map(p => p.trim()).filter(Boolean),
+            targetingLocales: raw.targetingLocales.split(',').map(l => l.trim()).filter(Boolean),
         };
 
         try {
-            const method = editingPopup?.id ? 'PATCH' : 'POST';
-            const body = editingPopup?.id ? { id: editingPopup.id, ...payload } : payload;
+            const result = editingPopup?.id
+                ? await updatePopUpAction(editingPopup.id, payload)
+                : await createPopUpAction(payload);
 
-            const response = await fetch('/api/admin/marketing/popups', {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
-            });
-
-            if (!response.ok) throw new Error("Failed to save");
+            if (!result.success) throw new Error(result.error);
 
             toast.success("PopUp berhasil disimpan");
             setIsOpen(false);
@@ -116,16 +118,12 @@ export function PopUpsManager() {
         if (!confirm("Apakah Anda yakin ingin menghapus PopUp ini?")) return;
         setDeletingId(id);
         try {
-            const response = await fetch(`/api/admin/marketing/popups?id=${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                // If the error message indicates it's already gone, we treat it as success
-                if (errorData.error?.includes("P2025") || response.status === 404) {
+            const result = await deletePopUpAction(id);
+            if (!result.success) {
+                if (result.error?.includes("P2025")) {
                     toast.success("PopUp sudah dihapus");
                 } else {
-                    throw new Error("Failed to delete");
+                    throw new Error(result.error);
                 }
             } else {
                 toast.success("PopUp berhasil dihapus");
@@ -140,12 +138,8 @@ export function PopUpsManager() {
 
     const handleToggle = async (id: string, isActive: boolean) => {
         try {
-            const response = await fetch('/api/admin/marketing/popups', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, isActive: !isActive }),
-            });
-            if (!response.ok) throw new Error("Failed to toggle");
+            const result = await togglePopUpStatusAction(id, !isActive);
+            if (!result.success) throw new Error(result.error);
             loadPopUps();
         } catch {
             toast.error("Gagal mengubah status");

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { scheduleEmail } from "@/app/actions/email";
 
 // Check if Dialog exists, otherwise we might need to install it or use Sheet. 
 // Given the previous step installed Sheet manually, I should check if Dialog is available.
@@ -52,28 +53,20 @@ export function ScheduleDialog({ estimate, trigger }: ScheduleDialogProps) {
         setLoading(true);
 
         try {
-            const response = await fetch("/api/email/schedule", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    phone,
-                    notes,
-                    estimateId: estimate.id,
-                    estimateTitle: estimate.title,
-                    totalCost: estimate.totalCost,
-                    totalHours: estimate.totalHours,
-                    link: window.location.href
-                }),
+            await scheduleEmail({
+                name,
+                email,
+                phone,
+                notes,
+                estimateTitle: estimate.title,
+                totalCost: estimate.totalCost,
+                totalHours: estimate.totalHours,
+                link: window.location.href
             });
-
-            if (!response.ok) throw new Error("Failed to send request");
 
             toast.success("Request sent! We'll contact you shortly.");
             setOpen(false);
 
-            // Reset form
             setName("");
             setEmail("");
             setPhone("");

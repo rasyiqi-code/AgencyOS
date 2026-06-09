@@ -7,6 +7,7 @@ import { ImagePlus, Loader2, X, RefreshCw, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { updateProject } from "@/app/actions/projects";
 
 interface PreviewUploaderProps {
     projectId: string;
@@ -26,23 +27,15 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
         formData.append("file", file);
 
         try {
-            // 1. Upload file to General Storage API (Uses R2)
-            const uploadRes = await fetch("/api/storage/media", {
-                method: "POST",
-                body: formData,
-            });
+            const { uploadFile } = await import("@/lib/integrations/storage");
+            const url = await uploadFile(file, `projects/${projectId}/preview/${Date.now()}-${file.name.replace(/\s/g, "_")}`);
 
-            if (!uploadRes.ok) throw new Error("Upload failed");
-            const { url } = await uploadRes.json();
+            if (!url || (!url.startsWith("http") && !url.startsWith("/"))) {
+                throw new Error("Upload failed");
+            }
 
-            // 2. Update Project previewUrl
-            const updateRes = await fetch(`/api/projects/${projectId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ previewUrl: url }),
-            });
-
-            if (!updateRes.ok) throw new Error("Failed to update project preview");
+            const result = await updateProject(projectId, { previewUrl: url });
+            if (result.error) throw new Error("Failed to update project preview");
 
             toast.success("Project preview updated");
             router.refresh();
@@ -57,13 +50,8 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
     const handleRemove = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/projects/${projectId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ previewUrl: null }),
-            });
-
-            if (!res.ok) throw new Error("Failed to remove preview");
+            const result = await updateProject(projectId, { previewUrl: null });
+            if (result.error) throw new Error("Failed to remove preview");
 
             toast.success("Project preview removed");
             router.refresh();

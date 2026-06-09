@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Globe, ExternalLink, Pencil, Save, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { updateProject } from "@/app/actions/projects";
 
 interface WorkbenchStatusProps {
     projectId: string;
@@ -27,18 +28,12 @@ export function WorkbenchStatus({ projectId, deployUrl }: WorkbenchStatusProps) 
                 finalUrl = `https://${finalUrl}`;
             }
 
-            const res = await fetch(`/api/projects/${projectId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ deployUrl: finalUrl }),
-            });
+            const result = await updateProject(projectId, { deployUrl: finalUrl });
 
-            if (res.ok) {
+            if (!result.error) {
                 toast.success("Live URL updated");
                 setIsEditing(false);
-                setUrl(finalUrl); // Update local state with formatted URL
+                setUrl(finalUrl);
                 router.refresh();
             } else {
                 toast.error("Failed to update URL");

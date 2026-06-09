@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Globe, Save } from "lucide-react";
 import { toast } from "sonner";
+import { saveContactSettings } from "@/app/actions/system-admin";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -64,13 +65,19 @@ export function GeneralSettingsForm({ initialData }: Props) {
     async function handleSave() {
         setIsLoading(true);
         try {
-            const res = await fetch("/api/system/contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+            await saveContactSettings({
+                email: data.email || undefined,
+                phone: data.phone || undefined,
+                telegram: data.telegram || undefined,
+                address: data.address || undefined,
+                agencyName: data.agencyName || undefined,
+                companyName: data.companyName || undefined,
+                logoUrl: data.logoUrl || undefined,
+                logoDisplayMode: data.logoDisplayMode || undefined,
+                servicesTitle: data.servicesTitle || undefined,
+                servicesSubtitle: data.servicesSubtitle || undefined,
+                hours: data.hours || undefined,
             });
-
-            if (!res.ok) throw new Error("Failed");
             toast.success("General settings updated successfully");
         } catch {
             toast.error("An error occurred");

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { manageTeamPermission } from "@/app/actions/affiliates"
 
 interface TeamMember {
     id: string
@@ -45,20 +46,10 @@ export function TeamTable({ data, currentUserId }: TeamTableProps) {
         setLoading(loadingKey)
 
         try {
-            const response = await fetch('/api/admin/team', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId,
-                    email,
-                    key: role,
-                    action: currentValue ? 'revoke' : 'grant'
-                })
-            });
+            const result = await manageTeamPermission(userId, email, role, currentValue ? 'revoke' : 'grant');
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to update permission");
+            if (!result.success) {
+                throw new Error(result.error || "Failed to update permission");
             }
 
             toast.success(`Role ${role} ${currentValue ? 'revoked for' : 'granted to'} ${email}`)

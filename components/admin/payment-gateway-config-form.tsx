@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Save, Eye, EyeOff, Loader2, CreditCard, Store } from "lucide-react";
 import { toast } from "sonner";
+import { savePaymentConfig } from "@/app/actions/system-admin";
 
 interface PaymentGatewayConfig {
     midtrans?: {
@@ -47,16 +48,7 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
     const handleSaveMidtrans = async () => {
         setSavingMidtrans(true);
         try {
-            const res = await fetch("/api/admin/system/payment", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gateway: "midtrans", config: midtransConfig })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.error || "Failed to save");
-
+            await savePaymentConfig("midtrans", midtransConfig);
             toast.success("Midtrans configuration saved successfully");
         } catch (error) {
             console.error(error);
@@ -69,16 +61,7 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
     const handleSaveCreem = async () => {
         setSavingCreem(true);
         try {
-            const res = await fetch("/api/admin/system/payment", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gateway: "creem", config: creemConfig })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.error || "Failed to save");
-
+            await savePaymentConfig("creem", creemConfig);
             toast.success("Creem configuration saved successfully");
         } catch (error) {
             console.error(error);

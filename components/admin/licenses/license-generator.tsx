@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus } from "lucide-react";
+import { createManualLicense } from "@/app/actions/affiliates";
 
 interface LicenseGeneratorProps {
     products: Product[];
@@ -38,20 +39,15 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/admin/licenses", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    productId,
-                    maxActivations: Number(maxActivations),
-                    expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
-                }),
+            const result = await createManualLicense({
+                productId,
+                maxActivations: Number(maxActivations),
+                expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
             });
 
-            if (!res.ok) throw new Error("Failed");
+            if (!result.success) throw new Error("Failed");
 
-            const data = await res.json();
-            setGeneratedKey(data.key);
+            setGeneratedKey((result.data as { key: string }).key);
             toast.success("Lisensi berhasil dibuat");
             router.refresh();
         } catch {

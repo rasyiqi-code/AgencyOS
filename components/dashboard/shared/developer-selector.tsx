@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 import { UserCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { updateProject } from "@/app/actions/projects";
+import { getSquadDevelopers } from "@/app/actions/affiliates";
 
 interface Developer {
     id: string;
@@ -34,10 +36,9 @@ export function DeveloperSelector({
     useEffect(() => {
         async function fetchDevelopers() {
             try {
-                const res = await fetch("/api/admin/squad/users"); // Fetch from Squad APIs
-                if (res.ok) {
-                    const data = await res.json();
-                    setDevelopers(data);
+                const result = await getSquadDevelopers();
+                if (result.success) {
+                    setDevelopers(result.data as Developer[]);
                 }
             } catch (error) {
                 console.error("Failed to fetch developers:", error);
@@ -52,12 +53,8 @@ export function DeveloperSelector({
         const devId = value === "none" ? null : value;
         startTransition(async () => {
             try {
-                const res = await fetch(`/api/projects/${projectId}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ developerId: devId }),
-                });
-                if (!res.ok) throw new Error("Failed");
+                const result = await updateProject(projectId, { developerId: devId });
+                if (result.error) throw new Error("Failed");
                 toast.success("Developer assigned successfully");
                 router.refresh();
             } catch (error) {

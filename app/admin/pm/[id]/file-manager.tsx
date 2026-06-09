@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { uploadProjectFile, deleteProjectFile } from "@/app/actions/projects";
 import {
     FileText,
     Upload,
@@ -46,14 +47,10 @@ export function FileManager({ projectId, files, readonly = false }: FileManagerP
         formData.append("file", file);
 
         try {
-            const res = await fetch(`/api/projects/${projectId}/files`, {
-                method: "POST",
-                body: formData,
-            });
+            const result = await uploadProjectFile(projectId, formData);
 
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || "Upload failed");
+            if (result.error) {
+                throw new Error(typeof result.error === 'string' ? result.error : "Upload failed");
             }
 
             toast.success("File uploaded successfully");
@@ -72,18 +69,8 @@ export function FileManager({ projectId, files, readonly = false }: FileManagerP
 
         setIsLoading(true);
         try {
-            // We need a DELETE endpoint, but for now we can use a PATCH to projects
-            // Or implement a quick DELETE endpoint. 
-            // Let's assume we update via PATCH projects for now if DELETE is not ready.
-            const updatedFiles = files.filter(f => f.url !== fileUrl);
-
-            const res = await fetch(`/api/projects/${projectId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ files: updatedFiles }),
-            });
-
-            if (!res.ok) throw new Error("Delete failed");
+            const result = await deleteProjectFile(projectId, fileUrl);
+            if (result.error) throw new Error("Delete failed");
 
             toast.success("File deleted");
             router.refresh();
