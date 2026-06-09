@@ -44,8 +44,7 @@ export function WorkflowContent() {
         <div className="container mx-auto px-4">
             <motion.div
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                animate="visible"
                 variants={containerVariants}
                 className="space-y-12 md:space-y-16"
             >
@@ -64,8 +63,7 @@ export function WorkflowContent() {
                     {/* Connecting Line (Desktop) - Horizontal */}
                     <motion.div
                         initial={{ scaleX: 0, opacity: 0 }}
-                        whileInView={{ scaleX: 1, opacity: 1 }}
-                        viewport={{ once: true }}
+                        animate={{ scaleX: 1, opacity: 1 }}
                         transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
                         className="hidden md:block absolute top-9 left-[10%] right-[10%] h-0.5 bg-black/20 origin-left"
                     />
@@ -73,8 +71,7 @@ export function WorkflowContent() {
                     {/* Connecting Line (Mobile) - Vertical Left-Aligned */}
                     <motion.div
                         initial={{ scaleY: 0, opacity: 0 }}
-                        whileInView={{ scaleY: 1, opacity: 1 }}
-                        viewport={{ once: true }}
+                        animate={{ scaleY: 1, opacity: 1 }}
                         transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
                         className="md:hidden absolute left-8 top-8 bottom-12 w-0.5 bg-black/20 origin-top"
                     />

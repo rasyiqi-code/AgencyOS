@@ -40,8 +40,7 @@ export function SocialProofContent() {
         <motion.div
             ref={scrollRef}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            animate="visible"
             variants={containerVariants}
             className="container mx-auto px-4 overflow-hidden"
         >

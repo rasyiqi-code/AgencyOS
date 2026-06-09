@@ -50,8 +50,7 @@ export function SectionSolutions() {
                 <div className="text-center mb-16 max-w-4xl mx-auto">
                     <motion.div 
                         initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, y: 0 }}
                         className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900/50 border border-white/10 text-brand-yellow text-[10px] font-black uppercase tracking-[0.3em] mb-6 shadow-2xl backdrop-blur-md"
                     >
                         <Sparkles className="w-3.5 h-3.5 animate-pulse" />
@@ -60,8 +59,7 @@ export function SectionSolutions() {
                     
                     <motion.h2 
                         initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter max-w-4xl mx-auto leading-[1.1]"
                     >
@@ -70,8 +68,7 @@ export function SectionSolutions() {
                     
                     <motion.p 
                         initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
                         className="text-zinc-400 text-lg md:text-xl font-medium max-w-2xl mx-auto"
                     >
@@ -134,8 +131,7 @@ function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * (index + 1), duration: 0.5 }}
             onMouseMove={handleMouseMove}
             className={`flex-shrink-0 w-[85vw] md:w-full snap-center group relative p-8 rounded-[2.5rem] bg-zinc-900/30 border border-white/5 transition-all duration-500 flex flex-col items-center text-center h-full backdrop-blur-xl overflow-hidden shadow-2xl ${product.border}`}

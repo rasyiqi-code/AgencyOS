@@ -47,8 +47,7 @@ export function FAQSection() {
                 {/* Heading Section */}
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    animate={{ opacity: 1, y: 0 }}
                     className="mb-10 md:mb-16"
                 >
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-black tracking-tight leading-none mb-6">
@@ -69,8 +68,7 @@ export function FAQSection() {
                                     <motion.div
                                         key={key}
                                         initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
                                     >
                                         <AccordionItem 

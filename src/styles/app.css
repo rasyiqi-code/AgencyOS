@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-yellow: #FED700;
+  --color-brand-grey: #C4C4C4;
+}
+
 html {
   color-scheme: dark;
 }
+
