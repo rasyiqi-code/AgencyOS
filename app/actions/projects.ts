@@ -233,6 +233,40 @@ export async function uploadProjectFile(projectId: string, formData: FormData) {
     }
 }
 
+/**
+ * Mengunggah gambar pratinjau proyek ke penyimpanan R2 dan memperbarui database.
+ * Fungsi ini dijalankan di sisi server untuk menghindari kebocoran library Node.js ke browser.
+ */
+export async function uploadProjectPreview(projectId: string, formData: FormData) {
+    if (!await isAdmin()) return { error: "Unauthorized" };
+
+    try {
+        const file = formData.get("file") as File;
+        if (!file) return { error: "No file provided" };
+
+        const { uploadFile } = await import("@/lib/integrations/storage");
+        const filename = `projects/${projectId}/preview/${Date.now()}-${file.name.replace(/\s/g, "_")}`;
+        const url = await uploadFile(file, filename);
+
+        if (!url || (!url.startsWith("http") && !url.startsWith("/"))) {
+            throw new Error("Failed to upload to R2");
+        }
+
+        await prisma.project.update({
+            where: { id: projectId },
+            data: { previewUrl: url }
+        });
+
+        revalidatePath(`/admin/pm/${projectId}`);
+        revalidatePath(`/dashboard/projects/${projectId}`);
+        return { success: true, url };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Internal Server Error";
+        console.error("Project preview upload error:", message);
+        return { error: message };
+    }
+}
+
 export async function deleteProjectFile(projectId: string, fileUrl: string) {
     if (!await isAdmin()) return { error: "Unauthorized" };
 

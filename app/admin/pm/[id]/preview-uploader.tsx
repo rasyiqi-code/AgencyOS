@@ -7,7 +7,7 @@ import { ImagePlus, Loader2, X, RefreshCw, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { updateProject } from "@/app/actions/projects";
+import { updateProject, uploadProjectPreview } from "@/app/actions/projects";
 
 interface PreviewUploaderProps {
     projectId: string;
@@ -27,15 +27,9 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
         formData.append("file", file);
 
         try {
-            const { uploadFile } = await import("@/lib/integrations/storage");
-            const url = await uploadFile(file, `projects/${projectId}/preview/${Date.now()}-${file.name.replace(/\s/g, "_")}`);
-
-            if (!url || (!url.startsWith("http") && !url.startsWith("/"))) {
-                throw new Error("Upload failed");
-            }
-
-            const result = await updateProject(projectId, { previewUrl: url });
-            if (result.error) throw new Error("Failed to update project preview");
+            // Memanggil server action untuk memproses unggahan file di server side
+            const result = await uploadProjectPreview(projectId, formData);
+            if (result.error) throw new Error(result.error);
 
             toast.success("Project preview updated");
             router.refresh();
