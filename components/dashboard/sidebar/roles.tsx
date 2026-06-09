@@ -59,37 +59,38 @@ export function SidebarSuperAdmin() {
     const t = useTranslations("Dashboard.Sidebar");
     return (
         <>
-            <SidebarSectionHeader>{t("commandCenter")}</SidebarSectionHeader>
+            {/* Overview utama */}
             <SidebarLink href="/admin" icon={LayoutDashboard} label={t("overview")} />
 
-            <SidebarSectionHeader>Operations</SidebarSectionHeader>
+            {/* 1. OPERASIONAL AGENSI */}
+            <SidebarSectionHeader>Agency Ops</SidebarSectionHeader>
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
-            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("orders")} />
-            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
-            <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
-
-            <SidebarSectionHeader>CRM & Team</SidebarSectionHeader>
             <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
             <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
             <SidebarLink href="/admin/squad" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
 
-            <SidebarSectionHeader>Growth</SidebarSectionHeader>
-            <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing" />
-            <SidebarLink href="/admin/marketing?tab=push" icon={Bell} label="Push Center" iconClass="text-brand-yellow" />
-            <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
+            {/* 2. KEUANGAN & TRANSAKSI */}
+            <SidebarSectionHeader>Finance & Billing</SidebarSectionHeader>
+            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label="Client Invoices" />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes & Estimates" />
+            <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
+            <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
 
-            <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
+            {/* 3. PENJUALAN DIGITAL & PEMASARAN */}
+            <SidebarSectionHeader>Marketing & Products</SidebarSectionHeader>
+            <SidebarLink href="/admin/marketing" icon={Megaphone} label="Marketing Suite" />
             <SidebarLink href="/admin/products" icon={Package} label="DigiProducts" />
             <SidebarLink href="/admin/digital-sales" icon={LayoutDashboard} label="Digital Sales" />
             <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
-            <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
-            <SidebarLink href="/admin/system/webhooks" icon={Globe} label="Webhook Simulator" />
             <SidebarLink href="/admin/portfolio" icon={Images} label="Portfolio Admin" />
+            <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
 
-            <SidebarSectionHeader>System</SidebarSectionHeader>
-            <SidebarLink href="/admin/media" icon={Images} label="Media" />
+            {/* 4. SISTEM & KONFIGURASI */}
+            <SidebarSectionHeader>System & Tools</SidebarSectionHeader>
+            <SidebarLink href="/admin/media" icon={Images} label="Media Library" />
+            <SidebarLink href="/admin/system/webhooks" icon={Globe} label="Webhook Simulator" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
         </>
     );
