@@ -2,39 +2,82 @@ import { prisma } from "@/lib/config/db";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Layers, Users, Zap, ArrowUpRight, ArrowRight } from "lucide-react";
+import { DollarSign, Layers, Users, Zap, ArrowUpRight, ArrowRight, Package } from "lucide-react";
 
-export async function SuperAdminDashboardView() {
-    // Fetch Stats Data in parallel without a transaction to prevent timeouts
-    const [revenueResult, activeProjects, pendingOrders, totalClientsResult] = await Promise.all([
-        prisma.estimate.aggregate({
-            where: { status: 'paid' },
-            _sum: { totalCost: true }
-        }),
-        prisma.project.count({
-            where: { status: { in: ['queue', 'dev'] } }
-        }),
-        prisma.estimate.count({
-            where: { status: 'pending_payment' }
-        }),
-        prisma.project.groupBy({
-            by: ['userId'],
-        })
-    ]);
+interface SuperAdminDashboardViewProps {
+    mode?: string;
+}
 
-    const stats = {
-        revenue: revenueResult._sum.totalCost || 0,
-        activeProjects,
-        pendingOrders,
-        totalClients: totalClientsResult.length
+export async function SuperAdminDashboardView({ mode = 'services' }: SuperAdminDashboardViewProps) {
+    const isDigital = mode === 'digital';
+
+    let stats = {
+        revenue: 0,
+        activeCount: 0,
+        pendingCount: 0,
+        totalClients: 0
     };
+
+    if (isDigital) {
+        // Ambil data untuk Produk Digital
+        const [revenueResult, activeCount, pendingCount, totalClientsResult] = await Promise.all([
+            prisma.digitalOrder.aggregate({
+                where: { status: 'PAID' },
+                _sum: { amount: true }
+            }),
+            prisma.product.count({
+                where: { isActive: true }
+            }),
+            prisma.digitalOrder.count({
+                where: { status: 'PENDING' }
+            }),
+            prisma.digitalOrder.groupBy({
+                by: ['userEmail'],
+            })
+        ]);
+
+        stats = {
+            revenue: revenueResult._sum.amount || 0,
+            activeCount,
+            pendingCount,
+            totalClients: totalClientsResult.length
+        };
+    } else {
+        // Ambil data Jasa Agensi (Services)
+        const [revenueResult, activeCount, pendingCount, totalClientsResult] = await Promise.all([
+            prisma.estimate.aggregate({
+                where: { status: 'paid' },
+                _sum: { totalCost: true }
+            }),
+            prisma.project.count({
+                where: { status: { in: ['queue', 'dev'] } }
+            }),
+            prisma.estimate.count({
+                where: { status: 'pending_payment' }
+            }),
+            prisma.project.groupBy({
+                by: ['userId'],
+            })
+        ]);
+
+        stats = {
+            revenue: revenueResult._sum.totalCost || 0,
+            activeCount,
+            pendingCount,
+            totalClients: totalClientsResult.length
+        };
+    }
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white">Command Center</h1>
-                    <p className="text-zinc-400 mt-1">Agency performance at a glance.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-white">
+                        {isDigital ? "Digital Store Console" : "Command Center"}
+                    </h1>
+                    <p className="text-zinc-400 mt-1">
+                        {isDigital ? "Digital products sales and license performance." : "Agency performance at a glance."}
+                    </p>
                 </div>
                 <Button className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto">
                     <Zap className="w-4 h-4 mr-2" />
@@ -62,23 +105,31 @@ export async function SuperAdminDashboardView() {
 
                 <Card className="bg-zinc-900/40 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-400">Active Projects</CardTitle>
-                        <Layers className="h-4 w-4 text-blue-500" />
+                        <CardTitle className="text-sm font-medium text-zinc-400">
+                            {isDigital ? "Active Products" : "Active Projects"}
+                        </CardTitle>
+                        {isDigital ? <Package className="h-4 w-4 text-blue-500" /> : <Layers className="h-4 w-4 text-blue-500" />}
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{stats.activeProjects}</div>
-                        <p className="text-xs text-zinc-500 mt-1">In Queue or Development</p>
+                        <div className="text-2xl font-bold text-white">{stats.activeCount}</div>
+                        <p className="text-xs text-zinc-500 mt-1">
+                            {isDigital ? "Active in store" : "In Queue or Development"}
+                        </p>
                     </CardContent>
                 </Card>
 
                 <Card className="bg-zinc-900/40 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-zinc-400">Unique Clients</CardTitle>
+                        <CardTitle className="text-sm font-medium text-zinc-400">
+                            {isDigital ? "Unique Customers" : "Unique Clients"}
+                        </CardTitle>
                         <Users className="h-4 w-4 text-purple-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-white">{stats.totalClients}</div>
-                        <p className="text-xs text-zinc-500 mt-1">With at least 1 project</p>
+                        <p className="text-xs text-zinc-500 mt-1">
+                            {isDigital ? "With at least 1 purchase" : "With at least 1 project"}
+                        </p>
                     </CardContent>
                 </Card>
 
@@ -88,7 +139,7 @@ export async function SuperAdminDashboardView() {
                         <Zap className="h-4 w-4 text-amber-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{stats.pendingOrders}</div>
+                        <div className="text-2xl font-bold text-white">{stats.pendingCount}</div>
                         <p className="text-xs text-amber-500 mt-1">Needs attention</p>
                     </CardContent>
                 </Card>
@@ -96,33 +147,59 @@ export async function SuperAdminDashboardView() {
 
             {/* Quick Navigation Hub */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
-                <Link href="/admin/pm/projects" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Projects</h3>
-                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        <p className="text-sm text-zinc-500">View detailed registry, assign squads, and update status.</p>
-                    </div>
-                </Link>
+                {isDigital ? (
+                    <>
+                        <Link href="/admin/products" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Products</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500">View and configure digital store files, pricing, and downloads.</p>
+                            </div>
+                        </Link>
 
-                <Link href="/admin/finance/orders" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Finance & Orders</h3>
-                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        <p className="text-sm text-zinc-500">Track invoices, verify manual payments, and check revenue.</p>
-                    </div>
-                </Link>
+                        <Link href="/admin/digital-sales" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Digital Sales</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500">Review digital purchases, licenses generated, and payment status.</p>
+                            </div>
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link href="/admin/pm/projects" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Projects</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500">View detailed registry, assign squads, and update status.</p>
+                            </div>
+                        </Link>
+
+                        <Link href="/admin/finance/orders" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Finance & Orders</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500">Track invoices, verify manual payments, and check revenue.</p>
+                            </div>
+                        </Link>
+                    </>
+                )}
 
                 <Link href="/admin/system/settings" className="group">
                     <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-white group-hover:text-purple-400 transition-colors">System Keys</h3>
+                            <h3 className="font-semibold text-white group-hover:text-purple-400 transition-colors">System Settings</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
                         </div>
-                        <p className="text-sm text-zinc-500">Manage LLM API keys and bank account details.</p>
+                        <p className="text-sm text-zinc-500">Configure global settings, integrations, and operational rules.</p>
                     </div>
                 </Link>
             </div>

@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { SuperAdminDashboardView } from "@/components/admin/views/super-admin-view";
 import { BillingDashboardView } from "@/components/admin/views/billing-view";
 import { ProjectDashboardView } from "@/components/admin/views/project-view";
-
+import { DashboardModeSwitcher } from "@/components/admin/dashboard-mode-switcher";
 
 interface PageProps {
-    searchParams: Promise<{ view?: string }>;
+    searchParams: Promise<{ view?: string; mode?: string }>;
 }
 
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
@@ -36,18 +36,24 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     // Await searchParams properly (Next.js 15 pattern, safe for older versions too)
     const params = await searchParams;
     const requestedView = params?.view;
+    const mode = params?.mode || 'services';
 
     // 1. Super Admin Logic (Can Switch)
     // If user has both permissions (or is super_admin), show switcher
     if (isProjectAdmin && isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
+                {requestedView !== 'project' && (
+                    <div className="flex justify-end pt-2">
+                        <DashboardModeSwitcher />
+                    </div>
+                )}
                 {requestedView === 'finance' ? (
-                    <BillingDashboardView />
+                    <BillingDashboardView mode={mode} />
                 ) : requestedView === 'project' ? (
                     <ProjectDashboardView />
                 ) : (
-                    <SuperAdminDashboardView />
+                    <SuperAdminDashboardView mode={mode} />
                 )}
             </div>
         );
@@ -56,7 +62,14 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     // 2. Billing Admin Only
     // Force finance view regardless of URL param
     if (isBillingAdmin) {
-        return <BillingDashboardView />;
+        return (
+            <div className="flex flex-col gap-4">
+                <div className="flex justify-end pt-2">
+                    <DashboardModeSwitcher />
+                </div>
+                <BillingDashboardView mode={mode} />
+            </div>
+        );
     }
 
     // 3. Project Admin Only

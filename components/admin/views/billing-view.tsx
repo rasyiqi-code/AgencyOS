@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Zap, ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
@@ -6,35 +5,47 @@ import { prisma } from "@/lib/config/db";
 import { getTranslations } from "next-intl/server";
 import { paymentService } from "@/lib/server/payment-service";
 
-export async function BillingDashboardView() {
+interface BillingDashboardViewProps {
+    mode?: string;
+}
+
+export async function BillingDashboardView({ mode = 'services' }: BillingDashboardViewProps) {
     const t = await getTranslations("Admin.Finance.Dashboard");
+    const isDigital = mode === 'digital';
     
-    // Fetch Finance Specific Stats
+    // Fetch Finance Specific Stats berdasarkan mode
     const stats = await prisma.$transaction(async (tx) => {
-        // Service Revenue
-        const serviceRevenue = await tx.estimate.aggregate({
-            where: { status: 'paid' },
-            _sum: { totalCost: true }
-        });
+        if (isDigital) {
+            // Digital Revenue
+            const digitalRevenue = await tx.digitalOrder.aggregate({
+                where: { status: 'PAID' },
+                _sum: { amount: true }
+            });
 
-        // Digital Revenue
-        const digitalRevenue = await tx.digitalOrder.aggregate({
-            where: { status: 'PAID' },
-            _sum: { amount: true }
-        });
+            const pendingDigital = await tx.digitalOrder.count({
+                where: { status: 'PENDING' }
+            });
 
-        const pendingOrders = await tx.estimate.count({
-            where: { status: 'pending_payment' }
-        });
+            return { 
+                revenue: digitalRevenue._sum.amount || 0, 
+                pendingOrders: pendingDigital 
+            };
+        } else {
+            // Service Revenue
+            const serviceRevenue = await tx.estimate.aggregate({
+                where: { status: 'paid' },
+                _sum: { totalCost: true }
+            });
 
-        const pendingDigital = await tx.digitalOrder.count({
-            where: { status: 'PENDING' }
-        });
+            const pendingOrders = await tx.estimate.count({
+                where: { status: 'pending_payment' }
+            });
 
-        return { 
-            revenue: (serviceRevenue._sum.totalCost || 0) + (digitalRevenue._sum.amount || 0), 
-            pendingOrders: pendingOrders + pendingDigital 
-        };
+            return { 
+                revenue: serviceRevenue._sum.totalCost || 0, 
+                pendingOrders
+            };
+        }
     });
 
     const { rate } = await paymentService.convertToIDR(1);
@@ -42,7 +53,9 @@ export async function BillingDashboardView() {
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-4">{t("title")}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-4">
+                {t("title")} {isDigital ? "(Produk Digital)" : "(Jasa Agensi)"}
+            </h1>
 
             <div className="grid gap-4 md:grid-cols-2">
                 <Card className="bg-zinc-900/40 border-white/5 relative overflow-hidden group">
@@ -85,35 +98,79 @@ export async function BillingDashboardView() {
             </div>
 
             <div className="grid gap-4 mt-6">
-                <Link href="/admin/finance/orders" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold text-white group-hover:text-emerald-400 transition-colors">{t("manageOrders")}</h3>
-                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        <p className="text-sm text-zinc-500 max-w-md">{t("manageOrdersDesc")}</p>
-                    </div>
-                </Link>
+                {isDigital ? (
+                    <>
+                        <Link href="/admin/finance/digital-orders" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-emerald-500 transition-colors">
+                                        {t("digitalOrders")}
+                                    </h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">{t("digitalOrdersDesc")}</p>
+                            </div>
+                        </Link>
 
-                <Link href="/admin/finance/digital-orders" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold text-white group-hover:text-emerald-500 transition-colors">{t("digitalOrders")}</h3>
-                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        <p className="text-sm text-zinc-500 max-w-md">{t("digitalOrdersDesc")}</p>
-                    </div>
-                </Link>
+                        <Link href="/admin/products" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-blue-500 transition-colors">
+                                        DigiProducts Catalog
+                                    </h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">Manage store files, prices, and settings.</p>
+                            </div>
+                        </Link>
 
-                <Link href="/admin/finance/quotes" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold text-white group-hover:text-brand-yellow transition-colors">{t("quotes")}</h3>
-                            <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        <p className="text-sm text-zinc-500 max-w-md">{t("quotesDesc")}</p>
-                    </div>
-                </Link>
+                        <Link href="/admin/licenses" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-purple-500 transition-colors">
+                                        License Registry
+                                    </h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">Track purchase activations and issues.</p>
+                            </div>
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link href="/admin/finance/orders" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-emerald-400 transition-colors">{t("manageOrders")}</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">{t("manageOrdersDesc")}</p>
+                            </div>
+                        </Link>
+
+                        <Link href="/admin/finance/quotes" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-brand-yellow transition-colors">{t("quotes")}</h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">{t("quotesDesc")}</p>
+                            </div>
+                        </Link>
+
+                        <Link href="/admin/finance/subscriptions" className="group">
+                            <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="font-bold text-white group-hover:text-purple-400 transition-colors">
+                                        Client Retainers & SLA
+                                    </h3>
+                                    <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <p className="text-sm text-zinc-500 max-w-md">Monitor recurring monthly retainers and active SLAs.</p>
+                            </div>
+                        </Link>
+                    </>
+                )}
             </div>
         </div>
     );
