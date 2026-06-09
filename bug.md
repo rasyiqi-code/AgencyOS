@@ -18,7 +18,7 @@
 
 ## 🔴 Critical
 
-### C1. `app/api/projects/route.ts:31` — Load Semua User dari Auth Provider
+### C1. `app/api/projects/route.ts:31` — [SELESAI] Load Semua User dari Auth Provider
 
 **Masalah:** `hexclaverServerApp.listUsers()` dipanggil tiap request, mengunduh **semua user** dari external auth provider. Untuk agency dengan ribuan user, ini 5-10MB+ JSON per request.
 
@@ -45,7 +45,7 @@ stackUsers = await Promise.all(
 
 ---
 
-### C2. `app/genkit/flows/support.ts:28-31` — Query DB Tanpa Cache Tiap Chat
+### C2. `app/genkit/flows/support.ts:28-31` — [SELESAI] Query DB Tanpa Cache Tiap Chat
 
 **Masalah:** Setiap pesan support chat trigger Prisma query ambil semua active services. Service jarang berubah (mungkin seminggu sekali), tapi query jalan tanpa cache.
 
@@ -62,7 +62,7 @@ const services = await prisma.service.findMany({
 
 ---
 
-### C3. `lib/integrations/midtrans.ts:53-88` + `creem.ts:76-95` — Singleton Credential Kedaluarsa
+### C3. `lib/integrations/midtrans.ts:53-88` + `creem.ts:76-95` — [SELESAI] Singleton Credential Kedaluarsa
 
 **Masalah:** Midtrans & Creem instance dibuat sekali (singleton). Saat admin update kredensial di panel, instance tetap pakai config lama sampai server restart.
 
@@ -86,7 +86,7 @@ export function resetMidtransInstances() { snapInstance = null; }
 
 ---
 
-### C4. `lib/server/marketing.ts` + `leads.ts` + `changelog.ts` — 7+ Fungsi Tanpa Pagination
+### C4. `lib/server/marketing.ts` + `leads.ts` + `changelog.ts` — [SELESAI] 7+ Fungsi Tanpa Pagination
 
 **Masalah:** Banyak fungsi `findMany()` tanpa `take` limit. Data akan bertambah terus seiring waktu.
 
@@ -108,7 +108,7 @@ export function resetMidtransInstances() { snapInstance = null; }
 
 ---
 
-### C5. `lib/integrations/storage.ts:100-106` — File Di-Load ke Memory 2x Sebelum Upload
+### C5. `lib/integrations/storage.ts:100-106` — [SELESAI] File Di-Load ke Memory 2x Before Upload
 
 **Masalah:** File diubah ke `ArrayBuffer` lalu dikonversi lagi ke `Buffer` — dua kopi di memory.
 
@@ -127,7 +127,7 @@ await client.send(new PutObjectCommand({ Body: buffer }));
 
 ---
 
-### C6. `prisma/schema.prisma` — 5 Model Tanpa Index
+### C6. `prisma/schema.prisma` — [SELESAI] 5 Model Tanpa Index
 
 **Masalah:** Model berikut tidak memiliki index sama sekali → full table scan tiap query.
 
@@ -143,7 +143,7 @@ await client.send(new PutObjectCommand({ Body: buffer }));
 
 ---
 
-### C7. `components/chat/interface.tsx:92-115` — Array Map Tiap Streaming Chunk
+### C7. `components/chat/interface.tsx:92-115` — [BELUM] Array Map Tiap Streaming Chunk
 
 **Masalah:** Streaming chat update `setMessages` dengan `prev.map(...)` tiap chunk. 100 chunks = 100 array baru + 100 re-render + scroll effect.
 
@@ -164,7 +164,7 @@ setMessages(prev => prev.map(m =>
 
 ## 🟠 High
 
-### H1. `components/landing/hero-content.tsx:346-471` — Animasi Infinite Framer Motion
+### H1. `components/landing/hero-content.tsx:346-471` — [BELUM] Animasi Infinite Framer Motion
 
 **Masalah:** SVG decorative path animation dengan `repeat: Infinity`. Jalan 60fps terus-menerus.
 
@@ -185,7 +185,7 @@ setMessages(prev => prev.map(m =>
 
 ---
 
-### H2. `components/landing/section-stats.tsx:176-203` — setInterval + AnimatePresence Rotasi SVG
+### H2. `components/landing/section-stats.tsx:176-203` — [BELUM] setInterval + AnimatePresence Rotasi SVG
 
 **Masalah:** `setInterval` 2 detik rotasi 17 SVG logo via `AnimatePresence`. Setiap rotasi create/destroy DOM node.
 
@@ -204,7 +204,7 @@ useEffect(() => {
 
 ---
 
-### H3. `lib/config/genkit-stream.ts:51-53` — setTimeout 100ms Sebelum Close Stream
+### H3. `lib/config/genkit-stream.ts:51-53` — [BELUM] setTimeout 100ms Sebelum Close Stream
 
 **Masalah:** Tiap stream response nunggu 100ms artificial delay sebelum `controller.close()`.
 
@@ -222,7 +222,7 @@ finally {
 
 ---
 
-### H4. `lib/config/genkit-stream.ts:18` — new TextEncoder() Tiap Chunk
+### H4. `lib/config/genkit-stream.ts:18` — [BELUM] new TextEncoder() Tiap Chunk
 
 **Masalah:** `TextEncoder` adalah stateless & reusable, tapi dibuat baru tiap chunk.
 
@@ -239,7 +239,7 @@ function enqueue(data) {
 
 ---
 
-### H5. `lib/store/sidebar-store.ts:12-23` — persist Write Tanpa Debounce
+### H5. `lib/store/sidebar-store.ts:12-23` — [BELUM] persist Write Tanpa Debounce
 
 **Masalah:** Zustand `persist` middleware write ke `localStorage` sinkron tiap toggle sidebar, tanpa debounce/throttle.
 
@@ -261,7 +261,7 @@ export const useSidebarStore = create<SidebarState>()(
 
 ---
 
-### H6. `lib/store/floating-chat-store.ts:17-20` — Function Refs Berubah Tiap State Change
+### H6. `lib/store/floating-chat-store.ts:17-20` — [BELUM] Function Refs Berubah Tiap State Change
 
 **Masalah:** Arrow functions didefinisikan inline di Zustand `create`. Tiap state change, seluruh store object (termasuk method) dibuat ulang → komponen yang subscribe dapat ref baru → break `React.memo`.
 
@@ -280,7 +280,7 @@ export const useFloatingChat = create<FloatingChatStore>((set) => ({
 
 ---
 
-### H7. `hooks/use-safe-user.ts:11-16` — Object Spread Tiap Render
+### H7. `hooks/use-safe-user.ts:11-16` — [BELUM] Object Spread Tiap Render
 
 **Masalah:** Spread seluruh user object + conditional create tiap render tanpa `useMemo`.
 
@@ -299,7 +299,7 @@ const mockUserFallback = user?.profileImageUrl === "" ? {
 
 ---
 
-### H8. `components/admin/marketing/promotions-manager.tsx:50-60` — Single Form State Full Re-render
+### H8. `components/admin/marketing/promotions-manager.tsx:50-60` — [BELUM] Single Form State Full Re-render
 
 **Masalah:** Tiap keystroke bikin object baru via spread → full form re-render (termasuk semua input, button, badge).
 
@@ -315,7 +315,7 @@ onChange={(e) => setFormData({ ...formData, title: e.target.value })}
 
 ---
 
-### H9. `lib/server/cloudflare-rendering.ts:80-93` — 3× Regex Pass Atas Full HTML String
+### H9. `lib/server/cloudflare-rendering.ts:80-93` — [BELUM] 3× Regex Pass Atas Full HTML String
 
 **Masalah:** Tiga regex pass terpisah scan seluruh HTML string yang bisa megabyte besar.
 
@@ -333,7 +333,7 @@ enhancedHtml = enhancedHtml.replace(/url\(['"]?([^'")]+...)/g, ...);
 
 ## 🟡 Medium
 
-### M1. Fungsi Reset Instance Tidak Pernah Dipanggil
+### M1. [SELESAI] Fungsi Reset Instance Tidak Pernah Dipanggil
 
 | File | Fungsi | Baris |
 |------|--------|-------|
@@ -344,7 +344,7 @@ enhancedHtml = enhancedHtml.replace(/url\(['"]?([^'")]+...)/g, ...);
 
 ---
 
-### M2. `app/genkit/ai.ts:13-75` — Double Caching
+### M2. `app/genkit/ai.ts:13-75` — [BELUM] Double Caching
 
 **Masalah:** `inFlightRequests` Map + `unstable_cache` dari Next.js melakukan hal yang sama. Map tidak pernah shrink dan redundant.
 
@@ -368,7 +368,7 @@ const request = (async () => {
 
 ---
 
-### M3. `app/genkit/flows/` — Duplicate Zod Schema di 3 Files
+### M3. `app/genkit/flows/` — [BELUM] Duplicate Zod Schema di 3 Files
 
 **Masalah:** Schema didefinisikan 2× (di `defineFlow` + `ai.generate`) untuk estimator, product-generator, service-generator.
 
@@ -381,7 +381,7 @@ output: { schema: z.object({ title: z.string(), ... }) }  // di ai.generate — 
 
 ---
 
-### M4. `app/genkit/flows/service-generator.ts:39-108` — Prompt + Schema Boros Token
+### M4. `app/genkit/flows/service-generator.ts:39-108` — [BELUM] Prompt + Schema Boros Token
 
 **Masalah:** Prompt ~1800 chars instruksi + schema 60+ line Zod dikirim tiap API call. Schema duplikat (lihat M3).
 
@@ -391,7 +391,7 @@ output: { schema: z.object({ title: z.string(), ... }) }  // di ai.generate — 
 
 ---
 
-### M5. `lib/server/pricing-service.ts:43-49` — 4× Upsert Query
+### M5. `lib/server/pricing-service.ts:43-49` — [BELUM] 4× Upsert Query
 
 **Masalah:** Saving pricing config menjalankan 4 upsert queries terpisah dalam transaction, padahal cukup 1 row dengan JSON value.
 
@@ -408,7 +408,7 @@ const ops = [
 
 ---
 
-### M6. `lib/server/affiliates.ts:5-37` — Memory Leak Potensial
+### M6. `lib/server/affiliates.ts:5-37` — [BELUM] Memory Leak Potensial
 
 **Masalah:** `inFlightAffiliateRequests` Map tidak punya TTL. Jika promise never resolves (DB hang), entry tetap di Map forever.
 
@@ -420,7 +420,7 @@ const inFlightAffiliateRequests = new Map<string, Promise<any>>();
 
 ---
 
-### M7. `app/api/admin/products/route.ts:73` — Push Broadcast dengan Empty Array
+### M7. `app/api/admin/products/route.ts:73` — [BELUM] Push Broadcast dengan Empty Array
 
 ```typescript
 await broadcastPushNotification([], {  // Empty array!
@@ -434,7 +434,7 @@ await broadcastPushNotification([], {  // Empty array!
 
 ---
 
-### M8. `app/api/marketing/track/route.ts:34-54` — Race Condition Duplicate Referral
+### M8. `app/api/marketing/track/route.ts:34-54` — [SELESAI] Race Condition Duplicate Referral
 
 **Masalah:** TOCTOU — dua request concurrent bisa lolos `findFirst` lalu `create` duplikat.
 
@@ -442,7 +442,7 @@ await broadcastPushNotification([], {  // Empty array!
 
 ---
 
-### M9. `lib/server/payment-service.ts:13-19` — Hardcoded Fallback Rate 15000 IDR/USD
+### M9. `lib/server/payment-service.ts:13-19` — [BELUM] Hardcoded Fallback Rate 15000 IDR/USD
 
 ```typescript
 const fallbackRate = 15000;
@@ -453,7 +453,7 @@ const fallbackRate = 15000;
 
 ---
 
-### M10. `lib/server/marketing.ts:150-159` — Ambil Coupon Termuda, Bukan Terbaik
+### M10. `lib/server/marketing.ts:150-159` — [BELUM] Ambil Coupon Termuda, Bukan Terbaik
 
 ```typescript
 return await prisma.coupon.findFirst({
@@ -466,7 +466,7 @@ return await prisma.coupon.findFirst({
 
 ---
 
-### M11. `lib/integrations/storage.ts:42-49` — Log Credential ke Console
+### M11. `lib/integrations/storage.ts:42-49` — [BELUM] Log Credential ke Console
 
 ```typescript
 console.log("[Storage] Initializing R2 Client", {
@@ -480,7 +480,7 @@ console.log("[Storage] Initializing R2 Client", {
 
 ---
 
-### M12. `components/providers/currency-provider.tsx:81-83` — Return null Sampai mounted
+### M12. `components/providers/currency-provider.tsx:81-83` — [BELUM] Return null Sampai mounted
 
 ```tsx
 if (!mounted) { return null; }
@@ -492,7 +492,7 @@ if (!mounted) { return null; }
 
 ## 🟢 Low
 
-### L1. `lib/utils/crypto.ts:18-25` — String Concatenation O(n²)
+### L1. `lib/utils/crypto.ts:18-25` — [BELUM] String Concatenation O(n²)
 
 ```typescript
 for (let i = 0; i < length; i++) {
@@ -504,19 +504,19 @@ for (let i = 0; i < length; i++) {
 
 ---
 
-### L2. `proxy.ts:60,87` — console.log di Middleware
+### L2. `proxy.ts:60,87` — [BELUM] console.log di Middleware
 
 Console.log di middleware yang jalan tiap request. I/O waste di production.
 
 ---
 
-### L3. `proxy.ts:62-68` — AbortController Timeout Leak
+### L3. `proxy.ts:62-68` — [BELUM] AbortController Timeout Leak
 
 Jika `fetch` throw synchronous, `clearTimeout` tidak pernah jalan → dangling timer.
 
 ---
 
-### L4. `app/genkit/flows/consultant.ts:82-84` — Loop `shift()` O(n²)
+### L4. `app/genkit/flows/consultant.ts:82-84` — [BELUM] Loop `shift()` O(n²)
 
 ```typescript
 while (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
@@ -526,7 +526,7 @@ while (historyMessages.length > 0 && historyMessages[0].role !== 'user') {
 
 ---
 
-### L5. `lib/config/db.ts:16-18` — parseInt Tanpa Validasi
+### L5. `lib/config/db.ts:16-18` — [BELUM] parseInt Tanpa Validasi
 
 ```typescript
 const poolMax = process.env.DATABASE_POOL_SIZE
@@ -538,7 +538,7 @@ Jika env var = `"0"` atau `"abc"`, pool size jadi 0 atau NaN → connection star
 
 ---
 
-### L6. `components/landing/typing-hero-title.tsx:49` — Nested setTimeout Tidak di-cleanup
+### L6. `components/landing/typing-hero-title.tsx:49` — [BELUM] Nested setTimeout Tidak di-cleanup
 
 ```typescript
 setTimeout(() => setIsDeleting(true), 1800); // Tidak ada cleanup
@@ -548,7 +548,7 @@ Orphan timer terus jalan meski component unmount.
 
 ---
 
-### L7. `components/admin/support/chat-console.tsx:38-44` — filter/find Tiap Render Tanpa useMemo
+### L7. `components/admin/support/chat-console.tsx:38-44` — [BELUM] filter/find Tiap Render Tanpa useMemo
 
 ```typescript
 const selectedTicket = tickets.find(t => t.id === selectedTicketId);
@@ -561,7 +561,7 @@ const filteredTickets = tickets.filter(t =>
 
 ## Database Index Issues
 
-### Missing Indexes pada `prisma/schema.prisma`
+### [SELESAI] Missing Indexes pada `prisma/schema.prisma`
 
 | Model | Missing Index | Query Pattern |
 |-------|--------------|---------------|
