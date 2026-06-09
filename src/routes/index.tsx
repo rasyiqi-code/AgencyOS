@@ -73,7 +73,7 @@ function Home() {
         }}
       />
       <SiteHeader />
-      <LandingHero />
+      <LandingHero agencyName={agencyName} />
 
       <Suspense fallback={null}>
         <ScrollAnimationWrapper>

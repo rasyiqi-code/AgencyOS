@@ -1,6 +1,6 @@
 import { WorkflowContent } from "@/components/landing/workflow-content";
 
-export async function Workflow() {
+export function Workflow() {
     return (
         <section id="workflow" className="py-16 bg-brand-yellow border-y border-black/5 relative overflow-hidden">
             {/* Pola background diagonal lines yang dinamis dengan mask yang lebih tajam */}
