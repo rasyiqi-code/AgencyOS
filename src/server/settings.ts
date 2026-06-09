@@ -40,3 +40,28 @@ export const getUser = createServerFn({ method: 'GET' })
       profileImageUrl: user.profileImageUrl || undefined,
     }
   })
+
+// Server function untuk memperbarui pengaturan sistem (upsert)
+export const updateSystemSettingFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ key: z.string(), value: z.string() }))
+  .handler(async ({ data }) => {
+    const { hexclaveServerApp } = await import('@/lib/config/hexclave')
+    const user = await hexclaveServerApp.getUser()
+    if (!user) throw new Error("Unauthorized")
+
+    const adminEmails = process.env.ADMIN_EMAILS?.split(',') || []
+    const superAdminId = process.env.SUPER_ADMIN_ID
+    if (!((user.primaryEmail && adminEmails.includes(user.primaryEmail)) || user.id === superAdminId)) {
+      throw new Error("Forbidden")
+    }
+
+    const { prisma } = await import('@/lib/config/db')
+    await prisma.systemSetting.upsert({
+      where: { key: data.key },
+      update: { value: String(data.value) },
+      create: { key: data.key, value: String(data.value) }
+    })
+
+    return { success: true }
+  })
+

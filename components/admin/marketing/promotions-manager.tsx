@@ -26,7 +26,8 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { getAdminPromotions, deletePromotionAction, updatePromotionAction, createPromotionAction } from "@/app/actions/marketing-admin";
+import { getAdminPromotionsFn as getAdminPromotions, deletePromotionFn as deletePromotionAction, updatePromotionFn as updatePromotionAction, createPromotionFn as createPromotionAction } from "@/src/server/marketing";
+
 
 interface Promotion {
     id: string;
@@ -47,10 +48,6 @@ export function PromotionsManager() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingPromo, setEditingPromo] = useState<Promotion | null>(null);
 
-    useEffect(() => {
-        fetchPromotions();
-    }, []);
-
     const fetchPromotions = async () => {
         try {
             const data = await getAdminPromotions();
@@ -65,6 +62,14 @@ export function PromotionsManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchPromotions();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
 
     const handleOpenDialog = (promo?: Promotion) => {
         if (promo) {

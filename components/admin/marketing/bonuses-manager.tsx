@@ -12,7 +12,8 @@ import {
     Flame, Globe, Infinity as InfinityIcon, Star, Crown, CheckCircle2, Award, 
     Heart, HelpCircle, BookOpen, Sparkles, Trophy, Lightbulb, Clock, Compass 
 } from "lucide-react";
-import { getBonusesAction, createBonusAction, deleteBonusAction, toggleBonusStatusAction } from "@/app/actions/marketing-admin";
+import { getBonusesFn as getBonusesAction, createBonusFn as createBonusAction, deleteBonusFn as deleteBonusAction, toggleBonusStatusFn as toggleBonusStatusAction } from "@/src/server/marketing";
+
 
 const IconMap: Record<string, React.ElementType> = {
     Plus, Trash2, Gift, Zap, Check, ShieldCheck, Layers, PlusCircle, Download, 
@@ -42,10 +43,6 @@ export function BonusesManager() {
         appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"],
     });
 
-    useEffect(() => {
-        loadBonuses();
-    }, []);
-
     const loadBonuses = async () => {
         try {
             const result = await getBonusesAction();
@@ -57,6 +54,13 @@ export function BonusesManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadBonuses();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleCreate = async () => {
         if (!newBonus.title) {

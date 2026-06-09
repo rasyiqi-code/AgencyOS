@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { getPushStatsAction, broadcastPushAction } from "@/app/actions/marketing-admin";
+import { getPushStatsFn as getPushStatsAction, broadcastPushFn as broadcastPushAction } from "@/src/server/marketing";
+
 
 export function PushManager() {
     const [isPending, setIsPending] = useState(false);
@@ -17,10 +18,6 @@ export function PushManager() {
     const [body, setBody] = useState("");
     const urlRef = useRef<HTMLInputElement>(null);
     const defaultUrl = typeof window !== 'undefined' ? window.location.origin : "https://crediblemark.com";
-
-    useEffect(() => {
-        fetchStats();
-    }, []);
 
     const fetchStats = async () => {
         try {
@@ -32,6 +29,16 @@ export function PushManager() {
             console.error("Failed to fetch notification stats");
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchStats();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
+
+
 
     const handleBroadcast = async (e: React.FormEvent) => {
         e.preventDefault();

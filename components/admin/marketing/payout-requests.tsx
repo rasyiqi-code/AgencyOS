@@ -5,7 +5,8 @@ import { Loader2, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
-import { getPayoutRequests, processPayout } from "@/app/actions/affiliates";
+import { getPayoutRequestsFn as getPayoutRequests, processPayoutFn as processPayout } from "@/src/server/affiliates";
+
 
 interface PayoutReq {
     id: string;
@@ -44,7 +45,10 @@ export function PayoutRequests() {
     }, []);
 
     useEffect(() => {
-        fetchRequests();
+        const timer = setTimeout(() => {
+            fetchRequests();
+        }, 0);
+        return () => clearTimeout(timer);
     }, [fetchRequests]);
 
     const handleAction = async (requestId: string, action: "approved" | "rejected") => {

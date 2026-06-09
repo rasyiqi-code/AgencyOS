@@ -33,9 +33,20 @@ import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonia
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminLicensesRouteImport } from './routes/admin.licenses'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
+import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
+import { Route as AdminMarketingSubscribersRouteImport } from './routes/admin.marketing.subscribers'
+import { Route as AdminMarketingPushRouteImport } from './routes/admin.marketing.push'
+import { Route as AdminMarketingPromotionsRouteImport } from './routes/admin.marketing.promotions'
+import { Route as AdminMarketingPopupsRouteImport } from './routes/admin.marketing.popups'
+import { Route as AdminMarketingPayoutsRouteImport } from './routes/admin.marketing.payouts'
+import { Route as AdminMarketingLeadsRouteImport } from './routes/admin.marketing.leads'
+import { Route as AdminMarketingCouponsRouteImport } from './routes/admin.marketing.coupons'
+import { Route as AdminMarketingBonusesRouteImport } from './routes/admin.marketing.bonuses'
+import { Route as AdminMarketingAssetsRouteImport } from './routes/admin.marketing.assets'
+import { Route as AdminMarketingAffiliatesRouteImport } from './routes/admin.marketing.affiliates'
 import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.finance.subscriptions'
 import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
 import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
@@ -163,6 +174,11 @@ const AdminPmIndexRoute = AdminPmIndexRouteImport.update({
   path: '/pm/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMarketingIndexRoute = AdminMarketingIndexRouteImport.update({
+  id: '/marketing/',
+  path: '/marketing/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
   id: '/system/currency',
   path: '/system/currency',
@@ -178,6 +194,59 @@ const AdminPmProjectsRoute = AdminPmProjectsRouteImport.update({
   path: '/pm/projects',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMarketingSubscribersRoute =
+  AdminMarketingSubscribersRouteImport.update({
+    id: '/marketing/subscribers',
+    path: '/marketing/subscribers',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminMarketingPushRoute = AdminMarketingPushRouteImport.update({
+  id: '/marketing/push',
+  path: '/marketing/push',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingPromotionsRoute =
+  AdminMarketingPromotionsRouteImport.update({
+    id: '/marketing/promotions',
+    path: '/marketing/promotions',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminMarketingPopupsRoute = AdminMarketingPopupsRouteImport.update({
+  id: '/marketing/popups',
+  path: '/marketing/popups',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingPayoutsRoute = AdminMarketingPayoutsRouteImport.update({
+  id: '/marketing/payouts',
+  path: '/marketing/payouts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingLeadsRoute = AdminMarketingLeadsRouteImport.update({
+  id: '/marketing/leads',
+  path: '/marketing/leads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingCouponsRoute = AdminMarketingCouponsRouteImport.update({
+  id: '/marketing/coupons',
+  path: '/marketing/coupons',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingBonusesRoute = AdminMarketingBonusesRouteImport.update({
+  id: '/marketing/bonuses',
+  path: '/marketing/bonuses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingAssetsRoute = AdminMarketingAssetsRouteImport.update({
+  id: '/marketing/assets',
+  path: '/marketing/assets',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMarketingAffiliatesRoute =
+  AdminMarketingAffiliatesRouteImport.update({
+    id: '/marketing/affiliates',
+    path: '/marketing/affiliates',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminFinanceSubscriptionsRoute =
   AdminFinanceSubscriptionsRouteImport.update({
     id: '/finance/subscriptions',
@@ -237,9 +306,20 @@ export interface FileRoutesByFullPath {
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
+  '/admin/marketing/affiliates': typeof AdminMarketingAffiliatesRoute
+  '/admin/marketing/assets': typeof AdminMarketingAssetsRoute
+  '/admin/marketing/bonuses': typeof AdminMarketingBonusesRoute
+  '/admin/marketing/coupons': typeof AdminMarketingCouponsRoute
+  '/admin/marketing/leads': typeof AdminMarketingLeadsRoute
+  '/admin/marketing/payouts': typeof AdminMarketingPayoutsRoute
+  '/admin/marketing/popups': typeof AdminMarketingPopupsRoute
+  '/admin/marketing/promotions': typeof AdminMarketingPromotionsRoute
+  '/admin/marketing/push': typeof AdminMarketingPushRoute
+  '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
@@ -267,9 +347,20 @@ export interface FileRoutesByTo {
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
+  '/admin/marketing/affiliates': typeof AdminMarketingAffiliatesRoute
+  '/admin/marketing/assets': typeof AdminMarketingAssetsRoute
+  '/admin/marketing/bonuses': typeof AdminMarketingBonusesRoute
+  '/admin/marketing/coupons': typeof AdminMarketingCouponsRoute
+  '/admin/marketing/leads': typeof AdminMarketingLeadsRoute
+  '/admin/marketing/payouts': typeof AdminMarketingPayoutsRoute
+  '/admin/marketing/popups': typeof AdminMarketingPopupsRoute
+  '/admin/marketing/promotions': typeof AdminMarketingPromotionsRoute
+  '/admin/marketing/push': typeof AdminMarketingPushRoute
+  '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
@@ -303,9 +394,20 @@ export interface FileRoutesById {
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
+  '/admin/marketing/affiliates': typeof AdminMarketingAffiliatesRoute
+  '/admin/marketing/assets': typeof AdminMarketingAssetsRoute
+  '/admin/marketing/bonuses': typeof AdminMarketingBonusesRoute
+  '/admin/marketing/coupons': typeof AdminMarketingCouponsRoute
+  '/admin/marketing/leads': typeof AdminMarketingLeadsRoute
+  '/admin/marketing/payouts': typeof AdminMarketingPayoutsRoute
+  '/admin/marketing/popups': typeof AdminMarketingPopupsRoute
+  '/admin/marketing/promotions': typeof AdminMarketingPromotionsRoute
+  '/admin/marketing/push': typeof AdminMarketingPushRoute
+  '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
@@ -340,9 +442,20 @@ export interface FileRouteTypes {
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
+    | '/admin/marketing/affiliates'
+    | '/admin/marketing/assets'
+    | '/admin/marketing/bonuses'
+    | '/admin/marketing/coupons'
+    | '/admin/marketing/leads'
+    | '/admin/marketing/payouts'
+    | '/admin/marketing/popups'
+    | '/admin/marketing/promotions'
+    | '/admin/marketing/push'
+    | '/admin/marketing/subscribers'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
@@ -370,9 +483,20 @@ export interface FileRouteTypes {
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
+    | '/admin/marketing/affiliates'
+    | '/admin/marketing/assets'
+    | '/admin/marketing/bonuses'
+    | '/admin/marketing/coupons'
+    | '/admin/marketing/leads'
+    | '/admin/marketing/payouts'
+    | '/admin/marketing/popups'
+    | '/admin/marketing/promotions'
+    | '/admin/marketing/push'
+    | '/admin/marketing/subscribers'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/marketing'
     | '/admin/pm'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
@@ -405,9 +529,20 @@ export interface FileRouteTypes {
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
+    | '/admin/marketing/affiliates'
+    | '/admin/marketing/assets'
+    | '/admin/marketing/bonuses'
+    | '/admin/marketing/coupons'
+    | '/admin/marketing/leads'
+    | '/admin/marketing/payouts'
+    | '/admin/marketing/popups'
+    | '/admin/marketing/promotions'
+    | '/admin/marketing/push'
+    | '/admin/marketing/subscribers'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
@@ -595,6 +730,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPmIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/marketing/': {
+      id: '/admin/marketing/'
+      path: '/marketing'
+      fullPath: '/admin/marketing/'
+      preLoaderRoute: typeof AdminMarketingIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/system/currency': {
       id: '/admin/system/currency'
       path: '/system/currency'
@@ -614,6 +756,76 @@ declare module '@tanstack/react-router' {
       path: '/pm/projects'
       fullPath: '/admin/pm/projects'
       preLoaderRoute: typeof AdminPmProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/subscribers': {
+      id: '/admin/marketing/subscribers'
+      path: '/marketing/subscribers'
+      fullPath: '/admin/marketing/subscribers'
+      preLoaderRoute: typeof AdminMarketingSubscribersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/push': {
+      id: '/admin/marketing/push'
+      path: '/marketing/push'
+      fullPath: '/admin/marketing/push'
+      preLoaderRoute: typeof AdminMarketingPushRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/promotions': {
+      id: '/admin/marketing/promotions'
+      path: '/marketing/promotions'
+      fullPath: '/admin/marketing/promotions'
+      preLoaderRoute: typeof AdminMarketingPromotionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/popups': {
+      id: '/admin/marketing/popups'
+      path: '/marketing/popups'
+      fullPath: '/admin/marketing/popups'
+      preLoaderRoute: typeof AdminMarketingPopupsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/payouts': {
+      id: '/admin/marketing/payouts'
+      path: '/marketing/payouts'
+      fullPath: '/admin/marketing/payouts'
+      preLoaderRoute: typeof AdminMarketingPayoutsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/leads': {
+      id: '/admin/marketing/leads'
+      path: '/marketing/leads'
+      fullPath: '/admin/marketing/leads'
+      preLoaderRoute: typeof AdminMarketingLeadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/coupons': {
+      id: '/admin/marketing/coupons'
+      path: '/marketing/coupons'
+      fullPath: '/admin/marketing/coupons'
+      preLoaderRoute: typeof AdminMarketingCouponsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/bonuses': {
+      id: '/admin/marketing/bonuses'
+      path: '/marketing/bonuses'
+      fullPath: '/admin/marketing/bonuses'
+      preLoaderRoute: typeof AdminMarketingBonusesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/assets': {
+      id: '/admin/marketing/assets'
+      path: '/marketing/assets'
+      fullPath: '/admin/marketing/assets'
+      preLoaderRoute: typeof AdminMarketingAssetsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/marketing/affiliates': {
+      id: '/admin/marketing/affiliates'
+      path: '/marketing/affiliates'
+      fullPath: '/admin/marketing/affiliates'
+      preLoaderRoute: typeof AdminMarketingAffiliatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/finance/subscriptions': {
@@ -695,9 +907,20 @@ interface AdminRouteChildren {
   AdminFinanceOrdersRoute: typeof AdminFinanceOrdersRoute
   AdminFinanceQuotesRoute: typeof AdminFinanceQuotesRoute
   AdminFinanceSubscriptionsRoute: typeof AdminFinanceSubscriptionsRoute
+  AdminMarketingAffiliatesRoute: typeof AdminMarketingAffiliatesRoute
+  AdminMarketingAssetsRoute: typeof AdminMarketingAssetsRoute
+  AdminMarketingBonusesRoute: typeof AdminMarketingBonusesRoute
+  AdminMarketingCouponsRoute: typeof AdminMarketingCouponsRoute
+  AdminMarketingLeadsRoute: typeof AdminMarketingLeadsRoute
+  AdminMarketingPayoutsRoute: typeof AdminMarketingPayoutsRoute
+  AdminMarketingPopupsRoute: typeof AdminMarketingPopupsRoute
+  AdminMarketingPromotionsRoute: typeof AdminMarketingPromotionsRoute
+  AdminMarketingPushRoute: typeof AdminMarketingPushRoute
+  AdminMarketingSubscribersRoute: typeof AdminMarketingSubscribersRoute
   AdminPmProjectsRoute: typeof AdminPmProjectsRouteWithChildren
   AdminPmServicesRoute: typeof AdminPmServicesRouteWithChildren
   AdminSystemCurrencyRoute: typeof AdminSystemCurrencyRoute
+  AdminMarketingIndexRoute: typeof AdminMarketingIndexRoute
   AdminPmIndexRoute: typeof AdminPmIndexRoute
 }
 
@@ -709,9 +932,20 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFinanceOrdersRoute: AdminFinanceOrdersRoute,
   AdminFinanceQuotesRoute: AdminFinanceQuotesRoute,
   AdminFinanceSubscriptionsRoute: AdminFinanceSubscriptionsRoute,
+  AdminMarketingAffiliatesRoute: AdminMarketingAffiliatesRoute,
+  AdminMarketingAssetsRoute: AdminMarketingAssetsRoute,
+  AdminMarketingBonusesRoute: AdminMarketingBonusesRoute,
+  AdminMarketingCouponsRoute: AdminMarketingCouponsRoute,
+  AdminMarketingLeadsRoute: AdminMarketingLeadsRoute,
+  AdminMarketingPayoutsRoute: AdminMarketingPayoutsRoute,
+  AdminMarketingPopupsRoute: AdminMarketingPopupsRoute,
+  AdminMarketingPromotionsRoute: AdminMarketingPromotionsRoute,
+  AdminMarketingPushRoute: AdminMarketingPushRoute,
+  AdminMarketingSubscribersRoute: AdminMarketingSubscribersRoute,
   AdminPmProjectsRoute: AdminPmProjectsRouteWithChildren,
   AdminPmServicesRoute: AdminPmServicesRouteWithChildren,
   AdminSystemCurrencyRoute: AdminSystemCurrencyRoute,
+  AdminMarketingIndexRoute: AdminMarketingIndexRoute,
   AdminPmIndexRoute: AdminPmIndexRoute,
 }
 

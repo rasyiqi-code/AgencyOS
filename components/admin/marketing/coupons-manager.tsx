@@ -10,7 +10,8 @@ import { format } from "date-fns";
 import { Trash2, Plus, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
-import { getCouponsAction, createCouponAction, deleteCouponAction } from "@/app/actions/marketing-admin";
+import { getCouponsFn as getCouponsAction, createCouponFn as createCouponAction, deleteCouponFn as deleteCouponAction } from "@/src/server/marketing";
+
 
 interface Coupon {
     id: string;
@@ -37,10 +38,6 @@ export function CouponsManager() {
         appliesTo: ["DIGITAL", "SERVICE", "CALCULATOR"],
     });
 
-    useEffect(() => {
-        loadCoupons();
-    }, []);
-
     const loadCoupons = async () => {
         try {
             const result = await getCouponsAction();
@@ -52,6 +49,13 @@ export function CouponsManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadCoupons();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleCreate = async () => {
         if (!newCoupon.code || !newCoupon.discountValue) {

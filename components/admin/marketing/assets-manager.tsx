@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
 import Image from "next/image";
-import { getAdminAssets, createAsset, updateAsset, deleteAsset } from "@/app/actions/marketing-admin";
+import { getAdminAssetsFn as getAdminAssets, createAssetFn as createAsset, updateAssetFn as updateAsset, deleteAssetFn as deleteAsset } from "@/src/server/marketing";
 import { uploadAssetAction } from "@/app/actions/marketing-admin";
 // We should check how manual payment uploads. It uses a route handler.
 // We need an upload route for this. Or reuse /api/billing/proof if generic enough? 
@@ -70,7 +70,10 @@ export function AssetsManager() {
     }, []);
 
     useEffect(() => {
-        fetchAssets();
+        const timer = setTimeout(() => {
+            fetchAssets();
+        }, 0);
+        return () => clearTimeout(timer);
     }, [fetchAssets]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

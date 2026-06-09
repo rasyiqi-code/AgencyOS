@@ -29,7 +29,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { getPopUpsAction, createPopUpAction, updatePopUpAction, deletePopUpAction, togglePopUpStatusAction } from "@/app/actions/marketing-admin";
+import { getPopUpsFn as getPopUpsAction, createPopUpFn as createPopUpAction, updatePopUpFn as updatePopUpAction, deletePopUpFn as deletePopUpAction, togglePopUpStatusFn as togglePopUpStatusAction } from "@/src/server/marketing";
+
 
 interface PopUp {
     id: string;
@@ -60,10 +61,6 @@ export function PopUpsManager() {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [isMultiLang, setIsMultiLang] = useState(false);
 
-    useEffect(() => {
-        loadPopUps();
-    }, []);
-
     const loadPopUps = async () => {
         try {
             const result = await getPopUpsAction();
@@ -75,6 +72,14 @@ export function PopUpsManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadPopUps();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

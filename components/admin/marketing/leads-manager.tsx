@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { getLeadsAction, deleteLeadAction } from "@/app/actions/marketing-admin";
+import { getLeadsFn as getLeadsAction, deleteLeadFn as deleteLeadAction } from "@/src/server/marketing";
+
 
 interface Lead {
     id: string;
@@ -39,10 +40,6 @@ export function LeadsManager() {
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-    useEffect(() => {
-        loadLeads();
-    }, []);
-
     const loadLeads = async () => {
         try {
             const result = await getLeadsAction();
@@ -54,6 +51,13 @@ export function LeadsManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadLeads();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus lead ini?")) return;

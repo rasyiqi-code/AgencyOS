@@ -6,8 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/shared/utils";
-import { updateSystemSetting } from "@/app/actions/system-admin";
-import { getAffiliates, updateAffiliate } from "@/app/actions/affiliates";
+import { updateSystemSettingFn as updateSystemSetting } from "@/src/server/settings";
+import { getAffiliatesFn as getAffiliates, updateAffiliateFn as updateAffiliate } from "@/src/server/affiliates";
+
+
+
 
 interface Affiliate {
     id: string;
@@ -64,7 +67,10 @@ export function AffiliateManager() {
     }, []);
 
     useEffect(() => {
-        fetchData();
+        const timer = setTimeout(() => {
+            fetchData();
+        }, 0);
+        return () => clearTimeout(timer);
     }, [fetchData]);
 
     /** Mulai edit inline */

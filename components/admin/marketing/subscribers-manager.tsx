@@ -7,7 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { format } from "date-fns";
 import { Trash2, Search, Mail, User } from "lucide-react";
 import { toast } from "sonner";
-import { getSubscribersAction, deleteSubscriberAction } from "@/app/actions/marketing-admin";
+import { getSubscribersFn as getSubscribersAction, deleteSubscriberFn as deleteSubscriberAction } from "@/src/server/marketing";
+
 
 interface Subscriber {
     id: string;
@@ -21,10 +22,6 @@ export function SubscribersManager() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
 
-    useEffect(() => {
-        loadSubscribers();
-    }, []);
-
     const loadSubscribers = async () => {
         try {
             const result = await getSubscribersAction();
@@ -36,6 +33,16 @@ export function SubscribersManager() {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            loadSubscribers();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
+
+
 
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) return;
