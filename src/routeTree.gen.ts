@@ -30,10 +30,15 @@ import { Route as DashboardSupportRouteImport } from './routes/dashboard.support
 import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-products'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
+import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminLicensesRouteImport } from './routes/admin.licenses'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
+import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.finance.subscriptions'
+import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
+import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
@@ -143,6 +148,16 @@ const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
   path: '/testimonials',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLicensesRoute = AdminLicensesRouteImport.update({
+  id: '/licenses',
+  path: '/licenses',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPmIndexRoute = AdminPmIndexRouteImport.update({
   id: '/pm/',
   path: '/pm/',
@@ -161,6 +176,22 @@ const AdminPmServicesRoute = AdminPmServicesRouteImport.update({
 const AdminPmProjectsRoute = AdminPmProjectsRouteImport.update({
   id: '/pm/projects',
   path: '/pm/projects',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFinanceSubscriptionsRoute =
+  AdminFinanceSubscriptionsRouteImport.update({
+    id: '/finance/subscriptions',
+    path: '/finance/subscriptions',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminFinanceQuotesRoute = AdminFinanceQuotesRouteImport.update({
+  id: '/finance/quotes',
+  path: '/finance/quotes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFinanceOrdersRoute = AdminFinanceOrdersRouteImport.update({
+  id: '/finance/orders',
+  path: '/finance/orders',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPmServicesNewRoute = AdminPmServicesNewRouteImport.update({
@@ -186,6 +217,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
+  '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -201,6 +234,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
+  '/admin/finance/orders': typeof AdminFinanceOrdersRoute
+  '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
+  '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
@@ -211,6 +247,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -226,6 +264,9 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/squad': typeof SquadIndexRoute
   '/support': typeof SupportIndexRoute
+  '/admin/finance/orders': typeof AdminFinanceOrdersRoute
+  '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
+  '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
@@ -242,6 +283,8 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
+  '/admin/licenses': typeof AdminLicensesRoute
+  '/admin/products': typeof AdminProductsRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -257,6 +300,9 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
+  '/admin/finance/orders': typeof AdminFinanceOrdersRoute
+  '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
+  '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
@@ -274,6 +320,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/squad'
     | '/support'
+    | '/admin/licenses'
+    | '/admin/products'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -289,6 +337,9 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/squad/'
     | '/support/'
+    | '/admin/finance/orders'
+    | '/admin/finance/quotes'
+    | '/admin/finance/subscriptions'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
@@ -299,6 +350,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/licenses'
+    | '/admin/products'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -314,6 +367,9 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/squad'
     | '/support'
+    | '/admin/finance/orders'
+    | '/admin/finance/quotes'
+    | '/admin/finance/subscriptions'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
@@ -329,6 +385,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/squad'
     | '/support'
+    | '/admin/licenses'
+    | '/admin/products'
     | '/admin/testimonials'
     | '/affiliate/join'
     | '/dashboard/my-products'
@@ -344,6 +402,9 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/squad/'
     | '/support/'
+    | '/admin/finance/orders'
+    | '/admin/finance/quotes'
+    | '/admin/finance/subscriptions'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
@@ -513,6 +574,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestimonialsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/licenses': {
+      id: '/admin/licenses'
+      path: '/licenses'
+      fullPath: '/admin/licenses'
+      preLoaderRoute: typeof AdminLicensesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pm/': {
       id: '/admin/pm/'
       path: '/pm'
@@ -539,6 +614,27 @@ declare module '@tanstack/react-router' {
       path: '/pm/projects'
       fullPath: '/admin/pm/projects'
       preLoaderRoute: typeof AdminPmProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/finance/subscriptions': {
+      id: '/admin/finance/subscriptions'
+      path: '/finance/subscriptions'
+      fullPath: '/admin/finance/subscriptions'
+      preLoaderRoute: typeof AdminFinanceSubscriptionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/finance/quotes': {
+      id: '/admin/finance/quotes'
+      path: '/finance/quotes'
+      fullPath: '/admin/finance/quotes'
+      preLoaderRoute: typeof AdminFinanceQuotesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/finance/orders': {
+      id: '/admin/finance/orders'
+      path: '/finance/orders'
+      fullPath: '/admin/finance/orders'
+      preLoaderRoute: typeof AdminFinanceOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/pm/services/new': {
@@ -592,8 +688,13 @@ const AdminPmServicesRouteWithChildren = AdminPmServicesRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminLicensesRoute: typeof AdminLicensesRoute
+  AdminProductsRoute: typeof AdminProductsRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminFinanceOrdersRoute: typeof AdminFinanceOrdersRoute
+  AdminFinanceQuotesRoute: typeof AdminFinanceQuotesRoute
+  AdminFinanceSubscriptionsRoute: typeof AdminFinanceSubscriptionsRoute
   AdminPmProjectsRoute: typeof AdminPmProjectsRouteWithChildren
   AdminPmServicesRoute: typeof AdminPmServicesRouteWithChildren
   AdminSystemCurrencyRoute: typeof AdminSystemCurrencyRoute
@@ -601,8 +702,13 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminLicensesRoute: AdminLicensesRoute,
+  AdminProductsRoute: AdminProductsRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminFinanceOrdersRoute: AdminFinanceOrdersRoute,
+  AdminFinanceQuotesRoute: AdminFinanceQuotesRoute,
+  AdminFinanceSubscriptionsRoute: AdminFinanceSubscriptionsRoute,
   AdminPmProjectsRoute: AdminPmProjectsRouteWithChildren,
   AdminPmServicesRoute: AdminPmServicesRouteWithChildren,
   AdminSystemCurrencyRoute: AdminSystemCurrencyRoute,

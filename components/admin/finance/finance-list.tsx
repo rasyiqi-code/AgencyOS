@@ -16,7 +16,6 @@ import {
     XCircle,
     FileText
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -366,11 +365,11 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                         </span>
 
                         <div className="flex items-center gap-2 mt-2">
-                            <Link href={`/id/invoices/${data.id}`} target="_blank">
+                            <a href={`/id/invoices/${data.id}`} target="_blank" rel="noreferrer">
                                 <Button variant="outline" size="icon" className="h-9 w-9 border-zinc-800 bg-zinc-900 hover:bg-zinc-800 hover:text-brand-yellow text-zinc-400" title="Open Invoice">
                                     <FileText className="w-4 h-4" />
                                 </Button>
-                            </Link>
+                            </a>
                             {isPending && !isSettledDP && (
                                 <div className="flex items-center">
                                     <span className="text-xs text-amber-500 italic mr-2">{t("waitingConfirmation")}</span>

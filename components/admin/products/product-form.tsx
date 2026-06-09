@@ -17,12 +17,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { Loader2, Plus, Languages, Sparkles, Pencil } from "lucide-react";
 import { ProductImageUpload } from "./product-image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { createDigitalProduct, updateDigitalProduct } from "@/app/actions/digital-products";
+import { createDigitalProductFn, updateDigitalProductFn } from "@/src/server/products";
 
 const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -147,18 +147,18 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
         try {
             let result;
             if (product) {
-                result = await updateDigitalProduct(product.id, data);
+                result = await updateDigitalProductFn({ data: { id: product.id, body: data } });
             } else {
-                result = await createDigitalProduct(data);
+                result = await createDigitalProductFn({ data });
             }
 
             if (!result.success) {
-                throw new Error(result.error || "Failed to save product");
+                throw new Error("Failed to save product");
             }
 
             toast.success(product ? "Product updated" : "Product created");
             setOpen(false);
-            router.refresh();
+            router.invalidate();
             onSuccess?.();
             if (!product) form.reset();
         } catch (error) {

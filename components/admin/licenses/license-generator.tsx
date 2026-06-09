@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { Loader2, Plus } from "lucide-react";
-import { createManualLicense } from "@/app/actions/affiliates";
+import { createManualLicenseFn } from "@/src/server/products";
 
 interface LicenseGeneratorProps {
     products: Product[];
@@ -39,17 +39,19 @@ export function LicenseGenerator({ products }: LicenseGeneratorProps) {
         setLoading(true);
 
         try {
-            const result = await createManualLicense({
-                productId,
-                maxActivations: Number(maxActivations),
-                expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+            const result = await createManualLicenseFn({
+                data: {
+                    productId,
+                    maxActivations: Number(maxActivations),
+                    expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+                }
             });
 
             if (!result.success) throw new Error("Failed");
 
             setGeneratedKey((result.data as { key: string }).key);
             toast.success("Lisensi berhasil dibuat");
-            router.refresh();
+            router.invalidate();
         } catch {
             toast.error("Gagal membuat lisensi");
         } finally {

@@ -12,13 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductForm } from "./product-form";
 import { Pencil, Trash2, Key, ExternalLink, Package } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import Image from "next/image";
 import { Product } from "@prisma/client";
 import { cn } from "@/lib/shared/utils";
 
-import { deleteDigitalProduct } from "@/app/actions/digital-products";
+import { deleteDigitalProductFn } from "@/src/server/products";
 
 type ProductWithCount = Product & { _count?: { licenses: number } };
 
@@ -39,14 +39,14 @@ export function ProductList({ products }: ProductListProps) {
         if (!confirm("Yakin ingin menghapus produk ini? Aksi ini tidak bisa dibatalkan.")) return;
 
         try {
-            const result = await deleteDigitalProduct(id);
+            const result = await deleteDigitalProductFn({ data: id });
 
             if (!result.success) {
-                throw new Error(result.error || "Failed to delete product");
+                throw new Error("Failed to delete product");
             }
 
             toast.success("Produk berhasil dihapus");
-            router.refresh();
+            router.invalidate();
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Gagal menghapus produk");
         }

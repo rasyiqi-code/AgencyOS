@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react";
 import { Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteQuote } from "@/app/actions/quotes";
+import { deleteQuoteFn } from "@/src/server/finance";
+import { useRouter } from "@tanstack/react-router";
 
 interface DeleteQuoteButtonProps {
     /** ID estimate yang akan dihapus */
@@ -21,6 +22,7 @@ interface DeleteQuoteButtonProps {
 export function DeleteQuoteButton({ estimateId, userId, size = "sm" }: DeleteQuoteButtonProps) {
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const handleDelete = () => {
         // Konfirmasi sebelum hapus
@@ -29,9 +31,13 @@ export function DeleteQuoteButton({ estimateId, userId, size = "sm" }: DeleteQuo
 
         setError(null);
         startTransition(async () => {
-            const result = await deleteQuote(estimateId, userId);
-            if (result.error) {
-                setError(result.error);
+            try {
+                const result = await deleteQuoteFn({ data: { estimateId, userId } });
+                if (result.success) {
+                    router.invalidate();
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Gagal menghapus");
             }
         });
     };

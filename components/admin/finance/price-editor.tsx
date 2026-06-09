@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Edit2, Check, X, Loader2 } from "lucide-react";
-import { setQuotePrice } from "@/app/actions/quotes";
+import { updateQuotePriceFn } from "@/src/server/finance";
+import { useRouter } from "@tanstack/react-router";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
 interface PriceEditorProps {
@@ -16,6 +17,7 @@ interface PriceEditorProps {
 
 export function PriceEditor({ estimateId, projectId, initialPrice, currency = 'IDR' }: PriceEditorProps) {
     const { currency: contextCurrency, rate } = useCurrency();
+    const router = useRouter();
     const [isEditing, setIsEditing] = useState(false);
     const [price, setPrice] = useState(initialPrice);
     const [tempPrice, setTempPrice] = useState(initialPrice);
@@ -31,24 +33,32 @@ export function PriceEditor({ estimateId, projectId, initialPrice, currency = 'I
         if (isNaN(tempPrice) || tempPrice <= 0) return;
 
         setIsLoading(true);
-        const formData = new FormData();
-        formData.append("estimateId", estimateId);
-        formData.append("projectId", projectId || "");
-        formData.append("newPrice", tempPrice.toString());
-        formData.append("contextCurrency", contextCurrency);
-        formData.append("activeRate", rate.toString());
-
-        const result = await setQuotePrice(formData);
-        if (result?.success) {
-            const newBasePrice = (contextCurrency === 'USD' && currency === 'IDR') ? tempPrice * rate :
-                (contextCurrency === 'IDR' && currency === 'USD') ? tempPrice / rate :
-                    tempPrice;
-            setPrice(newBasePrice);
-            setIsEditing(false);
-        } else {
-            alert(result?.error || "Gagal memperbarui harga");
+        try {
+            const result = await updateQuotePriceFn({
+                data: {
+                    estimateId,
+                    projectId,
+                    newPrice: tempPrice,
+                    contextCurrency,
+                    activeRate: rate
+                }
+            });
+            if (result?.success) {
+                const newBasePrice = (contextCurrency === 'USD' && currency === 'IDR') ? tempPrice * rate :
+                    (contextCurrency === 'IDR' && currency === 'USD') ? tempPrice / rate :
+                        tempPrice;
+                setPrice(newBasePrice);
+                setIsEditing(false);
+                router.invalidate();
+            } else {
+                alert("Gagal memperbarui harga");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Gagal memperbarui harga");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     if (!isEditing) {

@@ -88,7 +88,7 @@ export function DailyLogFeed({ projectId, initialLogs, canPost = false }: DailyL
                 if (!result.success) throw new Error("Gagal memposting");
                 toast.success('Pembaruan harian berhasil diposting');
                 router.invalidate();
-            } catch (_err) {
+            } catch {
                 toast.error('Gagal memposting pembaruan');
             }
         });

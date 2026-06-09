@@ -4,10 +4,12 @@ import { useState } from "react";
 import { UserSelector } from "./user-selector";
 import { ServiceSelector } from "./service-selector";
 import { Button } from "@/components/ui/button";
-import { createManualQuote } from "@/app/actions/quotes";
+import { createManualQuoteFn } from "@/src/server/finance";
 import type { Service } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCurrency } from "@/components/providers/currency-provider";
+import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 interface UserAccount {
     id: string;
@@ -32,14 +34,46 @@ interface QuoteGeneratorFormProps {
 export function QuoteGeneratorForm({ services, availableUsers, translations }: QuoteGeneratorFormProps) {
     const [selectedUserId, setSelectedUserId] = useState("");
     const { currency: contextCurrency, rate } = useCurrency();
+    const router = useRouter();
 
     const isOffline = selectedUserId === 'OFFLINE';
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const serviceId = formData.get("serviceId") as string;
+        const amount = parseFloat(formData.get("amount") as string);
+        const clientName = (formData.get("clientName") as string) || "";
+        const clientEmail = (formData.get("clientEmail") as string) || "";
+
+        if (!serviceId || !selectedUserId || isNaN(amount)) {
+            toast.error("Harap isi semua kolom wajib");
+            return;
+        }
+
+        try {
+            await createManualQuoteFn({
+                data: {
+                    serviceId,
+                    userId: selectedUserId,
+                    clientName: isOffline ? clientName : "",
+                    clientEmail: isOffline ? clientEmail : "",
+                    amount,
+                    contextCurrency,
+                    activeRate: rate
+                }
+            });
+            toast.success("Quote berhasil dibuat");
+            router.invalidate();
+        } catch (err) {
+            console.error(err);
+            toast.error("Gagal membuat quote");
+        }
+    };
+
     return (
         <form
-            action={async (formData) => {
-                await createManualQuote(formData);
-            }}
+            onSubmit={handleSubmit}
             className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 sm:items-end w-full"
         >
             <input type="hidden" name="contextCurrency" value={contextCurrency} />

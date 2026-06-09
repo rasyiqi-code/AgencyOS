@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Copy, Key, Trash2, Box } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/shared/utils";
 import {
@@ -55,15 +55,15 @@ export function LicenseList({ licenses }: LicenseListProps) {
         if (!confirm("Yakin ingin menghapus lisensi ini?")) return;
 
         try {
-            const { deleteLicense } = await import("@/app/actions/licenses");
-            const res = await deleteLicense(id);
+            const { deleteLicenseFn } = await import("@/src/server/products");
+            const res = await deleteLicenseFn({ data: id });
 
             if (!res.success) {
-                throw new Error(res.error || "Gagal menghapus lisensi");
+                throw new Error("Gagal menghapus lisensi");
             }
 
             toast.success("Lisensi berhasil dihapus");
-            router.refresh();
+            router.invalidate();
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Gagal menghapus lisensi");
         }
