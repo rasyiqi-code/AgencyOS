@@ -67,7 +67,6 @@ export function SidebarSuperAdmin() {
             <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
             <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
             <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
-            <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
             <SidebarLink href="/admin/squad" icon={Code} label="Squad Network" iconClass="text-brand-yellow" />
             <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
 
@@ -90,6 +89,7 @@ export function SidebarSuperAdmin() {
             {/* 4. SISTEM & KONFIGURASI */}
             <SidebarSectionHeader>System & Tools</SidebarSectionHeader>
             <SidebarLink href="/admin/media" icon={Images} label="Media Library" />
+            <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
             <SidebarLink href="/admin/system/webhooks" icon={Globe} label="Webhook Simulator" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
         </>
