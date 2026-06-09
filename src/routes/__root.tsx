@@ -63,7 +63,9 @@ function RootComponent() {
 
   return (
     <RootDocument i18n={i18n}>
-      <Outlet />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outlet />
+      </Suspense>
     </RootDocument>
   )
 }

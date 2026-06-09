@@ -1,16 +1,21 @@
 import { HexclaveServerApp, HexclaveClientApp } from "@hexclave/tanstack-start";
 import { unstable_cache } from "../cache";
 
-// Inisialisasi untuk sisi browser/client
+// Client app — runs in the browser; no secret key exposed
 export const hexclaveClientApp = new HexclaveClientApp({
     projectId: import.meta.env.VITE_HEXCLAVE_PROJECT_ID || import.meta.env.VITE_STACK_PROJECT_ID || process.env.HEXCLAVE_PROJECT_ID,
     tokenStore: "cookie",
     redirectMethod: "window",
+    urls: {
+        default: {
+            type: "hosted",
+        },
+    },
 });
 
-// Inisialisasi untuk sisi server (server functions) secara aman agar tidak crash di browser
+// Server app — only instantiated server-side to protect the secret key
 export const hexclaveServerApp = typeof window === "undefined"
-    ? new HexclaveServerApp({ tokenStore: "cookie" })
+    ? new HexclaveServerApp({ inheritsFrom: hexclaveClientApp })
     : {} as HexclaveServerApp;
 
 // Cache list user selama 5 menit untuk mencegah bottleneck download massal user auth provider eksternal
