@@ -58,7 +58,7 @@ export function AssetsManager() {
 
     const fetchAssets = useCallback(async () => {
         try {
-            const res = await fetch("/api/admin/marketing/assets");
+            const res = await fetch("/api/marketing/assets?scope=admin");
             if (res.ok) {
                 const data = await res.json();
                 setAssets(data);
@@ -128,7 +128,7 @@ export function AssetsManager() {
                 imageUrl: imageUrl || undefined
             };
 
-            const url = editingAsset ? `/api/admin/marketing/assets/${editingAsset.id}` : "/api/admin/marketing/assets";
+            const url = editingAsset ? `/api/marketing/assets/${editingAsset.id}` : "/api/marketing/assets";
             const method = editingAsset ? "PATCH" : "POST";
 
             const res = await fetch(url, {
@@ -171,7 +171,7 @@ export function AssetsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus aset ini?")) return;
         try {
-            await fetch(`/api/admin/marketing/assets/${id}`, { method: "DELETE" });
+            await fetch(`/api/marketing/assets/${id}`, { method: "DELETE" });
             toast.success("Aset berhasil dihapus");
             fetchAssets();
         } catch {

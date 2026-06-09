@@ -1,4 +1,3 @@
-
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
@@ -7,14 +6,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     try {
         const { id } = await params;
         const user = await hexclaveServerApp.getUser();
-        if (!user) return new NextResponse("Unauthorized", { status: 401 });
+        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         // Admin check
         const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
         const superAdminId = process.env.SUPER_ADMIN_ID;
         const isSuperAdmin = (user.primaryEmail && adminEmails.includes(user.primaryEmail)) || user.id === superAdminId;
 
-        if (!isSuperAdmin) return new NextResponse("Forbidden", { status: 403 });
+        if (!isSuperAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
         const body = await req.json();
         const { title, content, imageUrl, category, isActive, metadata } = body;
@@ -34,7 +33,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         return NextResponse.json(asset);
     } catch (error) {
         console.error("Update Marketing Asset Error:", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
 
@@ -42,14 +41,14 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     try {
         const { id } = await params;
         const user = await hexclaveServerApp.getUser();
-        if (!user) return new NextResponse("Unauthorized", { status: 401 });
+        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         // Admin check
         const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
         const superAdminId = process.env.SUPER_ADMIN_ID;
         const isSuperAdmin = (user.primaryEmail && adminEmails.includes(user.primaryEmail)) || user.id === superAdminId;
 
-        if (!isSuperAdmin) return new NextResponse("Forbidden", { status: 403 });
+        if (!isSuperAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
         await prisma.marketingAsset.delete({
             where: { id }
@@ -58,6 +57,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         return new NextResponse(null, { status: 204 });
     } catch (error) {
         console.error("Delete Marketing Asset Error:", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

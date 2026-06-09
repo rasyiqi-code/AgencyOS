@@ -101,18 +101,17 @@ export function FloatingChatWidget() {
                         },
                     ]);
                 }
+                if (data.contact) {
+                    setContactSettings({
+                        phone: data.contact.phone?.replace(/\D/g, '') || "6285183131249",
+                        telegram: data.contact.telegram?.replace('@', '') || "crediblemark"
+                    });
+                }
             })
-            .catch(() => setAiAvailable(false));
-
-        fetch("/api/system/contact")
-            .then(res => res.json())
-            .then(data => {
-                setContactSettings({
-                    phone: data.phone?.replace(/\D/g, '') || "6285183131249",
-                    telegram: data.telegram?.replace('@', '') || "crediblemark"
-                });
-            })
-            .catch(e => console.error("Failed to fetch contact settings", e));
+            .catch(e => {
+                setAiAvailable(false);
+                console.error("Failed to fetch chat settings", e);
+            });
     }, []);
 
     // Notification State

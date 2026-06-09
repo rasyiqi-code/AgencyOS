@@ -41,7 +41,7 @@ export default function MarketingKitPage() {
         }).catch(err => console.error(err));
 
         // Fetch assets
-        fetch("/api/marketing/assets").then(res => {
+        fetch("/api/marketing/assets?scope=user").then(res => {
             if (res.ok) return res.json();
             return [];
         }).then(data => setAssets(data))

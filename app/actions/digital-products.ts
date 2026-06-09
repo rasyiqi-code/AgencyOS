@@ -10,13 +10,17 @@ const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with dashes"),
     description: z.string().optional(),
+    name_id: z.string().optional(),
+    description_id: z.string().optional(),
     price: z.number().min(0, "Price must be positive"),
-    type: z.string().default("plugin"), // plugin, template
+    type: z.enum(["plugin", "template", "saas"]),
     purchaseType: z.enum(["one_time", "subscription"]).default("one_time"),
     interval: z.string().optional(), // month, year
     isActive: z.boolean().default(true),
     image: z.string().optional(),
     fileUrl: z.string().optional(),
+    currency: z.enum(["USD", "IDR"]).default("USD"),
+    externalWebhookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
 });
 
 export type DigitalProductFormValues = z.infer<typeof productSchema>;
@@ -35,9 +39,32 @@ export async function createDigitalProduct(data: DigitalProductFormValues) {
         const product = await prisma.product.create({
             data: {
                 ...validated,
-                type: validated.type,
+                price: Number(validated.price) || 0,
             }
         });
+
+        // Trigger Push Notification for new product
+        try {
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+            const subscriptions = await prisma.pushSubscription.findMany();
+            if (subscriptions.length > 0) {
+                const pushSubs = subscriptions.map((s) => ({
+                    endpoint: s.endpoint,
+                    keys: {
+                        p256dh: s.p256dh,
+                        auth: s.auth
+                    }
+                }));
+                const { broadcastPushNotification } = await import("@/lib/server/push");
+                await broadcastPushNotification(pushSubs, {
+                    title: "Produk Baru Rilis! 🔥",
+                    body: `${validated.name} kini tersedia di AgencyOS. Cek detail dan fiturnya sekarang!`,
+                    url: `${appUrl}/products/${validated.slug}`,
+                });
+            }
+        } catch (err: unknown) {
+            console.error("Auto Push Product Error in Server Action:", err);
+        }
 
         revalidatePath('/admin/products');
         revalidatePath('/products');

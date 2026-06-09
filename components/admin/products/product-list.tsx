@@ -18,6 +18,8 @@ import Image from "next/image";
 import { Product } from "@prisma/client";
 import { cn } from "@/lib/shared/utils";
 
+import { deleteDigitalProduct } from "@/app/actions/digital-products";
+
 type ProductWithCount = Product & { _count?: { licenses: number } };
 
 /**
@@ -37,13 +39,9 @@ export function ProductList({ products }: ProductListProps) {
         if (!confirm("Yakin ingin menghapus produk ini? Aksi ini tidak bisa dibatalkan.")) return;
 
         try {
-            const res = await fetch(`/api/admin/products/${id}`, {
-                method: "DELETE",
-            });
+            const result = await deleteDigitalProduct(id);
 
-            const result = await res.json();
-
-            if (!res.ok) {
+            if (!result.success) {
                 throw new Error(result.error || "Failed to delete product");
             }
 

@@ -22,6 +22,8 @@ import { Loader2, Plus, Languages, Sparkles, Pencil } from "lucide-react";
 import { ProductImageUpload } from "./product-image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { createDigitalProduct, updateDigitalProduct } from "@/app/actions/digital-products";
+
 const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with dashes"),
@@ -143,18 +145,14 @@ export function ProductForm({ product, onSuccess, trigger }: ProductFormProps) {
     const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
         setLoading(true);
         try {
-            const url = product ? `/api/admin/products/${product.id}` : "/api/admin/products";
-            const method = product ? "PATCH" : "POST";
+            let result;
+            if (product) {
+                result = await updateDigitalProduct(product.id, data);
+            } else {
+                result = await createDigitalProduct(data);
+            }
 
-            const res = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-
-            const result = await res.json();
-
-            if (!res.ok) {
+            if (!result.success) {
                 throw new Error(result.error || "Failed to save product");
             }
 

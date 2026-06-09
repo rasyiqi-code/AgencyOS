@@ -67,32 +67,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
         amountToPay = Math.max(0, total - paid);
     }
 
-    const handleApplyCoupon = async () => {
-        if (!couponInput) return;
-        setIsValidating(true);
-        try {
-            const response = await fetch('/api/marketing/coupon/validate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: couponInput, context: context })
-            });
-
-            const result = await response.json();
-
-            if (result.valid) {
-                onApplyCoupon((result.coupon as Coupon) || null);
-                toast.success(t("couponApplied"));
-            } else {
-                toast.error(result.message || t("invalidCoupon"));
-                onApplyCoupon(null);
-            }
-        } catch {
-            toast.error(t("validateError"));
-        } finally {
-            setIsValidating(false);
-        }
-    };
-
     const handleCheckout = async () => {
         setIsProcessing(true);
         try {
@@ -102,7 +76,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                     estimateId: estimate.id,
                     amount: amountToPay, // Calculated based on type
                     title: estimate.title,
-                    appliedCoupon: appliedCoupon?.code,
+                    appliedCoupon: couponInput, // Kirim langsung coupon input dari state
                     paymentType: paymentType,
                     currency: currency,
                     selectedAddons: selectedAddons
@@ -248,37 +222,8 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                                     onChange={(e) => setCouponInput(e.target.value)}
                                     placeholder={t("enterCode")}
                                     className="h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs"
-                                    disabled={!!appliedCoupon}
                                 />
-                                {appliedCoupon ? (
-                                    <Button
-                                        variant="secondary"
-                                        size="sm"
-                                        className="bg-white/5 hover:bg-white/10 text-white h-10 px-4 text-xs"
-                                        onClick={() => {
-                                            setCouponInput("");
-                                            onApplyCoupon(null);
-                                        }}
-                                    >
-                                        {t("change")}
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        size="sm"
-                                        className="bg-brand-yellow text-black hover:bg-brand-yellow/80 h-10 px-4 font-bold text-xs"
-                                        onClick={handleApplyCoupon}
-                                        disabled={isValidating || !couponInput}
-                                    >
-                                        {isValidating ? <Loader2 className="w-4 h-4 animate-spin" /> : t("apply")}
-                                    </Button>
-                                )}
                             </div>
-                            {appliedCoupon && (
-                                <div className="mt-2 text-[10px] text-emerald-400 flex items-center gap-1.5 animate-in fade-in slide-in-from-top-1">
-                                    <Check className="w-3 h-3" />
-                                    {t("applied")}: {appliedCoupon.code}
-                                </div>
-                            )}
                         </div>
                     )}
 
@@ -287,14 +232,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                             <span className="text-zinc-400 text-sm font-medium">
                                 {t("totalToPay")}
                             </span>
-                            {appliedCoupon && (
-                                <div className="flex justify-between text-sm text-emerald-400 mb-1">
-                                    <span>{t("discount")} ({appliedCoupon.code})</span>
-                                    <span>
-                                        - <PriceDisplay amount={estimate.totalCost - amount} baseCurrency={baseCurrency} />
-                                    </span>
-                                </div>
-                            )}
                             <span className="text-3xl font-bold text-white tracking-tight">
                                 <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
                             </span>
@@ -303,11 +240,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                                     <span>{t("totalProjectValue")}:</span>
                                     <span><PriceDisplay amount={amount} baseCurrency={baseCurrency} /></span>
                                 </div>
-                            )}
-                            {appliedCoupon && paymentType === "FULL" && (
-                                <span className="text-xs text-zinc-500 line-through">
-                                    <PriceDisplay amount={estimate.totalCost} baseCurrency={baseCurrency} />
-                                </span>
                             )}
                         </div>
 

@@ -21,7 +21,7 @@
     currentScript.parentNode.insertBefore(container, currentScript);
 
     // Fetch Asset Data from Public API
-    fetch(baseUrl + '/api/public/marketing/assets')
+    fetch(baseUrl + '/api/marketing/assets?scope=public')
         .then(res => res.json())
         .then(assets => {
             var asset = assets.find(a => a.id === assetId);

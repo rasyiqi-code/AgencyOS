@@ -27,7 +27,7 @@ export function PreviewUploader({ projectId, currentPreviewUrl }: PreviewUploade
 
         try {
             // 1. Upload file to General Storage API (Uses R2)
-            const uploadRes = await fetch("/api/storage", {
+            const uploadRes = await fetch("/api/storage/media", {
                 method: "POST",
                 body: formData,
             });
