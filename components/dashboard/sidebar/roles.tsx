@@ -91,6 +91,7 @@ export function SidebarSuperAdmin() {
                     {/* KEUANGAN & TRANSAKSI DIGITAL */}
                     <SidebarSectionHeader>Finance & Billing (Digital)</SidebarSectionHeader>
                     <SidebarLink href="/admin/finance/digital-orders?mode=digital" icon={ShoppingCart} label="Digital Orders" />
+                    <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
 
                     {/* CAMPAIGNS & PROMOTIONS */}
                     <SidebarSectionHeader>Campaigns & Promos</SidebarSectionHeader>
@@ -117,7 +118,6 @@ export function SidebarSuperAdmin() {
                     {/* DIGITAL PRODUCTS */}
                     <SidebarSectionHeader>Digital Products</SidebarSectionHeader>
                     <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
-                    <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
                     <SidebarLink href="/admin/licenses?mode=digital" icon={Key} label="Licenses" />
                     <SidebarLink href="/admin/portfolio?mode=digital" icon={Images} label="Portfolio Admin" />
                     <SidebarLink href="/admin/testimonials?mode=digital" icon={MessageSquare} label="Testimonials" />
