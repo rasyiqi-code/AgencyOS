@@ -5,6 +5,7 @@ import {
   createRootRoute,
   HeadContent,
   Scripts,
+  useLocation,
 } from '@tanstack/react-router'
 import { QueryProvider } from '@/components/providers/query-provider'
 import { CurrencyProvider } from '@/components/providers/currency-provider'
@@ -52,14 +53,17 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const { pathname } = useLocation()
   const [i18n, setI18n] = useState<{ locale: string; messages: Messages }>({
     locale: 'en',
     messages: enMessages,
   })
 
   useEffect(() => {
-    getLocaleMessages().then(setI18n)
-  }, [])
+    const pathSegments = pathname.split('/')
+    const pathLocale = pathSegments[1] === 'id' ? 'id' : 'en'
+    getLocaleMessages({ data: pathLocale }).then(setI18n)
+  }, [pathname])
 
   return (
     <RootDocument i18n={i18n}>
