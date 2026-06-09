@@ -579,9 +579,9 @@ const filteredTickets = tickets.filter(t =>
 
 ---
 
-## 🔴 Round 2 — TINGGI (Belum Diperbaiki)
+## 🔴 Round 2 — TINGGI (SELESAI)
 
-### R2-C1. `listUsers()` Masih Dipanggil di 8+ Lokasi
+### R2-C1. [SELESAI] `listUsers()` Masih Dipanggil di 8+ Lokasi
 
 **Masalah:** bug.md C1 hanya fix `projects/route.ts`. Tapi `hexclaverServerApp.listUsers()` masih dipanggil di banyak tempat lain.
 
@@ -602,7 +602,7 @@ const filteredTickets = tickets.filter(t =>
 
 ---
 
-### R2-C2. `handler/[...hexclave]/page.tsx:7-8` — Console.log Ekspos Token Auth
+### R2-C2. [SELESAI] `handler/[...hexclave]/page.tsx:7-8` — Console.log Ekspos Token Auth
 
 ```typescript
 console.log("HANDLER PARAMS:", params);
@@ -617,7 +617,7 @@ console.log("HANDLER SEARCH PARAMS:", searchParams);
 
 ---
 
-### R2-C3. `checkout/route.ts:313-315` — Error Response Ekspos Detail Internal
+### R2-C3. [SELESAI] `checkout/route.ts:313-315` — Error Response Ekspos Detail Internal
 
 ```typescript
 return NextResponse.json({
@@ -635,7 +635,7 @@ return NextResponse.json({
 
 ---
 
-### R2-C4. `api/admin/licenses/route.ts:18` — Pagination Hilang
+### R2-C4. [SELESAI] `api/admin/licenses/route.ts:18` — Pagination Hilang
 
 ```typescript
 return await prisma.license.findMany({
@@ -651,7 +651,7 @@ return await prisma.license.findMany({
 
 ---
 
-### R2-C5. `prisma/schema.prisma` — Model `Service`, `Product`, `Coupon` Masih Tanpa Index
+### R2-C5. [SELESAI] `prisma/schema.prisma` — Model `Service`, `Product`, `Coupon` Masih Tanpa Index
 
 | Model | Index Diperlukan | Query Pattern |
 |-------|-----------------|---------------|
@@ -666,7 +666,7 @@ return await prisma.license.findMany({
 
 ---
 
-### R2-C6. `lib/server/popups.ts:6-29` — PopUp Queries Tanpa `take` Limit
+### R2-C6. [SELESAI] `lib/server/popups.ts:6-29` — PopUp Queries Tanpa `take` Limit
 
 ```typescript
 export async function getPopUps() {
@@ -685,7 +685,7 @@ export async function getActivePopUps() {
 
 ---
 
-### R2-C7. Banyak Endpoint Publik Kurang `Cache-Control` Headers
+### R2-C7. [SELESAI] Banyak Endpoint Publik Kurang `Cache-Control` Headers
 
 | Endpoint | Data |
 |----------|------|
@@ -703,7 +703,7 @@ export async function getActivePopUps() {
 
 ## 🟠 Round 2 — SEDANG
 
-### R2-M1. `import * as LucideIcons` di 3 File — Tree-Shaking Mati
+### R2-M1. [SELESAI] `import * as LucideIcons` di 3 File — Tree-Shaking Mati
 
 | File | Baris |
 |------|-------|
@@ -719,7 +719,7 @@ export async function getActivePopUps() {
 
 ---
 
-### R2-M2. ReactMarkdown Tidak Lazy-Loaded
+### R2-M2. [SELESAI] ReactMarkdown Tidak Lazy-Loaded
 
 | Lokasi | Baris |
 |--------|-------|
@@ -736,7 +736,7 @@ const ReactMarkdown = dynamic(() => import('react-markdown'));
 
 ---
 
-### R2-M3. `push-manager.tsx` — Single Form State Spread Tiap Keystroke
+### R2-M3. [DI-SKIP] `push-manager.tsx` — Single Form State Spread Tiap Keystroke
 
 **Lokasi:** `components/admin/marketing/push-manager.tsx:15-18,94,105,116`
 
@@ -744,11 +744,11 @@ const ReactMarkdown = dynamic(() => import('react-markdown'));
 
 **Dampak:** ~10 subtree reconciliation/detik saat mengetik.
 
-**Fix:** Copy pola dari `PromotionDialog` — ganti ke `useRef` + `defaultValue`.
+**Fix:** Copy pola dari `PromotionDialog` — ganti ke `useRef` + `defaultValue`. (Di-skip karena fungsionalitas visual live preview membutuhkan state re-render secara langsung).
 
 ---
 
-### R2-M4. `service-worker-registrar.tsx:69-74` — setInterval Tidak di-cleanup
+### R2-M4. [SELESAI] `service-worker-registrar.tsx:69-74` — setInterval Tidak di-cleanup
 
 ```typescript
 setInterval(() => {
@@ -762,7 +762,7 @@ setInterval(() => {
 
 ---
 
-### R2-M5. `key={index}` di 5 Komponen
+### R2-M5. [SELESAI] `key={index}` di 5 Komponen
 
 | Lokasi | Baris |
 |--------|-------|
@@ -780,7 +780,7 @@ setInterval(() => {
 
 ---
 
-### R2-M6. 3 API Routes Lagi Tanpa Pagination
+### R2-M6. [SELESAI] 3 API Routes Lagi Tanpa Pagination
 
 | Lokasi | Baris | Tabel |
 |--------|-------|-------|
@@ -792,7 +792,7 @@ setInterval(() => {
 
 ---
 
-### R2-M7. Dockerfile — `bun install --production` di Runner Stage Tidak Perlu
+### R2-M7. [SELESAI] Dockerfile — `bun install --production` di Runner Stage Tidak Perlu
 
 **Lokasi:** `Dockerfile:68-73`
 
@@ -802,7 +802,7 @@ setInterval(() => {
 
 ---
 
-### R2-M8. `next.config.ts:49-52` — Wildcard `*.r2.dev` Terlalu Luas
+### R2-M8. [SELESAI] `next.config.ts:49-52` — Wildcard `*.r2.dev` Terlalu Luas
 
 ```typescript
 {
@@ -820,7 +820,7 @@ setInterval(() => {
 
 ## 🟢 Round 2 — RENDAH
 
-### R2-L1. `lib/server/push.ts:74-75` — Double `.filter()` Iterasi
+### R2-L1. [SELESAI] `lib/server/push.ts:74-75` — Double `.filter()` Iterasi
 
 ```typescript
 const successful = results.filter((r) => r.success).length;
@@ -831,7 +831,7 @@ const expired = results.filter((r) => r.expired).length;
 
 ---
 
-### R2-L2. `console.log` di Server Files
+### R2-L2. [SELESAI] `console.log` di Server Files
 
 | File | Baris | Isi |
 |------|-------|-----|
@@ -844,7 +844,7 @@ const expired = results.filter((r) => r.expired).length;
 
 ---
 
-### R2-L3. `console.log` di Client Components
+### R2-L3. [SELESAI] `console.log` di Client Components
 
 | File | Baris | Isi |
 |------|-------|-----|
@@ -855,7 +855,7 @@ const expired = results.filter((r) => r.expired).length;
 
 ---
 
-### R2-L4. `package.json` — Dependency `"sheet": "^0.2.0"` Tidak Dipakai
+### R2-L4. [SELESAI] `package.json` — Dependency `"sheet": "^0.2.0"` Tidak Dipakai
 
 Semua import Sheet dari `@/components/ui/sheet` yang pakai `@radix-ui/react-dialog`, bukan package `sheet`.
 
@@ -863,7 +863,7 @@ Semua import Sheet dari `@/components/ui/sheet` yang pakai `@radix-ui/react-dial
 
 ---
 
-### R2-L5. `next.config.ts:25` — `lodash` di `optimizePackageImports` Tapi Tidak Ada
+### R2-L5. [SELESAI] `next.config.ts:25` — `lodash` di `optimizePackageImports` Tapi Tidak Ada
 
 `lodash` tidak ada di dependencies, tapi tercantum di `optimizePackageImports`. Tidak error, tapi config inconsistent.
 
@@ -871,7 +871,7 @@ Semua import Sheet dari `@/components/ui/sheet` yang pakai `@radix-ui/react-dial
 
 ---
 
-### R2-L6. `app/api/marketing/assets/route.ts` — Auth Check Kurang Strict
+### R2-L6. [SELESAI] `app/api/marketing/assets/route.ts` — Auth Check Kurang Strict
 
 Endpoint cek user login aja, tidak cek role affiliate/admin.
 
