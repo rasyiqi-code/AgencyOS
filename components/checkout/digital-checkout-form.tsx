@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,10 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Tag, Check } from "lucide-react";
+import { Loader2, Tag, Check, XCircle } from "lucide-react";
 import "@/types/payment"; // Window.snap type augmentation
 import { useTranslations } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
+import { validateCouponAction } from "@/app/actions/coupons";
 
 interface Product {
     id: string;
@@ -41,6 +42,8 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
     const [loading, setLoading] = useState(false);
     const [couponInput, setCouponInput] = useState("");
     const [isValidating, setIsValidating] = useState(false);
+    const [couponStatus, setCouponStatus] = useState<"idle" | "valid" | "invalid">("idle");
+    const couponTimer = useRef<ReturnType<typeof setTimeout>>(null);
     const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
     const router = useRouter();
 
@@ -53,6 +56,35 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
             }
         }
     }, []);
+
+    const handleValidateCoupon = (code: string) => {
+        setCouponInput(code);
+        setCouponStatus("idle");
+        if (couponTimer.current) clearTimeout(couponTimer.current);
+
+        if (!code.trim()) {
+            onApplyCoupon(null);
+            return;
+        }
+
+        couponTimer.current = setTimeout(async () => {
+            setIsValidating(true);
+            try {
+                const result = await validateCouponAction(code, "DIGITAL");
+                if (result.valid && result.coupon) {
+                    setCouponStatus("valid");
+                    onApplyCoupon(result.coupon);
+                } else {
+                    setCouponStatus("invalid");
+                    onApplyCoupon(null);
+                }
+            } catch {
+                setCouponStatus("invalid");
+            } finally {
+                setIsValidating(false);
+            }
+        }, 500);
+    };
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(z.object({
@@ -147,14 +179,30 @@ export function CheckoutForm({ product, userId, userEmail, appliedCoupon, onAppl
                         <div className="flex items-center gap-2 mb-3 text-white">
                             <Tag className="w-3.5 h-3.5 text-brand-yellow" />
                             <span className="font-medium text-[10px] uppercase tracking-wider text-zinc-400">{t("haveCoupon")}</span>
+                            {appliedCoupon && (
+                                <span className="text-[10px] text-emerald-500 font-bold ml-auto flex items-center gap-1">
+                                    <Check className="w-3 h-3" /> -{appliedCoupon.discountType === 'percentage' ? `${appliedCoupon.discountValue}%` : <PriceDisplay amount={appliedCoupon.discountValue} />}
+                                </span>
+                            )}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="relative">
                             <Input
                                 value={couponInput}
-                                onChange={(e) => setCouponInput(e.target.value)}
+                                onChange={(e) => handleValidateCoupon(e.target.value)}
                                 placeholder={t("enterCode")}
-                                className="h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs"
+                                className={`h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs pr-10 ${
+                                    couponStatus === "valid" ? "border-emerald-500/50" : couponStatus === "invalid" ? "border-red-500/50" : ""
+                                }`}
                             />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                {isValidating ? (
+                                    <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
+                                ) : couponStatus === "valid" ? (
+                                    <Check className="w-4 h-4 text-emerald-500" />
+                                ) : couponStatus === "invalid" ? (
+                                    <XCircle className="w-4 h-4 text-red-500" />
+                                ) : null}
+                            </div>
                         </div>
                     </div>
 
