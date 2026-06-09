@@ -58,7 +58,7 @@ export function PushManager() {
                 body,
                 url: urlRef.current?.value || defaultUrl,
             };
-            const result = await broadcastPushAction(payload);
+            const result = await broadcastPushAction({ data: payload });
 
             if (result.success && result.data && 'successful' in result.data) {
                 const d = result.data;

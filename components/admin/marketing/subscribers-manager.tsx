@@ -47,7 +47,7 @@ export function SubscribersManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus pelanggan ini?")) return;
         try {
-            const result = await deleteSubscriberAction(id);
+            const result = await deleteSubscriberAction({ data: id });
             if (!result.success) throw new Error(result.error);
 
             toast.success("Pelanggan berhasil dihapus");

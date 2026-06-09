@@ -84,7 +84,7 @@ export function PromotionsManager() {
         if (!confirm("Yakin ingin menghapus promosi ini?")) return;
 
         try {
-            await deletePromotionAction(id);
+            await deletePromotionAction({ data: id });
             toast.success("Promosi dihapus");
             fetchPromotions();
         } catch {
@@ -94,7 +94,7 @@ export function PromotionsManager() {
 
     const toggleStatus = async (promo: Promotion) => {
         try {
-            await updatePromotionAction(promo.id, { isActive: !promo.isActive });
+            await updatePromotionAction({ data: { id: promo.id, data: { isActive: !promo.isActive } } });
             fetchPromotions();
         } catch {
             toast.error("Gagal mengubah status");
@@ -292,9 +292,9 @@ function PromotionDialog({ isOpen, onOpenChange, editingPromo, onSaveSuccess }: 
 
         try {
             if (editingPromo) {
-                await updatePromotionAction(editingPromo.id, payload);
+                await updatePromotionAction({ data: { id: editingPromo.id, data: payload } });
             } else {
-                await createPromotionAction(payload);
+                await createPromotionAction({ data: payload });
             }
             toast.success(editingPromo ? "Promosi diperbarui" : "Promosi dibuat");
             onSaveSuccess();

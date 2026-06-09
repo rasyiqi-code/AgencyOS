@@ -58,7 +58,7 @@ export function PayoutRequests() {
 
         setProcessingId(requestId);
         try {
-            const result = await processPayout(requestId, action, notes || undefined);
+            const result = await processPayout({ data: { requestId, action, notes: notes || undefined } });
 
             if (result.success) {
                 toast.success(`Payout ${action === 'approved' ? 'disetujui' : 'ditolak'}!`);

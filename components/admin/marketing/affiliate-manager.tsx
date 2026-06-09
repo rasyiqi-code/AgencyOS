@@ -89,7 +89,7 @@ export function AffiliateManager() {
     const saveEdit = async (id: string) => {
         setSaving(true);
         try {
-            const result = await updateAffiliate(id, editRate, editStatus);
+            const result = await updateAffiliate({ data: { id, commissionRate: editRate, status: editStatus } });
 
             if (result.success) {
                 toast.success("Mitra berhasil diperbarui!");

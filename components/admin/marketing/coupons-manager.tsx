@@ -65,12 +65,14 @@ export function CouponsManager() {
 
         try {
             const result = await createCouponAction({
-                code: newCoupon.code,
-                discountType: newCoupon.discountType,
-                discountValue: parseFloat(newCoupon.discountValue),
-                maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
-                expiresAt: newCoupon.expiresAt ? new Date(newCoupon.expiresAt) : undefined,
-                appliesTo: newCoupon.appliesTo,
+                data: {
+                    code: newCoupon.code,
+                    discountType: newCoupon.discountType,
+                    discountValue: parseFloat(newCoupon.discountValue),
+                    maxUses: newCoupon.maxUses ? parseInt(newCoupon.maxUses) : undefined,
+                    expiresAt: newCoupon.expiresAt || undefined,
+                    appliesTo: newCoupon.appliesTo,
+                }
             });
 
             if (!result.success) throw new Error(result.error);
@@ -86,7 +88,7 @@ export function CouponsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus kupon ini?")) return;
         try {
-            const result = await deleteCouponAction(id);
+            const result = await deleteCouponAction({ data: id });
             if (!result.success) throw new Error(result.error);
 
             toast.success("Kupon berhasil dihapus");

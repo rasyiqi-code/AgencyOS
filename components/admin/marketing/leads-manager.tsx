@@ -62,7 +62,7 @@ export function LeadsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus lead ini?")) return;
         try {
-            const result = await deleteLeadAction(id);
+            const result = await deleteLeadAction({ data: id });
             if (!result.success) throw new Error(result.error);
 
             toast.success("Lead berhasil dihapus");

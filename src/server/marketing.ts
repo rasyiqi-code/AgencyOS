@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/lib/config/db'
+import { Prisma } from '@prisma/client'
 import { isAdmin } from '@/lib/shared/auth-helpers'
 import { z } from 'zod'
 import { getBonuses, createBonus, deleteBonus, toggleBonusStatus, getCoupons, createCoupon, deleteCoupon, getSubscribers, deleteSubscriber, getPromotions, createPromotion, updatePromotion, deletePromotion } from "@/lib/server/marketing"
@@ -15,8 +16,13 @@ async function requireAdmin() {
 // ─── 1. BONUSES ───
 export const getBonusesFn = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await requireAdmin()
-    return await getBonuses()
+    try {
+      await requireAdmin()
+      const data = await getBonuses()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 const createBonusSchema = z.object({
@@ -30,30 +36,49 @@ const createBonusSchema = z.object({
 export const createBonusFn = createServerFn({ method: 'POST' })
   .validator(createBonusSchema)
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await createBonus(data)
+    try {
+      await requireAdmin()
+      const bonus = await createBonus(data)
+      return { success: true, data: bonus }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const deleteBonusFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    await requireAdmin()
-    await deleteBonus(id)
-    return { success: true }
+    try {
+      await requireAdmin()
+      await deleteBonus(id)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const toggleBonusStatusFn = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string(), isActive: z.boolean() }))
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await toggleBonusStatus(data.id, data.isActive)
+    try {
+      await requireAdmin()
+      const bonus = await toggleBonusStatus(data.id, data.isActive)
+      return { success: true, data: bonus }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 // ─── 2. COUPONS ───
 export const getCouponsFn = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await requireAdmin()
-    return await getCoupons()
+    try {
+      await requireAdmin()
+      const data = await getCoupons()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 const createCouponSchema = z.object({
@@ -68,101 +93,155 @@ const createCouponSchema = z.object({
 export const createCouponFn = createServerFn({ method: 'POST' })
   .validator(createCouponSchema)
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await createCoupon({
-      ...data,
-      expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined
-    })
+    try {
+      await requireAdmin()
+      const coupon = await createCoupon({
+        ...data,
+        expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined
+      })
+      return { success: true, data: coupon }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const deleteCouponFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    await requireAdmin()
-    await deleteCoupon(id)
-    return { success: true }
+    try {
+      await requireAdmin()
+      await deleteCoupon(id)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 // ─── 3. LEADS ───
 export const getLeadsFn = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await requireAdmin()
-    return await getLeads()
+    try {
+      await requireAdmin()
+      const data = await getLeads()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const deleteLeadFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    await requireAdmin()
-    await deleteLead(id)
-    return { success: true }
+    try {
+      await requireAdmin()
+      await deleteLead(id)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 // ─── 4. POPUPS ───
 export const getPopUpsFn = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await requireAdmin()
-    return await getPopUps()
+    try {
+      await requireAdmin()
+      const data = await getPopUps()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 const createPopUpSchema = z.object({
-  name: z.string(),
-  title: z.string(),
-  content: z.string(),
-  triggerType: z.string(),
-  triggerDelay: z.number().optional(),
-  scrollPercentage: z.number().optional(),
-  targetPages: z.array(z.string()).optional(),
-  isActive: z.boolean().optional(),
-  isNewsletterForm: z.boolean().optional(),
-  imageUrl: z.string().optional(),
+  headline: z.string(),
+  headline_id: z.string().optional(),
+  description: z.string(),
+  description_id: z.string().optional(),
   ctaText: z.string().optional(),
+  ctaText_id: z.string().optional(),
   ctaUrl: z.string().optional(),
+  isActive: z.boolean().optional(),
+  targetingType: z.string().optional(),
+  targetingPaths: z.array(z.string()).optional(),
+  targetingLocales: z.array(z.string()).optional(),
+  showFormLead: z.boolean().optional(),
+  formHeadline: z.string().optional(),
+  formHeadline_id: z.string().optional(),
+  delay: z.number().optional(),
   couponCode: z.string().optional()
 })
 
 export const createPopUpFn = createServerFn({ method: 'POST' })
   .validator(createPopUpSchema)
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await createPopUp(data)
+    try {
+      await requireAdmin()
+      const popup = await createPopUp(data)
+      return { success: true, data: popup }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const updatePopUpFn = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string(), data: createPopUpSchema.partial() }))
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await updatePopUp(data.id, data.data)
+    try {
+      await requireAdmin()
+      const popup = await updatePopUp(data.id, data.data)
+      return { success: true, data: popup }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const deletePopUpFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    await requireAdmin()
-    await deletePopUp(id)
-    return { success: true }
+    try {
+      await requireAdmin()
+      await deletePopUp(id)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const togglePopUpStatusFn = createServerFn({ method: 'POST' })
   .validator(z.object({ id: z.string(), isActive: z.boolean() }))
   .handler(async ({ data }) => {
-    await requireAdmin()
-    return await togglePopUpStatus(data.id, data.isActive)
+    try {
+      await requireAdmin()
+      const popup = await togglePopUpStatus(data.id, data.isActive)
+      return { success: true, data: popup }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 // ─── 5. SUBSCRIBERS ───
 export const getSubscribersFn = createServerFn({ method: 'GET' })
   .handler(async () => {
-    await requireAdmin()
-    return await getSubscribers()
+    try {
+      await requireAdmin()
+      const data = await getSubscribers()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 export const deleteSubscriberFn = createServerFn({ method: 'POST' })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    await requireAdmin()
-    await deleteSubscriber(id)
-    return { success: true }
+    try {
+      await requireAdmin()
+      await deleteSubscriber(id)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
   })
 
 // ─── 6. PUSH NOTIFICATIONS ───
@@ -306,7 +385,7 @@ export const createAssetFn = createServerFn({ method: 'POST' })
         content: data.content,
         imageUrl: data.imageUrl,
         category: data.category,
-        metadata: data.metadata || {}
+        metadata: (data.metadata || {}) as Prisma.InputJsonValue
       }
     })
     return JSON.parse(JSON.stringify(asset))
@@ -321,7 +400,7 @@ export const updateAssetFn = createServerFn({ method: 'POST' })
       where: { id: data.id },
       data: {
         ...rest,
-        ...(metadata ? { metadata } : {})
+        ...(metadata ? { metadata: metadata as Prisma.InputJsonValue } : {})
       }
     })
     return JSON.parse(JSON.stringify(asset))

@@ -70,11 +70,13 @@ export function BonusesManager() {
 
         try {
             const result = await createBonusAction({
-                title: newBonus.title,
-                description: newBonus.description || undefined,
-                value: newBonus.value || undefined,
-                icon: newBonus.icon || undefined,
-                appliesTo: newBonus.appliesTo,
+                data: {
+                    title: newBonus.title,
+                    description: newBonus.description || undefined,
+                    value: newBonus.value || undefined,
+                    icon: newBonus.icon || undefined,
+                    appliesTo: newBonus.appliesTo,
+                }
             });
 
             if (!result.success) throw new Error(result.error);
@@ -90,7 +92,7 @@ export function BonusesManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus bonus ini?")) return;
         try {
-            const result = await deleteBonusAction(id);
+            const result = await deleteBonusAction({ data: id });
             if (!result.success) throw new Error(result.error);
 
             toast.success("Bonus berhasil dihapus");
@@ -102,7 +104,7 @@ export function BonusesManager() {
 
     const handleToggle = async (id: string, currentStatus: boolean) => {
         try {
-            const result = await toggleBonusStatusAction(id, !currentStatus);
+            const result = await toggleBonusStatusAction({ data: { id, isActive: !currentStatus } });
             if (!result.success) throw new Error(result.error);
 
             loadBonuses();

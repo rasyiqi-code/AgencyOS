@@ -105,8 +105,8 @@ export function PopUpsManager() {
 
         try {
             const result = editingPopup?.id
-                ? await updatePopUpAction(editingPopup.id, payload)
-                : await createPopUpAction(payload);
+                ? await updatePopUpAction({ data: { id: editingPopup.id, data: payload } })
+                : await createPopUpAction({ data: payload });
 
             if (!result.success) throw new Error(result.error);
 
@@ -123,7 +123,7 @@ export function PopUpsManager() {
         if (!confirm("Apakah Anda yakin ingin menghapus PopUp ini?")) return;
         setDeletingId(id);
         try {
-            const result = await deletePopUpAction(id);
+            const result = await deletePopUpAction({ data: id });
             if (!result.success) {
                 if (result.error?.includes("P2025")) {
                     toast.success("PopUp sudah dihapus");
@@ -143,7 +143,7 @@ export function PopUpsManager() {
 
     const handleToggle = async (id: string, isActive: boolean) => {
         try {
-            const result = await togglePopUpStatusAction(id, !isActive);
+            const result = await togglePopUpStatusAction({ data: { id, isActive: !isActive } });
             if (!result.success) throw new Error(result.error);
             loadPopUps();
         } catch {

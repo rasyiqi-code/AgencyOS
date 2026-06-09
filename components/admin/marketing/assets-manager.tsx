@@ -60,7 +60,7 @@ export function AssetsManager() {
 
     const fetchAssets = useCallback(async () => {
         try {
-            const data = await getAdminAssets(1, 100);
+            const data = await getAdminAssets({ data: { page: 1, limit: 100 } });
             setAssets(data);
         } catch (error) {
             console.error("Failed to fetch assets", error);
@@ -121,9 +121,9 @@ export function AssetsManager() {
             };
 
             if (editingAsset) {
-                await updateAsset(editingAsset.id, payload);
+                await updateAsset({ data: { id: editingAsset.id, data: payload } });
             } else {
-                await createAsset(payload);
+                await createAsset({ data: payload });
             }
 
             toast.success(editingAsset ? "Aset berhasil diperbarui" : "Aset berhasil dibuat");
@@ -156,7 +156,7 @@ export function AssetsManager() {
     const handleDelete = async (id: string) => {
         if (!confirm("Apakah Anda yakin ingin menghapus aset ini?")) return;
         try {
-            await deleteAsset(id);
+            await deleteAsset({ data: id });
             toast.success("Aset berhasil dihapus");
             fetchAssets();
         } catch {
