@@ -345,3 +345,79 @@ export const updateEstimateFn = createServerFn({ method: 'POST' })
       return { error: "Gagal memperbarui estimasi" }
     }
   })
+
+const scheduleEmailSchema = z.object({
+  name: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  notes: z.string().optional(),
+  estimateTitle: z.string().optional(),
+  totalCost: z.number().optional(),
+  totalHours: z.number().optional(),
+  link: z.string().optional(),
+})
+
+// 4. Menjadwalkan pengiriman email leads/konsultasi ke admin
+export const scheduleEmailFn = createServerFn({ method: 'POST' })
+  .validator(scheduleEmailSchema)
+  .handler(async ({ data }) => {
+    const user = await hexclaveServerApp.getUser()
+    if (!user) throw new Error("Unauthorized")
+
+    const { getResendClient, getAdminEmailTarget } = await import("@/lib/email/client")
+    const resendClient = await getResendClient()
+    const adminEmail = await getAdminEmailTarget()
+
+    if (!resendClient) {
+      throw new Error("Server configuration error")
+    }
+
+    const escapeHtml = (text: string): string => {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+    }
+
+    const safeName = escapeHtml(data.name || user.displayName || "Client")
+    const safeEmail = escapeHtml(data.email || user.primaryEmail || "")
+    const safePhone = escapeHtml(data.phone || "")
+    const safeNotes = escapeHtml(data.notes || "No notes provided.")
+    const safeTitle = escapeHtml(data.estimateTitle || "")
+    const safeLink = escapeHtml(data.link || "")
+
+    const { error } = await resendClient.emails.send({
+      from: 'AgencyOS <onboarding@resend.dev>',
+      to: [adminEmail],
+      subject: `New Lead: ${safeName} - ${safeTitle}`,
+      html: `
+          <h1>New Consultation Request</h1>
+          <p><strong>Project:</strong> ${safeTitle}</p>
+          <p><strong>Est. Cost:</strong> $${data.totalCost}</p>
+          <p><strong>Est. Hours:</strong> ${data.totalHours}h</p>
+          <p><a href="${safeLink}">View Estimate Link</a></p>
+
+          <hr />
+
+          <h2>Client Details</h2>
+          <ul>
+              <li><strong>Name:</strong> ${safeName}</li>
+              <li><strong>Email:</strong> ${safeEmail}</li>
+              <li><strong>Phone:</strong> ${safePhone}</li>
+          </ul>
+
+          <h3>Notes:</h3>
+          <p>${safeNotes}</p>
+      `
+    })
+
+    if (error) {
+      console.error("Resend Error:", error)
+      throw new Error("Failed to send email")
+    }
+
+    return { success: true }
+  })
+
