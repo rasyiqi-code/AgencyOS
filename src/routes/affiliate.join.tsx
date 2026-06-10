@@ -52,7 +52,7 @@ function AffiliateJoinPage() {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="flex flex-col items-center justify-center text-center">
           <JoinAffiliateButton />
           <p className="text-zinc-600 text-sm mt-4">
             By joining, you agree to our{' '}
