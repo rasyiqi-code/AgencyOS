@@ -69,6 +69,7 @@ import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
+import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
 import { Route as AdminSystemSettingsRouteImport } from './routes/admin.system.settings'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
@@ -86,6 +87,7 @@ import { Route as AdminMarketingAffiliatesRouteImport } from './routes/admin.mar
 import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.finance.subscriptions'
 import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
 import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
+import { Route as AdminFinanceDigitalOrdersRouteImport } from './routes/admin.finance.digital-orders'
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
@@ -392,6 +394,11 @@ const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
   path: '/api/currency/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSystemWebhooksRoute = AdminSystemWebhooksRouteImport.update({
+  id: '/system/webhooks',
+  path: '/system/webhooks',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSystemSettingsRoute = AdminSystemSettingsRouteImport.update({
   id: '/system/settings',
   path: '/system/settings',
@@ -481,6 +488,12 @@ const AdminFinanceOrdersRoute = AdminFinanceOrdersRouteImport.update({
   path: '/finance/orders',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFinanceDigitalOrdersRoute =
+  AdminFinanceDigitalOrdersRouteImport.update({
+    id: '/finance/digital-orders',
+    path: '/finance/digital-orders',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
   id: '/api/system/keys/status',
   path: '/api/system/keys/status',
@@ -563,6 +576,7 @@ export interface FileRoutesByFullPath {
   '/services/': typeof ServicesIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
+  '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -580,6 +594,7 @@ export interface FileRoutesByFullPath {
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -642,6 +657,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesIndexRoute
   '/squad': typeof SquadIndexRoute
   '/support': typeof SupportIndexRoute
+  '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -659,6 +675,7 @@ export interface FileRoutesByTo {
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -727,6 +744,7 @@ export interface FileRoutesById {
   '/services/': typeof ServicesIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
+  '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -744,6 +762,7 @@ export interface FileRoutesById {
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -813,6 +832,7 @@ export interface FileRouteTypes {
     | '/services/'
     | '/squad/'
     | '/support/'
+    | '/admin/finance/digital-orders'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -830,6 +850,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services'
     | '/admin/system/currency'
     | '/admin/system/settings'
+    | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -892,6 +913,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/squad'
     | '/support'
+    | '/admin/finance/digital-orders'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -909,6 +931,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services'
     | '/admin/system/currency'
     | '/admin/system/settings'
+    | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -976,6 +999,7 @@ export interface FileRouteTypes {
     | '/services/'
     | '/squad/'
     | '/support/'
+    | '/admin/finance/digital-orders'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -993,6 +1017,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services'
     | '/admin/system/currency'
     | '/admin/system/settings'
+    | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -1459,6 +1484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCurrencyRatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/system/webhooks': {
+      id: '/admin/system/webhooks'
+      path: '/system/webhooks'
+      fullPath: '/admin/system/webhooks'
+      preLoaderRoute: typeof AdminSystemWebhooksRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/system/settings': {
       id: '/admin/system/settings'
       path: '/system/settings'
@@ -1578,6 +1610,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFinanceOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/finance/digital-orders': {
+      id: '/admin/finance/digital-orders'
+      path: '/finance/digital-orders'
+      fullPath: '/admin/finance/digital-orders'
+      preLoaderRoute: typeof AdminFinanceDigitalOrdersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/system/keys/status': {
       id: '/api/system/keys/status'
       path: '/api/system/keys/status'
@@ -1653,6 +1692,7 @@ interface AdminRouteChildren {
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminFinanceDigitalOrdersRoute: typeof AdminFinanceDigitalOrdersRoute
   AdminFinanceOrdersRoute: typeof AdminFinanceOrdersRoute
   AdminFinanceQuotesRoute: typeof AdminFinanceQuotesRoute
   AdminFinanceSubscriptionsRoute: typeof AdminFinanceSubscriptionsRoute
@@ -1670,6 +1710,7 @@ interface AdminRouteChildren {
   AdminPmServicesRoute: typeof AdminPmServicesRouteWithChildren
   AdminSystemCurrencyRoute: typeof AdminSystemCurrencyRoute
   AdminSystemSettingsRoute: typeof AdminSystemSettingsRoute
+  AdminSystemWebhooksRoute: typeof AdminSystemWebhooksRoute
   AdminMarketingIndexRoute: typeof AdminMarketingIndexRoute
   AdminPmIndexRoute: typeof AdminPmIndexRoute
 }
@@ -1685,6 +1726,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminTeamRoute: AdminTeamRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminFinanceDigitalOrdersRoute: AdminFinanceDigitalOrdersRoute,
   AdminFinanceOrdersRoute: AdminFinanceOrdersRoute,
   AdminFinanceQuotesRoute: AdminFinanceQuotesRoute,
   AdminFinanceSubscriptionsRoute: AdminFinanceSubscriptionsRoute,
@@ -1702,6 +1744,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPmServicesRoute: AdminPmServicesRouteWithChildren,
   AdminSystemCurrencyRoute: AdminSystemCurrencyRoute,
   AdminSystemSettingsRoute: AdminSystemSettingsRoute,
+  AdminSystemWebhooksRoute: AdminSystemWebhooksRoute,
   AdminMarketingIndexRoute: AdminMarketingIndexRoute,
   AdminPmIndexRoute: AdminPmIndexRoute,
 }

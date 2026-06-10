@@ -229,6 +229,21 @@ export const simulateWebhookFn = createServerFn({ method: 'POST' })
     return await triggerExternalWebhook(data.url, data.payload)
   })
 
+// Mengambil semua produk untuk webhook simulator
+export const getProductsForSimulatorFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    await requireAdmin()
+    return await prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        externalWebhookUrl: true,
+      }
+    })
+  })
+
 const submitTestimonialSchema = z.object({
   name: z.string(),
   role: z.string(),
