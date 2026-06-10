@@ -88,6 +88,8 @@ import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.fi
 import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
 import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
 import { Route as AdminFinanceDigitalOrdersRouteImport } from './routes/admin.finance.digital-orders'
+import { Route as AdminPmServicesIndexRouteImport } from './routes/admin.pm.services.index'
+import { Route as AdminPmProjectsIndexRouteImport } from './routes/admin.pm.projects.index'
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
@@ -494,6 +496,16 @@ const AdminFinanceDigitalOrdersRoute =
     path: '/finance/digital-orders',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminPmServicesIndexRoute = AdminPmServicesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPmServicesRoute,
+} as any)
+const AdminPmProjectsIndexRoute = AdminPmProjectsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPmProjectsRoute,
+} as any)
 const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
   id: '/api/system/keys/status',
   path: '/api/system/keys/status',
@@ -604,6 +616,8 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
+  '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
@@ -671,8 +685,6 @@ export interface FileRoutesByTo {
   '/admin/marketing/promotions': typeof AdminMarketingPromotionsRoute
   '/admin/marketing/push': typeof AdminMarketingPushRoute
   '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
-  '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
-  '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
@@ -685,6 +697,8 @@ export interface FileRoutesByTo {
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/admin/pm/projects': typeof AdminPmProjectsIndexRoute
+  '/admin/pm/services': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
@@ -772,6 +786,8 @@ export interface FileRoutesById {
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
+  '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
@@ -860,6 +876,8 @@ export interface FileRouteTypes {
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
+    | '/admin/pm/projects/'
+    | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
   fileRoutesByTo: FileRoutesByTo
@@ -927,8 +945,6 @@ export interface FileRouteTypes {
     | '/admin/marketing/promotions'
     | '/admin/marketing/push'
     | '/admin/marketing/subscribers'
-    | '/admin/pm/projects'
-    | '/admin/pm/services'
     | '/admin/system/currency'
     | '/admin/system/settings'
     | '/admin/system/webhooks'
@@ -941,6 +957,8 @@ export interface FileRouteTypes {
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
+    | '/admin/pm/projects'
+    | '/admin/pm/services'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
   id:
@@ -1027,6 +1045,8 @@ export interface FileRouteTypes {
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
+    | '/admin/pm/projects/'
+    | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
   fileRoutesById: FileRoutesById
@@ -1617,6 +1637,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFinanceDigitalOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pm/services/': {
+      id: '/admin/pm/services/'
+      path: '/'
+      fullPath: '/admin/pm/services/'
+      preLoaderRoute: typeof AdminPmServicesIndexRouteImport
+      parentRoute: typeof AdminPmServicesRoute
+    }
+    '/admin/pm/projects/': {
+      id: '/admin/pm/projects/'
+      path: '/'
+      fullPath: '/admin/pm/projects/'
+      preLoaderRoute: typeof AdminPmProjectsIndexRouteImport
+      parentRoute: typeof AdminPmProjectsRoute
+    }
     '/api/system/keys/status': {
       id: '/api/system/keys/status'
       path: '/api/system/keys/status'
@@ -1657,10 +1691,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminPmProjectsRouteChildren {
   AdminPmProjectsIdRoute: typeof AdminPmProjectsIdRoute
+  AdminPmProjectsIndexRoute: typeof AdminPmProjectsIndexRoute
 }
 
 const AdminPmProjectsRouteChildren: AdminPmProjectsRouteChildren = {
   AdminPmProjectsIdRoute: AdminPmProjectsIdRoute,
+  AdminPmProjectsIndexRoute: AdminPmProjectsIndexRoute,
 }
 
 const AdminPmProjectsRouteWithChildren = AdminPmProjectsRoute._addFileChildren(
@@ -1669,11 +1705,13 @@ const AdminPmProjectsRouteWithChildren = AdminPmProjectsRoute._addFileChildren(
 
 interface AdminPmServicesRouteChildren {
   AdminPmServicesNewRoute: typeof AdminPmServicesNewRoute
+  AdminPmServicesIndexRoute: typeof AdminPmServicesIndexRoute
   AdminPmServicesIdEditRoute: typeof AdminPmServicesIdEditRoute
 }
 
 const AdminPmServicesRouteChildren: AdminPmServicesRouteChildren = {
   AdminPmServicesNewRoute: AdminPmServicesNewRoute,
+  AdminPmServicesIndexRoute: AdminPmServicesIndexRoute,
   AdminPmServicesIdEditRoute: AdminPmServicesIdEditRoute,
 }
 
