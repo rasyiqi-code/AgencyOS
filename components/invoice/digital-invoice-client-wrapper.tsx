@@ -141,7 +141,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                                         width={40}
                                         height={40}
                                         className="object-contain"
-                                        style={{ height: 'auto', width: 'auto' }}
+                                        style={{ height: '40px', width: '40px' }}
                                         sizes="40px"
                                     />
                                     <h1 className="text-4xl font-black tracking-tighter leading-none text-[#D4AF37]">{agencyName}</h1>

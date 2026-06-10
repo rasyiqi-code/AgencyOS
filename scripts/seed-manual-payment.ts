@@ -1,7 +1,5 @@
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../lib/config/db";
 
 async function main() {
     console.log("🌱 Seeding manual payment settings...");
@@ -15,7 +13,8 @@ async function main() {
         { key: "COMPANY_NAME", value: "Agency OS Ltd." },
         { key: "AGENCY_NAME", value: "Agency OS" },
         { key: "CONTACT_EMAIL", value: "billing@agencyos.com" },
-        { key: "CONTACT_ADDRESS", value: "Sudirman Central Business District, Jakarta" }
+        { key: "CONTACT_ADDRESS", value: "Sudirman Central Business District, Jakarta" },
+        { key: "manual_payment_active", value: "true" }
     ];
 
     for (const setting of settings) {

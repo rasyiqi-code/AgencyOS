@@ -11,6 +11,8 @@ import { paymentGatewayService } from '@/lib/server/payment-gateway-service'
 import { paymentService } from '@/lib/server/payment-service'
 import { type InvoiceOrder } from '@/types/payment'
 import { z } from 'zod'
+import { SiteHeader } from '@/components/landing/site-header'
+import { SiteFooter } from '@/components/landing/site-footer'
 
 const invoiceSearchSchema = z.object({
   token: z.string().optional(),
@@ -182,19 +184,27 @@ function PublicInvoicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-24 text-left w-full">
-      <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
-        <CheckoutProgress currentStep={data.currentStep!} />
-        <InvoiceClientWrapper
-          order={data.order as unknown as InvoiceOrder}
-          estimate={data.estimate!}
-          user={data.user!}
-          isPaid={data.isPaid!}
-          bankDetails={data.bankDetails}
-          agencySettings={data.agencySettings!}
-          hasActiveGateway={data.hasActiveGateway!}
-          gatewayStatus={data.gatewayStatus!}
-        />
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      <div className="no-print contents">
+        <SiteHeader />
+      </div>
+      <main className="flex-1 pt-14 pb-24 text-left w-full selection:bg-lime-500/30">
+        <div className="container mx-auto px-4 py-12 max-w-7xl">
+          <CheckoutProgress currentStep={data.currentStep!} />
+          <InvoiceClientWrapper
+            order={data.order as unknown as InvoiceOrder}
+            estimate={data.estimate!}
+            user={data.user!}
+            isPaid={data.isPaid!}
+            bankDetails={data.bankDetails}
+            agencySettings={data.agencySettings!}
+            hasActiveGateway={data.hasActiveGateway!}
+            gatewayStatus={data.gatewayStatus!}
+          />
+        </div>
+      </main>
+      <div className="no-print">
+        <SiteFooter />
       </div>
     </div>
   )

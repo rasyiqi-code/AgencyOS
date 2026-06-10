@@ -12,6 +12,8 @@ import { DigitalCheckoutContent } from '@/components/checkout/digital-checkout-c
 import { type Bonus, type ExtendedEstimate } from '@/lib/shared/types'
 import { type SystemSetting } from '@prisma/client'
 import { z } from 'zod'
+import { SiteHeader } from '@/components/landing/site-header'
+import { SiteFooter } from '@/components/landing/site-footer'
 
 const checkoutSearchSchema = z.object({
   paymentType: z.enum(['FULL', 'DP', 'REPAYMENT']).optional(),
@@ -179,39 +181,55 @@ function CheckoutPage() {
 
   if (data.type === 'digital') {
     return (
-      <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24 text-left w-full">
-        <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
-          <CheckoutProgress currentStep={1} />
-          <DigitalCheckoutContent
-            product={data.product!}
-            bonuses={data.bonuses}
-            userId={data.userId!}
-            userEmail={data.userEmail}
-            activeRate={data.activeRate}
-          />
+      <div className="flex flex-col min-h-screen bg-black text-white">
+        <div className="no-print contents">
+          <SiteHeader />
+        </div>
+        <main className="flex-1 pt-14 pb-24 text-left w-full selection:bg-lime-500/30">
+          <div className="container mx-auto px-4 py-12 max-w-7xl">
+            <CheckoutProgress currentStep={1} />
+            <DigitalCheckoutContent
+              product={data.product!}
+              bonuses={data.bonuses}
+              userId={data.userId!}
+              userEmail={data.userEmail}
+              activeRate={data.activeRate}
+            />
+          </div>
+        </main>
+        <div className="no-print">
+          <SiteFooter />
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24 text-left w-full">
-      <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
-        <CheckoutProgress currentStep={data.estimate!.status === 'paid' ? 4 : 1} />
-        <CheckoutContent
-          estimate={data.estimate!}
-          bankDetails={data.bankDetails!}
-          activeRate={data.activeRate}
-          bonuses={data.bonuses}
-          user={data.user!}
-          agencySettings={data.agencySettings!}
-          hasActiveGateway={data.hasActiveGateway!}
-          defaultPaymentType={data.paymentType}
-          projectPaidAmount={data.projectPaidAmount!}
-          projectTotalAmount={data.projectTotalAmount!}
-          context={data.context!}
-          orderId={data.orderId}
-        />
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      <div className="no-print contents">
+        <SiteHeader />
+      </div>
+      <main className="flex-1 pt-14 pb-24 text-left w-full selection:bg-lime-500/30">
+        <div className="container mx-auto px-4 py-12 max-w-7xl">
+          <CheckoutProgress currentStep={data.estimate!.status === 'paid' ? 4 : 1} />
+          <CheckoutContent
+            estimate={data.estimate!}
+            bankDetails={data.bankDetails!}
+            activeRate={data.activeRate}
+            bonuses={data.bonuses}
+            user={data.user!}
+            agencySettings={data.agencySettings!}
+            hasActiveGateway={data.hasActiveGateway!}
+            defaultPaymentType={data.paymentType}
+            projectPaidAmount={data.projectPaidAmount!}
+            projectTotalAmount={data.projectTotalAmount!}
+            context={data.context!}
+            orderId={data.orderId}
+          />
+        </div>
+      </main>
+      <div className="no-print">
+        <SiteFooter />
       </div>
     </div>
   )
