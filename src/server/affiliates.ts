@@ -274,3 +274,50 @@ export const updateBankDetailsFn = createServerFn({ method: 'POST' })
     return { success: true, data: bankInfo }
   })
 
+export const getAffiliateDashboardData = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = await hexclaveServerApp.getUser()
+    if (!user) return null
+
+    const profile = await prisma.affiliateProfile.findUnique({
+      where: { userId: user.id },
+      include: {
+        _count: { select: { referrals: true, commissions: true } },
+        commissions: { take: 10, orderBy: { createdAt: 'desc' } },
+      },
+    })
+
+    const lifetimeTotal = await prisma.commissionLog.aggregate({
+      where: { affiliateId: profile?.id },
+      _sum: { amount: true },
+    })
+
+    const products = await prisma.product.findMany({ where: { isActive: true } })
+    const services = await prisma.service.findMany({ where: { isActive: true } })
+
+    return {
+      profile: profile
+        ? {
+            ...profile,
+            createdAt: profile.createdAt.toISOString(),
+            commissions: profile.commissions.map(c => ({
+              ...c,
+              createdAt: c.createdAt.toISOString(),
+            })),
+          }
+        : null,
+      lifetimeTotal: lifetimeTotal._sum.amount ?? 0,
+      products: products.map(p => ({
+        ...p,
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+      })),
+      services: services.map(s => ({
+        ...s,
+        createdAt: s.createdAt.toISOString(),
+        updatedAt: s.updatedAt.toISOString(),
+      })),
+    }
+  },
+)
+

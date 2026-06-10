@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
+import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { prisma } from '@/lib/config/db'
 import { redirect } from '@tanstack/react-router'
 import { JoinAffiliateButton } from '@/components/marketing/join-affiliate-button'
@@ -7,9 +7,13 @@ import { DollarSign, BarChart3, Zap, Share2 } from 'lucide-react'
 
 export const Route = createFileRoute('/affiliate/join')({
   beforeLoad: async () => {
-    const user = await hexclaveServerApp.getUser()
+    const user = await hexclaveClientApp.getUser()
     // Menggunakan href untuk rute dinamis /handler/sign-in
     if (!user) throw redirect({ href: '/handler/sign-in' })
+  },
+  loader: async () => {
+    const user = await hexclaveClientApp.getUser()
+    if (!user) return null
 
     const existing = await prisma.affiliateProfile.findUnique({
       where: { userId: user.id },

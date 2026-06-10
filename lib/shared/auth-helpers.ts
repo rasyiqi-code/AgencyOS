@@ -1,8 +1,12 @@
                             
 import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { hexclaveClientApp } from "@/lib/config/hexclave-client";
 
 export async function getCurrentUser() {
-    return await hexclaveServerApp.getUser();
+    if (typeof window === "undefined") {
+        return await hexclaveServerApp.getUser();
+    }
+    return await hexclaveClientApp.getUser();
 }
 
 /**

@@ -1,19 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
-import { prisma } from '@/lib/config/db'
 import { Badge } from '@/components/ui/badge'
 import { User, Code, Award } from 'lucide-react'
+import { getSquadProfile } from '@/src/server/squad'
 
 export const Route = createFileRoute('/squad/profile')({
   loader: async () => {
-    const user = await hexclaveServerApp.getUser()
-    if (!user) return null
-
-    const profile = await prisma.squadProfile.findUnique({
-      where: { userId: user.id },
-    })
-
-    return { user: { displayName: user.displayName, email: user.primaryEmail }, profile }
+    return await getSquadProfile()
   },
   component: SquadProfilePage,
 })

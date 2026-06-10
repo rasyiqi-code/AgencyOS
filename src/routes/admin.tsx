@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Outlet, Link } from '@tanstack/react-router'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
+import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { Shield, LogOut } from 'lucide-react'
 import { DashboardHeader } from '@/components/dashboard/header/main'
 import { isAdmin, canManageProjects, canManageBilling } from '@/lib/shared/auth-helpers'
@@ -12,7 +12,7 @@ import { SystemAlerts } from '@/components/admin/system-alerts'
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
-    const user = await hexclaveServerApp.getUser()
+    const user = await hexclaveClientApp.getUser()
     if (!user) {
       // Menggunakan href agar tidak memicu type error di rute statis
       throw redirect({ href: '/handler/sign-in' })

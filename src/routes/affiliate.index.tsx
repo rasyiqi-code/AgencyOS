@@ -1,38 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { hexclaveServerApp } from '@/lib/config/hexclave'
+import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { redirect } from '@tanstack/react-router'
 import { AffiliateLinksManager } from '@/components/affiliate/affiliate-links-manager'
-import { prisma } from '@/lib/config/db'
 import { DollarSign, Users, MousePointerClick, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getAffiliateDashboardData } from '@/src/server/affiliates'
 
 export const Route = createFileRoute('/affiliate/')({
   beforeLoad: async () => {
-    const user = await hexclaveServerApp.getUser()
+    const user = await hexclaveClientApp.getUser()
     // Menggunakan href agar tidak memicu type error rute statis
     if (!user) throw redirect({ href: '/handler/sign-in' })
   },
   loader: async () => {
-    const user = await hexclaveServerApp.getUser()
-    if (!user) return null
-
-    const profile = await prisma.affiliateProfile.findUnique({
-      where: { userId: user.id },
-      include: {
-        _count: { select: { referrals: true, commissions: true } },
-        commissions: { take: 10, orderBy: { createdAt: 'desc' } },
-      },
-    })
-
-    const lifetimeTotal = await prisma.commissionLog.aggregate({
-      where: { affiliateId: profile?.id },
-      _sum: { amount: true },
-    })
-
-    const products = await prisma.product.findMany({ where: { isActive: true } })
-    const services = await prisma.service.findMany({ where: { isActive: true } })
-
-    return { profile, lifetimeTotal: lifetimeTotal._sum.amount ?? 0, products, services }
+    return await getAffiliateDashboardData()
   },
   component: AffiliateDashboardLayout,
 })

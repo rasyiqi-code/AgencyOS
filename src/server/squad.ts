@@ -119,3 +119,16 @@ export const getSquadActiveMissions = createServerFn({ method: 'GET' }).handler(
     }))
   },
 )
+
+export const getSquadProfile = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = await hexclaveServerApp.getUser()
+    if (!user) return null
+
+    const profile = await prisma.squadProfile.findUnique({
+      where: { userId: user.id },
+    })
+
+    return { user: { displayName: user.displayName, email: user.primaryEmail }, profile }
+  },
+)
