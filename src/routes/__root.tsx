@@ -91,13 +91,18 @@ function RootDocument({
               if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
                 if ('serviceWorker' in navigator) {
                   navigator.serviceWorker.getRegistrations().then(function(regs) {
-                    for (var i = 0; i < regs.length; i++) {
-                      regs[i].unregister().then(function(success) {
-                        if (success) {
-                          console.log('[PWA] Stale SW unregistered via inline script');
-                          window.location.reload();
-                        }
-                      });
+                    if (regs.length > 0) {
+                      var hasReloaded = sessionStorage.getItem('sw_unregistered_reload');
+                      for (var i = 0; i < regs.length; i++) {
+                        regs[i].unregister();
+                      }
+                      if (!hasReloaded) {
+                        sessionStorage.setItem('sw_unregistered_reload', 'true');
+                        console.log('[PWA] Stale SW detected & unregistered, triggering one-time reload');
+                        window.location.reload();
+                      }
+                    } else {
+                      sessionStorage.removeItem('sw_unregistered_reload');
                     }
                   });
                 }
