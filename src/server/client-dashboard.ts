@@ -309,5 +309,55 @@ export const createProjectFromBriefFn = createServerFn({ method: 'POST' })
     }
   })
 
+// 8. Ambil detail misi untuk client secara aman
+export const getClientMissionDetailFn = createServerFn({ method: 'GET' })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    try {
+      const user = await requireClient()
+      const project = await prisma.project.findUnique({
+        where: { id },
+        include: {
+          service: true,
+          briefs: true,
+          feedback: {
+            orderBy: { createdAt: 'desc' },
+            include: { comments: { orderBy: { createdAt: 'asc' } } }
+          },
+          dailyLogs: {
+            orderBy: { createdAt: 'desc' }
+          },
+          estimate: true,
+        },
+      })
+
+      if (!project) {
+        throw new Error('Project not found')
+      }
+
+      if (project.userId !== user.id) {
+        throw new Error('Unauthorized')
+      }
+
+      const assignedProfile = project.developerId ? await prisma.squadProfile.findUnique({
+        where: { userId: project.developerId }
+      }) : null
+
+      return {
+        success: true,
+        project: JSON.parse(JSON.stringify(project)),
+        assignedProfile: assignedProfile ? JSON.parse(JSON.stringify(assignedProfile)) : null
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: (error as Error).message,
+        project: null,
+        assignedProfile: null
+      }
+    }
+  })
+
+
 
 

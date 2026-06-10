@@ -40,6 +40,7 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settin
 import { Route as DashboardServicesRouteImport } from './routes/dashboard.services'
 import { Route as DashboardQuotesRouteImport } from './routes/dashboard.quotes'
 import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-products'
+import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
 import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
@@ -56,7 +57,9 @@ import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
+import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
+import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
@@ -233,6 +236,11 @@ const DashboardMyProductsRoute = DashboardMyProductsRouteImport.update({
   path: '/my-products',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardMissionsRoute = DashboardMissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardInboxRoute = DashboardInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -313,9 +321,19 @@ const SquadMissionsIdRoute = SquadMissionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => SquadMissionsRoute,
 } as any)
+const DashboardMissionsIdRoute = DashboardMissionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashboardMissionsRoute,
+} as any)
 const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
   id: '/api/marketing/subscribe',
   path: '/api/marketing/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
+  id: '/api/currency/rates',
+  path: '/api/currency/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
@@ -445,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
   '/dashboard/my-products': typeof DashboardMyProductsRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
@@ -484,7 +503,9 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
@@ -510,6 +531,7 @@ export interface FileRoutesByTo {
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
   '/dashboard/my-products': typeof DashboardMyProductsRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
@@ -549,7 +571,9 @@ export interface FileRoutesByTo {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
@@ -581,6 +605,7 @@ export interface FileRoutesById {
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
   '/dashboard/my-products': typeof DashboardMyProductsRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
@@ -620,7 +645,9 @@ export interface FileRoutesById {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
@@ -653,6 +680,7 @@ export interface FileRouteTypes {
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
+    | '/dashboard/missions'
     | '/dashboard/my-products'
     | '/dashboard/quotes'
     | '/dashboard/services'
@@ -692,7 +720,9 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
@@ -718,6 +748,7 @@ export interface FileRouteTypes {
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
+    | '/dashboard/missions'
     | '/dashboard/my-products'
     | '/dashboard/quotes'
     | '/dashboard/services'
@@ -757,7 +788,9 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing'
     | '/admin/pm'
@@ -788,6 +821,7 @@ export interface FileRouteTypes {
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
+    | '/dashboard/missions'
     | '/dashboard/my-products'
     | '/dashboard/quotes'
     | '/dashboard/services'
@@ -827,7 +861,9 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
@@ -856,6 +892,7 @@ export interface RootRouteChildren {
   PriceCalculatorIndexRoute: typeof PriceCalculatorIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
 }
@@ -1079,6 +1116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMyProductsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/missions': {
+      id: '/dashboard/missions'
+      path: '/missions'
+      fullPath: '/dashboard/missions'
+      preLoaderRoute: typeof DashboardMissionsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/inbox': {
       id: '/dashboard/inbox'
       path: '/inbox'
@@ -1191,11 +1235,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SquadMissionsIdRouteImport
       parentRoute: typeof SquadMissionsRoute
     }
+    '/dashboard/missions/$id': {
+      id: '/dashboard/missions/$id'
+      path: '/$id'
+      fullPath: '/dashboard/missions/$id'
+      preLoaderRoute: typeof DashboardMissionsIdRouteImport
+      parentRoute: typeof DashboardMissionsRoute
+    }
     '/api/marketing/subscribe': {
       id: '/api/marketing/subscribe'
       path: '/api/marketing/subscribe'
       fullPath: '/api/marketing/subscribe'
       preLoaderRoute: typeof ApiMarketingSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/currency/rates': {
+      id: '/api/currency/rates'
+      path: '/api/currency/rates'
+      fullPath: '/api/currency/rates'
+      preLoaderRoute: typeof ApiCurrencyRatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/system/currency': {
@@ -1445,9 +1503,21 @@ const AffiliateRouteWithChildren = AffiliateRoute._addFileChildren(
   AffiliateRouteChildren,
 )
 
+interface DashboardMissionsRouteChildren {
+  DashboardMissionsIdRoute: typeof DashboardMissionsIdRoute
+}
+
+const DashboardMissionsRouteChildren: DashboardMissionsRouteChildren = {
+  DashboardMissionsIdRoute: DashboardMissionsIdRoute,
+}
+
+const DashboardMissionsRouteWithChildren =
+  DashboardMissionsRoute._addFileChildren(DashboardMissionsRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardBillingRoute: typeof DashboardBillingRoute
   DashboardInboxRoute: typeof DashboardInboxRoute
+  DashboardMissionsRoute: typeof DashboardMissionsRouteWithChildren
   DashboardMyProductsRoute: typeof DashboardMyProductsRoute
   DashboardQuotesRoute: typeof DashboardQuotesRoute
   DashboardServicesRoute: typeof DashboardServicesRoute
@@ -1459,6 +1529,7 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardBillingRoute: DashboardBillingRoute,
   DashboardInboxRoute: DashboardInboxRoute,
+  DashboardMissionsRoute: DashboardMissionsRouteWithChildren,
   DashboardMyProductsRoute: DashboardMyProductsRoute,
   DashboardQuotesRoute: DashboardQuotesRoute,
   DashboardServicesRoute: DashboardServicesRoute,
@@ -1531,6 +1602,7 @@ const rootRouteChildren: RootRouteChildren = {
   PriceCalculatorIndexRoute: PriceCalculatorIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
 }

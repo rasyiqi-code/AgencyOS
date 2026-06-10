@@ -14,8 +14,14 @@ export const getLocaleMessages = createServerFn({ method: 'GET' })
         ? inputLocale
         : (cookieLocale?.slice(0, 2) === 'id' ? 'id' : 'en')
 
-      const module = await import(`../../messages/${locale}.json`)
-      const messages: Messages = (module.default || module) as Messages
+      let messages: Messages
+      if (locale === 'id') {
+        const module = await import('../../messages/id.json')
+        messages = (module.default || module) as Messages
+      } else {
+        const module = await import('../../messages/en.json')
+        messages = (module.default || module) as Messages
+      }
 
       return { locale, messages }
     },
