@@ -12,8 +12,20 @@ import { toast } from "sonner";
  */
 export function ServiceWorkerRegistrar() {
     useEffect(() => {
-        // Jangan jalankan Service Worker di mode development
+        // Jangan jalankan Service Worker di mode development, melainkan hapus jika ada sisa dari sesi sebelumnya
         if (process.env.NODE_ENV === "development") {
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                    for (const registration of registrations) {
+                        registration.unregister().then((success) => {
+                            if (success) {
+                                console.log("[PWA] Unregistered stale service worker in development mode");
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
             return;
         }
 
