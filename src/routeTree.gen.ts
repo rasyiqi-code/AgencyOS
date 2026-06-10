@@ -67,6 +67,7 @@ import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
+import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
 import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
@@ -386,6 +387,11 @@ const DashboardMissionsIdRoute = DashboardMissionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DashboardMissionsRoute,
 } as any)
+const ApiStoreOrderRoute = ApiStoreOrderRouteImport.update({
+  id: '/api/store/order',
+  path: '/api/store/order',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
   id: '/api/marketing/subscribe',
   path: '/api/marketing/subscribe',
@@ -609,6 +615,7 @@ export interface FileRoutesByFullPath {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
@@ -690,6 +697,7 @@ export interface FileRoutesByTo {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
@@ -779,6 +787,7 @@ export interface FileRoutesById {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
@@ -869,6 +878,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
@@ -950,6 +960,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing'
@@ -1038,6 +1049,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
@@ -1078,6 +1090,7 @@ export interface RootRouteChildren {
   ServicesIndexRoute: typeof ServicesIndexRoute
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
+  ApiStoreOrderRoute: typeof ApiStoreOrderRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
   ApiMarketingAffiliatePayoutRequestRoute: typeof ApiMarketingAffiliatePayoutRequestRoute
 }
@@ -1489,6 +1502,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/missions/$id'
       preLoaderRoute: typeof DashboardMissionsIdRouteImport
       parentRoute: typeof DashboardMissionsRoute
+    }
+    '/api/store/order': {
+      id: '/api/store/order'
+      path: '/api/store/order'
+      fullPath: '/api/store/order'
+      preLoaderRoute: typeof ApiStoreOrderRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/marketing/subscribe': {
       id: '/api/marketing/subscribe'
@@ -1916,6 +1936,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesIndexRoute: ServicesIndexRoute,
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
+  ApiStoreOrderRoute: ApiStoreOrderRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
   ApiMarketingAffiliatePayoutRequestRoute:
     ApiMarketingAffiliatePayoutRequestRoute,
