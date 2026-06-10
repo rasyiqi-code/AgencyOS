@@ -5,9 +5,12 @@ import { LandingHero } from '@/components/landing/landing-hero'
 import { FAQSection } from '@/components/landing/faq-section-fixed'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { JsonLd } from '@/components/seo/json-ld'
-import { getSystemSettings } from '@/lib/server/settings'
-import { getPageSeo } from '@/lib/server/seo'
-import type { SystemSetting } from '@prisma/client'
+import { getSystemSettings, getPageSeoFn } from '@/src/server/settings'
+
+type SystemSetting = {
+  key: string
+  value: string
+}
 
 // Impor komponen secara statis untuk menghindari masalah hidrasi (hydration) pada rendering di sisi server (SSR)
 import { SectionStats } from '@/components/landing/section-stats'
@@ -22,9 +25,9 @@ import { SectionGuarantee } from '@/components/landing/section-guarantee'
 import { ScrollAnimationWrapper } from '@/components/ui/scroll-animation-wrapper'
 
 const loader = async () => {
-  const settings = await getSystemSettings(['AGENCY_NAME', 'AGENCY_LOGO', 'CONTACT_PHONE'])
+  const settings = await getSystemSettings({ data: ['AGENCY_NAME', 'AGENCY_LOGO', 'CONTACT_PHONE'] })
   const agencyName = settings.find((s: SystemSetting) => s.key === 'AGENCY_NAME')?.value || 'Agency OS'
-  const pageSeo = await getPageSeo('/')
+  const pageSeo = await getPageSeoFn({ data: '/' })
   return { settings, agencyName, pageSeo }
 }
 

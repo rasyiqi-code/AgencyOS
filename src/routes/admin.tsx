@@ -2,12 +2,12 @@ import { createFileRoute, redirect, Outlet, Link } from '@tanstack/react-router'
 import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { Shield, LogOut } from 'lucide-react'
 import { DashboardHeader } from '@/components/dashboard/header/main'
-import { isAdmin, canManageProjects, canManageBilling } from '@/lib/shared/auth-helpers'
+import { isAdminFn, canManageProjectsFn, canManageBillingFn } from '@/src/server/auth'
 import { AdminSidebarNavigation } from '@/components/admin/admin-sidebar-navigation'
 import { SidebarContainer } from '@/components/dashboard/sidebar/container'
 import { SidebarContentWrapper } from '@/components/dashboard/sidebar/content-wrapper'
 import { Badge } from '@/components/ui/badge'
-import { getSystemSettings } from '@/lib/server/settings'
+import { getSystemSettings } from '@/src/server/settings'
 import { SystemAlerts } from '@/components/admin/system-alerts'
 
 export const Route = createFileRoute('/admin')({
@@ -17,16 +17,16 @@ export const Route = createFileRoute('/admin')({
       // Menggunakan href agar tidak memicu type error di rute statis
       throw redirect({ href: '/handler/sign-in' })
     }
-    if (!await isAdmin()) {
+    if (!await isAdminFn()) {
       throw redirect({ to: '/dashboard' })
     }
   },
   loader: async () => {
-    const settings = await getSystemSettings(['AGENCY_NAME', 'LOGO_URL'])
+    const settings = await getSystemSettings({ data: ['AGENCY_NAME', 'LOGO_URL'] })
     const agencyName = settings.find(s => s.key === 'AGENCY_NAME')?.value || 'Agency OS'
     const logoUrl = settings.find(s => s.key === 'LOGO_URL')?.value
-    const pmAccess = await canManageProjects()
-    const financeAccess = await canManageBilling()
+    const pmAccess = await canManageProjectsFn()
+    const financeAccess = await canManageBillingFn()
     return { agencyName, logoUrl, pmAccess, financeAccess }
   },
   component: AdminLayout,

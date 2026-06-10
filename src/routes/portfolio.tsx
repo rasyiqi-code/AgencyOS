@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getPublicPortfoliosFn } from '@/src/server/portfolios'
-import { getSystemSettings } from '@/lib/server/settings'
-import { getPageSeo } from '@/lib/server/seo'
+import { getSystemSettings, getPageSeoFn } from '@/src/server/settings'
 import { PortfolioGrid } from '@/components/public/portfolio-grid'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,8 +13,8 @@ import { useLocale, useTranslations } from '@/lib/i18n/hooks'
 export const Route = createFileRoute('/portfolio')({
   loader: async () => {
     const portfolioRes = await getPublicPortfoliosFn()
-    const settings = await getSystemSettings(['AGENCY_NAME', 'CONTACT_PHONE'])
-    const pageSeo = await getPageSeo('/portfolio')
+    const settings = await getSystemSettings({ data: ['AGENCY_NAME', 'CONTACT_PHONE'] })
+    const pageSeo = await getPageSeoFn({ data: '/portfolio' })
 
     const portfolios = portfolioRes.success ? portfolioRes.data : []
     const agencyName = settings.find(s => s.key === 'AGENCY_NAME')?.value || 'Agency OS'

@@ -35,3 +35,22 @@ export const requireAuth = createServerFn({ method: 'GET' }).handler(
     }
   },
 )
+
+// Server function untuk memeriksa status admin secara aman dari client bundle
+export const isAdminFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const { isAdmin } = await import('@/lib/shared/auth-helpers')
+  return await isAdmin()
+})
+
+// Server function untuk memeriksa akses manajemen proyek
+export const canManageProjectsFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const { canManageProjects } = await import('@/lib/shared/auth-helpers')
+  return await canManageProjects()
+})
+
+// Server function untuk memeriksa akses billing/keuangan
+export const canManageBillingFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const { canManageBilling } = await import('@/lib/shared/auth-helpers')
+  return await canManageBilling()
+})
+

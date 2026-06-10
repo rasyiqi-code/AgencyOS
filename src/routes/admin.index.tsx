@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
-import { canManageProjects, canManageBilling } from '@/lib/shared/auth-helpers'
+import { canManageProjectsFn, canManageBillingFn } from '@/src/server/auth'
 import { getSuperAdminDashboardData, getBillingDashboardData, getProjectDashboardData } from '@/src/server/admin'
 import { SuperAdminDashboardView } from '@/components/admin/views/super-admin-view'
 import { BillingDashboardView } from '@/components/admin/views/billing-view'
@@ -19,8 +19,8 @@ export const Route = createFileRoute('/admin/')({
   loaderDeps: ({ search: { view, mode } }) => ({ view, mode }),
   loader: async ({ deps }) => {
     // Memeriksa peran admin saat ini
-    const isProjectAdmin = await canManageProjects()
-    const isBillingAdmin = await canManageBilling()
+    const isProjectAdmin = await canManageProjectsFn()
+    const isBillingAdmin = await canManageBillingFn()
 
     const mode = deps.mode || 'services'
     const view = deps.view

@@ -276,3 +276,13 @@ export const saveResendConfigFn = createServerFn({ method: 'POST' })
     }
     return { success: true }
   })
+
+// Server function untuk mengambil SEO halaman berdasarkan path secara aman dari client bundle
+export const getPageSeoFn = createServerFn({ method: 'GET' })
+  .validator((path: string) => path)
+  .handler(async ({ data: path }) => {
+    const { getPageSeo } = await import('@/lib/server/seo')
+    const seo = await getPageSeo(path)
+    return JSON.parse(JSON.stringify(seo))
+  })
+

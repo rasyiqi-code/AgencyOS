@@ -5,7 +5,8 @@ import { DashboardHeader } from '@/components/dashboard/header/main'
 import { SidebarContainer } from '@/components/dashboard/sidebar/container'
 import { SidebarContentWrapper } from '@/components/dashboard/sidebar/content-wrapper'
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from '@/components/dashboard/sidebar/navigation'
-import { getSystemSettings } from '@/lib/server/settings'
+import { getSystemSettings } from '@/src/server/settings'
+
 
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: async () => {
@@ -16,7 +17,7 @@ export const Route = createFileRoute('/dashboard')({
     }
   },
   loader: async () => {
-    const settings = await getSystemSettings(['AGENCY_NAME', 'LOGO_URL'])
+    const settings = await getSystemSettings({ data: ['AGENCY_NAME', 'LOGO_URL'] })
     const agencyName = settings.find(s => s.key === 'AGENCY_NAME')?.value || 'Agency OS'
     const logoUrl = settings.find(s => s.key === 'LOGO_URL')?.value
     return { agencyName, logoUrl }
