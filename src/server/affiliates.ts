@@ -341,4 +341,17 @@ export const getAffiliatePayoutData = createServerFn({ method: 'GET' }).handler(
   },
 )
 
+export const checkExistingAffiliateFn = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = await getCurrentUser()
+    if (!user) return { exists: false }
+
+    const existing = await prisma.affiliateProfile.findUnique({
+      where: { userId: user.id },
+    })
+
+    return { exists: !!existing }
+  },
+)
+
 

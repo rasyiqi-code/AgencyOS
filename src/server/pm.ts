@@ -381,14 +381,45 @@ export const deleteProjectFileFn = createServerFn({ method: 'POST' })
     return { success: true }
   })
 
-// 7. Mengambil Katalog Layanan (Katalog Layanan PM)
+// 6.5 Mengambil Katalog Layanan PM untuk admin
 export const getAdminServicesFn = createServerFn({ method: 'GET' })
   .handler(async () => {
     await requirePM()
     const services = await prisma.service.findMany({
       orderBy: { createdAt: 'desc' }
     })
-    return services
+    return JSON.parse(JSON.stringify(services))
+  })
+
+// 7. Mengambil Detail Layanan PM untuk pengeditan
+export const getAdminServiceDetailFn = createServerFn({ method: 'GET' })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    await requirePM()
+    const [service, categoryData] = await Promise.all([
+      prisma.service.findUnique({
+        where: { id }
+      }),
+      prisma.service.findMany({
+        select: { category: true },
+        distinct: ['category']
+      })
+    ])
+
+    if (!service) throw new Error('Service not found')
+
+    return JSON.parse(JSON.stringify({ service, categoryData }))
+  })
+
+// 7.5 Mengambil Kategori Layanan PM yang Unik
+export const getAdminServiceCategoriesFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    await requirePM()
+    const services = await prisma.service.findMany({
+      select: { category: true },
+      distinct: ['category']
+    })
+    return JSON.parse(JSON.stringify(services))
   })
 
 // 8. Menghapus Layanan

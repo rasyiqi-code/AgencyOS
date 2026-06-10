@@ -1,17 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { prisma } from '@/lib/config/db'
+import { getAdminServiceCategoriesFn } from '@/src/server/pm'
 import { CreateServiceForm } from '@/components/admin/pm/services/create-form'
 
 export const Route = createFileRoute('/admin/pm/services/new')({
   loader: async () => {
-    // Mengambil kategori unik yang ada di database
-    const services = await prisma.service.findMany({
-      select: { category: true },
-      distinct: ['category']
-    })
+    const services = await getAdminServiceCategoriesFn()
 
     const categories = Array.from(new Set(
-      services
+      (services as { category: string | null }[])
         .map(s => s.category)
         .filter((c): c is string => !!c && c !== 'Uncategorized')
     )).sort()

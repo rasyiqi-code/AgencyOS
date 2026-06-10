@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { hexclaveClientApp } from '@/lib/config/hexclave-client'
-import { prisma } from '@/lib/config/db'
+import { checkExistingAffiliateFn } from '@/src/server/affiliates'
 import { redirect } from '@tanstack/react-router'
 import { JoinAffiliateButton } from '@/components/marketing/join-affiliate-button'
 import { DollarSign, BarChart3, Zap, Share2 } from 'lucide-react'
@@ -12,14 +12,9 @@ export const Route = createFileRoute('/affiliate/join')({
     if (!user) throw redirect({ href: '/handler/sign-in' })
   },
   loader: async () => {
-    const user = await hexclaveClientApp.getUser()
-    if (!user) return null
-
-    const existing = await prisma.affiliateProfile.findUnique({
-      where: { userId: user.id },
-    })
-    // Mengarahkan ke rute index /affiliate/
-    if (existing) throw redirect({ to: '/affiliate' })
+    const res = await checkExistingAffiliateFn()
+    // Mengarahkan ke rute index /affiliate/ jika profil sudah terdaftar
+    if (res?.exists) throw redirect({ to: '/affiliate' })
   },
   component: AffiliateJoinPage,
 })

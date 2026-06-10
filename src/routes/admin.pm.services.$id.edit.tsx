@@ -1,28 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { prisma } from '@/lib/config/db'
+import { getAdminServiceDetailFn } from '@/src/server/pm'
 import { EditServiceForm, type ServiceData } from '@/components/admin/pm/services/edit-form'
 
 export const Route = createFileRoute('/admin/pm/services/$id/edit')({
   loader: async ({ params: { id } }) => {
-    const [service, categoryData] = await Promise.all([
-      prisma.service.findUnique({
-        where: { id }
-      }),
-      prisma.service.findMany({
-        select: { category: true },
-        distinct: ['category']
-      })
-    ])
-
-    if (!service) {
-      throw new Error('Service not found')
-    }
+    const { service, categoryData } = await getAdminServiceDetailFn({ data: id })
 
     const features = Array.isArray(service.features) ? (service.features as string[]) : []
     const features_id = Array.isArray((service as Record<string, unknown>).features_id) ? ((service as Record<string, unknown>).features_id as string[]) : []
 
     const categories = Array.from(new Set(
-      categoryData
+      (categoryData as { category: string | null }[])
         .map(s => s.category)
         .filter((c): c is string => !!c && c !== 'Uncategorized')
     )).sort()
