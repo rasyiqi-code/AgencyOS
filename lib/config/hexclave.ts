@@ -4,7 +4,10 @@ import { unstable_cache } from "../cache";
 
 // Server app — hanya diinstansiasi di sisi server untuk melindungi secret key
 export const hexclaveServerApp = typeof window === "undefined"
-    ? new HexclaveServerApp({ inheritsFrom: hexclaveClientApp })
+    ? new HexclaveServerApp({
+        secretServerKey: process.env.HEXCLAVE_SECRET_SERVER_KEY || import.meta.env.HEXCLAVE_SECRET_SERVER_KEY || process.env.STACK_SECRET_SERVER_KEY || import.meta.env.STACK_SECRET_SERVER_KEY,
+        inheritsFrom: hexclaveClientApp,
+      })
     : {} as HexclaveServerApp;
 
 // Cache daftar user selama 5 menit untuk mencegah bottleneck download massal user dari auth provider eksternal
