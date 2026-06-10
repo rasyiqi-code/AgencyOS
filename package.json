@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "DOTENV_LOG_LEVEL=error vite dev",
     "build": "vite build",
     "start": "vite preview",
     "lint": "eslint",
