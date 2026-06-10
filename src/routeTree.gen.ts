@@ -44,7 +44,10 @@ import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missio
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
 import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
+import { Route as AffiliateResourcesRouteImport } from './routes/affiliate.resources'
+import { Route as AffiliatePayoutsRouteImport } from './routes/affiliate.payouts'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
+import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSupportRouteImport } from './routes/admin.support'
@@ -79,6 +82,7 @@ import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.o
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
+import { Route as ApiMarketingAffiliatePayoutRequestRouteImport } from './routes/api.marketing.affiliate.payout.request'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
 
 const SupportRoute = SupportRouteImport.update({
@@ -256,9 +260,24 @@ const ApiEstimatesRoute = ApiEstimatesRouteImport.update({
   path: '/api/estimates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AffiliateResourcesRoute = AffiliateResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AffiliateRoute,
+} as any)
+const AffiliatePayoutsRoute = AffiliatePayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => AffiliateRoute,
+} as any)
 const AffiliateJoinRoute = AffiliateJoinRouteImport.update({
   id: '/join',
   path: '/join',
+  getParentRoute: () => AffiliateRoute,
+} as any)
+const AffiliateDashboardRoute = AffiliateDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AffiliateRoute,
 } as any)
 const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
@@ -435,6 +454,12 @@ const AdminPmProjectsIdRoute = AdminPmProjectsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminPmProjectsRoute,
 } as any)
+const ApiMarketingAffiliatePayoutRequestRoute =
+  ApiMarketingAffiliatePayoutRequestRouteImport.update({
+    id: '/api/marketing/affiliate/payout/request',
+    path: '/api/marketing/affiliate/payout/request',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminPmServicesIdEditRoute = AdminPmServicesIdEditRouteImport.update({
   id: '/$id/edit',
   path: '/$id/edit',
@@ -459,7 +484,10 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AdminSupportRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/affiliate/payouts': typeof AffiliatePayoutsRoute
+  '/affiliate/resources': typeof AffiliateResourcesRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -513,6 +541,7 @@ export interface FileRoutesByFullPath {
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
+  '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -527,7 +556,10 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AdminSupportRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/affiliate/payouts': typeof AffiliatePayoutsRoute
+  '/affiliate/resources': typeof AffiliateResourcesRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -581,6 +613,7 @@ export interface FileRoutesByTo {
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
+  '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -601,7 +634,10 @@ export interface FileRoutesById {
   '/admin/support': typeof AdminSupportRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/affiliate/payouts': typeof AffiliatePayoutsRoute
+  '/affiliate/resources': typeof AffiliateResourcesRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -655,6 +691,7 @@ export interface FileRoutesById {
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
+  '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -676,7 +713,10 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/team'
     | '/admin/testimonials'
+    | '/affiliate/dashboard'
     | '/affiliate/join'
+    | '/affiliate/payouts'
+    | '/affiliate/resources'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -730,6 +770,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
+    | '/api/marketing/affiliate/payout/request'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -744,7 +785,10 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/team'
     | '/admin/testimonials'
+    | '/affiliate/dashboard'
     | '/affiliate/join'
+    | '/affiliate/payouts'
+    | '/affiliate/resources'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -798,6 +842,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
+    | '/api/marketing/affiliate/payout/request'
   id:
     | '__root__'
     | '/'
@@ -817,7 +862,10 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/team'
     | '/admin/testimonials'
+    | '/affiliate/dashboard'
     | '/affiliate/join'
+    | '/affiliate/payouts'
+    | '/affiliate/resources'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -871,6 +919,7 @@ export interface FileRouteTypes {
     | '/admin/pm/services/new'
     | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
+    | '/api/marketing/affiliate/payout/request'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -895,6 +944,7 @@ export interface RootRouteChildren {
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
+  ApiMarketingAffiliatePayoutRequestRoute: typeof ApiMarketingAffiliatePayoutRequestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1144,11 +1194,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEstimatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/affiliate/resources': {
+      id: '/affiliate/resources'
+      path: '/resources'
+      fullPath: '/affiliate/resources'
+      preLoaderRoute: typeof AffiliateResourcesRouteImport
+      parentRoute: typeof AffiliateRoute
+    }
+    '/affiliate/payouts': {
+      id: '/affiliate/payouts'
+      path: '/payouts'
+      fullPath: '/affiliate/payouts'
+      preLoaderRoute: typeof AffiliatePayoutsRouteImport
+      parentRoute: typeof AffiliateRoute
+    }
     '/affiliate/join': {
       id: '/affiliate/join'
       path: '/join'
       fullPath: '/affiliate/join'
       preLoaderRoute: typeof AffiliateJoinRouteImport
+      parentRoute: typeof AffiliateRoute
+    }
+    '/affiliate/dashboard': {
+      id: '/affiliate/dashboard'
+      path: '/dashboard'
+      fullPath: '/affiliate/dashboard'
+      preLoaderRoute: typeof AffiliateDashboardRouteImport
       parentRoute: typeof AffiliateRoute
     }
     '/admin/testimonials': {
@@ -1389,6 +1460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPmProjectsIdRouteImport
       parentRoute: typeof AdminPmProjectsRoute
     }
+    '/api/marketing/affiliate/payout/request': {
+      id: '/api/marketing/affiliate/payout/request'
+      path: '/api/marketing/affiliate/payout/request'
+      fullPath: '/api/marketing/affiliate/payout/request'
+      preLoaderRoute: typeof ApiMarketingAffiliatePayoutRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/pm/services/$id/edit': {
       id: '/admin/pm/services/$id/edit'
       path: '/$id/edit'
@@ -1490,12 +1568,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AffiliateRouteChildren {
+  AffiliateDashboardRoute: typeof AffiliateDashboardRoute
   AffiliateJoinRoute: typeof AffiliateJoinRoute
+  AffiliatePayoutsRoute: typeof AffiliatePayoutsRoute
+  AffiliateResourcesRoute: typeof AffiliateResourcesRoute
   AffiliateIndexRoute: typeof AffiliateIndexRoute
 }
 
 const AffiliateRouteChildren: AffiliateRouteChildren = {
+  AffiliateDashboardRoute: AffiliateDashboardRoute,
   AffiliateJoinRoute: AffiliateJoinRoute,
+  AffiliatePayoutsRoute: AffiliatePayoutsRoute,
+  AffiliateResourcesRoute: AffiliateResourcesRoute,
   AffiliateIndexRoute: AffiliateIndexRoute,
 }
 
@@ -1605,6 +1689,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
+  ApiMarketingAffiliatePayoutRequestRoute:
+    ApiMarketingAffiliatePayoutRequestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

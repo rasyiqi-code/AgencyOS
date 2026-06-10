@@ -321,3 +321,24 @@ export const getAffiliateDashboardData = createServerFn({ method: 'GET' }).handl
   },
 )
 
+export const getAffiliatePayoutData = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = await getCurrentUser()
+    if (!user) return null
+
+    const profile = await prisma.affiliateProfile.findUnique({
+      where: { userId: user.id },
+    })
+
+    if (!profile) return null
+
+    return {
+      name: profile.name,
+      totalEarnings: profile.totalEarnings,
+      paidEarnings: profile.paidEarnings,
+      availableBalance: profile.totalEarnings - profile.paidEarnings,
+    }
+  },
+)
+
+

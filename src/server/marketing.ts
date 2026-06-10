@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/lib/config/db'
 import { Prisma } from '@prisma/client'
-import { isAdmin } from '@/lib/shared/auth-helpers'
+import { isAdmin, getCurrentUser } from '@/lib/shared/auth-helpers'
 import { z } from 'zod'
 import { getBonuses, createBonus, deleteBonus, toggleBonusStatus, getCoupons, createCoupon, deleteCoupon, getSubscribers, deleteSubscriber, getPromotions, createPromotion, updatePromotion, deletePromotion } from "@/lib/server/marketing"
 import { getLeads, deleteLead } from "@/lib/server/leads"
@@ -457,6 +457,19 @@ export const subscribeNewsletterFn = createServerFn({ method: 'POST' })
     const result = await createSubscriber(data.email, data.name)
     return result
   })
+
+export const getAffiliateAssetsFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const user = await getCurrentUser()
+    if (!user) throw new Error('Unauthorized')
+
+    const raw = await prisma.marketingAsset.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: 'desc' },
+    })
+    return JSON.parse(JSON.stringify(raw))
+  })
+
 
 
 
