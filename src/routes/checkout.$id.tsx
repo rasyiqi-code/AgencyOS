@@ -3,7 +3,7 @@ import { prisma } from '@/lib/config/db'
 import { getCurrentUser } from '@/lib/shared/auth-helpers'
 import { paymentGatewayService } from '@/lib/server/payment-gateway-service'
 import { getBonuses } from '@/lib/server/marketing'
-import { getSystemSettings } from '@/lib/server/settings'
+import { getSystemSettings } from '@/src/server/settings'
 import { paymentService } from '@/lib/server/payment-service'
 import { hexclaveServerApp } from '@/lib/config/hexclave'
 import { CheckoutProgress } from '@/components/checkout/checkout-progress'
@@ -27,9 +27,9 @@ export const Route = createFileRoute('/checkout/$id')({
       })
     }
   },
-  loader: async ({ params, search }) => {
+  loaderDeps: ({ search: { paymentType } }) => ({ paymentType }),
+  loader: async ({ params, deps: { paymentType } }) => {
     const { id } = params
-    const paymentType = search.paymentType
 
     const activeRate = await paymentService.getExchangeRate()
 
@@ -90,7 +90,7 @@ export const Route = createFileRoute('/checkout/$id')({
 
     const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value
 
-    const context = (estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE"
+    const context = ((estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE") as "SERVICE" | "CALCULATOR"
     const serviceBonuses = await getBonuses(context)
 
     const hasActiveGateway = await paymentGatewayService.hasActiveGateway()

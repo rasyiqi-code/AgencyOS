@@ -39,8 +39,10 @@ import { Route as SquadActiveRouteImport } from './routes/squad.active'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as PriceCalculatorIdRouteImport } from './routes/price-calculator.$id'
+import { Route as InvoicesIdRouteImport } from './routes/invoices.$id'
 import { Route as HandlerSignInRouteImport } from './routes/handler/sign-in'
 import { Route as HandlerSplatRouteImport } from './routes/handler/$'
+import { Route as DigitalInvoicesIdRouteImport } from './routes/digital-invoices.$id'
 import { Route as DashboardSupportRouteImport } from './routes/dashboard.support'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardServicesRouteImport } from './routes/dashboard.services'
@@ -74,6 +76,7 @@ import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
 import { Route as ApiPaymentCreemRouteImport } from './routes/api.payment.creem'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
+import { Route as ApiBillingProofRouteImport } from './routes/api.billing.proof'
 import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
 import { Route as AdminSystemSettingsRouteImport } from './routes/admin.system.settings'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
@@ -254,6 +257,11 @@ const PriceCalculatorIdRoute = PriceCalculatorIdRouteImport.update({
   path: '/price-calculator/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvoicesIdRoute = InvoicesIdRouteImport.update({
+  id: '/invoices/$id',
+  path: '/invoices/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HandlerSignInRoute = HandlerSignInRouteImport.update({
   id: '/handler/sign-in',
   path: '/handler/sign-in',
@@ -262,6 +270,11 @@ const HandlerSignInRoute = HandlerSignInRouteImport.update({
 const HandlerSplatRoute = HandlerSplatRouteImport.update({
   id: '/handler/$',
   path: '/handler/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalInvoicesIdRoute = DigitalInvoicesIdRouteImport.update({
+  id: '/digital-invoices/$id',
+  path: '/digital-invoices/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardSupportRoute = DashboardSupportRouteImport.update({
@@ -427,6 +440,11 @@ const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
 const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
   id: '/api/currency/rates',
   path: '/api/currency/rates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBillingProofRoute = ApiBillingProofRouteImport.update({
+  id: '/api/billing/proof',
+  path: '/api/billing/proof',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSystemWebhooksRoute = AdminSystemWebhooksRouteImport.update({
@@ -623,8 +641,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
+  '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
+  '/invoices/$id': typeof InvoicesIdRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -660,6 +680,7 @@ export interface FileRoutesByFullPath {
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
@@ -714,8 +735,10 @@ export interface FileRoutesByTo {
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
+  '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
+  '/invoices/$id': typeof InvoicesIdRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -749,6 +772,7 @@ export interface FileRoutesByTo {
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
@@ -809,8 +833,10 @@ export interface FileRoutesById {
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
+  '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
+  '/invoices/$id': typeof InvoicesIdRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -846,6 +872,7 @@ export interface FileRoutesById {
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
@@ -907,8 +934,10 @@ export interface FileRouteTypes {
     | '/dashboard/services'
     | '/dashboard/settings'
     | '/dashboard/support'
+    | '/digital-invoices/$id'
     | '/handler/$'
     | '/handler/sign-in'
+    | '/invoices/$id'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -944,6 +973,7 @@ export interface FileRouteTypes {
     | '/admin/system/currency'
     | '/admin/system/settings'
     | '/admin/system/webhooks'
+    | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
@@ -998,8 +1028,10 @@ export interface FileRouteTypes {
     | '/dashboard/services'
     | '/dashboard/settings'
     | '/dashboard/support'
+    | '/digital-invoices/$id'
     | '/handler/$'
     | '/handler/sign-in'
+    | '/invoices/$id'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -1033,6 +1065,7 @@ export interface FileRouteTypes {
     | '/admin/system/currency'
     | '/admin/system/settings'
     | '/admin/system/webhooks'
+    | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
@@ -1092,8 +1125,10 @@ export interface FileRouteTypes {
     | '/dashboard/services'
     | '/dashboard/settings'
     | '/dashboard/support'
+    | '/digital-invoices/$id'
     | '/handler/$'
     | '/handler/sign-in'
+    | '/invoices/$id'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -1129,6 +1164,7 @@ export interface FileRouteTypes {
     | '/admin/system/currency'
     | '/admin/system/settings'
     | '/admin/system/webhooks'
+    | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
@@ -1168,8 +1204,10 @@ export interface RootRouteChildren {
   ApiDigitalCheckoutRoute: typeof ApiDigitalCheckoutRoute
   ApiEstimatesRoute: typeof ApiEstimatesRoute
   CheckoutIdRoute: typeof CheckoutIdRoute
+  DigitalInvoicesIdRoute: typeof DigitalInvoicesIdRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
   HandlerSignInRoute: typeof HandlerSignInRoute
+  InvoicesIdRoute: typeof InvoicesIdRoute
   PriceCalculatorIdRoute: typeof PriceCalculatorIdRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
@@ -1177,6 +1215,7 @@ export interface RootRouteChildren {
   PriceCalculatorIndexRoute: typeof PriceCalculatorIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiBillingProofRoute: typeof ApiBillingProofRoute
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
   ApiPaymentCreemRoute: typeof ApiPaymentCreemRouteWithChildren
@@ -1399,6 +1438,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceCalculatorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invoices/$id': {
+      id: '/invoices/$id'
+      path: '/invoices/$id'
+      fullPath: '/invoices/$id'
+      preLoaderRoute: typeof InvoicesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/handler/sign-in': {
       id: '/handler/sign-in'
       path: '/handler/sign-in'
@@ -1411,6 +1457,13 @@ declare module '@tanstack/react-router' {
       path: '/handler/$'
       fullPath: '/handler/$'
       preLoaderRoute: typeof HandlerSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-invoices/$id': {
+      id: '/digital-invoices/$id'
+      path: '/digital-invoices/$id'
+      fullPath: '/digital-invoices/$id'
+      preLoaderRoute: typeof DigitalInvoicesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/support': {
@@ -1642,6 +1695,13 @@ declare module '@tanstack/react-router' {
       path: '/api/currency/rates'
       fullPath: '/api/currency/rates'
       preLoaderRoute: typeof ApiCurrencyRatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/billing/proof': {
+      id: '/api/billing/proof'
+      path: '/api/billing/proof'
+      fullPath: '/api/billing/proof'
+      preLoaderRoute: typeof ApiBillingProofRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/system/webhooks': {
@@ -2081,8 +2141,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDigitalCheckoutRoute: ApiDigitalCheckoutRoute,
   ApiEstimatesRoute: ApiEstimatesRoute,
   CheckoutIdRoute: CheckoutIdRoute,
+  DigitalInvoicesIdRoute: DigitalInvoicesIdRoute,
   HandlerSplatRoute: HandlerSplatRoute,
   HandlerSignInRoute: HandlerSignInRoute,
+  InvoicesIdRoute: InvoicesIdRoute,
   PriceCalculatorIdRoute: PriceCalculatorIdRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
@@ -2090,6 +2152,7 @@ const rootRouteChildren: RootRouteChildren = {
   PriceCalculatorIndexRoute: PriceCalculatorIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ApiBillingProofRoute: ApiBillingProofRoute,
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
   ApiPaymentCreemRoute: ApiPaymentCreemRouteWithChildren,
