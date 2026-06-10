@@ -1,5 +1,11 @@
+import { Buffer } from 'buffer'
 import type { ReactNode } from 'react'
 import { useEffect, useState, lazy, Suspense } from 'react'
+
+// Polyfill Buffer untuk client-side browser agar library internal Hexclave tidak mengalami ReferenceError
+if (typeof window !== 'undefined') {
+  window.Buffer = window.Buffer || Buffer
+}
 import {
   Outlet,
   createRootRoute,
