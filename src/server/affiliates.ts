@@ -276,7 +276,7 @@ export const updateBankDetailsFn = createServerFn({ method: 'POST' })
 
 export const getAffiliateDashboardData = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const user = await hexclaveServerApp.getUser()
+    const user = await getCurrentUser()
     if (!user) return null
 
     const profile = await prisma.affiliateProfile.findUnique({
