@@ -53,7 +53,7 @@ export function DashboardLanguageSwitcher() {
     const { pathname } = useLocation();
     const search = useSearch({ strict: false });
     const [mounted, setMounted] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const [isPending, setIsPending] = useState(false);
 
     useEffect(() => {
         const id = requestAnimationFrame(() => setMounted(true));
@@ -65,6 +65,9 @@ export function DashboardLanguageSwitcher() {
     const currentLocale = pathnameToUse?.split('/')[1]?.length === 2 ? pathnameToUse.split('/')[1] : 'en';
 
     const toggle = () => {
+        if (isPending) return;
+        setIsPending(true);
+
         const newLocale = currentLocale === 'en' ? 'id' : 'en';
 
         // Sesuaikan segmen path berdasarkan locale baru
@@ -86,13 +89,14 @@ export function DashboardLanguageSwitcher() {
 
         const newPath = segments.join('/') || '/';
 
-        // Transisi navigasi optimis
-        startTransition(async () => {
-            // Set cookie untuk persistensi locale
-            document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-            router.push(newPath);
-            router.invalidate();
-        });
+        // Set cookie untuk persistensi locale
+        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+
+        // Lakukan navigasi fisik penuh agar browser memuat ulang halaman dengan locale baru
+        // Ini memastikan state SSR dan client selalu sinkron dan mencegah masalah routing no-op pada TanStack Router
+        if (typeof window !== 'undefined') {
+            window.location.href = newPath;
+        }
     };
 
     return (
