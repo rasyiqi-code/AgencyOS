@@ -74,6 +74,7 @@ import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
 import { Route as ApiSystemSeoRouteImport } from './routes/api.system.seo'
 import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
+import { Route as ApiPaymentStatusRouteImport } from './routes/api.payment.status'
 import { Route as ApiPaymentCreemRouteImport } from './routes/api.payment.creem'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
@@ -446,6 +447,11 @@ const ApiStoreOrderRoute = ApiStoreOrderRouteImport.update({
   path: '/api/store/order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPaymentStatusRoute = ApiPaymentStatusRouteImport.update({
+  id: '/api/payment/status',
+  path: '/api/payment/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPaymentCreemRoute = ApiPaymentCreemRouteImport.update({
   id: '/api/payment/creem',
   path: '/api/payment/creem',
@@ -778,6 +784,7 @@ export interface FileRoutesByFullPath {
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
+  '/api/payment/status': typeof ApiPaymentStatusRoute
   '/api/store/order': typeof ApiStoreOrderRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -884,6 +891,7 @@ export interface FileRoutesByTo {
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
+  '/api/payment/status': typeof ApiPaymentStatusRoute
   '/api/store/order': typeof ApiStoreOrderRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -998,6 +1006,7 @@ export interface FileRoutesById {
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
+  '/api/payment/status': typeof ApiPaymentStatusRoute
   '/api/store/order': typeof ApiStoreOrderRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -1113,6 +1122,7 @@ export interface FileRouteTypes {
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
+    | '/api/payment/status'
     | '/api/store/order'
     | '/api/system/seo'
     | '/dashboard/missions/$id'
@@ -1219,6 +1229,7 @@ export interface FileRouteTypes {
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
+    | '/api/payment/status'
     | '/api/store/order'
     | '/api/system/seo'
     | '/dashboard/missions/$id'
@@ -1332,6 +1343,7 @@ export interface FileRouteTypes {
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
+    | '/api/payment/status'
     | '/api/store/order'
     | '/api/system/seo'
     | '/dashboard/missions/$id'
@@ -1390,6 +1402,7 @@ export interface RootRouteChildren {
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
   ApiPaymentCreemRoute: typeof ApiPaymentCreemRouteWithChildren
+  ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
   ApiStoreOrderRoute: typeof ApiStoreOrderRoute
   ApiSystemSeoRoute: typeof ApiSystemSeoRouteWithChildren
   ApiIntegrationsGithubAuthorizeRoute: typeof ApiIntegrationsGithubAuthorizeRoute
@@ -1856,6 +1869,13 @@ declare module '@tanstack/react-router' {
       path: '/api/store/order'
       fullPath: '/api/store/order'
       preLoaderRoute: typeof ApiStoreOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/payment/status': {
+      id: '/api/payment/status'
+      path: '/api/payment/status'
+      fullPath: '/api/payment/status'
+      preLoaderRoute: typeof ApiPaymentStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/payment/creem': {
@@ -2478,6 +2498,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
   ApiPaymentCreemRoute: ApiPaymentCreemRouteWithChildren,
+  ApiPaymentStatusRoute: ApiPaymentStatusRoute,
   ApiStoreOrderRoute: ApiStoreOrderRoute,
   ApiSystemSeoRoute: ApiSystemSeoRouteWithChildren,
   ApiIntegrationsGithubAuthorizeRoute: ApiIntegrationsGithubAuthorizeRoute,

@@ -117,13 +117,18 @@ export const Route = createFileRoute('/invoices/$id')({
       bank_holder: getSetting('bank_holder')
     } : undefined
 
+    const { getAppUrl } = await import('@/lib/shared/url')
+    const appUrl = getAppUrl()
+    const cleanWebsite = appUrl.replace('https://', '').replace('http://', '').replace(/\/$/, '')
+
     const agencySettings = {
       agencyName: getSetting('AGENCY_NAME') || "Agency OS",
       companyName: getSetting('COMPANY_NAME') || "Agency OS",
       address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
       email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com",
       phone: getSetting('CONTACT_PHONE'),
-      telegram: getSetting('CONTACT_TELEGRAM')
+      telegram: getSetting('CONTACT_TELEGRAM'),
+      website: cleanWebsite
     }
 
     let currentStep: 1 | 2 | 3 | 4 = 2
