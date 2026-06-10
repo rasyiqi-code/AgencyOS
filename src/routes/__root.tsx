@@ -62,7 +62,8 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  const i18n = Route.useLoaderData()
+  const loaderData = Route.useLoaderData()
+  const i18n = loaderData || { locale: 'en', messages: enMessages }
 
   return (
     <RootDocument i18n={i18n}>
@@ -75,11 +76,12 @@ function RootComponent() {
 
 function RootDocument({
   children,
-  i18n,
+  i18n: inputI18n,
 }: Readonly<{
   children: ReactNode
-  i18n: { locale: string; messages: Messages }
+  i18n: { locale: string; messages: Messages } | undefined
 }>) {
+  const i18n = inputI18n || { locale: 'en', messages: enMessages }
   return (
     <html lang={i18n.locale} className="dark">
       <head>

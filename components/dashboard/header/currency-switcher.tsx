@@ -60,25 +60,35 @@ export function DashboardLanguageSwitcher() {
         return () => cancelAnimationFrame(id);
     }, []);
 
-    // Simple detection based on first path segment being 2 chars
-    const currentLocale = pathname?.split('/')[1]?.length === 2 ? pathname.split('/')[1] : 'en';
+    // Menggunakan window.location.pathname di client-side karena pathname router telah di-rewrite
+    const pathnameToUse = typeof window !== 'undefined' ? window.location.pathname : pathname;
+    const currentLocale = pathnameToUse?.split('/')[1]?.length === 2 ? pathnameToUse.split('/')[1] : 'en';
 
     const toggle = () => {
         const newLocale = currentLocale === 'en' ? 'id' : 'en';
 
-        // Remove old locale if present
-        const segments = pathname?.split('/') || [];
+        // Sesuaikan segmen path berdasarkan locale baru
+        const currentPathname = typeof window !== 'undefined' ? window.location.pathname : pathname;
+        const segments = currentPathname?.split('/') || [];
         if (segments[1]?.length === 2) {
-            segments[1] = newLocale;
+            if (newLocale === 'en') {
+                // Hapus segmen locale jika kembali ke default (English)
+                segments.splice(1, 1);
+            } else {
+                segments[1] = newLocale;
+            }
         } else {
-            segments.splice(1, 0, newLocale);
+            if (newLocale !== 'en') {
+                // Sisipkan locale jika beralih ke non-default
+                segments.splice(1, 0, newLocale);
+            }
         }
 
         const newPath = segments.join('/') || '/';
 
-        // Optimistic UI & Transition
+        // Transisi navigasi optimis
         startTransition(async () => {
-            // Set cookie for client-side persistence redundancy
+            // Set cookie untuk persistensi locale
             document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
             router.push(newPath);
             router.invalidate();
