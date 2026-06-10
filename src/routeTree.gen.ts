@@ -69,6 +69,7 @@ import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
+import { Route as AdminSystemSettingsRouteImport } from './routes/admin.system.settings'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
@@ -391,6 +392,11 @@ const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
   path: '/api/currency/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSystemSettingsRoute = AdminSystemSettingsRouteImport.update({
+  id: '/system/settings',
+  path: '/system/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
   id: '/system/currency',
   path: '/system/currency',
@@ -573,6 +579,7 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -651,6 +658,7 @@ export interface FileRoutesByTo {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -735,6 +743,7 @@ export interface FileRoutesById {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
@@ -820,6 +829,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/system/settings'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -898,6 +908,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/system/settings'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -981,6 +992,7 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/system/settings'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/dashboard/missions/$id'
@@ -1447,6 +1459,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCurrencyRatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/system/settings': {
+      id: '/admin/system/settings'
+      path: '/system/settings'
+      fullPath: '/admin/system/settings'
+      preLoaderRoute: typeof AdminSystemSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/system/currency': {
       id: '/admin/system/currency'
       path: '/system/currency'
@@ -1650,6 +1669,7 @@ interface AdminRouteChildren {
   AdminPmProjectsRoute: typeof AdminPmProjectsRouteWithChildren
   AdminPmServicesRoute: typeof AdminPmServicesRouteWithChildren
   AdminSystemCurrencyRoute: typeof AdminSystemCurrencyRoute
+  AdminSystemSettingsRoute: typeof AdminSystemSettingsRoute
   AdminMarketingIndexRoute: typeof AdminMarketingIndexRoute
   AdminPmIndexRoute: typeof AdminPmIndexRoute
 }
@@ -1681,6 +1701,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPmProjectsRoute: AdminPmProjectsRouteWithChildren,
   AdminPmServicesRoute: AdminPmServicesRouteWithChildren,
   AdminSystemCurrencyRoute: AdminSystemCurrencyRoute,
+  AdminSystemSettingsRoute: AdminSystemSettingsRoute,
   AdminMarketingIndexRoute: AdminMarketingIndexRoute,
   AdminPmIndexRoute: AdminPmIndexRoute,
 }
