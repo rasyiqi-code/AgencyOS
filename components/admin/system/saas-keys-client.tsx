@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Key, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "@tanstack/react-router";
 import { createAgencyKeyFn, deleteAgencyKeyFn, toggleAgencyKeyFn } from "@/src/server/keys";
 import { SystemKey } from "@prisma/client";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -17,6 +18,7 @@ interface SaaSKeysClientProps {
 }
 
 export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
+    const router = useRouter();
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -30,6 +32,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
             toast.success("New SaaS Key generated!");
             setIsAddOpen(false);
             setNewLabel("");
+            router.invalidate();
         } catch {
             toast.error("Failed to generate key");
         }
@@ -40,6 +43,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
         try {
             await deleteAgencyKeyFn({ data: id });
             toast.success("Key deleted successfully");
+            router.invalidate();
         } catch {
             toast.error("Failed to delete key");
         } finally {
@@ -145,7 +149,15 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                             </TableCell>
                             <TableCell>
                                 <button 
-                                    onClick={() => toggleAgencyKeyFn({ data: { id: key.id, isActive: !key.isActive } })}
+                                    onClick={async () => {
+                                        try {
+                                            await toggleAgencyKeyFn({ data: { id: key.id, isActive: !key.isActive } });
+                                            toast.success("Key status updated");
+                                            router.invalidate();
+                                        } catch {
+                                            toast.error("Failed to update key status");
+                                        }
+                                    }}
                                     className="hover:opacity-80 transition-opacity"
                                 >
                                     {key.isActive ? (

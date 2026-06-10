@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { isAdmin, getCurrentUser } from '@/lib/shared/auth-helpers'
+import type { PrismaWithIntegration } from '@/types/payment'
 
 // Helper untuk validasi bahwa user saat ini adalah admin
 async function requireAdmin() {
@@ -285,4 +286,136 @@ export const getPageSeoFn = createServerFn({ method: 'GET' })
     const seo = await getPageSeo(path)
     return JSON.parse(JSON.stringify(seo))
   })
+
+// Server function untuk menyimpan konfigurasi Cloud Storage (R2 & Cloudflare Rendering)
+const saveStorageSettingsSchema = z.object({
+  r2BucketName: z.string().optional(),
+  r2Endpoint: z.string().optional(),
+  r2AccessKeyId: z.string().optional(),
+  r2SecretAccessKey: z.string().optional(),
+  r2PublicDomain: z.string().optional(),
+  cloudflareAccountId: z.string().optional(),
+  cloudflareApiToken: z.string().optional(),
+})
+
+export const saveStorageSettingsFn = createServerFn({ method: 'POST' })
+  .validator(saveStorageSettingsSchema)
+  .handler(async ({ data }) => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { prisma } = await import('@/lib/config/db')
+
+    // Lakukan pembaruan pengaturan sistem secara paralel
+    const updates = []
+    if (data.r2BucketName !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "r2_bucket_name" }, update: { value: data.r2BucketName }, create: { key: "r2_bucket_name", value: data.r2BucketName } }))
+    }
+    if (data.r2Endpoint !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "r2_endpoint" }, update: { value: data.r2Endpoint }, create: { key: "r2_endpoint", value: data.r2Endpoint } }))
+    }
+    if (data.r2AccessKeyId !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "r2_access_key_id" }, update: { value: data.r2AccessKeyId }, create: { key: "r2_access_key_id", value: data.r2AccessKeyId } }))
+    }
+    if (data.r2SecretAccessKey !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "r2_secret_access_key" }, update: { value: data.r2SecretAccessKey }, create: { key: "r2_secret_access_key", value: data.r2SecretAccessKey } }))
+    }
+    if (data.r2PublicDomain !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "r2_public_domain" }, update: { value: data.r2PublicDomain }, create: { key: "r2_public_domain", value: data.r2PublicDomain } }))
+    }
+    if (data.cloudflareAccountId !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "cloudflare_account_id" }, update: { value: data.cloudflareAccountId }, create: { key: "cloudflare_account_id", value: data.cloudflareAccountId } }))
+    }
+    if (data.cloudflareApiToken !== undefined) {
+      updates.push(prisma.systemSetting.upsert({ where: { key: "cloudflare_api_token" }, update: { value: data.cloudflareApiToken }, create: { key: "cloudflare_api_token", value: data.cloudflareApiToken } }))
+    }
+
+    if (updates.length > 0) {
+      await prisma.$transaction(updates)
+    }
+
+    return { success: true }
+  })
+
+// Server function untuk mengambil konfigurasi model penetapan harga AI
+export const getPricingConfigFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { pricingService } = await import('@/lib/server/pricing-service')
+    const config = await pricingService.getConfig()
+    return JSON.parse(JSON.stringify(config))
+  })
+
+// Server function untuk menyimpan konfigurasi model penetapan harga AI
+const savePricingSettingsSchema = z.object({
+  baseRate: z.number(),
+  multipliers: z.object({
+    Low: z.number(),
+    Medium: z.number(),
+    High: z.number(),
+  })
+})
+
+export const savePricingSettingsFn = createServerFn({ method: 'POST' })
+  .validator(savePricingSettingsSchema)
+  .handler(async ({ data }) => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { pricingService } = await import('@/lib/server/pricing-service')
+    await pricingService.saveConfig({
+      baseRate: data.baseRate,
+      multipliers: {
+        Low: data.multipliers.Low,
+        Medium: data.multipliers.Medium,
+        High: data.multipliers.High,
+      }
+    })
+
+    return { success: true }
+  })
+
+// Server function untuk mengambil seluruh integrasi sistem yang aktif
+export const getSystemIntegrationsFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { prisma } = await import('@/lib/config/db')
+    const integrations = await (prisma as unknown as PrismaWithIntegration).systemIntegration.findMany()
+    return JSON.parse(JSON.stringify(integrations))
+  })
+
+// Server function untuk memutuskan integrasi sistem berdasarkan provider (misal github)
+export const disconnectIntegrationFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ provider: z.string() }))
+  .handler(async ({ data }) => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { prisma } = await import('@/lib/config/db')
+
+    await (prisma as unknown as PrismaWithIntegration).systemIntegration.deleteMany({
+      where: { provider: data.provider }
+    })
+
+    return { success: true }
+  })
+
+// Server function untuk mengambil daftar seluruh SEO per halaman
+export const getPageSeoListFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    // Validasi hak akses admin
+    await requireAdmin()
+
+    const { prisma } = await import('@/lib/config/db')
+    const pages = await prisma.pageSeo.findMany({
+      orderBy: { path: 'asc' }
+    })
+    return JSON.parse(JSON.stringify(pages))
+  })
+
+
 

@@ -72,13 +72,21 @@ import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
+import { Route as ApiSystemSeoRouteImport } from './routes/api.system.seo'
 import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
 import { Route as ApiPaymentCreemRouteImport } from './routes/api.payment.creem'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
 import { Route as ApiBillingProofRouteImport } from './routes/api.billing.proof'
 import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
+import { Route as AdminSystemStorageRouteImport } from './routes/admin.system.storage'
 import { Route as AdminSystemSettingsRouteImport } from './routes/admin.system.settings'
+import { Route as AdminSystemSeoRouteImport } from './routes/admin.system.seo'
+import { Route as AdminSystemPricingRouteImport } from './routes/admin.system.pricing'
+import { Route as AdminSystemPaymentRouteImport } from './routes/admin.system.payment'
+import { Route as AdminSystemKeysRouteImport } from './routes/admin.system.keys'
+import { Route as AdminSystemIntegrationsRouteImport } from './routes/admin.system.integrations'
+import { Route as AdminSystemEmailRouteImport } from './routes/admin.system.email'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
@@ -98,12 +106,18 @@ import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.o
 import { Route as AdminFinanceDigitalOrdersRouteImport } from './routes/admin.finance.digital-orders'
 import { Route as AdminPmServicesIndexRouteImport } from './routes/admin.pm.services.index'
 import { Route as AdminPmProjectsIndexRouteImport } from './routes/admin.pm.projects.index'
+import { Route as ApiSystemSeoPagesRouteImport } from './routes/api.system.seo.pages'
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
 import { Route as ApiPaymentMidtransWebhookRouteImport } from './routes/api.payment.midtrans.webhook'
 import { Route as ApiPaymentMidtransChargeRouteImport } from './routes/api.payment.midtrans.charge'
 import { Route as ApiPaymentCreemWebhookRouteImport } from './routes/api.payment.creem.webhook'
+import { Route as ApiIntegrationsVercelAuthorizeRouteImport } from './routes/api.integrations.vercel.authorize'
+import { Route as ApiIntegrationsGithubCallbackRouteImport } from './routes/api.integrations.github.callback'
+import { Route as ApiIntegrationsGithubAuthorizeRouteImport } from './routes/api.integrations.github.authorize'
+import { Route as AdminSystemSeoPagesRouteImport } from './routes/admin.system.seo.pages'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
+import { Route as ApiSystemSeoPagesIdRouteImport } from './routes/api.system.seo.pages.$id'
 import { Route as ApiMarketingAffiliatePayoutRequestRouteImport } from './routes/api.marketing.affiliate.payout.request'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
 
@@ -422,6 +436,11 @@ const DashboardMissionsIdRoute = DashboardMissionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DashboardMissionsRoute,
 } as any)
+const ApiSystemSeoRoute = ApiSystemSeoRouteImport.update({
+  id: '/api/system/seo',
+  path: '/api/system/seo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiStoreOrderRoute = ApiStoreOrderRouteImport.update({
   id: '/api/store/order',
   path: '/api/store/order',
@@ -452,9 +471,44 @@ const AdminSystemWebhooksRoute = AdminSystemWebhooksRouteImport.update({
   path: '/system/webhooks',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSystemStorageRoute = AdminSystemStorageRouteImport.update({
+  id: '/system/storage',
+  path: '/system/storage',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSystemSettingsRoute = AdminSystemSettingsRouteImport.update({
   id: '/system/settings',
   path: '/system/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemSeoRoute = AdminSystemSeoRouteImport.update({
+  id: '/system/seo',
+  path: '/system/seo',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemPricingRoute = AdminSystemPricingRouteImport.update({
+  id: '/system/pricing',
+  path: '/system/pricing',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemPaymentRoute = AdminSystemPaymentRouteImport.update({
+  id: '/system/payment',
+  path: '/system/payment',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemKeysRoute = AdminSystemKeysRouteImport.update({
+  id: '/system/keys',
+  path: '/system/keys',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemIntegrationsRoute = AdminSystemIntegrationsRouteImport.update({
+  id: '/system/integrations',
+  path: '/system/integrations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSystemEmailRoute = AdminSystemEmailRouteImport.update({
+  id: '/system/email',
+  path: '/system/email',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
@@ -557,6 +611,11 @@ const AdminPmProjectsIndexRoute = AdminPmProjectsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminPmProjectsRoute,
 } as any)
+const ApiSystemSeoPagesRoute = ApiSystemSeoPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => ApiSystemSeoRoute,
+} as any)
 const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
   id: '/api/system/keys/status',
   path: '/api/system/keys/status',
@@ -579,6 +638,29 @@ const ApiPaymentCreemWebhookRoute = ApiPaymentCreemWebhookRouteImport.update({
   path: '/webhook',
   getParentRoute: () => ApiPaymentCreemRoute,
 } as any)
+const ApiIntegrationsVercelAuthorizeRoute =
+  ApiIntegrationsVercelAuthorizeRouteImport.update({
+    id: '/api/integrations/vercel/authorize',
+    path: '/api/integrations/vercel/authorize',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiIntegrationsGithubCallbackRoute =
+  ApiIntegrationsGithubCallbackRouteImport.update({
+    id: '/api/integrations/github/callback',
+    path: '/api/integrations/github/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiIntegrationsGithubAuthorizeRoute =
+  ApiIntegrationsGithubAuthorizeRouteImport.update({
+    id: '/api/integrations/github/authorize',
+    path: '/api/integrations/github/authorize',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminSystemSeoPagesRoute = AdminSystemSeoPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminSystemSeoRoute,
+} as any)
 const AdminPmServicesNewRoute = AdminPmServicesNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -588,6 +670,11 @@ const AdminPmProjectsIdRoute = AdminPmProjectsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AdminPmProjectsRoute,
+} as any)
+const ApiSystemSeoPagesIdRoute = ApiSystemSeoPagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiSystemSeoPagesRoute,
 } as any)
 const ApiMarketingAffiliatePayoutRequestRoute =
   ApiMarketingAffiliatePayoutRequestRouteImport.update({
@@ -678,27 +765,41 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/email': typeof AdminSystemEmailRoute
+  '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
+  '/admin/system/keys': typeof AdminSystemKeysRoute
+  '/admin/system/payment': typeof AdminSystemPaymentRoute
+  '/admin/system/pricing': typeof AdminSystemPricingRoute
+  '/admin/system/seo': typeof AdminSystemSeoRouteWithChildren
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/admin/system/seo/pages': typeof AdminSystemSeoPagesRoute
+  '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
+  '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
+  '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -770,27 +871,41 @@ export interface FileRoutesByTo {
   '/admin/marketing/push': typeof AdminMarketingPushRoute
   '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/email': typeof AdminSystemEmailRoute
+  '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
+  '/admin/system/keys': typeof AdminSystemKeysRoute
+  '/admin/system/payment': typeof AdminSystemPaymentRoute
+  '/admin/system/pricing': typeof AdminSystemPricingRoute
+  '/admin/system/seo': typeof AdminSystemSeoRouteWithChildren
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/admin/system/seo/pages': typeof AdminSystemSeoPagesRoute
+  '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
+  '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
+  '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
   '/admin/pm/projects': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -870,27 +985,41 @@ export interface FileRoutesById {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/admin/system/email': typeof AdminSystemEmailRoute
+  '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
+  '/admin/system/keys': typeof AdminSystemKeysRoute
+  '/admin/system/payment': typeof AdminSystemPaymentRoute
+  '/admin/system/pricing': typeof AdminSystemPricingRoute
+  '/admin/system/seo': typeof AdminSystemSeoRouteWithChildren
   '/admin/system/settings': typeof AdminSystemSettingsRoute
+  '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/admin/system/seo/pages': typeof AdminSystemSeoPagesRoute
+  '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
+  '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
+  '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
+  '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -971,27 +1100,41 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/system/email'
+    | '/admin/system/integrations'
+    | '/admin/system/keys'
+    | '/admin/system/payment'
+    | '/admin/system/pricing'
+    | '/admin/system/seo'
     | '/admin/system/settings'
+    | '/admin/system/storage'
     | '/admin/system/webhooks'
     | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
     | '/api/store/order'
+    | '/api/system/seo'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/admin/system/seo/pages'
+    | '/api/integrations/github/authorize'
+    | '/api/integrations/github/callback'
+    | '/api/integrations/vercel/authorize'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
+    | '/api/system/seo/pages'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/system/seo/pages/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1063,27 +1206,41 @@ export interface FileRouteTypes {
     | '/admin/marketing/push'
     | '/admin/marketing/subscribers'
     | '/admin/system/currency'
+    | '/admin/system/email'
+    | '/admin/system/integrations'
+    | '/admin/system/keys'
+    | '/admin/system/payment'
+    | '/admin/system/pricing'
+    | '/admin/system/seo'
     | '/admin/system/settings'
+    | '/admin/system/storage'
     | '/admin/system/webhooks'
     | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
     | '/api/store/order'
+    | '/api/system/seo'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing'
     | '/admin/pm'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/admin/system/seo/pages'
+    | '/api/integrations/github/authorize'
+    | '/api/integrations/github/callback'
+    | '/api/integrations/vercel/authorize'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
+    | '/api/system/seo/pages'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/system/seo/pages/$id'
   id:
     | '__root__'
     | '/'
@@ -1162,27 +1319,41 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/admin/system/email'
+    | '/admin/system/integrations'
+    | '/admin/system/keys'
+    | '/admin/system/payment'
+    | '/admin/system/pricing'
+    | '/admin/system/seo'
     | '/admin/system/settings'
+    | '/admin/system/storage'
     | '/admin/system/webhooks'
     | '/api/billing/proof'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
     | '/api/payment/creem'
     | '/api/store/order'
+    | '/api/system/seo'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/admin/system/seo/pages'
+    | '/api/integrations/github/authorize'
+    | '/api/integrations/github/callback'
+    | '/api/integrations/vercel/authorize'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
+    | '/api/system/seo/pages'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/system/seo/pages/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1220,6 +1391,10 @@ export interface RootRouteChildren {
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
   ApiPaymentCreemRoute: typeof ApiPaymentCreemRouteWithChildren
   ApiStoreOrderRoute: typeof ApiStoreOrderRoute
+  ApiSystemSeoRoute: typeof ApiSystemSeoRouteWithChildren
+  ApiIntegrationsGithubAuthorizeRoute: typeof ApiIntegrationsGithubAuthorizeRoute
+  ApiIntegrationsGithubCallbackRoute: typeof ApiIntegrationsGithubCallbackRoute
+  ApiIntegrationsVercelAuthorizeRoute: typeof ApiIntegrationsVercelAuthorizeRoute
   ApiPaymentMidtransChargeRoute: typeof ApiPaymentMidtransChargeRoute
   ApiPaymentMidtransWebhookRoute: typeof ApiPaymentMidtransWebhookRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
@@ -1669,6 +1844,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMissionsIdRouteImport
       parentRoute: typeof DashboardMissionsRoute
     }
+    '/api/system/seo': {
+      id: '/api/system/seo'
+      path: '/api/system/seo'
+      fullPath: '/api/system/seo'
+      preLoaderRoute: typeof ApiSystemSeoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/store/order': {
       id: '/api/store/order'
       path: '/api/store/order'
@@ -1711,11 +1893,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSystemWebhooksRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/system/storage': {
+      id: '/admin/system/storage'
+      path: '/system/storage'
+      fullPath: '/admin/system/storage'
+      preLoaderRoute: typeof AdminSystemStorageRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/system/settings': {
       id: '/admin/system/settings'
       path: '/system/settings'
       fullPath: '/admin/system/settings'
       preLoaderRoute: typeof AdminSystemSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/seo': {
+      id: '/admin/system/seo'
+      path: '/system/seo'
+      fullPath: '/admin/system/seo'
+      preLoaderRoute: typeof AdminSystemSeoRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/pricing': {
+      id: '/admin/system/pricing'
+      path: '/system/pricing'
+      fullPath: '/admin/system/pricing'
+      preLoaderRoute: typeof AdminSystemPricingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/payment': {
+      id: '/admin/system/payment'
+      path: '/system/payment'
+      fullPath: '/admin/system/payment'
+      preLoaderRoute: typeof AdminSystemPaymentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/keys': {
+      id: '/admin/system/keys'
+      path: '/system/keys'
+      fullPath: '/admin/system/keys'
+      preLoaderRoute: typeof AdminSystemKeysRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/integrations': {
+      id: '/admin/system/integrations'
+      path: '/system/integrations'
+      fullPath: '/admin/system/integrations'
+      preLoaderRoute: typeof AdminSystemIntegrationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/system/email': {
+      id: '/admin/system/email'
+      path: '/system/email'
+      fullPath: '/admin/system/email'
+      preLoaderRoute: typeof AdminSystemEmailRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/system/currency': {
@@ -1851,6 +2082,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPmProjectsIndexRouteImport
       parentRoute: typeof AdminPmProjectsRoute
     }
+    '/api/system/seo/pages': {
+      id: '/api/system/seo/pages'
+      path: '/pages'
+      fullPath: '/api/system/seo/pages'
+      preLoaderRoute: typeof ApiSystemSeoPagesRouteImport
+      parentRoute: typeof ApiSystemSeoRoute
+    }
     '/api/system/keys/status': {
       id: '/api/system/keys/status'
       path: '/api/system/keys/status'
@@ -1879,6 +2117,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPaymentCreemWebhookRouteImport
       parentRoute: typeof ApiPaymentCreemRoute
     }
+    '/api/integrations/vercel/authorize': {
+      id: '/api/integrations/vercel/authorize'
+      path: '/api/integrations/vercel/authorize'
+      fullPath: '/api/integrations/vercel/authorize'
+      preLoaderRoute: typeof ApiIntegrationsVercelAuthorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/integrations/github/callback': {
+      id: '/api/integrations/github/callback'
+      path: '/api/integrations/github/callback'
+      fullPath: '/api/integrations/github/callback'
+      preLoaderRoute: typeof ApiIntegrationsGithubCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/integrations/github/authorize': {
+      id: '/api/integrations/github/authorize'
+      path: '/api/integrations/github/authorize'
+      fullPath: '/api/integrations/github/authorize'
+      preLoaderRoute: typeof ApiIntegrationsGithubAuthorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/system/seo/pages': {
+      id: '/admin/system/seo/pages'
+      path: '/pages'
+      fullPath: '/admin/system/seo/pages'
+      preLoaderRoute: typeof AdminSystemSeoPagesRouteImport
+      parentRoute: typeof AdminSystemSeoRoute
+    }
     '/admin/pm/services/new': {
       id: '/admin/pm/services/new'
       path: '/new'
@@ -1892,6 +2158,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/pm/projects/$id'
       preLoaderRoute: typeof AdminPmProjectsIdRouteImport
       parentRoute: typeof AdminPmProjectsRoute
+    }
+    '/api/system/seo/pages/$id': {
+      id: '/api/system/seo/pages/$id'
+      path: '/$id'
+      fullPath: '/api/system/seo/pages/$id'
+      preLoaderRoute: typeof ApiSystemSeoPagesIdRouteImport
+      parentRoute: typeof ApiSystemSeoPagesRoute
     }
     '/api/marketing/affiliate/payout/request': {
       id: '/api/marketing/affiliate/payout/request'
@@ -1940,6 +2213,18 @@ const AdminPmServicesRouteWithChildren = AdminPmServicesRoute._addFileChildren(
   AdminPmServicesRouteChildren,
 )
 
+interface AdminSystemSeoRouteChildren {
+  AdminSystemSeoPagesRoute: typeof AdminSystemSeoPagesRoute
+}
+
+const AdminSystemSeoRouteChildren: AdminSystemSeoRouteChildren = {
+  AdminSystemSeoPagesRoute: AdminSystemSeoPagesRoute,
+}
+
+const AdminSystemSeoRouteWithChildren = AdminSystemSeoRoute._addFileChildren(
+  AdminSystemSeoRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminClientsRoute: typeof AdminClientsRoute
   AdminDigitalSalesRoute: typeof AdminDigitalSalesRoute
@@ -1968,7 +2253,14 @@ interface AdminRouteChildren {
   AdminPmProjectsRoute: typeof AdminPmProjectsRouteWithChildren
   AdminPmServicesRoute: typeof AdminPmServicesRouteWithChildren
   AdminSystemCurrencyRoute: typeof AdminSystemCurrencyRoute
+  AdminSystemEmailRoute: typeof AdminSystemEmailRoute
+  AdminSystemIntegrationsRoute: typeof AdminSystemIntegrationsRoute
+  AdminSystemKeysRoute: typeof AdminSystemKeysRoute
+  AdminSystemPaymentRoute: typeof AdminSystemPaymentRoute
+  AdminSystemPricingRoute: typeof AdminSystemPricingRoute
+  AdminSystemSeoRoute: typeof AdminSystemSeoRouteWithChildren
   AdminSystemSettingsRoute: typeof AdminSystemSettingsRoute
+  AdminSystemStorageRoute: typeof AdminSystemStorageRoute
   AdminSystemWebhooksRoute: typeof AdminSystemWebhooksRoute
   AdminMarketingIndexRoute: typeof AdminMarketingIndexRoute
   AdminPmIndexRoute: typeof AdminPmIndexRoute
@@ -2002,7 +2294,14 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPmProjectsRoute: AdminPmProjectsRouteWithChildren,
   AdminPmServicesRoute: AdminPmServicesRouteWithChildren,
   AdminSystemCurrencyRoute: AdminSystemCurrencyRoute,
+  AdminSystemEmailRoute: AdminSystemEmailRoute,
+  AdminSystemIntegrationsRoute: AdminSystemIntegrationsRoute,
+  AdminSystemKeysRoute: AdminSystemKeysRoute,
+  AdminSystemPaymentRoute: AdminSystemPaymentRoute,
+  AdminSystemPricingRoute: AdminSystemPricingRoute,
+  AdminSystemSeoRoute: AdminSystemSeoRouteWithChildren,
   AdminSystemSettingsRoute: AdminSystemSettingsRoute,
+  AdminSystemStorageRoute: AdminSystemStorageRoute,
   AdminSystemWebhooksRoute: AdminSystemWebhooksRoute,
   AdminMarketingIndexRoute: AdminMarketingIndexRoute,
   AdminPmIndexRoute: AdminPmIndexRoute,
@@ -2122,6 +2421,29 @@ const ApiPaymentCreemRouteWithChildren = ApiPaymentCreemRoute._addFileChildren(
   ApiPaymentCreemRouteChildren,
 )
 
+interface ApiSystemSeoPagesRouteChildren {
+  ApiSystemSeoPagesIdRoute: typeof ApiSystemSeoPagesIdRoute
+}
+
+const ApiSystemSeoPagesRouteChildren: ApiSystemSeoPagesRouteChildren = {
+  ApiSystemSeoPagesIdRoute: ApiSystemSeoPagesIdRoute,
+}
+
+const ApiSystemSeoPagesRouteWithChildren =
+  ApiSystemSeoPagesRoute._addFileChildren(ApiSystemSeoPagesRouteChildren)
+
+interface ApiSystemSeoRouteChildren {
+  ApiSystemSeoPagesRoute: typeof ApiSystemSeoPagesRouteWithChildren
+}
+
+const ApiSystemSeoRouteChildren: ApiSystemSeoRouteChildren = {
+  ApiSystemSeoPagesRoute: ApiSystemSeoPagesRouteWithChildren,
+}
+
+const ApiSystemSeoRouteWithChildren = ApiSystemSeoRoute._addFileChildren(
+  ApiSystemSeoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -2157,6 +2479,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
   ApiPaymentCreemRoute: ApiPaymentCreemRouteWithChildren,
   ApiStoreOrderRoute: ApiStoreOrderRoute,
+  ApiSystemSeoRoute: ApiSystemSeoRouteWithChildren,
+  ApiIntegrationsGithubAuthorizeRoute: ApiIntegrationsGithubAuthorizeRoute,
+  ApiIntegrationsGithubCallbackRoute: ApiIntegrationsGithubCallbackRoute,
+  ApiIntegrationsVercelAuthorizeRoute: ApiIntegrationsVercelAuthorizeRoute,
   ApiPaymentMidtransChargeRoute: ApiPaymentMidtransChargeRoute,
   ApiPaymentMidtransWebhookRoute: ApiPaymentMidtransWebhookRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,

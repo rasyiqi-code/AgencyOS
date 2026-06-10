@@ -122,3 +122,48 @@ export const getGoogleKeyStatusFn = createServerFn({ method: 'GET' })
     return { configured: !!key }
   })
 
+// 7. Mengambil semua kunci sistem (AI + agensi)
+export const getAllSystemKeysFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    await requireAdmin()
+    return await prisma.systemKey.findMany({
+      orderBy: { createdAt: "desc" }
+    })
+  })
+
+// 8. Mengaktifkan/menonaktifkan kunci AI (Gemini) dan menonaktifkan kunci Google lainnya jika diaktifkan
+export const toggleAIKeyFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ id: z.string(), isActive: z.boolean() }))
+  .handler(async ({ data }) => {
+    await requireAdmin()
+    const { id, isActive } = data
+    if (isActive) {
+      await prisma.systemKey.updateMany({
+        where: { provider: "google" },
+        data: { isActive: false }
+      })
+    }
+    await prisma.systemKey.update({
+      where: { id },
+      data: { isActive }
+    })
+    return { success: true }
+  })
+
+// 9. Memperbarui informasi metadata kunci AI dan mengaktifkannya
+export const updateAIKeyFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ id: z.string(), label: z.string(), modelId: z.string().optional() }))
+  .handler(async ({ data }) => {
+    await requireAdmin()
+    const { id, label, modelId } = data
+    await prisma.systemKey.updateMany({
+      where: { provider: "google" },
+      data: { isActive: false }
+    })
+    await prisma.systemKey.update({
+      where: { id },
+      data: { label, modelId: modelId || null, isActive: true }
+    })
+    return { success: true }
+  })
+
