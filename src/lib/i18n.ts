@@ -10,9 +10,24 @@ export const getLocaleMessages = createServerFn({ method: 'GET' })
   .handler(
     async ({ data: inputLocale }): Promise<{ locale: string; messages: Messages }> => {
       const cookieLocale = getCookie('NEXT_LOCALE')
+      
+      // Deteksi locale dari URL request di sisi server
+      let requestLocale: string | undefined
+      try {
+        const { getRequest } = await import('@tanstack/react-start/server')
+        const req = getRequest()
+        if (req) {
+          const reqUrl = new URL(req.url)
+          const match = /^\/(id|en)(?:\/|$)/.exec(reqUrl.pathname)
+          if (match) requestLocale = match[1]
+        }
+      } catch {
+        // Abaikan jika dipanggil di luar scope request
+      }
+
       const locale = inputLocale === 'id' || inputLocale === 'en'
         ? inputLocale
-        : (cookieLocale?.slice(0, 2) === 'id' ? 'id' : 'en')
+        : (requestLocale || (cookieLocale?.slice(0, 2) === 'id' ? 'id' : 'en'))
 
       let messages: Messages
       if (locale === 'id') {

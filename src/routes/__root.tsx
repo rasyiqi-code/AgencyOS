@@ -1,11 +1,10 @@
 import type { ReactNode } from 'react'
-import { useEffect, useState, lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 import {
   Outlet,
   createRootRoute,
   HeadContent,
   Scripts,
-  useLocation,
 } from '@tanstack/react-router'
 import { QueryProvider } from '@/components/providers/query-provider'
 import { CurrencyProvider } from '@/components/providers/currency-provider'
@@ -13,8 +12,8 @@ import { Toaster } from '@/components/ui/sonner'
 import { HexclaveProvider, HexclaveTheme } from '@hexclave/tanstack-start'
 import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { I18nProvider } from '@/components/providers/i18n-provider'
-import enMessages from '@/messages/en.json'
 import { getLocaleMessages } from '@/src/lib/i18n'
+import enMessages from '@/messages/en.json'
 import '../styles/app.css'
 
 const ServiceWorkerRegistrar = lazy(() => import('@/components/pwa/service-worker-registrar').then(m => ({ default: m.ServiceWorkerRegistrar })))
@@ -40,6 +39,16 @@ export const Route = createRootRoute({
       { rel: 'preconnect', href: 'https://i.pravatar.cc' },
     ],
   }),
+  loader: async (): Promise<{ locale: string; messages: Messages }> => {
+    let clientLocale: string | undefined
+    if (typeof window !== 'undefined') {
+      const match = /^\/(id|en)(?:\/|$)/.exec(window.location.pathname)
+      if (match) clientLocale = match[1]
+    }
+    
+    // Panggil server function getLocaleMessages secara langsung
+    return await getLocaleMessages({ data: clientLocale })
+  },
   component: RootComponent,
   notFoundComponent: () => (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
@@ -53,17 +62,7 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  const { pathname } = useLocation()
-  const [i18n, setI18n] = useState<{ locale: string; messages: Messages }>({
-    locale: 'en',
-    messages: enMessages,
-  })
-
-  useEffect(() => {
-    const pathSegments = pathname.split('/')
-    const pathLocale = pathSegments[1] === 'id' ? 'id' : 'en'
-    getLocaleMessages({ data: pathLocale }).then(setI18n)
-  }, [pathname])
+  const i18n = Route.useLoaderData()
 
   return (
     <RootDocument i18n={i18n}>
