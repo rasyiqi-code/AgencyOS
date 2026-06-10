@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   resolve: {
@@ -18,8 +19,15 @@ export default defineConfig({
     noExternal: ['@hexclave/tanstack-start'],
   },
   plugins: [
+    nodePolyfills({
+      include: ['buffer'],
+      globals: {
+        Buffer: true,
+      },
+    }),
     tanstackStart(),
     viteReact(),
     tailwindcss(),
   ],
 })
+

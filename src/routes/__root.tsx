@@ -1,11 +1,5 @@
-import { Buffer } from 'buffer'
 import type { ReactNode } from 'react'
 import { useEffect, useState, lazy, Suspense } from 'react'
-
-// Polyfill Buffer untuk client-side browser agar library internal Hexclave tidak mengalami ReferenceError
-if (typeof window !== 'undefined') {
-  window.Buffer = window.Buffer || Buffer
-}
 import {
   Outlet,
   createRootRoute,
@@ -17,7 +11,7 @@ import { QueryProvider } from '@/components/providers/query-provider'
 import { CurrencyProvider } from '@/components/providers/currency-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { HexclaveProvider, HexclaveTheme } from '@hexclave/tanstack-start'
-import { hexclaveClientApp } from '@/lib/config/hexclave'
+import { hexclaveClientApp } from '@/lib/config/hexclave-client'
 import { I18nProvider } from '@/components/providers/i18n-provider'
 import enMessages from '@/messages/en.json'
 import { getLocaleMessages } from '@/src/lib/i18n'
