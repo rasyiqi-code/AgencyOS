@@ -32,7 +32,7 @@ interface CheckoutSummaryProps {
     onToggleAddon?: (addon: ServiceAddon) => void;
 }
 
-export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [], onToggleAddon }: CheckoutSummaryProps) {
+export function CheckoutSummary({ estimate, bonuses = [], context, selectedAddons = [], onToggleAddon }: CheckoutSummaryProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';

@@ -6,6 +6,7 @@ import { useLocale } from "@/lib/i18n/hooks";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
+import { useReactToPrint } from "react-to-print";
 import { useCurrency } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, Coupon, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
@@ -51,13 +52,8 @@ export function CheckoutContent({
     const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
-    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
-
-    useEffect(() => {
-        import("react-to-print").then((mod) => {
-            setHandlePrint(() => mod.useReactToPrint({ contentRef: invoiceRef, documentTitle: `Invoice-${estimate.id}` }));
-        });
-    }, [estimate.id]);
+    
+    const handlePrint = useReactToPrint({ contentRef: invoiceRef, documentTitle: `Invoice-${estimate.id}` });
 
     // Calculate the TRUE base cost (estimate.totalCost minus any addons that are already baked into it)
     const initiallyIncludedAddonsTotal = initiallyIncludedAddons.reduce((sum: number, addon) => sum + (addon.price || 0), 0);

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PaymentSelector } from "@/components/payment/payment-selector";
 import type { BankDetails, MidtransPaymentData, PaymentMetadata } from "@/types/payment";
 import { PriceDisplay } from "@/components/providers/currency-provider";
+import { useReactToPrint } from "react-to-print";
 
 interface DigitalOrder {
     id: string;
@@ -96,13 +97,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
         return () => clearInterval(interval);
     }, [isPaid, order.id, router]);
 
-    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
-
-    useEffect(() => {
-        import("react-to-print").then((mod) => {
-            setHandlePrint(() => mod.useReactToPrint({ contentRef: componentRef, documentTitle: `Invoice-${order.id}` }));
-        });
-    }, [order.id]);
+    const handlePrint = useReactToPrint({ contentRef: componentRef, documentTitle: `Invoice-${order.id}` });
 
     return (
         <div className="flex flex-col xl:flex-row gap-8 items-start">
