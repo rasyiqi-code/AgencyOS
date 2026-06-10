@@ -33,6 +33,7 @@ import { Route as SquadActiveRouteImport } from './routes/squad.active'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as PriceCalculatorIdRouteImport } from './routes/price-calculator.$id'
+import { Route as HandlerSignInRouteImport } from './routes/handler/sign-in'
 import { Route as HandlerSplatRouteImport } from './routes/handler/$'
 import { Route as DashboardSupportRouteImport } from './routes/dashboard.support'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
@@ -195,6 +196,11 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
 const PriceCalculatorIdRoute = PriceCalculatorIdRouteImport.update({
   id: '/price-calculator/$id',
   path: '/price-calculator/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HandlerSignInRoute = HandlerSignInRouteImport.update({
+  id: '/handler/sign-in',
+  path: '/handler/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HandlerSplatRoute = HandlerSplatRouteImport.update({
@@ -445,6 +451,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/handler/sign-in': typeof HandlerSignInRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -509,6 +516,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/handler/sign-in': typeof HandlerSignInRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -579,6 +587,7 @@ export interface FileRoutesById {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/handler/sign-in': typeof HandlerSignInRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -650,6 +659,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/handler/sign-in'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -714,6 +724,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/handler/sign-in'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -783,6 +794,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/handler/sign-in'
     | '/price-calculator/$id'
     | '/products/$slug'
     | '/services/$slug'
@@ -836,6 +848,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRouteWithChildren
   ApiEstimatesRoute: typeof ApiEstimatesRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
+  HandlerSignInRoute: typeof HandlerSignInRoute
   PriceCalculatorIdRoute: typeof PriceCalculatorIdRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
@@ -1015,6 +1028,13 @@ declare module '@tanstack/react-router' {
       path: '/price-calculator/$id'
       fullPath: '/price-calculator/$id'
       preLoaderRoute: typeof PriceCalculatorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/handler/sign-in': {
+      id: '/handler/sign-in'
+      path: '/handler/sign-in'
+      fullPath: '/handler/sign-in'
+      preLoaderRoute: typeof HandlerSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/handler/$': {
@@ -1503,6 +1523,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRouteWithChildren,
   ApiEstimatesRoute: ApiEstimatesRoute,
   HandlerSplatRoute: HandlerSplatRoute,
+  HandlerSignInRoute: HandlerSignInRoute,
   PriceCalculatorIdRoute: PriceCalculatorIdRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,

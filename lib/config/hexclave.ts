@@ -12,6 +12,11 @@ export const hexclaveClientApp = new HexclaveClientApp({
             // Menggunakan handler-component agar halaman auth dirender secara lokal oleh komponen <HexclaveHandler>
             type: "handler-component",
         },
+        signIn: {
+            type: "custom",
+            url: "/handler/sign-in",
+            version: 1,
+        },
     },
 });
 
