@@ -24,6 +24,7 @@ export default defineConfig({
       include: ['buffer'],
       globals: {
         Buffer: true,
+        process: false,
       },
     }),
     tanstackStart(),

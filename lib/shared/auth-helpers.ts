@@ -18,23 +18,26 @@ export async function hasPermission(permission: string) {
     const user = await getCurrentUser();
     if (!user) return false;
 
-    // 1. Env Var Bypass (God Mode)
-    const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    const superAdminId = process.env.SUPER_ADMIN_ID; // From .env
+    // 1. Env Var Bypass (God Mode) - Hanya diperiksa di sisi server
+    if (typeof window === "undefined") {
+        const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+        const superAdminId = process.env.SUPER_ADMIN_ID; // Dari .env
+        if (adminEmails.includes(user.primaryEmail || '') || user.id === superAdminId) return true;
+    }
 
-    if (adminEmails.includes(user.primaryEmail || '') || user.id === superAdminId) return true;
-
-    // 2. Check Local Database Permission (NEW)
-    const { prisma } = await import("@/lib/config/db");
-    const localPerm = await prisma.userPermission.findUnique({
-        where: {
-            userId_key: {
-                userId: user.id,
-                key: permission
+    // 2. Check Local Database Permission (NEW) - Hanya diperiksa di sisi server
+    if (typeof window === "undefined") {
+        const { prisma } = await import("@/lib/config/db");
+        const localPerm = await prisma.userPermission.findUnique({
+            where: {
+                userId_key: {
+                    userId: user.id,
+                    key: permission
+                }
             }
-        }
-    });
-    if (localPerm) return true;
+        });
+        if (localPerm) return true;
+    }
 
     // 3. Check Project Permission (Global Level)
     const projectPerm = await user.getPermission(permission);
