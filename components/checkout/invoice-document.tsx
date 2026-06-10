@@ -197,8 +197,8 @@ export function InvoiceDocument({
                 return (
                     <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center watermark-container">
                         <div
-                            className="font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double opacity-[0.12] transform -rotate-[25deg]"
-                            style={{ border: `8px double ${color}`, color }}
+                            className="font-black text-5xl px-8 py-2.5 tracking-widest uppercase rounded-xl border-double opacity-[0.12] transform -rotate-[25deg]"
+                            style={{ border: `5px double ${color}`, color }}
                         >
                             {label}
                         </div>

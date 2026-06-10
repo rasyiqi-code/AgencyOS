@@ -125,7 +125,7 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
                         {/* Watermark */}
                         {isPaid && (
                             <div className="absolute top-12 right-12 z-0 pointer-events-none opacity-20 transform -rotate-12 watermark-container">
-                                <div className="border-[8px] border-[#FED700] text-[#FED700] font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double">
+                                <div className="border-[5px] border-[#FED700] text-[#FED700] font-black text-5xl px-8 py-2.5 tracking-widest uppercase rounded-xl border-double">
                                     {t('paid')}
                                 </div>
                             </div>
