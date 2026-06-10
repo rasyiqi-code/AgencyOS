@@ -101,13 +101,7 @@ export function PayoutsClient({ initialBalance, totalEarnings, paidEarnings }: P
     return (
         <div className="flex flex-col gap-8 pb-10 w-full animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white">Payouts & Earnings</h1>
-                    <p className="text-zinc-400 mt-2">
-                        Manage your withdrawals and view transaction history.
-                    </p>
-                </div>
+            <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
                 <button
                     onClick={handleRequestPayout}
                     disabled={!canRequest || requesting}

@@ -60,6 +60,10 @@ export function DashboardHeader({
         if (path === "/dashboard/missions") return idLang ? "Log Misi" : "Mission Log";
         if (path.startsWith("/dashboard/services")) return idLang ? "Layanan Kami" : "Our Services";
         if (path.startsWith("/dashboard/my-products")) return idLang ? "Produk Saya" : "My Products";
+        if (path.startsWith("/dashboard/inbox")) return idLang ? "Kotak Masuk" : "Inbox";
+        if (path.startsWith("/affiliate/dashboard")) return idLang ? "Dasbor Mitra" : "Partner Dashboard";
+        if (path.startsWith("/affiliate/payouts")) return idLang ? "Penarikan & Pendapatan" : "Payouts & Earnings";
+        if (path.startsWith("/affiliate/resources")) return idLang ? "Marketing Kit" : "Marketing Kit";
         return "";
     };
     const pageTitle = getPageTitle(cleanPath, isId);

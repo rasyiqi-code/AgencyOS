@@ -80,11 +80,6 @@ function MarketingKitPage() {
 
   return (
     <div className="space-y-6 text-left">
-      <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Marketing Kit</h1>
-        <p className="text-zinc-400">Official assets to help you promote and earn commission.</p>
-      </div>
-
       <Tabs defaultValue="copy" className="w-full">
         <TabsList className="bg-zinc-900 border border-zinc-800">
           <TabsTrigger value="copy">Copywriting</TabsTrigger>

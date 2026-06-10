@@ -32,13 +32,6 @@ function AffiliateDashboardLayout() {
 
   return (
     <div className="flex flex-col gap-8 pb-10 w-full animate-in fade-in duration-500 text-left">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Partner Dashboard</h1>
-        <p className="text-zinc-400 mt-2">
-          Start referring and track your earnings.
-        </p>
-      </div>
 
       {/* Referral Link Section */}
       <AffiliateLinksManager
