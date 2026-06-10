@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Clock, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useHeaderStore } from "@/lib/store/header-store";
 
 interface PayoutRequestData {
     id: string;
@@ -98,22 +99,27 @@ export function PayoutsClient({ initialBalance, totalEarnings, paidEarnings }: P
     const hasPendingRequest = requests.some(r => r.status === "pending");
     const canRequest = balance >= MIN_PAYOUT && !hasPendingRequest;
 
+    const setHeaderActions = useHeaderStore((state) => state.setActions);
+
+    useEffect(() => {
+        setHeaderActions(
+            <button
+                onClick={handleRequestPayout}
+                disabled={!canRequest || requesting}
+                className={`px-4 py-2 rounded-lg font-semibold text-xs transition-colors flex items-center gap-2 cursor-pointer
+                    ${canRequest
+                        ? "bg-white text-black hover:bg-zinc-200"
+                        : "bg-zinc-800 text-zinc-500 cursor-not-allowed"}`}
+            >
+                {requesting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <DollarSign className="w-3.5 h-3.5" />}
+                Request Payout
+            </button>
+        );
+        return () => setHeaderActions(null);
+    }, [canRequest, requesting, handleRequestPayout, setHeaderActions]);
+
     return (
         <div className="flex flex-col gap-8 pb-10 w-full animate-in fade-in duration-500">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
-                <button
-                    onClick={handleRequestPayout}
-                    disabled={!canRequest || requesting}
-                    className={`px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2
-                        ${canRequest
-                            ? "bg-white text-black hover:bg-zinc-200"
-                            : "bg-zinc-800 text-zinc-500 cursor-not-allowed"}`}
-                >
-                    {requesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
-                    Request Payout
-                </button>
-            </div>
 
             {/* Info jika tidak bisa request */}
             {hasPendingRequest && (

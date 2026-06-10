@@ -17,6 +17,7 @@ import { MobileNav } from "./mobile-nav";
 import { MobileConfigMenu } from "./mobile-config-menu";
 import { MobileProjectActions } from "@/components/admin/pm/mobile-project-actions";
 import { DashboardModeSwitcher } from "@/components/admin/dashboard-mode-switcher";
+import { useHeaderStore } from "@/lib/store/header-store";
 
 interface DashboardHeaderProps {
     allowedToSwitchViews?: boolean;
@@ -38,6 +39,7 @@ export function DashboardHeader({
     const t = useTranslations("Common");
     const { locale } = useCurrency();
     const isId = locale === 'id-ID' || locale === 'id';
+    const { actions } = useHeaderStore();
 
     // Perbaikan untuk bug Stack Auth: profil image kosong menyebabkan error browser
     const { mockUserFallback } = useSafeUser();
@@ -109,6 +111,13 @@ export function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+                {/* Dynamic Actions */}
+                {actions && (
+                    <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {actions}
+                    </div>
+                )}
+
                 {/* Switcher Mode Dasbor untuk Admin (Hanya muncul di halaman utama overview admin) */}
                 {(cleanPath === "/admin" || cleanPath === "/admin/") && (
                     <div className="mr-1 sm:mr-2 animate-in fade-in slide-in-from-top-2 duration-300">

@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useHeaderStore } from '@/lib/store/header-store'
 
 // Schema untuk memvalidasi parameter pencarian
 const searchSchema = z.object({
@@ -29,6 +30,19 @@ function MissionsPage() {
   const [searchQuery, setSearchQuery] = useState(search.q || '')
 
   const isId = locale === 'id-ID' || locale === 'id'
+
+  const setHeaderActions = useHeaderStore((state) => state.setActions)
+
+  useEffect(() => {
+    setHeaderActions(
+      <Link to="/price-calculator">
+        <Button size="sm" className="bg-white text-black hover:bg-zinc-200 font-semibold cursor-pointer h-8 text-xs">
+          {isId ? '+ Misi Baru' : '+ New Mission'}
+        </Button>
+      </Link>
+    )
+    return () => setHeaderActions(null)
+  }, [isId, setHeaderActions])
 
   if (!success) {
     return (
@@ -95,11 +109,6 @@ function MissionsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </form>
-            <Link to="/price-calculator">
-              <Button size="sm" className="bg-white text-black hover:bg-zinc-200 font-semibold cursor-pointer h-8 text-xs">
-                {isId ? '+ Misi Baru' : '+ New Mission'}
-              </Button>
-            </Link>
           </div>
         </div>
 
