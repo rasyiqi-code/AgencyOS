@@ -62,8 +62,8 @@ export const Route = createFileRoute('/invoices/$id')({
 
     const extendedEstimate: ExtendedEstimate = {
       ...estimateData,
-      screens: (estimateData.screens as unknown) as ExtendedEstimate['screens'],
-      apis: (estimateData.apis as unknown) as ExtendedEstimate['apis'],
+      screens: ((estimateData.screens as unknown) as ExtendedEstimate['screens']) || [],
+      apis: ((estimateData.apis as unknown) as ExtendedEstimate['apis']) || [],
       service: estimateData.service
     }
 
