@@ -50,6 +50,10 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 
+# TanStack & Nitro
+.output
+.tanstack
+
 # debug & temporary
 lint_output.txt
 lint_results.txt
