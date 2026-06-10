@@ -57,82 +57,75 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 />
 
                 {/* Visual Block */}
-                <div className="relative aspect-[16/9] overflow-hidden shrink-0">
+                <div className="relative h-44 bg-zinc-950/80 flex items-center justify-center overflow-hidden shrink-0">
                     {service.image ? (
                         <img
                             src={service.image}
                             alt={displayTitle}
-                            
-                            
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     ) : (
-                        <div className="absolute inset-0 bg-zinc-800/50 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-[#161618] flex items-center justify-center">
                             <Sparkles className="w-12 h-12 text-zinc-700" />
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
                 </div>
 
-                <div className="flex flex-col flex-grow p-6 md:p-8 relative z-10">
+                <div className="flex flex-col flex-grow p-5 relative z-10">
                     {/* Header Block */}
-                    <div className="mb-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[10px] font-bold text-brand-yellow uppercase tracking-widest">
+                    <div className="mb-4">
+                        <div className="flex items-center gap-3 mb-2.5">
+                            <div className="px-2.5 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[9px] font-bold text-brand-yellow uppercase tracking-wider">
                                 {service.interval === 'one_time'
                                     ? t("oneTime")
                                     : service.interval}
                             </div>
                         </div>
-                        <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-brand-yellow transition-colors leading-tight mb-3">
+                        <h3 className="text-lg font-bold text-white group-hover:text-brand-yellow transition-colors leading-snug">
                             {displayTitle}
                         </h3>
-                        <div
-                            className="text-zinc-400 text-sm leading-relaxed line-clamp-2 font-light"
-                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescription) }}
-                        />
                     </div>
 
                     <div className="mt-auto">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-3">
                             {/* Features Block */}
-                            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col relative group/list">
-                                <ul className="space-y-2">
+                            <div className="p-3.5 rounded-2xl bg-[#121214] border border-white/5 flex flex-col justify-between min-h-[120px] group/list">
+                                <ul className="space-y-1.5">
                                     {displayFeatures.slice(0, 3).map((feature: string, idx: number) => (
-                                        <li key={idx} className="flex items-start gap-2 group/item">
-                                            <Check className="w-3 h-3 text-brand-yellow shrink-0 mt-0.5" />
-                                            <span className="text-[11px] text-zinc-400 group-hover/item:text-white transition-colors line-clamp-1">{feature.replace(/<[^>]*>?/gm, '')}</span>
+                                        <li key={idx} className="flex items-start gap-1.5 group/item">
+                                            <Check className="w-3.5 h-3.5 text-brand-yellow shrink-0 mt-0.5" />
+                                            <span className="text-[10px] text-zinc-400 group-hover/item:text-white transition-colors line-clamp-1">{feature.replace(/<[^>]*>?/gm, '')}</span>
                                         </li>
                                     ))}
                                 </ul>
                                 {displayFeatures.length > 3 && (
-                                    <>
-                                        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
-                                        <DialogTrigger asChild>
-                                            <button className="text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity">
-                                                +{displayFeatures.length - 3} {tCards("more")} <ChevronDown className="w-2.5 h-2.5" />
-                                            </button>
-                                        </DialogTrigger>
-                                    </>
+                                    <DialogTrigger asChild>
+                                        <button className="text-[9px] text-brand-yellow font-bold uppercase tracking-wider mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity cursor-pointer text-left">
+                                            +{displayFeatures.length - 3} {tCards("more")} <ChevronDown className="w-2.5 h-2.5" />
+                                        </button>
+                                    </DialogTrigger>
                                 )}
                             </div>
 
                             {/* Metrics Block */}
-                            <div className="p-4 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[110px]">
-                                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">{tCards("price")}</div>
-                                {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
-                                    <span className="text-[9px] font-normal text-zinc-400 leading-none mb-0.5">
-                                        {t("startsAt")}
-                                    </span>
-                                )}
-                                <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
-                                    <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
+                            <div className="p-3.5 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between min-h-[120px]">
+                                <div>
+                                    <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider mb-1">{tCards("price")}</div>
+                                    {(service as unknown as Record<string, unknown>).priceType === 'STARTING_AT' && (
+                                        <span className="text-[8px] font-normal text-zinc-400 leading-none mb-0.5 block">
+                                            {t("startsAt")}
+                                        </span>
+                                    )}
+                                    <div className="text-base font-black text-white tracking-tight break-all line-clamp-1 group-hover:line-clamp-none transition-all">
+                                        <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    </div>
                                 </div>
                                 <PurchaseButton
                                     serviceId={service.id}
                                     interval={service.interval}
-                                    className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-9 px-4 rounded-xl w-full text-[10px] uppercase mt-4 tracking-tighter shadow-lg shadow-brand-yellow/20 shrink-0"
+                                    customLabel="PURCHASE PACKAGE"
+                                    className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 px-2 rounded-lg w-full text-[9px] uppercase tracking-wide shadow-lg shadow-brand-yellow/10 transition-colors shrink-0"
                                 />
                             </div>
                         </div>
