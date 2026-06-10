@@ -4,8 +4,8 @@
   <h1>AgencyOS</h1>
   <h3>Website for Agencies</h3>
   
-  [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-  [![Prisma](https://img.shields.io/badge/Prisma-7.2.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+  [![TanStack Start](https://img.shields.io/badge/TanStack_Start-1.168-ff4154?style=for-the-badge&logo=vite)](https://tanstack.com/router/latest/docs/start/overview)
+  [![Prisma](https://img.shields.io/badge/Prisma-7.4.1-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
   [![Tailwind](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
   [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
   
@@ -41,10 +41,10 @@
 
 | Component | Technology |
 | :--- | :--- |
-| **Frontend** | **Next.js 16 (App Router)**, React 19, Tailwind CSS 4, Zustand |
-| **Backend** | **PostgreSQL** with **Prisma ORM 7.2.0** |
+| **Frontend** | **TanStack Start (Vite)**, React 19, Tailwind CSS 4, Zustand |
+| **Backend** | **PostgreSQL** with **Prisma ORM 7.4.1** |
 | **AI Integration** | **Genkit AI** (Google Gemini 2.0 Flash & 1.5 Flash) |
-| **Authentication** | **Stack Auth** (Enterprise Ready) |
+| **Authentication** | **Hexclave (Stack Auth)** (Enterprise Ready) |
 | **Payments** | **Midtrans** & **Creem.io** (Fully Automated Reconciliation) |
 | **Storage** | **AWS S3** / **Cloudflare R2** |
 
