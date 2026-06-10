@@ -81,8 +81,8 @@ export function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
-                {/* Switcher Mode Dasbor untuk Admin */}
-                {isAdminPage && (
+                {/* Switcher Mode Dasbor untuk Admin (Hanya muncul di halaman utama overview admin) */}
+                {(cleanPath === "/admin" || cleanPath === "/admin/") && (
                     <div className="mr-1 sm:mr-2 animate-in fade-in slide-in-from-top-2 duration-300">
                         <DashboardModeSwitcher />
                     </div>
