@@ -49,6 +49,7 @@ import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-p
 import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
+import { Route as CheckoutIdRouteImport } from './routes/checkout.$id'
 import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
 import { Route as ApiDigitalCheckoutRouteImport } from './routes/api.digital-checkout'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
@@ -302,6 +303,11 @@ const DashboardBillingRoute = DashboardBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
   getParentRoute: () => DashboardRoute,
+} as any)
+const CheckoutIdRoute = CheckoutIdRouteImport.update({
+  id: '/checkout/$id',
+  path: '/checkout/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiEstimatesRoute = ApiEstimatesRouteImport.update({
   id: '/api/estimates',
@@ -608,6 +614,7 @@ export interface FileRoutesByFullPath {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
@@ -698,6 +705,7 @@ export interface FileRoutesByTo {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
@@ -792,6 +800,7 @@ export interface FileRoutesById {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/missions': typeof DashboardMissionsRouteWithChildren
@@ -889,6 +898,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/missions'
@@ -979,6 +989,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/missions'
@@ -1072,6 +1083,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/missions'
@@ -1155,6 +1167,7 @@ export interface RootRouteChildren {
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiDigitalCheckoutRoute: typeof ApiDigitalCheckoutRoute
   ApiEstimatesRoute: typeof ApiEstimatesRoute
+  CheckoutIdRoute: typeof CheckoutIdRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
   HandlerSignInRoute: typeof HandlerSignInRoute
   PriceCalculatorIdRoute: typeof PriceCalculatorIdRoute
@@ -1455,6 +1468,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/billing'
       preLoaderRoute: typeof DashboardBillingRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/checkout/$id': {
+      id: '/checkout/$id'
+      path: '/checkout/$id'
+      fullPath: '/checkout/$id'
+      preLoaderRoute: typeof CheckoutIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/estimates': {
       id: '/api/estimates'
@@ -2060,6 +2080,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiDigitalCheckoutRoute: ApiDigitalCheckoutRoute,
   ApiEstimatesRoute: ApiEstimatesRoute,
+  CheckoutIdRoute: CheckoutIdRoute,
   HandlerSplatRoute: HandlerSplatRoute,
   HandlerSignInRoute: HandlerSignInRoute,
   PriceCalculatorIdRoute: PriceCalculatorIdRoute,
