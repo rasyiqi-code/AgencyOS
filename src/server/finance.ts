@@ -275,23 +275,30 @@ export const updateQuotePriceFn = createServerFn({ method: 'POST' })
       }
     }
 
-    await prisma.estimate.update({
-      where: { id: estimateId },
-      data: {
-        totalCost: newPrice,
-        status: "pending_payment"
-      }
-    })
-
-    if (projectId) {
-      await prisma.project.update({
-        where: { id: projectId },
+    // ⚡ Bolt: Batch dependent database updates via $transaction to reduce round trips and avoid N+1 query patterns when updating quotes
+    const updates: Promise<any>[] = [
+      prisma.estimate.update({
+        where: { id: estimateId },
         data: {
-          status: "pending_payment",
-          totalAmount: newPrice
+          totalCost: newPrice,
+          status: "pending_payment"
         }
       })
+    ]
+
+    if (projectId) {
+      updates.push(
+        prisma.project.update({
+          where: { id: projectId },
+          data: {
+            status: "pending_payment",
+            totalAmount: newPrice
+          }
+        })
+      )
     }
+
+    await prisma.$transaction(updates)
 
     return { success: true }
   })
