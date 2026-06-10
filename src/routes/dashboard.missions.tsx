@@ -62,46 +62,46 @@ function MissionsPage() {
 
   return (
     <div className="pb-6 w-full text-left">
-      <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-3 mb-4">
-        <div className="flex items-center gap-2.5 w-full md:w-auto">
-          <form onSubmit={handleSearchSubmit} className="relative w-full md:w-60">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
-            <Input
-              name="q"
-              placeholder={isId ? 'Cari misi...' : 'Search missions...'}
-              className="bg-zinc-900/50 border-white/10 pl-8 w-full h-8 text-xs focus-visible:ring-1 focus-visible:ring-white/10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </form>
-          <Link to="/price-calculator">
-            <Button size="sm" className="bg-white text-black hover:bg-zinc-200 font-semibold cursor-pointer h-8 text-xs">
-              {isId ? '+ Misi Baru' : '+ New Mission'}
-            </Button>
-          </Link>
-        </div>
-      </div>
-
       <Tabs defaultValue="subscriptions" className="w-full">
-        <TabsList className="bg-zinc-900/50 border border-white/5 mb-4 h-9 p-0.5">
-          <TabsTrigger
-            value="subscriptions"
-            className="data-[state=active]:bg-brand-yellow data-[state=active]:text-black text-xs px-3 py-1"
-          >
-            {isId ? 'Langganan Aktif' : 'Active Subscriptions'}
-            {subscribedProjects.length > 0 && (
-              <span className="ml-1.5 bg-black/20 text-[9px] px-1.5 py-0.5 rounded-full">
-                {subscribedProjects.length}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            value="history"
-            className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-xs px-3 py-1"
-          >
-            {isId ? 'Riwayat & Proyek' : 'History & Projects'}
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+          <TabsList className="bg-zinc-900/50 border border-white/5 h-9 p-0.5">
+            <TabsTrigger
+              value="subscriptions"
+              className="data-[state=active]:bg-brand-yellow data-[state=active]:text-black text-xs px-3 py-1"
+            >
+              {isId ? 'Langganan Aktif' : 'Active Subscriptions'}
+              {subscribedProjects.length > 0 && (
+                <span className="ml-1.5 bg-black/20 text-[9px] px-1.5 py-0.5 rounded-full">
+                  {subscribedProjects.length}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger
+              value="history"
+              className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-xs px-3 py-1"
+            >
+              {isId ? 'Riwayat & Proyek' : 'History & Projects'}
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="flex items-center gap-2.5 w-full md:w-auto">
+            <form onSubmit={handleSearchSubmit} className="relative w-full md:w-60">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+              <Input
+                name="q"
+                placeholder={isId ? 'Cari misi...' : 'Search missions...'}
+                className="bg-zinc-900/50 border-white/10 pl-8 w-full h-8 text-xs focus-visible:ring-1 focus-visible:ring-white/10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
+            <Link to="/price-calculator">
+              <Button size="sm" className="bg-white text-black hover:bg-zinc-200 font-semibold cursor-pointer h-8 text-xs">
+                {isId ? '+ Misi Baru' : '+ New Mission'}
+              </Button>
+            </Link>
+          </div>
+        </div>
 
         <TabsContent value="subscriptions" className="mt-0">
           {subscribedProjects.length === 0 ? (
