@@ -20,10 +20,10 @@ function SettingsPage() {
   const { user } = result
 
   return (
-    <div className="flex flex-col gap-8 pb-10 text-left">
+    <div className="flex flex-col gap-5 pb-6 text-left">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Settings</h1>
-        <p className="text-zinc-400 mt-1">Manage your account and subscription.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
+        <p className="text-zinc-400 mt-0.5 text-sm">Manage your account and subscription.</p>
       </div>
 
       <div className="grid gap-6">

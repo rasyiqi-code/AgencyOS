@@ -26,12 +26,12 @@ function SupportPage() {
   const isId = locale === 'id'
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 text-left">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">
+        <h1 className="text-2xl font-bold text-white tracking-tight">
           {isId ? 'Bantuan' : 'Support'}
         </h1>
-        <p className="text-zinc-400">
+        <p className="text-zinc-400 text-sm mt-0.5">
           {isId
             ? 'Butuh bantuan dengan proyek Anda? Kami siap membantu.'
             : 'Need help with your project? We are here.'}

@@ -16,24 +16,24 @@ function MyProductsPage() {
   const licenses = result.success ? (result.licenses || []) : []
 
   return (
-    <div className="space-y-6 py-6 text-left w-full">
+    <div className="space-y-4 py-4 text-left w-full">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Package className="w-6 h-6 text-brand-yellow" />
+        <h1 className="text-xl font-bold text-white flex items-center gap-2">
+          <Package className="w-5 h-5 text-brand-yellow" />
           Produk Saya
         </h1>
-        <p className="text-zinc-400 mt-1">
+        <p className="text-zinc-400 mt-0.5 text-xs">
           Kelola lisensi dan unduh produk digital yang telah Anda beli.
         </p>
       </div>
 
       {/* Grid Kartu Lisensi */}
       {licenses.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
-          <Package className="w-12 h-12 text-zinc-700 mb-4" />
-          <h3 className="text-lg font-medium text-zinc-400">Belum ada produk</h3>
-          <p className="text-sm text-zinc-600 mt-1">
+        <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
+          <Package className="w-10 h-10 text-zinc-700 mb-3" />
+          <h3 className="text-base font-medium text-zinc-400">Belum ada produk</h3>
+          <p className="text-xs text-zinc-600 mt-0.5">
             Produk digital yang Anda beli akan muncul di sini.
           </p>
         </div>

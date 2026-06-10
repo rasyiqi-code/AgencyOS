@@ -65,38 +65,38 @@ function ClientQuotesPage() {
   const estimates = result.estimates as EstimateWithService[]
 
   return (
-    <div className="w-full py-8 text-left">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white tracking-tight">
+    <div className="w-full py-4 text-left">
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold text-white tracking-tight">
           {t.title}
         </h1>
-        <p className="text-zinc-400 mt-1">
+        <p className="text-zinc-400 mt-0.5 text-sm">
           {t.subtitle}
         </p>
       </div>
 
       <Card className="bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-white">
+        <CardHeader className="p-4 pb-3">
+          <CardTitle className="text-white text-base">
             {t.historyTitle}
           </CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardDescription className="text-zinc-400 text-xs font-light">
             {t.historyDesc}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0">
           <Table>
             <TableHeader className="border-zinc-800">
               <TableRow className="border-zinc-800 hover:bg-transparent">
-                <TableHead className="text-zinc-400">{t.colService}</TableHead>
-                <TableHead className="text-zinc-400">{t.colOfferedPrice}</TableHead>
-                <TableHead className="text-right text-zinc-400">{t.colAction}</TableHead>
+                <TableHead className="text-zinc-400 h-9 text-xs">{t.colService}</TableHead>
+                <TableHead className="text-zinc-400 h-9 text-xs">{t.colOfferedPrice}</TableHead>
+                <TableHead className="text-right text-zinc-400 h-9 text-xs">{t.colAction}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {estimates.length === 0 && (
                 <TableRow className="border-zinc-800">
-                  <TableCell colSpan={4} className="text-center py-12 text-zinc-500">
+                  <TableCell colSpan={4} className="text-center py-8 text-zinc-500 text-sm">
                     {t.empty}
                   </TableCell>
                 </TableRow>
