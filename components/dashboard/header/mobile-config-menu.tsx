@@ -14,8 +14,6 @@ import {
     DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Globe, DollarSign, Settings2 } from "lucide-react";
-import { useNavigate, useLocation, useSearch } from "@tanstack/react-router";
-import { useTransition } from "react";
 
 
 export function MobileConfigMenu() {
@@ -23,10 +21,8 @@ export function MobileConfigMenu() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const [, startTransition] = useTransition();
 
     // Language Logic
-
     const currentLocale = pathname?.split('/')[1]?.length === 2 ? pathname.split('/')[1] : 'en';
 
     const changeLanguage = (newLocale: string) => {
@@ -34,20 +30,30 @@ export function MobileConfigMenu() {
 
         const segments = pathname?.split('/') || [];
         if (segments[1]?.length === 2) {
-            segments[1] = newLocale;
+            if (newLocale === 'en') {
+                // Hapus segmen locale jika kembali ke default (English)
+                segments.splice(1, 1);
+            } else {
+                segments[1] = newLocale;
+            }
         } else {
-            segments.splice(1, 0, newLocale);
+            if (newLocale !== 'en') {
+                // Sisipkan locale jika beralih ke non-default
+                segments.splice(1, 0, newLocale);
+            }
         }
 
         const newPath = segments.join('/') || '/';
         const queryString = searchParams?.toString();
         const newPathWithParams = queryString ? `${newPath}?${queryString}` : newPath;
 
-        startTransition(() => {
-            document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-            router.push(newPathWithParams);
-            router.refresh();
-        });
+        // Set cookie untuk persistensi locale
+        document.cookie = `APP_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+
+        // Navigasi fisik paksa agar memuat ulang halaman dengan locale baru secara sinkron
+        if (typeof window !== 'undefined') {
+            window.location.href = newPathWithParams;
+        }
     };
 
 

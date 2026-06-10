@@ -9,7 +9,7 @@ export const getLocaleMessages = createServerFn({ method: 'GET' })
   .validator((locale: string | undefined) => locale)
   .handler(
     async ({ data: inputLocale }): Promise<{ locale: string; messages: Messages }> => {
-      const cookieLocale = getCookie('NEXT_LOCALE')
+      const cookieLocale = getCookie('APP_LOCALE')
       
       // Deteksi locale dari URL request di sisi server
       let requestLocale: string | undefined
@@ -45,10 +45,10 @@ export const getLocaleMessages = createServerFn({ method: 'GET' })
 // Helper isomorphic untuk mendeteksi locale aktif saat ini
 export function getCurrentLocaleIsomorphic(): string {
   if (typeof window !== 'undefined') {
-    // Prioritaskan cookie NEXT_LOCALE karena disetel langsung oleh interaksi user saat switch bahasa
+    // Prioritaskan cookie APP_LOCALE karena disetel langsung oleh interaksi user saat switch bahasa
     const cookieValue = document.cookie
       .split('; ')
-      .find(row => row.startsWith('NEXT_LOCALE='))
+      .find(row => row.startsWith('APP_LOCALE='))
       ?.split('=')[1]
     if (cookieValue === 'id' || cookieValue === 'en') return cookieValue
 
@@ -64,7 +64,7 @@ export function getCurrentLocaleIsomorphic(): string {
         const cookieHeader = req.headers.get('cookie') || ''
         const cookieValue = cookieHeader
           .split('; ')
-          .find((row: string) => row.trim().startsWith('NEXT_LOCALE='))
+          .find((row: string) => row.trim().startsWith('APP_LOCALE='))
           ?.split('=')[1]
         if (cookieValue === 'id' || cookieValue === 'en') return cookieValue
 

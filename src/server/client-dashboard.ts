@@ -14,7 +14,7 @@ async function requireClient() {
 
 // Helper untuk mendeteksi locale dari cookie
 function getLocale() {
-  return getCookie('NEXT_LOCALE') || 'en'
+  return getCookie('APP_LOCALE') || 'en'
 }
 
 // 1. Ambil data billing client

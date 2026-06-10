@@ -90,7 +90,7 @@ export function DashboardLanguageSwitcher() {
         const newPath = segments.join('/') || '/';
 
         // Set cookie untuk persistensi locale
-        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        document.cookie = `APP_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
         // Lakukan navigasi fisik penuh agar browser memuat ulang halaman dengan locale baru
         // Ini memastikan state SSR dan client selalu sinkron dan mencegah masalah routing no-op pada TanStack Router

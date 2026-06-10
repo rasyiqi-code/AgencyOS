@@ -84,7 +84,7 @@ export function CurrencyProvider({ children, initialLocale = 'en-US' }: { childr
     const updateLocale = (l: string) => {
         setLocale(l);
         // Sync with Cookie for Server Components
-        document.cookie = `NEXT_LOCALE=${l}; path=/; max-age=31536000`;
+        document.cookie = `APP_LOCALE=${l}; path=/; max-age=31536000`;
         // Sync with LocalStorage (optional, but good for backup)
         localStorage.setItem('agency-os-locale', l);
         // Invalidate router to re-render with new locale

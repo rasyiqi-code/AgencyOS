@@ -17,7 +17,7 @@ function subscribe(onStoreChange: () => void) {
 
 function getLocaleSnapshot() {
     if (typeof document === 'undefined') return 'en';
-    const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'));
+    const match = document.cookie.match(new RegExp('(^| )APP_LOCALE=([^;]+)'));
     return match ? match[2] : 'en';
 }
 
@@ -42,8 +42,8 @@ export function NavControls() {
 
     const toggleLanguage = () => {
         const next = lang === 'en' ? 'id' : 'en';
-        // Set cookie for next-intl middleware
-        document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; SameSite=Lax`;
+        // Set cookie untuk persistensi
+        document.cookie = `APP_LOCALE=${next}; path=/; max-age=31536000; SameSite=Lax`;
         // Notify any listeners (including our own instances)
         listeners.forEach(listener => listener());
         router.refresh(); // Refresh to re-render server components with new locale

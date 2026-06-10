@@ -55,7 +55,7 @@ export const getSupportTickets = createServerFn({ method: 'GET' })
     try {
       const user = await hexclaveServerApp.getUser()
       if (!user) throw new Error('Unauthorized')
-      const locale = getCookie('NEXT_LOCALE') || 'en'
+      const locale = getCookie('APP_LOCALE') || 'en'
 
       const rawTickets = await prisma.ticket.findMany({
         where: { userId: user.id, type: 'ticket' },
