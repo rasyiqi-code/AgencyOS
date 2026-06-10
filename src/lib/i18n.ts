@@ -45,29 +45,32 @@ export const getLocaleMessages = createServerFn({ method: 'GET' })
 // Helper isomorphic untuk mendeteksi locale aktif saat ini
 export function getCurrentLocaleIsomorphic(): string {
   if (typeof window !== 'undefined') {
-    const match = /^\/(id|en)(?:\/|$)/.exec(window.location.pathname)
-    if (match) return match[1]
-    
+    // Prioritaskan cookie NEXT_LOCALE karena disetel langsung oleh interaksi user saat switch bahasa
     const cookieValue = document.cookie
       .split('; ')
       .find(row => row.startsWith('NEXT_LOCALE='))
       ?.split('=')[1]
-    return cookieValue === 'id' ? 'id' : 'en'
+    if (cookieValue === 'id' || cookieValue === 'en') return cookieValue
+
+    const match = /^\/(id|en)(?:\/|$)/.exec(window.location.pathname)
+    if (match) return match[1]
+    
+    return 'en'
   } else {
     try {
       // Membaca getRequest secara dinamis hanya di server untuk menghindari import protection di client
       const req = (globalThis as any).require ? (globalThis as any).require('@tanstack/react-start/server').getRequest() : null
       if (req) {
-        const reqUrl = new URL(req.url)
-        const match = /^\/(id|en)(?:\/|$)/.exec(reqUrl.pathname)
-        if (match) return match[1]
-        
         const cookieHeader = req.headers.get('cookie') || ''
         const cookieValue = cookieHeader
           .split('; ')
           .find((row: string) => row.trim().startsWith('NEXT_LOCALE='))
           ?.split('=')[1]
-        return cookieValue === 'id' ? 'id' : 'en'
+        if (cookieValue === 'id' || cookieValue === 'en') return cookieValue
+
+        const reqUrl = new URL(req.url)
+        const match = /^\/(id|en)(?:\/|$)/.exec(reqUrl.pathname)
+        if (match) return match[1]
       }
     } catch {
       // Abaikan jika dipanggil di luar scope request
