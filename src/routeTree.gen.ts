@@ -50,6 +50,8 @@ import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missio
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
 import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
+import { Route as ApiDigitalCheckoutRouteImport } from './routes/api.digital-checkout'
+import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as AffiliateResourcesRouteImport } from './routes/affiliate.resources'
 import { Route as AffiliatePayoutsRouteImport } from './routes/affiliate.payouts'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
@@ -68,6 +70,7 @@ import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketin
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
 import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
+import { Route as ApiPaymentCreemRouteImport } from './routes/api.payment.creem'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
 import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
@@ -92,6 +95,9 @@ import { Route as AdminFinanceDigitalOrdersRouteImport } from './routes/admin.fi
 import { Route as AdminPmServicesIndexRouteImport } from './routes/admin.pm.services.index'
 import { Route as AdminPmProjectsIndexRouteImport } from './routes/admin.pm.projects.index'
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
+import { Route as ApiPaymentMidtransWebhookRouteImport } from './routes/api.payment.midtrans.webhook'
+import { Route as ApiPaymentMidtransChargeRouteImport } from './routes/api.payment.midtrans.charge'
+import { Route as ApiPaymentCreemWebhookRouteImport } from './routes/api.payment.creem.webhook'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
 import { Route as ApiMarketingAffiliatePayoutRequestRouteImport } from './routes/api.marketing.affiliate.payout.request'
@@ -302,6 +308,16 @@ const ApiEstimatesRoute = ApiEstimatesRouteImport.update({
   path: '/api/estimates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDigitalCheckoutRoute = ApiDigitalCheckoutRouteImport.update({
+  id: '/api/digital-checkout',
+  path: '/api/digital-checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
+  id: '/api/checkout',
+  path: '/api/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AffiliateResourcesRoute = AffiliateResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -390,6 +406,11 @@ const DashboardMissionsIdRoute = DashboardMissionsIdRouteImport.update({
 const ApiStoreOrderRoute = ApiStoreOrderRouteImport.update({
   id: '/api/store/order',
   path: '/api/store/order',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPaymentCreemRoute = ApiPaymentCreemRouteImport.update({
+  id: '/api/payment/creem',
+  path: '/api/payment/creem',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
@@ -517,6 +538,23 @@ const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
   path: '/api/system/keys/status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPaymentMidtransWebhookRoute =
+  ApiPaymentMidtransWebhookRouteImport.update({
+    id: '/api/payment/midtrans/webhook',
+    path: '/api/payment/midtrans/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPaymentMidtransChargeRoute =
+  ApiPaymentMidtransChargeRouteImport.update({
+    id: '/api/payment/midtrans/charge',
+    path: '/api/payment/midtrans/charge',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPaymentCreemWebhookRoute = ApiPaymentCreemWebhookRouteImport.update({
+  id: '/webhook',
+  path: '/webhook',
+  getParentRoute: () => ApiPaymentCreemRoute,
+} as any)
 const AdminPmServicesNewRoute = AdminPmServicesNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -567,6 +605,8 @@ export interface FileRoutesByFullPath {
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -615,6 +655,7 @@ export interface FileRoutesByFullPath {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
@@ -622,6 +663,9 @@ export interface FileRoutesByFullPath {
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
+  '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
+  '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
@@ -651,6 +695,8 @@ export interface FileRoutesByTo {
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -697,6 +743,7 @@ export interface FileRoutesByTo {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
@@ -704,6 +751,9 @@ export interface FileRoutesByTo {
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
+  '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
+  '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/projects': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services': typeof AdminPmServicesIndexRoute
@@ -739,6 +789,8 @@ export interface FileRoutesById {
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -787,6 +839,7 @@ export interface FileRoutesById {
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/store/order': typeof ApiStoreOrderRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
@@ -794,6 +847,9 @@ export interface FileRoutesById {
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
+  '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
+  '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
@@ -830,6 +886,8 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/checkout'
+    | '/api/digital-checkout'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -878,6 +936,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/payment/creem'
     | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
@@ -885,6 +944,9 @@ export interface FileRouteTypes {
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/payment/creem/webhook'
+    | '/api/payment/midtrans/charge'
+    | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
@@ -914,6 +976,8 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/checkout'
+    | '/api/digital-checkout'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -960,6 +1024,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/payment/creem'
     | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
@@ -967,6 +1032,9 @@ export interface FileRouteTypes {
     | '/admin/pm'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/payment/creem/webhook'
+    | '/api/payment/midtrans/charge'
+    | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
     | '/admin/pm/projects'
     | '/admin/pm/services'
@@ -1001,6 +1069,8 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/checkout'
+    | '/api/digital-checkout'
     | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -1049,6 +1119,7 @@ export interface FileRouteTypes {
     | '/admin/system/webhooks'
     | '/api/currency/rates'
     | '/api/marketing/subscribe'
+    | '/api/payment/creem'
     | '/api/store/order'
     | '/dashboard/missions/$id'
     | '/squad/missions/$id'
@@ -1056,6 +1127,9 @@ export interface FileRouteTypes {
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/payment/creem/webhook'
+    | '/api/payment/midtrans/charge'
+    | '/api/payment/midtrans/webhook'
     | '/api/system/keys/status'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
@@ -1078,6 +1152,8 @@ export interface RootRouteChildren {
   SubmitTestimonialRoute: typeof SubmitTestimonialRoute
   SupportRoute: typeof SupportRouteWithChildren
   TermsRoute: typeof TermsRoute
+  ApiCheckoutRoute: typeof ApiCheckoutRoute
+  ApiDigitalCheckoutRoute: typeof ApiDigitalCheckoutRoute
   ApiEstimatesRoute: typeof ApiEstimatesRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
   HandlerSignInRoute: typeof HandlerSignInRoute
@@ -1090,7 +1166,10 @@ export interface RootRouteChildren {
   ServicesIndexRoute: typeof ServicesIndexRoute
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
+  ApiPaymentCreemRoute: typeof ApiPaymentCreemRouteWithChildren
   ApiStoreOrderRoute: typeof ApiStoreOrderRoute
+  ApiPaymentMidtransChargeRoute: typeof ApiPaymentMidtransChargeRoute
+  ApiPaymentMidtransWebhookRoute: typeof ApiPaymentMidtransWebhookRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
   ApiMarketingAffiliatePayoutRequestRoute: typeof ApiMarketingAffiliatePayoutRequestRoute
 }
@@ -1384,6 +1463,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEstimatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/digital-checkout': {
+      id: '/api/digital-checkout'
+      path: '/api/digital-checkout'
+      fullPath: '/api/digital-checkout'
+      preLoaderRoute: typeof ApiDigitalCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/checkout': {
+      id: '/api/checkout'
+      path: '/api/checkout'
+      fullPath: '/api/checkout'
+      preLoaderRoute: typeof ApiCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/affiliate/resources': {
       id: '/affiliate/resources'
       path: '/resources'
@@ -1508,6 +1601,13 @@ declare module '@tanstack/react-router' {
       path: '/api/store/order'
       fullPath: '/api/store/order'
       preLoaderRoute: typeof ApiStoreOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/payment/creem': {
+      id: '/api/payment/creem'
+      path: '/api/payment/creem'
+      fullPath: '/api/payment/creem'
+      preLoaderRoute: typeof ApiPaymentCreemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/marketing/subscribe': {
@@ -1677,6 +1777,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/system/keys/status'
       preLoaderRoute: typeof ApiSystemKeysStatusRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/payment/midtrans/webhook': {
+      id: '/api/payment/midtrans/webhook'
+      path: '/api/payment/midtrans/webhook'
+      fullPath: '/api/payment/midtrans/webhook'
+      preLoaderRoute: typeof ApiPaymentMidtransWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/payment/midtrans/charge': {
+      id: '/api/payment/midtrans/charge'
+      path: '/api/payment/midtrans/charge'
+      fullPath: '/api/payment/midtrans/charge'
+      preLoaderRoute: typeof ApiPaymentMidtransChargeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/payment/creem/webhook': {
+      id: '/api/payment/creem/webhook'
+      path: '/webhook'
+      fullPath: '/api/payment/creem/webhook'
+      preLoaderRoute: typeof ApiPaymentCreemWebhookRouteImport
+      parentRoute: typeof ApiPaymentCreemRoute
     }
     '/admin/pm/services/new': {
       id: '/admin/pm/services/new'
@@ -1909,6 +2030,18 @@ const SupportRouteChildren: SupportRouteChildren = {
 const SupportRouteWithChildren =
   SupportRoute._addFileChildren(SupportRouteChildren)
 
+interface ApiPaymentCreemRouteChildren {
+  ApiPaymentCreemWebhookRoute: typeof ApiPaymentCreemWebhookRoute
+}
+
+const ApiPaymentCreemRouteChildren: ApiPaymentCreemRouteChildren = {
+  ApiPaymentCreemWebhookRoute: ApiPaymentCreemWebhookRoute,
+}
+
+const ApiPaymentCreemRouteWithChildren = ApiPaymentCreemRoute._addFileChildren(
+  ApiPaymentCreemRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -1924,6 +2057,8 @@ const rootRouteChildren: RootRouteChildren = {
   SubmitTestimonialRoute: SubmitTestimonialRoute,
   SupportRoute: SupportRouteWithChildren,
   TermsRoute: TermsRoute,
+  ApiCheckoutRoute: ApiCheckoutRoute,
+  ApiDigitalCheckoutRoute: ApiDigitalCheckoutRoute,
   ApiEstimatesRoute: ApiEstimatesRoute,
   HandlerSplatRoute: HandlerSplatRoute,
   HandlerSignInRoute: HandlerSignInRoute,
@@ -1936,7 +2071,10 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesIndexRoute: ServicesIndexRoute,
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
+  ApiPaymentCreemRoute: ApiPaymentCreemRouteWithChildren,
   ApiStoreOrderRoute: ApiStoreOrderRoute,
+  ApiPaymentMidtransChargeRoute: ApiPaymentMidtransChargeRoute,
+  ApiPaymentMidtransWebhookRoute: ApiPaymentMidtransWebhookRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
   ApiMarketingAffiliatePayoutRequestRoute:
     ApiMarketingAffiliatePayoutRequestRoute,
