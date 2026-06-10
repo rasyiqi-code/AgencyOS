@@ -1,14 +1,16 @@
 import { HexclaveServerApp, HexclaveClientApp } from "@hexclave/tanstack-start";
 import { unstable_cache } from "../cache";
 
-// Client app — runs in the browser; no secret key exposed
+// Client app — berjalan di browser; tidak mengekspos secret key server
 export const hexclaveClientApp = new HexclaveClientApp({
-    projectId: import.meta.env.VITE_HEXCLAVE_PROJECT_ID || import.meta.env.VITE_STACK_PROJECT_ID || process.env.HEXCLAVE_PROJECT_ID,
+    projectId: import.meta.env.VITE_HEXCLAVE_PROJECT_ID || import.meta.env.NEXT_PUBLIC_HEXCLAVE_PROJECT_ID || import.meta.env.VITE_STACK_PROJECT_ID || process.env.HEXCLAVE_PROJECT_ID,
+    publishableClientKey: import.meta.env.VITE_HEXCLAVE_PUBLISHABLE_CLIENT_KEY || import.meta.env.NEXT_PUBLIC_HEXCLAVE_PUBLISHABLE_CLIENT_KEY || process.env.HEXCLAVE_PUBLISHABLE_CLIENT_KEY,
     tokenStore: "cookie",
     redirectMethod: "window",
     urls: {
         default: {
-            type: "hosted",
+            // Menggunakan handler-component agar halaman auth dirender secara lokal oleh komponen <HexclaveHandler>
+            type: "handler-component",
         },
     },
 });
