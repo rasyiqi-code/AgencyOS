@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Loader2, CheckCircle2, Key, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { saveResendConfigFn } from "@/src/server/settings";
+import { useRouter } from "@/lib/router/hooks";
 
 interface Props {
     currentKey: string | null;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [apiKey, setApiKey] = useState(currentKey || "");
     const [targetEmail, setTargetEmail] = useState(currentTargetEmail || "");
@@ -37,6 +39,7 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
                 }
             });
             toast.success("Email configuration updated successfully");
+            router.refresh();
         } catch {
             toast.error("An error occurred");
         } finally {

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { SystemNav } from '@/components/admin/system-nav'
 import { PaymentGatewayConfigForm } from '@/components/admin/payment-gateway-config-form'
 import { getSystemSettings, getPaymentConfigsFn, updateSystemSettingFn } from '@/src/server/settings'
@@ -27,6 +27,7 @@ export const Route = createFileRoute('/admin/system/payment')({
 
 function AdminPaymentRoute() {
   const { settings, gatewayConfigs } = Route.useLoaderData()
+  const router = useRouter()
 
   const getSetting = (key: string) => settings.find((s) => s.key === key)?.value || ""
 
@@ -49,6 +50,7 @@ function AdminPaymentRoute() {
         updateSystemSettingFn({ data: { key: "manual_payment_active", value: manualPaymentActive ? "true" : "false" } }),
       ])
       toast.success("Bank details updated successfully")
+      router.invalidate()
     } catch (error) {
       console.error(error)
       toast.error("Failed to save bank details")

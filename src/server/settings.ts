@@ -71,6 +71,9 @@ export const updateSystemSettingFn = createServerFn({ method: 'POST' })
       create: { key: data.key, value: String(data.value) }
     })
 
+    const { revalidateTag } = await import('@/lib/cache')
+    revalidateTag('system-settings')
+
     return { success: true }
   })
 
@@ -244,6 +247,10 @@ export const saveContactSettingsFn = createServerFn({ method: 'POST' })
     ]
 
     await prisma.$transaction(updates)
+
+    const { revalidateTag } = await import('@/lib/cache')
+    revalidateTag('system-settings')
+
     return { success: true }
   })
 
@@ -275,6 +282,10 @@ export const saveResendConfigFn = createServerFn({ method: 'POST' })
         create: { key: "ADMIN_EMAIL_TARGET", value: adminEmail, description: "Target email address for contact form submissions" }
       })
     }
+
+    const { revalidateTag } = await import('@/lib/cache')
+    revalidateTag('system-settings')
+
     return { success: true }
   })
 
@@ -333,6 +344,9 @@ export const saveStorageSettingsFn = createServerFn({ method: 'POST' })
     if (updates.length > 0) {
       await prisma.$transaction(updates)
     }
+
+    const { revalidateTag } = await import('@/lib/cache')
+    revalidateTag('system-settings')
 
     return { success: true }
   })

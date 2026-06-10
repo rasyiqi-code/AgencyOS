@@ -10,6 +10,7 @@ import { Loader2, Globe, Save } from "lucide-react";
 import { toast } from "sonner";
 import { saveContactSettingsFn } from "@/src/server/settings";
 import { SafeImage } from "@/components/ui/safe-image";
+import { useRouter } from "@/lib/router/hooks";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export function GeneralSettingsForm({ initialData }: Props) {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [data, setData] = useState<ContactInfo>(initialData);
@@ -81,6 +83,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
                 }
             });
             toast.success("General settings updated successfully");
+            router.refresh();
         } catch {
             toast.error("An error occurred");
         } finally {
