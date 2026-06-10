@@ -229,4 +229,36 @@ export const simulateWebhookFn = createServerFn({ method: 'POST' })
     return await triggerExternalWebhook(data.url, data.payload)
   })
 
+const submitTestimonialSchema = z.object({
+  name: z.string(),
+  role: z.string(),
+  content: z.string(),
+})
+
+export const submitTestimonialFn = createServerFn({ method: 'POST' })
+  .validator(submitTestimonialSchema)
+  .handler(async ({ data }) => {
+    const { getCurrentUser } = await import('@/lib/shared/auth-helpers')
+    const user = await getCurrentUser()
+    if (!user) throw new Error('Unauthorized')
+
+    const { name, role, content } = data
+    if (!name || !role || !content) {
+      throw new Error('Please fill in all fields')
+    }
+
+    const testimonial = await prisma.testimonial.create({
+      data: {
+        name,
+        role,
+        content,
+        avatar: user.profileImageUrl,
+        isActive: false,
+      },
+    })
+
+    return { success: true, data: JSON.parse(JSON.stringify(testimonial)) }
+  })
+
+
 

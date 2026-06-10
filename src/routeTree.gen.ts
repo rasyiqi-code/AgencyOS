@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SubmitTestimonialRouteImport } from './routes/submit-testimonial'
 import { Route as SquadRouteImport } from './routes/squad'
 import { Route as PromosiRouteImport } from './routes/promosi'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -88,6 +89,11 @@ import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.ser
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmitTestimonialRoute = SubmitTestimonialRouteImport.update({
+  id: '/submit-testimonial',
+  path: '/submit-testimonial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SquadRoute = SquadRouteImport.update({
@@ -474,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
+  '/submit-testimonial': typeof SubmitTestimonialRoute
   '/support': typeof SupportRouteWithChildren
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
@@ -547,6 +554,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/portfolio': typeof PortfolioRoute
   '/promosi': typeof PromosiRoute
+  '/submit-testimonial': typeof SubmitTestimonialRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
@@ -624,6 +632,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
+  '/submit-testimonial': typeof SubmitTestimonialRoute
   '/support': typeof SupportRouteWithChildren
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
@@ -703,6 +712,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/promosi'
     | '/squad'
+    | '/submit-testimonial'
     | '/support'
     | '/admin/clients'
     | '/admin/digital-sales'
@@ -776,6 +786,7 @@ export interface FileRouteTypes {
     | '/'
     | '/portfolio'
     | '/promosi'
+    | '/submit-testimonial'
     | '/admin/clients'
     | '/admin/digital-sales'
     | '/admin/licenses'
@@ -852,6 +863,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/promosi'
     | '/squad'
+    | '/submit-testimonial'
     | '/support'
     | '/admin/clients'
     | '/admin/digital-sales'
@@ -930,6 +942,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   PromosiRoute: typeof PromosiRoute
   SquadRoute: typeof SquadRouteWithChildren
+  SubmitTestimonialRoute: typeof SubmitTestimonialRoute
   SupportRoute: typeof SupportRouteWithChildren
   ApiEstimatesRoute: typeof ApiEstimatesRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
@@ -954,6 +967,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submit-testimonial': {
+      id: '/submit-testimonial'
+      path: '/submit-testimonial'
+      fullPath: '/submit-testimonial'
+      preLoaderRoute: typeof SubmitTestimonialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/squad': {
@@ -1675,6 +1695,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   PromosiRoute: PromosiRoute,
   SquadRoute: SquadRouteWithChildren,
+  SubmitTestimonialRoute: SubmitTestimonialRoute,
   SupportRoute: SupportRouteWithChildren,
   ApiEstimatesRoute: ApiEstimatesRoute,
   HandlerSplatRoute: HandlerSplatRoute,
