@@ -31,24 +31,20 @@ export function SiteHeader() {
     const tc = useTranslations("Common");
     const locale = useLocale();
 
-    // Blog URL Logic
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+    // Logika Pembuatan URL Blog secara Konsisten antara SSR dan Client
     let blogHostname = "";
-    try {
-        if (appUrl) {
-            const url = new URL(appUrl);
-            blogHostname = url.hostname.replace(/^www\./, '');
+    if (typeof window !== "undefined") {
+        blogHostname = window.location.hostname.replace(/^www\./, '');
+    } else {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+        try {
+            if (appUrl) {
+                const url = new URL(appUrl);
+                blogHostname = url.hostname.replace(/^www\./, '');
+            }
+        } catch {
+            // Abaikan error format URL
         }
-    } catch {
-        // console.error("Invalid APP_URL", e);
-    }
-
-    // Fallback if env var is missing or invalid (optional, but good for safety)
-    if (!blogHostname) {
-        // We can't easily guess the domain on server side without headers(), 
-        // but for now let's leave it blank or rely on the fact that APP_URL should be set.
-        // Or if we really want a default, make it a generic placeholder or keep it empty to hide the link?
-        // Let's assume APP_URL is set as per standard setup.
     }
 
     const blogUrl = `http://blog.${blogHostname}`;
