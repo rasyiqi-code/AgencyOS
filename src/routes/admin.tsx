@@ -8,7 +8,7 @@ import { SidebarContainer } from '@/components/dashboard/sidebar/container'
 import { SidebarContentWrapper } from '@/components/dashboard/sidebar/content-wrapper'
 import { Badge } from '@/components/ui/badge'
 import { getSystemSettings } from '@/src/server/settings'
-import { SystemAlerts } from '@/components/admin/system-alerts'
+import { SystemAlertsClient } from '@/components/admin/system-alerts-client'
 
 export const Route = createFileRoute('/admin')({
   beforeLoad: async () => {
@@ -27,13 +27,22 @@ export const Route = createFileRoute('/admin')({
     const logoUrl = settings.find(s => s.key === 'LOGO_URL')?.value
     const pmAccess = await canManageProjectsFn()
     const financeAccess = await canManageBillingFn()
-    return { agencyName, logoUrl, pmAccess, financeAccess }
+
+    // Ambil status konfigurasi AI dan Gateway Pembayaran di server-side loader
+    const { isAIConfigured } = await import('@/src/server/ai')
+    const { paymentGatewayService } = await import('@/lib/server/payment-gateway-service')
+    const [aiConfigured, gatewayConfigured] = await Promise.all([
+      isAIConfigured(),
+      paymentGatewayService.hasActiveGateway()
+    ])
+
+    return { agencyName, logoUrl, pmAccess, financeAccess, aiConfigured, gatewayConfigured }
   },
   component: AdminLayout,
 })
 
 function AdminLayout() {
-  const { agencyName, logoUrl, pmAccess, financeAccess } = Route.useLoaderData()
+  const { agencyName, logoUrl, pmAccess, financeAccess, aiConfigured, gatewayConfigured } = Route.useLoaderData()
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-black">
@@ -99,7 +108,10 @@ function AdminLayout() {
           }
         />
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 min-w-0">
-          <SystemAlerts />
+          <SystemAlertsClient
+            aiConfigured={aiConfigured}
+            gatewayConfigured={gatewayConfigured}
+          />
           <Outlet />
         </main>
       </SidebarContentWrapper>
