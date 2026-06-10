@@ -1,11 +1,9 @@
-                            
-import { hexclaveServerApp } from "@/lib/config/hexclave";
-import { hexclaveClientApp } from "@/lib/config/hexclave-client";
-
 export async function getCurrentUser() {
     if (typeof window === "undefined") {
+        const { hexclaveServerApp } = await import("@/lib/config/hexclave");
         return await hexclaveServerApp.getUser();
     }
+    const { hexclaveClientApp } = await import("@/lib/config/hexclave-client");
     return await hexclaveClientApp.getUser();
 }
 
@@ -15,8 +13,6 @@ export async function getCurrentUser() {
  * Use user.getPermission(key) for global check.
  * Use user.getPermission(team, key) for team-scoped check.
  */
-
-import { prisma } from "@/lib/config/db";
 
 export async function hasPermission(permission: string) {
     const user = await getCurrentUser();
@@ -29,6 +25,7 @@ export async function hasPermission(permission: string) {
     if (adminEmails.includes(user.primaryEmail || '') || user.id === superAdminId) return true;
 
     // 2. Check Local Database Permission (NEW)
+    const { prisma } = await import("@/lib/config/db");
     const localPerm = await prisma.userPermission.findUnique({
         where: {
             userId_key: {

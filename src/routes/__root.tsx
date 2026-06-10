@@ -85,6 +85,26 @@ function RootDocument({
     <html lang={i18n.locale} className="dark">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(regs) {
+                    for (var i = 0; i < regs.length; i++) {
+                      regs[i].unregister().then(function(success) {
+                        if (success) {
+                          console.log('[PWA] Stale SW unregistered via inline script');
+                          window.location.reload();
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            `,
+          }}
+        />
       </head>
       <body className="bg-black text-white antialiased relative">
         <QueryProvider>

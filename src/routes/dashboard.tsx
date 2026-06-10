@@ -23,6 +23,17 @@ export const Route = createFileRoute('/dashboard')({
     return { agencyName, logoUrl }
   },
   component: DashboardLayout,
+  notFoundComponent: () => {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center bg-zinc-900/20 border border-dashed border-zinc-800 rounded-2xl h-64">
+        <h2 className="text-xl font-bold text-white mb-2">Page Not Found</h2>
+        <p className="text-zinc-400 text-sm mb-4">The page you are looking for does not exist.</p>
+        <Link to="/dashboard" className="text-xs bg-yellow-500 hover:bg-yellow-500/90 text-black font-semibold px-4 py-2 rounded-lg transition-colors">
+          Go to Dashboard
+        </Link>
+      </div>
+    )
+  }
 })
 
 function DashboardLayout() {
