@@ -88,3 +88,40 @@ export const getSupportTickets = createServerFn({ method: 'GET' })
     }
   })
 
+export const getTicketByIdFn = createServerFn({ method: 'GET' })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const user = await hexclaveServerApp.getUser()
+    if (!user) throw new Error('Unauthorized')
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id },
+      include: {
+        messages: {
+          orderBy: { createdAt: 'asc' }
+        }
+      }
+    })
+
+    if (!ticket) throw new Error('Ticket not found')
+
+    const isUserAdmin = await isAdmin()
+    if (ticket.userId !== user.id && !isUserAdmin) {
+      throw new Error('Forbidden')
+    }
+
+    const serializableTicket = {
+      ...ticket,
+      createdAt: ticket.createdAt.toISOString(),
+      updatedAt: ticket.updatedAt.toISOString(),
+      messages: ticket.messages.map(m => ({
+        ...m,
+        createdAt: m.createdAt.toISOString(),
+        attachments: m.attachments as any
+      }))
+    }
+
+    return JSON.parse(JSON.stringify(serializableTicket))
+  })
+
+

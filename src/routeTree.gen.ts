@@ -20,6 +20,7 @@ import { Route as ExpertsRouteImport } from './routes/experts'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ClientDashboardRouteImport } from './routes/client-dashboard'
 import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -32,13 +33,17 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as AffiliateIndexRouteImport } from './routes/affiliate.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ViewDesignSlugRouteImport } from './routes/view-design.$slug'
+import { Route as VerifyIdRouteImport } from './routes/verify.$id'
 import { Route as SquadProfileRouteImport } from './routes/squad.profile'
 import { Route as SquadOnboardingRouteImport } from './routes/squad.onboarding'
 import { Route as SquadMissionsRouteImport } from './routes/squad.missions'
 import { Route as SquadActiveRouteImport } from './routes/squad.active'
+import { Route as SitemapXmlRouteImport } from './routes/sitemap.xml'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as RobotsTxtRouteImport } from './routes/robots.txt'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as PriceCalculatorIdRouteImport } from './routes/price-calculator.$id'
+import { Route as LlmsTxtRouteImport } from './routes/llms.txt'
 import { Route as InvoicesIdRouteImport } from './routes/invoices.$id'
 import { Route as HandlerSignInRouteImport } from './routes/handler/sign-in'
 import { Route as HandlerSplatRouteImport } from './routes/handler/$'
@@ -52,9 +57,17 @@ import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missio
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
 import { Route as CheckoutIdRouteImport } from './routes/checkout.$id'
+import { Route as ApiTestimonialsRouteImport } from './routes/api.testimonials'
+import { Route as ApiSupportRouteImport } from './routes/api.support'
+import { Route as ApiServicesRouteImport } from './routes/api.services'
+import { Route as ApiProjectsRouteImport } from './routes/api.projects'
+import { Route as ApiFeedbackRouteImport } from './routes/api.feedback'
+import { Route as ApiExpertsRouteImport } from './routes/api.experts'
 import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
 import { Route as ApiDigitalCheckoutRouteImport } from './routes/api.digital-checkout'
+import { Route as ApiContactRouteImport } from './routes/api.contact'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
+import { Route as ApiChatRouteImport } from './routes/api.chat'
 import { Route as AffiliateResourcesRouteImport } from './routes/affiliate.resources'
 import { Route as AffiliatePayoutsRouteImport } from './routes/affiliate.payouts'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
@@ -70,15 +83,41 @@ import { Route as AdminDigitalSalesRouteImport } from './routes/admin.digital-sa
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
+import { Route as AdminFinanceIndexRouteImport } from './routes/admin.finance.index'
+import { Route as SquadProfileEditRouteImport } from './routes/squad.profile.edit'
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
+import { Route as DashboardSupportNewRouteImport } from './routes/dashboard.support.new'
+import { Route as DashboardSupportIdRouteImport } from './routes/dashboard.support.$id'
 import { Route as DashboardMissionsIdRouteImport } from './routes/dashboard.missions.$id'
+import { Route as ApiViewDesignSlugRouteImport } from './routes/api.view-design.$slug'
+import { Route as ApiSystemUploadRouteImport } from './routes/api.system.upload'
 import { Route as ApiSystemSeoRouteImport } from './routes/api.system.seo'
+import { Route as ApiSystemContactRouteImport } from './routes/api.system.contact'
 import { Route as ApiStoreOrderRouteImport } from './routes/api.store.order'
+import { Route as ApiStorageProxyRouteImport } from './routes/api.storage.proxy'
+import { Route as ApiStorageMediaRouteImport } from './routes/api.storage.media'
+import { Route as ApiSquadProfileRouteImport } from './routes/api.squad.profile'
+import { Route as ApiSquadPayoutRouteImport } from './routes/api.squad.payout'
+import { Route as ApiPushSubscribeRouteImport } from './routes/api.push.subscribe'
+import { Route as ApiPublicVerifyLicenseRouteImport } from './routes/api.public.verify-license'
+import { Route as ApiPublicPopupsRouteImport } from './routes/api.public.popups'
+import { Route as ApiPublicLeadsRouteImport } from './routes/api.public.leads'
+import { Route as ApiPublicAgencyInfoRouteImport } from './routes/api.public.agency-info'
 import { Route as ApiPaymentStatusRouteImport } from './routes/api.payment.status'
 import { Route as ApiPaymentCreemRouteImport } from './routes/api.payment.creem'
+import { Route as ApiMarketingTrackRouteImport } from './routes/api.marketing.track'
 import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
+import { Route as ApiMarketingAssetsRouteImport } from './routes/api.marketing.assets'
+import { Route as ApiInvoicesSendRouteImport } from './routes/api.invoices.send'
+import { Route as ApiGenkitGenerateServiceRouteImport } from './routes/api.genkit.generate-service'
+import { Route as ApiGenkitGenerateProductRouteImport } from './routes/api.genkit.generate-product'
+import { Route as ApiDigitalPaymentStatusRouteImport } from './routes/api.digital-payment.status'
+import { Route as ApiDigitalPaymentChargeRouteImport } from './routes/api.digital-payment.charge'
+import { Route as ApiDashboardTicketsRouteImport } from './routes/api.dashboard.tickets'
 import { Route as ApiCurrencyRatesRouteImport } from './routes/api.currency.rates'
+import { Route as ApiCheckoutStatusRouteImport } from './routes/api.checkout.status'
 import { Route as ApiBillingProofRouteImport } from './routes/api.billing.proof'
+import { Route as ApiBillingMethodRouteImport } from './routes/api.billing.method'
 import { Route as AdminSystemWebhooksRouteImport } from './routes/admin.system.webhooks'
 import { Route as AdminSystemStorageRouteImport } from './routes/admin.system.storage'
 import { Route as AdminSystemSettingsRouteImport } from './routes/admin.system.settings'
@@ -89,6 +128,7 @@ import { Route as AdminSystemKeysRouteImport } from './routes/admin.system.keys'
 import { Route as AdminSystemIntegrationsRouteImport } from './routes/admin.system.integrations'
 import { Route as AdminSystemEmailRouteImport } from './routes/admin.system.email'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
+import { Route as AdminSupportIdRouteImport } from './routes/admin.support.$id'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
 import { Route as AdminMarketingSubscribersRouteImport } from './routes/admin.marketing.subscribers'
@@ -104,14 +144,24 @@ import { Route as AdminMarketingAffiliatesRouteImport } from './routes/admin.mar
 import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.finance.subscriptions'
 import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
 import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
+import { Route as AdminFinanceInvoicesRouteImport } from './routes/admin.finance.invoices'
 import { Route as AdminFinanceDigitalOrdersRouteImport } from './routes/admin.finance.digital-orders'
 import { Route as AdminPmServicesIndexRouteImport } from './routes/admin.pm.services.index'
 import { Route as AdminPmProjectsIndexRouteImport } from './routes/admin.pm.projects.index'
+import { Route as ApiV1SubscriptionCheckRouteImport } from './routes/api.v1.subscription.check'
 import { Route as ApiSystemSeoPagesRouteImport } from './routes/api.system.seo.pages'
 import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
+import { Route as ApiSupportTicketMessageRouteImport } from './routes/api.support.ticket.message'
+import { Route as ApiSupportTicketCreateRouteImport } from './routes/api.support.ticket.create'
+import { Route as ApiSupportTicketIdRouteImport } from './routes/api.support.ticket.$id'
+import { Route as ApiStorageMediaSplatRouteImport } from './routes/api.storage.media.$'
+import { Route as ApiSquadMissionsCompleteRouteImport } from './routes/api.squad.missions.complete'
+import { Route as ApiSquadMissionsApplyRouteImport } from './routes/api.squad.missions.apply'
+import { Route as ApiSquadInvitationsRespondRouteImport } from './routes/api.squad.invitations.respond'
 import { Route as ApiPaymentMidtransWebhookRouteImport } from './routes/api.payment.midtrans.webhook'
 import { Route as ApiPaymentMidtransChargeRouteImport } from './routes/api.payment.midtrans.charge'
 import { Route as ApiPaymentCreemWebhookRouteImport } from './routes/api.payment.creem.webhook'
+import { Route as ApiMarketingAffiliateRegisterRouteImport } from './routes/api.marketing.affiliate.register'
 import { Route as ApiIntegrationsVercelAuthorizeRouteImport } from './routes/api.integrations.vercel.authorize'
 import { Route as ApiIntegrationsGithubCallbackRouteImport } from './routes/api.integrations.github.callback'
 import { Route as ApiIntegrationsGithubAuthorizeRouteImport } from './routes/api.integrations.github.authorize'
@@ -119,6 +169,10 @@ import { Route as AdminSystemSeoPagesRouteImport } from './routes/admin.system.s
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
 import { Route as ApiSystemSeoPagesIdRouteImport } from './routes/api.system.seo.pages.$id'
+import { Route as ApiSquadProfileIdRejectRouteImport } from './routes/api.squad.profile.$id.reject'
+import { Route as ApiSquadProfileIdApproveRouteImport } from './routes/api.squad.profile.$id.approve'
+import { Route as ApiSquadMissionsIdRespondRouteImport } from './routes/api.squad.missions.$id.respond'
+import { Route as ApiSquadApplicationsIdAcceptRouteImport } from './routes/api.squad.applications.$id.accept'
 import { Route as ApiMarketingAffiliatePayoutRequestRouteImport } from './routes/api.marketing.affiliate.payout.request'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
 
@@ -175,6 +229,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientDashboardRoute = ClientDashboardRouteImport.update({
+  id: '/client-dashboard',
+  path: '/client-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AffiliateRoute = AffiliateRouteImport.update({
@@ -237,6 +296,11 @@ const ViewDesignSlugRoute = ViewDesignSlugRouteImport.update({
   path: '/view-design/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyIdRoute = VerifyIdRouteImport.update({
+  id: '/verify/$id',
+  path: '/verify/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SquadProfileRoute = SquadProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -257,9 +321,19 @@ const SquadActiveRoute = SquadActiveRouteImport.update({
   path: '/active',
   getParentRoute: () => SquadRoute,
 } as any)
+const SitemapXmlRoute = SitemapXmlRouteImport.update({
+  id: '/sitemap/xml',
+  path: '/sitemap/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
   id: '/services/$slug',
   path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsTxtRoute = RobotsTxtRouteImport.update({
+  id: '/robots/txt',
+  path: '/robots/txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsSlugRoute = ProductsSlugRouteImport.update({
@@ -270,6 +344,11 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
 const PriceCalculatorIdRoute = PriceCalculatorIdRouteImport.update({
   id: '/price-calculator/$id',
   path: '/price-calculator/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsTxtRoute = LlmsTxtRouteImport.update({
+  id: '/llms/txt',
+  path: '/llms/txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvoicesIdRoute = InvoicesIdRouteImport.update({
@@ -337,6 +416,36 @@ const CheckoutIdRoute = CheckoutIdRouteImport.update({
   path: '/checkout/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTestimonialsRoute = ApiTestimonialsRouteImport.update({
+  id: '/api/testimonials',
+  path: '/api/testimonials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSupportRoute = ApiSupportRouteImport.update({
+  id: '/api/support',
+  path: '/api/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiServicesRoute = ApiServicesRouteImport.update({
+  id: '/api/services',
+  path: '/api/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProjectsRoute = ApiProjectsRouteImport.update({
+  id: '/api/projects',
+  path: '/api/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFeedbackRoute = ApiFeedbackRouteImport.update({
+  id: '/api/feedback',
+  path: '/api/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExpertsRoute = ApiExpertsRouteImport.update({
+  id: '/api/experts',
+  path: '/api/experts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiEstimatesRoute = ApiEstimatesRouteImport.update({
   id: '/api/estimates',
   path: '/api/estimates',
@@ -347,9 +456,19 @@ const ApiDigitalCheckoutRoute = ApiDigitalCheckoutRouteImport.update({
   path: '/api/digital-checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiContactRoute = ApiContactRouteImport.update({
+  id: '/api/contact',
+  path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
   id: '/api/checkout',
   path: '/api/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AffiliateResourcesRoute = AffiliateResourcesRouteImport.update({
@@ -427,24 +546,104 @@ const AdminMarketingIndexRoute = AdminMarketingIndexRouteImport.update({
   path: '/marketing/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFinanceIndexRoute = AdminFinanceIndexRouteImport.update({
+  id: '/finance/',
+  path: '/finance/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const SquadProfileEditRoute = SquadProfileEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => SquadProfileRoute,
+} as any)
 const SquadMissionsIdRoute = SquadMissionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => SquadMissionsRoute,
+} as any)
+const DashboardSupportNewRoute = DashboardSupportNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DashboardSupportRoute,
+} as any)
+const DashboardSupportIdRoute = DashboardSupportIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashboardSupportRoute,
 } as any)
 const DashboardMissionsIdRoute = DashboardMissionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => DashboardMissionsRoute,
 } as any)
+const ApiViewDesignSlugRoute = ApiViewDesignSlugRouteImport.update({
+  id: '/api/view-design/$slug',
+  path: '/api/view-design/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSystemUploadRoute = ApiSystemUploadRouteImport.update({
+  id: '/api/system/upload',
+  path: '/api/system/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSystemSeoRoute = ApiSystemSeoRouteImport.update({
   id: '/api/system/seo',
   path: '/api/system/seo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSystemContactRoute = ApiSystemContactRouteImport.update({
+  id: '/api/system/contact',
+  path: '/api/system/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiStoreOrderRoute = ApiStoreOrderRouteImport.update({
   id: '/api/store/order',
   path: '/api/store/order',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStorageProxyRoute = ApiStorageProxyRouteImport.update({
+  id: '/api/storage/proxy',
+  path: '/api/storage/proxy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStorageMediaRoute = ApiStorageMediaRouteImport.update({
+  id: '/api/storage/media',
+  path: '/api/storage/media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSquadProfileRoute = ApiSquadProfileRouteImport.update({
+  id: '/api/squad/profile',
+  path: '/api/squad/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSquadPayoutRoute = ApiSquadPayoutRouteImport.update({
+  id: '/api/squad/payout',
+  path: '/api/squad/payout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPushSubscribeRoute = ApiPushSubscribeRouteImport.update({
+  id: '/api/push/subscribe',
+  path: '/api/push/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicVerifyLicenseRoute = ApiPublicVerifyLicenseRouteImport.update({
+  id: '/api/public/verify-license',
+  path: '/api/public/verify-license',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPopupsRoute = ApiPublicPopupsRouteImport.update({
+  id: '/api/public/popups',
+  path: '/api/public/popups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicLeadsRoute = ApiPublicLeadsRouteImport.update({
+  id: '/api/public/leads',
+  path: '/api/public/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAgencyInfoRoute = ApiPublicAgencyInfoRouteImport.update({
+  id: '/api/public/agency-info',
+  path: '/api/public/agency-info',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPaymentStatusRoute = ApiPaymentStatusRouteImport.update({
@@ -457,9 +656,51 @@ const ApiPaymentCreemRoute = ApiPaymentCreemRouteImport.update({
   path: '/api/payment/creem',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMarketingTrackRoute = ApiMarketingTrackRouteImport.update({
+  id: '/api/marketing/track',
+  path: '/api/marketing/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
   id: '/api/marketing/subscribe',
   path: '/api/marketing/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMarketingAssetsRoute = ApiMarketingAssetsRouteImport.update({
+  id: '/api/marketing/assets',
+  path: '/api/marketing/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInvoicesSendRoute = ApiInvoicesSendRouteImport.update({
+  id: '/api/invoices/send',
+  path: '/api/invoices/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGenkitGenerateServiceRoute =
+  ApiGenkitGenerateServiceRouteImport.update({
+    id: '/api/genkit/generate-service',
+    path: '/api/genkit/generate-service',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiGenkitGenerateProductRoute =
+  ApiGenkitGenerateProductRouteImport.update({
+    id: '/api/genkit/generate-product',
+    path: '/api/genkit/generate-product',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiDigitalPaymentStatusRoute = ApiDigitalPaymentStatusRouteImport.update({
+  id: '/api/digital-payment/status',
+  path: '/api/digital-payment/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDigitalPaymentChargeRoute = ApiDigitalPaymentChargeRouteImport.update({
+  id: '/api/digital-payment/charge',
+  path: '/api/digital-payment/charge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDashboardTicketsRoute = ApiDashboardTicketsRouteImport.update({
+  id: '/api/dashboard/tickets',
+  path: '/api/dashboard/tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
@@ -467,9 +708,19 @@ const ApiCurrencyRatesRoute = ApiCurrencyRatesRouteImport.update({
   path: '/api/currency/rates',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCheckoutStatusRoute = ApiCheckoutStatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => ApiCheckoutRoute,
+} as any)
 const ApiBillingProofRoute = ApiBillingProofRouteImport.update({
   id: '/api/billing/proof',
   path: '/api/billing/proof',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBillingMethodRoute = ApiBillingMethodRouteImport.update({
+  id: '/api/billing/method',
+  path: '/api/billing/method',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSystemWebhooksRoute = AdminSystemWebhooksRouteImport.update({
@@ -521,6 +772,11 @@ const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
   id: '/system/currency',
   path: '/system/currency',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminSupportIdRoute = AdminSupportIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSupportRoute,
 } as any)
 const AdminPmServicesRoute = AdminPmServicesRouteImport.update({
   id: '/pm/services',
@@ -601,6 +857,11 @@ const AdminFinanceOrdersRoute = AdminFinanceOrdersRouteImport.update({
   path: '/finance/orders',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFinanceInvoicesRoute = AdminFinanceInvoicesRouteImport.update({
+  id: '/finance/invoices',
+  path: '/finance/invoices',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFinanceDigitalOrdersRoute =
   AdminFinanceDigitalOrdersRouteImport.update({
     id: '/finance/digital-orders',
@@ -617,6 +878,11 @@ const AdminPmProjectsIndexRoute = AdminPmProjectsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminPmProjectsRoute,
 } as any)
+const ApiV1SubscriptionCheckRoute = ApiV1SubscriptionCheckRouteImport.update({
+  id: '/api/v1/subscription/check',
+  path: '/api/v1/subscription/check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSystemSeoPagesRoute = ApiSystemSeoPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
@@ -627,6 +893,43 @@ const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
   path: '/api/system/keys/status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSupportTicketMessageRoute = ApiSupportTicketMessageRouteImport.update({
+  id: '/ticket/message',
+  path: '/ticket/message',
+  getParentRoute: () => ApiSupportRoute,
+} as any)
+const ApiSupportTicketCreateRoute = ApiSupportTicketCreateRouteImport.update({
+  id: '/ticket/create',
+  path: '/ticket/create',
+  getParentRoute: () => ApiSupportRoute,
+} as any)
+const ApiSupportTicketIdRoute = ApiSupportTicketIdRouteImport.update({
+  id: '/ticket/$id',
+  path: '/ticket/$id',
+  getParentRoute: () => ApiSupportRoute,
+} as any)
+const ApiStorageMediaSplatRoute = ApiStorageMediaSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => ApiStorageMediaRoute,
+} as any)
+const ApiSquadMissionsCompleteRoute =
+  ApiSquadMissionsCompleteRouteImport.update({
+    id: '/api/squad/missions/complete',
+    path: '/api/squad/missions/complete',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiSquadMissionsApplyRoute = ApiSquadMissionsApplyRouteImport.update({
+  id: '/api/squad/missions/apply',
+  path: '/api/squad/missions/apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSquadInvitationsRespondRoute =
+  ApiSquadInvitationsRespondRouteImport.update({
+    id: '/api/squad/invitations/respond',
+    path: '/api/squad/invitations/respond',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPaymentMidtransWebhookRoute =
   ApiPaymentMidtransWebhookRouteImport.update({
     id: '/api/payment/midtrans/webhook',
@@ -644,6 +947,12 @@ const ApiPaymentCreemWebhookRoute = ApiPaymentCreemWebhookRouteImport.update({
   path: '/webhook',
   getParentRoute: () => ApiPaymentCreemRoute,
 } as any)
+const ApiMarketingAffiliateRegisterRoute =
+  ApiMarketingAffiliateRegisterRouteImport.update({
+    id: '/api/marketing/affiliate/register',
+    path: '/api/marketing/affiliate/register',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiIntegrationsVercelAuthorizeRoute =
   ApiIntegrationsVercelAuthorizeRouteImport.update({
     id: '/api/integrations/vercel/authorize',
@@ -682,6 +991,29 @@ const ApiSystemSeoPagesIdRoute = ApiSystemSeoPagesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiSystemSeoPagesRoute,
 } as any)
+const ApiSquadProfileIdRejectRoute = ApiSquadProfileIdRejectRouteImport.update({
+  id: '/$id/reject',
+  path: '/$id/reject',
+  getParentRoute: () => ApiSquadProfileRoute,
+} as any)
+const ApiSquadProfileIdApproveRoute =
+  ApiSquadProfileIdApproveRouteImport.update({
+    id: '/$id/approve',
+    path: '/$id/approve',
+    getParentRoute: () => ApiSquadProfileRoute,
+  } as any)
+const ApiSquadMissionsIdRespondRoute =
+  ApiSquadMissionsIdRespondRouteImport.update({
+    id: '/api/squad/missions/$id/respond',
+    path: '/api/squad/missions/$id/respond',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiSquadApplicationsIdAcceptRoute =
+  ApiSquadApplicationsIdAcceptRouteImport.update({
+    id: '/api/squad/applications/$id/accept',
+    path: '/api/squad/applications/$id/accept',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiMarketingAffiliatePayoutRequestRoute =
   ApiMarketingAffiliatePayoutRequestRouteImport.update({
     id: '/api/marketing/affiliate/payout/request',
@@ -698,6 +1030,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
+  '/client-dashboard': typeof ClientDashboardRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRoute
@@ -715,16 +1048,24 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AdminMediaRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/support': typeof AdminSupportRoute
+  '/admin/support': typeof AdminSupportRouteWithChildren
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
-  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/checkout': typeof ApiCheckoutRouteWithChildren
+  '/api/contact': typeof ApiContactRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/api/experts': typeof ApiExpertsRoute
+  '/api/feedback': typeof ApiFeedbackRoute
+  '/api/projects': typeof ApiProjectsRoute
+  '/api/services': typeof ApiServicesRoute
+  '/api/support': typeof ApiSupportRouteWithChildren
+  '/api/testimonials': typeof ApiTestimonialsRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -733,18 +1074,22 @@ export interface FileRoutesByFullPath {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/support': typeof DashboardSupportRoute
+  '/dashboard/support': typeof DashboardSupportRouteWithChildren
   '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
   '/invoices/$id': typeof InvoicesIdRoute
+  '/llms/txt': typeof LlmsTxtRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/robots/txt': typeof RobotsTxtRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
-  '/squad/profile': typeof SquadProfileRoute
+  '/squad/profile': typeof SquadProfileRouteWithChildren
+  '/verify/$id': typeof VerifyIdRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/affiliate/': typeof AffiliateIndexRoute
@@ -755,6 +1100,7 @@ export interface FileRoutesByFullPath {
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
   '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
+  '/admin/finance/invoices': typeof AdminFinanceInvoicesRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -770,6 +1116,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
+  '/admin/support/$id': typeof AdminSupportIdRoute
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/email': typeof AdminSystemEmailRoute
   '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
@@ -780,15 +1127,41 @@ export interface FileRoutesByFullPath {
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/method': typeof ApiBillingMethodRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
+  '/api/checkout/status': typeof ApiCheckoutStatusRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
+  '/api/dashboard/tickets': typeof ApiDashboardTicketsRoute
+  '/api/digital-payment/charge': typeof ApiDigitalPaymentChargeRoute
+  '/api/digital-payment/status': typeof ApiDigitalPaymentStatusRoute
+  '/api/genkit/generate-product': typeof ApiGenkitGenerateProductRoute
+  '/api/genkit/generate-service': typeof ApiGenkitGenerateServiceRoute
+  '/api/invoices/send': typeof ApiInvoicesSendRoute
+  '/api/marketing/assets': typeof ApiMarketingAssetsRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/marketing/track': typeof ApiMarketingTrackRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/payment/status': typeof ApiPaymentStatusRoute
+  '/api/public/agency-info': typeof ApiPublicAgencyInfoRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
+  '/api/public/popups': typeof ApiPublicPopupsRoute
+  '/api/public/verify-license': typeof ApiPublicVerifyLicenseRoute
+  '/api/push/subscribe': typeof ApiPushSubscribeRoute
+  '/api/squad/payout': typeof ApiSquadPayoutRoute
+  '/api/squad/profile': typeof ApiSquadProfileRouteWithChildren
+  '/api/storage/media': typeof ApiStorageMediaRouteWithChildren
+  '/api/storage/proxy': typeof ApiStorageProxyRoute
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/contact': typeof ApiSystemContactRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
+  '/api/system/upload': typeof ApiSystemUploadRoute
+  '/api/view-design/$slug': typeof ApiViewDesignSlugRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
+  '/dashboard/support/$id': typeof DashboardSupportIdRoute
+  '/dashboard/support/new': typeof DashboardSupportNewRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
+  '/squad/profile/edit': typeof SquadProfileEditRoute
+  '/admin/finance/': typeof AdminFinanceIndexRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -797,19 +1170,33 @@ export interface FileRoutesByFullPath {
   '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
   '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
   '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
+  '/api/marketing/affiliate/register': typeof ApiMarketingAffiliateRegisterRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
+  '/api/squad/invitations/respond': typeof ApiSquadInvitationsRespondRoute
+  '/api/squad/missions/apply': typeof ApiSquadMissionsApplyRoute
+  '/api/squad/missions/complete': typeof ApiSquadMissionsCompleteRoute
+  '/api/storage/media/$': typeof ApiStorageMediaSplatRoute
+  '/api/support/ticket/$id': typeof ApiSupportTicketIdRoute
+  '/api/support/ticket/create': typeof ApiSupportTicketCreateRoute
+  '/api/support/ticket/message': typeof ApiSupportTicketMessageRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
+  '/api/v1/subscription/check': typeof ApiV1SubscriptionCheckRoute
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/squad/applications/$id/accept': typeof ApiSquadApplicationsIdAcceptRoute
+  '/api/squad/missions/$id/respond': typeof ApiSquadMissionsIdRespondRoute
+  '/api/squad/profile/$id/approve': typeof ApiSquadProfileIdApproveRoute
+  '/api/squad/profile/$id/reject': typeof ApiSquadProfileIdRejectRoute
   '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/client-dashboard': typeof ClientDashboardRoute
   '/contact': typeof ContactRoute
   '/docs': typeof DocsRoute
   '/experts': typeof ExpertsRoute
@@ -824,16 +1211,24 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AdminMediaRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/support': typeof AdminSupportRoute
+  '/admin/support': typeof AdminSupportRouteWithChildren
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
-  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/checkout': typeof ApiCheckoutRouteWithChildren
+  '/api/contact': typeof ApiContactRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/api/experts': typeof ApiExpertsRoute
+  '/api/feedback': typeof ApiFeedbackRoute
+  '/api/projects': typeof ApiProjectsRoute
+  '/api/services': typeof ApiServicesRoute
+  '/api/support': typeof ApiSupportRouteWithChildren
+  '/api/testimonials': typeof ApiTestimonialsRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -842,18 +1237,22 @@ export interface FileRoutesByTo {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/support': typeof DashboardSupportRoute
+  '/dashboard/support': typeof DashboardSupportRouteWithChildren
   '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
   '/invoices/$id': typeof InvoicesIdRoute
+  '/llms/txt': typeof LlmsTxtRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/robots/txt': typeof RobotsTxtRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
-  '/squad/profile': typeof SquadProfileRoute
+  '/squad/profile': typeof SquadProfileRouteWithChildren
+  '/verify/$id': typeof VerifyIdRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
   '/admin': typeof AdminIndexRoute
   '/affiliate': typeof AffiliateIndexRoute
@@ -864,6 +1263,7 @@ export interface FileRoutesByTo {
   '/squad': typeof SquadIndexRoute
   '/support': typeof SupportIndexRoute
   '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
+  '/admin/finance/invoices': typeof AdminFinanceInvoicesRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -877,6 +1277,7 @@ export interface FileRoutesByTo {
   '/admin/marketing/promotions': typeof AdminMarketingPromotionsRoute
   '/admin/marketing/push': typeof AdminMarketingPushRoute
   '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
+  '/admin/support/$id': typeof AdminSupportIdRoute
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/email': typeof AdminSystemEmailRoute
   '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
@@ -887,15 +1288,41 @@ export interface FileRoutesByTo {
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/method': typeof ApiBillingMethodRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
+  '/api/checkout/status': typeof ApiCheckoutStatusRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
+  '/api/dashboard/tickets': typeof ApiDashboardTicketsRoute
+  '/api/digital-payment/charge': typeof ApiDigitalPaymentChargeRoute
+  '/api/digital-payment/status': typeof ApiDigitalPaymentStatusRoute
+  '/api/genkit/generate-product': typeof ApiGenkitGenerateProductRoute
+  '/api/genkit/generate-service': typeof ApiGenkitGenerateServiceRoute
+  '/api/invoices/send': typeof ApiInvoicesSendRoute
+  '/api/marketing/assets': typeof ApiMarketingAssetsRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/marketing/track': typeof ApiMarketingTrackRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/payment/status': typeof ApiPaymentStatusRoute
+  '/api/public/agency-info': typeof ApiPublicAgencyInfoRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
+  '/api/public/popups': typeof ApiPublicPopupsRoute
+  '/api/public/verify-license': typeof ApiPublicVerifyLicenseRoute
+  '/api/push/subscribe': typeof ApiPushSubscribeRoute
+  '/api/squad/payout': typeof ApiSquadPayoutRoute
+  '/api/squad/profile': typeof ApiSquadProfileRouteWithChildren
+  '/api/storage/media': typeof ApiStorageMediaRouteWithChildren
+  '/api/storage/proxy': typeof ApiStorageProxyRoute
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/contact': typeof ApiSystemContactRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
+  '/api/system/upload': typeof ApiSystemUploadRoute
+  '/api/view-design/$slug': typeof ApiViewDesignSlugRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
+  '/dashboard/support/$id': typeof DashboardSupportIdRoute
+  '/dashboard/support/new': typeof DashboardSupportNewRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
+  '/squad/profile/edit': typeof SquadProfileEditRoute
+  '/admin/finance': typeof AdminFinanceIndexRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -904,15 +1331,28 @@ export interface FileRoutesByTo {
   '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
   '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
   '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
+  '/api/marketing/affiliate/register': typeof ApiMarketingAffiliateRegisterRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
+  '/api/squad/invitations/respond': typeof ApiSquadInvitationsRespondRoute
+  '/api/squad/missions/apply': typeof ApiSquadMissionsApplyRoute
+  '/api/squad/missions/complete': typeof ApiSquadMissionsCompleteRoute
+  '/api/storage/media/$': typeof ApiStorageMediaSplatRoute
+  '/api/support/ticket/$id': typeof ApiSupportTicketIdRoute
+  '/api/support/ticket/create': typeof ApiSupportTicketCreateRoute
+  '/api/support/ticket/message': typeof ApiSupportTicketMessageRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
+  '/api/v1/subscription/check': typeof ApiV1SubscriptionCheckRoute
   '/admin/pm/projects': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/squad/applications/$id/accept': typeof ApiSquadApplicationsIdAcceptRoute
+  '/api/squad/missions/$id/respond': typeof ApiSquadMissionsIdRespondRoute
+  '/api/squad/profile/$id/approve': typeof ApiSquadProfileIdApproveRoute
+  '/api/squad/profile/$id/reject': typeof ApiSquadProfileIdRejectRoute
   '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRoutesById {
@@ -920,6 +1360,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
+  '/client-dashboard': typeof ClientDashboardRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRoute
@@ -937,16 +1378,24 @@ export interface FileRoutesById {
   '/admin/media': typeof AdminMediaRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/support': typeof AdminSupportRoute
+  '/admin/support': typeof AdminSupportRouteWithChildren
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/join': typeof AffiliateJoinRoute
   '/affiliate/payouts': typeof AffiliatePayoutsRoute
   '/affiliate/resources': typeof AffiliateResourcesRoute
-  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/checkout': typeof ApiCheckoutRouteWithChildren
+  '/api/contact': typeof ApiContactRoute
   '/api/digital-checkout': typeof ApiDigitalCheckoutRoute
   '/api/estimates': typeof ApiEstimatesRoute
+  '/api/experts': typeof ApiExpertsRoute
+  '/api/feedback': typeof ApiFeedbackRoute
+  '/api/projects': typeof ApiProjectsRoute
+  '/api/services': typeof ApiServicesRoute
+  '/api/support': typeof ApiSupportRouteWithChildren
+  '/api/testimonials': typeof ApiTestimonialsRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
@@ -955,18 +1404,22 @@ export interface FileRoutesById {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/services': typeof DashboardServicesRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/support': typeof DashboardSupportRoute
+  '/dashboard/support': typeof DashboardSupportRouteWithChildren
   '/digital-invoices/$id': typeof DigitalInvoicesIdRoute
   '/handler/$': typeof HandlerSplatRoute
   '/handler/sign-in': typeof HandlerSignInRoute
   '/invoices/$id': typeof InvoicesIdRoute
+  '/llms/txt': typeof LlmsTxtRoute
   '/price-calculator/$id': typeof PriceCalculatorIdRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/robots/txt': typeof RobotsTxtRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
-  '/squad/profile': typeof SquadProfileRoute
+  '/squad/profile': typeof SquadProfileRouteWithChildren
+  '/verify/$id': typeof VerifyIdRoute
   '/view-design/$slug': typeof ViewDesignSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/affiliate/': typeof AffiliateIndexRoute
@@ -977,6 +1430,7 @@ export interface FileRoutesById {
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
   '/admin/finance/digital-orders': typeof AdminFinanceDigitalOrdersRoute
+  '/admin/finance/invoices': typeof AdminFinanceInvoicesRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
   '/admin/finance/quotes': typeof AdminFinanceQuotesRoute
   '/admin/finance/subscriptions': typeof AdminFinanceSubscriptionsRoute
@@ -992,6 +1446,7 @@ export interface FileRoutesById {
   '/admin/marketing/subscribers': typeof AdminMarketingSubscribersRoute
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
+  '/admin/support/$id': typeof AdminSupportIdRoute
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
   '/admin/system/email': typeof AdminSystemEmailRoute
   '/admin/system/integrations': typeof AdminSystemIntegrationsRoute
@@ -1002,15 +1457,41 @@ export interface FileRoutesById {
   '/admin/system/settings': typeof AdminSystemSettingsRoute
   '/admin/system/storage': typeof AdminSystemStorageRoute
   '/admin/system/webhooks': typeof AdminSystemWebhooksRoute
+  '/api/billing/method': typeof ApiBillingMethodRoute
   '/api/billing/proof': typeof ApiBillingProofRoute
+  '/api/checkout/status': typeof ApiCheckoutStatusRoute
   '/api/currency/rates': typeof ApiCurrencyRatesRoute
+  '/api/dashboard/tickets': typeof ApiDashboardTicketsRoute
+  '/api/digital-payment/charge': typeof ApiDigitalPaymentChargeRoute
+  '/api/digital-payment/status': typeof ApiDigitalPaymentStatusRoute
+  '/api/genkit/generate-product': typeof ApiGenkitGenerateProductRoute
+  '/api/genkit/generate-service': typeof ApiGenkitGenerateServiceRoute
+  '/api/invoices/send': typeof ApiInvoicesSendRoute
+  '/api/marketing/assets': typeof ApiMarketingAssetsRoute
   '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
+  '/api/marketing/track': typeof ApiMarketingTrackRoute
   '/api/payment/creem': typeof ApiPaymentCreemRouteWithChildren
   '/api/payment/status': typeof ApiPaymentStatusRoute
+  '/api/public/agency-info': typeof ApiPublicAgencyInfoRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
+  '/api/public/popups': typeof ApiPublicPopupsRoute
+  '/api/public/verify-license': typeof ApiPublicVerifyLicenseRoute
+  '/api/push/subscribe': typeof ApiPushSubscribeRoute
+  '/api/squad/payout': typeof ApiSquadPayoutRoute
+  '/api/squad/profile': typeof ApiSquadProfileRouteWithChildren
+  '/api/storage/media': typeof ApiStorageMediaRouteWithChildren
+  '/api/storage/proxy': typeof ApiStorageProxyRoute
   '/api/store/order': typeof ApiStoreOrderRoute
+  '/api/system/contact': typeof ApiSystemContactRoute
   '/api/system/seo': typeof ApiSystemSeoRouteWithChildren
+  '/api/system/upload': typeof ApiSystemUploadRoute
+  '/api/view-design/$slug': typeof ApiViewDesignSlugRoute
   '/dashboard/missions/$id': typeof DashboardMissionsIdRoute
+  '/dashboard/support/$id': typeof DashboardSupportIdRoute
+  '/dashboard/support/new': typeof DashboardSupportNewRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
+  '/squad/profile/edit': typeof SquadProfileEditRoute
+  '/admin/finance/': typeof AdminFinanceIndexRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
@@ -1019,15 +1500,28 @@ export interface FileRoutesById {
   '/api/integrations/github/authorize': typeof ApiIntegrationsGithubAuthorizeRoute
   '/api/integrations/github/callback': typeof ApiIntegrationsGithubCallbackRoute
   '/api/integrations/vercel/authorize': typeof ApiIntegrationsVercelAuthorizeRoute
+  '/api/marketing/affiliate/register': typeof ApiMarketingAffiliateRegisterRoute
   '/api/payment/creem/webhook': typeof ApiPaymentCreemWebhookRoute
   '/api/payment/midtrans/charge': typeof ApiPaymentMidtransChargeRoute
   '/api/payment/midtrans/webhook': typeof ApiPaymentMidtransWebhookRoute
+  '/api/squad/invitations/respond': typeof ApiSquadInvitationsRespondRoute
+  '/api/squad/missions/apply': typeof ApiSquadMissionsApplyRoute
+  '/api/squad/missions/complete': typeof ApiSquadMissionsCompleteRoute
+  '/api/storage/media/$': typeof ApiStorageMediaSplatRoute
+  '/api/support/ticket/$id': typeof ApiSupportTicketIdRoute
+  '/api/support/ticket/create': typeof ApiSupportTicketCreateRoute
+  '/api/support/ticket/message': typeof ApiSupportTicketMessageRoute
   '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/api/system/seo/pages': typeof ApiSystemSeoPagesRouteWithChildren
+  '/api/v1/subscription/check': typeof ApiV1SubscriptionCheckRoute
   '/admin/pm/projects/': typeof AdminPmProjectsIndexRoute
   '/admin/pm/services/': typeof AdminPmServicesIndexRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
   '/api/marketing/affiliate/payout/request': typeof ApiMarketingAffiliatePayoutRequestRoute
+  '/api/squad/applications/$id/accept': typeof ApiSquadApplicationsIdAcceptRoute
+  '/api/squad/missions/$id/respond': typeof ApiSquadMissionsIdRespondRoute
+  '/api/squad/profile/$id/approve': typeof ApiSquadProfileIdApproveRoute
+  '/api/squad/profile/$id/reject': typeof ApiSquadProfileIdRejectRoute
   '/api/system/seo/pages/$id': typeof ApiSystemSeoPagesIdRoute
 }
 export interface FileRouteTypes {
@@ -1036,6 +1530,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/affiliate'
+    | '/client-dashboard'
     | '/contact'
     | '/dashboard'
     | '/docs'
@@ -1060,9 +1555,17 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/chat'
     | '/api/checkout'
+    | '/api/contact'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/api/experts'
+    | '/api/feedback'
+    | '/api/projects'
+    | '/api/services'
+    | '/api/support'
+    | '/api/testimonials'
     | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -1076,13 +1579,17 @@ export interface FileRouteTypes {
     | '/handler/$'
     | '/handler/sign-in'
     | '/invoices/$id'
+    | '/llms/txt'
     | '/price-calculator/$id'
     | '/products/$slug'
+    | '/robots/txt'
     | '/services/$slug'
+    | '/sitemap/xml'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
     | '/squad/profile'
+    | '/verify/$id'
     | '/view-design/$slug'
     | '/admin/'
     | '/affiliate/'
@@ -1093,6 +1600,7 @@ export interface FileRouteTypes {
     | '/squad/'
     | '/support/'
     | '/admin/finance/digital-orders'
+    | '/admin/finance/invoices'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -1108,6 +1616,7 @@ export interface FileRouteTypes {
     | '/admin/marketing/subscribers'
     | '/admin/pm/projects'
     | '/admin/pm/services'
+    | '/admin/support/$id'
     | '/admin/system/currency'
     | '/admin/system/email'
     | '/admin/system/integrations'
@@ -1118,15 +1627,41 @@ export interface FileRouteTypes {
     | '/admin/system/settings'
     | '/admin/system/storage'
     | '/admin/system/webhooks'
+    | '/api/billing/method'
     | '/api/billing/proof'
+    | '/api/checkout/status'
     | '/api/currency/rates'
+    | '/api/dashboard/tickets'
+    | '/api/digital-payment/charge'
+    | '/api/digital-payment/status'
+    | '/api/genkit/generate-product'
+    | '/api/genkit/generate-service'
+    | '/api/invoices/send'
+    | '/api/marketing/assets'
     | '/api/marketing/subscribe'
+    | '/api/marketing/track'
     | '/api/payment/creem'
     | '/api/payment/status'
+    | '/api/public/agency-info'
+    | '/api/public/leads'
+    | '/api/public/popups'
+    | '/api/public/verify-license'
+    | '/api/push/subscribe'
+    | '/api/squad/payout'
+    | '/api/squad/profile'
+    | '/api/storage/media'
+    | '/api/storage/proxy'
     | '/api/store/order'
+    | '/api/system/contact'
     | '/api/system/seo'
+    | '/api/system/upload'
+    | '/api/view-design/$slug'
     | '/dashboard/missions/$id'
+    | '/dashboard/support/$id'
+    | '/dashboard/support/new'
     | '/squad/missions/$id'
+    | '/squad/profile/edit'
+    | '/admin/finance/'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
@@ -1135,19 +1670,33 @@ export interface FileRouteTypes {
     | '/api/integrations/github/authorize'
     | '/api/integrations/github/callback'
     | '/api/integrations/vercel/authorize'
+    | '/api/marketing/affiliate/register'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
+    | '/api/squad/invitations/respond'
+    | '/api/squad/missions/apply'
+    | '/api/squad/missions/complete'
+    | '/api/storage/media/$'
+    | '/api/support/ticket/$id'
+    | '/api/support/ticket/create'
+    | '/api/support/ticket/message'
     | '/api/system/keys/status'
     | '/api/system/seo/pages'
+    | '/api/v1/subscription/check'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/squad/applications/$id/accept'
+    | '/api/squad/missions/$id/respond'
+    | '/api/squad/profile/$id/approve'
+    | '/api/squad/profile/$id/reject'
     | '/api/system/seo/pages/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/client-dashboard'
     | '/contact'
     | '/docs'
     | '/experts'
@@ -1169,9 +1718,17 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/chat'
     | '/api/checkout'
+    | '/api/contact'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/api/experts'
+    | '/api/feedback'
+    | '/api/projects'
+    | '/api/services'
+    | '/api/support'
+    | '/api/testimonials'
     | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -1185,13 +1742,17 @@ export interface FileRouteTypes {
     | '/handler/$'
     | '/handler/sign-in'
     | '/invoices/$id'
+    | '/llms/txt'
     | '/price-calculator/$id'
     | '/products/$slug'
+    | '/robots/txt'
     | '/services/$slug'
+    | '/sitemap/xml'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
     | '/squad/profile'
+    | '/verify/$id'
     | '/view-design/$slug'
     | '/admin'
     | '/affiliate'
@@ -1202,6 +1763,7 @@ export interface FileRouteTypes {
     | '/squad'
     | '/support'
     | '/admin/finance/digital-orders'
+    | '/admin/finance/invoices'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -1215,6 +1777,7 @@ export interface FileRouteTypes {
     | '/admin/marketing/promotions'
     | '/admin/marketing/push'
     | '/admin/marketing/subscribers'
+    | '/admin/support/$id'
     | '/admin/system/currency'
     | '/admin/system/email'
     | '/admin/system/integrations'
@@ -1225,15 +1788,41 @@ export interface FileRouteTypes {
     | '/admin/system/settings'
     | '/admin/system/storage'
     | '/admin/system/webhooks'
+    | '/api/billing/method'
     | '/api/billing/proof'
+    | '/api/checkout/status'
     | '/api/currency/rates'
+    | '/api/dashboard/tickets'
+    | '/api/digital-payment/charge'
+    | '/api/digital-payment/status'
+    | '/api/genkit/generate-product'
+    | '/api/genkit/generate-service'
+    | '/api/invoices/send'
+    | '/api/marketing/assets'
     | '/api/marketing/subscribe'
+    | '/api/marketing/track'
     | '/api/payment/creem'
     | '/api/payment/status'
+    | '/api/public/agency-info'
+    | '/api/public/leads'
+    | '/api/public/popups'
+    | '/api/public/verify-license'
+    | '/api/push/subscribe'
+    | '/api/squad/payout'
+    | '/api/squad/profile'
+    | '/api/storage/media'
+    | '/api/storage/proxy'
     | '/api/store/order'
+    | '/api/system/contact'
     | '/api/system/seo'
+    | '/api/system/upload'
+    | '/api/view-design/$slug'
     | '/dashboard/missions/$id'
+    | '/dashboard/support/$id'
+    | '/dashboard/support/new'
     | '/squad/missions/$id'
+    | '/squad/profile/edit'
+    | '/admin/finance'
     | '/admin/marketing'
     | '/admin/pm'
     | '/admin/pm/projects/$id'
@@ -1242,21 +1831,35 @@ export interface FileRouteTypes {
     | '/api/integrations/github/authorize'
     | '/api/integrations/github/callback'
     | '/api/integrations/vercel/authorize'
+    | '/api/marketing/affiliate/register'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
+    | '/api/squad/invitations/respond'
+    | '/api/squad/missions/apply'
+    | '/api/squad/missions/complete'
+    | '/api/storage/media/$'
+    | '/api/support/ticket/$id'
+    | '/api/support/ticket/create'
+    | '/api/support/ticket/message'
     | '/api/system/keys/status'
     | '/api/system/seo/pages'
+    | '/api/v1/subscription/check'
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/squad/applications/$id/accept'
+    | '/api/squad/missions/$id/respond'
+    | '/api/squad/profile/$id/approve'
+    | '/api/squad/profile/$id/reject'
     | '/api/system/seo/pages/$id'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/affiliate'
+    | '/client-dashboard'
     | '/contact'
     | '/dashboard'
     | '/docs'
@@ -1281,9 +1884,17 @@ export interface FileRouteTypes {
     | '/affiliate/join'
     | '/affiliate/payouts'
     | '/affiliate/resources'
+    | '/api/chat'
     | '/api/checkout'
+    | '/api/contact'
     | '/api/digital-checkout'
     | '/api/estimates'
+    | '/api/experts'
+    | '/api/feedback'
+    | '/api/projects'
+    | '/api/services'
+    | '/api/support'
+    | '/api/testimonials'
     | '/checkout/$id'
     | '/dashboard/billing'
     | '/dashboard/inbox'
@@ -1297,13 +1908,17 @@ export interface FileRouteTypes {
     | '/handler/$'
     | '/handler/sign-in'
     | '/invoices/$id'
+    | '/llms/txt'
     | '/price-calculator/$id'
     | '/products/$slug'
+    | '/robots/txt'
     | '/services/$slug'
+    | '/sitemap/xml'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
     | '/squad/profile'
+    | '/verify/$id'
     | '/view-design/$slug'
     | '/admin/'
     | '/affiliate/'
@@ -1314,6 +1929,7 @@ export interface FileRouteTypes {
     | '/squad/'
     | '/support/'
     | '/admin/finance/digital-orders'
+    | '/admin/finance/invoices'
     | '/admin/finance/orders'
     | '/admin/finance/quotes'
     | '/admin/finance/subscriptions'
@@ -1329,6 +1945,7 @@ export interface FileRouteTypes {
     | '/admin/marketing/subscribers'
     | '/admin/pm/projects'
     | '/admin/pm/services'
+    | '/admin/support/$id'
     | '/admin/system/currency'
     | '/admin/system/email'
     | '/admin/system/integrations'
@@ -1339,15 +1956,41 @@ export interface FileRouteTypes {
     | '/admin/system/settings'
     | '/admin/system/storage'
     | '/admin/system/webhooks'
+    | '/api/billing/method'
     | '/api/billing/proof'
+    | '/api/checkout/status'
     | '/api/currency/rates'
+    | '/api/dashboard/tickets'
+    | '/api/digital-payment/charge'
+    | '/api/digital-payment/status'
+    | '/api/genkit/generate-product'
+    | '/api/genkit/generate-service'
+    | '/api/invoices/send'
+    | '/api/marketing/assets'
     | '/api/marketing/subscribe'
+    | '/api/marketing/track'
     | '/api/payment/creem'
     | '/api/payment/status'
+    | '/api/public/agency-info'
+    | '/api/public/leads'
+    | '/api/public/popups'
+    | '/api/public/verify-license'
+    | '/api/push/subscribe'
+    | '/api/squad/payout'
+    | '/api/squad/profile'
+    | '/api/storage/media'
+    | '/api/storage/proxy'
     | '/api/store/order'
+    | '/api/system/contact'
     | '/api/system/seo'
+    | '/api/system/upload'
+    | '/api/view-design/$slug'
     | '/dashboard/missions/$id'
+    | '/dashboard/support/$id'
+    | '/dashboard/support/new'
     | '/squad/missions/$id'
+    | '/squad/profile/edit'
+    | '/admin/finance/'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
@@ -1356,15 +1999,28 @@ export interface FileRouteTypes {
     | '/api/integrations/github/authorize'
     | '/api/integrations/github/callback'
     | '/api/integrations/vercel/authorize'
+    | '/api/marketing/affiliate/register'
     | '/api/payment/creem/webhook'
     | '/api/payment/midtrans/charge'
     | '/api/payment/midtrans/webhook'
+    | '/api/squad/invitations/respond'
+    | '/api/squad/missions/apply'
+    | '/api/squad/missions/complete'
+    | '/api/storage/media/$'
+    | '/api/support/ticket/$id'
+    | '/api/support/ticket/create'
+    | '/api/support/ticket/message'
     | '/api/system/keys/status'
     | '/api/system/seo/pages'
+    | '/api/v1/subscription/check'
     | '/admin/pm/projects/'
     | '/admin/pm/services/'
     | '/admin/pm/services/$id/edit'
     | '/api/marketing/affiliate/payout/request'
+    | '/api/squad/applications/$id/accept'
+    | '/api/squad/missions/$id/respond'
+    | '/api/squad/profile/$id/approve'
+    | '/api/squad/profile/$id/reject'
     | '/api/system/seo/pages/$id'
   fileRoutesById: FileRoutesById
 }
@@ -1372,6 +2028,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AffiliateRoute: typeof AffiliateRouteWithChildren
+  ClientDashboardRoute: typeof ClientDashboardRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   DocsRoute: typeof DocsRoute
@@ -1383,35 +2040,75 @@ export interface RootRouteChildren {
   SubmitTestimonialRoute: typeof SubmitTestimonialRoute
   SupportRoute: typeof SupportRouteWithChildren
   TermsRoute: typeof TermsRoute
-  ApiCheckoutRoute: typeof ApiCheckoutRoute
+  ApiChatRoute: typeof ApiChatRoute
+  ApiCheckoutRoute: typeof ApiCheckoutRouteWithChildren
+  ApiContactRoute: typeof ApiContactRoute
   ApiDigitalCheckoutRoute: typeof ApiDigitalCheckoutRoute
   ApiEstimatesRoute: typeof ApiEstimatesRoute
+  ApiExpertsRoute: typeof ApiExpertsRoute
+  ApiFeedbackRoute: typeof ApiFeedbackRoute
+  ApiProjectsRoute: typeof ApiProjectsRoute
+  ApiServicesRoute: typeof ApiServicesRoute
+  ApiSupportRoute: typeof ApiSupportRouteWithChildren
+  ApiTestimonialsRoute: typeof ApiTestimonialsRoute
   CheckoutIdRoute: typeof CheckoutIdRoute
   DigitalInvoicesIdRoute: typeof DigitalInvoicesIdRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
   HandlerSignInRoute: typeof HandlerSignInRoute
   InvoicesIdRoute: typeof InvoicesIdRoute
+  LlmsTxtRoute: typeof LlmsTxtRoute
   PriceCalculatorIdRoute: typeof PriceCalculatorIdRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
+  RobotsTxtRoute: typeof RobotsTxtRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
+  SitemapXmlRoute: typeof SitemapXmlRoute
+  VerifyIdRoute: typeof VerifyIdRoute
   ViewDesignSlugRoute: typeof ViewDesignSlugRoute
   PriceCalculatorIndexRoute: typeof PriceCalculatorIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiBillingMethodRoute: typeof ApiBillingMethodRoute
   ApiBillingProofRoute: typeof ApiBillingProofRoute
   ApiCurrencyRatesRoute: typeof ApiCurrencyRatesRoute
+  ApiDashboardTicketsRoute: typeof ApiDashboardTicketsRoute
+  ApiDigitalPaymentChargeRoute: typeof ApiDigitalPaymentChargeRoute
+  ApiDigitalPaymentStatusRoute: typeof ApiDigitalPaymentStatusRoute
+  ApiGenkitGenerateProductRoute: typeof ApiGenkitGenerateProductRoute
+  ApiGenkitGenerateServiceRoute: typeof ApiGenkitGenerateServiceRoute
+  ApiInvoicesSendRoute: typeof ApiInvoicesSendRoute
+  ApiMarketingAssetsRoute: typeof ApiMarketingAssetsRoute
   ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
+  ApiMarketingTrackRoute: typeof ApiMarketingTrackRoute
   ApiPaymentCreemRoute: typeof ApiPaymentCreemRouteWithChildren
   ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
+  ApiPublicAgencyInfoRoute: typeof ApiPublicAgencyInfoRoute
+  ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
+  ApiPublicPopupsRoute: typeof ApiPublicPopupsRoute
+  ApiPublicVerifyLicenseRoute: typeof ApiPublicVerifyLicenseRoute
+  ApiPushSubscribeRoute: typeof ApiPushSubscribeRoute
+  ApiSquadPayoutRoute: typeof ApiSquadPayoutRoute
+  ApiSquadProfileRoute: typeof ApiSquadProfileRouteWithChildren
+  ApiStorageMediaRoute: typeof ApiStorageMediaRouteWithChildren
+  ApiStorageProxyRoute: typeof ApiStorageProxyRoute
   ApiStoreOrderRoute: typeof ApiStoreOrderRoute
+  ApiSystemContactRoute: typeof ApiSystemContactRoute
   ApiSystemSeoRoute: typeof ApiSystemSeoRouteWithChildren
+  ApiSystemUploadRoute: typeof ApiSystemUploadRoute
+  ApiViewDesignSlugRoute: typeof ApiViewDesignSlugRoute
   ApiIntegrationsGithubAuthorizeRoute: typeof ApiIntegrationsGithubAuthorizeRoute
   ApiIntegrationsGithubCallbackRoute: typeof ApiIntegrationsGithubCallbackRoute
   ApiIntegrationsVercelAuthorizeRoute: typeof ApiIntegrationsVercelAuthorizeRoute
+  ApiMarketingAffiliateRegisterRoute: typeof ApiMarketingAffiliateRegisterRoute
   ApiPaymentMidtransChargeRoute: typeof ApiPaymentMidtransChargeRoute
   ApiPaymentMidtransWebhookRoute: typeof ApiPaymentMidtransWebhookRoute
+  ApiSquadInvitationsRespondRoute: typeof ApiSquadInvitationsRespondRoute
+  ApiSquadMissionsApplyRoute: typeof ApiSquadMissionsApplyRoute
+  ApiSquadMissionsCompleteRoute: typeof ApiSquadMissionsCompleteRoute
   ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
+  ApiV1SubscriptionCheckRoute: typeof ApiV1SubscriptionCheckRoute
   ApiMarketingAffiliatePayoutRequestRoute: typeof ApiMarketingAffiliatePayoutRequestRoute
+  ApiSquadApplicationsIdAcceptRoute: typeof ApiSquadApplicationsIdAcceptRoute
+  ApiSquadMissionsIdRespondRoute: typeof ApiSquadMissionsIdRespondRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1491,6 +2188,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/client-dashboard': {
+      id: '/client-dashboard'
+      path: '/client-dashboard'
+      fullPath: '/client-dashboard'
+      preLoaderRoute: typeof ClientDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/affiliate': {
@@ -1577,6 +2281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ViewDesignSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify/$id': {
+      id: '/verify/$id'
+      path: '/verify/$id'
+      fullPath: '/verify/$id'
+      preLoaderRoute: typeof VerifyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/squad/profile': {
       id: '/squad/profile'
       path: '/profile'
@@ -1605,11 +2316,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SquadActiveRouteImport
       parentRoute: typeof SquadRoute
     }
+    '/sitemap/xml': {
+      id: '/sitemap/xml'
+      path: '/sitemap/xml'
+      fullPath: '/sitemap/xml'
+      preLoaderRoute: typeof SitemapXmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/$slug': {
       id: '/services/$slug'
       path: '/services/$slug'
       fullPath: '/services/$slug'
       preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots/txt': {
+      id: '/robots/txt'
+      path: '/robots/txt'
+      fullPath: '/robots/txt'
+      preLoaderRoute: typeof RobotsTxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products/$slug': {
@@ -1624,6 +2349,13 @@ declare module '@tanstack/react-router' {
       path: '/price-calculator/$id'
       fullPath: '/price-calculator/$id'
       preLoaderRoute: typeof PriceCalculatorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms/txt': {
+      id: '/llms/txt'
+      path: '/llms/txt'
+      fullPath: '/llms/txt'
+      preLoaderRoute: typeof LlmsTxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invoices/$id': {
@@ -1717,6 +2449,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/testimonials': {
+      id: '/api/testimonials'
+      path: '/api/testimonials'
+      fullPath: '/api/testimonials'
+      preLoaderRoute: typeof ApiTestimonialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/support': {
+      id: '/api/support'
+      path: '/api/support'
+      fullPath: '/api/support'
+      preLoaderRoute: typeof ApiSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/services': {
+      id: '/api/services'
+      path: '/api/services'
+      fullPath: '/api/services'
+      preLoaderRoute: typeof ApiServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/projects': {
+      id: '/api/projects'
+      path: '/api/projects'
+      fullPath: '/api/projects'
+      preLoaderRoute: typeof ApiProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/feedback': {
+      id: '/api/feedback'
+      path: '/api/feedback'
+      fullPath: '/api/feedback'
+      preLoaderRoute: typeof ApiFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/experts': {
+      id: '/api/experts'
+      path: '/api/experts'
+      fullPath: '/api/experts'
+      preLoaderRoute: typeof ApiExpertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/estimates': {
       id: '/api/estimates'
       path: '/api/estimates'
@@ -1731,11 +2505,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDigitalCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/contact': {
+      id: '/api/contact'
+      path: '/api/contact'
+      fullPath: '/api/contact'
+      preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/checkout': {
       id: '/api/checkout'
       path: '/api/checkout'
       fullPath: '/api/checkout'
       preLoaderRoute: typeof ApiCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/affiliate/resources': {
@@ -1843,12 +2631,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMarketingIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/finance/': {
+      id: '/admin/finance/'
+      path: '/finance'
+      fullPath: '/admin/finance/'
+      preLoaderRoute: typeof AdminFinanceIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/squad/profile/edit': {
+      id: '/squad/profile/edit'
+      path: '/edit'
+      fullPath: '/squad/profile/edit'
+      preLoaderRoute: typeof SquadProfileEditRouteImport
+      parentRoute: typeof SquadProfileRoute
+    }
     '/squad/missions/$id': {
       id: '/squad/missions/$id'
       path: '/$id'
       fullPath: '/squad/missions/$id'
       preLoaderRoute: typeof SquadMissionsIdRouteImport
       parentRoute: typeof SquadMissionsRoute
+    }
+    '/dashboard/support/new': {
+      id: '/dashboard/support/new'
+      path: '/new'
+      fullPath: '/dashboard/support/new'
+      preLoaderRoute: typeof DashboardSupportNewRouteImport
+      parentRoute: typeof DashboardSupportRoute
+    }
+    '/dashboard/support/$id': {
+      id: '/dashboard/support/$id'
+      path: '/$id'
+      fullPath: '/dashboard/support/$id'
+      preLoaderRoute: typeof DashboardSupportIdRouteImport
+      parentRoute: typeof DashboardSupportRoute
     }
     '/dashboard/missions/$id': {
       id: '/dashboard/missions/$id'
@@ -1857,6 +2673,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMissionsIdRouteImport
       parentRoute: typeof DashboardMissionsRoute
     }
+    '/api/view-design/$slug': {
+      id: '/api/view-design/$slug'
+      path: '/api/view-design/$slug'
+      fullPath: '/api/view-design/$slug'
+      preLoaderRoute: typeof ApiViewDesignSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/system/upload': {
+      id: '/api/system/upload'
+      path: '/api/system/upload'
+      fullPath: '/api/system/upload'
+      preLoaderRoute: typeof ApiSystemUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/system/seo': {
       id: '/api/system/seo'
       path: '/api/system/seo'
@@ -1864,11 +2694,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSystemSeoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/system/contact': {
+      id: '/api/system/contact'
+      path: '/api/system/contact'
+      fullPath: '/api/system/contact'
+      preLoaderRoute: typeof ApiSystemContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/store/order': {
       id: '/api/store/order'
       path: '/api/store/order'
       fullPath: '/api/store/order'
       preLoaderRoute: typeof ApiStoreOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/storage/proxy': {
+      id: '/api/storage/proxy'
+      path: '/api/storage/proxy'
+      fullPath: '/api/storage/proxy'
+      preLoaderRoute: typeof ApiStorageProxyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/storage/media': {
+      id: '/api/storage/media'
+      path: '/api/storage/media'
+      fullPath: '/api/storage/media'
+      preLoaderRoute: typeof ApiStorageMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/squad/profile': {
+      id: '/api/squad/profile'
+      path: '/api/squad/profile'
+      fullPath: '/api/squad/profile'
+      preLoaderRoute: typeof ApiSquadProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/squad/payout': {
+      id: '/api/squad/payout'
+      path: '/api/squad/payout'
+      fullPath: '/api/squad/payout'
+      preLoaderRoute: typeof ApiSquadPayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/push/subscribe': {
+      id: '/api/push/subscribe'
+      path: '/api/push/subscribe'
+      fullPath: '/api/push/subscribe'
+      preLoaderRoute: typeof ApiPushSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/verify-license': {
+      id: '/api/public/verify-license'
+      path: '/api/public/verify-license'
+      fullPath: '/api/public/verify-license'
+      preLoaderRoute: typeof ApiPublicVerifyLicenseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/popups': {
+      id: '/api/public/popups'
+      path: '/api/public/popups'
+      fullPath: '/api/public/popups'
+      preLoaderRoute: typeof ApiPublicPopupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/leads': {
+      id: '/api/public/leads'
+      path: '/api/public/leads'
+      fullPath: '/api/public/leads'
+      preLoaderRoute: typeof ApiPublicLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/agency-info': {
+      id: '/api/public/agency-info'
+      path: '/api/public/agency-info'
+      fullPath: '/api/public/agency-info'
+      preLoaderRoute: typeof ApiPublicAgencyInfoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/payment/status': {
@@ -1885,11 +2785,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPaymentCreemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/marketing/track': {
+      id: '/api/marketing/track'
+      path: '/api/marketing/track'
+      fullPath: '/api/marketing/track'
+      preLoaderRoute: typeof ApiMarketingTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/marketing/subscribe': {
       id: '/api/marketing/subscribe'
       path: '/api/marketing/subscribe'
       fullPath: '/api/marketing/subscribe'
       preLoaderRoute: typeof ApiMarketingSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/marketing/assets': {
+      id: '/api/marketing/assets'
+      path: '/api/marketing/assets'
+      fullPath: '/api/marketing/assets'
+      preLoaderRoute: typeof ApiMarketingAssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/invoices/send': {
+      id: '/api/invoices/send'
+      path: '/api/invoices/send'
+      fullPath: '/api/invoices/send'
+      preLoaderRoute: typeof ApiInvoicesSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/genkit/generate-service': {
+      id: '/api/genkit/generate-service'
+      path: '/api/genkit/generate-service'
+      fullPath: '/api/genkit/generate-service'
+      preLoaderRoute: typeof ApiGenkitGenerateServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/genkit/generate-product': {
+      id: '/api/genkit/generate-product'
+      path: '/api/genkit/generate-product'
+      fullPath: '/api/genkit/generate-product'
+      preLoaderRoute: typeof ApiGenkitGenerateProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/digital-payment/status': {
+      id: '/api/digital-payment/status'
+      path: '/api/digital-payment/status'
+      fullPath: '/api/digital-payment/status'
+      preLoaderRoute: typeof ApiDigitalPaymentStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/digital-payment/charge': {
+      id: '/api/digital-payment/charge'
+      path: '/api/digital-payment/charge'
+      fullPath: '/api/digital-payment/charge'
+      preLoaderRoute: typeof ApiDigitalPaymentChargeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/dashboard/tickets': {
+      id: '/api/dashboard/tickets'
+      path: '/api/dashboard/tickets'
+      fullPath: '/api/dashboard/tickets'
+      preLoaderRoute: typeof ApiDashboardTicketsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/currency/rates': {
@@ -1899,11 +2855,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCurrencyRatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/checkout/status': {
+      id: '/api/checkout/status'
+      path: '/status'
+      fullPath: '/api/checkout/status'
+      preLoaderRoute: typeof ApiCheckoutStatusRouteImport
+      parentRoute: typeof ApiCheckoutRoute
+    }
     '/api/billing/proof': {
       id: '/api/billing/proof'
       path: '/api/billing/proof'
       fullPath: '/api/billing/proof'
       preLoaderRoute: typeof ApiBillingProofRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/billing/method': {
+      id: '/api/billing/method'
+      path: '/api/billing/method'
+      fullPath: '/api/billing/method'
+      preLoaderRoute: typeof ApiBillingMethodRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/system/webhooks': {
@@ -1975,6 +2945,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/system/currency'
       preLoaderRoute: typeof AdminSystemCurrencyRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/support/$id': {
+      id: '/admin/support/$id'
+      path: '/$id'
+      fullPath: '/admin/support/$id'
+      preLoaderRoute: typeof AdminSupportIdRouteImport
+      parentRoute: typeof AdminSupportRoute
     }
     '/admin/pm/services': {
       id: '/admin/pm/services'
@@ -2081,6 +3058,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFinanceOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/finance/invoices': {
+      id: '/admin/finance/invoices'
+      path: '/finance/invoices'
+      fullPath: '/admin/finance/invoices'
+      preLoaderRoute: typeof AdminFinanceInvoicesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/finance/digital-orders': {
       id: '/admin/finance/digital-orders'
       path: '/finance/digital-orders'
@@ -2102,6 +3086,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPmProjectsIndexRouteImport
       parentRoute: typeof AdminPmProjectsRoute
     }
+    '/api/v1/subscription/check': {
+      id: '/api/v1/subscription/check'
+      path: '/api/v1/subscription/check'
+      fullPath: '/api/v1/subscription/check'
+      preLoaderRoute: typeof ApiV1SubscriptionCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/system/seo/pages': {
       id: '/api/system/seo/pages'
       path: '/pages'
@@ -2114,6 +3105,55 @@ declare module '@tanstack/react-router' {
       path: '/api/system/keys/status'
       fullPath: '/api/system/keys/status'
       preLoaderRoute: typeof ApiSystemKeysStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/support/ticket/message': {
+      id: '/api/support/ticket/message'
+      path: '/ticket/message'
+      fullPath: '/api/support/ticket/message'
+      preLoaderRoute: typeof ApiSupportTicketMessageRouteImport
+      parentRoute: typeof ApiSupportRoute
+    }
+    '/api/support/ticket/create': {
+      id: '/api/support/ticket/create'
+      path: '/ticket/create'
+      fullPath: '/api/support/ticket/create'
+      preLoaderRoute: typeof ApiSupportTicketCreateRouteImport
+      parentRoute: typeof ApiSupportRoute
+    }
+    '/api/support/ticket/$id': {
+      id: '/api/support/ticket/$id'
+      path: '/ticket/$id'
+      fullPath: '/api/support/ticket/$id'
+      preLoaderRoute: typeof ApiSupportTicketIdRouteImport
+      parentRoute: typeof ApiSupportRoute
+    }
+    '/api/storage/media/$': {
+      id: '/api/storage/media/$'
+      path: '/$'
+      fullPath: '/api/storage/media/$'
+      preLoaderRoute: typeof ApiStorageMediaSplatRouteImport
+      parentRoute: typeof ApiStorageMediaRoute
+    }
+    '/api/squad/missions/complete': {
+      id: '/api/squad/missions/complete'
+      path: '/api/squad/missions/complete'
+      fullPath: '/api/squad/missions/complete'
+      preLoaderRoute: typeof ApiSquadMissionsCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/squad/missions/apply': {
+      id: '/api/squad/missions/apply'
+      path: '/api/squad/missions/apply'
+      fullPath: '/api/squad/missions/apply'
+      preLoaderRoute: typeof ApiSquadMissionsApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/squad/invitations/respond': {
+      id: '/api/squad/invitations/respond'
+      path: '/api/squad/invitations/respond'
+      fullPath: '/api/squad/invitations/respond'
+      preLoaderRoute: typeof ApiSquadInvitationsRespondRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/payment/midtrans/webhook': {
@@ -2136,6 +3176,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/payment/creem/webhook'
       preLoaderRoute: typeof ApiPaymentCreemWebhookRouteImport
       parentRoute: typeof ApiPaymentCreemRoute
+    }
+    '/api/marketing/affiliate/register': {
+      id: '/api/marketing/affiliate/register'
+      path: '/api/marketing/affiliate/register'
+      fullPath: '/api/marketing/affiliate/register'
+      preLoaderRoute: typeof ApiMarketingAffiliateRegisterRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/integrations/vercel/authorize': {
       id: '/api/integrations/vercel/authorize'
@@ -2186,6 +3233,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSystemSeoPagesIdRouteImport
       parentRoute: typeof ApiSystemSeoPagesRoute
     }
+    '/api/squad/profile/$id/reject': {
+      id: '/api/squad/profile/$id/reject'
+      path: '/$id/reject'
+      fullPath: '/api/squad/profile/$id/reject'
+      preLoaderRoute: typeof ApiSquadProfileIdRejectRouteImport
+      parentRoute: typeof ApiSquadProfileRoute
+    }
+    '/api/squad/profile/$id/approve': {
+      id: '/api/squad/profile/$id/approve'
+      path: '/$id/approve'
+      fullPath: '/api/squad/profile/$id/approve'
+      preLoaderRoute: typeof ApiSquadProfileIdApproveRouteImport
+      parentRoute: typeof ApiSquadProfileRoute
+    }
+    '/api/squad/missions/$id/respond': {
+      id: '/api/squad/missions/$id/respond'
+      path: '/api/squad/missions/$id/respond'
+      fullPath: '/api/squad/missions/$id/respond'
+      preLoaderRoute: typeof ApiSquadMissionsIdRespondRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/squad/applications/$id/accept': {
+      id: '/api/squad/applications/$id/accept'
+      path: '/api/squad/applications/$id/accept'
+      fullPath: '/api/squad/applications/$id/accept'
+      preLoaderRoute: typeof ApiSquadApplicationsIdAcceptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/marketing/affiliate/payout/request': {
       id: '/api/marketing/affiliate/payout/request'
       path: '/api/marketing/affiliate/payout/request'
@@ -2202,6 +3277,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminSupportRouteChildren {
+  AdminSupportIdRoute: typeof AdminSupportIdRoute
+}
+
+const AdminSupportRouteChildren: AdminSupportRouteChildren = {
+  AdminSupportIdRoute: AdminSupportIdRoute,
+}
+
+const AdminSupportRouteWithChildren = AdminSupportRoute._addFileChildren(
+  AdminSupportRouteChildren,
+)
 
 interface AdminPmProjectsRouteChildren {
   AdminPmProjectsIdRoute: typeof AdminPmProjectsIdRoute
@@ -2252,11 +3339,12 @@ interface AdminRouteChildren {
   AdminMediaRoute: typeof AdminMediaRoute
   AdminPortfolioRoute: typeof AdminPortfolioRoute
   AdminProductsRoute: typeof AdminProductsRoute
-  AdminSupportRoute: typeof AdminSupportRoute
+  AdminSupportRoute: typeof AdminSupportRouteWithChildren
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminFinanceDigitalOrdersRoute: typeof AdminFinanceDigitalOrdersRoute
+  AdminFinanceInvoicesRoute: typeof AdminFinanceInvoicesRoute
   AdminFinanceOrdersRoute: typeof AdminFinanceOrdersRoute
   AdminFinanceQuotesRoute: typeof AdminFinanceQuotesRoute
   AdminFinanceSubscriptionsRoute: typeof AdminFinanceSubscriptionsRoute
@@ -2282,6 +3370,7 @@ interface AdminRouteChildren {
   AdminSystemSettingsRoute: typeof AdminSystemSettingsRoute
   AdminSystemStorageRoute: typeof AdminSystemStorageRoute
   AdminSystemWebhooksRoute: typeof AdminSystemWebhooksRoute
+  AdminFinanceIndexRoute: typeof AdminFinanceIndexRoute
   AdminMarketingIndexRoute: typeof AdminMarketingIndexRoute
   AdminPmIndexRoute: typeof AdminPmIndexRoute
 }
@@ -2293,11 +3382,12 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMediaRoute: AdminMediaRoute,
   AdminPortfolioRoute: AdminPortfolioRoute,
   AdminProductsRoute: AdminProductsRoute,
-  AdminSupportRoute: AdminSupportRoute,
+  AdminSupportRoute: AdminSupportRouteWithChildren,
   AdminTeamRoute: AdminTeamRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminFinanceDigitalOrdersRoute: AdminFinanceDigitalOrdersRoute,
+  AdminFinanceInvoicesRoute: AdminFinanceInvoicesRoute,
   AdminFinanceOrdersRoute: AdminFinanceOrdersRoute,
   AdminFinanceQuotesRoute: AdminFinanceQuotesRoute,
   AdminFinanceSubscriptionsRoute: AdminFinanceSubscriptionsRoute,
@@ -2323,6 +3413,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSystemSettingsRoute: AdminSystemSettingsRoute,
   AdminSystemStorageRoute: AdminSystemStorageRoute,
   AdminSystemWebhooksRoute: AdminSystemWebhooksRoute,
+  AdminFinanceIndexRoute: AdminFinanceIndexRoute,
   AdminMarketingIndexRoute: AdminMarketingIndexRoute,
   AdminPmIndexRoute: AdminPmIndexRoute,
 }
@@ -2360,6 +3451,19 @@ const DashboardMissionsRouteChildren: DashboardMissionsRouteChildren = {
 const DashboardMissionsRouteWithChildren =
   DashboardMissionsRoute._addFileChildren(DashboardMissionsRouteChildren)
 
+interface DashboardSupportRouteChildren {
+  DashboardSupportIdRoute: typeof DashboardSupportIdRoute
+  DashboardSupportNewRoute: typeof DashboardSupportNewRoute
+}
+
+const DashboardSupportRouteChildren: DashboardSupportRouteChildren = {
+  DashboardSupportIdRoute: DashboardSupportIdRoute,
+  DashboardSupportNewRoute: DashboardSupportNewRoute,
+}
+
+const DashboardSupportRouteWithChildren =
+  DashboardSupportRoute._addFileChildren(DashboardSupportRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardBillingRoute: typeof DashboardBillingRoute
   DashboardInboxRoute: typeof DashboardInboxRoute
@@ -2368,7 +3472,7 @@ interface DashboardRouteChildren {
   DashboardQuotesRoute: typeof DashboardQuotesRoute
   DashboardServicesRoute: typeof DashboardServicesRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
-  DashboardSupportRoute: typeof DashboardSupportRoute
+  DashboardSupportRoute: typeof DashboardSupportRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -2380,7 +3484,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardQuotesRoute: DashboardQuotesRoute,
   DashboardServicesRoute: DashboardServicesRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
-  DashboardSupportRoute: DashboardSupportRoute,
+  DashboardSupportRoute: DashboardSupportRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
@@ -2400,11 +3504,23 @@ const SquadMissionsRouteWithChildren = SquadMissionsRoute._addFileChildren(
   SquadMissionsRouteChildren,
 )
 
+interface SquadProfileRouteChildren {
+  SquadProfileEditRoute: typeof SquadProfileEditRoute
+}
+
+const SquadProfileRouteChildren: SquadProfileRouteChildren = {
+  SquadProfileEditRoute: SquadProfileEditRoute,
+}
+
+const SquadProfileRouteWithChildren = SquadProfileRoute._addFileChildren(
+  SquadProfileRouteChildren,
+)
+
 interface SquadRouteChildren {
   SquadActiveRoute: typeof SquadActiveRoute
   SquadMissionsRoute: typeof SquadMissionsRouteWithChildren
   SquadOnboardingRoute: typeof SquadOnboardingRoute
-  SquadProfileRoute: typeof SquadProfileRoute
+  SquadProfileRoute: typeof SquadProfileRouteWithChildren
   SquadIndexRoute: typeof SquadIndexRoute
 }
 
@@ -2412,7 +3528,7 @@ const SquadRouteChildren: SquadRouteChildren = {
   SquadActiveRoute: SquadActiveRoute,
   SquadMissionsRoute: SquadMissionsRouteWithChildren,
   SquadOnboardingRoute: SquadOnboardingRoute,
-  SquadProfileRoute: SquadProfileRoute,
+  SquadProfileRoute: SquadProfileRouteWithChildren,
   SquadIndexRoute: SquadIndexRoute,
 }
 
@@ -2429,6 +3545,34 @@ const SupportRouteChildren: SupportRouteChildren = {
 const SupportRouteWithChildren =
   SupportRoute._addFileChildren(SupportRouteChildren)
 
+interface ApiCheckoutRouteChildren {
+  ApiCheckoutStatusRoute: typeof ApiCheckoutStatusRoute
+}
+
+const ApiCheckoutRouteChildren: ApiCheckoutRouteChildren = {
+  ApiCheckoutStatusRoute: ApiCheckoutStatusRoute,
+}
+
+const ApiCheckoutRouteWithChildren = ApiCheckoutRoute._addFileChildren(
+  ApiCheckoutRouteChildren,
+)
+
+interface ApiSupportRouteChildren {
+  ApiSupportTicketIdRoute: typeof ApiSupportTicketIdRoute
+  ApiSupportTicketCreateRoute: typeof ApiSupportTicketCreateRoute
+  ApiSupportTicketMessageRoute: typeof ApiSupportTicketMessageRoute
+}
+
+const ApiSupportRouteChildren: ApiSupportRouteChildren = {
+  ApiSupportTicketIdRoute: ApiSupportTicketIdRoute,
+  ApiSupportTicketCreateRoute: ApiSupportTicketCreateRoute,
+  ApiSupportTicketMessageRoute: ApiSupportTicketMessageRoute,
+}
+
+const ApiSupportRouteWithChildren = ApiSupportRoute._addFileChildren(
+  ApiSupportRouteChildren,
+)
+
 interface ApiPaymentCreemRouteChildren {
   ApiPaymentCreemWebhookRoute: typeof ApiPaymentCreemWebhookRoute
 }
@@ -2439,6 +3583,32 @@ const ApiPaymentCreemRouteChildren: ApiPaymentCreemRouteChildren = {
 
 const ApiPaymentCreemRouteWithChildren = ApiPaymentCreemRoute._addFileChildren(
   ApiPaymentCreemRouteChildren,
+)
+
+interface ApiSquadProfileRouteChildren {
+  ApiSquadProfileIdApproveRoute: typeof ApiSquadProfileIdApproveRoute
+  ApiSquadProfileIdRejectRoute: typeof ApiSquadProfileIdRejectRoute
+}
+
+const ApiSquadProfileRouteChildren: ApiSquadProfileRouteChildren = {
+  ApiSquadProfileIdApproveRoute: ApiSquadProfileIdApproveRoute,
+  ApiSquadProfileIdRejectRoute: ApiSquadProfileIdRejectRoute,
+}
+
+const ApiSquadProfileRouteWithChildren = ApiSquadProfileRoute._addFileChildren(
+  ApiSquadProfileRouteChildren,
+)
+
+interface ApiStorageMediaRouteChildren {
+  ApiStorageMediaSplatRoute: typeof ApiStorageMediaSplatRoute
+}
+
+const ApiStorageMediaRouteChildren: ApiStorageMediaRouteChildren = {
+  ApiStorageMediaSplatRoute: ApiStorageMediaSplatRoute,
+}
+
+const ApiStorageMediaRouteWithChildren = ApiStorageMediaRoute._addFileChildren(
+  ApiStorageMediaRouteChildren,
 )
 
 interface ApiSystemSeoPagesRouteChildren {
@@ -2468,6 +3638,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AffiliateRoute: AffiliateRouteWithChildren,
+  ClientDashboardRoute: ClientDashboardRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,
   DocsRoute: DocsRoute,
@@ -2479,36 +3650,76 @@ const rootRouteChildren: RootRouteChildren = {
   SubmitTestimonialRoute: SubmitTestimonialRoute,
   SupportRoute: SupportRouteWithChildren,
   TermsRoute: TermsRoute,
-  ApiCheckoutRoute: ApiCheckoutRoute,
+  ApiChatRoute: ApiChatRoute,
+  ApiCheckoutRoute: ApiCheckoutRouteWithChildren,
+  ApiContactRoute: ApiContactRoute,
   ApiDigitalCheckoutRoute: ApiDigitalCheckoutRoute,
   ApiEstimatesRoute: ApiEstimatesRoute,
+  ApiExpertsRoute: ApiExpertsRoute,
+  ApiFeedbackRoute: ApiFeedbackRoute,
+  ApiProjectsRoute: ApiProjectsRoute,
+  ApiServicesRoute: ApiServicesRoute,
+  ApiSupportRoute: ApiSupportRouteWithChildren,
+  ApiTestimonialsRoute: ApiTestimonialsRoute,
   CheckoutIdRoute: CheckoutIdRoute,
   DigitalInvoicesIdRoute: DigitalInvoicesIdRoute,
   HandlerSplatRoute: HandlerSplatRoute,
   HandlerSignInRoute: HandlerSignInRoute,
   InvoicesIdRoute: InvoicesIdRoute,
+  LlmsTxtRoute: LlmsTxtRoute,
   PriceCalculatorIdRoute: PriceCalculatorIdRoute,
   ProductsSlugRoute: ProductsSlugRoute,
+  RobotsTxtRoute: RobotsTxtRoute,
   ServicesSlugRoute: ServicesSlugRoute,
+  SitemapXmlRoute: SitemapXmlRoute,
+  VerifyIdRoute: VerifyIdRoute,
   ViewDesignSlugRoute: ViewDesignSlugRoute,
   PriceCalculatorIndexRoute: PriceCalculatorIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ApiBillingMethodRoute: ApiBillingMethodRoute,
   ApiBillingProofRoute: ApiBillingProofRoute,
   ApiCurrencyRatesRoute: ApiCurrencyRatesRoute,
+  ApiDashboardTicketsRoute: ApiDashboardTicketsRoute,
+  ApiDigitalPaymentChargeRoute: ApiDigitalPaymentChargeRoute,
+  ApiDigitalPaymentStatusRoute: ApiDigitalPaymentStatusRoute,
+  ApiGenkitGenerateProductRoute: ApiGenkitGenerateProductRoute,
+  ApiGenkitGenerateServiceRoute: ApiGenkitGenerateServiceRoute,
+  ApiInvoicesSendRoute: ApiInvoicesSendRoute,
+  ApiMarketingAssetsRoute: ApiMarketingAssetsRoute,
   ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
+  ApiMarketingTrackRoute: ApiMarketingTrackRoute,
   ApiPaymentCreemRoute: ApiPaymentCreemRouteWithChildren,
   ApiPaymentStatusRoute: ApiPaymentStatusRoute,
+  ApiPublicAgencyInfoRoute: ApiPublicAgencyInfoRoute,
+  ApiPublicLeadsRoute: ApiPublicLeadsRoute,
+  ApiPublicPopupsRoute: ApiPublicPopupsRoute,
+  ApiPublicVerifyLicenseRoute: ApiPublicVerifyLicenseRoute,
+  ApiPushSubscribeRoute: ApiPushSubscribeRoute,
+  ApiSquadPayoutRoute: ApiSquadPayoutRoute,
+  ApiSquadProfileRoute: ApiSquadProfileRouteWithChildren,
+  ApiStorageMediaRoute: ApiStorageMediaRouteWithChildren,
+  ApiStorageProxyRoute: ApiStorageProxyRoute,
   ApiStoreOrderRoute: ApiStoreOrderRoute,
+  ApiSystemContactRoute: ApiSystemContactRoute,
   ApiSystemSeoRoute: ApiSystemSeoRouteWithChildren,
+  ApiSystemUploadRoute: ApiSystemUploadRoute,
+  ApiViewDesignSlugRoute: ApiViewDesignSlugRoute,
   ApiIntegrationsGithubAuthorizeRoute: ApiIntegrationsGithubAuthorizeRoute,
   ApiIntegrationsGithubCallbackRoute: ApiIntegrationsGithubCallbackRoute,
   ApiIntegrationsVercelAuthorizeRoute: ApiIntegrationsVercelAuthorizeRoute,
+  ApiMarketingAffiliateRegisterRoute: ApiMarketingAffiliateRegisterRoute,
   ApiPaymentMidtransChargeRoute: ApiPaymentMidtransChargeRoute,
   ApiPaymentMidtransWebhookRoute: ApiPaymentMidtransWebhookRoute,
+  ApiSquadInvitationsRespondRoute: ApiSquadInvitationsRespondRoute,
+  ApiSquadMissionsApplyRoute: ApiSquadMissionsApplyRoute,
+  ApiSquadMissionsCompleteRoute: ApiSquadMissionsCompleteRoute,
   ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
+  ApiV1SubscriptionCheckRoute: ApiV1SubscriptionCheckRoute,
   ApiMarketingAffiliatePayoutRequestRoute:
     ApiMarketingAffiliatePayoutRequestRoute,
+  ApiSquadApplicationsIdAcceptRoute: ApiSquadApplicationsIdAcceptRoute,
+  ApiSquadMissionsIdRespondRoute: ApiSquadMissionsIdRespondRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
