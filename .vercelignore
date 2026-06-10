@@ -1,0 +1,33 @@
+# Kategori dependensi dan build outputs
+node_modules/
+.next/
+out/
+build/
+dist/
+.output/
+.tanstack/
+
+# Berkas lingkungan dan rahasia
+.env
+.env.local
+.env.*.local
+.env.test
+.env.docker
+api_keys.txt
+
+# Backup dan dokumentasi lokal
+backup/
+doc/
+bug.md
+MIGRATION_STATUS.md
+DEPLOY.md
+
+# Log dan berkas temporary
+*.log
+*.tsbuildinfo
+.vscode/
+.idea/
+.Jules/
+.agent/
+lint_output.txt
+lint_results.txt
