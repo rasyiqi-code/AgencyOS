@@ -9,12 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SubmitTestimonialRouteImport } from './routes/submit-testimonial'
 import { Route as SquadRouteImport } from './routes/squad'
 import { Route as PromosiRouteImport } from './routes/promosi'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as ExpertsRouteImport } from './routes/experts'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -86,6 +91,11 @@ import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.project
 import { Route as ApiMarketingAffiliatePayoutRequestRouteImport } from './routes/api.marketing.affiliate.payout.request'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -106,14 +116,34 @@ const PromosiRoute = PromosiRouteImport.update({
   path: '/promosi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortfolioRoute = PortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpertsRoute = ExpertsRouteImport.update({
+  id: '/experts',
+  path: '/experts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AffiliateRoute = AffiliateRouteImport.update({
@@ -476,12 +506,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/docs': typeof DocsRoute
+  '/experts': typeof ExpertsRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
   '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
   '/submit-testimonial': typeof SubmitTestimonialRoute
   '/support': typeof SupportRouteWithChildren
+  '/terms': typeof TermsRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
@@ -552,9 +587,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/docs': typeof DocsRoute
+  '/experts': typeof ExpertsRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
   '/promosi': typeof PromosiRoute
   '/submit-testimonial': typeof SubmitTestimonialRoute
+  '/terms': typeof TermsRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
@@ -628,12 +668,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/docs': typeof DocsRoute
+  '/experts': typeof ExpertsRoute
   '/portfolio': typeof PortfolioRoute
+  '/privacy': typeof PrivacyRoute
   '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
   '/submit-testimonial': typeof SubmitTestimonialRoute
   '/support': typeof SupportRouteWithChildren
+  '/terms': typeof TermsRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
@@ -708,12 +753,17 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/affiliate'
+    | '/contact'
     | '/dashboard'
+    | '/docs'
+    | '/experts'
     | '/portfolio'
+    | '/privacy'
     | '/promosi'
     | '/squad'
     | '/submit-testimonial'
     | '/support'
+    | '/terms'
     | '/admin/clients'
     | '/admin/digital-sales'
     | '/admin/licenses'
@@ -784,9 +834,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contact'
+    | '/docs'
+    | '/experts'
     | '/portfolio'
+    | '/privacy'
     | '/promosi'
     | '/submit-testimonial'
+    | '/terms'
     | '/admin/clients'
     | '/admin/digital-sales'
     | '/admin/licenses'
@@ -859,12 +914,17 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/affiliate'
+    | '/contact'
     | '/dashboard'
+    | '/docs'
+    | '/experts'
     | '/portfolio'
+    | '/privacy'
     | '/promosi'
     | '/squad'
     | '/submit-testimonial'
     | '/support'
+    | '/terms'
     | '/admin/clients'
     | '/admin/digital-sales'
     | '/admin/licenses'
@@ -938,12 +998,17 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AffiliateRoute: typeof AffiliateRouteWithChildren
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  DocsRoute: typeof DocsRoute
+  ExpertsRoute: typeof ExpertsRoute
   PortfolioRoute: typeof PortfolioRoute
+  PrivacyRoute: typeof PrivacyRoute
   PromosiRoute: typeof PromosiRoute
   SquadRoute: typeof SquadRouteWithChildren
   SubmitTestimonialRoute: typeof SubmitTestimonialRoute
   SupportRoute: typeof SupportRouteWithChildren
+  TermsRoute: typeof TermsRoute
   ApiEstimatesRoute: typeof ApiEstimatesRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
   HandlerSignInRoute: typeof HandlerSignInRoute
@@ -962,6 +1027,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -990,6 +1062,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PromosiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portfolio': {
       id: '/portfolio'
       path: '/portfolio'
@@ -997,11 +1076,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/experts': {
+      id: '/experts'
+      path: '/experts'
+      fullPath: '/experts'
+      preLoaderRoute: typeof ExpertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/affiliate': {
@@ -1691,12 +1791,17 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AffiliateRoute: AffiliateRouteWithChildren,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  DocsRoute: DocsRoute,
+  ExpertsRoute: ExpertsRoute,
   PortfolioRoute: PortfolioRoute,
+  PrivacyRoute: PrivacyRoute,
   PromosiRoute: PromosiRoute,
   SquadRoute: SquadRouteWithChildren,
   SubmitTestimonialRoute: SubmitTestimonialRoute,
   SupportRoute: SupportRouteWithChildren,
+  TermsRoute: TermsRoute,
   ApiEstimatesRoute: ApiEstimatesRoute,
   HandlerSplatRoute: HandlerSplatRoute,
   HandlerSignInRoute: HandlerSignInRoute,

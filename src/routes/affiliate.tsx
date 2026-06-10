@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 import { DashboardHeader } from '@/components/dashboard/header/main'
 import { SidebarContainer } from '@/components/dashboard/sidebar/container'
@@ -29,6 +29,21 @@ function AffiliateLayout() {
   const settings = Route.useLoaderData()
   const agencyName = settings?.find((s: any) => s.key === 'AGENCY_NAME')?.value || 'Agency OS'
   const logoUrl = settings?.find((s: any) => s.key === 'LOGO_URL')?.value
+  const { pathname } = useLocation()
+
+  // Normalisasi path untuk mengecek apakah rute saat ini adalah halaman join afiliasi
+  const isJoinPage = pathname.endsWith('/affiliate/join')
+
+  if (isJoinPage) {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-black">
+        <DashboardHeader agencyName={agencyName} logoUrl={logoUrl} />
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 md:gap-8">
+          <Outlet />
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-black">
