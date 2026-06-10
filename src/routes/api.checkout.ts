@@ -61,7 +61,7 @@ export const Route = createFileRoute('/api/checkout')({
               let addonsSummaryText = ""
 
               if (selectedAddons && selectedAddons.length > 0) {
-                addonsSummaryText = addonsMarker
+                addonsSummaryText = addonsMarker;
                 (selectedAddons as ServiceAddon[]).forEach((addon) => {
                   addonsTotal += addon.price
                   const currencySymbol = addon.currency === 'IDR' ? 'Rp' : '$'
