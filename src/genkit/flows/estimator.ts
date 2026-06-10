@@ -1,0 +1,75 @@
+import { z } from 'genkit';
+import { ai, getActiveAIConfig } from '../ai';
+import { pricingService } from '@/lib/server/pricing-service';
+
+// OPTIMASI M3: Definisikan schema Zod sekali sebagai konstanta modul agar tidak diduplikasi di RAM
+const estimateOutputSchema = z.object({
+    title: z.string(),
+    summary: z.string(),
+    complexity: z.string(),
+    screens: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+        hours: z.number()
+    })),
+    apis: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+        hours: z.number()
+    })),
+    totalHours: z.number(),
+    totalCost: z.number()
+});
+
+export const estimateFlow = ai.defineFlow(
+    {
+        name: 'estimateFlow',
+        inputSchema: z.string(),
+        outputSchema: estimateOutputSchema,
+    },
+    async (prompt) => {
+        const { apiKey, model } = await getActiveAIConfig();
+
+        // Fetch Dynamic Pricing Config
+        const pricing = await pricingService.getConfig();
+        const { baseRate, multipliers } = pricing;
+
+        const { output } = await ai.generate({
+            model: `googleai/${model}`,
+            config: { apiKey },
+            prompt: `
+            You are an expert software estimator.
+            Analyze this project requirement and generate a detailed cost estimate.
+            
+            Current Requirement: "${prompt}"
+
+            PRICING MODEL:
+            - Base Rate: $${baseRate}/hr
+            - Complexity Multipliers:
+              - Low: ${multipliers.Low}x (Rate: $${baseRate * multipliers.Low}/hr)
+              - Medium: ${multipliers.Medium}x (Rate: $${baseRate * multipliers.Medium}/hr)
+              - High: ${multipliers.High}x (Rate: $${baseRate * multipliers.High}/hr)
+
+            RULES:
+            1. Determine Complexity first (Low, Medium, High).
+            2. Use the corresponding Hourly Rate for Total Cost calculation.
+            3. Break down into Screens (UI) and APIs (Backend).
+               - DILARANG MENGHAPUS (CRITICAL): You MUST include every single feature or screen mentioned by the user in the Current Requirement. Do not omit anything they asked for.
+               - If the user's requirement is vague, brainstorm necessary standard screens and APIs for that type of project.
+            4. Be realistic. Simple pages = 4-8 hours. Complex CRUD = 12-20 hours.
+            5. Return strictly valid JSON matching the schema.
+            6. DETECT LANGUAGE: If the prompt is in Indonesian, the output (Title, Summary, Descriptions) MUST be in Indonesian. If English, use English. Match the user's language.
+            7. User Pricing Constraints: If the user mentions a specific budget or desired total cost, adjust the \`totalHours\` and/or complexity to approximate that cost if reasonably possible.
+            `,
+            output: {
+                schema: estimateOutputSchema
+            }
+        });
+
+        if (!output) {
+            console.error("Genkit Output Error: Output is null or undefined");
+            throw new Error("Failed to generate estimate - Model returned empty response");
+        }
+        return output;
+    }
+);

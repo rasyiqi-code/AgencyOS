@@ -458,4 +458,26 @@ export const deleteQuoteFn = createServerFn({ method: 'POST' })
     }
   })
 
+// Fungsi publik untuk mendapatkan data estimasi berdasarkan ID
+export const getPublicEstimateFn = createServerFn({ method: 'GET' })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const estimate = await prisma.estimate.findUnique({
+      where: { id }
+    })
+
+    if (!estimate) return null
+
+    // Access Control
+    if (estimate.userId) {
+      const currentUser = await hexclaveServerApp.getUser()
+      if (!currentUser || currentUser.id !== estimate.userId) {
+        throw new Error("Access Denied")
+      }
+    }
+
+    return JSON.parse(JSON.stringify(estimate))
+  })
+
+
 

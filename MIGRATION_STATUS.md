@@ -1,10 +1,10 @@
 # Migrasi Next.js → TanStack Start — Status
 
-## Progres Keseluruhan: ~23%
+## Progres Keseluruhan: ~32%
 
 - **Rute Next.js (lama):** 90
-- **Rute TanStack Start (baru):** 21 (termasuk layout/__root)
-- **Sisa:** ~69 rute belum dimigrasikan
+- **Rute TanStack Start (baru):** 29 (termasuk layout/__root)
+- **Sisa:** ~61 rute belum dimigrasikan
 
 ---
 
@@ -21,6 +21,14 @@
 | `/` (Landing) | `index.tsx` | ✅ Landing lengkap dgn semua section |
 | `/view-design/$slug` | `view-design.$slug.tsx` | ✅ Layout preview |
 | `/handler/$` | `handler.$.tsx` | ✅ Hexclave auth handler |
+| `/price-calculator` | `price-calculator.index.tsx` | ✅ Kalkulator harga utama |
+| `/price-calculator/$id` | `price-calculator.$id.tsx` | ✅ Detail hasil estimasi harga |
+| `/services` | `services.index.tsx` | ✅ Katalog layanan lengkap |
+| `/services/$slug` | `services.$slug.tsx` | ✅ Detail spesifikasi layanan |
+| `/products` | `products.index.tsx` | ✅ Galeri produk digital |
+| `/products/$slug` | `products.$slug.tsx` | ✅ Detail pembelian produk digital |
+| `/portfolio` | `portfolio.tsx` | ✅ Galeri hasil kerja/desain |
+| `/promosi` | `promosi.tsx` | ✅ Daftar promo aktif & newsletter |
 
 ### Dashboard
 | Rute | File | Status |
@@ -132,22 +140,14 @@
 - `checkout/[id]`
 - `invoices/[id]`
 - `digital-invoices/[id]`
-- `products`
-- `products/[slug]`
-- `price-calculator`
-- `price-calculator/[id]`
-- `services`
-- `services/[slug]`
 - `verify/[id]`
 
 ### Publik Informasi (10)
-- `portfolio`
 - `contact`
 - `docs`
 - `experts`
 - `privacy`
 - `terms`
-- `promosi`
 - `client-dashboard`
 - `submit-testimonial`
 

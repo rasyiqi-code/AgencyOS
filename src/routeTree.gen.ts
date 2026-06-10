@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SquadRouteImport } from './routes/squad'
+import { Route as PromosiRouteImport } from './routes/promosi'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SupportIndexRouteImport } from './routes/support.index'
 import { Route as SquadIndexRouteImport } from './routes/squad.index'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as PriceCalculatorIndexRouteImport } from './routes/price-calculator.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as AffiliateIndexRouteImport } from './routes/affiliate.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -25,6 +30,9 @@ import { Route as SquadProfileRouteImport } from './routes/squad.profile'
 import { Route as SquadOnboardingRouteImport } from './routes/squad.onboarding'
 import { Route as SquadMissionsRouteImport } from './routes/squad.missions'
 import { Route as SquadActiveRouteImport } from './routes/squad.active'
+import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as PriceCalculatorIdRouteImport } from './routes/price-calculator.$id'
 import { Route as HandlerSplatRouteImport } from './routes/handler/$'
 import { Route as DashboardSupportRouteImport } from './routes/dashboard.support'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
@@ -33,6 +41,7 @@ import { Route as DashboardQuotesRouteImport } from './routes/dashboard.quotes'
 import { Route as DashboardMyProductsRouteImport } from './routes/dashboard.my-products'
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard.billing'
+import { Route as ApiEstimatesRouteImport } from './routes/api.estimates'
 import { Route as AffiliateJoinRouteImport } from './routes/affiliate.join'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
@@ -46,6 +55,7 @@ import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminPmIndexRouteImport } from './routes/admin.pm.index'
 import { Route as AdminMarketingIndexRouteImport } from './routes/admin.marketing.index'
 import { Route as SquadMissionsIdRouteImport } from './routes/squad.missions.$id'
+import { Route as ApiMarketingSubscribeRouteImport } from './routes/api.marketing.subscribe'
 import { Route as AdminSystemCurrencyRouteImport } from './routes/admin.system.currency'
 import { Route as AdminPmServicesRouteImport } from './routes/admin.pm.services'
 import { Route as AdminPmProjectsRouteImport } from './routes/admin.pm.projects'
@@ -62,6 +72,7 @@ import { Route as AdminMarketingAffiliatesRouteImport } from './routes/admin.mar
 import { Route as AdminFinanceSubscriptionsRouteImport } from './routes/admin.finance.subscriptions'
 import { Route as AdminFinanceQuotesRouteImport } from './routes/admin.finance.quotes'
 import { Route as AdminFinanceOrdersRouteImport } from './routes/admin.finance.orders'
+import { Route as ApiSystemKeysStatusRouteImport } from './routes/api.system.keys.status'
 import { Route as AdminPmServicesNewRouteImport } from './routes/admin.pm.services.new'
 import { Route as AdminPmProjectsIdRouteImport } from './routes/admin.pm.projects.$id'
 import { Route as AdminPmServicesIdEditRouteImport } from './routes/admin.pm.services.$id.edit'
@@ -74,6 +85,16 @@ const SupportRoute = SupportRouteImport.update({
 const SquadRoute = SquadRouteImport.update({
   id: '/squad',
   path: '/squad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromosiRoute = PromosiRouteImport.update({
+  id: '/promosi',
+  path: '/promosi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -105,6 +126,21 @@ const SquadIndexRoute = SquadIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SquadRoute,
+} as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsIndexRoute = ProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PriceCalculatorIndexRoute = PriceCalculatorIndexRouteImport.update({
+  id: '/price-calculator/',
+  path: '/price-calculator/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
@@ -146,6 +182,21 @@ const SquadActiveRoute = SquadActiveRouteImport.update({
   path: '/active',
   getParentRoute: () => SquadRoute,
 } as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsSlugRoute = ProductsSlugRouteImport.update({
+  id: '/products/$slug',
+  path: '/products/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PriceCalculatorIdRoute = PriceCalculatorIdRouteImport.update({
+  id: '/price-calculator/$id',
+  path: '/price-calculator/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HandlerSplatRoute = HandlerSplatRouteImport.update({
   id: '/handler/$',
   path: '/handler/$',
@@ -185,6 +236,11 @@ const DashboardBillingRoute = DashboardBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
   getParentRoute: () => DashboardRoute,
+} as any)
+const ApiEstimatesRoute = ApiEstimatesRouteImport.update({
+  id: '/api/estimates',
+  path: '/api/estimates',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AffiliateJoinRoute = AffiliateJoinRouteImport.update({
   id: '/join',
@@ -250,6 +306,11 @@ const SquadMissionsIdRoute = SquadMissionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => SquadMissionsRoute,
+} as any)
+const ApiMarketingSubscribeRoute = ApiMarketingSubscribeRouteImport.update({
+  id: '/api/marketing/subscribe',
+  path: '/api/marketing/subscribe',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSystemCurrencyRoute = AdminSystemCurrencyRouteImport.update({
   id: '/system/currency',
@@ -335,6 +396,11 @@ const AdminFinanceOrdersRoute = AdminFinanceOrdersRouteImport.update({
   path: '/finance/orders',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiSystemKeysStatusRoute = ApiSystemKeysStatusRouteImport.update({
+  id: '/api/system/keys/status',
+  path: '/api/system/keys/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPmServicesNewRoute = AdminPmServicesNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -356,6 +422,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
+  '/portfolio': typeof PortfolioRoute
+  '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
   '/admin/clients': typeof AdminClientsRoute
@@ -368,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -376,6 +445,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/price-calculator/$id': typeof PriceCalculatorIdRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
@@ -384,6 +456,9 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/affiliate/': typeof AffiliateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/price-calculator/': typeof PriceCalculatorIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
@@ -402,15 +477,19 @@ export interface FileRoutesByFullPath {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/portfolio': typeof PortfolioRoute
+  '/promosi': typeof PromosiRoute
   '/admin/clients': typeof AdminClientsRoute
   '/admin/digital-sales': typeof AdminDigitalSalesRoute
   '/admin/licenses': typeof AdminLicensesRoute
@@ -421,6 +500,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -429,6 +509,9 @@ export interface FileRoutesByTo {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/price-calculator/$id': typeof PriceCalculatorIdRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
@@ -437,6 +520,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/affiliate': typeof AffiliateIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/price-calculator': typeof PriceCalculatorIndexRoute
+  '/products': typeof ProductsIndexRoute
+  '/services': typeof ServicesIndexRoute
   '/squad': typeof SquadIndexRoute
   '/support': typeof SupportIndexRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
@@ -455,11 +541,13 @@ export interface FileRoutesByTo {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing': typeof AdminMarketingIndexRoute
   '/admin/pm': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
 }
 export interface FileRoutesById {
@@ -468,6 +556,8 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/affiliate': typeof AffiliateRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
+  '/portfolio': typeof PortfolioRoute
+  '/promosi': typeof PromosiRoute
   '/squad': typeof SquadRouteWithChildren
   '/support': typeof SupportRouteWithChildren
   '/admin/clients': typeof AdminClientsRoute
@@ -480,6 +570,7 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/affiliate/join': typeof AffiliateJoinRoute
+  '/api/estimates': typeof ApiEstimatesRoute
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
   '/dashboard/my-products': typeof DashboardMyProductsRoute
@@ -488,6 +579,9 @@ export interface FileRoutesById {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/support': typeof DashboardSupportRoute
   '/handler/$': typeof HandlerSplatRoute
+  '/price-calculator/$id': typeof PriceCalculatorIdRoute
+  '/products/$slug': typeof ProductsSlugRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/squad/active': typeof SquadActiveRoute
   '/squad/missions': typeof SquadMissionsRouteWithChildren
   '/squad/onboarding': typeof SquadOnboardingRoute
@@ -496,6 +590,9 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/affiliate/': typeof AffiliateIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/price-calculator/': typeof PriceCalculatorIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/squad/': typeof SquadIndexRoute
   '/support/': typeof SupportIndexRoute
   '/admin/finance/orders': typeof AdminFinanceOrdersRoute
@@ -514,11 +611,13 @@ export interface FileRoutesById {
   '/admin/pm/projects': typeof AdminPmProjectsRouteWithChildren
   '/admin/pm/services': typeof AdminPmServicesRouteWithChildren
   '/admin/system/currency': typeof AdminSystemCurrencyRoute
+  '/api/marketing/subscribe': typeof ApiMarketingSubscribeRoute
   '/squad/missions/$id': typeof SquadMissionsIdRoute
   '/admin/marketing/': typeof AdminMarketingIndexRoute
   '/admin/pm/': typeof AdminPmIndexRoute
   '/admin/pm/projects/$id': typeof AdminPmProjectsIdRoute
   '/admin/pm/services/new': typeof AdminPmServicesNewRoute
+  '/api/system/keys/status': typeof ApiSystemKeysStatusRoute
   '/admin/pm/services/$id/edit': typeof AdminPmServicesIdEditRoute
 }
 export interface FileRouteTypes {
@@ -528,6 +627,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliate'
     | '/dashboard'
+    | '/portfolio'
+    | '/promosi'
     | '/squad'
     | '/support'
     | '/admin/clients'
@@ -540,6 +641,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/my-products'
@@ -548,6 +650,9 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/price-calculator/$id'
+    | '/products/$slug'
+    | '/services/$slug'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
@@ -556,6 +661,9 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/affiliate/'
     | '/dashboard/'
+    | '/price-calculator/'
+    | '/products/'
+    | '/services/'
     | '/squad/'
     | '/support/'
     | '/admin/finance/orders'
@@ -574,15 +682,19 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/marketing/subscribe'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/portfolio'
+    | '/promosi'
     | '/admin/clients'
     | '/admin/digital-sales'
     | '/admin/licenses'
@@ -593,6 +705,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/my-products'
@@ -601,6 +714,9 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/price-calculator/$id'
+    | '/products/$slug'
+    | '/services/$slug'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
@@ -609,6 +725,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliate'
     | '/dashboard'
+    | '/price-calculator'
+    | '/products'
+    | '/services'
     | '/squad'
     | '/support'
     | '/admin/finance/orders'
@@ -627,11 +746,13 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/marketing/subscribe'
     | '/squad/missions/$id'
     | '/admin/marketing'
     | '/admin/pm'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
   id:
     | '__root__'
@@ -639,6 +760,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/affiliate'
     | '/dashboard'
+    | '/portfolio'
+    | '/promosi'
     | '/squad'
     | '/support'
     | '/admin/clients'
@@ -651,6 +774,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/affiliate/join'
+    | '/api/estimates'
     | '/dashboard/billing'
     | '/dashboard/inbox'
     | '/dashboard/my-products'
@@ -659,6 +783,9 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/support'
     | '/handler/$'
+    | '/price-calculator/$id'
+    | '/products/$slug'
+    | '/services/$slug'
     | '/squad/active'
     | '/squad/missions'
     | '/squad/onboarding'
@@ -667,6 +794,9 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/affiliate/'
     | '/dashboard/'
+    | '/price-calculator/'
+    | '/products/'
+    | '/services/'
     | '/squad/'
     | '/support/'
     | '/admin/finance/orders'
@@ -685,11 +815,13 @@ export interface FileRouteTypes {
     | '/admin/pm/projects'
     | '/admin/pm/services'
     | '/admin/system/currency'
+    | '/api/marketing/subscribe'
     | '/squad/missions/$id'
     | '/admin/marketing/'
     | '/admin/pm/'
     | '/admin/pm/projects/$id'
     | '/admin/pm/services/new'
+    | '/api/system/keys/status'
     | '/admin/pm/services/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -698,10 +830,21 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AffiliateRoute: typeof AffiliateRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
+  PortfolioRoute: typeof PortfolioRoute
+  PromosiRoute: typeof PromosiRoute
   SquadRoute: typeof SquadRouteWithChildren
   SupportRoute: typeof SupportRouteWithChildren
+  ApiEstimatesRoute: typeof ApiEstimatesRoute
   HandlerSplatRoute: typeof HandlerSplatRoute
+  PriceCalculatorIdRoute: typeof PriceCalculatorIdRoute
+  ProductsSlugRoute: typeof ProductsSlugRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
   ViewDesignSlugRoute: typeof ViewDesignSlugRoute
+  PriceCalculatorIndexRoute: typeof PriceCalculatorIndexRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiMarketingSubscribeRoute: typeof ApiMarketingSubscribeRoute
+  ApiSystemKeysStatusRoute: typeof ApiSystemKeysStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -718,6 +861,20 @@ declare module '@tanstack/react-router' {
       path: '/squad'
       fullPath: '/squad'
       preLoaderRoute: typeof SquadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/promosi': {
+      id: '/promosi'
+      path: '/promosi'
+      fullPath: '/promosi'
+      preLoaderRoute: typeof PromosiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -761,6 +918,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/squad/'
       preLoaderRoute: typeof SquadIndexRouteImport
       parentRoute: typeof SquadRoute
+    }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/': {
+      id: '/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/price-calculator/': {
+      id: '/price-calculator/'
+      path: '/price-calculator'
+      fullPath: '/price-calculator/'
+      preLoaderRoute: typeof PriceCalculatorIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/dashboard/': {
       id: '/dashboard/'
@@ -818,6 +996,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SquadActiveRouteImport
       parentRoute: typeof SquadRoute
     }
+    '/services/$slug': {
+      id: '/services/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/$slug': {
+      id: '/products/$slug'
+      path: '/products/$slug'
+      fullPath: '/products/$slug'
+      preLoaderRoute: typeof ProductsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/price-calculator/$id': {
+      id: '/price-calculator/$id'
+      path: '/price-calculator/$id'
+      fullPath: '/price-calculator/$id'
+      preLoaderRoute: typeof PriceCalculatorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/handler/$': {
       id: '/handler/$'
       path: '/handler/$'
@@ -873,6 +1072,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/billing'
       preLoaderRoute: typeof DashboardBillingRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/api/estimates': {
+      id: '/api/estimates'
+      path: '/api/estimates'
+      fullPath: '/api/estimates'
+      preLoaderRoute: typeof ApiEstimatesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/affiliate/join': {
       id: '/affiliate/join'
@@ -964,6 +1170,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/squad/missions/$id'
       preLoaderRoute: typeof SquadMissionsIdRouteImport
       parentRoute: typeof SquadMissionsRoute
+    }
+    '/api/marketing/subscribe': {
+      id: '/api/marketing/subscribe'
+      path: '/api/marketing/subscribe'
+      fullPath: '/api/marketing/subscribe'
+      preLoaderRoute: typeof ApiMarketingSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/system/currency': {
       id: '/admin/system/currency'
@@ -1076,6 +1289,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/finance/orders'
       preLoaderRoute: typeof AdminFinanceOrdersRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/system/keys/status': {
+      id: '/api/system/keys/status'
+      path: '/api/system/keys/status'
+      fullPath: '/api/system/keys/status'
+      preLoaderRoute: typeof ApiSystemKeysStatusRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/pm/services/new': {
       id: '/admin/pm/services/new'
@@ -1277,10 +1497,21 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AffiliateRoute: AffiliateRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
+  PortfolioRoute: PortfolioRoute,
+  PromosiRoute: PromosiRoute,
   SquadRoute: SquadRouteWithChildren,
   SupportRoute: SupportRouteWithChildren,
+  ApiEstimatesRoute: ApiEstimatesRoute,
   HandlerSplatRoute: HandlerSplatRoute,
+  PriceCalculatorIdRoute: PriceCalculatorIdRoute,
+  ProductsSlugRoute: ProductsSlugRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
   ViewDesignSlugRoute: ViewDesignSlugRoute,
+  PriceCalculatorIndexRoute: PriceCalculatorIndexRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
+  ApiMarketingSubscribeRoute: ApiMarketingSubscribeRoute,
+  ApiSystemKeysStatusRoute: ApiSystemKeysStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

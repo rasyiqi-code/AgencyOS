@@ -442,4 +442,21 @@ export const uploadAssetFn = createServerFn({ method: 'POST' })
     return { success: true, data: { url } }
   })
 
+// Fungsi publik untuk mendapatkan promosi aktif
+export const getPublicPromotionsFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const raw = await getPromotions(true)
+    return JSON.parse(JSON.stringify(raw))
+  })
+
+// Fungsi publik untuk berlangganan newsletter
+export const subscribeNewsletterFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ email: z.string().email(), name: z.string().optional() }))
+  .handler(async ({ data }) => {
+    const { createSubscriber } = await import("@/lib/server/marketing")
+    const result = await createSubscriber(data.email, data.name)
+    return result
+  })
+
+
 

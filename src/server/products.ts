@@ -208,3 +208,33 @@ export const deleteLicenseFn = createServerFn({ method: 'POST' })
     })
     return { success: true }
   })
+
+// 8. Fungsi publik untuk mendapatkan semua produk digital aktif
+export const getPublicProductsFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const products = await prisma.product.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" }
+    })
+    return products.map(p => ({
+      ...p,
+      createdAt: p.createdAt.toISOString(),
+      updatedAt: p.updatedAt.toISOString(),
+    }))
+  })
+
+// 9. Fungsi publik untuk mendapatkan detail produk digital berdasarkan slug
+export const getPublicProductBySlugFn = createServerFn({ method: 'GET' })
+  .validator((slug: string) => slug)
+  .handler(async ({ data: slug }) => {
+    const product = await prisma.product.findUnique({
+      where: { slug }
+    })
+    if (!product || !product.isActive) return null
+    return {
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      updatedAt: product.updatedAt.toISOString(),
+    }
+  })
+

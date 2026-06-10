@@ -84,3 +84,56 @@ export const getPortfolioHtmlFn = createServerFn({ method: 'POST' })
     }
   })
 
+// 6. Fungsi publik untuk mendapatkan semua portofolio publik dengan pemrosesan iframe/HTML
+export const getPublicPortfoliosFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    try {
+      const data = await getPortfolios()
+      const { isFrameBlocked } = await import('@/lib/server/cloudflare-rendering')
+
+      const portfolioWithHtml = await Promise.all(
+        data.map(async (p) => {
+          try {
+            if (!p.externalUrl) {
+              const html = await getPortfolioHtml(p.slug)
+              return {
+                ...p,
+                createdAt: typeof p.createdAt === 'string' ? p.createdAt : p.createdAt.toISOString(),
+                html
+              }
+            }
+
+            const blocked = await isFrameBlocked(p.externalUrl)
+            if (blocked) {
+              const html = await getRenderedHtml(p.externalUrl)
+              return {
+                ...p,
+                createdAt: typeof p.createdAt === 'string' ? p.createdAt : p.createdAt.toISOString(),
+                html
+              }
+            }
+
+            return {
+              ...p,
+              createdAt: typeof p.createdAt === 'string' ? p.createdAt : p.createdAt.toISOString(),
+              html: ""
+            }
+          } catch (err) {
+            console.error(`[getPublicPortfoliosFn] Error processing ${p.title}:`, err)
+            return {
+              ...p,
+              createdAt: typeof p.createdAt === 'string' ? p.createdAt : p.createdAt.toISOString(),
+              html: ""
+            }
+          }
+        })
+      )
+
+      return { success: true, data: portfolioWithHtml }
+    } catch (error) {
+      console.error("[getPublicPortfoliosFn] Error:", error)
+      return { success: false, error: (error as Error).message, data: [] }
+    }
+  })
+
+

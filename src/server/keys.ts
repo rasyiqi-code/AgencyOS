@@ -112,3 +112,13 @@ export const verifyAndSaveGoogleKeyFn = createServerFn({ method: 'POST' })
     })
     return result
   })
+
+// 6. Fungsi publik untuk memeriksa status konfigurasi kunci Google Gemini
+export const getGoogleKeyStatusFn = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const key = await prisma.systemKey.findFirst({
+      where: { provider: "google", isActive: true }
+    })
+    return { configured: !!key }
+  })
+
