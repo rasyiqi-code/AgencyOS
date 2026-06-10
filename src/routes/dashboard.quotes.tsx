@@ -65,16 +65,7 @@ function ClientQuotesPage() {
   const estimates = result.estimates as EstimateWithService[]
 
   return (
-    <div className="w-full py-4 text-left">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          {t.title}
-        </h1>
-        <p className="text-zinc-400 mt-0.5 text-sm">
-          {t.subtitle}
-        </p>
-      </div>
-
+    <div className="w-full py-2 text-left">
       <Card className="bg-zinc-900 border-zinc-800">
         <CardHeader className="p-4 pb-3">
           <CardTitle className="text-white text-base">

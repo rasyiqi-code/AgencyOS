@@ -62,15 +62,7 @@ function MissionsPage() {
 
   return (
     <div className="pb-6 w-full text-left">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            {isId ? 'Log Misi' : 'Mission Log'}
-          </h1>
-          <p className="text-zinc-400 mt-0.5 text-sm">
-            {isId ? 'Semua operasi aktif dan yang diarsipkan.' : 'All active and archived operations.'}
-          </p>
-        </div>
+      <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-3 mb-4">
         <div className="flex items-center gap-2.5 w-full md:w-auto">
           <form onSubmit={handleSearchSubmit} className="relative w-full md:w-60">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />

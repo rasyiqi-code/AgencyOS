@@ -17,16 +17,7 @@ function MyProductsPage() {
 
   return (
     <div className="space-y-4 py-4 text-left w-full">
-      {/* Header */}
-      <div>
-        <h1 className="text-xl font-bold text-white flex items-center gap-2">
-          <Package className="w-5 h-5 text-brand-yellow" />
-          Produk Saya
-        </h1>
-        <p className="text-zinc-400 mt-0.5 text-xs">
-          Kelola lisensi dan unduh produk digital yang telah Anda beli.
-        </p>
-      </div>
+
 
       {/* Grid Kartu Lisensi */}
       {licenses.length === 0 ? (

@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { getClientBillingDataFn } from '@/src/server/client-dashboard'
 import { BillingList, type BillingOrder } from '@/components/dashboard/billing/billing-list'
 import { UnpaidBills } from '@/components/dashboard/billing/unpaid-bills'
-import { Receipt } from 'lucide-react'
 
 export const Route = createFileRoute('/dashboard/billing')({
   loader: async () => {
@@ -21,17 +20,7 @@ function ClientBillingPage() {
   const isId = locale === 'id-ID' || locale === 'id'
 
   return (
-    <div className="w-full py-4">
-      <div className="mb-4 text-left">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-          <Receipt className="w-6 h-6 text-brand-yellow" />
-          {isId ? 'Tagihan & Faktur' : 'Billing & Invoices'}
-        </h1>
-        <p className="text-zinc-400 mt-1 text-xs max-w-2xl">
-          {isId ? 'Lacak riwayat pembayaran dan unduh faktur Anda.' : 'Track your payment history and download invoices.'}
-        </p>
-      </div>
-
+    <div className="w-full py-2">
       <UnpaidBills unpaidEstimates={unpaidEstimates} projectsNeedingRenewal={projectsNeedingRenewal} />
 
       <BillingList orders={orders as unknown as BillingOrder[]} />

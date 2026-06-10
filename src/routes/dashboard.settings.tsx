@@ -20,12 +20,7 @@ function SettingsPage() {
   const { user } = result
 
   return (
-    <div className="flex flex-col gap-5 pb-6 text-left">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Settings</h1>
-        <p className="text-zinc-400 mt-0.5 text-sm">Manage your account and subscription.</p>
-      </div>
-
+    <div className="flex flex-col gap-4 pb-6 text-left">
       <div className="grid gap-6">
         <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm">
           <CardHeader>

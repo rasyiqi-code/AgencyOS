@@ -22,16 +22,6 @@ function ClientServicesPage() {
 
   return (
     <div className="w-full py-4 text-left">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-brand-yellow" />
-          {isId ? 'Layanan Kami' : 'Our Services'}
-        </h1>
-        <p className="text-zinc-400 mt-1 text-xs max-w-2xl">
-          {isId ? 'Pilih paket layanan kelas enterprise yang dikurasi untuk mempercepat pertumbuhan bisnis Anda.' : 'Choose from our curated enterprise-grade services to accelerate your business growth.'}
-        </p>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
         {processedServices.map((service: any) => (
           <ServiceCard key={service.id} service={service as DashboardService} />
