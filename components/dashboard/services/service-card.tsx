@@ -57,7 +57,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 />
 
                 {/* Visual Block */}
-                <div className="relative h-44 bg-zinc-950/80 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="relative aspect-square bg-zinc-950/80 flex items-center justify-center overflow-hidden shrink-0">
                     {service.image ? (
                         <img
                             src={service.image}
