@@ -12,6 +12,9 @@ import type { StackUser } from "@/lib/shared/types";
 import { getTranslations } from "next-intl/server";
 import { QuoteGeneratorForm } from "@/components/admin/finance/quote-generator-form";
 import { CheckCircle2 } from "lucide-react";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminQuotesPage() {
     const t = await getTranslations("Admin.Finance.Quotes");
@@ -96,14 +99,7 @@ export default async function AdminQuotesPage() {
 
     return (
         <div className="w-full py-6 sm:py-10 space-y-8 animate-in fade-in duration-700">
-            <header className="space-y-1">
-                <h1 className="text-3xl font-bold tracking-tight text-white">
-                    {t('title')}
-                </h1>
-                <p className="text-zinc-400 mt-1 text-sm max-w-2xl leading-relaxed">
-                    {t('subtitle')}
-                </p>
-            </header>
+            <AdminHeaderSetter title={t('title')} />
 
             <Card className="bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 shadow-2xl shadow-black/50 overflow-hidden relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />

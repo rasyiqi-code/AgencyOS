@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { FinanceList } from "@/components/admin/finance/finance-list";
 import { FinanceData } from "@/components/admin/finance/finance-columns";
 import { getTranslations } from "next-intl/server";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = 'force-dynamic';
 
@@ -78,8 +79,6 @@ export default async function AdminOrdersPage() {
 
     // 2. Stack Auth User Resolution
     // ⚡ Bolt Optimization: Only fetch users that are missing a valid clientName natively
-    // 🎯 Why: Avoids unnecessary N+1 network calls to Stack Auth for users we already have names for
-    // 📊 Impact: Reduces Stack Auth API calls from O(N_orders) to O(N_missing_names)
     const missingClientNameOrders = orders.filter(o => {
         const project = o.project as { userId?: string | null; clientName?: string | null } | null;
         return o.userId && (!project || !project.clientName || project.clientName === "Client");
@@ -103,8 +102,6 @@ export default async function AdminOrdersPage() {
 
     // 3. Enrich Data
     const enrichedData = financeData.map(item => {
-        // We first try to enrich using the resolved stack auth user if available
-        // If not, we keep the original data
         if (item.project && item.project.userId && (item.project.clientName === "Client" || !item.project.clientName)) {
             const u = userMap.get(item.project.userId);
             if (u) {
@@ -118,33 +115,24 @@ export default async function AdminOrdersPage() {
             }
         }
 
-        // If there's NO project attached, but the base order has a userId, we might still want to
-        // use it if we can. (Though financeData mapping above doesn't surface it directly,
-        // we'll keep it strictly to existing behavior which only enriched project.clientName)
-
         return item;
     });
 
     return (
         <div className="-mx-4 sm:-mx-6 px-4 sm:px-6 py-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-4 group">
-                        {t("title")}
-                        <div className="relative p-2 rounded-xl bg-zinc-900 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
-                            <ShoppingCart className="w-5 h-5 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
-                            {orders.length > 0 && (
-                                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white ring-2 ring-black">
-                                    {orders.length}
-                                </span>
-                            )}
+            <AdminHeaderSetter
+                title={t("title")}
+                actions={
+                    orders.length > 0 ? (
+                        <div className="relative p-2 rounded-xl bg-zinc-900 border border-white/5 shrink-0 flex items-center justify-center">
+                            <ShoppingCart className="w-5 h-5 text-zinc-400" />
+                            <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-bold text-white ring-2 ring-black">
+                                {orders.length}
+                            </span>
                         </div>
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-xl leading-relaxed">
-                        {t("description")}
-                    </p>
-                </div>
-            </div>
+                    ) : null
+                }
+            />
 
 
             <FinanceList data={enrichedData} />

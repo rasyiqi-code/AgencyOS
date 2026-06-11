@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Repeat, CheckCircle2, AlertCircle } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { RenewSubscriptionButton } from "./renew-button";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = 'force-dynamic';
 
@@ -32,15 +33,7 @@ export default async function AdminSubscriptionsPage() {
 
     return (
         <div className="w-full py-6 sm:py-10 space-y-8 animate-in fade-in duration-700">
-            <header className="space-y-1">
-                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                    <Repeat className="w-8 h-8 text-blue-500" />
-                    Subscriptions
-                </h1>
-                <p className="text-zinc-400 mt-1 text-sm max-w-2xl leading-relaxed">
-                    Kelola siklus langganan bulanan atau tahunan dari klien Anda.
-                </p>
-            </header>
+            <AdminHeaderSetter title="Subscriptions" />
 
             <Card className="bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 shadow-2xl rounded-3xl relative">
                 <CardContent className="p-0">
