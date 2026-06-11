@@ -46,41 +46,12 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
         ? (estimate.service?.addons_id as ServiceAddon[]) || (estimate.service?.addons as ServiceAddon[])
         : (estimate.service?.addons as ServiceAddon[]);
 
-    const estimatedDays = Math.ceil(estimate.totalHours / 6);
-    const salesPoints = [
-        {
-            icon: ShieldCheck,
-            title: t("riskFree"),
-            description: t("refundable")
-        },
-        {
-            icon: Zap,
-            title: t("fastDelivery"),
-            description: (!estimate.serviceId || context === "CALCULATOR") && estimatedDays > 0
-                ? t("turnaround", { days: estimatedDays })
-                : t("fastTurnaroundDesc")
-        }
-    ];
-
     return (
         <div className="space-y-6 sm:space-y-8">
             <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
                 <div>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">{estimate.title}</h2>
                     <p className="text-sm sm:text-base text-zinc-400 break-words">{estimate.summary}</p>
-                </div>
-
-                {/* Sales Points */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                    {salesPoints.map((point, i) => (
-                        <div key={i} className="flex gap-3 items-start p-4 bg-white/5 rounded-lg border border-white/5">
-                            <point.icon className="w-5 h-5 text-lime-400 mt-1 shrink-0" />
-                            <div>
-                                <div className="font-medium text-white">{point.title}</div>
-                                <div className="text-sm text-zinc-500">{point.description}</div>
-                            </div>
-                        </div>
-                    ))}
                 </div>
 
                 {/* Deliverables & Features */}
@@ -162,11 +133,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                         )}
                     </div>
                 </div>
-
-                <SubscriptionDialog context={context === "CALCULATOR" ? "CALCULATOR" : "SERVICE"} />
             </div>
         </div>
     );
 }
-
-import { SubscriptionDialog } from "@/components/checkout/subscription-dialog";
