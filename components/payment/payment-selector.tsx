@@ -268,7 +268,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                                             <group.icon className="w-3 h-3" />
                                             {group.label}
                                         </h3>
-                                        <div className="grid gap-2">
+                                        <div className="grid gap-2.5">
                                             {group.methods.filter(m => !m.disabled).map((method) => (
                                                 <button
                                                     key={method.id}
@@ -279,24 +279,24 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                                                         id: method.id,
                                                         label: method.label
                                                     })}
-                                                    className={`w-full text-left p-3 rounded-lg border transition-all flex items-center justify-between group 
-                                                    ${method.disabled ? 'opacity-50 cursor-not-allowed bg-zinc-900 border-zinc-900' : ''}
+                                                    className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between group transform active:scale-[0.99]
+                                                    ${method.disabled ? 'opacity-50 cursor-not-allowed bg-zinc-900/40 border-zinc-900/40' : ''}
                                                     ${isSelected(method.id)
-                                                            ? 'bg-lime-500/10 border-lime-500 ring-1 ring-lime-500/20 z-10'
-                                                            : 'bg-zinc-900 border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700'
+                                                            ? 'bg-lime-500/[0.04] border-lime-500 shadow-[0_0_15px_rgba(132,204,22,0.08)] z-10'
+                                                            : 'bg-zinc-900/40 border-white/5 hover:bg-zinc-850 hover:border-white/10'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${isSelected(method.id) ? 'bg-lime-500 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+                                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-300 ${isSelected(method.id) ? 'bg-gradient-to-br from-lime-500 to-emerald-500 text-black shadow-[0_2px_8px_rgba(132,204,22,0.3)]' : 'bg-zinc-800 text-zinc-400 border border-white/5'}`}>
                                                             {method.id.slice(0, 2).toUpperCase()}
                                                         </div>
                                                         <div>
-                                                            <div className={`text-sm font-medium ${isSelected(method.id) ? 'text-lime-400' : 'text-zinc-200'} ${method.disabled ? 'text-zinc-600' : ''}`}>
+                                                            <div className={`text-sm font-semibold transition-colors duration-300 ${isSelected(method.id) ? 'text-lime-400' : 'text-zinc-200'} ${method.disabled ? 'text-zinc-600' : ''}`}>
                                                                 {method.label}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${isSelected(method.id) ? 'border-lime-500 bg-lime-500 text-black' : 'border-zinc-700 bg-zinc-900'}`}>
+                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected(method.id) ? 'border-lime-500 bg-lime-500 text-black' : 'border-zinc-700 bg-zinc-900'}`}>
                                                         {isSelected(method.id) && <CheckCircle2 className="w-3 h-3" />}
                                                     </div>
                                                 </button>
@@ -311,9 +311,13 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                             <Button
                                 onClick={handleCharge}
                                 disabled={!selectedMethod || loading}
-                                className={`w-full h-12 text-lg font-bold transition-all ${!selectedMethod ? 'bg-zinc-900 border border-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-lime-500 hover:bg-lime-400 text-black shadow-lg shadow-lime-900/20'}`}
+                                className={`w-full h-12 text-sm font-extrabold transition-all duration-300 rounded-xl cursor-pointer ${
+                                    !selectedMethod 
+                                    ? 'bg-zinc-850 border border-white/5 text-zinc-500 cursor-not-allowed' 
+                                    : 'bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-extrabold shadow-[0_4px_20px_rgba(132,204,22,0.2)] hover:shadow-[0_4px_25px_rgba(132,204,22,0.35)] transform hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99]'
+                                }`}
                             >
-                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : `Pay ${new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency }).format(amount)}`}
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : `Bayar ${new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency }).format(amount)}`}
                             </Button>
                         </div>
                     </>

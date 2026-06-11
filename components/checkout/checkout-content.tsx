@@ -5,10 +5,12 @@ import { useLocale } from "next-intl";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
-import { useCurrency } from "@/components/providers/currency-provider";
+import { useCurrency, PriceDisplay } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
+import { ChevronDown, Gift } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 
 export function CheckoutContent({
     estimate,
@@ -88,72 +90,66 @@ export function CheckoutContent({
 
     const discountedAmount = baseTotal;
 
+    const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const isPaid = estimate.status === 'paid';
 
     return (
-        <div className={`flex flex-col-reverse lg:flex-row gap-8 max-w-6xl mx-auto ${isPaid ? 'justify-center items-center py-12' : ''}`}>
-            {/* Left Column: Payment Form (Now Main Area) */}
-            {!isPaid ? (
-                <div className="flex-1 space-y-6">
-                     <PaymentSidebar
-                        estimate={estimate}
-                        amount={discountedAmount}
-                        onPrint={handlePrint}
-                        bankDetails={bankDetails}
-                        activeRate={activeRate}
-                        hasActiveGateway={hasActiveGateway}
-                        gatewayStatus={gatewayStatus}
-                        defaultPaymentType={defaultPaymentType}
-                        projectPaidAmount={projectPaidAmount}
-                        projectTotalAmount={projectTotalAmount}
-                        context={context}
-                        user={user}
-                        orderId={orderId}
-                        selectedAddons={selectedAddons}
-                        agencySettings={agencySettings}
-                    />
-                </div>
-            ) : (
-                // Bila sudah lunas, posisikan sukses panel di tengah
-                <div className={`w-full lg:w-96 space-y-6 ${isPaid ? 'transform scale-110 transition-transform duration-500' : ''}`}>
-                     <PaymentSidebar
-                        estimate={estimate}
-                        amount={discountedAmount}
-                        onPrint={handlePrint}
-                        bankDetails={bankDetails}
-                        activeRate={activeRate}
-                        hasActiveGateway={hasActiveGateway}
-                        gatewayStatus={gatewayStatus}
-                        defaultPaymentType={defaultPaymentType}
-                        projectPaidAmount={projectPaidAmount}
-                        projectTotalAmount={projectTotalAmount}
-                        context={context}
-                        user={user}
-                        orderId={orderId}
-                        selectedAddons={selectedAddons}
-                        agencySettings={agencySettings}
-                    />
-                </div>
+        <div className="max-w-4xl mx-auto w-full space-y-6">
+            {/* Drawer/Sheet Ringkasan Pesanan samping (Premium Glassmorphism) */}
+            {!isPaid && (
+                <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                    <SheetContent className="w-full sm:max-w-md bg-zinc-950/95 backdrop-blur-xl border-l border-white/10 text-white overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-zinc-800">
+                        <SheetHeader className="mb-6">
+                            <SheetTitle className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                                <Gift className="w-5 h-5 text-lime-400" />
+                                Detail Pesanan & Bonus
+                            </SheetTitle>
+                            <SheetDescription className="text-xs text-zinc-400">
+                                Rincian lengkap produk jasa, deliverables, modul, add-on opsional, serta bonus pemasaran Anda.
+                            </SheetDescription>
+                        </SheetHeader>
+                        
+                        <div className="pb-8">
+                            <CheckoutSummary
+                                estimate={{ ...estimate, totalCost: trueBaseCost }}
+                                bonuses={bonuses}
+                                context={context}
+                                selectedAddons={selectedAddons}
+                                onToggleAddon={(addon) => {
+                                    setSelectedAddons(prev => 
+                                        prev.some(a => a.name === addon.name)
+                                            ? prev.filter(a => a.name !== addon.name)
+                                            : [...prev, addon]
+                                    );
+                                }}
+                            />
+                        </div>
+                    </SheetContent>
+                </Sheet>
             )}
 
-            {/* Right Column: Order Summary (Now Sidebar) */}
-            {!isPaid && (
-                <div className="w-full lg:w-96 space-y-6">
-                    <CheckoutSummary
-                        estimate={{ ...estimate, totalCost: trueBaseCost }}
-                        bonuses={bonuses}
-                        context={context}
-                        selectedAddons={selectedAddons}
-                        onToggleAddon={(addon) => {
-                            setSelectedAddons(prev => 
-                                prev.some(a => a.name === addon.name)
-                                    ? prev.filter(a => a.name !== addon.name)
-                                    : [...prev, addon]
-                            );
-                        }}
-                    />
-                </div>
-            )}
+            {/* Main Checkout Panel (2-Column internal grid) */}
+            <div className={isPaid ? 'flex justify-center items-center py-12' : 'w-full'}>
+                 <PaymentSidebar
+                    estimate={estimate}
+                    amount={discountedAmount}
+                    onPrint={handlePrint}
+                    bankDetails={bankDetails}
+                    activeRate={activeRate}
+                    hasActiveGateway={hasActiveGateway}
+                    gatewayStatus={gatewayStatus}
+                    defaultPaymentType={defaultPaymentType}
+                    projectPaidAmount={projectPaidAmount}
+                    projectTotalAmount={projectTotalAmount}
+                    context={context}
+                    user={user}
+                    orderId={orderId}
+                    selectedAddons={selectedAddons}
+                    agencySettings={agencySettings}
+                    onOpenSummary={() => setIsDrawerOpen(true)}
+                />
+            </div>
 
             {/* Hidden Invoice for Printing */}
             <div className="hidden">
