@@ -205,71 +205,73 @@ export function PaymentSidebar({
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 relative z-10 items-stretch">
                     
-                    {/* Left Sub-column: Billing info & Price Summary (50% Width) */}
+                    {/* Left Sub-column: Billing info & Detail Pesanan (50% Width) */}
                     <div className="space-y-4 flex flex-col justify-start lg:pr-12 lg:border-r lg:border-white/5">
-                        <div className="space-y-4">
-                            {/* Header */}
-                            <div className="space-y-1">
-                                <h2 className="text-xl sm:text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-400">
-                                    {activeOrderId ? (t("paymentOptions") || "Metode Pembayaran") : t("title")}
-                                </h2>
-                                <p className="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">
-                                    {activeOrderId ? (t("selectPayment") || "Pilih metode pembayaran di bawah ini.") : t("selectPayment")}
-                                </p>
-                            </div>
+                        {/* Header */}
+                        <div className="space-y-1">
+                            <h2 className="text-xl sm:text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-400">
+                                {activeOrderId ? (t("paymentOptions") || "Metode Pembayaran") : t("title")}
+                            </h2>
+                            <p className="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">
+                                {activeOrderId ? (t("selectPayment") || "Pilih metode pembayaran di bawah ini.") : t("selectPayment")}
+                            </p>
+                        </div>
 
-                            {/* Bill To & Detail Pesanan dalam Grid Horizontal */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                                {/* Bill To */}
-                                {user && (
-                                    <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all duration-300 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.2)] flex flex-col justify-between min-h-[96px]">
-                                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-lime-500 to-emerald-500 opacity-60 group-hover:opacity-100 transition-opacity" />
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-lime-500 shadow-[0_0_8px_rgba(132,204,22,0.6)]" />
-                                                {ti("billTo")}
-                                            </span>
-                                            {!activeOrderId && (
-                                                <Button variant="ghost" size="sm" className="h-5 px-1.5 text-[9px] text-zinc-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer" onClick={() => window.location.href = '/handler/sign-in'}>
-                                                    {t("change")}
-                                                </Button>
-                                            )}
-                                        </div>
-                                        <div className="space-y-0.5 mt-auto">
-                                            <div className="text-xs font-bold text-white tracking-tight line-clamp-1">{user.displayName || "Valued Client"}</div>
-                                            <div className="text-[10px] text-zinc-400 font-mono tracking-tight line-clamp-1">{user.email}</div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Detail Pesanan Ringkas */}
+                        {/* Bill To & Detail Pesanan dalam Grid Horizontal */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            {/* Bill To */}
+                            {user && (
                                 <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all duration-300 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.2)] flex flex-col justify-between min-h-[96px]">
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-brand-yellow to-lime-500 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-lime-500 to-emerald-500 opacity-60 group-hover:opacity-100 transition-opacity" />
                                     <div className="flex items-center justify-between mb-1">
                                         <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,0.6)]" />
-                                            Detail Pesanan
+                                            <span className="w-1.5 h-1.5 rounded-full bg-lime-500 shadow-[0_0_8px_rgba(132,204,22,0.6)]" />
+                                            {ti("billTo")}
                                         </span>
-                                        <button
-                                            onClick={onOpenSummary}
-                                            className="text-[9px] text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline cursor-pointer bg-transparent border-0 p-0"
-                                        >
-                                            Lihat Detail
-                                        </button>
+                                        {!activeOrderId && (
+                                            <Button variant="ghost" size="sm" className="h-5 px-1.5 text-[9px] text-zinc-500 hover:text-white hover:bg-white/5 transition-all cursor-pointer" onClick={() => window.location.href = '/handler/sign-in'}>
+                                                {t("change")}
+                                            </Button>
+                                        )}
                                     </div>
                                     <div className="space-y-0.5 mt-auto">
-                                        <div className="text-xs font-bold text-white tracking-tight line-clamp-1">{estimate.title}</div>
-                                        <div className="text-[10px] text-zinc-400 font-medium line-clamp-1">
-                                            {selectedAddons.length > 0 
-                                                ? `+ ${selectedAddons.length} Add-on`
-                                                : 'Tanpa add-on tambahan'
-                                            }
-                                        </div>
+                                        <div className="text-xs font-bold text-white tracking-tight line-clamp-1">{user.displayName || "Valued Client"}</div>
+                                        <div className="text-[10px] text-zinc-400 font-mono tracking-tight line-clamp-1">{user.email}</div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Detail Pesanan Ringkas */}
+                            <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all duration-300 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.2)] flex flex-col justify-between min-h-[96px]">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-brand-yellow to-lime-500 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,0.6)]" />
+                                        Detail Pesanan
+                                    </span>
+                                    <button
+                                        onClick={onOpenSummary}
+                                        className="text-[9px] text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline cursor-pointer bg-transparent border-0 p-0"
+                                    >
+                                        Lihat Detail
+                                    </button>
+                                </div>
+                                <div className="space-y-0.5 mt-auto">
+                                    <div className="text-xs font-bold text-white tracking-tight line-clamp-1">{estimate.title}</div>
+                                    <div className="text-[10px] text-zinc-400 font-medium line-clamp-1">
+                                        {selectedAddons.length > 0 
+                                            ? `+ ${selectedAddons.length} Add-on`
+                                            : 'Tanpa add-on tambahan'
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    {/* Right Sub-column: Payment Selection or Checkout Actions (50% Width) */}
+                    <div className="flex flex-col justify-start space-y-5 lg:pl-6">
+                        
                         {/* Rincian Harga & Tipe Pembayaran Terintegrasi */}
                         <div className="bg-gradient-to-br from-zinc-850/60 via-zinc-900/40 to-zinc-950/60 p-4.5 rounded-2xl border border-white/5 shadow-inner space-y-4">
                             <div>
@@ -350,10 +352,7 @@ export function PaymentSidebar({
                                 )}
                             </p>
                         </div>
-                    </div>
 
-                    {/* Right Sub-column: Payment Selection or Checkout Actions (50% Width) */}
-                    <div className="flex flex-col justify-start space-y-5 lg:pl-6">
                         {activeOrderId ? (
                             // Tampilan jika Order ID sudah dibuat (Metode Pembayaran Aktif terintegrasi)
                             <div className="flex flex-col justify-start space-y-5">
