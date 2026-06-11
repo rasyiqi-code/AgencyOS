@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { Save, TrendingUp, DollarSign } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { pricingService } from "@/lib/server/pricing-service";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminPricingPage() {
     const pricing = await pricingService.getConfig();
@@ -29,20 +30,7 @@ export default async function AdminPricingPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] font-semibold tracking-widest text-zinc-500 uppercase">System Configuration</span>
-                    </div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Pricing Strategy
-                        <TrendingUp className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Configure base rates and AI complexity multipliers for automated estimates.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="Pricing Strategy" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 

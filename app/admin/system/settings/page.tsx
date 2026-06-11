@@ -3,13 +3,12 @@ import { Settings2 } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
 import { getSystemSettings } from "@/lib/server/settings";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
     // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
-    // 🎯 Why: Reduces redundant database queries for global settings, mitigating N+1 query problems and reducing database load.
-    // 📊 Impact: Faster API response times and less database load by leveraging Next.js caching.
     const settings = await getSystemSettings(["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_TELEGRAM", "CONTACT_ADDRESS", "AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY", "CONTACT_HOURS"]);
 
     const contactData = {
@@ -28,17 +27,7 @@ export default async function AdminSettingsPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        General Settings
-                        <Settings2 className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        Manage global system parameters and default behaviors.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="General Settings" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 

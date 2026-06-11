@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2, RefreshCw, Save, DollarSign, Clock } from "lucide-react";
 import { getCurrencyConfig, saveCurrencyConfig, forceUpdateCurrencyRates } from "@/app/actions/system-admin";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default function CurrencySettingsPage() {
     const [loading, setLoading] = useState(false);
@@ -65,15 +66,7 @@ export default function CurrencySettingsPage() {
 
     return (
         <div className="space-y-8 p-8 max-w-4xl mx-auto">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                    Currency Settings
-                    <DollarSign className="w-6 h-6 text-zinc-600" />
-                </h1>
-                <p className="text-zinc-400 mt-1.5 text-sm">
-                    Configure exchange rate API and update Schedule.
-                </p>
-            </div>
+            <AdminHeaderSetter title="Currency Settings" />
 
             <div className="grid gap-8 md:grid-cols-2">
                 {/* Configuration Card */}

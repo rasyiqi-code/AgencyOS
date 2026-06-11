@@ -2,29 +2,17 @@ import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
 import { getSystemSettings } from "@/lib/server/settings";
-// import { getResendKey, getAdminTargetEmail } from "@/app/actions/email";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminEmailPage() {
     // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
-    // 🎯 Why: Reduces redundant database queries during SSR by utilizing Next.js unstable_cache
-    // 📊 Impact: Eliminates an N+1 query problem across the component tree, faster page load
     const settings = await getSystemSettings(["RESEND_API_KEY", "ADMIN_EMAIL_TARGET"]);
     const resendApiKey = settings.find(s => s.key === "RESEND_API_KEY")?.value || null;
     const adminTargetEmail = settings.find(s => s.key === "ADMIN_EMAIL_TARGET")?.value || null;
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Email Service
-                        <Mail className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        Configure email delivery settings and provider integrations.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="Email Service" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 

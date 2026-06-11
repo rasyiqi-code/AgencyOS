@@ -3,13 +3,12 @@ import { Globe } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { SeoSettingsForm } from "@/components/admin/system/seo-settings-form";
 import { getSystemSettings } from "@/lib/server/settings";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSeoPage() {
     // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
-    // 🎯 Why: Reduces redundant database queries for global settings, mitigating N+1 query problems and reducing database load.
-    // 📊 Impact: Faster API response times and less database load by leveraging Next.js caching.
     const settings = await getSystemSettings(["SEO_TITLE", "SEO_TITLE_ID", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID", "SEO_KEYWORDS", "SEO_KEYWORDS_ID", "SEO_OG_IMAGE", "SEO_FAVICON", "SEO_GOOGLE_VERIFICATION", "SEO_GA_ID"]);
 
     const seoData = {
@@ -27,17 +26,7 @@ export default async function AdminSeoPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        SEO Settings
-                        <Globe className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Manage global search engine optimization parameters.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="SEO / Metadata" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 

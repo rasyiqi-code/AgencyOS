@@ -8,6 +8,7 @@ import { Github, Globe, CheckCircle2, XCircle, Link2, Unlink } from "lucide-reac
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import type { PrismaWithIntegration } from "@/types/payment";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminIntegrationsPage() {
     const integrations = await (prisma as unknown as PrismaWithIntegration).systemIntegration.findMany();
@@ -25,15 +26,7 @@ export default async function AdminIntegrationsPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                    System Integrations
-                    <Link2 className="w-6 h-6 text-zinc-600" />
-                </h1>
-                <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                    Connect GitHub and Vercel to enable automated workflows and deployment monitoring.
-                </p>
-            </div>
+            <AdminHeaderSetter title="System Integrations" />
 
             <div className="grid gap-8 lg:grid-cols-3">
                 <div className="lg:col-span-1">

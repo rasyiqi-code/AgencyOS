@@ -8,6 +8,7 @@ import { SystemNav } from "@/components/admin/system-nav";
 import { AddKeyDialog } from "@/components/admin/add-key-dialog";
 import { EditKeyDialog } from "@/components/admin/edit-key-dialog";
 import { SaaSKeysClient } from "@/components/admin/system/saas-keys-client";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 import { SystemKey } from "@prisma/client";
 
@@ -65,17 +66,7 @@ export default async function AdminKeysPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Secure Vault
-                        <Key className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        Manage API Keys for AI providers and third-party SaaS integrations.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="API Key" />
 
             <div className="grid gap-8 lg:grid-cols-3">
                 {/* Left Column: Context/Navigation */}

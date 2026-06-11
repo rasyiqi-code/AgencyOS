@@ -9,6 +9,7 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { getSystemSettings } from "@/lib/server/settings";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminPaymentPage() {
     // Fetch bank settings
@@ -43,17 +44,7 @@ export default async function AdminPaymentPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Payment Details
-                        <CreditCard className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Manage bank accounts and billing details displayed on client invoices.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="Payment Details" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 

@@ -5,19 +5,16 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { Cloud } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { getSystemSettings } from "@/lib/server/settings";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminStoragePage() {
     // Fetch settings
-    // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
-    // 🎯 Why: Reduces database load by caching frequently accessed storage settings.
-    // 📊 Impact: Eliminates a database query on the storage settings page load.
     const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name', 'cloudflare_account_id', 'cloudflare_api_token']);
 
     const getSetting = (key: string) => settings.find((s: { key: string; value: string }) => s.key === key)?.value || "";
 
     async function updateSettings(formData: FormData) {
         "use server";
-
 
         const r2BucketName = formData.get("r2_bucket_name") as string;
         const r2Endpoint = formData.get("r2_endpoint") as string;
@@ -41,17 +38,7 @@ export default async function AdminStoragePage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-                        Cloud Storage
-                        <Cloud className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-                        Configure S3-compatible object storage (e.g. Cloudflare R2) for file uploads.
-                    </p>
-                </div>
-            </div>
+            <AdminHeaderSetter title="Cloud Storage" />
 
             <div className="grid gap-8 lg:grid-cols-3">
 
