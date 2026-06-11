@@ -232,13 +232,13 @@ export async function markQuoteAsPaid(estimateId: string) {
             data: { status: "paid" }
         });
 
-        // Update status di project terkait
+        // Update status di project terkait agar masuk antrean (queue) dan status pembayaran PAID
         if (estimate.project) {
             await prisma.project.update({
                 where: { id: estimate.project.id },
                 data: {
-                    status: "active",
-                    paymentStatus: "paid",
+                    status: "queue",
+                    paymentStatus: "PAID",
                     paidAmount: estimate.totalCost
                 }
             });

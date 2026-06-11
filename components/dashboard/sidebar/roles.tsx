@@ -73,8 +73,8 @@ export function SidebarSuperAdmin() {
 
             {/* 2. KEUANGAN & TRANSAKSI AGENSI */}
             <SidebarSectionHeader>Finance & Billing (Agency)</SidebarSectionHeader>
-            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label="Client Invoices" />
-            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes & Estimates" />
+            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label="Direct Orders" />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes & Invoices" />
             <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
 
             {/* 3. PEMASARAN & AUDIENS (SERVICES) */}
@@ -101,8 +101,8 @@ export function SidebarFinance() {
         <>
             <SidebarSectionHeader>{t("financeConsole")}</SidebarSectionHeader>
             <SidebarLink href="/admin/finance" icon={LayoutDashboard} label={t("dashboard")} />
-            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("invoices")} />
-            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
+            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label="Direct Orders" />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes & Invoices" />
             <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
         </>
     );
