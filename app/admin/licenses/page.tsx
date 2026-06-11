@@ -9,15 +9,12 @@ import { Key } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function LicensesPage() {
-    // Include digitalOrder untuk info pembeli (email, nama)
+    // Ambil daftar lisensi beserta relasi produk/software terkait
     const licenses = await prisma.license.findMany({
         orderBy: { createdAt: "desc" },
         include: {
             product: {
                 select: { name: true, slug: true }
-            },
-            digitalOrder: {
-                select: { userEmail: true, userName: true, status: true }
             }
         }
     });

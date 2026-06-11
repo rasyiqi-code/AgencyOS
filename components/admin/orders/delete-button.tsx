@@ -6,7 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function DeleteOrderButton({ id, type = "service" }: { id: string, type?: "service" | "digital" }) {
+export function DeleteOrderButton({ id }: { id: string }) {
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
@@ -15,18 +15,10 @@ export function DeleteOrderButton({ id, type = "service" }: { id: string, type?:
 
         startTransition(async () => {
             try {
-                if (type === "digital") {
-                    // We'll import the action dynamically or pass it as a prop?
-                    // Better to use fetch for consistency if possible, or just a server action.
-                    const { deleteDigitalOrder } = await import("@/app/actions/digital-orders");
-                    const res = await deleteDigitalOrder(id);
-                    if (!res.success) throw new Error(res.error || "Failed");
-                } else {
-                    const { deleteQuote, deleteOrder } = await import("@/app/actions/quotes");
-                    const isOrderId = id.startsWith('ORDER-');
-                    const res = isOrderId ? await deleteOrder(id) : await deleteQuote(id);
-                    if (res.error) throw new Error(res.error);
-                }
+                const { deleteQuote, deleteOrder } = await import("@/app/actions/quotes");
+                const isOrderId = id.startsWith('ORDER-');
+                const res = isOrderId ? await deleteOrder(id) : await deleteQuote(id);
+                if (res.error) throw new Error(res.error);
                 
                 toast.success("Transaction deleted permanently.");
                 router.refresh();

@@ -144,3 +144,44 @@ export async function deleteLicense(licenseId: string) {
         return { success: false, error: message };
     }
 }
+
+/**
+ * Membuat lisensi secara manual untuk inventaris internal agensi (Vault).
+ * Mendukung penyimpanan nama client dan catatan tambahan ke kolom JSON metadata.
+ */
+export async function createManualLicense(data: {
+    productId: string;
+    key?: string;
+    maxActivations: number;
+    expiresAt?: string | null;
+    clientName?: string;
+    notes?: string;
+}) {
+    try {
+        if (!await isAdmin()) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        const key = data.key || generateKey();
+
+        const license = await prisma.license.create({
+            data: {
+                key,
+                productId: data.productId,
+                maxActivations: data.maxActivations,
+                expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
+                status: "active",
+                metadata: {
+                    clientName: data.clientName || "",
+                    notes: data.notes || ""
+                }
+            }
+        });
+
+        revalidatePath("/admin/licenses");
+        return { success: true, data: license };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return { success: false, error: message };
+    }
+}

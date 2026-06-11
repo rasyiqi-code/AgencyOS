@@ -1,7 +1,6 @@
 import { getServices } from "@/lib/server/services";
-import { getDigitalProducts } from "@/app/actions/digital-products";
 import { getPortfolios, type PortfolioItem } from "@/lib/portfolios/actions";
-import type { Service, Product } from "@prisma/client";
+import type { Service } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
@@ -27,17 +26,12 @@ export async function GET(req: Request) {
     const now = new Date();
 
     let portfolios: PortfolioItem[] = [];
-    let products: Product[] = [];
     let services: Service[] = [];
 
     try {
-        const [portfoliosRes, productsRes, servicesRes] = await Promise.all([
+        const [portfoliosRes, servicesRes] = await Promise.all([
             getPortfolios().catch((err) => {
                 console.error("[Sitemap] Gagal mengambil portfolio dari DB:", err);
-                return [];
-            }),
-            getDigitalProducts(true).catch((err) => {
-                console.error("[Sitemap] Gagal mengambil produk digital dari DB:", err);
                 return [];
             }),
             getServices(true).catch((err) => {
@@ -46,7 +40,6 @@ export async function GET(req: Request) {
             }),
         ]);
         portfolios = portfoliosRes;
-        products = productsRes;
         services = servicesRes;
     } catch (err) {
         console.error("[Sitemap] Error fatal saat mengambil data database:", err);
@@ -57,7 +50,6 @@ export async function GET(req: Request) {
         "",
         "/services",
         "/portfolio",
-        "/products",
         "/contact",
         "/experts",
         "/price-calculator",
@@ -88,18 +80,6 @@ export async function GET(req: Request) {
                 lastModified: portfolio.createdAt || now,
                 changeFrequency: "monthly",
                 priority: 0.7,
-            });
-        }
-    }
-
-    // Rute Produk Digital
-    for (const product of products) {
-        if (product && product.slug) {
-            baseRoutes.push({
-                route: `/products/${product.slug}`,
-                lastModified: product.updatedAt || product.createdAt || now,
-                changeFrequency: "weekly",
-                priority: 0.9,
             });
         }
     }

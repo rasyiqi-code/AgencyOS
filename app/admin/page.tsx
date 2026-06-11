@@ -35,19 +35,17 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     // Await searchParams properly (Next.js 15 pattern, safe for older versions too)
     const params = await searchParams;
     const requestedView = params?.view;
-    const mode = params?.mode || 'services';
 
-    // 1. Super Admin Logic (Can Switch)
-    // If user has both permissions (or is super_admin), show switcher
+    // 1. Super Admin Logic
     if (isProjectAdmin && isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
                 {requestedView === 'finance' ? (
-                    <BillingDashboardView mode={mode} />
+                    <BillingDashboardView />
                 ) : requestedView === 'project' ? (
                     <ProjectDashboardView />
                 ) : (
-                    <SuperAdminDashboardView mode={mode} />
+                    <SuperAdminDashboardView />
                 )}
             </div>
         );
@@ -58,7 +56,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     if (isBillingAdmin) {
         return (
             <div className="flex flex-col gap-4">
-                <BillingDashboardView mode={mode} />
+                <BillingDashboardView />
             </div>
         );
     }

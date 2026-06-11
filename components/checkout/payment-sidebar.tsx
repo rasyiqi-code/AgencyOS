@@ -1,25 +1,19 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, CheckCircle, Loader2, AlertTriangle, Tag, Check, XCircle } from "lucide-react";
-import { ExtendedEstimate, Coupon, ServiceAddon } from "@/lib/shared/types";
+import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
+import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
-import { Input } from "@/components/ui/input";
-import { validateCouponAction } from "@/app/actions/coupons";
 
 import { useTranslations } from "next-intl";
 
-export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activeRate, appliedCoupon, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, context, user, orderId, selectedAddons = [] }: {
+export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, user, orderId, selectedAddons = [] }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
-    onApplyCoupon: (coupon: Coupon | null) => void,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
-    appliedCoupon: Coupon | null,
     hasActiveGateway?: boolean,
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number,
@@ -50,10 +44,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
         }
     }, [countdown, estimate.status, orderId, router]);
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
-    const [couponInput, setCouponInput] = useState("");
-    const [isValidating, setIsValidating] = useState(false);
-    const [couponStatus, setCouponStatus] = useState<"idle" | "valid" | "invalid">("idle");
-    const couponTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
     const { currency, rate } = useCurrency();
     const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
@@ -69,35 +59,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
         amountToPay = Math.max(0, total - paid);
     }
 
-    const handleValidateCoupon = (code: string) => {
-        setCouponInput(code);
-        setCouponStatus("idle");
-        if (couponTimer.current) clearTimeout(couponTimer.current);
-
-        if (!code.trim()) {
-            onApplyCoupon(null);
-            return;
-        }
-
-        couponTimer.current = setTimeout(async () => {
-            setIsValidating(true);
-            try {
-                const result = await validateCouponAction(code, context);
-                if (result.valid && result.coupon) {
-                    setCouponStatus("valid");
-                    onApplyCoupon(result.coupon);
-                } else {
-                    setCouponStatus("invalid");
-                    onApplyCoupon(null);
-                }
-            } catch {
-                setCouponStatus("invalid");
-            } finally {
-                setIsValidating(false);
-            }
-        }, 500);
-    };
-
     const handleCheckout = async () => {
         setIsProcessing(true);
         try {
@@ -107,7 +68,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                     estimateId: estimate.id,
                     amount: amountToPay, // Calculated based on type
                     title: estimate.title,
-                    appliedCoupon: couponInput, // Kirim langsung coupon input dari state
                     paymentType: paymentType,
                     currency: currency,
                     selectedAddons: selectedAddons
@@ -239,42 +199,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, onApplyCoupon, activ
                             </div>
                         )}
                     </>
-
-                    {/* Pricing Display or Input Box */}
-                    {estimate.status !== 'paid' && (
-                        <div className="pt-6 border-t border-white/5">
-                            <div className="flex items-center gap-2 mb-3 text-white">
-                                <Tag className="w-3.5 h-3.5 text-brand-yellow" />
-                                <span className="font-medium text-[10px] uppercase tracking-wider text-zinc-400">{t("haveCoupon")}</span>
-                                {appliedCoupon && (
-                                    <span className="text-[10px] text-emerald-500 font-bold ml-auto flex items-center gap-1">
-                                        <Check className="w-3 h-3" /> -{appliedCoupon.discountType === 'percentage' ? `${appliedCoupon.discountValue}%` : <PriceDisplay amount={appliedCoupon.discountValue} />}
-                                    </span>
-                                )}
-                            </div>
-                            <div className="flex gap-2">
-                                <div className="relative flex-1">
-                                    <Input
-                                        value={couponInput}
-                                        onChange={(e) => handleValidateCoupon(e.target.value)}
-                                        placeholder={t("enterCode")}
-                                        className={`h-10 bg-zinc-950/50 border-zinc-800 text-white focus:ring-brand-yellow/50 uppercase text-xs pr-10 ${
-                                            couponStatus === "valid" ? "border-emerald-500/50" : couponStatus === "invalid" ? "border-red-500/50" : ""
-                                        }`}
-                                    />
-                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                        {isValidating ? (
-                                            <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
-                                        ) : couponStatus === "valid" ? (
-                                            <Check className="w-4 h-4 text-emerald-500" />
-                                        ) : couponStatus === "invalid" ? (
-                                            <XCircle className="w-4 h-4 text-red-500" />
-                                        ) : null}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
                     <div className="bg-zinc-800/50 p-4 sm:p-6 rounded-xl border border-white/5">
                         <div className="flex flex-col gap-1 mb-4">

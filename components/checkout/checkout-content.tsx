@@ -6,7 +6,7 @@ import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { useCurrency } from "@/components/providers/currency-provider";
-import { ExtendedEstimate, Bonus, Coupon, ServiceAddon } from "@/lib/shared/types";
+import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 
 export function CheckoutContent({
@@ -38,7 +38,6 @@ export function CheckoutContent({
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
-    const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const locale = useLocale();
     const isId = locale === 'id';
 
@@ -86,11 +85,7 @@ export function CheckoutContent({
         summary: cleanSummary + currentAddonsSummary
     };
 
-    const discountedAmount = appliedCoupon
-        ? appliedCoupon.discountType === 'percentage'
-            ? baseTotal * (1 - appliedCoupon.discountValue / 100)
-            : Math.max(0, baseTotal - appliedCoupon.discountValue)
-        : baseTotal;
+    const discountedAmount = baseTotal;
 
     const isPaid = estimate.status === 'paid';
 
@@ -121,10 +116,8 @@ export function CheckoutContent({
                     estimate={estimate}
                     amount={discountedAmount}
                     onPrint={() => handlePrint && handlePrint()}
-                    onApplyCoupon={(coupon) => setAppliedCoupon(coupon)}
                     bankDetails={bankDetails}
                     activeRate={activeRate}
-                    appliedCoupon={appliedCoupon}
                     hasActiveGateway={hasActiveGateway}
                     defaultPaymentType={defaultPaymentType}
                     projectPaidAmount={projectPaidAmount}

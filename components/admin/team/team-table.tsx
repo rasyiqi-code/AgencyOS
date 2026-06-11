@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { manageTeamPermission } from "@/app/actions/affiliates"
+import { manageTeamPermission } from "@/app/actions/team"
 
 interface TeamMember {
     id: string

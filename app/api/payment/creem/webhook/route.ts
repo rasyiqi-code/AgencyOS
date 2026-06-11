@@ -7,31 +7,6 @@ import { processAffiliateCommission } from "@/lib/affiliate/commission";
 // Helper to update order/subscription status
 const updateOrderStatus = async (orderId: string, status: string, metadata: unknown) => {
     try {
-        const isDigital = orderId.startsWith("DIGI-");
-
-        if (isDigital) {
-            console.log(`[CREEM_WEBHOOK] Updating Digital Order ${orderId} to ${status}`);
-
-            // Activate Digital Order if paid
-            if (status === 'paid') {
-                const { completeDigitalOrder } = await import("@/app/actions/digital-orders");
-                // Midtrans digital route uses paymentId for SDK transaction_id
-                // Checkout completed data usually has checkout id which we stored as transactionId/paymentId
-                const creemData = metadata as { id?: string };
-                const transactionId = creemData.id || orderId;
-
-                await completeDigitalOrder(orderId, transactionId, "credit_card");
-            } else {
-                await prisma.digitalOrder.update({
-                    where: { id: orderId },
-                    data: {
-                        status: status.toUpperCase(),
-                        paymentMetadata: metadata as Prisma.InputJsonValue
-                    }
-                });
-            }
-            return;
-        }
 
         // Simpan paymentMetadata asli sebelum di-overwrite (untuk affiliate code)
         const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });

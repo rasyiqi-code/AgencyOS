@@ -136,12 +136,20 @@ export function FloatingChatWidget() {
         }
     }, [messages, mode]);
 
-    // Poll for new messages when in human_chat
+    const consecutiveEmptyPolls = useRef(0);
+    const currentInterval = useRef(5000);
+    const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Poll for new messages when in human_chat dengan exponential backoff
     useEffect(() => {
         if (mode !== "human_chat" || !ticketId) return;
 
-        const interval = setInterval(async () => {
-            if (document.hidden) return;
+        const poll = async () => {
+            if (document.hidden) {
+                pollingTimeoutRef.current = setTimeout(poll, 15000);
+                return;
+            }
+
             try {
                 const res = await fetch(`/api/support/ticket/${ticketId}`);
                 if (res.ok) {
@@ -152,9 +160,11 @@ export function FloatingChatWidget() {
                             role: m.sender === "user" ? "user" : "assistant",
                             content: m.content
                         }));
+
+                        let hasNew = false;
                         setMessages(prev => {
                             if (newMessages.length > prev.length) {
-                                // Check if last message is from assistant/human agent
+                                hasNew = true;
                                 const lastMsg = newMessages[newMessages.length - 1];
                                 if (lastMsg.role === "assistant") {
                                     playSound();
@@ -164,14 +174,33 @@ export function FloatingChatWidget() {
                             }
                             return prev;
                         });
+
+                        if (hasNew) {
+                            consecutiveEmptyPolls.current = 0;
+                            currentInterval.current = 5000; // Reset ke 5 detik jika ada pesan baru
+                        } else {
+                            consecutiveEmptyPolls.current += 1;
+                            if (consecutiveEmptyPolls.current >= 3) {
+                                // Naikkan interval bertahap (5s -> 10s -> 15s -> 20s maks)
+                                currentInterval.current = Math.min(currentInterval.current + 5000, 20000);
+                            }
+                        }
                     }
                 }
             } catch (e) {
                 console.error("Polling error", e);
             }
-        }, 5000); // Dirubah dari 1000ms ke 5000ms agar efisien RAM & CPU
 
-        return () => clearInterval(interval);
+            pollingTimeoutRef.current = setTimeout(poll, currentInterval.current);
+        };
+
+        pollingTimeoutRef.current = setTimeout(poll, currentInterval.current);
+
+        return () => {
+            if (pollingTimeoutRef.current) {
+                clearTimeout(pollingTimeoutRef.current);
+            }
+        };
     }, [mode, ticketId, isOpen]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -629,6 +658,12 @@ export function FloatingChatWidget() {
                             <Input
                                 value={input}
                                 onChange={handleInputChange}
+                                onFocus={() => {
+                                    if (mode === "human_chat") {
+                                        consecutiveEmptyPolls.current = 0;
+                                        currentInterval.current = 5000;
+                                    }
+                                }}
                                 placeholder={mode === "human_chat" ? "Type to human agent..." : "Type your message..."}
                                 className="flex-1 bg-zinc-900/50 border-white/10 focus-visible:ring-brand-yellow/50 text-white"
                             />

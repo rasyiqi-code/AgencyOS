@@ -43,20 +43,30 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
+        // Batasi khusus file gambar yang diproses Sharp maksimal 5MB agar RAM tidak melonjak ekstrem (mencegah crash OOM)
+        const isProcessableImage = file.type.startsWith("image/") &&
+            !file.type.includes("svg") &&
+            !file.type.includes("webp");
+
+        if (isProcessableImage && file.size > 5 * 1024 * 1024) {
+            return NextResponse.json({ 
+                error: "Image file size exceeds the 5MB limit for optimization" 
+            }, { status: 400 });
+        }
+
         let uploadPayload: File | Uint8Array = file;
         let finalFileName = file.name;
         let finalType = file.type;
         let fileSize = file.size;
 
-        // Optimization: Convert images to WebP
-        const isProcessableImage = file.type.startsWith("image/") &&
-            !file.type.includes("svg") &&
-            !file.type.includes("webp");
-
         if (isProcessableImage) {
             try {
                 // Memuat modul sharp secara dinamis agar tidak crash jika library native tidak tersedia
                 const sharp = (await import("sharp")).default;
+                
+                // Matikan cache RAM sharp secara runtime agar tidak menyisakan memory leak di serverless
+                sharp.cache(false);
+
                 // Hanya membaca arrayBuffer jika sharp berhasil di-load secara dinamis
                 const buffer = new Uint8Array(await file.arrayBuffer());
                 const processedBuffer = await sharp(buffer)

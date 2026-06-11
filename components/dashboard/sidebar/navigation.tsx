@@ -16,13 +16,11 @@ export function DashboardSidebarNavigation() {
             <SidebarLink href="/dashboard/inbox" icon={Inbox} label={t("inbox")} />
             <SidebarLink href="/dashboard/billing" icon={Receipt} label={t("billing")} />
 
-            <SidebarSectionHeader>Digital Assets</SidebarSectionHeader>
+            <SidebarSectionHeader>Digital Services</SidebarSectionHeader>
             <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />
-            <SidebarLink href="/dashboard/my-products" icon={Package} label="My Products" />
 
-            <SidebarSectionHeader>Support & Growth</SidebarSectionHeader>
+            <SidebarSectionHeader>Support & Feedback</SidebarSectionHeader>
             <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />
-            <SidebarLink href="/affiliate/dashboard" icon={Users} label={t("affiliate")} />
             <SidebarLink href="/submit-testimonial" icon={MessageSquare} label="Give Feedback" />
         </>
     );

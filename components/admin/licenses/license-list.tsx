@@ -31,6 +31,7 @@ interface LicenseWithRelations {
     expiresAt: Date | null;
     createdAt: Date;
     userId: string | null;
+    metadata?: any;
     product: { name: string; slug: string };
     digitalOrder?: {
         userEmail: string;
@@ -121,7 +122,7 @@ export function LicenseList({ licenses }: LicenseListProps) {
                                     <TableHeader className="bg-white/5">
                                         <TableRow className="hover:bg-transparent border-white/5">
                                             <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3 pl-6">License Key</TableHead>
-                                            <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3">Customer</TableHead>
+                                            <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3">Client / Notes</TableHead>
                                             <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3 text-center">Activations</TableHead>
                                             <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3 text-center">Status</TableHead>
                                             <TableHead className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-3 text-center">Expiry</TableHead>
@@ -129,33 +130,40 @@ export function LicenseList({ licenses }: LicenseListProps) {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {groupedLicenses[productName].map((license) => (
-                                            <TableRow key={license.id} className="hover:bg-white/[0.02] border-white/5 transition-colors group/row">
-                                                <TableCell className="py-4 pl-6">
-                                                    <div className="flex items-center gap-2">
-                                                        <code className="bg-black/30 px-2 py-0.5 rounded text-[11px] font-mono text-zinc-300 border border-white/5 group-hover/row:border-brand-yellow/30 transition-colors">
-                                                            {license.key}
-                                                        </code>
-                                                        <button
-                                                            onClick={() => copyToClipboard(license.key)}
-                                                            className="text-zinc-600 hover:text-brand-yellow transition-colors"
-                                                        >
-                                                            <Copy className="w-3 h-3" />
-                                                        </button>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {license.digitalOrder ? (
-                                                        <div className="space-y-0.5">
-                                                            <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-tight">{license.digitalOrder.userEmail}</div>
-                                                            {license.digitalOrder.userName && (
-                                                                <div className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">{license.digitalOrder.userName}</div>
-                                                            )}
+                                        {groupedLicenses[productName].map((license) => {
+                                            const metadataObj = license.metadata as Record<string, any> | null;
+                                            const clientName = metadataObj?.clientName || null;
+                                            const notes = metadataObj?.notes || null;
+
+                                            return (
+                                                <TableRow key={license.id} className="hover:bg-white/[0.02] border-white/5 transition-colors group/row">
+                                                    <TableCell className="py-4 pl-6">
+                                                        <div className="flex items-center gap-2">
+                                                            <code className="bg-black/30 px-2 py-0.5 rounded text-[11px] font-mono text-zinc-300 border border-white/5 group-hover/row:border-brand-yellow/30 transition-colors">
+                                                                {license.key}
+                                                            </code>
+                                                            <button
+                                                                onClick={() => copyToClipboard(license.key)}
+                                                                className="text-zinc-600 hover:text-brand-yellow transition-colors"
+                                                            >
+                                                                <Copy className="w-3 h-3" />
+                                                            </button>
                                                         </div>
-                                                    ) : (
-                                                        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest opacity-50 border-white/5">Manual</Badge>
-                                                    )}
-                                                </TableCell>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {clientName || notes ? (
+                                                            <div className="space-y-0.5">
+                                                                {clientName && (
+                                                                    <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-tight">{clientName}</div>
+                                                                )}
+                                                                {notes && (
+                                                                    <div className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">{notes}</div>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest opacity-50 border-white/5">General</Badge>
+                                                        )}
+                                                    </TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-col items-center gap-1.5">
                                                         <div className="w-20 h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/5">
@@ -203,7 +211,8 @@ export function LicenseList({ licenses }: LicenseListProps) {
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                            );
+                                        })}
                                     </TableBody>
                                 </Table>
                             </div>

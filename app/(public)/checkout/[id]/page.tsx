@@ -1,5 +1,4 @@
 import { CheckoutContent } from "@/components/checkout/checkout-content";
-import { DigitalCheckoutContent } from "@/components/checkout/digital-checkout-content";
 import { prisma } from "@/lib/config/db";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { notFound, redirect } from "next/navigation";
@@ -18,9 +17,7 @@ interface PageProps {
 
 /**
  * Halaman Checkout Unified.
- * Menangani dua jenis checkout:
- * 1. Digital Product (via Product ID)
- * 2. Service/Estimate (via Estimate ID) - Legacy/Existing Flow
+ * Menangani checkout Service/Estimate (via Estimate ID) untuk Agensi Jasa.
  */
 export default async function CheckoutPage(props: PageProps) {
     const params = await props.params;
@@ -31,58 +28,16 @@ export default async function CheckoutPage(props: PageProps) {
     const { paymentService } = await import("@/lib/server/payment-service");
     const activeRate = await paymentService.getExchangeRate();
 
-    const product = await prisma.product.findUnique({
-        where: { id }
-    });
-
-    const bonuses = await getBonuses("DIGITAL");
-
-    const bonusesData = bonuses.map((b: Bonus) => ({
-        ...b,
-        icon: b.icon || "Check",
-        value: b.value || "",
-        description: b.description || ""
-    }));
-
     // Fetch user and enforce login for all checkout types
     const user = await hexclaveServerApp.getUser().catch(() => null);
 
     if (!user) {
-        // Enforce Login for all Checkout flows to ensure we have user identity
+        // Enforce Login to ensure we have user identity
         redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
     }
 
     const userId = user.id;
     const userEmail = user.primaryEmail || undefined;
-
-    // 1. Jika Product ditemukan dan aktif, render Digital Checkout (New Flow)
-    if (product && product.isActive) {
-        const p = product;
-        const productData = {
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            purchaseType: (p.purchaseType as "one_time" | "subscription") || "one_time",
-            interval: p.interval || undefined,
-            description: p.description,
-            description_id: p.description_id,
-        };
-
-        return (
-            <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
-                <div className="container mx-auto px-4 py-12 md:py-24 max-w-7xl">
-                    <CheckoutProgress currentStep={1} />
-                    <DigitalCheckoutContent
-                        product={productData}
-                        bonuses={bonusesData}
-                        userId={userId}
-                        userEmail={userEmail}
-                        activeRate={activeRate}
-                    />
-                </div>
-            </div>
-        );
-    }
 
     // 2. Jika Product tidak ditemukan, cari sebagai Service Estimate (Legacy Flow)
     const estimate = await prisma.estimate.findUnique({

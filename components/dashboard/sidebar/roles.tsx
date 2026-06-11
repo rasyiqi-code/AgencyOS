@@ -58,102 +58,40 @@ export function SidebarSectionHeader({ children }: { children: React.ReactNode }
 
 export function SidebarSuperAdmin() {
     const t = useTranslations("Dashboard.Sidebar");
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-
-    // Tentukan mode berdasarkan searchParams, dengan fallback cerdas berbasis rute aktif
-    let mode = searchParams.get("mode");
-    if (!mode) {
-        const cleanPath = pathname.replace(/^\/(en|id)/, "");
-        if (
-            cleanPath.startsWith("/admin/products") ||
-            cleanPath.startsWith("/admin/digital-sales") ||
-            cleanPath.startsWith("/admin/licenses") ||
-            cleanPath.startsWith("/admin/finance/digital-orders") ||
-            cleanPath.startsWith("/admin/portfolio") ||
-            cleanPath.startsWith("/admin/marketing") ||
-            cleanPath.startsWith("/admin/testimonials")
-        ) {
-            mode = "digital";
-        } else {
-            mode = "services";
-        }
-    }
-
-    const isDigital = mode === "digital";
 
     return (
         <>
             {/* Overview utama */}
-            <SidebarLink href={isDigital ? "/admin?mode=digital" : "/admin?mode=services"} icon={LayoutDashboard} label={t("overview")} />
+            <SidebarLink href="/admin" icon={LayoutDashboard} label={t("overview")} />
 
-            {isDigital ? (
-                <>
-                    {/* KEUANGAN & TRANSAKSI DIGITAL */}
-                    <SidebarSectionHeader>Finance & Billing (Digital)</SidebarSectionHeader>
-                    <SidebarLink href="/admin/finance/digital-orders?mode=digital" icon={ShoppingCart} label="Digital Orders" />
-                    <SidebarLink href="/admin/digital-sales?mode=digital" icon={LayoutDashboard} label="Digital Sales" />
+            {/* 1. OPERASIONAL AGENSI */}
+            <SidebarSectionHeader>Agency Ops</SidebarSectionHeader>
+            <SidebarLink href="/admin/pm/projects" icon={Layers} label={t("missionBoard")} />
+            <SidebarLink href="/admin/pm/services" icon={Package} label={t("serviceCatalog")} />
+            <SidebarLink href="/admin/clients" icon={Users} label={t("clients")} />
+            <SidebarLink href="/admin/support" icon={Mail} label={t("supportInbox")} />
 
-                    {/* CAMPAIGNS & PROMOTIONS */}
-                    <SidebarSectionHeader>Campaigns & Promos</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/promotions?mode=digital" icon={Megaphone} label="Visual Promos" />
-                    <SidebarLink href="/admin/marketing/popups?mode=digital" icon={LayoutTemplate} label="PopUp Banners" />
-                    <SidebarLink href="/admin/marketing/push?mode=digital" icon={Bell} label="Push Center" />
-                    <SidebarLink href="/admin/portfolio?mode=digital" icon={Images} label="Portfolio Admin" />
-                    <SidebarLink href="/admin/testimonials?mode=digital" icon={MessageSquare} label="Testimonials" />
+            {/* 2. KEUANGAN & TRANSAKSI AGENSI */}
+            <SidebarSectionHeader>Finance & Billing (Agency)</SidebarSectionHeader>
+            <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label="Client Invoices" />
+            <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes & Estimates" />
+            <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
 
-                    {/* DISCOUNTS & OFFERS */}
-                    <SidebarSectionHeader>Discounts & Offers</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/coupons?mode=digital" icon={Tag} label="Coupon Codes" />
-                    <SidebarLink href="/admin/marketing/bonuses?mode=digital" icon={Gift} label="Checkout Bonuses" />
-
-                    {/* AUDIENCE & LEADS */}
-                    <SidebarSectionHeader>Audience & Leads</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/leads?mode=digital" icon={UserPlus} label="Contact Leads" />
-                    <SidebarLink href="/admin/marketing/subscribers?mode=digital" icon={Mail} label="Newsletter Subs" />
-
-                    {/* AFFILIATE NETWORK */}
-                    <SidebarSectionHeader>Affiliate Network</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/affiliates?mode=digital" icon={Users} label="Affiliate Partners" />
-                    <SidebarLink href="/admin/marketing/payouts?mode=digital" icon={DollarSign} label="Payout Requests" />
-                    <SidebarLink href="/admin/marketing/assets?mode=digital" icon={FolderOpen} label="Marketing Assets" />
-
-                    {/* DIGITAL PRODUCTS */}
-                    <SidebarSectionHeader>Digital Products</SidebarSectionHeader>
-                    <SidebarLink href="/admin/products?mode=digital" icon={Package} label="DigiProducts" />
-                    <SidebarLink href="/admin/licenses?mode=digital" icon={Key} label="Licenses" />
-                </>
-            ) : (
-                <>
-                    {/* 1. OPERASIONAL AGENSI */}
-                    <SidebarSectionHeader>Agency Ops</SidebarSectionHeader>
-                    <SidebarLink href="/admin/pm/projects?mode=services" icon={Layers} label={t("missionBoard")} />
-                    <SidebarLink href="/admin/pm/services?mode=services" icon={Package} label={t("serviceCatalog")} />
-                    <SidebarLink href="/admin/clients?mode=services" icon={Users} label={t("clients")} />
-                    <SidebarLink href="/admin/support?mode=services" icon={Mail} label={t("supportInbox")} />
-
-                    {/* 2. KEUANGAN & TRANSAKSI AGENSI */}
-                    <SidebarSectionHeader>Finance & Billing (Agency)</SidebarSectionHeader>
-                    <SidebarLink href="/admin/finance/orders?mode=services" icon={ShoppingCart} label="Client Invoices" />
-                    <SidebarLink href="/admin/finance/quotes?mode=services" icon={MessageSquare} label="Quotes & Estimates" />
-                    <SidebarLink href="/admin/finance/subscriptions?mode=services" icon={Repeat} label="Subscriptions" />
-
-                    {/* 3. PEMASARAN & AUDIENS (SERVICES) */}
-                    <SidebarSectionHeader>Campaigns & Leads</SidebarSectionHeader>
-                    <SidebarLink href="/admin/marketing/promotions?mode=services" icon={Megaphone} label="Visual Promos" />
-                    <SidebarLink href="/admin/portfolio?mode=services" icon={Images} label="Portfolio Admin" />
-                    <SidebarLink href="/admin/testimonials?mode=services" icon={MessageSquare} label="Testimonials" />
-                    <SidebarLink href="/admin/marketing/leads?mode=services" icon={UserPlus} label="Contact Leads" />
-                    <SidebarLink href="/admin/marketing/subscribers?mode=services" icon={Mail} label="Newsletter Subs" />
-                </>
-            )}
+            {/* 3. PEMASARAN & AUDIENS (SERVICES) */}
+            <SidebarSectionHeader>Campaigns & Leads</SidebarSectionHeader>
+            <SidebarLink href="/admin/marketing/promotions" icon={Megaphone} label="Visual Promos" />
+            <SidebarLink href="/admin/portfolio" icon={Images} label="Portfolio Admin" />
+            <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
+            <SidebarLink href="/admin/marketing/leads" icon={UserPlus} label="Contact Leads" />
+            <SidebarLink href="/admin/marketing/subscribers" icon={Mail} label="Newsletter Subs" />
 
             {/* 4. SISTEM & KONFIGURASI */}
             <SidebarSectionHeader>System & Tools</SidebarSectionHeader>
-            <SidebarLink href={isDigital ? "/admin/media?mode=digital" : "/admin/media?mode=services"} icon={Images} label="Media Library" />
-            <SidebarLink href={isDigital ? "/admin/team?mode=digital" : "/admin/team?mode=services"} icon={ShieldCheck} label="Team Roles" />
-            <SidebarLink href={isDigital ? "/admin/system/webhooks?mode=digital" : "/admin/system/webhooks?mode=services"} icon={Globe} label="Webhook Simulator" />
-            <SidebarLink href={isDigital ? "/admin/system/settings?mode=digital" : "/admin/system/settings?mode=services"} icon={Settings} label={t("system")} />
+            <SidebarLink href="/admin/media" icon={Images} label="Media Library" />
+            <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
+            <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
+            <SidebarLink href="/admin/system/webhooks" icon={Globe} label="Webhook Simulator" />
+            <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
         </>
     );
 }
@@ -167,7 +105,6 @@ export function SidebarFinance() {
             <SidebarLink href="/admin/finance/orders" icon={ShoppingCart} label={t("invoices")} />
             <SidebarLink href="/admin/finance/quotes" icon={MessageSquare} label="Quotes" />
             <SidebarLink href="/admin/finance/subscriptions" icon={Repeat} label="Subscriptions" />
-            <SidebarLink href="/admin/finance/digital-orders" icon={ShoppingCart} label="Digital Orders" />
         </>
     );
 }

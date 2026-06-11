@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { processAffiliateCommission } from "@/lib/affiliate/commission";
-import { completeDigitalOrder } from "@/app/actions/digital-orders";
 import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 
 /**
@@ -12,7 +11,6 @@ import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
  * Menangani notifikasi pembayaran dari Midtrans.
  * Mendukung dua jenis order:
  * - Order biasa (project/service) → prefix ORDER-
- * - DigitalOrder (produk digital) → prefix DIGI-
  */
 export async function POST(req: Request) {
     try {
@@ -48,13 +46,6 @@ export async function POST(req: Request) {
         console.log(`[MIDTRANS_WEBHOOK] Order: ${order_id}, Status: ${transaction_status}`);
 
         // ============================================
-        // DIGITAL ORDER (prefix DIGI-)
-        // ============================================
-        if (order_id.startsWith("DIGI-")) {
-            return await handleDigitalOrderWebhook(order_id, transaction_status, transaction_id, payment_type);
-        }
-
-        // ============================================
         // ORDER BIASA (project/service)
         // ============================================
         return await handleProjectOrderWebhook(
@@ -65,71 +56,6 @@ export async function POST(req: Request) {
         console.error("[MIDTRANS_WEBHOOK_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });
     }
-}
-
-/**
- * Handle webhook untuk DigitalOrder (produk digital).
- * Jika settlement → update status PAID + generate license.
- */
-async function handleDigitalOrderWebhook(
-    orderId: string,
-    transactionStatus: string,
-    transactionId: string,
-    paymentType?: string
-) {
-    // Cari order berdasarkan paymentId, karena order_id dari Midtrans
-    // mengandung suffix timestamp (contoh: DIGI-xxx-1739443234567)
-    // yang tidak sama dengan ID asli di database (DIGI-xxx).
-    // Field paymentId sudah disimpan saat charge di /api/digital-payment/charge.
-    const digitalOrder = await prisma.digitalOrder.findFirst({
-        where: { paymentId: orderId },
-    });
-
-    if (!digitalOrder) {
-        console.error(`[MIDTRANS_WEBHOOK] Digital order not found for paymentId: ${orderId}`);
-        return NextResponse.json(
-            { status: "error", message: "Digital order not found" },
-            { status: 404 }
-        );
-    }
-
-    // Idempotency: jika order sudah PAID, skip untuk mencegah proses duplikat
-    if (digitalOrder.status === 'PAID') {
-        console.log(`[MIDTRANS_WEBHOOK] Digital order ${digitalOrder.id} already PAID, skipping.`);
-        return NextResponse.json({ status: "ok", message: "Already processed" });
-    }
-
-    const actualOrderId = digitalOrder.id;
-
-    if (transactionStatus === "capture" || transactionStatus === "settlement") {
-        // Pembayaran berhasil → selesaikan order + generate license
-        const result = await completeDigitalOrder(actualOrderId, transactionId, paymentType);
-
-        if (!result.success) {
-            console.error(`[MIDTRANS_WEBHOOK] Failed to complete digital order ${actualOrderId}:`, result.error);
-            return NextResponse.json({ status: "error", message: result.error }, { status: 500 });
-        }
-
-        console.log(`[MIDTRANS_WEBHOOK] Digital order ${actualOrderId} completed with license`);
-    } else if (
-        transactionStatus === "deny" ||
-        transactionStatus === "cancel" ||
-        transactionStatus === "expire"
-    ) {
-        // Pembayaran gagal/expired → update status
-        await prisma.digitalOrder.update({
-            where: { id: actualOrderId },
-            data: {
-                status: transactionStatus === "expire" ? "EXPIRED" : "FAILED",
-                paymentId: transactionId,
-            },
-        });
-
-        console.log(`[MIDTRANS_WEBHOOK] Digital order ${actualOrderId} status: ${transactionStatus}`);
-    }
-    // Status "pending" → tidak perlu update, order sudah PENDING
-
-    return NextResponse.json({ status: "ok" });
 }
 
 /**

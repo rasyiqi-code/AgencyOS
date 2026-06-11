@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { UserCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { updateProject } from "@/app/actions/projects";
-import { getSquadDevelopers } from "@/app/actions/affiliates";
+import { getSquadDevelopers } from "@/app/actions/team";
 
 interface Developer {
     id: string;
