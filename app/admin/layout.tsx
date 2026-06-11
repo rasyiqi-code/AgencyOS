@@ -12,6 +12,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { getSystemSettings } from "@/lib/server/settings";
 import { SystemAlerts } from "@/components/admin/system-alerts";
+import { cookies } from "next/headers";
+import { RoleSwitcher } from "@/components/admin/role-switcher";
 
 export default async function AdminLayout({
     children,
@@ -30,9 +32,24 @@ export default async function AdminLayout({
         redirect('/dashboard');
     }
 
-    // Role Checks
+    // Pemeriksaan Peran & Akses
     const pmAccess = await canManageProjects();
     const financeAccess = await canManageBilling();
+
+    // Membaca cookie peran aktif pilihan admin (jika ia memiliki kedua peran/Super Admin)
+    const cookieStore = await cookies();
+    const activeViewRole = cookieStore.get("admin_view_role")?.value || "admin";
+
+    let effectivePmAccess = pmAccess;
+    let effectiveFinanceAccess = financeAccess;
+
+    if (pmAccess && financeAccess) {
+        if (activeViewRole === "pm") {
+            effectiveFinanceAccess = false;
+        } else if (activeViewRole === "finance") {
+            effectivePmAccess = false;
+        }
+    }
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-black">
@@ -57,10 +74,14 @@ export default async function AdminLayout({
                             <span className="text-sm font-bold text-white truncate max-w-[140px] leading-tight">
                                 {agencyName}
                             </span>
-                            <div className="flex">
-                                <Badge variant="outline" className="h-[18px] px-1.5 text-[9px] uppercase tracking-widest border-red-500/50 text-red-500 bg-red-500/10 font-black">
-                                    Admin
-                                </Badge>
+                            <div className="flex mt-0.5">
+                                {pmAccess && financeAccess ? (
+                                    <RoleSwitcher currentRole={activeViewRole as "admin" | "pm" | "finance"} />
+                                ) : (
+                                    <Badge variant="outline" className="h-[18px] px-1.5 text-[9px] uppercase tracking-widest border-red-500/50 text-red-500 bg-red-500/10 font-black">
+                                        Admin
+                                    </Badge>
+                                )}
                             </div>
                         </div>
                     </Link>
@@ -78,8 +99,8 @@ export default async function AdminLayout({
                 }
             >
                 <AdminSidebarNavigation
-                    pmAccess={pmAccess}
-                    financeAccess={financeAccess}
+                    pmAccess={effectivePmAccess}
+                    financeAccess={effectiveFinanceAccess}
                 />
             </SidebarContainer>
 
@@ -87,7 +108,7 @@ export default async function AdminLayout({
                 <DashboardHeader
                     agencyName={agencyName}
                     logoUrl={logoUrl ?? undefined}
-                    navChildren={<AdminSidebarNavigation pmAccess={pmAccess} financeAccess={financeAccess} />}
+                    navChildren={<AdminSidebarNavigation pmAccess={effectivePmAccess} financeAccess={effectiveFinanceAccess} />}
                     navFooter={
                         <Link
                             href="/dashboard"

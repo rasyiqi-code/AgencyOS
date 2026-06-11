@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Mail, FileText, Loader2, Copy } from "lucide-react";
+import { Mail, FileText, Loader2, Copy, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useCurrency } from "@/components/providers/currency-provider";
+import { markQuoteAsPaid } from "@/app/actions/quotes";
 
 interface InvoiceActionsProps {
     /** ID Estimate untuk referensi API dan preview */
@@ -16,6 +17,7 @@ interface InvoiceActionsProps {
     serviceTitle?: string;
     amount?: number;
     currency?: string;
+    status?: string;
 }
 
 /**
@@ -28,11 +30,30 @@ export function InvoiceActions({
     clientName = "Client",
     serviceTitle = "Service",
     amount = 0,
-    currency = "IDR"
+    currency = "IDR",
+    status
 }: InvoiceActionsProps) {
     const t = useTranslations("Admin.Finance.Quotes");
     const { currency: contextCurrency, rate, locale: contextLocale } = useCurrency();
     const [isSending, setIsSending] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    /** Tandai invoice manual sebagai lunas */
+    async function handleMarkPaid() {
+        setIsUpdating(true);
+        try {
+            const res = await markQuoteAsPaid(estimateId);
+            if (res?.error) {
+                throw new Error(res.error);
+            }
+            toast.success("Invoice berhasil ditandai sebagai lunas!");
+        } catch (error) {
+            console.error("Mark paid error:", error);
+            toast.error(error instanceof Error ? error.message : "Gagal memperbarui status.");
+        } finally {
+            setIsUpdating(false);
+        }
+    }
 
     /** Kirim invoice via email ke klien */
     async function handleSendEmail() {
@@ -135,6 +156,22 @@ export function InvoiceActions({
             >
                 <FileText className="h-3.5 w-3.5" />
             </Button>
+            {status !== "paid" && (
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 flex items-center justify-center text-zinc-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-full transition-all active:scale-90"
+                    onClick={handleMarkPaid}
+                    disabled={isUpdating}
+                    title="Tandai sebagai Lunas (Mark Paid)"
+                >
+                    {isUpdating ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                        <CheckCircle className="h-3.5 w-3.5" />
+                    )}
+                </Button>
+            )}
         </div>
     );
 }

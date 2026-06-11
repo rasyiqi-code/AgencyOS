@@ -186,6 +186,7 @@ export default async function AdminQuotesPage() {
                                             serviceTitle={est.service?.title}
                                             amount={est.totalCost}
                                             currency={est.service?.currency || 'IDR'}
+                                            status={est.status}
                                         />
                                         {est.status === 'paid' && (
                                             <div className="flex items-center gap-1 text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full uppercase border border-emerald-500/20">
@@ -259,6 +260,7 @@ export default async function AdminQuotesPage() {
                                                             serviceTitle={est.service?.title}
                                                             amount={est.totalCost}
                                                             currency={est.service?.currency || 'IDR'}
+                                                            status={est.status}
                                                         />
                                                         {est.status === 'paid' && (
                                                             <div className="flex items-center gap-1 text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full uppercase border border-emerald-500/20">

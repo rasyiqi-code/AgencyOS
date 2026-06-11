@@ -207,3 +207,49 @@ export async function deleteOrder(orderId: string) {
     }
 }
 
+/**
+ * Menandai status pembayaran invoice manual/estimate sebagai lunas (Paid).
+ * Sekaligus memperbarui proyek terkait jika ada.
+ */
+export async function markQuoteAsPaid(estimateId: string) {
+    if (!estimateId) return { error: "Missing estimate ID" };
+
+    try {
+        if (!await isAdmin()) {
+            return { error: "Unauthorized" };
+        }
+
+        const estimate = await prisma.estimate.findUnique({
+            where: { id: estimateId },
+            include: { project: true }
+        });
+
+        if (!estimate) return { error: "Quote not found" };
+
+        // Tandai lunas pada estimate
+        await prisma.estimate.update({
+            where: { id: estimateId },
+            data: { status: "paid" }
+        });
+
+        // Update status di project terkait
+        if (estimate.project) {
+            await prisma.project.update({
+                where: { id: estimate.project.id },
+                data: {
+                    status: "active",
+                    paymentStatus: "paid",
+                    paidAmount: estimate.totalCost
+                }
+            });
+        }
+
+        revalidatePath("/admin/finance/quotes");
+        revalidatePath("/dashboard/missions");
+        return { success: true };
+    } catch (error) {
+        console.error("Error marking quote as paid:", error);
+        return { error: "Failed to update payment status" };
+    }
+}
+
