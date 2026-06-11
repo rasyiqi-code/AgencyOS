@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { CheckoutSummary } from "@/components/checkout/checkout-summary";
 import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
@@ -8,6 +8,7 @@ import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checko
 import { useCurrency } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
+import { useReactToPrint } from "react-to-print";
 
 export function CheckoutContent({
     estimate,
@@ -49,13 +50,11 @@ export function CheckoutContent({
     const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
-    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
 
-    useEffect(() => {
-        import("react-to-print").then((mod) => {
-            setHandlePrint(() => mod.useReactToPrint({ contentRef: invoiceRef, documentTitle: `Invoice-${estimate.id}` }));
-        });
-    }, [estimate.id]);
+    const handlePrint = useReactToPrint({
+        contentRef: invoiceRef,
+        documentTitle: `Invoice-${estimate.id}`
+    });
 
     // Calculate the TRUE base cost (estimate.totalCost minus any addons that are already baked into it)
     const initiallyIncludedAddonsTotal = initiallyIncludedAddons.reduce((sum: number, addon) => sum + (addon.price || 0), 0);
@@ -115,7 +114,7 @@ export function CheckoutContent({
                 <PaymentSidebar
                     estimate={estimate}
                     amount={discountedAmount}
-                    onPrint={() => handlePrint && handlePrint()}
+                    onPrint={handlePrint}
                     bankDetails={bankDetails}
                     activeRate={activeRate}
                     hasActiveGateway={hasActiveGateway}

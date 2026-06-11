@@ -2,6 +2,11 @@ import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
+// Meredam MaxListenersExceededWarning dari Next.js dev server HMR / worker threads
+if (typeof process !== 'undefined' && typeof process.setMaxListeners === 'function') {
+    process.setMaxListeners(20);
+}
+
 const isDev = process.env.NODE_ENV === 'development'
 const isServerless = !!process.env.VERCEL
 

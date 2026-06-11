@@ -289,10 +289,12 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                         const selectedScreens = initialScreens.filter((_, i) => selectedScreenIndices.has(i));
                                         const selectedApis = initialApis.filter((_, i) => selectedApiIndices.has(i));
 
-                                        const res = await fetch(`/api/estimates/${estimate.id}/finalize`, {
+                                        const res = await fetch("/api/estimates", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
                                             body: JSON.stringify({
+                                                action: "finalize",
+                                                estimateId: estimate.id,
                                                 selectedScreens,
                                                 selectedApis,
                                                 totalHours,
@@ -300,8 +302,8 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                             }),
                                         });
                                         const data = await res.json();
-                                        if (res.ok && data.url) {
-                                            window.location.href = data.url;
+                                        if (res.ok && data.id) {
+                                            window.location.href = `/checkout/${data.id}`;
                                         } else if (res.status === 401) {
                                             // User belum login — redirect ke sign-in lalu kembali ke halaman ini
                                             window.location.href = `/handler/sign-in?after_auth_return_to=${encodeURIComponent(window.location.pathname)}`;
@@ -339,10 +341,12 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                     const selectedScreens = initialScreens.filter((_, i) => selectedScreenIndices.has(i));
                                     const selectedApis = initialApis.filter((_, i) => selectedApiIndices.has(i));
 
-                                    const res = await fetch(`/api/estimates/${estimate.id}/finalize`, {
+                                    const res = await fetch("/api/estimates", {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
                                         body: JSON.stringify({
+                                            action: "finalize",
+                                            estimateId: estimate.id,
                                             selectedScreens,
                                             selectedApis,
                                             totalHours,
@@ -350,8 +354,8 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                         }),
                                     });
                                     const data = await res.json();
-                                    if (res.ok && data.url) {
-                                        window.location.href = data.url;
+                                    if (res.ok && data.id) {
+                                        window.location.href = `/checkout/${data.id}`;
                                     } else if (res.status === 401) {
                                         window.location.href = `/handler/sign-in?after_auth_return_to=${encodeURIComponent(window.location.pathname)}`;
                                     } else {

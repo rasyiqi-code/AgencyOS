@@ -52,7 +52,124 @@ export async function POST(req: Request) {
         const userId = user?.id;
         const creatorName = user?.displayName || user?.primaryEmail?.split('@')[0] || "Anonymous";
 
-        // Manual Mode (from Calculator/Human)
+        // 1. Direct Purchase (Beli Langsung Service dari Catalog)
+        if (body.serviceId) {
+            if (!userId) {
+                return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            }
+
+            const service = await prisma.service.findFirst({
+                where: { id: body.serviceId, isActive: true }
+            });
+
+            if (!service) {
+                return NextResponse.json({ error: "Service not found or inactive" }, { status: 404 });
+            }
+
+            // Buat Estimate untuk pembelian langsung service ini
+            const estimate = await prisma.estimate.create({
+                data: {
+                    prompt: `Direct Service Purchase: ${service.title}`,
+                    title: service.title,
+                    summary: service.description,
+                    screens: [],
+                    apis: [],
+                    totalHours: 0,
+                    totalCost: service.price,
+                    complexity: "medium",
+                    status: "pending_payment",
+                    serviceId: service.id,
+                    userId,
+                    creatorName
+                }
+            });
+
+            // Buat Project terhubung
+            await prisma.project.create({
+                data: {
+                    userId,
+                    clientName: user?.displayName || user?.primaryEmail || "Valued Client",
+                    title: service.title,
+                    description: service.description,
+                    spec: JSON.stringify({ screens: [], apis: [] }, null, 2),
+                    status: "pending_payment",
+                    estimateId: estimate.id,
+                    serviceId: service.id,
+                    totalAmount: service.price
+                }
+            });
+
+            return NextResponse.json({ id: estimate.id });
+        }
+
+        // 2. Finalisasi Proposal Kustom dari Price Calculator
+        if (body.action === 'finalize') {
+            if (!userId) {
+                return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            }
+
+            const { estimateId, selectedScreens, selectedApis, totalHours, totalCost } = body;
+
+            if (!estimateId) {
+                return NextResponse.json({ error: "Estimate ID is required" }, { status: 400 });
+            }
+
+            const estimate = await prisma.estimate.findUnique({
+                where: { id: estimateId }
+            });
+
+            if (!estimate) {
+                return NextResponse.json({ error: "Estimate not found" }, { status: 404 });
+            }
+
+            // Perbarui Estimate dengan screens, apis, totalHours, dan totalCost pilihan klien
+            const updatedEstimate = await prisma.estimate.update({
+                where: { id: estimateId },
+                data: {
+                    screens: selectedScreens,
+                    apis: selectedApis,
+                    totalHours: totalHours,
+                    totalCost: totalCost,
+                    status: "pending_payment",
+                    userId
+                }
+            });
+
+            // Sinkronkan ke Project terkait (buat baru jika belum ada)
+            const existingProject = await prisma.project.findUnique({
+                where: { estimateId }
+            });
+
+            if (existingProject) {
+                await prisma.project.update({
+                    where: { id: existingProject.id },
+                    data: {
+                        totalAmount: totalCost,
+                        description: estimate.summary,
+                        spec: JSON.stringify({ screens: selectedScreens, apis: selectedApis }, null, 2),
+                        status: "pending_payment"
+                    }
+                });
+            } else {
+                await prisma.project.create({
+                    data: {
+                        userId,
+                        clientName: user?.displayName || user?.primaryEmail || "Valued Client",
+                        title: updatedEstimate.title,
+                        description: updatedEstimate.summary,
+                        spec: JSON.stringify({ screens: selectedScreens, apis: selectedApis }, null, 2),
+                        status: "pending_payment",
+                        estimateId: updatedEstimate.id,
+                        serviceId: updatedEstimate.serviceId,
+                        totalAmount: totalCost
+                    }
+                });
+            }
+
+            return NextResponse.json({ id: updatedEstimate.id });
+        }
+
+        // 3. Manual Mode (from Calculator/Human) - Default Manual
         if (body.type === 'manual') {
             const { title, summary, complexity, screens, apis, totalHours, totalCost, prompt } = body.data;
 
@@ -74,17 +191,17 @@ export async function POST(req: Request) {
             return NextResponse.json({ id: estimate.id });
         }
 
-        // AI Mode (Genkit)
+        // 4. AI Mode (Genkit) - Default AI Fallback
         const { prompt } = body;
 
         if (!prompt) {
             return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
         }
 
-        // Run Genkit Flow
+        // Jalankan Genkit Flow
         const result = await estimateFlow(prompt);
 
-        // Save to DB
+        // Simpan ke Database
         const estimate = await prisma.estimate.create({
             data: {
                 prompt,
@@ -100,7 +217,7 @@ export async function POST(req: Request) {
             }
         });
 
-        // Fire & Forget Notification
+        // Kirim Notifikasi Admin secara async (Fire & Forget)
         notifyNewEstimate({
             id: estimate.id,
             title: estimate.title,

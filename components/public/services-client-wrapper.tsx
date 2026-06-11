@@ -45,7 +45,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                 // Trigger checkout for the pending service
                 const proceedToCheckout = async () => {
                     try {
-                        const res = await fetch("/api/store/order", {
+                        const res = await fetch("/api/estimates", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ serviceId: pendingServiceId })
@@ -58,8 +58,8 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                             return;
                         }
 
-                        if (data.url) {
-                            router.push(data.url);
+                        if (data.id) {
+                            router.push(`/checkout/${data.id}`);
                         }
                     } catch (error) {
                         console.error(error);

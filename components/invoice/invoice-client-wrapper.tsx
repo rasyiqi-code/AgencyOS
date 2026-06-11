@@ -9,6 +9,7 @@ import { PaymentSelector } from "@/components/payment/payment-selector";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { useCurrency } from "@/components/providers/currency-provider";
 import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails } from "@/types/payment";
+import { useReactToPrint } from "react-to-print";
 
 interface InvoiceClientWrapperProps {
     order: {
@@ -88,13 +89,10 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         return () => clearInterval(interval);
     }, [isPaid, order.id, router]);
 
-    const [handlePrint, setHandlePrint] = useState<() => void>(() => () => {});
-
-    useEffect(() => {
-        import("react-to-print").then((mod) => {
-            setHandlePrint(() => mod.useReactToPrint({ contentRef: componentRef, documentTitle: `Invoice-${order.id}` }));
-        });
-    }, [order.id]);
+    const handlePrint = useReactToPrint({
+        contentRef: componentRef,
+        documentTitle: `Invoice-${order.id}`
+    });
 
     // HEURISTIC: Detect legacy mismatched data where USD amount was saved as IDR (e.g. 2014 IDR instead of 32jt)
     // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR
