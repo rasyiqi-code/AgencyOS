@@ -29,7 +29,7 @@ interface Message {
     content: string;
 }
 
-type ChatMode = "ai" | "human_onboarding" | "human_chat";
+type ChatMode = "ai";
 
 interface ContactSettings {
     phone: string;
@@ -41,7 +41,7 @@ import { useFloatingChat } from "@/lib/store/floating-chat-store";
 export function FloatingChatWidget() {
     const { user } = useSafeUser();
     const t = useTranslations("FloatingChat");
-    const { isOpen, mode, openChat, closeChat, isMenuOpen, setIsMenuOpen } = useFloatingChat();
+    const { isOpen, openChat, closeChat, isMenuOpen, setIsMenuOpen } = useFloatingChat();
     // Local state for expanded/collapsed only, visibility is global
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -51,10 +51,8 @@ export function FloatingChatWidget() {
     const pathname = usePathname();
 
     // Helper handlers to replace local setters
-    const setMode = (newMode: ChatMode) => openChat(newMode);
-    const setIsOpen = (open: boolean) => open ? openChat(mode) : closeChat();
-
-    const [ticketId, setTicketId] = useState<string | null>(null);
+    const setMode = (newMode: ChatMode) => openChat(newMode as any);
+    const setIsOpen = (open: boolean) => open ? openChat("ai") : closeChat();
 
     // AI Chat State
     const [input, setInput] = useState("");
@@ -124,9 +122,6 @@ export function FloatingChatWidget() {
         audio.play().catch(e => console.error("Audio play failed", e));
     };
 
-    // Human Onboarding State
-    const [onboardingData, setOnboardingData] = useState({ name: "", email: "" });
-
     const scrollRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll effect
@@ -134,74 +129,7 @@ export function FloatingChatWidget() {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages, mode]);
-
-    const consecutiveEmptyPolls = useRef(0);
-    const currentInterval = useRef(5000);
-    const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    // Poll for new messages when in human_chat dengan exponential backoff
-    useEffect(() => {
-        if (mode !== "human_chat" || !ticketId) return;
-
-        const poll = async () => {
-            if (document.hidden) {
-                pollingTimeoutRef.current = setTimeout(poll, 15000);
-                return;
-            }
-
-            try {
-                const res = await fetch(`/api/support/ticket/${ticketId}`);
-                if (res.ok) {
-                    const ticket = await res.json();
-                    if (ticket.messages) {
-                        const newMessages: Message[] = ticket.messages.map((m: { id: string, content: string, sender: string }) => ({
-                            id: m.id,
-                            role: m.sender === "user" ? "user" : "assistant",
-                            content: m.content
-                        }));
-
-                        let hasNew = false;
-                        setMessages(prev => {
-                            if (newMessages.length > prev.length) {
-                                hasNew = true;
-                                const lastMsg = newMessages[newMessages.length - 1];
-                                if (lastMsg.role === "assistant") {
-                                    playSound();
-                                    if (!isOpen) setUnreadCount(c => c + 1);
-                                }
-                                return newMessages;
-                            }
-                            return prev;
-                        });
-
-                        if (hasNew) {
-                            consecutiveEmptyPolls.current = 0;
-                            currentInterval.current = 5000; // Reset ke 5 detik jika ada pesan baru
-                        } else {
-                            consecutiveEmptyPolls.current += 1;
-                            if (consecutiveEmptyPolls.current >= 3) {
-                                // Naikkan interval bertahap (5s -> 10s -> 15s -> 20s maks)
-                                currentInterval.current = Math.min(currentInterval.current + 5000, 20000);
-                            }
-                        }
-                    }
-                }
-            } catch (e) {
-                console.error("Polling error", e);
-            }
-
-            pollingTimeoutRef.current = setTimeout(poll, currentInterval.current);
-        };
-
-        pollingTimeoutRef.current = setTimeout(poll, currentInterval.current);
-
-        return () => {
-            if (pollingTimeoutRef.current) {
-                clearTimeout(pollingTimeoutRef.current);
-            }
-        };
-    }, [mode, ticketId, isOpen]);
+    }, [messages]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
@@ -287,91 +215,7 @@ export function FloatingChatWidget() {
         }
     };
 
-    const handleHumanSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!input.trim() || isLoading || !ticketId) return;
-
-        const content = input;
-        setInput("");
-
-        // Optimistic update
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            role: "user",
-            content: content,
-        };
-        setMessages((prev) => [...prev, userMessage]);
-
-        try {
-            const formData = new FormData();
-            formData.append("ticketId", ticketId);
-            formData.append("content", content);
-            formData.append("sender", "user");
-
-            await fetch("/api/support/ticket/message", {
-                method: "POST",
-                body: formData
-            });
-        } catch (e) {
-            console.error("Failed to send message", e);
-        }
-    };
-
-    const startHumanHandoff = async () => {
-
-        if (user) {
-            // Already logged in, initiate chat directly
-            try {
-                await initiateLiveChat(user.primaryEmail || "", user.displayName || "");
-            } catch (err) {
-                console.error("Handoff failed", err);
-                toast.error("Failed to start live chat. Please check if server is ready.");
-            }
-        } else {
-            // Guest, show form
-
-            setMode("human_onboarding");
-        }
-    };
-
-    const initiateLiveChat = async (email: string, name: string) => {
-        setIsLoading(true);
-        try {
-            const res = await fetch("/api/support/ticket/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email,
-                    name,
-                    initialMessage: "User started a live chat session.",
-                    type: "chat"
-                })
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "Failed to create ticket");
-            }
-
-            const data = await res.json();
-            if (data.id) {
-                setTicketId(data.id);
-                setMessages(data.messages.map((m: { id: string, content: string, sender: string }) => ({
-                    id: m.id,
-                    role: m.sender === "user" ? "user" : "assistant",
-                    content: m.content
-                })));
-                setMode("human_chat");
-                toast.success("Connected to human support");
-            }
-        } catch (e) {
-            const errorMessage = e instanceof Error ? e.message : "Failed to connect to support";
-            console.error("Create Ticket Error:", e);
-            toast.error(errorMessage);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // Human handoff disabled - AI only
 
     const [isVisible, setIsVisible] = useState(true);
 
@@ -414,7 +258,7 @@ export function FloatingChatWidget() {
                         <div className="flex flex-col gap-3 max-w-sm mx-auto">
                             <MobileContactOption
                                 icon={<MessageCircle className="w-5 h-5" />}
-                                label="Live Chat"
+                                label="AI Assistant"
                                 color="bg-brand-yellow text-black"
                                 onClick={() => { setIsOpen(true); setUnreadCount(0); }}
                             />
@@ -499,32 +343,22 @@ export function FloatingChatWidget() {
                         <Avatar className="h-10 w-10 border border-brand-yellow/30">
                             <AvatarImage src="/bot-avatar.png" />
                             <AvatarFallback className="bg-brand-yellow text-black font-bold">
-                                {mode === "human_chat" ? <User className="w-5 h-5" /> : "AI"}
+                                AI
                             </AvatarFallback>
                         </Avatar>
                         <span className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-black", "bg-brand-yellow")}></span>
                     </div>
                     <div>
                         <h3 className="font-semibold text-white text-sm">
-                            {mode === "human_chat" ? "Human Agent" : csName}
+                            {csName}
                         </h3>
                         <p className="text-xs text-zinc-400 flex items-center gap-1">
                             <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", "bg-brand-yellow")}></span>
-                            {mode === "human_chat" ? "Connected" : "Online"}
+                            Online
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-1">
-                    {mode === "ai" && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs text-brand-yellow hover:text-black hover:bg-brand-yellow font-medium mr-2"
-                            onClick={startHumanHandoff}
-                        >
-                            Talk to Human
-                        </Button>
-                    )}
                     <Button
                         variant="ghost"
                         size="icon"
@@ -545,43 +379,7 @@ export function FloatingChatWidget() {
             </div>
 
             {/* Content Area */}
-            {mode === "human_onboarding" ? (
-                <div className="flex-1 p-6 flex flex-col justify-center gap-4">
-                    <div className="text-center space-y-2">
-                        <h4 className="text-white font-medium">Please introduce yourself</h4>
-                        <p className="text-zinc-400 text-sm">We need your details to connect you with an agent.</p>
-                    </div>
-                    <Input
-                        placeholder="Your Name"
-                        className="bg-zinc-900/50 border-white/10 text-white"
-                        value={onboardingData.name}
-                        onChange={e => setOnboardingData({ ...onboardingData, name: e.target.value })}
-                    />
-                    <Input
-                        placeholder="Your Email"
-                        type="email"
-                        className="bg-zinc-900/50 border-white/10 text-white"
-                        value={onboardingData.email}
-                        onChange={e => setOnboardingData({ ...onboardingData, email: e.target.value })}
-                    />
-                    <div className="flex gap-2">
-                        <Button
-                            variant="outline"
-                            onClick={() => setMode("ai")}
-                            className="flex-1 border-white/10 text-zinc-400 hover:text-white hover:bg-white/5"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={() => initiateLiveChat(onboardingData.email, onboardingData.name)}
-                            disabled={!onboardingData.email || isLoading}
-                            className="flex-1 bg-brand-yellow hover:bg-brand-yellow/80 text-black font-bold"
-                        >
-                            {isLoading ? "Connecting..." : "Start Chat"}
-                        </Button>
-                    </div>
-                </div>
-            ) : (
+            {false ? null : (
                 <>
                     {/* Messages */}
                     <ScrollArea className="flex-1 p-4" ref={scrollRef}>
@@ -601,7 +399,7 @@ export function FloatingChatWidget() {
                                                 m.role === "user" ? "bg-zinc-800 text-zinc-300" : "bg-brand-yellow/20 text-brand-yellow"
                                             )}
                                         >
-                                            {m.role === "user" ? "ME" : (mode === "human_chat" ? <User className="w-4 h-4" /> : "AI")}
+                                            {m.role === "user" ? "ME" : "AI"}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div
@@ -654,17 +452,11 @@ export function FloatingChatWidget() {
 
                     {/* Input */}
                     <div className="p-4 md:p-6 border-t border-white/10 bg-black/40 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 shrink-0">
-                        <form onSubmit={mode === "ai" ? handleAiSubmit : handleHumanSubmit} className="flex gap-2">
+                        <form onSubmit={handleAiSubmit} className="flex gap-2">
                             <Input
                                 value={input}
                                 onChange={handleInputChange}
-                                onFocus={() => {
-                                    if (mode === "human_chat") {
-                                        consecutiveEmptyPolls.current = 0;
-                                        currentInterval.current = 5000;
-                                    }
-                                }}
-                                placeholder={mode === "human_chat" ? "Type to human agent..." : "Type your message..."}
+                                placeholder="Type your message..."
                                 className="flex-1 bg-zinc-900/50 border-white/10 focus-visible:ring-brand-yellow/50 text-white"
                             />
                             <Button
@@ -724,7 +516,7 @@ function ContactButtons({ contactSettings, setIsOpen, setUnreadCount, setIsMenuO
             {/* Live Chat */}
             <div className="flex items-center gap-3">
                 <span className="bg-white text-black text-[10px] font-bold px-2 py-1 rounded shadow whitespace-nowrap">
-                    Live Chat
+                    AI Assistant
                 </span>
                 <Button
                     onClick={() => {
