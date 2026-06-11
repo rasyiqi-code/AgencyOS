@@ -2,9 +2,7 @@ import { ChatInterface } from "@/components/support/chat-interface";
 import { prisma } from "@/lib/config/db";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 import type { MessageAttachment } from "@/types/payment";
 
 export default async function AdminTicketChatPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,22 +33,19 @@ export default async function AdminTicketChatPage({ params }: { params: Promise<
 
     return (
         <div className="flex flex-col h-[calc(100vh-100px)] md:h-[calc(100vh-80px)] py-2 md:py-4">
-            <div className="mb-3 md:mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
-                    <Link href="/admin/support" className="shrink-0">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400">
-                            <ArrowLeft className="w-3.5 h-3.5" />
-                        </Button>
-                    </Link>
-                    <div className="min-w-0">
-                        <h1 className="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2 truncate">
-                            <span className="truncate">Ticket #{ticket.id.slice(-6).toUpperCase()}</span>
-                            <Badge variant="outline" className="shrink-0 font-mono text-[9px] h-4 px-1">{ticket.status}</Badge>
-                        </h1>
-                        <p className="text-zinc-500 text-[10px] md:text-xs truncate">Client: {ticket.email}</p>
-                    </div>
-                </div>
-            </div>
+            <AdminHeaderSetter
+                title={
+                    <span className="flex items-center gap-2 max-w-[200px] sm:max-w-xs md:max-w-md truncate">
+                        <span className="truncate">Ticket #{ticket.id.slice(-6).toUpperCase()}</span>
+                        <Badge variant="outline" className="shrink-0 font-mono text-[9px] h-4 px-1 uppercase border-white/10 text-zinc-300">{ticket.status}</Badge>
+                    </span>
+                }
+                actions={
+                    <span className="text-[10px] sm:text-xs text-zinc-400 truncate hidden sm:inline-block bg-white/5 border border-white/5 px-3 py-1 rounded-lg">
+                        Client: {ticket.email}
+                    </span>
+                }
+            />
 
             <div className="flex-1 bg-black rounded-xl overflow-hidden shadow-2xl border border-white/5">
                 <ChatInterface initialTicket={serializableTicket} isAdmin={true} />
