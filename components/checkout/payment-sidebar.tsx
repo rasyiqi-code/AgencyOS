@@ -6,23 +6,39 @@ import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 import { toast } from "sonner";
-
 import { useTranslations } from "next-intl";
+import { PaymentSelector } from "@/components/payment/payment-selector";
 
-export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiveGateway = true, defaultPaymentType, projectPaidAmount, projectTotalAmount, user, orderId, selectedAddons = [] }: {
+export function PaymentSidebar({
+    estimate,
+    amount,
+    onPrint,
+    activeRate,
+    hasActiveGateway = true,
+    gatewayStatus,
+    defaultPaymentType,
+    projectPaidAmount,
+    projectTotalAmount,
+    user,
+    orderId,
+    selectedAddons = [],
+    agencySettings
+}: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
     hasActiveGateway?: boolean,
+    gatewayStatus?: { midtrans: boolean; creem: boolean },
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number,
     projectTotalAmount?: number,
     context?: "SERVICE" | "CALCULATOR",
     user?: { displayName: string | null, email: string | null },
     orderId?: string | null,
-    selectedAddons?: ServiceAddon[]
+    selectedAddons?: ServiceAddon[],
+    agencySettings?: any
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
@@ -30,20 +46,50 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
     const [countdown, setCountdown] = useState(5);
     const router = useRouter();
 
+    // Menyimpan Order ID aktif secara lokal untuk transisi alur tanpa reload halaman
+    const [activeOrderId, setActiveOrderId] = useState<string | null>(orderId || null);
+    const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
+
+    // Efek untuk memantau status lunas (Selesai) guna pengalihan ke Invoice publik
     useEffect(() => {
-        if (estimate.status === 'paid' && orderId && countdown > 0) {
+        if (estimate.status === 'paid' && activeOrderId && countdown > 0) {
             const timer = setInterval(() => {
                 setCountdown((prev) => prev - 1);
             }, 1000);
             return () => clearInterval(timer);
         }
-    }, [estimate.status, orderId, countdown]);
+    }, [estimate.status, activeOrderId, countdown]);
 
     useEffect(() => {
-        if (countdown <= 0 && estimate.status === 'paid' && orderId) {
-            router.push(`/invoices/${orderId}`);
+        if (countdown <= 0 && estimate.status === 'paid' && activeOrderId) {
+            router.push(`/invoices/${activeOrderId}`);
         }
-    }, [countdown, estimate.status, orderId, router]);
+    }, [countdown, estimate.status, activeOrderId, router]);
+
+    // Polling status transaksi di background ketika Order ID aktif terisi
+    useEffect(() => {
+        if (!activeOrderId || estimate.status === 'paid') return;
+
+        const interval = setInterval(async () => {
+            if (document.hidden) return;
+            try {
+                const res = await fetch(`/api/payment/status?orderId=${activeOrderId}&mode=json`);
+                const data = await res.json();
+
+                if (data.status === 'waiting_verification') {
+                    setActiveOrderStatus('waiting_verification');
+                } else if (data.status === 'paid' || data.status === 'settled') {
+                    // Memicu rendering ulang server component saat pembayaran lunas
+                    router.refresh();
+                }
+            } catch (error) {
+                console.error("Gagal melakukan polling status pembayaran:", error);
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [activeOrderId, estimate.status, router]);
+
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
 
     const { currency, rate } = useCurrency();
@@ -53,8 +99,6 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
     if (paymentType === "DP") {
         amountToPay = amount * 0.5;
     } else if (paymentType === "REPAYMENT") {
-        // Calculate remaining amount
-        // Use projectTotalAmount if available, otherwise fallback to current amount (which might be estimate cost)
         const total = projectTotalAmount && projectTotalAmount > 0 ? projectTotalAmount : amount;
         const paid = projectPaidAmount || 0;
         amountToPay = Math.max(0, total - paid);
@@ -67,7 +111,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                 method: "POST",
                 body: JSON.stringify({
                     estimateId: estimate.id,
-                    amount: amountToPay, // Calculated based on type
+                    amount: amountToPay,
                     title: estimate.title,
                     paymentType: paymentType,
                     currency: currency,
@@ -77,23 +121,26 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
 
             if (!response.ok) {
                 const err = await response.json();
-                console.error("Payment Error:", err);
+                console.error("Gagal melakukan checkout:", err);
                 const errorMessage = err.error || err.message || JSON.stringify(err);
-                toast.error(`${t("failProcess") || "Payment Error"}: ${errorMessage}`);
+                toast.error(`${t("failProcess") || "Gagal melakukan checkout"}: ${errorMessage}`);
                 throw new Error(errorMessage);
             }
-            const { orderId } = await response.json();
+            const { orderId: newOrderId } = await response.json();
 
-            // Redirect to Public Invoice
-            window.location.href = `/invoices/${orderId}`;
+            // Set Order ID secara lokal untuk langsung memunculkan pemilih metode pembayaran
+            setActiveOrderId(newOrderId);
+            toast.success("Pesanan berhasil dibuat! Silakan pilih metode pembayaran.");
         } catch (e) {
             console.error(e);
+        } finally {
             setIsProcessing(false);
         }
     };
 
     const isPaid = estimate.status === 'paid';
 
+    // 1. Tampilan jika transaksi sudah lunas (PAID)
     if (isPaid) {
         return (
             <div className="w-full max-w-md mx-auto text-center space-y-8 py-12 animate-in fade-in zoom-in duration-700">
@@ -115,18 +162,18 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                     </div>
 
                     <div className="flex flex-col items-center justify-center">
-                        {countdown > 0 && orderId ? (
+                        {countdown > 0 && activeOrderId ? (
                             <div className="space-y-4">
                                 <div className="text-8xl font-black text-brand-yellow tracking-tighter drop-shadow-[0_0_30px_rgba(254,215,0,0.3)]">
                                     {countdown}
                                 </div>
                                 <div className="text-[12px] font-black text-brand-yellow/40 uppercase tracking-[0.4em] animate-pulse">
-                                    {t("redirectingToInvoice") || "Redirecting to Invoice..."}
+                                    {t("redirectingToInvoice") || "Mengalihkan ke Invoice..."}
                                 </div>
                             </div>
                         ) : (
                             <div className="px-8 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-bold tracking-widest uppercase text-sm">
-                                {t("paymentVerified") || "Payment Verified"}
+                                {t("paymentVerified") || "Pembayaran Terverifikasi"}
                             </div>
                         )}
                     </div>
@@ -135,9 +182,55 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
         );
     }
 
+    // 2. Tampilan jika Order ID sudah dibuat (Tampilkan PaymentSelector langsung di Checkout)
+    if (activeOrderId) {
+        // Ekstrak data bank details yang aman
+        const formattedBankDetails = estimate.project ? {
+            bank_name: agencySettings?.bankName,
+            bank_account: agencySettings?.bankAccount,
+            bank_holder: agencySettings?.bankHolder
+        } : undefined;
+
+        return (
+            <div className="space-y-4 sticky top-6 md:top-12 lg:top-24 max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-6rem)] lg:max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
+                {user && (
+                    <Card className="bg-zinc-900 border-white/10 text-white overflow-hidden relative group">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-lime-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <CardHeader className="px-4 sm:px-6 pt-4 pb-2">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                                    <CheckCircle className="w-3 h-3 text-lime-500" />
+                                    {ti("billTo")}
+                                </CardTitle>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="px-4 sm:px-6 pb-4">
+                            <div className="space-y-1">
+                                <div className="text-sm font-bold text-white">{user.displayName || "Valued Client"}</div>
+                                <div className="text-xs text-zinc-400 font-mono">{user.email}</div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                <PaymentSelector
+                    orderId={activeOrderId}
+                    amount={amountToPay}
+                    currency={currency as 'USD' | 'IDR'}
+                    bankDetails={formattedBankDetails || undefined}
+                    orderStatus={activeOrderStatus}
+                    contactWA={agencySettings?.phone}
+                    contactTele={agencySettings?.telegram}
+                    hasActiveGateway={hasActiveGateway}
+                    gatewayStatus={gatewayStatus}
+                />
+            </div>
+        );
+    }
+
+    // 3. Tampilan awal Checkout sebelum inisiasi Order (Opsi DP/Full & tombol "Lanjut ke Pembayaran")
     return (
-        <div className="space-y-4 sticky top-24">
-            {/* Customer Information (Identity Step Preview) */}
+        <div className="space-y-4 sticky top-6 md:top-12 lg:top-24 max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-6rem)] lg:max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
             {user && (
                 <Card className="bg-zinc-900 border-white/10 text-white overflow-hidden relative group">
                     <div className="absolute top-0 left-0 w-1 h-full bg-lime-500 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -169,10 +262,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
-
                     <>
-                        {/* Payment Type Selection */}
-                        {/* Hide selection if query param enforces repayment */}
                         {defaultPaymentType === 'REPAYMENT' ? (
                             <div className="p-3 rounded-lg border border-brand-yellow/30 bg-brand-yellow/10 text-brand-yellow text-sm font-medium text-center mb-2">
                                 {t("repayment")}
@@ -236,51 +326,20 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                             {t("downloadInvoice")}
                         </Button>
 
-                        {hasActiveGateway ? (
-                            <Button
-                                className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={isProcessing}
-                                onClick={handleCheckout}
-                            >
-                                {isProcessing ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                        {t("processing")}
-                                    </>
-                                ) : (
-                                    t("proceed")
-                                )}
-                            </Button>
-                        ) : (
-                            <div className="space-y-3">
-                                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                                    <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
-                                        <AlertTriangle className="w-4 h-4" />
-                                        {t("manualPayment")}
-                                    </p>
-                                    <p className="text-[10px] text-amber-200/70 leading-relaxed">
-                                        {t("manualDesc")}
-                                    </p>
-                                </div>
-                                <Button
-                                    className="w-full bg-white hover:bg-zinc-200 text-black font-bold h-12"
-                                    onClick={handleCheckout}
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            {t("processing")}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Download className="w-4 h-4 mr-2" />
-                                            {t("continue")}
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        )}
+                        <Button
+                            className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isProcessing}
+                            onClick={handleCheckout}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    {t("processing")}
+                                </>
+                            ) : (
+                                t("proceed")
+                            )}
+                        </Button>
                     </div>
 
                     <p className="text-xs text-zinc-500 text-center">

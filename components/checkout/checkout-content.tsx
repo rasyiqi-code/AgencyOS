@@ -18,6 +18,7 @@ export function CheckoutContent({
     user,
     agencySettings,
     hasActiveGateway = true,
+    gatewayStatus,
     defaultPaymentType,
     projectPaidAmount = 0,
     projectTotalAmount = 0,
@@ -25,12 +26,13 @@ export function CheckoutContent({
     orderId
 }: {
     estimate: ExtendedEstimate,
-    bankDetails: BankDetails,
+    bankDetails: BankDetails | undefined,
     activeRate: number,
     bonuses: Bonus[],
     user: { displayName: string | null, email: string | null },
     agencySettings?: AgencyInvoiceSettings,
     hasActiveGateway?: boolean,
+    gatewayStatus?: { midtrans: boolean; creem: boolean },
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number;
     projectTotalAmount?: number;
@@ -111,13 +113,14 @@ export function CheckoutContent({
 
             {/* Right: Payment Actions */}
             <div className={`w-full lg:w-96 space-y-6 ${isPaid ? 'transform scale-110 transition-transform duration-500' : ''}`}>
-                <PaymentSidebar
+                 <PaymentSidebar
                     estimate={estimate}
                     amount={discountedAmount}
                     onPrint={handlePrint}
                     bankDetails={bankDetails}
                     activeRate={activeRate}
                     hasActiveGateway={hasActiveGateway}
+                    gatewayStatus={gatewayStatus}
                     defaultPaymentType={defaultPaymentType}
                     projectPaidAmount={projectPaidAmount}
                     projectTotalAmount={projectTotalAmount}
@@ -125,6 +128,7 @@ export function CheckoutContent({
                     user={user}
                     orderId={orderId}
                     selectedAddons={selectedAddons}
+                    agencySettings={agencySettings}
                 />
             </div>
 

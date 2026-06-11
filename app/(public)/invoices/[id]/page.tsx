@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
@@ -143,28 +145,13 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         telegram: getSetting('CONTACT_TELEGRAM')
     };
 
-    // Determine current step for progress indicator
-    let currentStep: 1 | 2 | 3 | 4 = 2;
-    if (isPaid) {
-        currentStep = 4;
-    } else {
-        const metadata = order.paymentMetadata as Record<string, unknown>;
-        const hasInitiatedPayment = metadata && (
-            metadata.payment_type || 
-            metadata.transaction_id || 
-            metadata.status_code || 
-            order.status === 'waiting_verification' ||
-            order.snapToken
-        );
-        if (hasInitiatedPayment) {
-            currentStep = 3;
-        }
-    }
+    // Menentukan langkah saat ini untuk indikator progres (1: Pembayaran, 2: Selesai)
+    const currentStep: 1 | 2 = isPaid ? 2 : 1;
 
     return (
         <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
             <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
-                <CheckoutProgress currentStep={currentStep} />
+                <CheckoutProgress key={currentStep} currentStep={currentStep} />
                 <InvoiceClientWrapper
                     order={order as unknown as InvoiceOrder}
                     estimate={extendedEstimate}

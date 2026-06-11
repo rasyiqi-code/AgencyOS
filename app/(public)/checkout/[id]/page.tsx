@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { CheckoutContent } from "@/components/checkout/checkout-content";
 import { prisma } from "@/lib/config/db";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
@@ -47,21 +49,22 @@ export default async function CheckoutPage(props: PageProps) {
         // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query to avoid N+1 query and reduce database load
         // 🎯 Why: This page is frequently accessed during checkout. Caching system settings reduces database queries.
         // 📊 Impact: Eliminates 1 database query per checkout page load for legacy estimate flow.
-        const settings = await getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']);
+        const settings = await getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'manual_payment_active', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']);
 
         const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
 
         const context = (estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE";
         const bonuses = await getBonuses(context);
 
-        const hasActiveGateway = await paymentGatewayService.hasActiveGateway();
+        const gatewayStatus = await paymentGatewayService.getGatewayStatus();
+        const hasActiveGateway = gatewayStatus.midtrans || gatewayStatus.creem;
 
-        // Data preparation
-        const bankDetails = {
+        const isManualActive = getSetting('manual_payment_active') === 'true';
+        const bankDetails = isManualActive ? {
             bank_name: getSetting('bank_name'),
             bank_account: getSetting('bank_account'),
             bank_holder: getSetting('bank_holder')
-        };
+        } : undefined;
 
         const agencySettings = {
             agencyName: getSetting('AGENCY_NAME') || "Agency OS",
@@ -131,7 +134,7 @@ export default async function CheckoutPage(props: PageProps) {
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
             <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
-                    <CheckoutProgress currentStep={estimate.status === 'paid' ? 4 : 1} />
+                    <CheckoutProgress key={estimate.status === 'paid' ? 2 : 1} currentStep={estimate.status === 'paid' ? 2 : 1} />
                     <CheckoutContent
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
@@ -140,6 +143,7 @@ export default async function CheckoutPage(props: PageProps) {
                         user={userData}
                         agencySettings={agencySettings}
                         hasActiveGateway={hasActiveGateway}
+                        gatewayStatus={gatewayStatus}
                         defaultPaymentType={paymentType}
                         projectPaidAmount={estimate.project?.paidAmount || 0}
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}

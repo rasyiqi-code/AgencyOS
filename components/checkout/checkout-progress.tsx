@@ -1,12 +1,10 @@
 "use client";
 
-export function CheckoutProgress({ currentStep }: { currentStep: 1 | 2 | 3 | 4 }) {
+export function CheckoutProgress({ currentStep }: { currentStep: 1 | 2 }) {
 
     const steps = [
-        { id: 1, label: "Ringkasan" },
-        { id: 2, label: "Pembayaran" },
-        { id: 3, label: "Verifikasi" },
-        { id: 4, label: "Selesai" }
+        { id: 1, label: "Pembayaran" },
+        { id: 2, label: "Selesai" }
     ];
 
     return (
