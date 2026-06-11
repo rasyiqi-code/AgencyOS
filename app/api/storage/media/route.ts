@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { listFiles, uploadFile } from "@/lib/integrations/storage";
-import sharp from "sharp";
 
 export async function GET(req: NextRequest) {
     const user = await hexclaveServerApp.getUser();
@@ -44,9 +43,10 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        let buffer: Uint8Array = new Uint8Array(await file.arrayBuffer());
+        let uploadPayload: File | Uint8Array = file;
         let finalFileName = file.name;
         let finalType = file.type;
+        let fileSize = file.size;
 
         // Optimization: Convert images to WebP
         const isProcessableImage = file.type.startsWith("image/") &&
@@ -55,13 +55,17 @@ export async function POST(req: NextRequest) {
 
         if (isProcessableImage) {
             try {
-                // Optimasi pemrosesan Sharp: Batasi ukuran gambar maks 1920px (width/height)
-                // dan turunkan effort kompresi webp ke 2 agar lebih hemat CPU & RAM
+                // Memuat modul sharp secara dinamis agar tidak crash jika library native tidak tersedia
+                const sharp = (await import("sharp")).default;
+                // Hanya membaca arrayBuffer jika sharp berhasil di-load secara dinamis
+                const buffer = new Uint8Array(await file.arrayBuffer());
                 const processedBuffer = await sharp(buffer)
                     .resize(1920, 1920, { fit: "inside", withoutEnlargement: true })
                     .webp({ quality: 80, effort: 2 })
                     .toBuffer();
-                buffer = processedBuffer;
+                
+                uploadPayload = processedBuffer;
+                fileSize = processedBuffer.length;
 
                 // Change extension to .webp
                 const baseName = file.name.includes('.')
@@ -71,18 +75,19 @@ export async function POST(req: NextRequest) {
                 finalType = "image/webp";
             } catch (sharpError) {
                 console.error("[Storage API] Sharp conversion error, falling back to original:", sharpError);
-                // Fallback to original buffer and name if sharp fails
+                uploadPayload = file;
+                fileSize = file.size;
             }
         }
 
         const storagePath = `${folder}/${Date.now()}-${finalFileName}`;
-        const url = await uploadFile(buffer, storagePath, finalType);
+        const url = await uploadFile(uploadPayload, storagePath, finalType);
 
         return NextResponse.json({
             success: true,
             url,
             fileName: storagePath,
-            size: buffer.length,
+            size: fileSize,
             type: finalType,
             originalName: file.name
         });
