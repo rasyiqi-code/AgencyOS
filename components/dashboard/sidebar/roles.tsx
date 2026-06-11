@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Repeat, UserPlus } from "lucide-react";
+import { LayoutDashboard, Layers, ShoppingCart, Settings, Package, Mail, Users, Megaphone, ShieldCheck, MessageSquare, Images, Repeat, UserPlus, Sparkles } from "lucide-react";
 import { useSidebarStore } from "@/lib/store/sidebar-store";
 import { cn } from "@/lib/shared/utils";
 import { useSyncExternalStore, type ComponentType } from "react";
@@ -80,6 +80,7 @@ export function SidebarSuperAdmin() {
             {/* 3. PEMASARAN & AUDIENS (SERVICES) */}
             <SidebarSectionHeader>Campaigns & Leads</SidebarSectionHeader>
             <SidebarLink href="/admin/marketing/promotions" icon={Megaphone} label="Visual Promos" />
+            <SidebarLink href="/admin/marketing/popups" icon={Sparkles} label="Promotional Popups" />
             <SidebarLink href="/admin/portfolio" icon={Images} label="Portfolio Admin" />
             <SidebarLink href="/admin/testimonials" icon={MessageSquare} label="Testimonials" />
             <SidebarLink href="/admin/marketing/leads" icon={UserPlus} label="Contact Leads" />
