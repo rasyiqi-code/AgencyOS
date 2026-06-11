@@ -7,8 +7,9 @@ import { formatDistanceToNow } from "date-fns";
 import { Sparkles, ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
+import { id as localeID, enUS as localeEN } from "date-fns/locale";
 
 interface RecentEstimate {
     id: string;
@@ -22,6 +23,18 @@ interface RecentEstimate {
 
 export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
     const t = useTranslations("PriceCalculator");
+    const activeLocale = useLocale();
+    const dateLocale = activeLocale === "id" ? localeID : localeEN;
+
+    const getComplexityLabel = (c: string) => {
+        switch (c.toLowerCase()) {
+            case 'simple': return t('complexitySimple') || 'Simple';
+            case 'medium': return t('complexityMedium') || 'Medium';
+            case 'high': return t('complexityHigh') || 'High';
+            default: return c;
+        }
+    };
+
     const [estimates, setEstimates] = useState<RecentEstimate[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -101,7 +114,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
                                         {estimate.title}
                                     </h3>
                                     <p className="text-xs text-zinc-500 mt-1">
-                                        {t("by")} {estimate.creatorName || t("anonymous")} • {formatDistanceToNow(new Date(estimate.createdAt), { addSuffix: true })}
+                                        {t("by")} {estimate.creatorName || t("anonymous")} • {formatDistanceToNow(new Date(estimate.createdAt), { addSuffix: true, locale: dateLocale })}
                                     </p>
                                 </div>
                                 <div className="bg-zinc-950 px-3 py-1 rounded-full border border-zinc-800 text-brand-yellow font-mono text-sm">
@@ -115,7 +128,7 @@ export function RecentEstimates({ isAdmin }: { isAdmin?: boolean }) {
                                         estimate.complexity === 'Medium' ? 'bg-yellow-500' :
                                             'bg-red-500'
                                         }`} />
-                                    {estimate.complexity} {t("complexity")}
+                                    {getComplexityLabel(estimate.complexity)} {t("complexity")}
                                 </span>
                                 <span className="flex items-center gap-1 group-hover:translate-x-1 transition-transform text-white">
                                     {t("viewDetails")} <ArrowRight className="w-4 h-4" />

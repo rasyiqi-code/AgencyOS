@@ -23,6 +23,7 @@ import {
     Loader2
 } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 interface Testimonial {
     id: string;
@@ -97,28 +98,26 @@ export default function AdminTestimonialsPage() {
 
     return (
         <div className="w-full py-1 md:py-4 space-y-4 md:space-y-6">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
-                <div className="space-y-1.5">
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <AdminHeaderSetter
+                title={
+                    <span className="flex items-center gap-2">
                         Testimonials
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-md">
-                        Review and manage client feedback before it goes live.
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="flex-1 md:flex-none bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 md:h-10 text-[10px] md:text-xs font-bold uppercase tracking-widest">
-                        <Filter className="w-3.5 h-3.5 mr-2" />
-                        Filter
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1 md:flex-none bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 md:h-10 text-[10px] md:text-xs font-bold uppercase tracking-widest">
-                        <Search className="w-3.5 h-3.5 mr-2" />
-                        Search
-                    </Button>
-                </div>
-            </div>
+                        <MessageSquare className="w-5 h-5 text-zinc-600" />
+                    </span>
+                }
+                actions={
+                    <>
+                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest">
+                            <Filter className="w-3.5 h-3.5 mr-2" />
+                            Filter
+                        </Button>
+                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest">
+                            <Search className="w-3.5 h-3.5 mr-2" />
+                            Search
+                        </Button>
+                    </>
+                }
+            />
 
             {/* Content Section */}
             <div className="space-y-6">

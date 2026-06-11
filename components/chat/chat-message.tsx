@@ -22,18 +22,18 @@ export function ChatMessage({ message }: { message: Message }) {
 
     return (
         <div className={`flex gap-2 ${isUser ? 'flex-row-reverse' : ''}`}>
-            <Avatar className="w-6 h-6 mt-0.5 border border-zinc-100">
+            <Avatar className="w-6 h-6 mt-0.5 border border-white/10">
                 {isUser ? (
                     <>
                         <AvatarImage src="" />
-                        <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                        <AvatarFallback className="bg-zinc-800 text-zinc-400">
                             <User className="w-3 h-3" />
                         </AvatarFallback>
                     </>
                 ) : (
                     <>
                         <AvatarImage src="" />
-                        <AvatarFallback className="bg-blue-50 text-blue-600">
+                        <AvatarFallback className="bg-blue-950 text-blue-400">
                             <Bot className="w-3 h-3" />
                         </AvatarFallback>
                     </>
@@ -43,7 +43,7 @@ export function ChatMessage({ message }: { message: Message }) {
             <div
                 className={`rounded-md px-3 py-1.5 max-w-[85%] leading-relaxed text-sm ${isUser
                     ? 'bg-zinc-800 text-zinc-50'
-                    : 'bg-zinc-50 border border-zinc-100 text-zinc-800'
+                    : 'bg-zinc-900 border border-white/5 text-zinc-100'
                     }`}
             >
                 {isUser ? (
@@ -56,8 +56,8 @@ export function ChatMessage({ message }: { message: Message }) {
                             ul: ({ node: _node, ...props }) => { void _node; return <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />; },
                             ol: ({ node: _node, ...props }) => { void _node; return <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />; },
                             li: ({ node: _node, ...props }) => { void _node; return <li className="mb-0.5" {...props} />; },
-                            strong: ({ node: _node, ...props }) => { void _node; return <span className="font-semibold text-zinc-900" {...props} />; },
-                            a: ({ node: _node, ...props }) => { void _node; return <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />; },
+                            strong: ({ node: _node, ...props }) => { void _node; return <span className="font-semibold text-white" {...props} />; },
+                            a: ({ node: _node, ...props }) => { void _node; return <a className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />; },
                         }}
                     >
                         {/* Remove JSON blocks from display text */}

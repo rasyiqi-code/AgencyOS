@@ -13,6 +13,7 @@ interface StackUser {
 }
 
 import { cookies } from "next/headers";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 // Safe to dynamic render as we rely on searchParams
 export const dynamic = 'force-dynamic';
@@ -130,17 +131,14 @@ export default async function AdminProjectsPage({
 
     return (
         <div className="w-full py-6 min-w-0">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <AdminHeaderSetter
+                title={
+                    <span className="flex items-center gap-3">
                         {isId ? 'Papan Misi' : 'Mission Board'}
                         <Layers className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        {isId ? 'Ringkasan semua proyek klien, status pengembangan, dan penugasan.' : 'Overview of all client projects, development status, and assignments.'}
-                    </p>
-                </div>
-            </div>
+                    </span>
+                }
+            />
 
             <div className="flex items-center gap-4 mb-6">
                 {/* Search and Filter moved to DashboardHeader */}

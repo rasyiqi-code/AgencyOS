@@ -11,10 +11,11 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createProjectFromBrief } from "@/app/actions/projects";
+import { useTranslations } from 'next-intl';
 
 interface ChatInterfaceProps {
     onBriefGenerated?: (brief: { title: string; description: string }) => void;
@@ -26,30 +27,48 @@ interface ChatInterfaceProps {
 
 export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, minimal = false }: ChatInterfaceProps) {
     const router = useRouter();
+    const t = useTranslations("ProposalAssistant");
 
     // Construct initial messages based on context
-    const initialMessages = initialContext
-        ? [
-            {
-                id: 'context',
-                role: 'system',
-                content: `Current Project Context: ${initialContext}`
-            },
-            {
-                id: 'welcome',
-                role: 'assistant',
-                content: "I've reviewed the estimate. How would you like to adjust the scope or requirements?"
-            }
-        ]
-        : [
-            {
-                id: 'welcome',
-                role: 'assistant',
-                content: "Hello! I'm CredibleBot, your Proposal Assistant. I'm here to help you adjust the scope and price of your project.\n\nTell me what features you'd like to add or remove (e.g., 'Add a mobile app', 'Remove the admin panel'), and I'll update the quote instantly."
-            }
-        ];
+    const initialMessages = useMemo(() => {
+        return initialContext
+            ? [
+                {
+                    id: 'context',
+                    role: 'system',
+                    content: `Current Project Context: ${initialContext}`
+                },
+                {
+                    id: 'welcome',
+                    role: 'assistant',
+                    content: t("welcomeContext")
+                }
+            ]
+            : [
+                {
+                    id: 'welcome',
+                    role: 'assistant',
+                    content: t("welcomeNoContext")
+                }
+            ];
+    }, [initialContext, t]);
 
     const [messages, setMessages] = useState<{ id: string, role: string, content: string }[]>(initialMessages);
+
+    // Sinkronisasi bahasa pesan sambutan jika locale berubah dinamis
+    useEffect(() => {
+        setMessages(prev => {
+            return prev.map(m => {
+                if (m.id === 'welcome') {
+                    return {
+                        ...m,
+                        content: initialContext ? t("welcomeContext") : t("welcomeNoContext")
+                    };
+                }
+                return m;
+            });
+        });
+    }, [initialContext, t]);
     const [localInput, setLocalInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -139,14 +158,14 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
         } catch (error) {
             console.error('Chat error:', error);
-            toast.error('Failed to send message');
+            toast.error(t('failSendMessage'));
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleUpdateQuote = async (action: { additions?: { screens?: { title: string, hours: number }[], apis?: { title: string, hours: number }[] }, removals?: { screens?: string[], apis?: string[] }, reason?: string }) => {
-        const toastId = toast.loading("Updating estimate...");
+        const toastId = toast.loading(t("updatingEstimate"));
         try {
             // Get current estimate ID from somewhere? 
             // We need to pass estimateId prop to ChatInterface or get it from URL
@@ -165,24 +184,24 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
             if (!response.ok) throw new Error("Failed to update");
 
-            toast.success("Estimate updated!", { id: toastId });
+            toast.success(t("estimateUpdated"), { id: toastId });
             router.refresh(); // Refresh server components
 
             // Call callback if exists
             if (onEstimateUpdate) onEstimateUpdate();
 
         } catch (e) {
-            toast.error("Failed to update estimate", { id: toastId });
+            toast.error(t("failUpdateEstimate"), { id: toastId });
             console.error(e);
         }
     };
 
     return (
-        <div className="flex flex-col h-full min-h-0 border border-zinc-200 rounded-lg bg-card overflow-hidden text-sm">
+        <div className="flex flex-col h-full min-h-0 border border-white/5 rounded-lg bg-zinc-900/40 backdrop-blur-xl overflow-hidden text-sm">
             {!minimal && (
-                <div className="bg-muted/30 px-3 py-2 border-b border-zinc-100 flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-zinc-500" />
-                    <h3 className="font-medium text-zinc-700">Proposal Assistant</h3>
+                <div className="bg-white/[0.02] px-3 py-2 border-b border-white/5 flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-zinc-400" />
+                    <h3 className="font-medium text-zinc-300">{t("title")}</h3>
                 </div>
             )}
 
@@ -194,18 +213,18 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                             className={`flex gap-2 ${m.role === 'user' ? 'flex-row-reverse' : ''
                                 }`}
                         >
-                            <Avatar className="w-6 h-6 mt-0.5 border border-zinc-100">
+                            <Avatar className="w-6 h-6 mt-0.5 border border-white/10">
                                 {m.role === 'user' ? (
                                     <>
                                         <AvatarImage src="" />
-                                        <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                                        <AvatarFallback className="bg-zinc-800 text-zinc-400">
                                             <User className="w-3 h-3" />
                                         </AvatarFallback>
                                     </>
                                 ) : (
                                     <>
                                         <AvatarImage src="" />
-                                        <AvatarFallback className="bg-blue-50 text-blue-600">
+                                        <AvatarFallback className="bg-blue-950 text-blue-400">
                                             <Bot className="w-3 h-3" />
                                         </AvatarFallback>
                                     </>
@@ -215,7 +234,7 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                             <div
                                 className={`rounded-md px-3 py-1.5 max-w-[85%] leading-relaxed ${m.role === 'user'
                                     ? 'bg-zinc-800 text-zinc-50'
-                                    : 'bg-zinc-50 border border-zinc-100 text-zinc-800'
+                                    : 'bg-zinc-900 border border-white/5 text-zinc-100'
                                     }`}
                             >
                                 {m.role === 'user' ? (
@@ -228,8 +247,8 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                             ul: ({ ...props }) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
                                             ol: ({ ...props }) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
                                             li: ({ ...props }) => <li className="mb-0.5" {...props} />,
-                                            strong: ({ ...props }) => <span className="font-semibold text-zinc-900" {...props} />,
-                                            a: ({ ...props }) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                                            strong: ({ ...props }) => <span className="font-semibold text-white" {...props} />,
+                                            a: ({ ...props }) => <a className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
                                         }}
                                     >
                                         {m.content.replace(/```json[\s\S]*?```/g, '')}
@@ -242,11 +261,11 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                         <div className="flex gap-2">
                             <Avatar className="w-6 h-6 mt-0.5">
                                 <AvatarFallback className="bg-transparent">
-                                    <Bot className="w-3 h-3 text-zinc-400" />
+                                    <Bot className="w-3 h-3 text-zinc-500" />
                                 </AvatarFallback>
                             </Avatar>
-                            <div className="text-xs text-zinc-400 self-center animate-pulse">
-                                Thinking...
+                            <div className="text-xs text-zinc-500 self-center animate-pulse">
+                                {t("thinking")}
                             </div>
                         </div>
                     )}
@@ -262,11 +281,11 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                     // Handle Quote Update Action
                                     if (action.type === 'update_estimate') {
                                         return (
-                                            <div className="mt-4 mx-8 border rounded-md overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                <div className="bg-purple-50/50 px-3 py-2 border-b border-purple-100 flex items-center justify-between">
-                                                    <div className="text-xs font-medium text-purple-700 flex items-center gap-1.5">
-                                                        <Sparkles className="w-3 h-3 text-purple-500" />
-                                                        Update Proposed
+                                            <div className="mt-4 mx-8 border border-white/5 rounded-md overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                <div className="bg-purple-950/20 px-3 py-2 border-b border-purple-900/30 flex items-center justify-between">
+                                                    <div className="text-xs font-medium text-purple-400 flex items-center gap-1.5">
+                                                        <Sparkles className="w-3 h-3 text-purple-400" />
+                                                        {t("updateProposed")}
                                                     </div>
                                                     <Button
                                                         size="sm"
@@ -274,23 +293,23 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                                         className="h-7 text-xs bg-purple-600 hover:bg-purple-700 text-white shadow-none"
                                                         onClick={() => handleUpdateQuote(action)}
                                                     >
-                                                        Apply Changes
+                                                        {t("applyChanges")}
                                                     </Button>
                                                 </div>
-                                                <div className="px-3 py-2 bg-white text-xs text-zinc-600">
-                                                    <p className="font-medium text-zinc-800 mb-1">{action.reason}</p>
+                                                <div className="px-3 py-2 bg-zinc-950 text-xs text-zinc-400">
+                                                    <p className="font-medium text-zinc-300 mb-1">{action.reason}</p>
                                                     <ul className="list-disc pl-4 space-y-0.5 text-zinc-500">
                                                         {action.additions?.screens?.map((s: { title: string, hours: number }) => (
-                                                            <li key={s.title} className="text-emerald-600">+ Screen: {s.title} ({s.hours}h)</li>
+                                                            <li key={s.title} className="text-emerald-400">+ Screen: {s.title} ({s.hours}h)</li>
                                                         ))}
                                                         {action.additions?.apis?.map((a: { title: string, hours: number }) => (
-                                                            <li key={a.title} className="text-emerald-600">+ API: {a.title} ({a.hours}h)</li>
+                                                            <li key={a.title} className="text-emerald-400">+ API: {a.title} ({a.hours}h)</li>
                                                         ))}
                                                         {action.removals?.screens?.map((title: string) => (
-                                                            <li key={title} className="text-red-500 line-through">- Remove Screen: {title}</li>
+                                                            <li key={title} className="text-red-400 line-through">- Remove Screen: {title}</li>
                                                         ))}
                                                         {action.removals?.apis?.map((title: string) => (
-                                                            <li key={title} className="text-red-500 line-through">- Remove API: {title}</li>
+                                                            <li key={title} className="text-red-400 line-through">- Remove API: {title}</li>
                                                         ))}
                                                     </ul>
                                                 </div>
@@ -301,18 +320,18 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                                     // Handle Brief Creation Action (Existing)
                                     if (action.title && action.description) {
                                         return (
-                                            <div className="mt-4 mx-8 border rounded-md overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                <div className="bg-blue-50/50 px-3 py-2 border-b border-blue-100 flex items-center justify-between">
-                                                    <div className="text-xs font-medium text-blue-700 flex items-center gap-1.5">
+                                            <div className="mt-4 mx-8 border border-white/5 rounded-md overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                <div className="bg-blue-950/20 px-3 py-2 border-b border-blue-900/30 flex items-center justify-between">
+                                                    <div className="text-xs font-medium text-blue-400 flex items-center gap-1.5">
                                                         <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                                                        Brief Ready
+                                                        {t("briefReady")}
                                                     </div>
                                                     <Button
                                                         size="sm"
                                                         variant="default"
                                                         className="h-7 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-none"
                                                         onClick={async () => {
-                                                            const toastId = toast.loading("Creating project...");
+                                                            const toastId = toast.loading(t("creatingProject"));
                                                             try {
                                                                 const result = await createProjectFromBrief({
                                                                     title: action.title,
@@ -321,20 +340,20 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
 
                                                                 if (result.error || !result.data) throw new Error("Failed to create project");
 
-                                                                toast.success("Project created successfully", { id: toastId });
+                                                                toast.success(t("projectCreated"), { id: toastId });
                                                                 router.push(`/dashboard/projects/${result.data.id}`);
                                                             } catch (error) {
-                                                                toast.error("Failed to create project", { id: toastId });
+                                                                toast.error(t("failCreateProject"), { id: toastId });
                                                                 console.error(error);
                                                             }
                                                         }}
                                                     >
-                                                        Save Project
+                                                        {t("saveProject")}
                                                     </Button>
                                                 </div>
-                                                <div className="px-3 py-2 bg-white">
+                                                <div className="px-3 py-2 bg-zinc-950">
                                                     <p className="text-xs text-zinc-500">
-                                                        I&apos;ve converted our discussion into a structured brief. Click &ldquo;Fill Form&rdquo; to proceed.
+                                                        {t("briefCreatedDesc")}
                                                     </p>
                                                 </div>
                                             </div>
@@ -351,19 +370,19 @@ export function ChatInterface({ initialContext, estimateId, onEstimateUpdate, mi
                 </div>
             </ScrollArea>
 
-            <div className="p-3 bg-white border-t border-zinc-100">
+            <div className="p-3 bg-zinc-900 border-t border-white/5">
                 <form onSubmit={handleSend} className="flex gap-2 items-end">
                     <Input
                         value={localInput}
                         onChange={(e) => setLocalInput(e.target.value)}
-                        placeholder="Type your requirements..."
-                        className="flex-1 min-h-[36px] h-9 text-sm bg-zinc-50 border-zinc-200 focus-visible:ring-1 focus-visible:ring-zinc-300 focus-visible:border-zinc-300 shadow-none placeholder:text-zinc-400"
+                        placeholder={t("placeholder")}
+                        className="flex-1 min-h-[36px] h-9 text-sm bg-zinc-950 border-white/10 focus-visible:ring-1 focus-visible:ring-white/20 focus-visible:border-white/20 text-white shadow-none placeholder:text-zinc-600"
                     />
                     <Button
                         type="submit"
                         size="icon"
                         disabled={isLoading}
-                        className="h-9 w-9 bg-zinc-900 hover:bg-zinc-800 text-white shadow-none shrink-0"
+                        className="h-9 w-9 bg-white hover:bg-zinc-200 text-black shadow-none shrink-0"
                     >
                         <Send className="w-3.5 h-3.5" />
                         <span className="sr-only">Send</span>

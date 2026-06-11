@@ -13,6 +13,7 @@ import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "./currency
 import { MobileNav } from "./mobile-nav";
 import { MobileConfigMenu } from "./mobile-config-menu";
 import { MobileProjectActions } from "@/components/admin/pm/mobile-project-actions";
+import { useAdminHeaderStore } from "@/lib/store/admin-header-store";
 
 interface DashboardHeaderProps {
     allowedToSwitchViews?: boolean;
@@ -31,6 +32,7 @@ export function DashboardHeader({
     const pathname = usePathname();
     const router = useRouter();
     const t = useTranslations("Common");
+    const { title, actions } = useAdminHeaderStore();
 
     // Perbaikan untuk profil image kosong pada integrasi auth
     const { mockUserFallback } = useSafeUser();
@@ -44,7 +46,7 @@ export function DashboardHeader({
 
     return (
         <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-4 border-b border-white/5 bg-black/50 backdrop-blur-sm px-3 sm:px-6">
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
                 <MobileNav agencyName={agencyName} logoUrl={logoUrl} footer={navFooter}>
                     {navChildren}
                 </MobileNav>
@@ -61,6 +63,13 @@ export function DashboardHeader({
                     </Button>
                 )}
 
+                {/* Dinamis Judul Halaman Admin */}
+                {title && (
+                    <div className="ml-2 font-bold text-white text-base sm:text-lg md:text-xl tracking-tight flex items-center gap-2 border-l border-white/10 pl-3 sm:pl-4 truncate animate-in fade-in slide-in-from-left-2 duration-300">
+                        {title}
+                    </div>
+                )}
+
                 {isProjectPage && (
                     <>
                         <div className="hidden md:flex flex-1 max-w-xl items-center gap-2 ml-4 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -75,6 +84,13 @@ export function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
+                {/* Dinamis Tombol Aksi Admin */}
+                {actions && (
+                    <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-300 mr-1 sm:mr-2">
+                        {actions}
+                    </div>
+                )}
+
                 <div className="hidden md:block">
                     <UserButton mockUser={mockUserFallback} />
                 </div>

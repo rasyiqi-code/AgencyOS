@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Monitor, Code2, Calendar, ArrowRight, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { ChatInterface } from "@/components/chat/interface";
 
@@ -26,6 +28,7 @@ interface Estimate {
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
 export function EstimateViewer({ estimate }: { estimate: Estimate }) {
+    const t = useTranslations("PriceCalculator");
     // Chat Sheet State
     // Refine Mode State
     const [isRefining, setIsRefining] = useState(false);
@@ -87,7 +90,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
             {/* Left Column: Details */}
             <div className="lg:col-span-2 space-y-8">
                 <div>
-                    <div className="text-zinc-500 text-sm mb-2">Summary & Specification /</div>
+                    <div className="text-zinc-500 text-sm mb-2">{t("specification")} /</div>
                     <h1 className="text-3xl font-bold text-white mb-4">{estimate.title}</h1>
                     <p className="text-zinc-400 leading-relaxed">
                         {estimate.summary}
@@ -95,7 +98,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                 </div>
 
                 <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">
-                    Need to develop:
+                    {t("needToDevelop")}
                 </div>
 
                 {/* Screens Section */}
@@ -106,14 +109,14 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                 <Monitor className="w-5 h-5" />
                             </div>
                             <div>
-                                <div className="text-white font-medium">Web app screens</div>
+                                <div className="text-white font-medium">{t("webScreens")}</div>
                                 <div className="text-zinc-500 text-xs text-left">
-                                    {activeScreensCount}/{initialScreens.length} selected
+                                    {t("selected", { active: activeScreensCount, total: initialScreens.length })}
                                 </div>
                             </div>
                         </div>
                         <div className="text-xl font-bold text-white">
-                            {initialScreens.filter((_, i) => selectedScreenIndices.has(i)).reduce((acc, s) => acc + s.hours, 0)} hrs
+                            {initialScreens.filter((_, i) => selectedScreenIndices.has(i)).reduce((acc, s) => acc + s.hours, 0)} {t("hours")}
                         </div>
                     </div>
                     <div className="divide-y divide-white/5">
@@ -135,7 +138,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                         <div className="text-zinc-500 text-sm mt-1">{screen.description}</div>
                                     </div>
                                     <div className="text-zinc-400 text-sm font-mono whitespace-nowrap">
-                                        {screen.hours} hrs
+                                        {screen.hours} {t("hours")}
                                     </div>
                                 </div>
                             );
@@ -151,14 +154,14 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                 <Code2 className="w-5 h-5" />
                             </div>
                             <div>
-                                <div className="text-white font-medium">APIs & Integrations</div>
+                                <div className="text-white font-medium">{t("apis")}</div>
                                 <div className="text-zinc-500 text-xs text-left">
-                                    {activeApisCount}/{initialApis.length} selected
+                                    {t("selected", { active: activeApisCount, total: initialApis.length })}
                                 </div>
                             </div>
                         </div>
                         <div className="text-xl font-bold text-white">
-                            {initialApis.filter((_, i) => selectedApiIndices.has(i)).reduce((acc, s) => acc + s.hours, 0)} hrs
+                            {initialApis.filter((_, i) => selectedApiIndices.has(i)).reduce((acc, s) => acc + s.hours, 0)} {t("hours")}
                         </div>
                     </div>
                     <div className="divide-y divide-white/5">
@@ -180,7 +183,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                         <div className="text-zinc-500 text-sm mt-1">{api.description}</div>
                                     </div>
                                     <div className="text-zinc-400 text-sm font-mono whitespace-nowrap">
-                                        {api.hours} hrs
+                                        {api.hours} {t("hours")}
                                     </div>
                                 </div>
                             );
@@ -196,7 +199,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                         <div className="p-4 border-b border-white/5 bg-zinc-800/50 flex justify-between items-center">
                             <h3 className="font-bold text-white flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-brand-yellow" />
-                                Proposal Assistant
+                                {t("proposalAssistant")}
                             </h3>
                             <Button
                                 variant="ghost"
@@ -204,7 +207,7 @@ export function EstimateViewer({ estimate }: { estimate: Estimate }) {
                                 onClick={() => setIsRefining(false)}
                                 className="text-zinc-400 hover:text-white h-8"
                             >
-                                Cancel
+                                {t("cancel")}
                             </Button>
                         </div>
                         <div className="flex-1 bg-zinc-950 overflow-hidden min-h-0">
@@ -235,33 +238,33 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                 <div className="sticky top-24 self-start space-y-6 animate-in fade-in slide-in-from-left-4 duration-300 z-30">
                     <div className="bg-zinc-900 rounded-2xl border border-white/10 p-6 space-y-6 shadow-2xl">
                         <div className="text-center space-y-2 pb-6 border-b border-white/5">
-                            <div className="text-zinc-500 text-sm">Est. Duration</div>
-                            <div className="text-3xl font-bold text-white transition-all duration-300">{totalHours} hours</div>
+                            <div className="text-zinc-500 text-sm">{t("duration")}</div>
+                            <div className="text-3xl font-bold text-white transition-all duration-300">{totalHours} {t("hours")}</div>
                             <div className="text-brand-yellow text-sm font-medium flex items-center justify-center gap-2">
                                 <Calendar className="w-3 h-3" />
-                                Approx {timelineDays} working days
+                                {t("workingDays", { days: timelineDays })}
                             </div>
                         </div>
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-zinc-400">Payment Type</span>
+                                <span className="text-zinc-400">{t("paymentType")}</span>
                                 <Badge variant="outline" className="border-brand-yellow/30 text-brand-yellow bg-brand-yellow/10">
-                                    Milestone Based
+                                    {t("milestoneBased")}
                                 </Badge>
                             </div>
                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-zinc-400">Rate</span>
+                                <span className="text-zinc-400">{t("rate")}</span>
                                 <span className="text-white font-mono flex gap-1">
                                     <PriceDisplay amount={hourlyRate} />
-                                    <span>/hr</span>
+                                    <span>{t("perHour")}</span>
                                 </span>
                             </div>
                         </div>
 
 
                         <div className="pt-6 border-t border-white/5 text-center space-y-2">
-                            <div className="text-zinc-500 text-sm">Est. Total Cost</div>
+                            <div className="text-zinc-500 text-sm">{t("totalCost")}</div>
                             <div className="text-4xl font-bold text-white tracking-tight transition-all duration-300">
                                 <PriceDisplay amount={totalCost} />
                             </div>
@@ -278,7 +281,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                 }}
                             >
                                 <Sparkles className="w-4 h-4 mr-2" />
-                                Proposal Assistant
+                                {t("proposalAssistant")}
                             </Button>
 
                             <Button
@@ -312,11 +315,11 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                         }
                                     } catch (e) {
                                         console.error(e);
-                                        alert("Failed to finalize. Please try again.");
+                                        toast.error(t("finalizeError") || "Failed to finalize. Please try again.");
                                     }
                                 }}
                             >
-                                Finalize Quote & Start
+                                {t("finalize")}
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         </div>
@@ -329,7 +332,7 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                 <div className="fixed bottom-0 left-0 right-0 py-3 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-50">
                     <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
                         <div className="flex-1">
-                            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">Est. Total Cost</div>
+                            <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">{t("totalCost")}</div>
                             <div className="text-xl font-black text-white tracking-tighter">
                                 <PriceDisplay amount={totalCost} />
                             </div>
@@ -363,11 +366,11 @@ ${initialApis.filter((_, i) => selectedApiIndices.has(i)).map(a => `- ${a.title}
                                     }
                                 } catch (e) {
                                     console.error(e);
-                                    alert("Failed to finalize. Please try again.");
+                                    toast.error(t("finalizeError") || "Failed to finalize. Please try again.");
                                 }
                             }}
                         >
-                            Finalize & Start
+                            {t("finalizeMobile")}
                             <ArrowRight className="w-3 h-3 ml-2" />
                         </Button>
                     </div>

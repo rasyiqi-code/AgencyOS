@@ -9,6 +9,7 @@ import Link from "next/link";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 import {
     Accordion,
     AccordionContent,
@@ -32,23 +33,22 @@ export default async function ServicesPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <AdminHeaderSetter
+                title={
+                    <span className="flex items-center gap-3">
                         {isId ? 'Katalog Layanan' : 'Service Catalog'}
                         <Package className="w-6 h-6 text-zinc-600" />
-                    </h1>
-                    <p className="text-zinc-400 mt-1.5 text-sm max-w-lg">
-                        {isId ? 'Kelola layanan terproduk dan paket berlangganan.' : 'Manage productized services and subscription plans.'}
-                    </p>
-                </div>
-                <Link href="/admin/pm/services/new" className="shrink-0">
-                    <Button className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 h-9 text-xs font-bold">
-                        <Plus className="w-4 h-4 mr-1.5" />
-                        {isId ? 'Buat Layanan' : 'Create Service'}
-                    </Button>
-                </Link>
-            </div>
+                    </span>
+                }
+                actions={
+                    <Link href="/admin/pm/services/new" className="shrink-0">
+                        <Button className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 h-9 text-xs font-bold">
+                            <Plus className="w-4 h-4 mr-1.5" />
+                            {isId ? 'Buat Layanan' : 'Create Service'}
+                        </Button>
+                    </Link>
+                }
+            />
 
             <div className="w-full space-y-2">
                 {services.length === 0 && (

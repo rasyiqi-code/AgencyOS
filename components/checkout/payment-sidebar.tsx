@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Download, CheckCircle, Loader2, AlertTriangle } from "lucide-react";
 import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
+import { toast } from "sonner";
 
 import { useTranslations } from "next-intl";
 
@@ -78,7 +79,7 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                 const err = await response.json();
                 console.error("Payment Error:", err);
                 const errorMessage = err.error || err.message || JSON.stringify(err);
-                alert(`Payment Error: ${errorMessage}`);
+                toast.error(`${t("failProcess") || "Payment Error"}: ${errorMessage}`);
                 throw new Error(errorMessage);
             }
             const { orderId } = await response.json();
@@ -120,12 +121,12 @@ export function PaymentSidebar({ estimate, amount, onPrint, activeRate, hasActiv
                                     {countdown}
                                 </div>
                                 <div className="text-[12px] font-black text-brand-yellow/40 uppercase tracking-[0.4em] animate-pulse">
-                                    Redirecting to Invoice...
+                                    {t("redirectingToInvoice") || "Redirecting to Invoice..."}
                                 </div>
                             </div>
                         ) : (
                             <div className="px-8 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-bold tracking-widest uppercase text-sm">
-                                Payment Verified
+                                {t("paymentVerified") || "Payment Verified"}
                             </div>
                         )}
                     </div>
