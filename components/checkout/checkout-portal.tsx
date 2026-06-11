@@ -2,17 +2,18 @@
 
 import { useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { CheckoutSummary } from "@/components/checkout/checkout-summary";
-import { PaymentSidebar } from "@/components/checkout/payment-sidebar";
+import { ProductShowcase } from "./product-showcase";
+import { PaymentPanel } from "./payment-panel";
+import { CheckoutSummary } from "./checkout-summary";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { useCurrency, PriceDisplay } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
-import { ChevronDown, Gift } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Gift } from "lucide-react";
 
-export function CheckoutContent({
+export function CheckoutPortal({
     estimate,
     bankDetails,
     activeRate,
@@ -54,13 +55,14 @@ export function CheckoutContent({
     const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handlePrint = useReactToPrint({
         contentRef: invoiceRef,
         documentTitle: `Invoice-${estimate.id}`
     });
 
-    // Calculate the TRUE base cost (estimate.totalCost minus any addons that are already baked into it)
+    // Calculate the TRUE base cost
     const initiallyIncludedAddonsTotal = initiallyIncludedAddons.reduce((sum: number, addon) => sum + (addon.price || 0), 0);
     const trueBaseCost = estimate.totalCost - initiallyIncludedAddonsTotal;
 
@@ -89,21 +91,59 @@ export function CheckoutContent({
     };
 
     const discountedAmount = baseTotal;
-
-    const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const isPaid = estimate.status === 'paid';
 
     return (
-        <div className="max-w-7xl mx-auto w-full space-y-6">
-            {/* Drawer/Sheet Ringkasan Pesanan samping (Premium Glassmorphism) */}
+        <div className="max-w-7xl mx-auto w-full">
+            {/* Main Portal Container: 50% split adapt layout (lg:col-span-5 & lg:col-span-7) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl border border-white/10 overflow-hidden shadow-2xl bg-zinc-950/40 backdrop-blur-md relative z-10 min-h-[500px]">
+                
+                {/* Left Side: Product Showcase (lg:col-span-5) */}
+                <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/10">
+                    <ProductShowcase 
+                        estimate={estimate}
+                        bonuses={bonuses}
+                        selectedAddons={selectedAddons}
+                    />
+                </div>
+
+                {/* Right Side: Payment configurator & Gateway selector (lg:col-span-7) */}
+                <div className="lg:col-span-7">
+                    <PaymentPanel 
+                        estimate={estimate}
+                        amount={discountedAmount}
+                        onPrint={handlePrint}
+                        bankDetails={bankDetails}
+                        activeRate={activeRate}
+                        hasActiveGateway={hasActiveGateway}
+                        gatewayStatus={gatewayStatus}
+                        defaultPaymentType={defaultPaymentType}
+                        projectPaidAmount={projectPaidAmount}
+                        projectTotalAmount={projectTotalAmount}
+                        user={user}
+                        orderId={orderId}
+                        selectedAddons={selectedAddons}
+                        onToggleAddon={(addon) => {
+                            setSelectedAddons(prev => 
+                                prev.some(a => a.name === addon.name)
+                                    ? prev.filter(a => a.name !== addon.name)
+                                    : [...prev, addon]
+                            );
+                        }}
+                        agencySettings={agencySettings}
+                        onOpenSummary={() => setIsDrawerOpen(true)}
+                    />
+                </div>
+            </div>
+
+            {/* Slide-out Drawer for Full Order Details */}
             {!isPaid && (
                 <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <SheetContent className="w-full sm:max-w-md bg-zinc-950/95 backdrop-blur-xl border-l border-white/10 text-white overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-zinc-800">
                         <SheetHeader className="mb-6">
                             <SheetTitle className="text-xl font-black text-white tracking-tight flex items-center gap-2">
                                 <Gift className="w-5 h-5 text-lime-400" />
-                                Detail Pesanan & Bonus
+                                {isId ? "Rincian Lengkap Pesanan" : "Full Order Details"}
                             </SheetTitle>
                             <SheetDescription className="text-xs text-zinc-400">
                                 Rincian lengkap produk jasa, deliverables, modul, add-on opsional, serta bonus pemasaran Anda.
@@ -128,28 +168,6 @@ export function CheckoutContent({
                     </SheetContent>
                 </Sheet>
             )}
-
-            {/* Main Checkout Panel (2-Column internal grid) */}
-            <div className={isPaid ? 'flex justify-center items-center py-12' : 'w-full'}>
-                 <PaymentSidebar
-                    estimate={estimate}
-                    amount={discountedAmount}
-                    onPrint={handlePrint}
-                    bankDetails={bankDetails}
-                    activeRate={activeRate}
-                    hasActiveGateway={hasActiveGateway}
-                    gatewayStatus={gatewayStatus}
-                    defaultPaymentType={defaultPaymentType}
-                    projectPaidAmount={projectPaidAmount}
-                    projectTotalAmount={projectTotalAmount}
-                    context={context}
-                    user={user}
-                    orderId={orderId}
-                    selectedAddons={selectedAddons}
-                    agencySettings={agencySettings}
-                    onOpenSummary={() => setIsDrawerOpen(true)}
-                />
-            </div>
 
             {/* Hidden Invoice for Printing */}
             <div className="hidden">

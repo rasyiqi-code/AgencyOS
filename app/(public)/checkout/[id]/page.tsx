@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import { CheckoutContent } from "@/components/checkout/checkout-content";
+import { CheckoutPortal } from "@/components/checkout/checkout-portal";
 import { prisma } from "@/lib/config/db";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { notFound, redirect } from "next/navigation";
@@ -135,7 +135,7 @@ export default async function CheckoutPage(props: PageProps) {
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
             <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
                     <CheckoutProgress key={estimate.status === 'paid' ? 2 : 1} currentStep={estimate.status === 'paid' ? 2 : 1} />
-                    <CheckoutContent
+                    <CheckoutPortal
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
                         activeRate={activeRate}
