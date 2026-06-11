@@ -24,6 +24,7 @@ export interface PaymentSelectorProps {
     contactTele?: string | null;
     hasActiveGateway?: boolean;
     gatewayStatus?: { midtrans: boolean; creem: boolean };
+    noCard?: boolean;
 }
 
 interface PaymentMethod {
@@ -87,7 +88,7 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
     },
 ];
 
-export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele, hasActiveGateway = true, gatewayStatus }: PaymentSelectorProps) {
+export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele, hasActiveGateway = true, gatewayStatus, noCard }: PaymentSelectorProps) {
     const [loading, setLoading] = useState(false);
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
         if (!paymentMetadata) return null;
@@ -249,11 +250,13 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
 
     return (
         <>
-            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-6 shadow-xl flex flex-col h-fit max-h-[800px]">
-                <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
-                    <Wallet className="w-5 h-5 text-lime-400" />
-                    Payment Method
-                </h2>
+            <div className={noCard ? "w-full flex flex-col h-fit" : "w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-6 shadow-xl flex flex-col h-fit max-h-[800px]"}>
+                {!noCard && (
+                    <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
+                        <Wallet className="w-5 h-5 text-lime-400" />
+                        Payment Method
+                    </h2>
+                )}
 
                 {!paymentData ? (
                     <>

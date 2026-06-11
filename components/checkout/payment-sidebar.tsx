@@ -13,6 +13,7 @@ export function PaymentSidebar({
     estimate,
     amount,
     onPrint,
+    bankDetails,
     activeRate,
     hasActiveGateway = true,
     gatewayStatus,
@@ -104,6 +105,17 @@ export function PaymentSidebar({
         amountToPay = Math.max(0, total - paid);
     }
 
+    // Ekstrak data bank details yang aman
+    const formattedBankDetails = estimate.project && agencySettings ? {
+        bank_name: agencySettings.bankName,
+        bank_account: agencySettings.bankAccount,
+        bank_holder: agencySettings.bankHolder
+    } : (bankDetails ? {
+        bank_name: bankDetails.bank_name || undefined,
+        bank_account: bankDetails.bank_account || undefined,
+        bank_holder: bankDetails.bank_holder || undefined
+    } : undefined);
+
     const handleCheckout = async () => {
         setIsProcessing(true);
         try {
@@ -182,53 +194,7 @@ export function PaymentSidebar({
         );
     }
 
-    // 2. Tampilan jika Order ID sudah dibuat (Tampilkan PaymentSelector langsung di Checkout)
-    if (activeOrderId) {
-        // Ekstrak data bank details yang aman
-        const formattedBankDetails = estimate.project ? {
-            bank_name: agencySettings?.bankName,
-            bank_account: agencySettings?.bankAccount,
-            bank_holder: agencySettings?.bankHolder
-        } : undefined;
-
-        return (
-            <div className="space-y-4 sticky top-6 md:top-12 lg:top-24 max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-6rem)] lg:max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
-                {user && (
-                    <Card className="bg-zinc-900 border-white/10 text-white overflow-hidden relative group">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-lime-500 opacity-50 group-hover:opacity-100 transition-opacity" />
-                        <CardHeader className="px-4 sm:px-6 pt-4 pb-2">
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                    <CheckCircle className="w-3 h-3 text-lime-500" />
-                                    {ti("billTo")}
-                                </CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="px-4 sm:px-6 pb-4">
-                            <div className="space-y-1">
-                                <div className="text-sm font-bold text-white">{user.displayName || "Valued Client"}</div>
-                                <div className="text-xs text-zinc-400 font-mono">{user.email}</div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-
-                <PaymentSelector
-                    orderId={activeOrderId}
-                    amount={amountToPay}
-                    currency={currency as 'USD' | 'IDR'}
-                    bankDetails={formattedBankDetails || undefined}
-                    orderStatus={activeOrderStatus}
-                    contactWA={agencySettings?.phone}
-                    contactTele={agencySettings?.telegram}
-                    hasActiveGateway={hasActiveGateway}
-                    gatewayStatus={gatewayStatus}
-                />
-            </div>
-        );
-    }
-
-    // 3. Tampilan awal Checkout sebelum inisiasi Order (Opsi DP/Full & tombol "Lanjut ke Pembayaran")
+    // 2. Tampilan awal & pemrosesan Checkout terintegrasi
     return (
         <div className="space-y-4 sticky top-6 md:top-12 lg:top-24 max-h-[calc(100vh-3rem)] md:max-h-[calc(100vh-6rem)] lg:max-h-[calc(100vh-12rem)] overflow-y-auto pr-1">
             {user && (
@@ -240,9 +206,11 @@ export function PaymentSidebar({
                                 <CheckCircle className="w-3 h-3 text-lime-500" />
                                 {ti("billTo")}
                             </CardTitle>
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] text-zinc-500 hover:text-white" onClick={() => window.location.href = '/handler/sign-in'}>
-                                {t("change")}
-                            </Button>
+                            {!activeOrderId && (
+                                <Button variant="ghost" size="sm" className="h-6 text-[10px] text-zinc-500 hover:text-white" onClick={() => window.location.href = '/handler/sign-in'}>
+                                    {t("change")}
+                                </Button>
+                            )}
                         </div>
                     </CardHeader>
                     <CardContent className="px-4 sm:px-6 pb-4">
@@ -256,103 +224,192 @@ export function PaymentSidebar({
 
             <Card className="bg-zinc-900 border-white/10 text-white">
                 <CardHeader className="px-4 sm:px-6 pt-4 sm:pt-6">
-                    <CardTitle className="text-xl sm:text-2xl break-words">{t("title")}</CardTitle>
+                    <CardTitle className="text-xl sm:text-2xl break-words">
+                        {activeOrderId ? (t("paymentOptions") || "Metode Pembayaran") : t("title")}
+                    </CardTitle>
                     <CardDescription className="text-sm break-words">
-                        {t("selectPayment")}
+                        {activeOrderId ? (t("selectPayment") || "Pilih metode pembayaran di bawah ini.") : t("selectPayment")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
-                    <>
-                        {defaultPaymentType === 'REPAYMENT' ? (
-                            <div className="p-3 rounded-lg border border-brand-yellow/30 bg-brand-yellow/10 text-brand-yellow text-sm font-medium text-center mb-2">
-                                {t("repayment")}
+                    {activeOrderId ? (
+                        // Tampilan jika Order ID sudah dibuat (Metode Pembayaran Aktif terintegrasi)
+                        <>
+                            {/* Informasi Tipe Pembayaran Terkunci */}
+                            <div className="flex justify-between items-center bg-zinc-950/40 border border-white/5 p-3 rounded-lg">
+                                <span className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">
+                                    Tipe Pembayaran
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-bold bg-white/10 text-zinc-200 px-2.5 py-1 rounded-full">
+                                        {paymentType === "FULL" ? t("fullPayment") : paymentType === "DP" ? t("dp") : t("repayment")}
+                                    </span>
+                                    {!orderId && (
+                                        <button
+                                            onClick={() => setActiveOrderId(null)}
+                                            className="text-xs text-lime-400 hover:text-lime-300 font-semibold transition-colors hover:underline"
+                                        >
+                                            {t("change") || "Ubah"}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                        ) : (
-                            <div className="grid grid-cols-2 gap-2">
-                                <button
-                                    onClick={() => setPaymentType("FULL")}
-                                    className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "FULL" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
-                                >
-                                    {t("fullPayment")}
-                                </button>
-                                <button
-                                    onClick={() => setPaymentType("DP")}
-                                    className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "DP" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
-                                >
-                                    {t("dp")}
-                                </button>
-                            </div>
-                        )}
 
-                        {paymentType === "DP" && (
-                            <div className="text-xs text-amber-500 bg-amber-500/10 p-3 rounded border border-amber-500/20">
-                                {t("dpDesc")}
-                            </div>
-                        )}
-                    </>
-
-                    <div className="bg-zinc-800/50 p-4 sm:p-6 rounded-xl border border-white/5">
-                        <div className="flex flex-col gap-1 mb-4">
-                            <span className="text-zinc-400 text-sm font-medium">
-                                {t("totalToPay")}
-                            </span>
-                            <span className="text-3xl font-bold text-white tracking-tight">
-                                <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
-                            </span>
                             {paymentType === "DP" && (
-                                <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
-                                    <span>{t("totalProjectValue")}:</span>
-                                    <span><PriceDisplay amount={amount} baseCurrency={baseCurrency} /></span>
+                                <div className="text-xs text-amber-500 bg-amber-500/10 p-3 rounded border border-amber-500/20">
+                                    {t("dpDesc")}
                                 </div>
                             )}
-                        </div>
 
-                        <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                            <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
-                            {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && (rate || activeRate) && (
-                                `(rate: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rate || activeRate || 0)})`
-                            )}
-                        </p>
-                    </div>
+                            {/* Rincian Harga Pembayaran */}
+                            <div className="bg-zinc-800/50 p-4 sm:p-6 rounded-xl border border-white/5">
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-zinc-400 text-sm font-medium">
+                                        {t("totalToPay")}
+                                    </span>
+                                    <span className="text-3xl font-bold text-white tracking-tight">
+                                        <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
+                                    </span>
+                                    {paymentType === "DP" && (
+                                        <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
+                                            <span>{t("totalProjectValue")}:</span>
+                                            <span><PriceDisplay amount={amount} baseCurrency={baseCurrency} /></span>
+                                        </div>
+                                    )}
+                                </div>
 
-                    <div className="space-y-3">
-                        <Button
-                            variant="outline"
-                            className="w-full border-zinc-700 bg-transparent text-white hover:bg-zinc-800 hover:text-white cursor-pointer"
-                            onClick={onPrint}
-                            disabled={isProcessing}
-                        >
-                            <Download className="w-4 h-4 mr-2" />
-                            {t("downloadInvoice")}
-                        </Button>
+                                <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity mt-4">
+                                    <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
+                                    {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && (rate || activeRate) && (
+                                        `(rate: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rate || activeRate || 0)})`
+                                    )}
+                                </p>
+                            </div>
 
-                        <Button
-                            className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isProcessing}
-                            onClick={handleCheckout}
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    {t("processing")}
-                                </>
+                            {/* Pembatas Visual */}
+                            <div className="border-t border-white/5 my-2" />
+
+                            {/* Selector Metode Pembayaran (noCard={true}) */}
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <PaymentSelector
+                                    orderId={activeOrderId}
+                                    amount={amountToPay}
+                                    currency={currency as 'USD' | 'IDR'}
+                                    bankDetails={formattedBankDetails}
+                                    orderStatus={activeOrderStatus}
+                                    contactWA={agencySettings?.phone}
+                                    contactTele={agencySettings?.telegram}
+                                    hasActiveGateway={hasActiveGateway}
+                                    gatewayStatus={gatewayStatus}
+                                    noCard={true}
+                                />
+                            </div>
+
+                            <Button
+                                variant="outline"
+                                className="w-full border-zinc-800 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-white cursor-pointer h-10 text-xs"
+                                onClick={onPrint}
+                                disabled={isProcessing}
+                            >
+                                <Download className="w-3.5 h-3.5 mr-2" />
+                                {t("downloadInvoice")}
+                            </Button>
+                        </>
+                    ) : (
+                        // Tampilan awal sebelum Order ID dibuat (Pemilihan Tipe Pembayaran & Tombol Lanjut)
+                        <>
+                            {defaultPaymentType === 'REPAYMENT' ? (
+                                <div className="p-3 rounded-lg border border-brand-yellow/30 bg-brand-yellow/10 text-brand-yellow text-sm font-medium text-center mb-2">
+                                    {t("repayment")}
+                                </div>
                             ) : (
-                                t("proceed")
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        onClick={() => setPaymentType("FULL")}
+                                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "FULL" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                                    >
+                                        {t("fullPayment")}
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentType("DP")}
+                                        className={`p-3 rounded-lg border text-sm font-medium transition-all ${paymentType === "DP" ? "bg-white text-black border-white" : "bg-transparent text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"}`}
+                                    >
+                                        {t("dp")}
+                                    </button>
+                                </div>
                             )}
-                        </Button>
-                    </div>
 
-                    <p className="text-xs text-zinc-500 text-center">
-                        {t("secure")}
-                    </p>
+                            {paymentType === "DP" && (
+                                <div className="text-xs text-amber-500 bg-amber-500/10 p-3 rounded border border-amber-500/20">
+                                    {t("dpDesc")}
+                                </div>
+                            )}
 
-                    <div className="text-center pt-2">
-                        <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 underline decoration-zinc-700 underline-offset-2 hover:decoration-zinc-400 transition-all">
-                            {t("problem")}
-                        </a>
-                    </div>
+                            <div className="bg-zinc-800/50 p-4 sm:p-6 rounded-xl border border-white/5">
+                                <div className="flex flex-col gap-1 mb-4">
+                                    <span className="text-zinc-400 text-sm font-medium">
+                                        {t("totalToPay")}
+                                    </span>
+                                    <span className="text-3xl font-bold text-white tracking-tight">
+                                        <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
+                                    </span>
+                                    {paymentType === "DP" && (
+                                        <div className="flex justify-between text-xs text-zinc-500 mt-2 pt-2 border-t border-white/5">
+                                            <span>{t("totalProjectValue")}:</span>
+                                            <span><PriceDisplay amount={amount} baseCurrency={baseCurrency} /></span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <p className="text-[10px] text-zinc-500 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
+                                    <span className="w-1 h-1 rounded-full bg-zinc-500 shrink-0" />
+                                    {t("processedIn")} {currency === 'IDR' ? 'IDR' : 'USD'} {currency === 'IDR' && (rate || activeRate) && (
+                                        `(rate: ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(rate || activeRate || 0)})`
+                                    )}
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                <Button
+                                    variant="outline"
+                                    className="w-full border-zinc-700 bg-transparent text-white hover:bg-zinc-800 hover:text-white cursor-pointer"
+                                    onClick={onPrint}
+                                    disabled={isProcessing}
+                                >
+                                    <Download className="w-4 h-4 mr-2" />
+                                    {t("downloadInvoice")}
+                                </Button>
+
+                                <Button
+                                    className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isProcessing}
+                                    onClick={handleCheckout}
+                                >
+                                    {isProcessing ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                            {t("processing")}
+                                        </>
+                                    ) : (
+                                        t("proceed")
+                                    )}
+                                </Button>
+                            </div>
+
+                            <p className="text-xs text-zinc-500 text-center">
+                                {t("secure")}
+                            </p>
+
+                            <div className="text-center pt-2">
+                                <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 underline decoration-zinc-700 underline-offset-2 hover:decoration-zinc-400 transition-all">
+                                    {t("problem")}
+                                </a>
+                            </div>
+                        </>
+                    )}
                 </CardContent>
             </Card>
         </div>
     );
 }
+
