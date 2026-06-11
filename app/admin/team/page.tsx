@@ -5,6 +5,7 @@ import { type StackUser } from "@/lib/shared/types";
 import { UserPermission } from "@prisma/client";
 import { TeamTable } from "@/components/admin/team/team-table";
 import { ShieldAlert } from "lucide-react";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = 'force-dynamic';
 
@@ -57,20 +58,15 @@ export default async function AdminTeamPage() {
 
     return (
         <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
-                        Team & Roles
-                    </h1>
-                    <p className="text-zinc-400">
-                        Manage internal staff roles and permissions.
-                    </p>
-                </div>
-                <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-lg px-4 py-2">
-                    <div className="text-xs text-indigo-400 uppercase tracking-wider font-semibold mb-0.5">Super Admin Mode</div>
-                    <div className="text-sm font-medium text-white">Full Access</div>
-                </div>
-            </div>
+            <AdminHeaderSetter
+                title="Team & Roles"
+                actions={
+                    <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-xl px-4 py-1.5 text-right shrink-0">
+                        <div className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold">Super Admin Mode</div>
+                        <div className="text-sm font-medium text-white leading-tight">Full Access</div>
+                    </div>
+                }
+            />
 
             <TeamTable data={teamMembers} currentUserId={currentUser?.id} />
         </div>
