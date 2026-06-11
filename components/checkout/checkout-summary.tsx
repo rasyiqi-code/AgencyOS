@@ -48,7 +48,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
 
     return (
         <div className="space-y-6 sm:space-y-8">
-            <div className="bg-zinc-900 border border-white/10 rounded-xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+            <div className="bg-zinc-900 border border-white/10 rounded-xl p-6 space-y-6">
                 <div>
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">{estimate.title}</h2>
                     <p className="text-sm sm:text-base text-zinc-400 break-words">{estimate.summary}</p>
@@ -61,7 +61,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                             <Layers className="w-4 h-4 text-lime-400" />
                             {t("deliverables")}
                         </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                        <div className="grid grid-cols-1 gap-y-2.5">
                             {serviceFeatures.map((feature, i) => (
                                 <div key={i} className="flex items-start gap-3 text-zinc-300">
                                     <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-lime-500 shrink-0" />
@@ -79,7 +79,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                             <PlusCircle className="w-4 h-4 text-blue-400" />
                             {isId ? "Add-ons Tersedia" : "Available Add-ons"}
                         </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                        <div className="grid grid-cols-1 gap-y-3">
                             {serviceAddons.map((addon, i) => {
                                 const isSelected = selectedAddons.some(a => a.name === addon.name);
                                 return (

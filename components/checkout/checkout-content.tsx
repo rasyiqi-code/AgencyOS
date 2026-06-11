@@ -91,10 +91,54 @@ export function CheckoutContent({
     const isPaid = estimate.status === 'paid';
 
     return (
-        <div className={`flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto ${isPaid ? 'justify-center items-center py-12' : ''}`}>
-            {/* Left: Summary & Trust (Replaces Invoice) */}
+        <div className={`flex flex-col-reverse lg:flex-row gap-8 max-w-6xl mx-auto ${isPaid ? 'justify-center items-center py-12' : ''}`}>
+            {/* Left Column: Payment Form (Now Main Area) */}
+            {!isPaid ? (
+                <div className="flex-1 space-y-6">
+                     <PaymentSidebar
+                        estimate={estimate}
+                        amount={discountedAmount}
+                        onPrint={handlePrint}
+                        bankDetails={bankDetails}
+                        activeRate={activeRate}
+                        hasActiveGateway={hasActiveGateway}
+                        gatewayStatus={gatewayStatus}
+                        defaultPaymentType={defaultPaymentType}
+                        projectPaidAmount={projectPaidAmount}
+                        projectTotalAmount={projectTotalAmount}
+                        context={context}
+                        user={user}
+                        orderId={orderId}
+                        selectedAddons={selectedAddons}
+                        agencySettings={agencySettings}
+                    />
+                </div>
+            ) : (
+                // Bila sudah lunas, posisikan sukses panel di tengah
+                <div className={`w-full lg:w-96 space-y-6 ${isPaid ? 'transform scale-110 transition-transform duration-500' : ''}`}>
+                     <PaymentSidebar
+                        estimate={estimate}
+                        amount={discountedAmount}
+                        onPrint={handlePrint}
+                        bankDetails={bankDetails}
+                        activeRate={activeRate}
+                        hasActiveGateway={hasActiveGateway}
+                        gatewayStatus={gatewayStatus}
+                        defaultPaymentType={defaultPaymentType}
+                        projectPaidAmount={projectPaidAmount}
+                        projectTotalAmount={projectTotalAmount}
+                        context={context}
+                        user={user}
+                        orderId={orderId}
+                        selectedAddons={selectedAddons}
+                        agencySettings={agencySettings}
+                    />
+                </div>
+            )}
+
+            {/* Right Column: Order Summary (Now Sidebar) */}
             {!isPaid && (
-                <div className="flex-1">
+                <div className="w-full lg:w-96 space-y-6">
                     <CheckoutSummary
                         estimate={{ ...estimate, totalCost: trueBaseCost }}
                         bonuses={bonuses}
@@ -110,27 +154,6 @@ export function CheckoutContent({
                     />
                 </div>
             )}
-
-            {/* Right: Payment Actions */}
-            <div className={`w-full lg:w-96 space-y-6 ${isPaid ? 'transform scale-110 transition-transform duration-500' : ''}`}>
-                 <PaymentSidebar
-                    estimate={estimate}
-                    amount={discountedAmount}
-                    onPrint={handlePrint}
-                    bankDetails={bankDetails}
-                    activeRate={activeRate}
-                    hasActiveGateway={hasActiveGateway}
-                    gatewayStatus={gatewayStatus}
-                    defaultPaymentType={defaultPaymentType}
-                    projectPaidAmount={projectPaidAmount}
-                    projectTotalAmount={projectTotalAmount}
-                    context={context}
-                    user={user}
-                    orderId={orderId}
-                    selectedAddons={selectedAddons}
-                    agencySettings={agencySettings}
-                />
-            </div>
 
             {/* Hidden Invoice for Printing */}
             <div className="hidden">
