@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml, getRenderedHtml } from "@/lib/portfolios/actions";
 import { Button } from "@/components/ui/button";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -163,36 +164,17 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
 
     return (
         <div className="space-y-8">
-            {/* === Header Section === */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-brand-yellow border-brand-yellow/20 bg-brand-yellow/5 uppercase tracking-widest text-[9px] font-bold">
-                            Content Management
-                        </Badge>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter">
-                            Portfolio Live Admin
-                        </h1>
-                        <div className="hidden sm:flex p-2 rounded-xl bg-white/5 border border-white/10">
-                            <Layout className="w-5 h-5 text-brand-yellow" />
-                        </div>
-                    </div>
-                    <p className="text-zinc-500 max-w-xl text-sm md:text-base leading-relaxed">
-                        Manage your website showcase and <span className="text-zinc-300">local HTML designs</span>.
-                    </p>
-                </div>
-
-                <div className="shrink-0">
+            <AdminHeaderSetter
+                title="Portfolio Live Admin"
+                actions={
                     <Button
                         onClick={() => setIsModalOpen(true)}
-                        className="font-bold transition-all duration-300 shadow-xl w-full md:w-auto bg-gradient-to-br from-brand-yellow to-yellow-600 text-black hover:scale-105 active:scale-95 shadow-brand-yellow/20"
+                        className="font-bold transition-all duration-300 shadow-xl w-full md:w-auto bg-gradient-to-br from-brand-yellow to-yellow-600 text-black hover:scale-105 active:scale-95 shadow-brand-yellow/20 text-xs sm:text-sm"
                     >
                         <Plus className="w-4 h-4 mr-2" /> Add New Project
                     </Button>
-                </div>
-            </div>
+                }
+            />
 
             <div className="h-px w-full bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
 

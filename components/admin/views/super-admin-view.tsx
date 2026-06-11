@@ -3,9 +3,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Layers, Users, Zap, ArrowUpRight, ArrowRight } from "lucide-react";
+import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export async function SuperAdminDashboardView() {
-    // Ambil data performa Jasa Agensi (Services) secara paralel
+    // Ambil data Jasa Agensi (Services) secara paralel
     const [revenueResult, activeCount, pendingCount, totalClientsResult] = await Promise.all([
         prisma.estimate.aggregate({
             where: { status: 'paid' },
@@ -31,20 +32,15 @@ export async function SuperAdminDashboardView() {
 
     return (
         <div className="flex flex-col gap-6 w-full py-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white">
-                        Command Center
-                    </h1>
-                    <p className="text-zinc-400 mt-1">
-                        Agency performance at a glance.
-                    </p>
-                </div>
-                <Button className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto">
-                    <Zap className="w-4 h-4 mr-2" />
-                    Quick Action
-                </Button>
-            </div>
+            <AdminHeaderSetter
+                title="Command Center"
+                actions={
+                    <Button className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto">
+                        <Zap className="w-4 h-4 mr-2" />
+                        Quick Action
+                    </Button>
+                }
+            />
 
             {/* Metrics Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
