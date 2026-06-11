@@ -29,63 +29,23 @@ export async function updateProject(projectId: string, body: unknown) {
 
     try {
         const parsed = updateProjectSchema.parse(body);
-        const { developerId, ...otherUpdates } = parsed;
 
         const project = await prisma.$transaction(async (tx) => {
             const updated = await tx.project.update({
                 where: { id: projectId },
-                data: otherUpdates,
+                data: parsed,
             });
 
-            if (developerId) {
-                const squadProfile = await tx.squadProfile.findUnique({
-                    where: { userId: developerId }
-                });
-
-                if (squadProfile) {
-                    const existingApp = await tx.missionApplication.findFirst({
-                        where: {
-                            missionId: projectId,
-                            squadId: squadProfile.id
-                        }
-                    });
-
-                    if (!existingApp) {
-                        await tx.missionApplication.create({
-                            data: {
-                                missionId: projectId,
-                                squadId: squadProfile.id,
-                                status: "invited",
-                            }
-                        });
-
-                        await tx.notification.create({
-                            data: {
-                                userId: developerId,
-                                title: "New Mission Invitation",
-                                content: `You have been invited to join mission: ${updated.title || 'Untitled Project'}. Check your Squad Dashboard to accept.`,
-                                link: "/squad",
-                                type: "invitation"
-                            }
-                        });
-
-                    } else if (existingApp.status !== "accepted" && existingApp.status !== "invited") {
-                        await tx.missionApplication.update({
-                            where: { id: existingApp.id },
-                            data: { status: "invited" }
-                        });
-
-                        await tx.notification.create({
-                            data: {
-                                userId: developerId,
-                                title: "Mission Invitation Updated",
-                                content: `You have a pending invitation for mission: ${updated.title || 'Untitled Project'}.`,
-                                link: "/squad",
-                                type: "invitation"
-                            }
-                        });
+            if (parsed.developerId) {
+                await tx.notification.create({
+                    data: {
+                        userId: parsed.developerId,
+                        title: "New Project Assignment",
+                        content: `You have been assigned to project: ${updated.title || 'Untitled Project'}.`,
+                        link: `/dashboard/projects/${projectId}`,
+                        type: "assignment"
                     }
-                }
+                });
             }
 
             return updated;
@@ -112,30 +72,25 @@ export async function createDailyLog(projectId: string, formData: FormData) {
     const isGlobalAdmin = await isAdmin();
 
     if (!isGlobalAdmin) {
-        const squadProfile = await prisma.squadProfile.findUnique({
-            where: { userId: user.id }
-        });
-
-        if (!squadProfile) return { error: "Unauthorized" };
-
-        const application = await prisma.missionApplication.findUnique({
+        const hasDevPermission = await prisma.userPermission.findUnique({
             where: {
-                missionId_squadId: {
-                    missionId: projectId,
-                    squadId: squadProfile.id
+                userId_key: {
+                    userId: user.id,
+                    key: 'developer'
                 }
             }
         });
+
+        if (!hasDevPermission) return { error: "Unauthorized" };
 
         const project = await prisma.project.findUnique({
             where: { id: projectId },
             select: { developerId: true }
         });
 
-        const isAssigned = project?.developerId === squadProfile.id;
-        const isAccepted = application?.status === 'accepted';
-
-        if (!isAssigned && !isAccepted) return { error: "Unauthorized access to this mission" };
+        if (project?.developerId !== user.id) {
+            return { error: "Unauthorized access to this project" };
+        }
     }
 
     try {
@@ -332,33 +287,9 @@ export async function removeTeamMember(projectId: string, squadId: string) {
     if (!await isAdmin()) return { error: "Unauthorized" };
 
     try {
-        await prisma.$transaction(async (tx) => {
-            await tx.missionApplication.delete({
-                where: {
-                    missionId_squadId: {
-                        missionId: projectId,
-                        squadId: squadId
-                    }
-                }
-            });
-
-            const squadProfile = await tx.squadProfile.findUnique({
-                where: { id: squadId }
-            });
-
-            if (squadProfile) {
-                const project = await tx.project.findUnique({
-                    where: { id: projectId },
-                    select: { developerId: true }
-                });
-
-                if (project?.developerId === squadProfile.userId) {
-                    await tx.project.update({
-                        where: { id: projectId },
-                        data: { developerId: null }
-                    });
-                }
-            }
+        await prisma.project.update({
+            where: { id: projectId },
+            data: { developerId: null }
         });
 
         revalidatePath(`/admin/pm/${projectId}`);

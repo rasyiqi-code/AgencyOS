@@ -88,9 +88,7 @@ export function SidebarSuperAdmin() {
             {/* 4. SISTEM & KONFIGURASI */}
             <SidebarSectionHeader>System & Tools</SidebarSectionHeader>
             <SidebarLink href="/admin/media" icon={Images} label="Media Library" />
-            <SidebarLink href="/admin/licenses" icon={Key} label="Licenses" />
             <SidebarLink href="/admin/team" icon={ShieldCheck} label="Team Roles" />
-            <SidebarLink href="/admin/system/webhooks" icon={Globe} label="Webhook Simulator" />
             <SidebarLink href="/admin/system/settings" icon={Settings} label={t("system")} />
         </>
     );

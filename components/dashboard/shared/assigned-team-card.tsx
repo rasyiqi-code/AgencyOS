@@ -3,14 +3,13 @@
 
 import { User, Github, UserCheck, XCircle } from "lucide-react";
 import { DeveloperSelector } from "./developer-selector";
-import { SquadProfile } from "@prisma/client";
-import type { ExtendedSquadProfile } from "@/lib/shared/types";
+import type { TeamMember } from "@/lib/shared/types";
 import { removeTeamMember } from "@/app/actions/projects";
 
 interface AssignedTeamCardProps {
     projectId: string;
     developerId: string | null;
-    assignedProfile?: SquadProfile | null;
+    assignedProfile?: TeamMember | null;
     repoOwner: string | null;
     repoName: string | null;
     repoUrl: string | null;
@@ -26,9 +25,9 @@ export function AssignedTeamCard({
     repoName,
     repoUrl,
     isEditable = false,
-}: AssignedTeamCardProps & { team?: ExtendedSquadProfile[] }) {
+}: AssignedTeamCardProps & { team?: TeamMember[] }) {
     // Combine single profile if exists and team is empty (migration path)
-    const effectiveTeam = (team.length > 0 ? team : (assignedProfile ? [assignedProfile] : [])) as ExtendedSquadProfile[];
+    const effectiveTeam = (team.length > 0 ? team : (assignedProfile ? [assignedProfile] : [])) as TeamMember[];
 
     return (
         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">

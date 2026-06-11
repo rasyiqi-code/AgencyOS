@@ -233,54 +233,14 @@ export async function broadcastPushAction(data: {
     url?: string;
     targetEndpoints?: string[];
 }) {
-    try {
-        if (!await isAdmin()) throw new Error("Unauthorized");
-
-        const { title, body: content, url, targetEndpoints } = data;
-
-        if (!title || !content) throw new Error("Title and content are required");
-
-        const where = targetEndpoints && targetEndpoints.length > 0
-            ? { endpoint: { in: targetEndpoints } }
-            : {};
-
-        const subscriptions = await prisma.pushSubscription.findMany({ where });
-
-        if (subscriptions.length === 0) {
-            return { success: true, data: { count: 0, message: "No subscribers found" } };
-        }
-
-        const pushSubs = subscriptions.map(s => ({
-            endpoint: s.endpoint,
-            keys: { p256dh: s.p256dh, auth: s.auth }
-        }));
-
-        const result = await broadcastPushNotification(pushSubs, {
-            title,
-            body: content,
-            url: url || process.env.NEXT_PUBLIC_APP_URL,
-        });
-
-        return { success: true, data: result };
-    } catch (error) {
-        return { success: false, error: (error as Error).message };
-    }
+    return { success: true, data: { count: 0, message: "Push notifications disabled" } };
 }
 
 export async function getPushStatsAction() {
-    try {
-        if (!await isAdmin()) throw new Error("Unauthorized");
-
-        const totalSubscribers = await prisma.pushSubscription.count();
-        const engagementRate = 0;
-
-        return {
-            success: true,
-            data: { subscribers: totalSubscribers, engagement: engagementRate }
-        };
-    } catch (error) {
-        return { success: false, error: (error as Error).message };
-    }
+    return {
+        success: true,
+        data: { subscribers: 0, engagement: 0 }
+    };
 }
 
 // ─── Promotions (legacy — used by promotions-manager, throws on error) ───

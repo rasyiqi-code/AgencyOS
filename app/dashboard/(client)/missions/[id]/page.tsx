@@ -72,9 +72,17 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     }[project.status] || project.status;
 
 
-    const assignedProfile = project.developerId ? await prisma.squadProfile.findUnique({
-        where: { userId: project.developerId }
+    const assignedPermission = project.developerId ? await prisma.userPermission.findFirst({
+        where: { userId: project.developerId, key: 'developer' }
     }) : null;
+
+    const assignedProfile = assignedPermission ? {
+        id: assignedPermission.id,
+        userId: assignedPermission.userId,
+        name: assignedPermission.email.split('@')[0],
+        email: assignedPermission.email,
+        role: 'Developer',
+    } : null;
 
     return (
         <div className="pb-6 min-h-screen">

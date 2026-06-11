@@ -35,7 +35,6 @@ model Project {
   briefs             Brief[]
   dailyLogs          DailyLog[]
   feedback           Feedback[]
-  applications       MissionApplication[]
   orders             Order[]
   estimate           Estimate?            @relation(fields: [estimateId], references: [id])
   service            Service?             @relation(fields: [serviceId], references: [id])
@@ -345,112 +344,7 @@ model PageSeo {
   ogImage_id     String?
 }
 
-model SquadProfile {
-  id           String               @id @default(cuid())
-  userId       String               @unique
-  name         String
-  email        String
-  role         String               @default("engineer")
-  skills       String[]
-  yearsOfExp   Int
-  bio          String?
-  linkedin     String?
-  github       String?
-  portfolio    String?
-  avatar       String?
-  specialty    String?
-  status       String               @default("pending")
-  availability String               @default("available")
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  applications   MissionApplication[]
-  payoutRequests PayoutRequest[]
 
-  @@index([status])
-}
-
-model MissionApplication {
-  id        String       @id @default(cuid())
-  missionId String
-  squadId   String
-  status    String       @default("pending")
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  mission   Project      @relation(fields: [missionId], references: [id])
-  squad     SquadProfile @relation(fields: [squadId], references: [id])
-
-  @@unique([missionId, squadId])
-  @@index([status])
-}
-
-model AffiliateProfile {
-  id             String          @id @default(cuid())
-  userId         String          @unique
-  name           String
-  email          String          @unique
-  referralCode   String          @unique
-  status         String          @default("pending")
-  commissionRate Float           @default(10)
-  totalEarnings  Float           @default(0)
-  paidEarnings   Float           @default(0)
-  bankInfo       Json?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  commissions    CommissionLog[]
-  payoutRequests PayoutRequest[]
-  referrals      ReferralUsage[]
-
-  @@index([status])
-}
-
-model PayoutRequest {
-  id          String            @id @default(cuid())
-  affiliateId String?
-  squadId     String?
-  amount      Float
-  status      String            @default("pending")
-  bankInfo    Json?
-  notes       String?
-  processedAt DateTime?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  affiliate   AffiliateProfile? @relation(fields: [affiliateId], references: [id])
-  squad       SquadProfile?     @relation(fields: [squadId], references: [id])
-
-  @@index([affiliateId])
-  @@index([squadId])
-}
-
-model ReferralUsage {
-  id             String           @id @default(cuid())
-  affiliateId    String
-  referredUserId String?
-  visitorId      String?
-  source         String?
-  converted      Boolean          @default(false)
-  convertedAt    DateTime?
-  metadata       Json?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  affiliate      AffiliateProfile @relation(fields: [affiliateId], references: [id])
-
-  @@unique([affiliateId, visitorId])
-}
-
-model CommissionLog {
-  id          String           @id @default(cuid())
-  affiliateId String
-  amount      Float
-  status      String           @default("pending")
-  orderId     String?
-  description String?
-  paidAt      DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id])
-
-  @@index([affiliateId])
-}
 
 model MarketingAsset {
   id           String   @id @default(cuid())
@@ -468,76 +362,7 @@ model MarketingAsset {
   @@index([isActive])
 }
 
-model Product {
-  id             String         @id @default(cuid())
-  name           String
-  slug           String         @unique
-  description    String?
-  price          Float          @default(0)
-  type           String         @default("plugin")
-  isActive       Boolean        @default(true)
-  name_id        String?
-  description_id String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  purchaseType   String         @default("one_time")
-  interval       String?
-  image          String?
-  fileUrl        String?
-  currency       String         @default("USD")
-  externalWebhookUrl String?
-  digitalOrders  DigitalOrder[]
-  licenses       License[]
 
-  @@index([isActive])
-  @@index([type])
-}
-
-model License {
-  id             String        @id @default(cuid())
-  key            String        @unique
-  productId      String
-  userId         String?
-  status         String        @default("active")
-  maxActivations Int           @default(1)
-  activations    Int           @default(0)
-  expiresAt      DateTime?
-  metadata       Json?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  digitalOrder   DigitalOrder?
-  product        Product       @relation(fields: [productId], references: [id])
-
-  @@index([productId])
-  @@index([userId])
-}
-
-model DigitalOrder {
-  id              String   @id @default(cuid())
-  userId          String?
-  userEmail       String
-  userName        String?
-  productId       String
-  amount          Float
-  status          String   @default("PENDING")
-  snapToken       String?
-  paymentId       String?
-  paymentType     String?
-  paymentMetadata Json?
-  metadata        Json?
-  licenseId       String?  @unique
-  proofUrl        String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  license         License? @relation(fields: [licenseId], references: [id])
-  product         Product  @relation(fields: [productId], references: [id])
-
-  @@index([productId])
-  @@index([userId])
-  @@index([status])
-  @@index([userEmail, status])
-  @@index([createdAt])
-}
 
 model PopUp {
   id               String   @id @default(cuid())
@@ -581,17 +406,7 @@ model Lead {
   @@index([createdAt])
 }
 
-model PushSubscription {
-  id        String   @id @default(cuid())
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
-  metadata  Json?    // For device info, locale, etc.
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@index([endpoint])
-}
 
 model Portfolio {
   id          String   @id @default(cuid())

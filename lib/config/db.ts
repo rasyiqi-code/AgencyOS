@@ -22,7 +22,7 @@ const poolMax = (!isNaN(parsedPoolSize) && parsedPoolSize > 0)
     : (isDev ? 10 : (isServerless ? 2 : 5));
 
 const idleTimeout = isServerless ? 10000 : 30000; // 10 detik di serverless agar cepat membebaskan koneksi
-const connectionTimeout = isServerless ? 15000 : 5000; // 15 detik di serverless untuk toleransi cold start Neon DB
+const connectionTimeout = 30000; // 30 detik untuk memberikan toleransi cold start Neon DB baik di local maupun serverless
 
 const pool = globalForPrisma.pg_pool_v8 ?? new Pool({
     connectionString: process.env.DATABASE_URL,

@@ -1,8 +1,11 @@
 
 import { z } from "zod";
-import type { SquadProfile } from "@prisma/client";
-
-export interface ExtendedSquadProfile extends SquadProfile {
+export interface TeamMember {
+    id: string;
+    userId: string;
+    name: string;
+    email: string;
+    role: string;
     applicationStatus?: string;
 }
 

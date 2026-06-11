@@ -26,54 +26,12 @@ export async function manageTeamPermission(
             return { success: false, error: "Admin cannot manage their own permissions to prevent accidental lockout." };
         }
 
-        if (key === 'developer') {
-            if (action === 'grant') {
-                const existingProfile = await prisma.squadProfile.findUnique({
-                    where: { userId }
-                });
-
-                if (existingProfile) {
-                    await prisma.squadProfile.update({
-                        where: { userId },
-                        data: { status: 'vetted' }
-                    });
-                } else {
-                    let targetName = email.split('@')[0];
-                    try {
-                        const targetUser = await hexclaveServerApp.getUser(userId);
-                        if (targetUser?.displayName) {
-                            targetName = targetUser.displayName;
-                        }
-                    } catch {
-                        console.warn(`[ADMIN_TEAM] Could not fetch user ${userId}, using email as name.`);
-                    }
-
-                    await prisma.squadProfile.create({
-                        data: {
-                            userId,
-                            email,
-                            name: targetName,
-                            role: 'engineer',
-                            yearsOfExp: 0,
-                            skills: [],
-                            status: 'vetted'
-                        }
-                    });
-                }
-            } else if (action === 'revoke') {
-                await prisma.squadProfile.update({
-                    where: { userId },
-                    data: { status: 'rejected' }
-                });
-            }
+        if (action === 'grant') {
+            await grantPermission(userId, email, key);
+        } else if (action === 'revoke') {
+            await revokePermission(userId, key);
         } else {
-            if (action === 'grant') {
-                await grantPermission(userId, email, key);
-            } else if (action === 'revoke') {
-                await revokePermission(userId, key);
-            } else {
-                return { success: false, error: "Invalid action" };
-            }
+            return { success: false, error: "Invalid action" };
         }
 
         revalidatePath('/admin/team');
@@ -84,35 +42,30 @@ export async function manageTeamPermission(
     }
 }
 
-/**
- * Mengambil daftar developer tim agensi yang terdaftar untuk penugasan project.
- */
 export async function getSquadDevelopers() {
     if (!await isAdmin()) {
         return { success: false, error: "Unauthorized" };
     }
 
     try {
-        const profiles = await prisma.squadProfile.findMany({
-            where: { status: 'vetted' }, // Hanya developer yang sudah vetted
-            orderBy: { name: 'asc' },
+        const permissions = await prisma.userPermission.findMany({
+            where: { key: 'developer' },
+            orderBy: { email: 'asc' },
             select: {
                 userId: true,
-                name: true,
-                email: true,
-                role: true
+                email: true
             }
         });
 
-        const developers = profiles.map(p => ({
+        const developers = permissions.map(p => ({
             id: p.userId,
-            displayName: `${p.name} (${p.role})`,
+            displayName: `${p.email.split('@')[0]} (Developer)`,
             primaryEmail: p.email,
         }));
 
         return { success: true, data: developers };
     } catch (error) {
-        console.error("Failed to fetch squad profiles:", error);
+        console.error("Failed to fetch developers:", error);
         return { success: false, error: "Internal Server Error" };
     }
 }

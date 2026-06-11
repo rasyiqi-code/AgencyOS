@@ -12,7 +12,7 @@ import { DailyLogFeed } from "@/components/dashboard/missions/daily-log-feed";
 import { WorkbenchStatus } from "@/components/dashboard/missions/workbench-status";
 import { RepoActivity } from "@/components/dashboard/missions/repo-activity";
 import { Badge } from "@/components/ui/badge";
-import { type ExtendedProject, type ProjectFile, type ExtendedSquadProfile } from "@/lib/shared/types";
+import { type ExtendedProject, type ProjectFile, type TeamMember } from "@/lib/shared/types";
 import { PreviewUploader } from "./preview-uploader";
 import { FileManager } from "./file-manager";
 import { FeedbackBoard } from "@/components/feedback/board";
@@ -48,22 +48,18 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
 
     if (!project) notFound();
 
-    // Fetch Team (Accepted or Invited Applications)
-    const teamApplications = await prisma.missionApplication.findMany({
-        where: {
-            missionId: project.id,
-            status: { in: ['accepted', 'invited'] }
-        },
-        include: {
-            squad: true
-        }
-    });
+    const assignedPermission = project.developerId ? await prisma.userPermission.findFirst({
+        where: { userId: project.developerId, key: 'developer' }
+    }) : null;
 
-    // Map with status so we can display it
-    const team: ExtendedSquadProfile[] = teamApplications.map(app => ({
-        ...app.squad,
-        applicationStatus: app.status
-    }));
+    const team: TeamMember[] = assignedPermission ? [{
+        id: assignedPermission.id,
+        userId: assignedPermission.userId,
+        name: assignedPermission.email.split('@')[0],
+        email: assignedPermission.email,
+        role: 'Developer',
+        applicationStatus: 'accepted'
+    }] : [];
 
     return (
         <div className="w-full py-4 pb-12">
