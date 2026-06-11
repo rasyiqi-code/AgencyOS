@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Suspense } from "react";
 import nextDynamic from "next/dynamic";
 
 import "./globals.css";
 import { HexclaveTheme, HexclaveProvider } from "@hexclave/next";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { Toaster } from "@/components/ui/sonner";
-import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
 import { CurrencyProvider } from "@/components/providers/currency-provider";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -232,9 +230,6 @@ export default async function RootLayout({
               <HexclaveTheme>
                 {children}
                 <ScrollRestorer />
-                <Suspense fallback={null}>
-                  <ConditionalFloatingChat />
-                </Suspense>
                 <Toaster />
                 <ServiceWorkerRegistrar />
                 <InstallPrompt />

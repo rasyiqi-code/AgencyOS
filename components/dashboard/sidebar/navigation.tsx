@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Settings, Inbox, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare, Package, Users } from "lucide-react";
+import { LayoutDashboard, Settings, Inbox, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare } from "lucide-react";
 import { SidebarLink, SidebarSectionHeader } from "./roles";
 import { useTranslations } from "next-intl";
 
