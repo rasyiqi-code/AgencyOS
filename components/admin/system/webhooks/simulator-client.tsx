@@ -8,7 +8,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Send, Globe, Database, Code, RefreshCcw, CheckCircle2, AlertCircle } from "lucide-react";
 import { simulateWebhook } from "@/app/actions/webhooks";
-import { WEBHOOK_PAYLOAD } from "@/components/public/docs/constants";
+
+
+// Payload default untuk simulasi webhook (contoh format event subscription)
+const WEBHOOK_PAYLOAD = JSON.stringify({
+    event: "subscription.activated",
+    timestamp: new Date().toISOString(),
+    data: {
+        orderId: "ORDER-EXAMPLE-001",
+        email: "user@example.com",
+        productSlug: "your-product-slug",
+        licenseKey: "XXXX-XXXX-XXXX-XXXX",
+        status: "active"
+    }
+}, null, 2);
 
 interface Product {
     id: string;

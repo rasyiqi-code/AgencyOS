@@ -51,11 +51,9 @@ export async function GET(req: Request) {
         "/services",
         "/portfolio",
         "/contact",
-        "/experts",
         "/price-calculator",
         "/submit-testimonial",
         "/promosi",
-        "/docs",
         "/privacy",
         "/terms",
     ];

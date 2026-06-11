@@ -42,12 +42,6 @@ export async function GET() {
         select: { title: true, slug: true, description: true, price: true, currency: true },
     });
 
-    // Fetch active products
-    const products = await prisma.product.findMany({
-        where: { isActive: true },
-        orderBy: { updatedAt: "desc" },
-        select: { name: true, slug: true, description: true, price: true, currency: true, type: true },
-    });
 
     // Build the markdown content following llms-txt standard
     const lines: string[] = [
@@ -81,13 +75,7 @@ export async function GET() {
         `- [Services](${baseUrl}/services): Our productized services with transparent pricing`
     );
     lines.push(
-        `- [Products](${baseUrl}/products): Digital products, templates, and plugins`
-    );
-    lines.push(
         `- [Portfolio](${baseUrl}/portfolio): Showcase of completed projects and designs`
-    );
-    lines.push(
-        `- [Experts](${baseUrl}/experts): Meet our team of senior engineers and vetted experts`
     );
     lines.push(
         `- [Price Calculator](${baseUrl}/price-calculator): AI-powered instant project cost estimator`
@@ -113,26 +101,6 @@ export async function GET() {
         lines.push("");
     }
 
-    // Products section
-    if (products.length > 0) {
-        lines.push("## Digital Products");
-        lines.push("");
-        for (const product of products) {
-            const productUrl = `${baseUrl}/products/${product.slug}`;
-            const desc = product.description
-                ? product.description.substring(0, 150) +
-                (product.description.length > 150 ? "..." : "")
-                : "Digital product";
-            const priceStr =
-                product.price > 0
-                    ? ` (${product.currency} ${product.price.toLocaleString()})`
-                    : " (Free)";
-            lines.push(
-                `- [${product.name}](${productUrl}): ${desc}${priceStr}`
-            );
-        }
-        lines.push("");
-    }
 
     // Technical info
     lines.push("## Technical Details");
