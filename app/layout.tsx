@@ -16,6 +16,7 @@ import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
 import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
 import { ScrollRestorer } from "@/components/ui/scroll-restorer";
+import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-chat";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -234,6 +235,7 @@ export default async function RootLayout({
                 <ServiceWorkerRegistrar />
                 <InstallPrompt />
                 <MarketingPopup />
+                <ConditionalFloatingChat />
               </HexclaveTheme>
             </HexclaveProvider>
           </CurrencyProvider>
