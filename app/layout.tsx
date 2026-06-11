@@ -11,13 +11,11 @@ import { ConditionalFloatingChat } from "@/components/ui/conditional-floating-ch
 import { CurrencyProvider } from "@/components/providers/currency-provider";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
-import { PendingCheckoutRedirect } from "@/components/store/pending-checkout-redirect";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import NextTopLoader from 'nextjs-toploader';
 import Script from 'next/script';
 import { getSystemSettings } from "@/lib/server/settings";
 import { cn } from "@/lib/shared/utils";
-import { ReferralTracker } from "@/components/marketing/referral-tracker";
 import { ServiceWorkerRegistrar } from "@/components/pwa/service-worker-registrar";
 import { ScrollRestorer } from "@/components/ui/scroll-restorer";
 
@@ -102,7 +100,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const MarketingPopup = nextDynamic(() => import("@/components/public/marketing-popup").then(mod => mod.MarketingPopup));
-const PushNotificationBanner = nextDynamic(() => import("@/components/public/push-notification-banner").then(mod => mod.PushNotificationBanner));
 const InstallPrompt = nextDynamic(() => import("@/components/pwa/install-prompt").then(mod => mod.InstallPrompt));
 
 export const dynamic = 'force-dynamic';
@@ -235,8 +232,6 @@ export default async function RootLayout({
               <HexclaveTheme>
                 {children}
                 <ScrollRestorer />
-                <ReferralTracker />
-                <PendingCheckoutRedirect />
                 <Suspense fallback={null}>
                   <ConditionalFloatingChat />
                 </Suspense>
@@ -244,7 +239,6 @@ export default async function RootLayout({
                 <ServiceWorkerRegistrar />
                 <InstallPrompt />
                 <MarketingPopup />
-                <PushNotificationBanner />
               </HexclaveTheme>
             </HexclaveProvider>
           </CurrencyProvider>

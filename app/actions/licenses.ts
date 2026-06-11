@@ -93,7 +93,6 @@ export async function regenerateLicense(licenseId: string) {
             }
         });
 
-        revalidatePath('/dashboard/my-products');
         return { success: true, license: updated };
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Unknown error";

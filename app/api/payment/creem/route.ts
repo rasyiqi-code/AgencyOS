@@ -18,47 +18,30 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Order ID is required" }, { status: 400 });
         }
 
-        const isDigital = orderId.startsWith("DIGI-");
         let amount = 0;
         let title = "";
         let creemProductIdFromService = null;
         let paymentMetadata: Record<string, unknown> = {};
         let orderUserId = "";
 
-        if (isDigital) {
-            const digitalOrder = await prisma.digitalOrder.findUnique({
-                where: { id: orderId },
-                include: { product: true }
-            });
-
-            if (!digitalOrder) {
-                return NextResponse.json({ message: "Digital Order not found" }, { status: 404 });
-            }
-
-            amount = digitalOrder.amount;
-            title = digitalOrder.product.name;
-            paymentMetadata = (digitalOrder.paymentMetadata as unknown as Record<string, unknown>) || {};
-            orderUserId = digitalOrder.userId || "";
-        } else {
-            const order = await prisma.order.findUnique({
-                where: { id: orderId },
-                include: {
-                    project: {
-                        include: { service: true }
-                    }
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                project: {
+                    include: { service: true }
                 }
-            });
-
-            if (!order) {
-                return NextResponse.json({ message: "Order not found" }, { status: 404 });
             }
+        });
 
-            amount = order.amount;
-            title = order.project?.service?.title || order.project?.title || "Project Payment";
-            creemProductIdFromService = (order.project?.service as { creemProductId?: string | null })?.creemProductId;
-            paymentMetadata = (order.paymentMetadata as unknown as Record<string, unknown>) || {};
-            orderUserId = order.userId;
+        if (!order) {
+            return NextResponse.json({ message: "Order not found" }, { status: 404 });
         }
+
+        amount = order.amount;
+        title = order.project?.service?.title || order.project?.title || "Project Payment";
+        creemProductIdFromService = (order.project?.service as { creemProductId?: string | null })?.creemProductId;
+        paymentMetadata = (order.paymentMetadata as unknown as Record<string, unknown>) || {};
+        orderUserId = order.userId;
 
         // Ownership check: pastikan order milik user yang sedang login
         if (orderUserId && orderUserId !== user.id) {
@@ -70,12 +53,10 @@ export async function POST(req: NextRequest) {
         // 1. CHECK: Has a dynamic product already been created for this Order? (Use Metadata)
         if ((paymentMetadata as Record<string, string>).creemProductId) {
             productId = (paymentMetadata as Record<string, string>).creemProductId as string;
-
         }
         // 2. CHECK: Use synced Creem Product ID if available (Official Services)
         else if (creemProductIdFromService) {
             productId = creemProductIdFromService;
-
         }
         else {
             // FALLBACK: Create a NEW dynamic product
@@ -84,7 +65,7 @@ export async function POST(req: NextRequest) {
 
             const creem = await getCreem();
             const product = await creem.products.create({
-                name: isDigital ? title : `Invoice #${orderId.slice(-8).toUpperCase()}`,
+                name: `Invoice #${orderId.slice(-8).toUpperCase()}`,
                 description: `Payment for Order #${orderId}`,
                 price: Math.round(amount * 100), // Convert to cents
                 currency: "USD",
@@ -102,52 +83,32 @@ export async function POST(req: NextRequest) {
                 }
             };
 
-            if (isDigital) {
-                await prisma.digitalOrder.update({
-                    where: { id: orderId },
-                    data: updateData
-                });
-            } else {
-                await prisma.order.update({
-                    where: { id: orderId },
-                    data: updateData
-                });
-            }
-
+            await prisma.order.update({
+                where: { id: orderId },
+                data: updateData
+            });
         }
 
         // 2. Create Checkout Session
         const creem = await getCreem();
         const checkout = await creem.checkouts.create({
             productId: productId, // CamelCase
-            successUrl: isDigital
-                ? `${process.env.NEXT_PUBLIC_APP_URL}/digital-invoices/${orderId}`
-                : `${process.env.NEXT_PUBLIC_APP_URL}/api/payment/status?orderId=${orderId}`, // CamelCase
+            successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/payment/status?orderId=${orderId}`, // CamelCase
             metadata: {
                 orderId: orderId
             },
-
         });
 
-        // 3. Update Order with Payment Type
-
-
         // Ensure we don't pass undefined to Prisma (even though it's usually fine, let's be explicit)
-        const finalUpdate: { paymentType: string; paymentId?: string; transactionId?: string } = { paymentType: "creem" };
-        if (isDigital) finalUpdate.paymentId = checkout.id;
-        else finalUpdate.transactionId = checkout.id;
+        const finalUpdate: { paymentType: string; transactionId?: string } = { 
+            paymentType: "creem",
+            transactionId: checkout.id
+        };
 
-        if (isDigital) {
-            await prisma.digitalOrder.update({
-                where: { id: orderId },
-                data: finalUpdate
-            });
-        } else {
-            await prisma.order.update({
-                where: { id: orderId },
-                data: finalUpdate
-            });
-        }
+        await prisma.order.update({
+            where: { id: orderId },
+            data: finalUpdate
+        });
 
         return NextResponse.json({ checkout_url: checkout.checkoutUrl });
 

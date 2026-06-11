@@ -74,27 +74,6 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ success: true, url });
             }
 
-            // If not found in Order, try DigitalOrder
-            const digitalOrder = await prisma.digitalOrder.findUnique({ where: { id: orderId } });
-            if (digitalOrder) {
-                if (digitalOrder.userId !== user.id) {
-                    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-                }
-
-                const path = `proofs/digital-orders/${orderId}-${Date.now()}-${file.name}`;
-                const url = await uploadFile(file, path);
-
-                await prisma.digitalOrder.update({
-                    where: { id: orderId },
-                    data: {
-                        proofUrl: url,
-                        status: 'WAITING_VERIFICATION'
-                    } as unknown as Record<string, unknown>
-                });
-
-                return NextResponse.json({ success: true, url });
-            }
-
             return NextResponse.json({ error: "Not Found" }, { status: 404 });
         }
 

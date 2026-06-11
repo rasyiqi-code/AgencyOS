@@ -58,33 +58,6 @@ export async function notifyNewServiceOrder(data: {
 }
 
 /**
- * Send notification when a Digital Product Order is created.
- */
-export async function notifyNewDigitalOrder(data: {
-    orderId: string;
-    productName: string;
-    customerEmail: string;
-    amount: number;
-}) {
-    const resend = await getResendClient();
-    const adminEmail = await getAdminEmailTarget();
-    if (!resend) return;
-
-    await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
-        to: adminEmail,
-        subject: `[New Digital Order] ${data.productName} (${data.orderId})`,
-        html: `
-            <h3>New Digital Product Order</h3>
-            <p><strong>Product:</strong> ${data.productName}</p>
-            <p><strong>Customer:</strong> ${data.customerEmail}</p>
-            <p><strong>Amount:</strong> $${data.amount}</p>
-            <p>Status: PENDING</p>
-        `
-    });
-}
-
-/**
  * Send notification when ANY payment is successfully settled.
  */
 export async function notifyPaymentSuccess(data: {
@@ -107,32 +80,6 @@ export async function notifyPaymentSuccess(data: {
             <p><strong>Amount:</strong> $${data.amount.toFixed(2)}</p>
             <p><strong>Customer:</strong> ${data.customerName || "Guest"}</p>
             <p><strong>Type:</strong> ${data.type}</p>
-        `
-    });
-}
-
-/**
- * Send notification when a new Affiliate registers.
- */
-export async function notifyNewAffiliate(data: {
-    name: string;
-    email: string;
-    code: string;
-}) {
-    const resend = await getResendClient();
-    const adminEmail = await getAdminEmailTarget();
-    if (!resend) return;
-
-    await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
-        to: adminEmail,
-        subject: `[New Affiliate] ${data.name} just joined!`,
-        html: `
-            <h3>New Affiliate Registered</h3>
-            <p><strong>Name:</strong> ${data.name}</p>
-            <p><strong>Email:</strong> ${data.email}</p>
-            <p><strong>Referral Code:</strong> ${data.code}</p>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/marketing/affiliates">Manage Affiliates</a></p>
         `
     });
 }

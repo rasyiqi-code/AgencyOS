@@ -2,7 +2,7 @@ import { prisma } from "@/lib/config/db";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
-import { processAffiliateCommission } from "@/lib/affiliate/commission";
+
 import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 
 /**
@@ -170,10 +170,6 @@ async function handleProjectOrderWebhook(
                 data: { status: "paid" },
             });
         }
-
-        // Commission logic — gunakan existingOrder.id (DB ID asli),
-        // bukan orderId dari Midtrans yang bisa berupa uniqueTransactionId
-        await processAffiliateCommission(existingOrder.id, order.amount, order.paymentMetadata);
 
         // Notify Admin
         notifyPaymentSuccess({

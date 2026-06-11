@@ -4,7 +4,7 @@ import { prisma } from "@/lib/config/db";
 import { revalidatePath } from "next/cache";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { isAdmin } from "@/lib/shared/auth-helpers";
-import { processAffiliateCommissionsBulk } from "@/lib/affiliate/commission";
+
 import { notifyPaymentSuccess } from "@/lib/email/admin-notifications";
 import { sendPaymentSuccessEmail } from "@/lib/email/client-notifications";
 import { sendOrderCancelledEmail } from "@/lib/email/client-notifications";
@@ -98,7 +98,6 @@ export async function confirmPayment(id: string) {
                     data: { status: 'paid' }
                 });
 
-                await processAffiliateCommissionsBulk(pendingOrders);
             }
 
             try {

@@ -45,32 +45,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true });
         }
 
-        // Try DigitalOrder
-        const digitalOrder = await prisma.digitalOrder.findUnique({
-            where: { id: orderId }
-        });
-
-        if (digitalOrder) {
-            if (digitalOrder.userId !== user.id) {
-                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-            }
-
-            const currentMeta = digitalOrder.paymentMetadata as object || {};
-
-            await prisma.digitalOrder.update({
-                where: { id: orderId },
-                data: {
-                    paymentType,
-                    paymentMetadata: {
-                        ...currentMeta,
-                        ...metadata
-                    } as unknown as Prisma.InputJsonValue
-                }
-            });
-
-            return NextResponse.json({ success: true });
-        }
-
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
     } catch (error) {
         console.error("Select Payment Method Error:", error);

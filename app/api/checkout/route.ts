@@ -5,7 +5,6 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
-import { cookies } from "next/headers";
 import { secureRandomInt } from "@/lib/utils/crypto";
 
 export async function POST(req: Request) {
@@ -253,10 +252,6 @@ export async function POST(req: Request) {
         // Create a unique order ID
         const orderId = `ORDER-${Date.now()}-${secureRandomInt(0, 1000)}`;
 
-        // Check for affiliate cookie
-        const cookieStore = await cookies();
-        const affiliateCode = cookieStore.get('agencyos_affiliate_id')?.value;
-
         const finalOrderAmount = currency === "IDR" ? finalIdrAmount : amountToPay;
 
         debugSteps.push("Saving order to DB");
@@ -268,11 +263,10 @@ export async function POST(req: Request) {
                 userId: user.id,
                 project: finalProjectId ? { connect: { id: finalProjectId } } : undefined,
                 status: "pending",
-                type: paymentType, // Save type
+                type: paymentType,
                 currency: currency,
                 exchangeRate: finalRate,
                 paymentMetadata: {
-                    ...(affiliateCode ? { affiliate_code: affiliateCode } : {}),
                     ...(validatedCoupon ? { coupon_code: validatedCoupon.code, coupon_discount: validatedCoupon.discountValue, coupon_type: validatedCoupon.discountType } : {}),
                 } as unknown as Prisma.InputJsonValue,
             },

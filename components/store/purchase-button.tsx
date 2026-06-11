@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 interface PurchaseButtonProps {
     serviceId: string;
@@ -14,59 +13,29 @@ interface PurchaseButtonProps {
     selectedAddons?: Record<string, unknown>[];
 }
 
-import { useTranslations } from "next-intl";
-
-export function PurchaseButton({ serviceId, interval, className, customLabel, selectedAddons = [] }: PurchaseButtonProps) {
+/**
+ * Tombol CTA untuk service — mengarahkan user ke halaman price-calculator
+ * dengan service yang dipilih sebagai pre-fill, karena digital agency
+ * membutuhkan konsultasi dan estimasi harga sebelum checkout.
+ */
+export function PurchaseButton({ serviceId, interval, className, customLabel }: PurchaseButtonProps) {
     const t = useTranslations("Cards");
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
+    const locale = useLocale();
 
-    const handlePurchase = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch("/api/store/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ serviceId, selectedAddons })
-            });
-
-            const data = await res.json();
-
-            if (res.status === 401) {
-                // Store serviceId in sessionStorage for post-login checkout
-                sessionStorage.setItem('pendingServiceCheckout', serviceId);
-                toast.error(t("signIn"));
-                router.push(`/handler/sign-in?callbackUrl=${encodeURIComponent('/services?action=checkout')}`);
-                return;
-            }
-
-            if (!res.ok) throw new Error(data.error || "Failed to create order");
-
-            if (data.message) {
-                toast.success(data.message);
-            }
-
-            if (data.url) {
-                router.push(data.url);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error(t("error"));
-            setLoading(false);
-        }
-    };
+    const label = customLabel
+        ? customLabel
+        : interval === "one_time"
+            ? t("purchasePackage")
+            : t("purchasePlan");
 
     return (
         <Button
-            onClick={(e) => {
-                e.preventDefault();
-                handlePurchase();
-            }}
-            disabled={loading}
+            asChild
             className={`w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-11 text-sm rounded-xl transition-transform active:scale-[0.98] ${className}`}
         >
-            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-            {customLabel ? customLabel : (interval === 'one_time' ? t("purchasePackage") : t("purchasePlan"))}
+            <Link href={`/${locale}/price-calculator?service=${serviceId}`}>
+                {label}
+            </Link>
         </Button>
     );
 }

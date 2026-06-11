@@ -3,7 +3,7 @@ import { getCore } from "@/lib/integrations/midtrans";
 import { creem as getCreem } from "@/lib/integrations/creem";
 import { NextResponse } from "next/server";
 import type { CreemPaymentMetadata } from "@/types/payment";
-import { processAffiliateCommission } from "@/lib/affiliate/commission";
+
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -88,11 +88,6 @@ export async function GET(req: Request) {
                             }
                         }
 
-                        // Proses komisi affiliate (jika ada referral)
-                        const fullOrder = await prisma.order.findUnique({ where: { id: orderId } });
-                        if (fullOrder) {
-                            await processAffiliateCommission(orderId, fullOrder.amount, fullOrder.paymentMetadata);
-                        }
                     }
 
                     // Return updated status
@@ -118,9 +113,6 @@ export async function GET(req: Request) {
 
                     const status = creemStatus.status as string;
                     if (status === 'completed' || status === 'paid') {
-                        // Simpan paymentMetadata sebelum di-overwrite oleh creemStatus
-                        const existingOrder = await prisma.order.findUnique({ where: { id: orderId } });
-                        const affiliateMetadata = existingOrder?.paymentMetadata;
 
                         // Update Order
                         const updatedOrder = await prisma.order.update({
@@ -161,9 +153,6 @@ export async function GET(req: Request) {
                                 });
                             }
                         }
-
-                        // Proses komisi affiliate (gunakan metadata asli sebelum overwrite)
-                        await processAffiliateCommission(orderId, updatedOrder.amount, affiliateMetadata);
 
                         order.status = "paid"; // Update local var for redirect logic
                     }
