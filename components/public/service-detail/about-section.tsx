@@ -32,8 +32,8 @@ export function AboutSection({ service, displayDescription, displayAddons, selec
                 />
             </div>
 
-            {/* Right Column: Add-ons (1/3 width) as Sidebar */}
-            {service.priceType === 'STARTING_AT' && displayAddons && displayAddons.length > 0 ? (
+            {/* Kolom Kanan: Add-ons (1/3 lebar) sebagai Sidebar */}
+            {displayAddons && displayAddons.length > 0 ? (
                 <div className="space-y-6 sticky top-24">
                     <div className="space-y-1">
                         <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">

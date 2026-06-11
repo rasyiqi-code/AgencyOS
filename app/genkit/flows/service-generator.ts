@@ -67,18 +67,18 @@ export const serviceGeneratorFlow = ai.defineFlow(
                  * If currency is "USD", the price should be a realistic global price (e.g., 500 or 2500).
                  * NEVER mix large Indonesian numbers with USD currency.
                - interval: "one_time", "monthly", or "yearly".
-               - CRITICAL INTERVAL & ADD-ON LOGIC:
-                 * If priceType is "STARTING_AT": interval MUST be "one_time". You MUST generate 2-3 logical add-ons.
-                 * If priceType is "FIXED": interval can be "one_time", "monthly", or "yearly". You MUST NOT generate any add-ons (set "addons" and "addons_id" to empty array []).
-               - recommended_price: Generate a realistic base price matching the selected currency.
-            6. Add-ons ("addons" & "addons_id"):
-               - For STARTING_AT services, brainstorm 3-5 logical, high-value upsell options.
-               - CRITICAL ADD-ON PRICING LOGIC: 
-                 * Add-on prices MUST be realistic and proportional to the base price.
-                 * Usually, an add-on should be between 5% to 25% of the "recommended_price".
-                 * NEVER make an add-on more expensive than 50% of the base price unless it's a major upgrade.
-               - Each addon has: name, price, interval (one_time/monthly/yearly), currency (MUST match the main service currency).
-               - "addons_id" MUST be the Indonesian translation of the exact same addons.
+                - LOGIKA INTERVAL & ADD-ON:
+                  * Pilihan interval ("one_time", "monthly", "yearly") dapat digunakan untuk kedua jenis priceType ("FIXED" dan "STARTING_AT") sesuai kebutuhan layanan tersebut.
+                  * Layanan bertipe "FIXED" maupun "STARTING_AT" dapat memiliki add-ons. Silakan buat 2-4 opsi add-ons yang logis dan memberikan nilai tambah.
+                - recommended_price: Generate a realistic base price matching the selected currency.
+             6. Add-ons ("addons" & "addons_id"):
+                - Buat 2-4 add-ons (upsell options) yang logis dan bernilai tinggi untuk layanan tersebut.
+                - LOGIKA HARGA ADD-ON: 
+                  * Harga add-on harus realistis dan proporsional dengan harga dasar (recommended_price).
+                  * Biasanya, harga add-on berkisar antara 5% hingga 25% dari "recommended_price".
+                  * Jangan membuat add-on yang lebih mahal dari 50% harga dasar kecuali jika itu merupakan peningkatan fungsionalitas utama.
+                - Setiap add-on memiliki properti: name, price, interval (one_time/monthly/yearly), dan currency (HARUS sama dengan mata uang utama layanan).
+                - "addons_id" HARUS berupa terjemahan Bahasa Indonesia dari daftar add-ons yang sama persis.
 
             CRITICAL: All "_id" fields must contain human-readable Indonesian text.
             Return strictly valid JSON matching the schema.
