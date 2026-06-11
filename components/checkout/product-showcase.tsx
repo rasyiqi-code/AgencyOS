@@ -21,7 +21,7 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductSh
         : (estimate.service?.features as string[]) || [];
 
     return (
-        <div className="space-y-8 flex flex-col justify-between h-full text-white p-6 sm:p-8 relative overflow-hidden bg-zinc-950">
+        <div className="space-y-8 flex flex-col justify-between h-full text-white p-6 pl-0 sm:p-8 sm:pl-0 lg:pr-12 lg:py-4 relative overflow-hidden bg-transparent">
             {/* Background glow effects */}
             <div className="absolute -top-32 -left-32 w-64 h-64 bg-lime-500/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-32 left-16 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -49,9 +49,10 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductSh
                         {estimate.title}
                     </h1>
                     
-                    <p className="text-sm sm:text-base text-zinc-400 font-medium leading-relaxed max-w-xl">
-                        {estimate.summary}
-                    </p>
+                    <div 
+                        className="text-sm sm:text-base text-zinc-400 font-medium leading-relaxed max-w-xl prose prose-invert prose-sm"
+                        dangerouslySetInnerHTML={{ __html: estimate.summary }}
+                    />
                 </div>
 
                 {/* Deliverables / Checklist */}

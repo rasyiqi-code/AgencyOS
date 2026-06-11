@@ -95,11 +95,11 @@ export function CheckoutPortal({
 
     return (
         <div className="max-w-7xl mx-auto w-full">
-            {/* Main Portal Container: 50% split adapt layout (lg:col-span-5 & lg:col-span-7) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl border border-white/10 overflow-hidden shadow-2xl bg-zinc-950/40 backdrop-blur-md relative z-10 min-h-[500px]">
+            {/* Main Portal Container: Menyatu langsung dengan latar belakang (borderless & backgroundless) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 relative z-10 min-h-[500px]">
                 
                 {/* Left Side: Product Showcase (lg:col-span-5) */}
-                <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/10">
+                <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/5">
                     <ProductShowcase 
                         estimate={estimate}
                         bonuses={bonuses}

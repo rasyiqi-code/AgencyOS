@@ -133,7 +133,7 @@ export default async function CheckoutPage(props: PageProps) {
 
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-24">
-            <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
+                <div className="max-w-7xl mx-auto px-6 py-8 md:py-24 w-full">
                     <CheckoutProgress key={estimate.status === 'paid' ? 2 : 1} currentStep={estimate.status === 'paid' ? 2 : 1} />
                     <CheckoutPortal
                         estimate={extendedEstimate}

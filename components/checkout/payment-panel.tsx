@@ -202,10 +202,10 @@ export function PaymentPanel({
 
     // 2. Tampilan Form & Konfigurasi Aktif (Minecraft Server Style Redesign)
     return (
-        <div className="h-full flex flex-col justify-between p-6 sm:p-8 relative bg-zinc-900/40 border-l border-white/5 backdrop-blur-md">
+        <div className="h-full flex flex-col justify-between p-6 pr-0 sm:p-8 sm:pr-0 lg:pl-12 lg:py-4 bg-transparent border-0">
             
             {/* Scrollable Main Area */}
-            <div className="space-y-6 flex-grow pb-24">
+            <div className="space-y-6 flex-grow">
                 
                 {/* Header Produk Pilihan */}
                 <div className="flex items-center justify-between bg-zinc-950/40 border border-white/5 rounded-2xl p-4.5">
@@ -408,7 +408,7 @@ export function PaymentPanel({
             </div>
 
             {/* Premium Minecraft-style Bottom Specification & Checkout Action Footer Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur-md border-t border-white/10 px-6 py-4.5 flex flex-col sm:flex-row items-center justify-between gap-4 z-20">
+            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 z-20 lg:pr-0">
                 {/* Specification Details */}
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
                     <div className="flex flex-col">
