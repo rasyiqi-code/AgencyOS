@@ -95,7 +95,7 @@ export function CheckoutContent({
     const isPaid = estimate.status === 'paid';
 
     return (
-        <div className="max-w-4xl mx-auto w-full space-y-6">
+        <div className="max-w-7xl mx-auto w-full space-y-6">
             {/* Drawer/Sheet Ringkasan Pesanan samping (Premium Glassmorphism) */}
             {!isPaid && (
                 <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

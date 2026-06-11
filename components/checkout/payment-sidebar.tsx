@@ -203,10 +203,10 @@ export function PaymentSidebar({
                 {/* Background glow effect */}
                 <div className="absolute -top-32 -right-32 w-64 h-64 bg-lime-500/5 rounded-full blur-3xl pointer-events-none" />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 relative z-10 items-stretch">
                     
-                    {/* Left Sub-column: Billing info & Price Summary */}
-                    <div className="lg:col-span-5 space-y-4 flex flex-col justify-start">
+                    {/* Left Sub-column: Billing info & Price Summary (50% Width) */}
+                    <div className="space-y-4 flex flex-col justify-start lg:pr-12 lg:border-r lg:border-white/5">
                         <div className="space-y-4">
                             {/* Header */}
                             <div className="space-y-1">
@@ -352,13 +352,8 @@ export function PaymentSidebar({
                         </div>
                     </div>
 
-                    {/* Divider Line on Desktop */}
-                    <div className="hidden lg:flex lg:col-span-1 justify-center items-center">
-                        <div className="w-[1px] h-full min-h-[280px] bg-white/5" />
-                    </div>
-
-                    {/* Right Sub-column: Payment Selection or Checkout Actions */}
-                    <div className="lg:col-span-6 flex flex-col justify-start space-y-5">
+                    {/* Right Sub-column: Payment Selection or Checkout Actions (50% Width) */}
+                    <div className="flex flex-col justify-start space-y-5 lg:pl-6">
                         {activeOrderId ? (
                             // Tampilan jika Order ID sudah dibuat (Metode Pembayaran Aktif terintegrasi)
                             <div className="flex flex-col justify-start space-y-5">
