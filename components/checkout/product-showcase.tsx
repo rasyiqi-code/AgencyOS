@@ -1,7 +1,7 @@
 "use client";
 
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Check, Star, ArrowLeft, TrendingUp, MessageSquare, ShieldCheck, Flame } from "lucide-react";
+import { Check, Star, ArrowLeft, ShieldCheck, Flame } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 interface ProductShowcaseProps {
@@ -81,62 +81,6 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductSh
                     </div>
                 )}
 
-                {/* Premium HTML Mockup: Agency OS Dashboard Preview */}
-                <div className="bg-zinc-900/40 border border-white/5 rounded-2xl p-4 space-y-4 hover:border-white/10 transition-all duration-300 shadow-[0_12px_24px_rgba(0,0,0,0.3)] backdrop-blur-sm relative overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-lime-500/20 to-transparent" />
-                    
-                    {/* Mockup Header */}
-                    <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                        <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                        </div>
-                        <span className="text-[10px] text-zinc-600 font-mono tracking-tight group-hover:text-zinc-500 transition-colors">agencyos-portal.app</span>
-                    </div>
-
-                    {/* Mockup Body Content */}
-                    <div className="grid grid-cols-12 gap-3">
-                        {/* Diagram Trend */}
-                        <div className="col-span-7 bg-zinc-950/50 rounded-xl p-3 border border-white/5 flex flex-col justify-between min-h-[120px]">
-                            <div className="flex justify-between items-center">
-                                <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                                    <TrendingUp className="w-3 h-3 text-lime-400" />
-                                    Growth Rate
-                                </span>
-                                <span className="text-[10px] text-lime-400 font-bold">+28.4%</span>
-                            </div>
-                            
-                            {/* Line Chart Mockup */}
-                            <div className="h-10 flex items-end gap-1.5 pt-2">
-                                <div className="w-full bg-lime-500/10 rounded-sm h-[30%] group-hover:bg-lime-500/20 transition-all duration-500" />
-                                <div className="w-full bg-lime-500/10 rounded-sm h-[45%] group-hover:bg-lime-500/20 transition-all duration-500" />
-                                <div className="w-full bg-lime-500/15 rounded-sm h-[35%] group-hover:bg-lime-500/25 transition-all duration-500" />
-                                <div className="w-full bg-lime-500/20 rounded-sm h-[60%] group-hover:bg-lime-500/30 transition-all duration-500" />
-                                <div className="w-full bg-lime-500/30 rounded-sm h-[50%] group-hover:bg-lime-500/40 transition-all duration-500" />
-                                <div className="w-full bg-gradient-to-t from-lime-500 to-emerald-500 rounded-sm h-[90%] shadow-[0_0_8px_rgba(132,204,22,0.4)]" />
-                            </div>
-                        </div>
-
-                        {/* Obrolan Team Mockup */}
-                        <div className="col-span-5 bg-zinc-950/50 rounded-xl p-3 border border-white/5 flex flex-col justify-between min-h-[120px]">
-                            <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-1 mb-1">
-                                <MessageSquare className="w-3 h-3 text-blue-400" />
-                                Tim Project
-                            </span>
-                            <div className="space-y-2">
-                                <div className="bg-white/5 rounded-lg p-1.5 text-[9px] leading-tight max-w-[90%]">
-                                    <span className="text-zinc-500 block font-bold text-[8px] mb-0.5">PM Agensi</span>
-                                    Memulai setup proyek...
-                                </div>
-                                <div className="bg-lime-500/10 rounded-lg p-1.5 text-[9px] leading-tight max-w-[90%] ml-auto text-right">
-                                    <span className="text-lime-400 block font-bold text-[8px] mb-0.5">Klien (Anda)</span>
-                                    Terima kasih!
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Showcase Footer (Rating & Payment Methods) */}
