@@ -8,8 +8,7 @@ import Image from "next/image";
 import { ArrowRight, Zap, TrendingUp, Activity, BarChart3 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { TypingHeroTitle } from "./typing-hero-title";
-
-import { useFloatingChat } from "@/lib/store/floating-chat-store";
+import { useParams } from "next/navigation";
 import { cn } from "@/lib/shared/utils";
 
 interface HeroContentProps {
@@ -18,7 +17,8 @@ interface HeroContentProps {
 
 export function HeroContent({ agencyName }: HeroContentProps) {
     const t = useTranslations("Hero");
-    const { setIsMenuOpen } = useFloatingChat();
+    const params = useParams();
+    const locale = params?.locale as string || "id";
     const [isMobile, setIsMobile] = React.useState(false);
     const [mounted, setMounted] = React.useState(false);
     const shouldReduceMotion = !!useReducedMotion();
@@ -126,12 +126,14 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                         >
                             <div className="flex flex-row items-center justify-center lg:justify-start gap-3">
                                 <Button
-                                    onClick={() => setIsMenuOpen(true)}
+                                    asChild
                                     size="lg"
                                     className="h-11 px-5 text-sm md:h-14 md:px-8 md:text-lg bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full font-bold shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] transition-all cursor-pointer"
                                 >
-                                    {t("launchDashboard")}
-                                    <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
+                                    <Link href={`/${locale}/contact`}>
+                                        {t("launchDashboard")}
+                                        <ArrowRight className="ml-1.5 w-4 h-4 md:w-5 md:h-5" />
+                                    </Link>
                                 </Button>
 
                                 <Link href="/services">

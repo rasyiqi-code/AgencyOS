@@ -794,7 +794,15 @@
         "readyToScale": "Ready to scale?",
         "getQuote": "Quote",
         "instantSolution": "Solutions",
-        "showcase": "Showcase"
+        "showcase": "Showcase",
+        "viewRepo": "VIEW REPO",
+        "getApp": "GET APP",
+        "viewCase": "VIEW CASE",
+        "typeRepository": "Repository",
+        "typeMobileApp": "Mobile App",
+        "typeDesktopApp": "Desktop App",
+        "typeLiveSite": "Live Site",
+        "typeLiveRender": "Live Render"
     },
     "Missions": {
         "inOrbit": "In Orbit",
@@ -1062,5 +1070,23 @@
         "title": "Premium Services",
         "subtitle": "Scale your business with our productized services. High-quality deliverables, transparent pricing, and rapid turnaround times.",
         "backToHome": "Back to Home"
+    },
+    "ContactForm": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "subject": "Subject",
+        "message": "Message",
+        "messageSent": "Message Sent!",
+        "thankYou": "Thank you for reaching out. Our team will get back to you within 24 hours.",
+        "sendAnother": "Send another message",
+        "sending": "Sending...",
+        "sendMessage": "Send Message",
+        "networkError": "Network error. Please try again.",
+        "placeholderFirstName": "John",
+        "placeholderLastName": "Doe",
+        "placeholderEmail": "john@example.com",
+        "placeholderSubject": "Project Inquiry",
+        "placeholderMessage": "Tell us about your project..."
     }
 }

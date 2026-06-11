@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: string; icon: ComponentType<{ className?: string }>; label: string; iconClass?: string }) {
     const { isCollapsed } = useSidebarStore();
     const isClient = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+    const collapsed = isClient ? isCollapsed : false;
     const pathname = usePathname();
     const cleanHrefPath = href.split('?')[0];
     const isActive = pathname === cleanHrefPath || (
@@ -25,32 +26,25 @@ export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: stri
         pathname?.startsWith(cleanHrefPath)
     );
 
-    if (!isClient) return null;
-
     return (
         <Link
             href={href}
-            title={isCollapsed ? label : undefined}
+            title={collapsed ? label : undefined}
             className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-white/5 cursor-pointer",
                 isActive ? "text-brand-yellow bg-brand-yellow/10" : "text-zinc-400 hover:text-white",
-                isCollapsed ? "justify-center px-2" : ""
+                "group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2"
             )}
         >
             <Icon className={cn("h-4 w-4 shrink-0", iconClass)} />
-            {!isCollapsed && <span className="truncate">{label}</span>}
+            <span className="truncate group-data-[collapsed=true]:hidden">{label}</span>
         </Link>
     );
 }
 
 export function SidebarSectionHeader({ children }: { children: React.ReactNode }) {
-    const { isCollapsed } = useSidebarStore();
-    const isClient = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-    if (!isClient || isCollapsed) return <div className="h-4" />;
-
     return (
-        <div className="px-3 mb-2 mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500 truncate">
+        <div className="px-3 mb-2 mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500 truncate transition-all duration-300 group-data-[collapsed=true]:h-0 group-data-[collapsed=true]:opacity-0 group-data-[collapsed=true]:my-0 group-data-[collapsed=true]:py-0 group-data-[collapsed=true]:pointer-events-none group-data-[collapsed=true]:overflow-hidden">
             {children}
         </div>
     );

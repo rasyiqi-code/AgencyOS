@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, Maximize2, Github, Smartphone, Monitor, Code } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PortfolioCardProps {
     title: string;
@@ -34,6 +35,7 @@ function buildSrcDoc(content: string): string {
 }
 
 export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, description, category }: PortfolioCardProps) {
+    const t = useTranslations("Portfolio");
     const previewUrl = `/view-design/${slug}`;
     
     // Determine icon and CTA based on category
@@ -42,7 +44,7 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
     const isDesktop = category?.toLowerCase().includes("desktop") || category?.toLowerCase().includes("windows") || category?.toLowerCase().includes("mac");
     
     const Icon = isGithub ? Github : isAndroid ? Smartphone : isDesktop ? Monitor : Code;
-    const ctaText = isGithub ? "VIEW REPO" : (isAndroid || isDesktop) ? "GET APP" : "VIEW CASE";
+    const ctaText = isGithub ? t("viewRepo") : (isAndroid || isDesktop) ? t("getApp") : t("viewCase");
 
     return (
         <div className="group relative bg-zinc-950/40 border border-white/5 rounded-2xl flex flex-col overflow-hidden hover:border-brand-yellow/30 transition-all duration-700 shadow-2xl hover:shadow-brand-yellow/5 backdrop-blur-sm">
@@ -88,7 +90,7 @@ export function PortfolioCard({ title, slug, html, externalUrl, imageUrl, descri
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
                         </span>
                         <span className="text-[9px] text-zinc-300 font-bold uppercase tracking-widest font-mono">
-                            {isGithub ? "Repository" : isAndroid ? "Mobile App" : isDesktop ? "Desktop App" : externalUrl ? "Live Site" : "Live Render"}
+                            {isGithub ? t("typeRepository") : isAndroid ? t("typeMobileApp") : isDesktop ? t("typeDesktopApp") : externalUrl ? t("typeLiveSite") : t("typeLiveRender")}
                         </span>
                     </div>
                 </div>

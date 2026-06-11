@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { useState } from "react";
-// Removed server action import
+import { useTranslations } from "next-intl";
 
 interface ContactState {
     success?: boolean;
@@ -21,6 +21,8 @@ interface ContactState {
 }
 
 export function ContactForm() {
+    const t = useTranslations("ContactForm");
+    const tc = useTranslations("Common");
     const [state, setState] = useState<ContactState>({ success: false, error: "", fieldErrors: {} });
     const [isPending, setIsPending] = useState(false);
 
@@ -44,14 +46,14 @@ export function ContactForm() {
             if (!res.ok) {
                 setState({
                     success: false,
-                    error: result.error || "Something went wrong",
+                    error: result.error || tc("error"),
                     fieldErrors: result.fieldErrors || {},
                 });
             } else {
                 setState({ success: true });
             }
         } catch {
-            setState({ success: false, error: "Network error. Please try again." });
+            setState({ success: false, error: t("networkError") });
         } finally {
             setIsPending(false);
         }
@@ -63,15 +65,15 @@ export function ContactForm() {
                 <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">Message Sent!</h3>
+                <h3 className="text-2xl font-bold text-white">{t("messageSent")}</h3>
                 <p className="text-zinc-400 max-w-xs">
-                    Thank you for reaching out. Our team will get back to you within 24 hours.
+                    {t("thankYou")}
                 </p>
                 <Button
                     className="mt-4 bg-white text-black hover:bg-zinc-200 font-medium"
                     onClick={() => window.location.reload()}
                 >
-                    Send another message
+                    {t("sendAnother")}
                 </Button>
             </div>
         );
@@ -88,23 +90,23 @@ export function ContactForm() {
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-zinc-400">First Name</Label>
+                    <Label htmlFor="firstName" className="text-zinc-400">{t("firstName")}</Label>
                     <Input
                         name="firstName"
                         id="firstName"
                         required
-                        placeholder="John"
+                        placeholder={t("placeholderFirstName")}
                         className="bg-zinc-900/50 border-white/10 focus-visible:ring-blue-500 text-white placeholder:text-zinc-600"
                     />
                     {state.fieldErrors?.firstName?.[0] && <span className="text-xs text-red-400">{state.fieldErrors?.firstName?.[0]}</span>}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-zinc-400">Last Name</Label>
+                    <Label htmlFor="lastName" className="text-zinc-400">{t("lastName")}</Label>
                     <Input
                         name="lastName"
                         id="lastName"
                         required
-                        placeholder="Doe"
+                        placeholder={t("placeholderLastName")}
                         className="bg-zinc-900/50 border-white/10 focus-visible:ring-blue-500 text-white placeholder:text-zinc-600"
                     />
                     {state.fieldErrors?.lastName?.[0] && <span className="text-xs text-red-400">{state.fieldErrors?.lastName?.[0]}</span>}
@@ -112,37 +114,37 @@ export function ContactForm() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="email" className="text-zinc-400">Email</Label>
+                <Label htmlFor="email" className="text-zinc-400">{t("email")}</Label>
                 <Input
                     name="email"
                     id="email"
                     type="email"
                     required
-                    placeholder="john@example.com"
+                    placeholder={t("placeholderEmail")}
                     className="bg-zinc-900/50 border-white/10 focus-visible:ring-blue-500 text-white placeholder:text-zinc-600"
                 />
                 {state.fieldErrors?.email?.[0] && <span className="text-xs text-red-400">{state.fieldErrors?.email?.[0]}</span>}
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="subject" className="text-zinc-400">Subject</Label>
+                <Label htmlFor="subject" className="text-zinc-400">{t("subject")}</Label>
                 <Input
                     name="subject"
                     id="subject"
                     required
-                    placeholder="Project Inquiry"
+                    placeholder={t("placeholderSubject")}
                     className="bg-zinc-900/50 border-white/10 focus-visible:ring-blue-500 text-white placeholder:text-zinc-600"
                 />
                 {state.fieldErrors?.subject?.[0] && <span className="text-xs text-red-400">{state.fieldErrors?.subject?.[0]}</span>}
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="message" className="text-zinc-400">Message</Label>
+                <Label htmlFor="message" className="text-zinc-400">{t("message")}</Label>
                 <Textarea
                     name="message"
                     id="message"
                     required
-                    placeholder="Tell us about your project..."
+                    placeholder={t("placeholderMessage")}
                     className="min-h-[120px] bg-zinc-900/50 border-white/10 focus-visible:ring-blue-500 text-white placeholder:text-zinc-600 resize-none"
                 />
                 {state.fieldErrors?.message?.[0] && <span className="text-xs text-red-400">{state.fieldErrors?.message?.[0]}</span>}
@@ -156,11 +158,11 @@ export function ContactForm() {
                 {isPending ? (
                     <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Sending...
+                        {t("sending")}
                     </>
                 ) : (
                     <>
-                        Send Message
+                        {t("sendMessage")}
                         <Send className="w-4 h-4 ml-2" />
                     </>
                 )}

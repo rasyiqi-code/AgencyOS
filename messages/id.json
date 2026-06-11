@@ -883,7 +883,15 @@
         "readyToScale": "Siap untuk berkembang?",
         "getQuote": "Penawaran",
         "instantSolution": "Solusi",
-        "showcase": "Showcase"
+        "showcase": "Showcase",
+        "viewRepo": "LIHAT REPO",
+        "getApp": "UNDUH APLIKASI",
+        "viewCase": "LIHAT KASUS",
+        "typeRepository": "Repositori",
+        "typeMobileApp": "Aplikasi Mobile",
+        "typeDesktopApp": "Aplikasi Desktop",
+        "typeLiveSite": "Situs Langsung",
+        "typeLiveRender": "Render Langsung"
     },
     "Missions": {
         "inOrbit": "Dalam Orbit",
@@ -1063,5 +1071,23 @@
         "title": "Layanan Premium",
         "subtitle": "Tingkatkan bisnis Anda dengan layanan tersistem kami. Hasil berkualitas tinggi, harga transparan, dan waktu pengerjaan cepat.",
         "backToHome": "Kembali ke Beranda"
+    },
+    "ContactForm": {
+        "firstName": "Nama Depan",
+        "lastName": "Nama Belakang",
+        "email": "Email",
+        "subject": "Subjek",
+        "message": "Pesan",
+        "messageSent": "Pesan Terkirim!",
+        "thankYou": "Terima kasih telah menghubungi kami. Tim kami akan menghubungi Anda dalam waktu 24 jam.",
+        "sendAnother": "Kirim pesan lain",
+        "sending": "Mengirim...",
+        "sendMessage": "Kirim Pesan",
+        "networkError": "Kesalahan jaringan. Silakan coba lagi.",
+        "placeholderFirstName": "John",
+        "placeholderLastName": "Doe",
+        "placeholderEmail": "john@example.com",
+        "placeholderSubject": "Pertanyaan Proyek",
+        "placeholderMessage": "Ceritakan tentang proyek Anda..."
     }
 }

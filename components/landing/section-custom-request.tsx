@@ -4,13 +4,11 @@ import { Calculator, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useFloatingChat } from "@/lib/store/floating-chat-store";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { useParams } from "next/navigation";
 
 export function SectionCustomRequest() {
     const t = useTranslations("CustomCTA");
-    const { setIsMenuOpen } = useFloatingChat();
     const params = useParams();
     const locale = params?.locale as string || "id";
 
@@ -44,13 +42,15 @@ export function SectionCustomRequest() {
                                 </Button>
                                 
                                 <Button
-                                    onClick={() => setIsMenuOpen(true)}
+                                    asChild
                                     variant="outline"
                                     size="default"
                                     className="w-full sm:w-auto h-12 px-6 rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 font-bold text-sm transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                    <MessageCircle className="w-4 h-4 text-brand-yellow" />
-                                    {t("contact")}
+                                    <Link href={`/${locale}/contact`}>
+                                        <MessageCircle className="w-4 h-4 text-brand-yellow" />
+                                        {t("contact")}
+                                    </Link>
                                 </Button>
                             </div>
                         </div>

@@ -145,8 +145,8 @@ export function InstallPrompt() {
         }
     };
 
-    // Tidak render jika sudah terinstall atau tidak visible
-    if (isInstalled || !isVisible) return null;
+    // Tidak render jika sudah terinstall
+    if (isInstalled) return null;
 
     return (
         <AnimatePresence>

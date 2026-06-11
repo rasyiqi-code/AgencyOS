@@ -25,8 +25,9 @@ export function SidebarContainer({ children, header, footer }: SidebarContainerP
     return (
         <>
             <aside
+                data-collapsed={collapsed}
                 className={cn(
-                    "fixed inset-y-0 left-0 z-10 hidden flex-col border-r border-white/10 bg-zinc-900/50 backdrop-blur-xl sm:flex transition-all duration-300 ease-in-out",
+                    "group fixed inset-y-0 left-0 z-10 hidden flex-col border-r border-white/10 bg-zinc-900/50 backdrop-blur-xl sm:flex transition-all duration-300 ease-in-out",
                     collapsed ? "w-14" : "w-64"
                 )}
             >

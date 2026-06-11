@@ -224,7 +224,7 @@ export default async function RootLayout({
             strategy="lazyOnload"
           />
         )}
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <HexclaveProvider app={hexclaveServerApp}>
               <HexclaveTheme>
