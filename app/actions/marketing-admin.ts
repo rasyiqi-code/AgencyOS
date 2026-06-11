@@ -9,8 +9,6 @@ import { getBonuses, createBonus, deleteBonus, toggleBonusStatus, getCoupons, cr
 import { getLeads, deleteLead } from "@/lib/server/leads";
 import { getPopUps, createPopUp, updatePopUp, deletePopUp, togglePopUpStatus } from "@/lib/server/popups";
 import { uploadFile } from "@/lib/integrations/storage";
-import { broadcastPushNotification } from "@/lib/server/push";
-
 // ─── Bonuses ───
 
 export async function getBonusesAction() {
@@ -227,7 +225,7 @@ export async function uploadAssetAction(formData: FormData) {
 
 // ─── Push ───
 
-export async function broadcastPushAction(data: {
+export async function broadcastPushAction(_data: {
     title: string;
     body: string;
     url?: string;

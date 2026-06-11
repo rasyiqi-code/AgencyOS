@@ -2,7 +2,6 @@
 
 import { prisma } from "@/lib/config/db";
 import { isAdmin, getCurrentUser } from "@/lib/shared/auth-helpers";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { grantPermission, revokePermission } from "@/lib/server/admin-team";
 import { revalidatePath } from "next/cache";
 

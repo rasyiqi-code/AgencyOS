@@ -283,7 +283,7 @@ export async function updateProjectStatus(projectId: string, status: string) {
     }
 }
 
-export async function removeTeamMember(projectId: string, squadId: string) {
+export async function removeTeamMember(projectId: string, _squadId: string) {
     if (!await isAdmin()) return { error: "Unauthorized" };
 
     try {

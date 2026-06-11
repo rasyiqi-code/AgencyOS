@@ -35,10 +35,6 @@ export default async function CheckoutPage(props: PageProps) {
         // Enforce Login to ensure we have user identity
         redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
     }
-
-    const userId = user.id;
-    const userEmail = user.primaryEmail || undefined;
-
     // 2. Jika Product tidak ditemukan, cari sebagai Service Estimate (Legacy Flow)
     const estimate = await prisma.estimate.findUnique({
         where: { id },

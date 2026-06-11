@@ -19,7 +19,6 @@ export async function POST(req: NextRequest) {
         }
 
         let amount = 0;
-        let title = "";
         let creemProductIdFromService = null;
         let paymentMetadata: Record<string, unknown> = {};
         let orderUserId = "";
@@ -38,7 +37,6 @@ export async function POST(req: NextRequest) {
         }
 
         amount = order.amount;
-        title = order.project?.service?.title || order.project?.title || "Project Payment";
         creemProductIdFromService = (order.project?.service as { creemProductId?: string | null })?.creemProductId;
         paymentMetadata = (order.paymentMetadata as unknown as Record<string, unknown>) || {};
         orderUserId = order.userId;
