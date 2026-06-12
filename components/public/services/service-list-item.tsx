@@ -41,11 +41,15 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
                     100% { transform: translate3d(-50%, 0, 0); }
                 }
                 .marquee-container {
-                    overflow: hidden;
+                    overflow-x: auto;
+                    scrollbar-width: none;
                     white-space: nowrap;
                     width: 100%;
                     mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
                     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+                }
+                .marquee-container::-webkit-scrollbar {
+                    display: none;
                 }
                 .marquee-content {
                     display: inline-block;
@@ -54,6 +58,7 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
                 }
                 @media (min-width: 640px) {
                     .marquee-container {
+                        overflow: hidden;
                         mask-image: none;
                         -webkit-mask-image: none;
                     }

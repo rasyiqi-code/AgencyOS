@@ -31,11 +31,15 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
                             100% { transform: translate3d(-50%, 0, 0); }
                         }
                         .marquee-container-db {
-                            overflow: hidden;
+                            overflow-x: auto;
+                            scrollbar-width: none;
                             white-space: nowrap;
                             width: 100%;
                             mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
                             -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+                        }
+                        .marquee-container-db::-webkit-scrollbar {
+                            display: none;
                         }
                         .marquee-content-db {
                             display: inline-block;
@@ -44,6 +48,7 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
                         }
                         @media (min-width: 640px) {
                             .marquee-container-db {
+                                overflow: hidden;
                                 mask-image: none;
                                 -webkit-mask-image: none;
                             }
