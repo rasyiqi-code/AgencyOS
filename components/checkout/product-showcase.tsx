@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
-import { Check, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ArrowLeft } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { cleanSummaryText } from "@/lib/shared/utils";
@@ -16,8 +15,6 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
-    const [isExpanded, setIsExpanded] = useState(false);
-
     // Ambil list deliverables
     const serviceFeatures = isId
         ? (estimate.service?.features_id as string[]) || (estimate.service?.features as string[])
@@ -72,7 +69,7 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
                                     {t("deliverables") || "Fitur & Deliverables"}
                                 </span>
                                 <div className="grid grid-cols-1 gap-2.5">
-                                    {serviceFeatures && (isExpanded ? serviceFeatures : serviceFeatures.slice(0, 4)).map((feature, i) => (
+                                    {serviceFeatures.map((feature, i) => (
                                         <div key={i} className="flex items-start gap-3 group animate-in fade-in duration-300">
                                             <div className="w-5 h-5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform shadow-[0_0_8px_rgba(254,215,0,0.1)]">
                                                 <Check className="w-3 h-3 text-brand-yellow" />
@@ -82,24 +79,6 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
                                             </span>
                                         </div>
                                     ))}
-                                    {serviceFeatures && serviceFeatures.length > 4 && (
-                                        <button
-                                            onClick={() => setIsExpanded(!isExpanded)}
-                                            className="text-xs text-brand-yellow hover:text-yellow-300 font-bold tracking-wide transition-all duration-300 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left pl-8 flex items-center gap-1 mt-1 group mb-1"
-                                        >
-                                            {isExpanded ? (
-                                                <>
-                                                    {isId ? "Sembunyikan rincian" : "Hide details"}
-                                                    <ChevronUp className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                                                </>
-                                            ) : (
-                                                <>
-                                                    + {serviceFeatures.length - 4} {isId ? "deliverable lainnya" : "more deliverables"} ({isId ? "klik untuk melihat" : "click to view"})
-                                                    <ChevronDown className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />
-                                                </>
-                                            )}
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         )}
