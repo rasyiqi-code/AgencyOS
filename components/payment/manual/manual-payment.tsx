@@ -201,18 +201,20 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                 </div>
             </div>
 
-            <div className="flex justify-end pt-4 mt-2 border-t border-zinc-800/50">
-                <Button
-                    variant="ghost"
-                    onClick={() => {
-                        // Menutup detail pembayaran manual (akan beralih ke state pending/tertunda di komponen induk)
-                        onClose();
-                    }}
-                    className="text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 text-xs"
-                >
-                    Close & Continue Later
-                </Button>
-            </div>
+            {!proofUploaded && (
+                <div className="flex justify-end pt-4 mt-2 border-t border-zinc-800/50">
+                    <Button
+                        variant="ghost"
+                        onClick={() => {
+                            // Menutup detail pembayaran manual (akan beralih ke state pending/tertunda di komponen induk)
+                            onClose();
+                        }}
+                        className="text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 text-xs"
+                    >
+                        Close & Continue Later
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }
