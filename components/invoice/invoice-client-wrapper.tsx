@@ -134,91 +134,92 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
             </div>
 
             {/* Status & Payment Action Panel */}
-            <div className="space-y-6 pt-2">
-                {/* Status & Summary Box */}
-                <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                        <span className="text-[10px] text-zinc-500 font-extrabold uppercase tracking-[0.2em] block">
-                            {t('status')}
-                        </span>
-                        <div className="flex items-center gap-2.5">
-                            <span className="font-mono text-xs font-bold text-zinc-400">#{order.id}</span>
-                            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
-                                {isPaid ? t('paid') : t('unpaid')}
+            {orderStatus !== 'waiting_verification' && (
+                <div className="space-y-6 pt-2">
+                    {/* Status & Summary Box */}
+                    <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                            <span className="text-[10px] text-zinc-500 font-extrabold uppercase tracking-[0.2em] block">
+                                {t('status')}
                             </span>
-                            {(order.type === 'DP' || order.type === 'REPAYMENT') && (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
-                                    {order.type === 'DP' ? tc('dp') : tc('repayment')}
+                            <div className="flex items-center gap-2.5">
+                                <span className="font-mono text-xs font-bold text-zinc-400">#{order.id}</span>
+                                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
+                                    {isPaid ? t('paid') : t('unpaid')}
                                 </span>
-                            )}
+                                {(order.type === 'DP' || order.type === 'REPAYMENT') && (
+                                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
+                                        {order.type === 'DP' ? tc('dp') : tc('repayment')}
+                                    </span>
+                                )}
+                            </div>
                         </div>
+
+                        {!isPaid && (hasActiveGateway || bankDetails) && (
+                            <div className="flex flex-col sm:items-end gap-0.5">
+                                <span className="text-[10px] text-zinc-500 font-extrabold uppercase tracking-[0.2em]">
+                                    {tc('totalToPay')}
+                                </span>
+                                <span className="text-xl font-mono font-black text-brand-yellow">
+                                    {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
+                                </span>
+                            </div>
+                        )}
+
+                        {isPaid && (
+                            <Button
+                                onClick={handlePrint}
+                                className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold h-9 px-4.5 flex items-center gap-2 rounded-xl cursor-pointer text-xs"
+                            >
+                                <Download className="w-3.5 h-3.5" />
+                                {t('downloadPrint')}
+                            </Button>
+                        )}
                     </div>
 
+                    {/* Manual Payment Warning Notification */}
+                    {!isPaid && !hasActiveGateway && bankDetails && (
+                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-left">
+                            <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4" />
+                                {tc('manualPayment')}
+                            </p>
+                            <p className="text-[10px] text-amber-200/60 leading-relaxed">
+                                {tc('manualDesc')}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Payment Selector Widget */}
                     {!isPaid && (hasActiveGateway || bankDetails) && (
-                        <div className="flex flex-col sm:items-end gap-0.5">
-                            <span className="text-[10px] text-zinc-500 font-extrabold uppercase tracking-[0.2em]">
-                                {tc('totalToPay')}
-                            </span>
-                            <span className="text-xl font-mono font-black text-brand-yellow">
-                                {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
-                            </span>
-                        </div>
-                    )}
-
-                    {isPaid && (
-                        <Button
-                            onClick={handlePrint}
-                            className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold h-9 px-4.5 flex items-center gap-2 rounded-xl cursor-pointer text-xs"
-                        >
-                            <Download className="w-3.5 h-3.5" />
-                            {t('downloadPrint')}
-                        </Button>
-                    )}
-                </div>
-
-                {/* Manual Payment Warning Notification */}
-                {!isPaid && !hasActiveGateway && bankDetails && orderStatus !== 'waiting_verification' && (
-                    <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-left">
-                        <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4" />
-                            {tc('manualPayment')}
-                        </p>
-                        <p className="text-[10px] text-amber-200/60 leading-relaxed">
-                            {tc('manualDesc')}
-                        </p>
-                    </div>
-                )}
-
-                {/* Payment Selector Widget */}
-                {!isPaid && (hasActiveGateway || bankDetails) && (
-                    <div className="space-y-3 pt-2">
-                        {orderStatus !== 'waiting_verification' && (
+                        <div className="space-y-3 pt-2">
                             <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
                                 {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
                             </span>
-                        )}
-                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full">
-                            <PaymentSelector
-                                orderId={order.id}
-                                amount={displayAmount}
-                                paymentMetadata={order.paymentMetadata}
-                                currency={effectiveCurrency as 'USD' | 'IDR'}
-                                allowedGroups={undefined}
-                                bankDetails={bankDetails}
-                                orderStatus={orderStatus}
-                                contactWA={agencySettings?.phone}
-                                contactTele={agencySettings?.telegram}
-                                hasActiveGateway={hasActiveGateway}
-                                gatewayStatus={gatewayStatus}
-                                noCard={true}
-                                onPaymentInitiated={() => setIsPaymentInitiated(true)}
-                                onPaymentClosed={() => setIsPaymentInitiated(false)}
-                                onPaymentStatusChange={(status) => setOrderStatus(status)}
-                            />
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full">
+                                <PaymentSelector
+                                    orderId={order.id}
+                                    amount={displayAmount}
+                                    paymentMetadata={order.paymentMetadata}
+                                    currency={effectiveCurrency as 'USD' | 'IDR'}
+                                    allowedGroups={undefined}
+                                    bankDetails={bankDetails}
+                                    orderStatus={orderStatus}
+                                    contactWA={agencySettings?.phone}
+                                    contactTele={agencySettings?.telegram}
+                                    hasActiveGateway={hasActiveGateway}
+                                    gatewayStatus={gatewayStatus}
+                                    noCard={true}
+                                    onPaymentInitiated={() => setIsPaymentInitiated(true)}
+                                    onPaymentClosed={() => setIsPaymentInitiated(false)}
+                                    onPaymentStatusChange={(status) => setOrderStatus(status)}
+                                />
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            )}
+
         </div>
     );
 }
