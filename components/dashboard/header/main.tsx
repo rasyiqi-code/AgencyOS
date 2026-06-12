@@ -111,7 +111,7 @@ export function DashboardHeader({
                     };
                 case "/admin/finance/quotes":
                     return {
-                        title: "Quotes & Invoices",
+                        title: "Offline Trx",
                         icon: <MessageSquare className="w-4 h-4 text-zinc-500" />
                     };
                 case "/admin/finance/subscriptions":
