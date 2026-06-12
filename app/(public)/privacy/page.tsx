@@ -36,6 +36,8 @@ export async function generateMetadata(
                 title: isId ? "Kebijakan Privasi" : "Privacy Policy",
                 images: ogImages,
                 type: "website",
+                locale: isId ? 'id_ID' : 'en_US',
+                alternateLocale: isId ? ['en_US'] : ['id_ID'],
             },
             twitter: {
                 card: "summary_large_image",
@@ -59,6 +61,8 @@ export async function generateMetadata(
             description,
             images: ogImages,
             type: "website",
+            locale: isId ? 'id_ID' : 'en_US',
+            alternateLocale: isId ? ['en_US'] : ['id_ID'],
         },
         twitter: {
             card: "summary_large_image",

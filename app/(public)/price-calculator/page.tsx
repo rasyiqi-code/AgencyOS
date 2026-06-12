@@ -17,10 +17,11 @@ export async function generateMetadata(
     // ⚡ Optimasi: Gunakan getPageSeo yang ter-cache (unstable_cache, TTL 1 jam)
     const pageSeo = await getPageSeo("/price-calculator");
 
+    const isId = locale === 'id';
     const previousImages = (await parent).openGraph?.images || [];
     const ogImages = pageSeo?.ogImage ? [{ url: pageSeo.ogImage }] : previousImages;
-    const title = pageSeo?.title || "Price Calculator";
-    const description = pageSeo?.description || "Get an instant quote for your custom project. Configure features and see estimated costs immediately.";
+    const title = (isId ? pageSeo?.title_id : null) || pageSeo?.title || (isId ? "Kalkulator Harga" : "Price Calculator");
+    const description = (isId ? pageSeo?.description_id : null) || pageSeo?.description || (isId ? "Dapatkan estimasi harga instan untuk proyek kustom Anda." : "Get an instant quote for your custom project. Configure features and see estimated costs immediately.");
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return {
@@ -32,6 +33,8 @@ export async function generateMetadata(
             description,
             images: ogImages,
             type: "website",
+            locale: isId ? 'id_ID' : 'en_US',
+            alternateLocale: isId ? ['en_US'] : ['id_ID'],
         },
         twitter: {
             card: "summary_large_image",

@@ -30,6 +30,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+Sitemap: ${baseUrl}/sitemap-index.xml
 Sitemap: ${baseUrl}/sitemap.xml
 `;
 

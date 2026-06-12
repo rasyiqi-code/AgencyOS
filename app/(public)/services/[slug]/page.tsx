@@ -8,6 +8,7 @@ import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/faq-section-fixed";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { getSystemSettings } from "@/lib/server/settings";
+import { getActiveTestimonials } from "@/lib/server/testimonials";
 
 export const revalidate = 3600; // Cache halaman detail layanan selama 1 jam (ISR)
 
@@ -88,6 +89,13 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+    // Fetch testimonial untuk aggregateRating schema (bintang rich snippet di SERP)
+    const testimonials = await getActiveTestimonials(100);
+    const ratingsWithValue = testimonials.filter((t) => typeof t.rating === 'number' && t.rating > 0);
+    const avgRating = ratingsWithValue.length > 0
+        ? (ratingsWithValue.reduce((sum, t) => sum + (t.rating ?? 5), 0) / ratingsWithValue.length).toFixed(1)
+        : null;
+
     // Social proof avatars (temporarily disabled due to Stack Auth SDK error)
     const trustedAvatars: string[] = [];
 
@@ -115,6 +123,9 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                         "@context": "https://schema.org",
                         "@type": "Service",
                         "serviceType": title,
+                        "name": title,
+                        "url": `${baseUrl}/${locale}/services/${service.slug}`,
+                        "image": service.image || undefined,
                         "provider": {
                             "@type": "Organization",
                             "name": brand,
@@ -122,6 +133,16 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                         },
                         "description": cleanDescription,
                         "areaServed": "Worldwide",
+                        // aggregateRating untuk rich snippet bintang di Google SERP
+                        ...(avgRating && ratingsWithValue.length >= 3 ? {
+                            "aggregateRating": {
+                                "@type": "AggregateRating",
+                                "ratingValue": avgRating,
+                                "bestRating": "5",
+                                "worstRating": "1",
+                                "ratingCount": ratingsWithValue.length,
+                            }
+                        } : {}),
                         // Menambahkan properti offers langsung di bawah Service agar terdeteksi oleh Rich Snippets Google
                         "offers": {
                             "@type": "Offer",
