@@ -202,14 +202,14 @@ export function CheckoutPortal({
             <div className="grid grid-cols-1 lg:grid-cols-12 relative z-10 min-h-[500px]">
                 
                 {/* Left Side: Product Showcase (lg:col-span-5) */}
-                <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/5">
+                <div className="lg:col-span-6 border-b lg:border-b-0 lg:border-r border-white/5">
                     <ProductShowcase 
                         estimate={estimate}
                     />
                 </div>
 
                 {/* Right Side: Payment configurator & Gateway selector (lg:col-span-7) */}
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-6">
                     <PaymentPanel 
                         estimate={estimate}
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
