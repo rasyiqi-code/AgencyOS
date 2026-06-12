@@ -210,6 +210,7 @@ export function CheckoutPortal({
                         selectedAddons={selectedAddons}
                         amountToPay={amountToPay}
                         baseCurrency={baseCurrency}
+                        context={context}
                     />
                 </div>
 
