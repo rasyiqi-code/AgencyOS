@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Settings, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Settings, Rocket, Sparkles, LifeBuoy, Receipt, MessageSquare, Key } from "lucide-react";
 import { SidebarLink, SidebarSectionHeader } from "./roles";
 import { useTranslations } from "next-intl";
 
@@ -17,6 +17,7 @@ export function DashboardSidebarNavigation() {
 
             <SidebarSectionHeader>Digital Services</SidebarSectionHeader>
             <SidebarLink href="/dashboard/services" icon={Sparkles} label={t("store")} />
+            <SidebarLink href="/dashboard/licenses" icon={Key} label="My Licenses" />
 
             <SidebarSectionHeader>Support & Feedback</SidebarSectionHeader>
             <SidebarLink href="/dashboard/support" icon={LifeBuoy} label={t("support")} />

@@ -155,9 +155,9 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                     <span className="text-xs font-semibold">{tAdmin("aiAssistant")}</span>
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent 
-                                className="w-[calc(100vw-2rem)] sm:w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" 
-                                align="end" 
+                            <PopoverContent
+                                className="w-[calc(100vw-2rem)] sm:w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20"
+                                align="end"
                                 sideOffset={8}
                             >
                                 <div className="p-4 border-b border-white/5 bg-indigo-500/5">
@@ -481,9 +481,9 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("billingInterval")}</label>
-                                    <Select 
-                                        name="interval" 
-                                        value={interval} 
+                                    <Select
+                                        name="interval"
+                                        value={interval}
                                         onValueChange={setInterval}
                                     >
                                         <SelectTrigger className="bg-black/20 border-white/10 text-zinc-200">

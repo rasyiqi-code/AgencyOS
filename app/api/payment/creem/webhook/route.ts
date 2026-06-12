@@ -50,6 +50,12 @@ const updateOrderStatus = async (orderId: string, status: string, metadata: unkn
                 });
             }
         }
+
+        // Jika status paid dan bertipe SOFTWARE_LICENSE → jalankan provisi lisensi
+        if (status === 'paid' && order.type === 'SOFTWARE_LICENSE') {
+            const { handleSoftwareLicenseProvisioning } = await import("@/lib/server/licenses-helper");
+            await handleSoftwareLicenseProvisioning(order.id).catch(err => console.error("Failed to provision Creem software license:", err));
+        }
     } catch (error) {
         console.error(`[CREEM_WEBHOOK] Failed to update order ${orderId}:`, error);
     }
