@@ -71,11 +71,19 @@ export async function POST(req: Request) {
             const addonsTotal = selectedAddons.reduce((sum: number, addon: { price?: number }) => sum + (addon.price || 0), 0);
             const totalPrice = service.price + addonsTotal;
 
-            // Bangun summary dengan informasi addon yang dipilih
+            // Bangun summary — simpan marker addon (nama EN) untuk deteksi di checkout
             let summary = service.description;
             if (selectedAddons.length > 0) {
-                const addonLines = selectedAddons.map((a: { name: string }) => `+ ${a.name}`).join('\n');
-                summary = `${service.description}\n\n--- Selected Add-ons ---\n${addonLines}`;
+                // Ambil nama EN dari service.addons sebagai referensi matching
+                const enAddons = Array.isArray(service.addons) ? (service.addons as Array<{ name: string }>) : [];
+                const addonLines = selectedAddons.map((a: { name: string }) => {
+                    // Cari padanan nama EN berdasarkan index/posisi
+                    const idAddons = Array.isArray(service.addons_id) ? (service.addons_id as Array<{ name: string }>) : [];
+                    const idx = idAddons.findIndex(ia => ia.name === a.name);
+                    const enName = idx >= 0 && enAddons[idx] ? enAddons[idx].name : a.name;
+                    return `+ ${enName}`;
+                }).join('\n');
+                summary = `${service.description}\n${addonLines}`;
             }
 
             // Buat Estimate untuk pembelian langsung service ini

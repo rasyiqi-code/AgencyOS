@@ -57,12 +57,19 @@ export function CheckoutPortal({
     );
     const [shouldSubscribe, setShouldSubscribe] = useState(true);
 
-    const serviceAddons = (isId && Array.isArray((estimate.service as unknown as Record<string, unknown>)?.addons_id) && ((estimate.service as unknown as Record<string, unknown>)?.addons_id as unknown[]).length > 0)
+    const serviceAddonsEn = (estimate.service?.addons as ServiceAddon[]) || [];
+    const serviceAddonsId = Array.isArray((estimate.service as unknown as Record<string, unknown>)?.addons_id)
         ? (estimate.service as unknown as Record<string, unknown>).addons_id as ServiceAddon[]
-        : (estimate.service?.addons as ServiceAddon[]) || [];
+        : [];
 
-    // Parse initially selected addons from the estimate summary (if it was already updated)
-    const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
+    // Addon yang ditampilkan ke user sesuai locale
+    const serviceAddons = (isId && serviceAddonsId.length > 0) ? serviceAddonsId : serviceAddonsEn;
+
+    // Deteksi addon yang sudah dipilih — summary menyimpan nama EN, jadi cocokkan via index
+    const initiallyIncludedAddons = serviceAddons.filter((_addon, idx) => {
+        const enName = serviceAddonsEn[idx]?.name;
+        return enName && estimate.summary.includes(`+ ${enName}`);
+    });
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
 
