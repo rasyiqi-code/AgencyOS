@@ -6,8 +6,6 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { notFound, redirect } from "next/navigation";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { ExtendedEstimate } from "@/lib/shared/types";
-import { getBonuses } from "@/lib/server/marketing";
-import { Bonus } from "@/lib/shared/types";
 import { SystemSetting } from "@prisma/client";
 import { getSystemSettings } from "@/lib/server/settings";
 
@@ -30,31 +28,23 @@ export default async function CheckoutPage(props: PageProps) {
     const { paymentService } = await import("@/lib/server/payment-service");
     const activeRate = await paymentService.getExchangeRate();
 
-    // Fetch user and enforce login for all checkout types
+    // Pastikan user sudah login
     const user = await hexclaveServerApp.getUser().catch(() => null);
 
     if (!user) {
-        // Enforce Login to ensure we have user identity
         redirect(`/handler/sign-in?after_auth_return_to=${encodeURIComponent(`/checkout/${id}`)}`);
     }
-    // 2. Jika Product tidak ditemukan, cari sebagai Service Estimate (Legacy Flow)
+    // Cari data Estimate
     const estimate = await prisma.estimate.findUnique({
         where: { id },
         include: { service: true, project: true }
     });
 
-    // Jika Estimate ditemukan, render Service Checkout Flow (Legacy)
     if (estimate) {
-        // Fetch dependencies for Service Checkout
-        // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query to avoid N+1 query and reduce database load
-        // 🎯 Why: This page is frequently accessed during checkout. Caching system settings reduces database queries.
-        // 📊 Impact: Eliminates 1 database query per checkout page load for legacy estimate flow.
+        // Ambil pengaturan sistem
         const settings = await getSystemSettings(['bank_name', 'bank_account', 'bank_holder', 'manual_payment_active', 'AGENCY_NAME', 'COMPANY_NAME', 'CONTACT_ADDRESS', 'CONTACT_EMAIL', 'CONTACT_PHONE', 'CONTACT_TELEGRAM']);
 
         const getSetting = (key: string) => settings.find((s: SystemSetting) => s.key === key)?.value;
-
-        const context = (estimate.prompt === "Instant Quote Calculator" || !estimate.serviceId) ? "CALCULATOR" : "SERVICE";
-        const bonuses = await getBonuses(context);
 
         const gatewayStatus = await paymentGatewayService.getGatewayStatus();
         const hasActiveGateway = gatewayStatus.midtrans || gatewayStatus.creem;
@@ -75,7 +65,7 @@ export default async function CheckoutPage(props: PageProps) {
             telegram: getSetting('CONTACT_TELEGRAM')
         };
 
-        // Construct ExtendedEstimate
+        // Konstruksi ExtendedEstimate
         const extendedEstimate: ExtendedEstimate = {
             ...estimate,
             screens: (estimate.screens as unknown) as ExtendedEstimate['screens'],
@@ -86,52 +76,36 @@ export default async function CheckoutPage(props: PageProps) {
             } : null
         };
 
-        const bonusesDataForEstimate = bonuses.map((b: Bonus) => ({
-            ...b,
-            icon: b.icon || "Check",
-            value: b.value || "",
-            description: b.description || ""
-        }));
-
-        // Determine display user data for the invoice
-        // If it's a manual quote or linked to a project, prioritize the project/estimate owner info
+        // Detail data user untuk invoice
         const userData = {
             displayName: estimate.project?.clientName || user?.displayName || "Valued Client",
-            email: "", // Default to empty to avoid showing admin's email on client's invoice
+            email: "", 
         };
 
         if (estimate.project?.userId) {
             if (estimate.project.userId === 'OFFLINE') {
-                // Handle Offline Client
-                // Extract contact (email/phone) from summary if possible: "Custom quote for Name (contact)"
                 const emailMatch = estimate.summary.match(/\(([^)]+)\)/);
                 if (emailMatch) {
                     userData.email = emailMatch[1];
                 }
             } else if (estimate.project.userId !== user?.id) {
-                // If the logged-in user is NOT the owner (e.g. Admin Preview), fetch owner info
                 try {
-                    // ⚡ Bolt Optimization: Use hexclaveServerApp.getUser() instead of listUsers() array lookup
-                    // 🎯 Why: Avoids O(N) network payload and memory overhead when fetching a single user.
-                    // 📊 Impact: O(1) performance lookup and reduced API latency.
                     const owner = await hexclaveServerApp.getUser(estimate.project.userId);
                     if (owner) {
                         userData.displayName = owner.displayName || owner.primaryEmail || estimate.project.clientName || "Valued Client";
                         userData.email = owner.primaryEmail || "";
                     }
                 } catch (e) {
-                    console.error("Failed to fetch estimate owner for invoice:", e);
+                    console.error("Gagal mengambil data pemilik estimasi untuk invoice:", e);
                 }
             } else {
-                // Logged in user IS the owner
                 userData.email = user.primaryEmail || "";
             }
         } else {
-            // No project (Instant Calculator flow), use current logged-in user
             userData.email = user?.primaryEmail || "";
         }
 
-        // Mengambil status awal order jika invoiceId ada
+        // Ambil status awal pesanan
         let initialOrderStatus = "pending";
         if (estimate.project?.invoiceId) {
             const orderObj = await prisma.order.findUnique({
@@ -150,7 +124,6 @@ export default async function CheckoutPage(props: PageProps) {
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
                         activeRate={activeRate}
-                        bonuses={bonusesDataForEstimate}
                         user={userData}
                         agencySettings={agencySettings}
                         hasActiveGateway={hasActiveGateway}
@@ -158,7 +131,6 @@ export default async function CheckoutPage(props: PageProps) {
                         defaultPaymentType={paymentType}
                         projectPaidAmount={estimate.project?.paidAmount || 0}
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
-                        context={context}
                         orderId={estimate.project?.invoiceId}
                         initialOrderStatus={initialOrderStatus}
                     />

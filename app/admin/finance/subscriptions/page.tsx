@@ -1,10 +1,9 @@
 import { prisma } from "@/lib/config/db";
 import { canManageBilling } from "@/lib/shared/auth-helpers";
 import { redirect } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Repeat, CheckCircle2, AlertCircle } from "lucide-react";
+import { Calendar, CheckCircle2, AlertCircle } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { RenewSubscriptionButton } from "./renew-button";
 import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";

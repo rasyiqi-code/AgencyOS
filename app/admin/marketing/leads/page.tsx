@@ -1,7 +1,6 @@
 "use client";
 
 import { LeadsManager } from "@/components/admin/marketing/leads-manager";
-import { UserPlus } from "lucide-react";
 import { Suspense } from "react";
 
 /**

@@ -1,9 +1,7 @@
 
 import { prisma } from "@/lib/config/db";
-import { Badge } from "@/components/ui/badge";
 import { SystemNav } from "@/components/admin/system-nav";
 import { PageSeoList } from "@/components/admin/system/page-seo-list";
-import { Search } from "lucide-react";
 import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export const dynamic = "force-dynamic";

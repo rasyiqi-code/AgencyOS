@@ -1,7 +1,6 @@
 "use client";
 
 import { PromotionsManager } from "@/components/admin/marketing/promotions-manager";
-import { Megaphone } from "lucide-react";
 import { Suspense } from "react";
 
 /**

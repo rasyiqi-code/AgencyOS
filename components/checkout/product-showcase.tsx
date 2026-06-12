@@ -1,20 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Check, ArrowLeft, ShieldCheck, Flame, ChevronDown, ChevronUp } from "lucide-react";
+import { ExtendedEstimate } from "@/lib/shared/types";
+import { Check, ArrowLeft, ShieldCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { PriceDisplay } from "@/components/providers/currency-provider";
 
 interface ProductShowcaseProps {
     estimate: ExtendedEstimate;
-    bonuses: Bonus[];
-    selectedAddons: ServiceAddon[];
-    amountToPay: number;
-    baseCurrency: "USD" | "IDR";
 }
 
-export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency }: ProductShowcaseProps) {
+export function ProductShowcase({ estimate }: ProductShowcaseProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';

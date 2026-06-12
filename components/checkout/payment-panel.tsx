@@ -1,34 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { CheckCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Download, CheckCircle, Loader2, Check, Layers, PlusCircle } from "lucide-react";
 import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
-import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
-import { toast } from "sonner";
+import { useCurrency } from "@/components/providers/currency-provider";
 import { useTranslations, useLocale } from "next-intl";
 import { PaymentSelector } from "@/components/payment/payment-selector";
 import { type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 
 export function PaymentPanel({
     estimate,
-    amount,
     amountToPay,
     paymentType,
     onChangePaymentType,
     bankDetails,
-    activeRate,
     hasActiveGateway = true,
     gatewayStatus,
     defaultPaymentType,
-    projectPaidAmount,
-    projectTotalAmount,
     user,
     activeOrderId,
     onChangeActiveOrderId,
     activeOrderStatus,
-    isProcessing,
     countdown,
     selectedAddons = [],
     onToggleAddon,
@@ -41,21 +33,16 @@ export function PaymentPanel({
 }: {
     estimate: ExtendedEstimate,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
-    activeRate?: number,
-    amount: number,
     amountToPay: number,
     paymentType: "FULL" | "DP" | "REPAYMENT",
     onChangePaymentType: (type: "FULL" | "DP" | "REPAYMENT") => void,
     hasActiveGateway?: boolean,
     gatewayStatus?: { midtrans: boolean; creem: boolean },
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
-    projectPaidAmount?: number,
-    projectTotalAmount?: number,
     user?: { displayName: string | null, email: string | null },
     activeOrderId: string | null,
     onChangeActiveOrderId: (orderId: string | null) => void,
     activeOrderStatus: string,
-    isProcessing: boolean,
     countdown: number,
     selectedAddons?: ServiceAddon[],
     onToggleAddon?: (addon: ServiceAddon) => void,
@@ -70,10 +57,8 @@ export function PaymentPanel({
     const ti = useTranslations("Invoice");
     const locale = useLocale();
     const isId = locale === 'id';
-    const router = useRouter();
 
-    const { currency, rate } = useCurrency();
-    const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
+    const { currency } = useCurrency();
 
     // Get available addons from the service
     const serviceAddons = isId

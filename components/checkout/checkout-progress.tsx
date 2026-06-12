@@ -19,7 +19,7 @@ export function CheckoutProgress({ currentStep }: { currentStep: 1 | 2 }) {
                     />
                 </div>
 
-                {steps.map((step, index) => {
+                {steps.map((step) => {
                     const isActive = currentStep >= step.id;
                     const StepIcon = step.icon;
                     return (

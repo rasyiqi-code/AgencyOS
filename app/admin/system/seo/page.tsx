@@ -1,5 +1,3 @@
-
-import { Globe } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { SeoSettingsForm } from "@/components/admin/system/seo-settings-form";
 import { getSystemSettings } from "@/lib/server/settings";

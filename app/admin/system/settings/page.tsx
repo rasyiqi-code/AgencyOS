@@ -1,5 +1,3 @@
-
-import { Settings2 } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { GeneralSettingsForm } from "@/components/admin/system/general-settings-form";
 import { getSystemSettings } from "@/lib/server/settings";

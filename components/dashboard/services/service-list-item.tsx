@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
 
@@ -28,7 +27,6 @@ interface ServiceListItemProps {
 
 export function ServiceListItem({ service }: ServiceListItemProps) {
     const { currency } = useCurrency();
-    const t = useTranslations("Service");
     const isId = currency === 'IDR';
 
     const displayTitle = (isId && service.title_id) ? service.title_id : service.title;

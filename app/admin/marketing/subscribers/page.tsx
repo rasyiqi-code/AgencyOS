@@ -1,7 +1,6 @@
 "use client";
 
 import { SubscribersManager } from "@/components/admin/marketing/subscribers-manager";
-import { Mail } from "lucide-react";
 import { Suspense } from "react";
 
 /**

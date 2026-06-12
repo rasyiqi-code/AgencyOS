@@ -6,9 +6,8 @@ import { PortfolioItem, savePortfolio, deletePortfolio, getPortfolioHtml, getRen
 import { Button } from "@/components/ui/button";
 import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Trash2, Plus, AlertTriangle, Layout, Maximize2, ExternalLink, Info } from "lucide-react";
+import { Trash2, Plus, AlertTriangle, Maximize2, ExternalLink, Info } from "lucide-react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { HtmlFileUploader } from "./html-file-uploader";

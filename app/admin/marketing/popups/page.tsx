@@ -1,7 +1,6 @@
 "use client";
 
 import { PopUpsManager } from "@/components/admin/marketing/popups-manager";
-import { LayoutTemplate } from "lucide-react";
 import { Suspense } from "react";
 
 /**

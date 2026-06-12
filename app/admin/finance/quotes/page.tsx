@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/config/db";
-import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, LayoutGrid, List } from "lucide-react";
 import { canManageBilling } from "@/lib/shared/auth-helpers";

@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Wallet, CheckCircle2, Lock, CreditCard, Building, Smartphone, Store } from "lucide-react";
+import { Loader2, Wallet, Lock, CreditCard, Building, Smartphone, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useLocale } from "next-intl";
 
 import { initiateCreemPayment } from "@/components/payment/creem/client";
@@ -118,7 +117,6 @@ export function PaymentSelector({
     const locale = useLocale();
     const isId = locale === 'id';
     const [loading, setLoading] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
 
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
@@ -213,7 +211,6 @@ export function PaymentSelector({
                 });
 
                 setPaymentData(manualData);
-                setIsDialogOpen(true);
                 onPaymentInitiated?.();
                 toast.success(isId ? "Pilihan pembayaran berhasil disimpan" : "Please complete your transfer");
             } catch (error) {
@@ -263,7 +260,6 @@ export function PaymentSelector({
             if (!res.ok) throw new Error(data.message || "Payment Failed");
 
             setPaymentData(data);
-            setIsDialogOpen(true);
             onPaymentInitiated?.();
             toast.success(isId ? "Pembayaran berhasil diinisiasi!" : "Payment initiated!");
         } catch (error) {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useSafeUser } from "@/hooks/use-safe-user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -107,9 +108,11 @@ export function SettingsClient() {
                         <div className="relative group">
                             <div className="w-20 h-20 rounded-full bg-brand-yellow/10 flex items-center justify-center text-3xl font-black text-brand-yellow border border-brand-yellow/30 overflow-hidden">
                                 {user.profileImageUrl ? (
-                                    <img
+                                    <Image
                                         src={user.profileImageUrl}
                                         alt={user.displayName || "Avatar"}
+                                        width={80}
+                                        height={80}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (

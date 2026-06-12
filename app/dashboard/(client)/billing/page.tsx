@@ -4,18 +4,12 @@ import { BillingList, type BillingOrder } from "@/components/dashboard/billing/b
 import { UnpaidBills } from "@/components/dashboard/billing/unpaid-bills";
 import { redirect } from "next/navigation";
 
-import { cookies } from "next/headers";
-
 export default async function ClientBillingPage() {
     const user = await hexclaveServerApp.getUser();
 
     if (!user) {
         redirect('/handler/sign-in');
     }
-
-    const cookieStore = await cookies();
-    const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en-US';
-    const isId = locale === 'id-ID' || locale === 'id';
 
     const orders = await prisma.order.findMany({
         where: {

@@ -1,4 +1,3 @@
-import { Mail } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { ResendConfigForm } from "@/components/admin/system/resend-config-form";
 import { getSystemSettings } from "@/lib/server/settings";

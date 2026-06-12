@@ -27,10 +27,9 @@ interface Service {
 interface ServicesClientWrapperProps {
     services: Service[];
     pageTitle?: string | null;
-    pageSubtitle?: string | null;
 }
 
-export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: ServicesClientWrapperProps) {
+export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWrapperProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();

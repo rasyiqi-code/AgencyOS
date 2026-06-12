@@ -8,7 +8,7 @@ import { ProductShowcase } from "./product-showcase";
 import { PaymentPanel } from "./payment-panel";
 import { CheckoutStickyBar } from "./checkout-sticky-bar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
-import { useCurrency, PriceDisplay } from "@/components/providers/currency-provider";
+import { useCurrency } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
@@ -17,7 +17,6 @@ export function CheckoutPortal({
     estimate,
     bankDetails,
     activeRate,
-    bonuses,
     user,
     agencySettings,
     hasActiveGateway = true,
@@ -25,14 +24,12 @@ export function CheckoutPortal({
     defaultPaymentType,
     projectPaidAmount = 0,
     projectTotalAmount = 0,
-    context,
     orderId,
     initialOrderStatus
 }: {
     estimate: ExtendedEstimate,
     bankDetails: BankDetails | undefined,
     activeRate: number,
-    bonuses: Bonus[],
     user: { displayName: string | null, email: string | null },
     agencySettings?: AgencyInvoiceSettings,
     hasActiveGateway?: boolean,
@@ -40,7 +37,6 @@ export function CheckoutPortal({
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
     projectPaidAmount?: number;
     projectTotalAmount?: number;
-    context?: "SERVICE" | "CALCULATOR";
     orderId?: string | null;
     initialOrderStatus?: string;
 }) {
@@ -208,10 +204,6 @@ export function CheckoutPortal({
                 <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-white/5">
                     <ProductShowcase 
                         estimate={estimate}
-                        bonuses={bonuses}
-                        selectedAddons={selectedAddons}
-                        amountToPay={amountToPay}
-                        baseCurrency={baseCurrency}
                     />
                 </div>
 
@@ -222,22 +214,17 @@ export function CheckoutPortal({
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
                         onPaymentClosed={() => setIsPaymentInitiated(false)} // Matikan pengecekan status jika kembali ke pilihan metode pembayaran
                         onPaymentStatusChange={(status) => setActiveOrderStatus(status)} // Pemicu perubahan status pada UI
-                        amount={discountedAmount}
                         amountToPay={amountToPay}
                         paymentType={paymentType}
                         onChangePaymentType={setPaymentType}
                         bankDetails={bankDetails}
-                        activeRate={activeRate}
                         hasActiveGateway={hasActiveGateway}
                         gatewayStatus={gatewayStatus}
                         defaultPaymentType={defaultPaymentType}
-                        projectPaidAmount={projectPaidAmount}
-                        projectTotalAmount={projectTotalAmount}
                         user={user}
                         activeOrderId={activeOrderId}
                         onChangeActiveOrderId={setActiveOrderId}
                         activeOrderStatus={activeOrderStatus}
-                        isProcessing={isProcessing}
                         countdown={countdown}
                         selectedAddons={selectedAddons}
                         onToggleAddon={(addon) => {
