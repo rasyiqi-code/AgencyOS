@@ -220,35 +220,36 @@ export function InvoiceDocument({
                             width={32}
                             height={32}
                             className="object-contain w-8 h-8 sm:w-10 sm:h-10"
-                            style={{ height: 'auto', width: 'auto' }}
+                            style={{ height: 'auto' }}
                             sizes="40px"
                         />
                         <h1 className="text-2xl sm:text-4xl font-black tracking-tighter leading-none text-[#D4AF37]">{agencyName}</h1>
                     </div>
                     <div className="text-left sm:text-right w-full sm:w-auto">
                         <h2 className="text-2xl sm:text-4xl font-black text-[#D4AF37] uppercase tracking-tighter leading-none select-none flex items-baseline justify-start sm:justify-end relative sm:-top-[6px]">
-                            <span className="mr-3 sm:mr-4 opacity-30 relative -top-[2px]">|</span>{t('title')}
+                            <span className="mr-3 sm:mr-4 opacity-30 relative -top-[2px] hidden sm:inline">|</span>{t('title')}
                         </h2>
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-between items-start mt-4 pt-4 border-t border-b border-zinc-100/80 pb-4 gap-4">
-                    <div className="text-xs sm:text-sm text-zinc-600 max-w-xs leading-tight whitespace-pre-line space-y-[1px]">
+                <div className="grid grid-cols-2 sm:flex sm:justify-between items-start mt-4 pt-4 border-t border-b border-zinc-100/80 pb-4 gap-4 w-full">
+                    <div className="text-xs sm:text-sm text-zinc-600 leading-tight space-y-[2px]">
                         <div className="font-bold text-zinc-900">{website}</div>
                         <div className="text-zinc-500 font-medium text-[11px] sm:text-[12px]">{billingEmail}</div>
                     </div>
-                    <div className="text-left sm:text-right space-y-[1px] w-full sm:w-auto">
-                        <div className="flex justify-start sm:justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
+                    <div className="text-right space-y-[2px] w-full">
+                        <div className="flex justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('invoiceNo', { fallback: "No. Invoice" })}</span>
                             <span className="font-mono font-bold text-zinc-900">#{extendedEstimate.id.slice(-8).toUpperCase()}</span>
                         </div>
-                        <div className="flex justify-start sm:justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
+                        <div className="flex justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('date')}</span>
                             <span className="font-bold text-zinc-900">{formattedDate}</span>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             {/* Client & Payment Info */}
             <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-6 sm:justify-between items-start sm:items-end relative z-10">
