@@ -34,7 +34,8 @@ export function PaymentPanel({
     onToggleAddon,
     agencySettings,
     onPaymentInitiated,
-    onPaymentClosed
+    onPaymentClosed,
+    onPaymentStatusChange
 }: {
     estimate: ExtendedEstimate,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
@@ -58,7 +59,8 @@ export function PaymentPanel({
     onToggleAddon?: (addon: ServiceAddon) => void,
     agencySettings?: AgencyInvoiceSettings,
     onPaymentInitiated?: () => void,
-    onPaymentClosed?: () => void
+    onPaymentClosed?: () => void,
+    onPaymentStatusChange?: (status: string) => void
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
@@ -323,6 +325,7 @@ export function PaymentPanel({
                                 noCard={true}
                                 onPaymentInitiated={onPaymentInitiated}
                                 onPaymentClosed={onPaymentClosed}
+                                onPaymentStatusChange={onPaymentStatusChange}
                             />
                         </div>
                     </div>

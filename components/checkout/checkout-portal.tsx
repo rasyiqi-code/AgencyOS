@@ -68,6 +68,13 @@ export function CheckoutPortal({
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
 
+    // Menghubungkan state activeOrderStatus dengan initialOrderStatus jika ada pembaruan dari server
+    useEffect(() => {
+        if (initialOrderStatus) {
+            setActiveOrderStatus(initialOrderStatus);
+        }
+    }, [initialOrderStatus]);
+
     const handlePrint = useReactToPrint({
         contentRef: invoiceRef,
         documentTitle: `Invoice-${estimate.id}`
@@ -212,6 +219,7 @@ export function CheckoutPortal({
                         estimate={estimate}
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
                         onPaymentClosed={() => setIsPaymentInitiated(false)} // Matikan pengecekan status jika kembali ke pilihan metode pembayaran
+                        onPaymentStatusChange={(status) => setActiveOrderStatus(status)} // Pemicu perubahan status pada UI
                         amount={discountedAmount}
                         amountToPay={amountToPay}
                         paymentType={paymentType}

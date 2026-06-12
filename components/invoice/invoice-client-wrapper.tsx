@@ -68,6 +68,15 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         order.status ? order.status !== "pending" : false
     );
 
+    // State lokal untuk memantau status pesanan (diperlukan untuk update UI instan)
+    const [orderStatus, setOrderStatus] = useState<string>(order.status);
+
+    useEffect(() => {
+        if (order.status) {
+            setOrderStatus(order.status);
+        }
+    }, [order.status]);
+
     const quote = useMemo(() => {
         // Deterministic quote based on Order ID
         const index = order.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % thankYouQuotes.length;
@@ -77,7 +86,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     useEffect(() => {
         if (isPaid) return;
         // Hanya lakukan polling jika statusnya waiting_verification atau jika pembayaran telah diinisiasi oleh user
-        if (order.status !== 'waiting_verification' && !isPaymentInitiated) return;
+        if (orderStatus !== 'waiting_verification' && !isPaymentInitiated) return;
 
         const interval = setInterval(async () => {
             if (document.hidden) return;
@@ -94,7 +103,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [isPaid, order.id, router, order.status, isPaymentInitiated]);
+    }, [isPaid, order.id, router, orderStatus, isPaymentInitiated]);
 
     const handlePrint = useReactToPrint({
         contentRef: componentRef,
@@ -258,13 +267,14 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         // Allow all groups if IDR, filter if USD (handled inside widget)
                         allowedGroups={undefined}
                         bankDetails={bankDetails}
-                        orderStatus={order.status}
+                        orderStatus={orderStatus}
                         contactWA={agencySettings?.phone}
                         contactTele={agencySettings?.telegram}
                         hasActiveGateway={hasActiveGateway}
                         gatewayStatus={gatewayStatus}
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
                         onPaymentClosed={() => setIsPaymentInitiated(false)}
+                        onPaymentStatusChange={(status) => setOrderStatus(status)}
                     />
                 )}
 

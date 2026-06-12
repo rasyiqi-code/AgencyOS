@@ -18,9 +18,11 @@ interface ManualPaymentProps {
     onClose: () => void;
     contactWA?: string | null;
     contactTele?: string | null;
+    onPaymentStatusChange?: (status: string) => void;
+    onProofUploaded?: () => void;
 }
 
-export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contactTele }: ManualPaymentProps) {
+export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contactTele, onPaymentStatusChange, onProofUploaded }: ManualPaymentProps) {
     const t = useTranslations("Checkout"); // Using Checkout context for simplicity or add ManualPayment context
     const router = useRouter();
     const [isUploading, setIsUploading] = useState(false);
@@ -44,6 +46,7 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
             if (!res.ok) throw new Error("Upload failed");
             toast.success("Proof uploaded! Please click 'Confirm Payment' to notify us.");
             setProofUploaded(true);
+            onProofUploaded?.();
         } catch (error) {
             console.error(error);
             toast.error("Failed to upload proof");
@@ -124,14 +127,27 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-2.5 w-full animate-in fade-in duration-300">
-                                        <div className="shrink-0 w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                    <div className="flex flex-col gap-2 w-full animate-in fade-in duration-300">
+                                        <div className="flex items-center gap-2.5 w-full">
+                                            <div className="shrink-0 w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                                                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                            </div>
+                                            <div className="flex flex-col min-w-0 flex-1 pr-2">
+                                                <span className="text-xs font-semibold text-emerald-500 truncate max-w-full">Proof Uploaded</span>
+                                                <span className="text-[9px] text-zinc-500 truncate max-w-full">We will verify this shortly</span>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col min-w-0 flex-1 pr-2">
-                                            <span className="text-xs font-semibold text-emerald-500 truncate max-w-full">Proof Uploaded</span>
-                                            <span className="text-[9px] text-zinc-500 truncate max-w-full">We will verify this shortly</span>
-                                        </div>
+                                        {/* Tombol Selesai untuk mengunci status dan beralih ke Verifikasi */}
+                                        <Button
+                                            type="button"
+                                            onClick={async () => {
+                                                onPaymentStatusChange?.('waiting_verification');
+                                                router.refresh();
+                                            }}
+                                            className="w-full mt-1.5 h-9 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs"
+                                        >
+                                            {typeof window !== 'undefined' && window.location.pathname.split('/').includes('id') ? "Selesai & Konfirmasi" : "Done & Confirm"}
+                                        </Button>
                                     </div>
                                 )}
                             </div>
@@ -189,18 +205,7 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                 <Button
                     variant="ghost"
                     onClick={() => {
-                        // Menentukan target url berdasarkan apakah berada di checkout atau invoice, serta mempertahankan prefiks bahasa (locale)
-                        const isCheckout = typeof window !== 'undefined' && window.location.pathname.includes('/checkout/');
-                        let targetUrl = isCheckout ? `/invoices/${orderId}` : `/dashboard`;
-                        
-                        if (typeof window !== 'undefined') {
-                            const segments = window.location.pathname.split('/');
-                            if (segments[1] && segments[1].length === 2) {
-                                targetUrl = `/${segments[1]}${targetUrl}`;
-                            }
-                        }
-                        
-                        router.push(targetUrl);
+                        // Menutup detail pembayaran manual (akan beralih ke state pending/tertunda di komponen induk)
                         onClose();
                     }}
                     className="text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 text-xs"

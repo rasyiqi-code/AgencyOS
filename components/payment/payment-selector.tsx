@@ -33,6 +33,7 @@ export interface PaymentSelectorProps {
     noCard?: boolean;
     onPaymentInitiated?: () => void;
     onPaymentClosed?: () => void; // Callback ketika proses pembayaran dibatalkan atau ditutup
+    onPaymentStatusChange?: (status: string) => void; // Callback ketika status pembayaran berubah
 }
 
 interface PaymentMethod {
@@ -111,7 +112,8 @@ export function PaymentSelector({
     gatewayStatus,
     noCard,
     onPaymentInitiated,
-    onPaymentClosed
+    onPaymentClosed,
+    onPaymentStatusChange
 }: PaymentSelectorProps) {
     const locale = useLocale();
     const isId = locale === 'id';
@@ -125,6 +127,13 @@ export function PaymentSelector({
             return paymentMetadata;
         }
         return null;
+    });
+
+    // Menambahkan state untuk memantau apakah pembayaran ditunda (pending) dan bukti telah diunggah
+    const [isPending, setIsPending] = useState<boolean>(false);
+    const [hasUploadedProof, setHasUploadedProof] = useState<boolean>(() => {
+        // Jika statusnya sudah waiting_verification, bukti otomatis dianggap sudah diunggah
+        return orderStatus === 'waiting_verification';
     });
 
     const isVerifying = orderStatus === 'waiting_verification';
@@ -272,6 +281,31 @@ export function PaymentSelector({
         return <VerificationInProgress orderId={orderId} isId={isId} />;
     }
 
+    // Menampilkan state tertunda dengan animasi spinner jika pengguna menutup petunjuk bayar
+    if (isPending && paymentData) {
+        return (
+            <PaymentPendingState
+                isId={isId}
+                hasUploadedProof={hasUploadedProof}
+                onContinue={() => setIsPending(false)}
+                onCancel={async () => {
+                    setPaymentData(null);
+                    setIsPending(false);
+                    onPaymentClosed?.();
+                    try {
+                        await fetch("/api/billing/method", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ orderId, paymentType: 'cancel' })
+                        });
+                    } catch (e) {
+                        console.error("Gagal membatalkan metode pembayaran:", e);
+                    }
+                }}
+            />
+        );
+    }
+
     return (
         <>
             <div className={noCard ? "w-full flex flex-col h-fit" : "w-full bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden p-6 shadow-2xl flex flex-col h-fit max-h-[800px]"}>
@@ -304,7 +338,7 @@ export function PaymentSelector({
                                                         bank: method.type === 'bank_transfer' ? method.id : undefined,
                                                         id: method.id,
                                                         label: method.label
-                                                    })}
+                                                     })}
                                                 />
                                             ))}
                                         </div>
@@ -345,11 +379,12 @@ export function PaymentSelector({
                             orderId={orderId}
                             bankDetails={bankDetails}
                             onClose={() => {
-                                setPaymentData(null);
-                                onPaymentClosed?.();
+                                setIsPending(true);
                             }}
+                            onProofUploaded={() => setHasUploadedProof(true)}
                             contactWA={contactWA}
                             contactTele={contactTele}
+                            onPaymentStatusChange={onPaymentStatusChange}
                         />
                     ) : (
                         <MidtransPayment
@@ -357,8 +392,7 @@ export function PaymentSelector({
                             paymentData={paymentData as MidtransPaymentData}
                             selectedMethod={selectedMethod}
                             onClose={() => {
-                                setPaymentData(null);
-                                onPaymentClosed?.();
+                                setIsPending(true);
                             }}
                         />
                     )
