@@ -16,6 +16,8 @@ interface DynamicListInputProps {
 export function DynamicListInput({ name, defaultValue = [], placeholder, className }: DynamicListInputProps) {
     const [items, setItems] = useState<string[]>(defaultValue);
     const [newItem, setNewItem] = useState("");
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [isDraggable, setIsDraggable] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleAddItem = (e?: React.FormEvent) => {
@@ -41,6 +43,31 @@ export function DynamicListInput({ name, defaultValue = [], placeholder, classNa
         }
     };
 
+    // Drag and Drop Handlers
+    const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", index.toString());
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === index) return;
+
+        const reorderedItems = [...items];
+        const draggedItem = reorderedItems[draggedIndex];
+        reorderedItems.splice(draggedIndex, 1);
+        reorderedItems.splice(index, 0, draggedItem);
+
+        setDraggedIndex(index);
+        setItems(reorderedItems);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+        setIsDraggable(false);
+    };
+
     return (
         <div className={cn("space-y-3", className)}>
             {/* Hidden input for form submission */}
@@ -50,9 +77,23 @@ export function DynamicListInput({ name, defaultValue = [], placeholder, classNa
             {items.length > 0 && (
                 <ul className="space-y-2">
                     {items.map((item, index) => (
-                        <li key={`${item}-${index}`} className="flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200">
+                        <li 
+                            key={`${item}-${index}`}
+                            draggable={isDraggable}
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragOver={(e) => handleDragOver(e, index)}
+                            onDragEnd={handleDragEnd}
+                            className={cn(
+                                "flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200",
+                                draggedIndex === index && "opacity-40 scale-[0.98] transition-all"
+                            )}
+                        >
                             <div className="flex-1 flex items-center gap-2 bg-zinc-900/40 border border-white/5 rounded-lg px-3 py-2 text-sm text-zinc-300">
-                                <GripVertical className="w-4 h-4 text-zinc-600 cursor-move opacity-50" />
+                                <GripVertical 
+                                    className="w-4 h-4 text-zinc-600 cursor-move opacity-50 active:text-blue-400 active:opacity-100 transition-all"
+                                    onMouseDown={() => setIsDraggable(true)}
+                                    onMouseUp={() => setIsDraggable(false)}
+                                />
                                 <span>{item}</span>
                             </div>
                             <Button

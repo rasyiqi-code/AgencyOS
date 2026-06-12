@@ -27,6 +27,8 @@ export function DynamicAddonInput({ name, defaultValue = [], className, currency
     const [newPrice, setNewPrice] = useState("");
     const [newInterval, setNewInterval] = useState<"one_time" | "monthly" | "yearly">("one_time");
     const [newCurrency, setNewCurrency] = useState<"USD" | "IDR">("USD");
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [isDraggable, setIsDraggable] = useState(false);
     const nameRef = useRef<HTMLInputElement>(null);
 
     const handleAddAddon = (e?: React.FormEvent) => {
@@ -56,6 +58,31 @@ export function DynamicAddonInput({ name, defaultValue = [], className, currency
         }
     };
 
+    // Drag and Drop Handlers
+    const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", index.toString());
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === index) return;
+
+        const reorderedAddons = [...addons];
+        const draggedItem = reorderedAddons[draggedIndex];
+        reorderedAddons.splice(draggedIndex, 1);
+        reorderedAddons.splice(index, 0, draggedItem);
+
+        setDraggedIndex(index);
+        setAddons(reorderedAddons);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+        setIsDraggable(false);
+    };
+
     return (
         <div className={cn("space-y-3", className)}>
             <input type="hidden" name={name} value={JSON.stringify(addons)} />
@@ -63,10 +90,24 @@ export function DynamicAddonInput({ name, defaultValue = [], className, currency
             {addons.length > 0 && (
                 <ul className="space-y-2">
                     {addons.map((addon, index) => (
-                        <li key={`${addon.name}-${index}`} className="flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200">
+                        <li 
+                            key={`${addon.name}-${index}`}
+                            draggable={isDraggable}
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragOver={(e) => handleDragOver(e, index)}
+                            onDragEnd={handleDragEnd}
+                            className={cn(
+                                "flex items-center gap-2 group animate-in fade-in slide-in-from-left-1 duration-200",
+                                draggedIndex === index && "opacity-40 scale-[0.98] transition-all"
+                            )}
+                        >
                             <div className="flex-1 flex items-center justify-between gap-2 bg-zinc-900/40 border border-white/5 rounded-lg px-3 py-2 text-sm text-zinc-300">
                                 <div className="flex items-center gap-2">
-                                    <GripVertical className="w-4 h-4 text-zinc-600 cursor-move opacity-50" />
+                                    <GripVertical 
+                                        className="w-4 h-4 text-zinc-600 cursor-move opacity-50 active:text-blue-400 active:opacity-100 transition-all"
+                                        onMouseDown={() => setIsDraggable(true)}
+                                        onMouseUp={() => setIsDraggable(false)}
+                                    />
                                     <div className="flex flex-col">
                                         <span>{addon.name}</span>
                                         <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
