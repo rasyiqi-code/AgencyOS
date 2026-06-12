@@ -16,8 +16,8 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     useEffect(() => {
         const handleScroll = () => {
-            // Tampilkan bar sticky ketika pengguna menggulir ke bawah melewati 200px
-            if (window.scrollY > 200) {
+            // Tampilkan bar sticky ketika pengguna menggulir ke bawah melewati 300px
+            if (window.scrollY > 300) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
@@ -34,11 +34,11 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     return (
         <div
-            className={`fixed top-10 md:top-14 left-0 right-0 py-2 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-40 transition-opacity duration-300 shadow-md shadow-black/80 ${
-                isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+            className={`fixed bottom-0 left-0 right-0 py-3.5 bg-[#0a0a0a]/90 backdrop-blur-xl border-t border-white/5 z-40 transition-all duration-300 transform shadow-[0_-10px_30px_rgba(0,0,0,0.8)] ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
             }`}
         >
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
                 {/* Judul Layanan di Sisi Kiri */}
                 <div className="flex-1 min-w-0">
                     <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
@@ -47,7 +47,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                 </div>
 
                 {/* Harga & Tombol Order di Sisi Kanan (Sebaris) */}
-                <div className="flex items-center gap-2.5 md:gap-4 shrink-0">
+                <div className="flex items-center gap-3 md:gap-5 shrink-0">
                     <div className="text-right flex flex-col justify-center select-none">
                         <span className="text-xs sm:text-sm font-black text-white tracking-tight leading-none whitespace-nowrap">
                             <PriceDisplay
@@ -56,7 +56,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                                 compact={true}
                             />
                         </span>
-                        <span className="text-[9px] sm:text-[10px] font-medium text-zinc-500 tracking-tight leading-none mt-0 whitespace-nowrap">
+                        <span className="text-[9px] sm:text-[10px] font-medium text-zinc-500 tracking-tight leading-none mt-1 whitespace-nowrap">
                             / {intervalLabel}
                         </span>
                     </div>
@@ -65,7 +65,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                         serviceId={service.id}
                         interval={service.interval}
                         selectedAddons={selectedAddons}
-                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-[26px] sm:h-7.5 px-2.5 sm:px-3.5 rounded-none text-[9px] sm:text-[10px] uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 sm:h-9 px-4 sm:px-6 rounded-none text-xs uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shrink-0"
                     />
                 </div>
             </div>
