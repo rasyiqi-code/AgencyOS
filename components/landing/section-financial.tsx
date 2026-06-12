@@ -26,20 +26,9 @@ export async function FinancialLogic() {
 
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-12 relative group/tooltip">
+                <div className="text-center mb-12 relative">
                     <h2 className="text-2xl md:text-4xl font-black text-black mb-4 tracking-tight inline-flex items-center gap-3 italic">
                         {t("title")}
-                        <div className="relative cursor-help">
-                            <Info className="w-5 h-5 text-black/20 hover:text-black transition-colors" />
-                            {/* Custom Tooltip */}
-                            <div className="absolute bottom-full left-1/2 -translate-y-2 -translate-x-1/2 mb-3 w-64 p-3 bg-black border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 z-50">
-                                <p className="text-[10px] text-zinc-400 font-bold tracking-wide leading-relaxed">
-                                    {t("comparison")} Analysis Based on Standard Market Rates 2025
-                                </p>
-                                {/* Tooltip Arrow */}
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-black" />
-                            </div>
-                        </div>
                     </h2>
                     <p className="text-black/70 font-semibold text-base max-w-xl mx-auto">
                         {t("subtitle")}
