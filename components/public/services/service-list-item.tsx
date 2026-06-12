@@ -79,13 +79,13 @@ export function ServiceListItem({ service, isId, indexNumber }: ServiceListItemP
                         <div className="marquee-content">
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug pr-8 inline-block">
                                 {indexNumber !== undefined && (
-                                    <span className="text-white mr-1.5">#{indexNumber}.</span>
+                                    <span style={{ color: "#ffffff" }} className="mr-1.5">#{indexNumber}.</span>
                                 )}
                                 {titleText}
                             </span>
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug sm:hidden pr-8 inline-block">
                                 {indexNumber !== undefined && (
-                                    <span className="text-white mr-1.5">#{indexNumber}.</span>
+                                    <span style={{ color: "#ffffff" }} className="mr-1.5">#{indexNumber}.</span>
                                 )}
                                 {titleText}
                             </span>
