@@ -123,6 +123,15 @@ export function PaymentPanel({
             {/* Scrollable Main Area */}
             <div className="space-y-6 flex-grow">
 
+                {/* Tombol Kembali */}
+                <button
+                    onClick={() => window.history.back()}
+                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-widest group cursor-pointer bg-transparent border-0 p-0"
+                >
+                    <svg className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                    {isId ? "Kembali" : "Back"}
+                </button>
+
                 {/* Tipe Pembayaran (DP vs FULL) - Selektor Paket Horizontal Minecraft Style */}
                 <div className="space-y-2.5">
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
