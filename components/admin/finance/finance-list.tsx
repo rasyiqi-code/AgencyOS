@@ -320,7 +320,7 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                     <div className="space-y-3">
                         <div className="flex items-center justify-between text-xs p-2 rounded bg-zinc-950/50 border border-white/5">
-                            <span className="text-zinc-500">Full Invoice ID</span>
+                            <span className="text-zinc-500">System ID</span>
                             <span className="font-mono text-zinc-300 flex items-center gap-2">
                                 {data.id}
                                 <Copy className="w-3 h-3 cursor-pointer hover:text-white" onClick={copyId} />

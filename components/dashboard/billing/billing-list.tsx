@@ -280,7 +280,7 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-end mt-2">
                     <div className="space-y-1 text-xs text-zinc-500">
                         <div className="flex items-center gap-2">
-                            <span>Full Invoice ID:</span>
+                            <span>System ID:</span>
                             <span className="font-mono text-zinc-300">{order.id}</span>
                             <Copy className="w-3 h-3 cursor-pointer hover:text-white" onClick={copyId} />
                         </div>
