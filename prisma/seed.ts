@@ -36,6 +36,7 @@ async function main() {
         {
             title: 'Web Development Starter',
             title_id: 'Paket Pemula Web Development',
+            slug: 'web-development-starter',
             description: 'Perfect for small businesses needing a professional online presence. Includes 5 pages, contact form, and mobile responsiveness.',
             description_id: 'Cocok untuk bisnis kecil yang membutuhkan kehadiran online profesional. Termasuk 5 halaman, formulir kontak, dan responsivitas seluler.',
             price: 1500,
@@ -47,6 +48,7 @@ async function main() {
         {
             title: 'E-Commerce Growth Plan',
             title_id: 'Paket Pertumbuhan E-Commerce',
+            slug: 'e-commerce-growth-plan',
             description: 'Scale your online store with ongoing maintenance, priority support, and monthly performance optimizations.',
             description_id: 'Tingkatkan toko online Anda dengan pemeliharaan berkelanjutan, dukungan prioritas, dan optimasi performa bulanan.',
             price: 299,
@@ -58,6 +60,7 @@ async function main() {
         {
             title: 'Enterprise Support (Annual)',
             title_id: 'Dukungan Enterprise (Tahunan)',
+            slug: 'enterprise-support-annual',
             description: 'Full-service dedicated support for large organizations needing guaranteed uptime and rapid response.',
             description_id: 'Dukungan penuh khusus untuk organisasi besar yang membutuhkan jaminan uptime dan respons cepat.',
             price: 50000000,
@@ -69,6 +72,7 @@ async function main() {
         {
             title: 'Custom Website Design',
             title_id: 'Desain Website Kustom',
+            slug: 'custom-website-design',
             description: 'High-end custom website design tailored to your brand identity and business goals.',
             description_id: 'Desain website kustom kelas atas yang disesuaikan dengan identitas merek dan tujuan bisnis Anda.',
             price: 25000000,
@@ -87,7 +91,20 @@ async function main() {
             });
             console.log(`Created service: ${service.title}`);
         } else {
-            console.log(`Service exists: ${s.title}`);
+            const service = await prisma.service.update({
+                where: { id: existing.id },
+                data: {
+                    slug: s.slug,
+                    title_id: s.title_id,
+                    description_id: s.description_id,
+                    features: s.features,
+                    features_id: s.features_id,
+                    price: s.price,
+                    currency: s.currency,
+                    interval: s.interval,
+                }
+            });
+            console.log(`Updated service: ${service.title}`);
         }
     }
 
