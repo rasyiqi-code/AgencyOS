@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, DollarSign } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
 
 const listeners = new Set<() => void>();
 
@@ -26,6 +27,7 @@ function getServerSnapshot() {
 export function NavControls() {
     const { currency, setCurrency } = useCurrency();
     const router = useRouter();
+    const t = useTranslations("Common");
 
     const lang = useSyncExternalStore(
         subscribe,
@@ -54,7 +56,7 @@ export function NavControls() {
                 size="sm"
                 onClick={toggleCurrency}
                 className="text-zinc-400 hover:text-white flex items-center gap-1.5 min-w-[60px]"
-                title="Switch Currency"
+                title={t("switchCurrency")}
             >
                 {currency === 'USD' ? <DollarSign className="w-4 h-4" /> : <span className="text-xs font-bold">Rp</span>}
                 <span className="text-xs font-medium">{currency}</span>
@@ -67,7 +69,7 @@ export function NavControls() {
                 size="sm"
                 onClick={toggleLanguage}
                 className="text-zinc-400 hover:text-white flex items-center gap-1.5 min-w-[60px]"
-                title="Switch Language"
+                title={t("switchLanguage")}
             >
                 <Globe className="w-4 h-4" />
                 <span className="text-xs font-medium uppercase">{lang}</span>

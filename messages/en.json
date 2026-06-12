@@ -3,7 +3,11 @@
         "error": "Something went wrong",
         "login": "Login",
         "inbox": "Chat",
-        "back": "Back"
+        "back": "Back",
+        "switchCurrency": "Switch Currency",
+        "switchLanguage": "Switch Language",
+        "region": "Region",
+        "toggleMenu": "Toggle Menu"
     },
     "ViewDesign": {
         "inquireDesign": "Order",
@@ -88,7 +92,25 @@
                 "role": "VP of Engineering, CloudScale",
                 "text": "Incredible performance and reliability. Their hybrid AI approach works like magic."
             }
-        ]
+        ],
+        "submit": {
+            "title": "Share Your Experience",
+            "subtitle": "How has {brand} helped your business?",
+            "fullName": "Full Name",
+            "roleCompany": "Role & Company",
+            "yourTestimonial": "Your Testimonial",
+            "placeholderName": "Alex Chen",
+            "placeholderRole": "CTO, InnovateLabs",
+            "placeholderContent": "{brand} helped us ship our MVP in record time...",
+            "submitButton": "Submit Testimonial",
+            "thankYou": "Thank You!",
+            "successDesc": "Your testimonial has been submitted successfully. It will appear on our homepage once verified by our team.",
+            "returnHome": "Return Home",
+            "toastSuccess": "Testimonial submitted successfully!",
+            "toastError": "Something went wrong. Please try again.",
+            "toastFillAll": "Please fill in all fields",
+            "toastFail": "Failed to submit. Please try again."
+        }
     },
     "Comparison": {
         "title": "Why We Are Worth It",
@@ -469,7 +491,9 @@
         "typeMobileApp": "Mobile App",
         "typeDesktopApp": "Desktop App",
         "typeLiveSite": "Live Site",
-        "typeLiveRender": "Live Render"
+        "typeLiveRender": "Live Render",
+        "all": "All",
+        "empty": "No portfolios found for this category."
     },
     "Loader": {
         "initializingCore": "Preparing Senior Architecture...",
@@ -533,7 +557,10 @@
         "complexityMedium": "Medium",
         "complexityHigh": "High",
         "proposalAssistant": "Proposal Assistant",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "accessDenied": "Access Denied",
+        "noPermission": "You do not have permission to view this estimate.",
+        "createOwn": "Create your own estimate"
     },
     "Service": {
         "cancel": "Cancel",
@@ -615,7 +642,10 @@
         "valuedClient": "Valued Client",
         "guestUser": "Guest User",
         "completePaymentDigital": "Please complete payment below to access your digital product.",
-        "thankYouPurchase": "Thank you for your purchase. Enjoy your product!"
+        "thankYouPurchase": "Thank you for your purchase. Enjoy your product!",
+        "accessDenied": "Access Denied",
+        "noPermission": "You do not have permission to view this invoice.",
+        "dataIncomplete": "Invoice data incomplete"
     },
     "FloatingChat": {
         "needHelp": "Need Help? 👋"
@@ -657,7 +687,41 @@
         "failUpdateEstimate": "Failed to update estimate",
         "creatingProject": "Creating project...",
         "projectCreated": "Project created successfully",
-        "failCreateProject": "Failed to create project",
         "failSendMessage": "Failed to send message"
+    },
+    "Promotions": {
+        "metaTitle": "Promotions & Special Offers | {brand}",
+        "metaDesc": "Discover our latest promotions, special discounts, and limited-time offers for our services.",
+        "title": "Exclusive",
+        "titleHighlight": "Offers",
+        "subtitle": "Accelerate your business growth with our range of exclusive promotions and bonuses designed specifically for our strategic partners.",
+        "emptyTitle": "No Active Promotions",
+        "emptyDesc": "Please check back later for more exciting offers.",
+        "newsletterTitle": "Want to Be the First to Know?",
+        "newsletterDesc": "Subscribe to our newsletter to receive promo alerts, exclusive discounts, and service updates directly in your inbox."
+    },
+    "Contact": {
+        "title": "Get in touch",
+        "subtitle": "Have a project in mind or want to learn more about our services? We'd love to hear from you. Fill out the form and we'll get back to you shortly.",
+        "email": "Email",
+        "office": "Office",
+        "phone": "Phone",
+        "backToHome": "Back to Home"
+    },
+    "Verify": {
+        "metaTitle": "Verify Invoice #{id} | {brand}",
+        "metaDesc": "Official invoice verification system for {brand}.",
+        "verifiedTitle": "Authenticity Verified",
+        "verifiedDesc": "This document has been verified as an official invoice issued by {brand}.",
+        "invoiceId": "Invoice ID",
+        "dateIssued": "Date Issued",
+        "client": "Client",
+        "totalAmount": "Total Amount",
+        "signedBy": "Signed and Encrypted by {brand} Trust System",
+        "failedTitle": "Verification Failed",
+        "failedDesc": "We could not find any official record for the document ID provided. This document may be invalid or forged.",
+        "invalidId": "Invalid ID",
+        "contactSupport": "Contact Support",
+        "portalTitle": "Official Verification Portal"
     }
 }

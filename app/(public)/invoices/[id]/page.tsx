@@ -9,6 +9,7 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { paymentService } from "@/lib/server/payment-service";
 import type { InvoiceOrder } from "@/types/payment";
+import { getTranslations } from "next-intl/server";
 
 async function getOrder(id: string) {
     return await prisma.order.findUnique({
@@ -29,6 +30,7 @@ async function getOrder(id: string) {
 export default async function PublicInvoicePage(props: { params: Promise<{ id: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const { params } = props;
     const { id } = await params;
+    const t = await getTranslations("Invoice");
 
     const searchParams = (props.searchParams) ? await props.searchParams : {};
     const token = searchParams.token as string | undefined;
@@ -48,8 +50,8 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         return (
             <div className="min-h-screen bg-black flex items-center justify-center text-white">
                 <div className="text-center space-y-4">
-                    <h1 className="text-2xl font-bold">Access Denied</h1>
-                    <p className="text-zinc-400">You do not have permission to view this invoice.</p>
+                    <h1 className="text-2xl font-bold">{t("accessDenied")}</h1>
+                    <p className="text-zinc-400">{t("noPermission")}</p>
                 </div>
             </div>
         );
@@ -62,7 +64,7 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     const estimateData = order.project?.estimate;
 
     if (!estimateData) {
-        return <div>Invoice data incomplete</div>;
+        return <div>{t("dataIncomplete")}</div>;
     }
 
     const extendedEstimate: ExtendedEstimate = {

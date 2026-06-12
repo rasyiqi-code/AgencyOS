@@ -117,10 +117,10 @@ export function MarketingPopup() {
                     handleDismiss();
                 }, 3000);
             } else {
-                toast.error("Gagal mengirim data.");
+                toast.error(isId ? "Gagal mengirim data." : "Failed to send data.");
             }
         } catch {
-            toast.error("Terjadi kesalahan jaringan.");
+            toast.error(isId ? "Terjadi kesalahan jaringan." : "Network error occurred.");
         } finally {
             setIsPending(false);
         }
@@ -254,7 +254,7 @@ export function MarketingPopup() {
                                         <CheckCircle2 className="w-6 h-6 text-green-500" />
                                     </div>
                                     <div className="space-y-1">
-                                        <p className="text-white font-black uppercase tracking-tight">Success!</p>
+                                        <p className="text-white font-black uppercase tracking-tight">{isId ? "Berhasil!" : "Success!"}</p>
                                         <p className="text-zinc-500 text-xs">{isId ? "Terima kasih telah bergabung." : "Thank you for joining us."}</p>
                                     </div>
                                 </div>

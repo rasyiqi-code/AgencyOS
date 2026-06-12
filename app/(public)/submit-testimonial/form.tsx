@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface SubmitTestimonialFormProps {
     agencyName: string;
@@ -20,6 +21,7 @@ interface SubmitTestimonialFormProps {
 export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: SubmitTestimonialFormProps) {
     const [isPending, startTransition] = useTransition();
     const [submitted, setSubmitted] = useState(false);
+    const t = useTranslations("Testimonials");
 
     async function onSubmit(formData: FormData) {
         const name = formData.get("name") as string;
@@ -27,7 +29,7 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
         const content = formData.get("content") as string;
 
         if (!name || !role || !content) {
-            toast.error("Please fill in all fields");
+            toast.error(t("submit.toastFillAll"));
             return;
         }
 
@@ -37,12 +39,12 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
 
                 if (result.success) {
                     setSubmitted(true);
-                    toast.success("Testimonial submitted successfully!");
+                    toast.success(t("submit.toastSuccess"));
                 } else {
-                    toast.error("Something went wrong. Please try again.");
+                    toast.error(t("submit.toastError"));
                 }
             } catch {
-                toast.error("Failed to submit. Please try again.");
+                toast.error(t("submit.toastFail"));
             }
         });
     }
@@ -56,16 +58,16 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
                             <CheckCircle2 className="w-8 h-8" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-2xl font-bold text-white">Thank You!</h1>
+                            <h1 className="text-2xl font-bold text-white">{t("submit.thankYou")}</h1>
                             <p className="text-zinc-400">
-                                Your testimonial has been submitted successfully. It will appear on our homepage once verified by our team.
+                                {t("submit.successDesc")}
                             </p>
                         </div>
                         <Button
                             onClick={() => window.location.href = '/'}
                             className="bg-white text-black hover:bg-zinc-200 w-full"
                         >
-                            Return Home
+                            {t("submit.returnHome")}
                         </Button>
                     </CardContent>
                 </Card>
@@ -79,9 +81,9 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
 
             <div className="max-w-md w-full space-y-8">
                 <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold font-heading tracking-tight sm:text-4xl text-white">Share Your Experience</h1>
+                    <h1 className="text-3xl font-bold font-heading tracking-tight sm:text-4xl text-white">{t("submit.title")}</h1>
                     <p className="text-zinc-400 text-sm sm:text-base">
-                        How has {agencyName} helped your business?
+                        {t("submit.subtitle", { brand: agencyName })}
                     </p>
                 </div>
 
@@ -105,23 +107,23 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
 
                     <div className="grid gap-5 sm:grid-cols-2">
                         <div className="space-y-1.5">
-                            <Label htmlFor="name" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">Full Name</Label>
+                            <Label htmlFor="name" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">{t("submit.fullName")}</Label>
                             <Input
                                 id="name"
                                 name="name"
                                 defaultValue={userName || ""}
-                                placeholder="Alex Chen"
+                                placeholder={t("submit.placeholderName")}
                                 className="bg-white/5 border-white/5 text-white placeholder:text-white/20 focus:border-white/20 h-11 rounded-xl transition-all hover:bg-white/10"
                                 required
                             />
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="role" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">Role & Company</Label>
+                            <Label htmlFor="role" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">{t("submit.roleCompany")}</Label>
                             <Input
                                 id="role"
                                 name="role"
-                                placeholder="CTO, InnovateLabs"
+                                placeholder={t("submit.placeholderRole")}
                                 className="bg-white/5 border-white/5 text-white placeholder:text-white/20 focus:border-white/20 h-11 rounded-xl transition-all hover:bg-white/10"
                                 required
                             />
@@ -129,11 +131,11 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
                     </div>
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="content" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">Your Testimonial</Label>
+                        <Label htmlFor="content" className="text-zinc-400 text-[11px] uppercase tracking-widest font-bold pl-1">{t("submit.yourTestimonial")}</Label>
                         <Textarea
                             id="content"
                             name="content"
-                            placeholder={`${agencyName} helped us ship our MVP in record time...`}
+                            placeholder={t("submit.placeholderContent", { brand: agencyName })}
                             className="bg-white/5 border-white/5 min-h-[140px] text-white placeholder:text-white/20 focus:border-white/20 resize-none text-base rounded-xl transition-all hover:bg-white/10"
                             required
                         />
@@ -146,7 +148,7 @@ export function SubmitTestimonialForm({ agencyName, userAvatar, userName }: Subm
                         className="w-full bg-white text-black hover:bg-zinc-200 h-11 rounded-full font-bold text-sm tracking-wide"
                     >
                         {isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        Submit Testimonial
+                        {t("submit.submitButton")}
                     </Button>
                 </form>
             </div>

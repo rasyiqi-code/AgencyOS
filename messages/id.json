@@ -3,7 +3,11 @@
         "error": "Terjadi kesalahan",
         "login": "Masuk",
         "inbox": "Chat",
-        "back": "Kembali"
+        "back": "Kembali",
+        "switchCurrency": "Ganti Mata Uang",
+        "switchLanguage": "Ganti Bahasa",
+        "region": "Wilayah",
+        "toggleMenu": "Buka Menu"
     },
     "ViewDesign": {
         "inquireDesign": "Pesan",
@@ -88,7 +92,25 @@
                 "role": "VP of Engineering, CloudScale",
                 "text": "Performa luar biasa. Pendekatan hybrid AI mereka bekerja sangat efektif."
             }
-        ]
+        ],
+        "submit": {
+            "title": "Bagikan Pengalaman Anda",
+            "subtitle": "Bagaimana {brand} membantu bisnis Anda?",
+            "fullName": "Nama Lengkap",
+            "roleCompany": "Peran & Perusahaan",
+            "yourTestimonial": "Testimoni Anda",
+            "placeholderName": "Alex Chen",
+            "placeholderRole": "CTO, InnovateLabs",
+            "placeholderContent": "{brand} membantu kami meluncurkan MVP dalam waktu singkat...",
+            "submitButton": "Kirim Testimoni",
+            "thankYou": "Terima Kasih!",
+            "successDesc": "Testimoni Anda telah berhasil dikirim. Testimoni akan muncul di beranda setelah diverifikasi oleh tim kami.",
+            "returnHome": "Kembali ke Beranda",
+            "toastSuccess": "Testimoni berhasil dikirim!",
+            "toastError": "Terjadi kesalahan. Silakan coba lagi.",
+            "toastFillAll": "Harap isi semua kolom",
+            "toastFail": "Gagal mengirim. Silakan coba lagi."
+        }
     },
     "Comparison": {
         "title": "Kenapa Pilih Kami?",
@@ -490,7 +512,9 @@
         "typeMobileApp": "Aplikasi Mobile",
         "typeDesktopApp": "Aplikasi Desktop",
         "typeLiveSite": "Situs Langsung",
-        "typeLiveRender": "Render Langsung"
+        "typeLiveRender": "Render Langsung",
+        "all": "Semua",
+        "empty": "Tidak ada portfolio untuk kategori ini."
     },
     "Loader": {
         "initializingCore": "Menyiapkan Arsitektur...",
@@ -554,7 +578,10 @@
         "complexityMedium": "Sedang",
         "complexityHigh": "Tinggi",
         "proposalAssistant": "Asisten Proposal",
-        "cancel": "Batal"
+        "cancel": "Batal",
+        "accessDenied": "Akses Ditolak",
+        "noPermission": "Anda tidak memiliki izin untuk melihat estimasi ini.",
+        "createOwn": "Buat estimasi Anda sendiri"
     },
     "Service": {
         "cancel": "Batal",
@@ -615,7 +642,10 @@
         "valuedClient": "Klien Terhormat",
         "guestUser": "Pengguna Tamu",
         "completePaymentDigital": "Mohon selesaikan pembayaran di bawah ini untuk mengakses produk digital Anda.",
-        "thankYouPurchase": "Terima kasih atas pembelian Anda. Selamat menikmati produk Anda!"
+        "thankYouPurchase": "Terima kasih atas pembelian Anda. Selamat menikmati produk Anda!",
+        "accessDenied": "Akses Ditolak",
+        "noPermission": "Anda tidak memiliki izin untuk melihat faktur ini.",
+        "dataIncomplete": "Data faktur tidak lengkap"
     },
     "FloatingChat": {
         "needHelp": "Butuh Bantuan? 👋"
@@ -657,7 +687,41 @@
         "failUpdateEstimate": "Gagal memperbarui estimasi",
         "creatingProject": "Membuat proyek...",
         "projectCreated": "Proyek berhasil dibuat",
-        "failCreateProject": "Gagal membuat proyek",
         "failSendMessage": "Gagal mengirim pesan"
+    },
+    "Promotions": {
+        "metaTitle": "Promosi & Penawaran Spesial | {brand}",
+        "metaDesc": "Temukan berbagai promo menarik, diskon spesial, dan penawaran terbatas untuk layanan kami.",
+        "title": "Penawaran",
+        "titleHighlight": "Eksklusif",
+        "subtitle": "Akselerasikan pertumbuhan bisnis Anda dengan berbagai pilihan promo dan bonus eksklusif yang dirancang khusus untuk mitra strategis kami.",
+        "emptyTitle": "Belum ada promo aktif",
+        "emptyDesc": "Silakan kembali lagi nanti untuk penawaran menarik lainnya.",
+        "newsletterTitle": "Ingin Jadi yang Pertama Tahu?",
+        "newsletterDesc": "Berlangganan newsletter kami untuk mendapatkan info promo, diskon eksklusif, dan update layanan langsung di inbox Anda."
+    },
+    "Contact": {
+        "title": "Hubungi kami",
+        "subtitle": "Punya proyek atau ingin tahu lebih banyak tentang layanan kami? Kami ingin mendengar dari Anda. Isi formulir dan kami akan segera menghubungi Anda.",
+        "email": "Email",
+        "office": "Kantor",
+        "phone": "Telepon",
+        "backToHome": "Kembali ke Beranda"
+    },
+    "Verify": {
+        "metaTitle": "Verifikasi Invoice #{id} | {brand}",
+        "metaDesc": "Sistem verifikasi resmi invoice untuk {brand}.",
+        "verifiedTitle": "Keaslian Terverifikasi",
+        "verifiedDesc": "Dokumen ini telah diverifikasi sebagai invoice resmi yang diterbitkan oleh {brand}.",
+        "invoiceId": "ID Invoice",
+        "dateIssued": "Tanggal Terbit",
+        "client": "Klien",
+        "totalAmount": "Total Tagihan",
+        "signedBy": "Ditandatangani dan Dienkripsi oleh Sistem Kepercayaan {brand}",
+        "failedTitle": "Verifikasi Gagal",
+        "failedDesc": "Kami tidak dapat menemukan catatan resmi untuk ID dokumen yang diberikan. Dokumen ini mungkin tidak valid atau palsu.",
+        "invalidId": "ID Tidak Valid",
+        "contactSupport": "Hubungi Dukungan",
+        "portalTitle": "Portal Verifikasi Resmi"
     }
 }

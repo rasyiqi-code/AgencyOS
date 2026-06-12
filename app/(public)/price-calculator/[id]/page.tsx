@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { EstimateViewer } from "@/components/estimate/estimate-viewer";
 import { getCurrentUser } from "@/lib/shared/auth-helpers";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { Estimate } from "@prisma/client";
 
@@ -15,6 +16,7 @@ async function getEstimate(id: string) {
 
 export default async function EstimateResultPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const t = await getTranslations("PriceCalculator");
     const estimate = await getEstimate(id);
 
     if (!estimate) {
@@ -28,9 +30,9 @@ export default async function EstimateResultPage({ params }: { params: Promise<{
             // If logged in but wrong user, or not logged in at all for a private estimate
             return (
                 <main className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
-                    <h1 className="text-2xl font-bold text-white mb-2">Access Denied</h1>
-                    <p className="text-zinc-400 mb-6">You do not have permission to view this estimate.</p>
-                    <Link href="/price-calculator" className="text-brand-yellow hover:underline">Create your own estimate</Link>
+                    <h1 className="text-2xl font-bold text-white mb-2">{t("accessDenied")}</h1>
+                    <p className="text-zinc-400 mb-6">{t("noPermission")}</p>
+                    <Link href="/price-calculator" className="text-brand-yellow hover:underline">{t("createOwn")}</Link>
                 </main>
             );
         }

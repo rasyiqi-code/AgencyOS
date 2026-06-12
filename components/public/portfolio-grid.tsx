@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PortfolioCard } from "@/components/public/portfolio-card";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
+import { useTranslations } from "next-intl";
 
 interface PortfolioItem {
     id: string;
@@ -25,6 +26,7 @@ interface PortfolioGridProps {
  */
 export function PortfolioGrid({ items }: PortfolioGridProps) {
     const [activeCategory, setActiveCategory] = useState<string>("all");
+    const t = useTranslations("Portfolio");
 
     // Ekstrak daftar kategori unik dari portfolio items
     const categories = Array.from(
@@ -51,7 +53,7 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
                             }`}
                         style={activeCategory === "all" ? { backgroundColor: "#a67c00" } : undefined}
                     >
-                        Semua
+                        {t("all")}
                     </button>
 
                     {/* Tombol per kategori */}
@@ -91,7 +93,7 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
             {/* Empty state saat filter aktif */}
             {filteredItems.length === 0 && (
                 <div className="text-center py-16 border border-dashed border-white/10 rounded-2xl mb-24">
-                    <p className="text-zinc-500">Tidak ada portfolio untuk kategori ini.</p>
+                    <p className="text-zinc-500">{t("empty")}</p>
                 </div>
             )}
         </>

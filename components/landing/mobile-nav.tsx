@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
@@ -8,12 +8,13 @@ import Link from "next/link";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-
+import { useTranslations } from "next-intl";
+ 
 interface NavItem {
     href: string;
     label: string;
 }
-
+ 
 interface MobileNavProps {
     agencyName: string;
     logoUrl?: string;
@@ -23,7 +24,7 @@ interface MobileNavProps {
     startProjectUrl: string;
     startProjectLabel: string;
 }
-
+ 
 export function MobileNav({
     agencyName,
     logoUrl,
@@ -35,13 +36,14 @@ export function MobileNav({
 }: MobileNavProps) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
-
+    const t = useTranslations("Common");
+ 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10 shrink-0">
                     <Menu className="h-6 w-6" />
-                    <span className="sr-only">Toggle menu</span>
+                    <span className="sr-only">{t("toggleMenu")}</span>
                 </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] bg-zinc-950 border-zinc-800 p-0 flex flex-col">
@@ -64,7 +66,7 @@ export function MobileNav({
                         )}
                     </SheetTitle>
                 </SheetHeader>
-
+ 
                 <div className="flex-1 overflow-y-auto py-6 px-4">
                     <div className="flex flex-col space-y-4">
                         {navItems.map((item) => (
@@ -81,16 +83,16 @@ export function MobileNav({
                             </Link>
                         ))}
                     </div>
-
+ 
                     <div className="my-8 border-t border-white/10 pt-8 space-y-6">
                         <div className="flex items-center gap-4 px-4">
-                            <span className="text-sm text-zinc-500 font-mono uppercase tracking-wider">Region</span>
+                            <span className="text-sm text-zinc-500 font-mono uppercase tracking-wider">{t("region")}</span>
                             <div className="flex items-center gap-2 ml-auto">
                                 <DashboardLanguageSwitcher />
                                 <DashboardCurrencySwitcher />
                             </div>
                         </div>
-
+ 
                         <div className="space-y-3 px-4">
                             <Link href={loginUrl} onClick={() => setOpen(false)} className="block">
                                 <Button variant="outline" className="w-full justify-start text-zinc-300 border-zinc-700 hover:bg-zinc-800 hover:text-white">
