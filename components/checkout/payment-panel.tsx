@@ -119,7 +119,7 @@ export function PaymentPanel({
 
     // 2. Tampilan Form & Konfigurasi Aktif (Minecraft Server Style Redesign)
     return (
-        <div className="h-full flex flex-col justify-between p-6 pr-0 sm:p-8 sm:pr-0 lg:pl-12 lg:py-4 bg-transparent border-0">
+        <div className="h-full flex flex-col justify-between px-0 py-6 sm:p-8 sm:pr-0 lg:pl-12 lg:py-4 bg-transparent border-0">
             
             {/* Scrollable Main Area */}
             <div className="space-y-6 flex-grow">

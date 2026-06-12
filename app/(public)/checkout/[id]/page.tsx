@@ -119,7 +119,7 @@ export default async function CheckoutPage(props: PageProps) {
 
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-6">
-                <div className="max-w-7xl mx-auto px-6 py-4 md:py-8 w-full">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 md:py-8 w-full">
                     <CheckoutPortal
                         estimate={extendedEstimate}
                         bankDetails={bankDetails}
