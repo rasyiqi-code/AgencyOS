@@ -97,7 +97,10 @@ export function ServiceListItem({ service, isId, indexNumber }: ServiceListItemP
 
             {/* Aksi dan Harga */}
             <div className="flex items-center gap-3 shrink-0">
-                <div className="text-right">
+                <div className="text-right flex flex-col justify-center select-none">
+                    <div className="text-[10px] text-zinc-500 line-through tracking-tight leading-none mb-1">
+                        <PriceDisplay amount={service.price * 2} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                    </div>
                     <div className="text-xs sm:text-sm font-black text-white tracking-tight leading-none">
                         <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                     </div>
