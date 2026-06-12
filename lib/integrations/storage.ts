@@ -13,29 +13,6 @@ let s3ConfigHash: string | null = null;
 const LOCAL_UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 /**
- * Memeriksa apakah provider Vercel Blob aktif berdasarkan environment variable.
- */
-function isVercelBlobActive(): boolean {
-    const provider = process.env.STORAGE_PROVIDER?.trim().toLowerCase();
-    const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
-
-    // Jika provider diset ke vercel-blob secara eksplisit dan token ada
-    if (provider === "vercel-blob" && token) {
-        return true;
-    }
-    // Jika provider diset ke r2 secara eksplisit, paksa pakai R2
-    if (provider === "r2") {
-        return false;
-    }
-    // Jika provider tidak ditentukan, fallback otomatis ke Vercel Blob jika token ada
-    if (!provider && token) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * Memeriksa apakah konfigurasi R2 lengkap dan siap digunakan.
  */
 async function isR2Configured(): Promise<boolean> {
@@ -47,6 +24,44 @@ async function isR2Configured(): Promise<boolean> {
     } catch {
         return false;
     }
+}
+
+/**
+ * Mendapatkan provider storage yang aktif secara dinamis.
+ * Membaca dari Edge Config jika tersedia, lalu ke env variable STORAGE_PROVIDER,
+ * dan terakhir melakukan deteksi otomatis berdasarkan ketersediaan konfigurasi.
+ */
+async function getActiveProvider(): Promise<"vercel-blob" | "r2" | "local"> {
+    // 1. Baca dari Vercel Edge Config jika tersedia secara realtime
+    if (process.env.EDGE_CONFIG) {
+        try {
+            const { get } = await import("@vercel/edge-config");
+            const edgeProvider = await get<string>("storageProvider");
+            if (edgeProvider === "vercel-blob" || edgeProvider === "r2" || edgeProvider === "local") {
+                return edgeProvider;
+            }
+        } catch (error) {
+            console.warn("[Storage] Gagal membaca storageProvider dari Edge Config, menggunakan fallback lokal:", error);
+        }
+    }
+
+    // 2. Baca dari environment variable local
+    const provider = process.env.STORAGE_PROVIDER?.trim().toLowerCase();
+    if (provider === "vercel-blob") return "vercel-blob";
+    if (provider === "r2") return "r2";
+    if (provider === "local") return "local";
+
+    // 3. Deteksi otomatis berdasarkan token & config yang tersedia
+    const hasBlobToken = !!process.env.BLOB_READ_WRITE_TOKEN?.trim();
+    if (hasBlobToken) {
+        return "vercel-blob";
+    }
+
+    if (await isR2Configured()) {
+        return "r2";
+    }
+
+    return "local";
 }
 
 /**
@@ -66,20 +81,17 @@ export async function getClient() {
         throw new Error("Storage configuration is incomplete. Please set R2 Endpoint, Keys, and Bucket Name in Admin Settings.");
     }
 
-    // Buat hash konfigurasi untuk mendeteksi perubahan
     const configHash = JSON.stringify({ endpoint, accessKeyId, secretAccessKey, bucketName });
 
     if (s3ClientInstance && s3BucketName === bucketName && s3ConfigHash === configHash) {
         return { client: s3ClientInstance, bucketName: s3BucketName };
     }
 
-    // Bersihkan endpoint: hapus prefix bucket name jika ada (Cloudflare S3 API style)
     let cleanEndpoint = endpoint.replace(/^https?:\/\//, '');
     if (cleanEndpoint.toLowerCase().startsWith(`${bucketName.toLowerCase()}.`)) {
         cleanEndpoint = cleanEndpoint.slice(bucketName.length + 1);
     }
 
-    // Pastikan menggunakan protokol https
     cleanEndpoint = `https://${cleanEndpoint}`;
 
     s3ClientInstance = new S3Client({
@@ -91,8 +103,8 @@ export async function getClient() {
         },
         forcePathStyle: true,
         requestHandler: {
-            connectionTimeout: 10000, // 10s
-            socketTimeout: 15000,     // 15s
+            connectionTimeout: 10000,
+            socketTimeout: 15000,
         } as unknown as import("@smithy/types").RequestHandler<unknown, unknown>,
     });
     s3BucketName = bucketName;
@@ -121,7 +133,7 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Pr
 }
 
 /**
- * FUNGSI FALLBACK: Menyimpan berkas secara lokal di public/uploads
+ * Menyimpan berkas secara lokal di public/uploads
  */
 async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativePath: string): Promise<string> {
     const targetPath = path.join(LOCAL_UPLOAD_DIR, relativePath);
@@ -146,7 +158,7 @@ async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativ
 }
 
 /**
- * FUNGSI FALLBACK: Membaca berkas lokal secara rekursif
+ * Membaca berkas lokal secara rekursif
  */
 async function listFilesLocal(prefix?: string): Promise<Array<{ key: string; size: number; lastModified: Date; url: string }>> {
     const searchDir = prefix ? path.join(LOCAL_UPLOAD_DIR, prefix) : LOCAL_UPLOAD_DIR;
@@ -185,7 +197,7 @@ async function listFilesLocal(prefix?: string): Promise<Array<{ key: string; siz
 }
 
 /**
- * FUNGSI FALLBACK: Menghapus file lokal
+ * Menghapus file lokal
  */
 async function deleteFileLocal(relativePath: string): Promise<void> {
     const targetPath = path.join(LOCAL_UPLOAD_DIR, relativePath);
@@ -199,8 +211,10 @@ export async function uploadFile(
     pathName: string,
     contentType?: string
 ): Promise<string> {
-    // 1. Cek Vercel Blob
-    if (isVercelBlobActive()) {
+    const provider = await getActiveProvider();
+
+    // 1. Vercel Blob
+    if (provider === "vercel-blob") {
         const { put } = await import("@vercel/blob");
         
         let finalContentType = contentType;
@@ -226,8 +240,8 @@ export async function uploadFile(
         return blob.url;
     }
 
-    // 2. Cek Cloudflare R2
-    if (await isR2Configured()) {
+    // 2. Cloudflare R2
+    if (provider === "r2" && await isR2Configured()) {
         const { client, bucketName } = await getClient();
 
         let body: ReadableStream<Uint8Array> | Buffer | Uint8Array;
@@ -273,13 +287,15 @@ export async function uploadFile(
     }
 
     // 3. Fallback: Local File System
-    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Menggunakan Local File System Fallback.");
+    console.info("[Storage] Provider aktif: Local. Menggunakan Local File System.");
     return await uploadFileLocal(fileOrBuffer, pathName);
 }
 
 export async function listFiles(prefix?: string): Promise<Array<{ key: string; size: number; lastModified: Date; url: string }>> {
-    // 1. Cek Vercel Blob
-    if (isVercelBlobActive()) {
+    const provider = await getActiveProvider();
+
+    // 1. Vercel Blob
+    if (provider === "vercel-blob") {
         const { list } = await import("@vercel/blob");
         const response = await list({
             prefix: prefix || '',
@@ -294,8 +310,8 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
         })).sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
     }
 
-    // 2. Cek Cloudflare R2
-    if (await isR2Configured()) {
+    // 2. Cloudflare R2
+    if (provider === "r2" && await isR2Configured()) {
         const { client, bucketName } = await getClient();
 
         return withRetry(async () => {
@@ -327,13 +343,15 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
     }
 
     // 3. Fallback: Local File System
-    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Membaca dari Local File System.");
+    console.info("[Storage] Provider aktif: Local. Membaca dari Local File System.");
     return await listFilesLocal(prefix);
 }
 
 export async function deleteFile(key: string): Promise<void> {
-    // 1. Cek Vercel Blob
-    if (isVercelBlobActive()) {
+    const provider = await getActiveProvider();
+
+    // 1. Vercel Blob
+    if (provider === "vercel-blob") {
         const { del, list } = await import("@vercel/blob");
 
         let urlToDelete = key;
@@ -360,8 +378,8 @@ export async function deleteFile(key: string): Promise<void> {
         return;
     }
 
-    // 2. Cek Cloudflare R2
-    if (await isR2Configured()) {
+    // 2. Cloudflare R2
+    if (provider === "r2" && await isR2Configured()) {
         const { client, bucketName } = await getClient();
 
         return withRetry(async () => {
@@ -373,6 +391,6 @@ export async function deleteFile(key: string): Promise<void> {
     }
 
     // 3. Fallback: Local File System
-    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Menghapus dari Local File System.");
+    console.info("[Storage] Provider aktif: Local. Menghapus dari Local File System.");
     await deleteFileLocal(key);
 }
