@@ -6,7 +6,18 @@ const ipCache = new Map<string, { countryCode: string; expiry: number }>();
 const CACHE_TTL = 3600 * 1000; // Cache berlaku selama 1 jam
 const MAX_CACHE_SIZE = 1000; // Batas ukuran cache untuk mencegah pemborosan memori RAM (memory leak)
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
+    const hostname = request.headers.get("host") || "";
+
+    // 0. Validasi host untuk local development (mencegah akses subdomain tidak sah di lokal)
+    const isLocal = hostname.includes("localhost") || hostname.includes("127.0.0.1") || hostname.includes("[::1]");
+    if (isLocal) {
+        const cleanHost = hostname.replace(/:\d+$/, ""); // Hapus port
+        if (cleanHost !== "localhost" && cleanHost !== "127.0.0.1" && cleanHost !== "[::1]") {
+            return new NextResponse("Not Found", { status: 404 });
+        }
+    }
+
     const pathname = request.nextUrl.pathname;
 
     // 1. Identify Locale and Clean Path
