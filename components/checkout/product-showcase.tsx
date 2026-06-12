@@ -49,10 +49,19 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
                         {estimate.title}
                     </h1>
                     
-                    <div 
-                        className="text-sm sm:text-base text-zinc-400 font-medium leading-relaxed max-w-xl prose prose-invert prose-sm"
-                        dangerouslySetInnerHTML={{ __html: estimate.summary }}
-                    />
+                    {(() => {
+                        // Bersihkan summary dari marker addon agar tidak tampil mentah
+                        const cleanSummary = estimate.summary
+                            .replace(/\n*---\s*Selected Add-ons\s*---\n*/g, '')
+                            .replace(/\n*\+\s+.+/g, '')
+                            .trim();
+                        return (
+                            <div
+                                className="text-sm sm:text-base text-zinc-400 font-medium leading-relaxed max-w-xl prose prose-invert prose-sm"
+                                dangerouslySetInnerHTML={{ __html: cleanSummary }}
+                            />
+                        );
+                    })()}
                 </div>
 
                 {/* Deliverables / Checklist */}
