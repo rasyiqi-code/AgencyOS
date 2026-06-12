@@ -35,16 +35,6 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
             className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 hover:bg-zinc-900/10 border-l-2 border-l-transparent hover:border-l-brand-yellow transition-all duration-300 group relative"
         >
             <div className="flex-1 min-w-0 flex flex-col justify-center">
-                {/* Badge Category & Interval */}
-                <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                    <span className="px-1.5 py-0.5 rounded bg-brand-yellow/10 border border-brand-yellow/20 text-[7px] font-semibold text-brand-yellow uppercase tracking-wider leading-none">
-                        {service.category || (isId ? "Umum" : "General")}
-                    </span>
-                    <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[7px] font-medium text-zinc-400 uppercase tracking-wider leading-none">
-                        {service.interval === 'one_time' ? (isId ? "Sekali Bayar" : "One-time") : service.interval}
-                    </span>
-                </div>
-
                 {/* Judul & Link Detail */}
                 <Link href={`/services/${service.slug || service.id}`} className="inline-flex items-center gap-1 group/title max-w-full">
                     <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-brand-yellow transition-all duration-300 leading-snug truncate transform group-hover:translate-x-0.5">
@@ -57,9 +47,6 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
             {/* Aksi dan Harga */}
             <div className="flex items-center gap-3 shrink-0">
                 <div className="text-right">
-                    <div className="text-[7px] font-semibold text-zinc-500 uppercase tracking-widest leading-none mb-0.5">
-                        {isId ? "Mulai Dari" : "Starting At"}
-                    </div>
                     <div className="text-xs sm:text-sm font-black text-white tracking-tight leading-none">
                         <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                     </div>
