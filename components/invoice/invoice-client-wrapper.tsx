@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
 import { ExtendedEstimate } from "@/lib/shared/types";
-import { useCurrency } from "@/components/providers/currency-provider";
 import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
 
@@ -56,7 +55,6 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const { currency: contextCurrency, rate: contextRate } = useCurrency();
     const [scale, setScale] = useState(1);
 
     // State untuk memantau apakah pembayaran telah diinisiasi oleh user

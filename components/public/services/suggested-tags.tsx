@@ -5,9 +5,10 @@ import { Sparkles } from "lucide-react";
 interface SuggestedTagsProps {
     onTagClick: (tag: string) => void;
     isId: boolean;
+    servicesCount: number;
 }
 
-export function SuggestedTags({ onTagClick, isId }: SuggestedTagsProps) {
+export function SuggestedTags({ onTagClick, isId, servicesCount }: SuggestedTagsProps) {
     // Daftar tag saran yang premium dan relevan dengan industri agency
     const tags = isId
         ? ["Landing Page", "Website", "Aplikasi Mobile", "SaaS", "Desain UI/UX", "SEO", "Maintenance"]
@@ -18,7 +19,9 @@ export function SuggestedTags({ onTagClick, isId }: SuggestedTagsProps) {
             <div className="flex items-center justify-center gap-1.5 mb-2.5">
                 <Sparkles className="w-3.5 h-3.5 text-brand-yellow/80 animate-pulse" />
                 <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
-                    {isId ? "Rekomendasi Pencarian" : "Suggested Searches"}
+                    {isId 
+                        ? `${servicesCount} layanan siap untuk mu, cari` 
+                        : `${servicesCount} services ready for you, search`}
                 </span>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">

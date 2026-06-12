@@ -133,7 +133,11 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
 
                     {/* Pintasan Saran Pencarian */}
                     {searchQuery === "" && (
-                        <SuggestedTags onTagClick={(tag) => setSearchQuery(tag)} isId={isId} />
+                        <SuggestedTags 
+                            onTagClick={(tag) => setSearchQuery(tag)} 
+                            isId={isId} 
+                            servicesCount={services.length} 
+                        />
                     )}
                 </div>
 
