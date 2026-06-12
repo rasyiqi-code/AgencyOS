@@ -13,7 +13,6 @@ const Comparison = dynamic(() => import("@/components/landing/section-comparison
 const SectionSolutions = dynamic(() => import("@/components/landing/section-solutions").then(mod => mod.SectionSolutions));
 const FinancialLogic = dynamic(() => import("@/components/landing/section-financial").then(mod => mod.FinancialLogic));
 const Workflow = dynamic(() => import("@/components/landing/section-workflow").then(mod => mod.Workflow));
-const SectionIncluded = dynamic(() => import("@/components/landing/section-included").then(mod => mod.SectionIncluded));
 const Testimonials = dynamic(() => import("@/components/landing/section-testimonials").then(mod => mod.Testimonials));
 const SectionGuarantee = dynamic(() => import("@/components/landing/section-guarantee").then(mod => mod.SectionGuarantee));
 
@@ -117,10 +116,6 @@ export default async function Home() {
       <SectionSolutions />
       <FinancialLogic />
       <Workflow />
-
-      <ScrollAnimationWrapper>
-        <SectionIncluded />
-      </ScrollAnimationWrapper>
 
       <ScrollAnimationWrapper>
         <Testimonials />
