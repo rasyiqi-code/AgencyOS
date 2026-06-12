@@ -32,7 +32,7 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
 
     return (
         <div
-            className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 hover:bg-zinc-900/10 border-l-2 border-l-transparent hover:border-l-brand-yellow transition-all duration-300 group relative"
+            className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 bg-zinc-900/20 hover:bg-zinc-900/30 border-l-2 border-l-brand-yellow transition-all duration-300 group relative"
         >
             {/* Gaya Marquee Lokal Terisolasi */}
             <style dangerouslySetInnerHTML={{ __html: `
@@ -76,10 +76,10 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
                 <div className="flex items-center gap-1 max-w-full">
                     <Link href={`/services/${service.slug || service.id}`} className="marquee-container flex-1 min-w-0 block">
                         <div className="marquee-content">
-                            <span className="text-xs sm:text-sm font-bold text-white group-hover:text-brand-yellow transition-all duration-300 leading-snug pr-8 inline-block">
+                            <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug pr-8 inline-block">
                                 {titleText}
                             </span>
-                            <span className="text-xs sm:text-sm font-bold text-white group-hover:text-brand-yellow transition-all duration-300 leading-snug sm:hidden pr-8 inline-block">
+                            <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug sm:hidden pr-8 inline-block">
                                 {titleText}
                             </span>
                         </div>

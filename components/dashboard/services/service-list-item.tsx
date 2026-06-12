@@ -22,7 +22,7 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <div
-                    className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 bg-zinc-900/20 hover:bg-zinc-900/40 border-b border-white/5 border-l-2 border-l-transparent hover:border-l-brand-yellow rounded-none transition-all duration-300 group relative cursor-pointer"
+                    className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 bg-zinc-900/20 hover:bg-zinc-900/40 border-b border-white/5 border-l-2 border-l-brand-yellow rounded-none transition-all duration-300 group relative cursor-pointer"
                 >
                     {/* Gaya Marquee Lokal Terisolasi */}
                     <style dangerouslySetInnerHTML={{ __html: `
@@ -66,10 +66,10 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
                         <div className="flex items-center gap-1 max-w-full">
                             <div className="marquee-container-db flex-1 min-w-0 block">
                                 <div className="marquee-content-db">
-                                    <span className="text-xs sm:text-sm font-bold text-white group-hover:text-brand-yellow transition-all duration-300 leading-snug pr-8 inline-block">
+                                    <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug pr-8 inline-block">
                                         {displayTitle}
                                     </span>
-                                    <span className="text-xs sm:text-sm font-bold text-white group-hover:text-brand-yellow transition-all duration-300 leading-snug sm:hidden pr-8 inline-block">
+                                    <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug sm:hidden pr-8 inline-block">
                                         {displayTitle}
                                     </span>
                                 </div>
