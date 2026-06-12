@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
 import { validateCoupon, applyCoupon, createSubscriber } from "@/lib/server/marketing";
 import { secureRandomInt } from "@/lib/utils/crypto";
+import { cleanSummaryText } from "@/lib/shared/utils";
 
 export async function POST(req: Request) {
     const debugSteps: string[] = [];
@@ -51,9 +52,7 @@ export async function POST(req: Request) {
                 
                 // Remove previous addons text if it exists
                 const addonsMarker = "\n\nAdd-ons Selected at Checkout:";
-                const baseSummary = estimate.summary.includes(addonsMarker) 
-                    ? estimate.summary.substring(0, estimate.summary.indexOf(addonsMarker))
-                    : estimate.summary;
+                const baseSummary = cleanSummaryText(estimate.summary);
                 
                 let addonsTotal = 0;
                 let addonsSummaryText = "";

@@ -13,6 +13,7 @@ import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
 
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
+import { cleanSummaryText } from "@/lib/shared/utils";
 
 export function CheckoutPortal({
     estimate,
@@ -135,9 +136,7 @@ export function CheckoutPortal({
 
     // Reconstruct the summary for the dynamic estimate
     const addonsMarker = "\n\nAdd-ons Selected at Checkout:";
-    const cleanSummary = estimate.summary.includes(addonsMarker)
-        ? estimate.summary.substring(0, estimate.summary.indexOf(addonsMarker))
-        : estimate.summary;
+    const cleanSummary = cleanSummaryText(estimate.summary);
     
     let currentAddonsSummary = "";
     if (selectedAddons.length > 0) {

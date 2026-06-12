@@ -5,6 +5,7 @@ import { ExtendedEstimate } from "@/lib/shared/types";
 import { Check, ArrowLeft, ShieldCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+import { cleanSummaryText } from "@/lib/shared/utils";
 
 interface ProductShowcaseProps {
     estimate: ExtendedEstimate;
@@ -55,11 +56,7 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
                     </h1>
 
                     {(() => {
-                        // Bersihkan summary dari marker addon agar tidak tampil mentah
-                        const cleanSummary = estimate.summary
-                            .replace(/\n*---\s*Selected Add-ons\s*---\n*/g, '')
-                            .replace(/\n*\+\s+.+/g, '')
-                            .trim();
+                        const cleanSummary = cleanSummaryText(estimate.summary);
                         return (
                             <div
                                 className="text-sm sm:text-base text-zinc-400 font-medium leading-relaxed max-w-xl prose prose-invert prose-sm"

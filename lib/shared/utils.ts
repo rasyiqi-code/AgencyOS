@@ -50,3 +50,26 @@ export function slugify(text: string) {
         .replace(/^-+/, '')        // Trim - from start of text
         .replace(/-+$/, '');       // Trim - from end of text
 }
+
+/**
+ * Membersihkan ringkasan estimasi atau deskripsi proyek dari teks add-ons yang ditambahkan
+ * selama proses checkout agar tidak tampil mentah atau rusak di UI.
+ */
+export function cleanSummaryText(summary: string | null | undefined): string {
+    if (!summary) return "";
+    
+    const addonsMarker = "Add-ons Selected at Checkout:";
+    let clean = summary;
+    const markerIndex = clean.toLowerCase().indexOf(addonsMarker.toLowerCase());
+    if (markerIndex !== -1) {
+        clean = clean.substring(0, markerIndex);
+    }
+    
+    return clean
+        .replace(/\n*---\s*Selected Add-ons\s*---\n*/gi, '')
+        .replace(/\n*-\s*\+\s*.+/g, '') // Hapus baris daftar addon yang diawali "- +"
+        .replace(/\n*\+\s*.+/g, '')     // Hapus baris addon yang diawali "+"
+        .replace(/\n*-\s*$/gm, '')      // Hapus baris yang hanya berisi tanda hubung "-" di akhir baris
+        .trim();
+}
+
