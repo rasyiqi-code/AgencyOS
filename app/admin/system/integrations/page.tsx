@@ -14,7 +14,6 @@ export default async function AdminIntegrationsPage() {
     const integrations = await (prisma as unknown as PrismaWithIntegration).systemIntegration.findMany();
 
     const github = integrations.find((i: { provider: string }) => i.provider === "github");
-    const vercel = integrations.find((i: { provider: string }) => i.provider === "vercel");
 
     async function disconnect(provider: string) {
         "use server";
@@ -96,58 +95,6 @@ export default async function AdminIntegrationsPage() {
                         )}
                     </div>
 
-                    {/* Vercel Integration */}
-                    <div className="pt-6 pb-6 border-b border-white/5 relative">
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 rounded-lg bg-zinc-800/50 border border-white/5">
-                                    <Globe className="w-6 h-6 text-white" />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-white">Vercel</h3>
-                                    <p className="text-xs text-zinc-500">Deployment & Webhook Control</p>
-                                </div>
-                            </div>
-                            {vercel?.isActive ? (
-                                <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
-                                    <CheckCircle2 className="w-3 h-3 mr-1" /> Connected
-                                </Badge>
-                            ) : (
-                                <Badge variant="outline" className="text-zinc-500 border-zinc-800">
-                                    <XCircle className="w-3 h-3 mr-1" /> Disconnected
-                                </Badge>
-                            )}
-                        </div>
-
-                        {vercel?.isActive ? (
-                            <div className="space-y-4">
-                                <div className="p-4 rounded-lg bg-black/20 border border-white/5 flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-white">{vercel.accountName}</p>
-                                        <p className="text-[10px] text-zinc-500 font-mono italic">
-                                            {vercel.accountId?.startsWith("team_") ? "Team ID" : "User ID"}: {vercel.accountId}
-                                        </p>
-                                    </div>
-                                    <form action={disconnect.bind(null, "vercel")}>
-                                        <Button variant="ghost" size="sm" className="text-zinc-500 hover:text-red-400 hover:bg-red-950/20 gap-2">
-                                            <Unlink className="w-3 h-3" /> Disconnect
-                                        </Button>
-                                    </form>
-                                </div>
-                            </div>
-                        ) : (
-                            <div>
-                                <Link href="/api/integrations/vercel/authorize">
-                                    <Button className="w-full bg-sky-500 text-white hover:bg-sky-600 gap-2">
-                                        <Link2 className="w-4 h-4" /> Connect Vercel Account
-                                    </Button>
-                                </Link>
-                                <p className="text-[10px] text-zinc-600 mt-3 text-center">
-                                    Enables automated deployment triggering via API.
-                                </p>
-                            </div>
-                        )}
-                    </div>
 
                     <div className="p-4 rounded-lg bg-blue-950/10 border border-blue-500/10">
                         <p className="text-xs text-blue-400/80 leading-relaxed">
