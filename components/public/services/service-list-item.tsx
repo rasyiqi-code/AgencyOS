@@ -31,9 +31,13 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
     const titleText = (isId ? service.title_id : null) || service.title || "";
     const descText = (isId ? service.description_id : null) || service.description || "";
 
+    // Bersihkan tag HTML mentah dari deskripsi untuk estetika dan kerapian text clamp
+    const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
+    const cleanDescText = stripHtml(descText);
+
     return (
         <div
-            className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 hover:bg-zinc-900/10 border-l-[3px] border-l-transparent hover:border-l-brand-yellow transition-all duration-300 group relative"
+            className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 hover:bg-zinc-900/10 border-l-2 border-l-transparent hover:border-l-brand-yellow transition-all duration-300 group relative"
         >
             <div className="flex-1 min-w-0">
                 {/* Badge Category & Interval */}
@@ -56,7 +60,7 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
 
                 {/* Deskripsi */}
                 <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2 max-w-2xl leading-relaxed">
-                    {descText}
+                    {cleanDescText}
                 </p>
             </div>
 
