@@ -7,13 +7,13 @@
     var baseUrl = currentScript.getAttribute('data-host') || window.location.origin;
 
     if (!assetId) {
-        console.error('AgencyOS Widget: data-id is required');
+        console.error('Crediblemark Widget: data-id is required');
         return;
     }
 
     // Container for the ad
     var container = document.createElement('div');
-    container.className = 'agencyos-ad-container';
+    container.className = 'Crediblemark-ad-container';
     container.style.display = 'inline-block';
     container.style.maxWidth = '100%';
 
@@ -26,7 +26,7 @@
         .then(assets => {
             var asset = assets.find(a => a.id === assetId);
             if (!asset || !asset.imageUrl) {
-                console.warn('AgencyOS Widget: Asset not found or no image');
+                console.warn('Crediblemark Widget: Asset not found or no image');
                 return;
             }
 
@@ -50,5 +50,5 @@
                 </a>
             `;
         })
-        .catch(err => console.error('AgencyOS Widget Error:', err));
+        .catch(err => console.error('Crediblemark Widget Error:', err));
 })();

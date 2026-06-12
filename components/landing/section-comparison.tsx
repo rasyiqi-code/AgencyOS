@@ -8,7 +8,7 @@ export async function Comparison() {
     // Fetch Agency Name
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return (
         <section className="py-16 bg-brand-yellow relative overflow-hidden">
@@ -49,7 +49,7 @@ export async function Comparison() {
                         </ul>
                     </div>
 
-                    {/* Agency OS */}
+                    {/* Crediblemark */}
                     <div className="p-6 rounded-2xl border border-black/20 bg-black text-white relative overflow-hidden shadow-2xl transform hover:scale-[1.01] transition-transform duration-500">
                         <div className="absolute top-0 right-0 px-4 py-1 bg-white text-[10px] font-black text-black rounded-bl-xl tracking-tighter shadow-lg">
                             {t("recommended")}

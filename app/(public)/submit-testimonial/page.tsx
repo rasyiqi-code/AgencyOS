@@ -84,7 +84,7 @@ export default async function SubmitTestimonialPage() {
 
     // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache untuk menghindari query DB langsung
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return (
         <SubmitTestimonialForm

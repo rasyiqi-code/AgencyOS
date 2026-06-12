@@ -26,7 +26,7 @@ export async function GET() {
     ]);
 
     const agencyName =
-        settings.find((s) => s.key === "AGENCY_NAME")?.value || "Agency OS";
+        settings.find((s) => s.key === "AGENCY_NAME")?.value || "Crediblemark";
     const description =
         settings.find((s) => s.key === "SEO_DESCRIPTION")?.value ||
         "Professional Software Development Agency";

@@ -82,8 +82,8 @@ export default async function PrivacyPolicyPage() {
     // 🎯 Why: Reduces redundant database queries for static system settings during SSR, mitigating the N+1 query problem.
     // 📊 Impact: Faster page load and reduced DB connections.
     const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
-    const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "AgencyOS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
+    const companyName = settings.find(s => s.key === "COMPANY_NAME")?.value || "Crediblemark";
 
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-zinc-400 p-8 md:p-24 font-sans leading-relaxed">

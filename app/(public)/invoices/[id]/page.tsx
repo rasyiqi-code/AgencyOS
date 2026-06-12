@@ -113,10 +113,10 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     // User data for InvoiceDocument
     // Priority: 1. Manual Client Name from Project, 2. Account Display Name (if owner & NOT offline), 3. Fallback
     const isOffline = order.userId === 'OFFLINE' || !!order.project?.clientName;
-    
+
     const userData = {
         displayName: order.project?.clientName || (isOwner && !isOffline ? user?.displayName : null) || "Valued Client",
-        email: (isOwner && !isOffline ? user?.primaryEmail : null) || "", 
+        email: (isOwner && !isOffline ? user?.primaryEmail : null) || "",
     };
 
     // Fetch System Settings for Bank and Agency
@@ -138,8 +138,8 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     } : undefined;
 
     const agencySettings = {
-        agencyName: getSetting('AGENCY_NAME') || "Agency OS",
-        companyName: getSetting('COMPANY_NAME') || "Agency OS",
+        agencyName: getSetting('AGENCY_NAME') || "Crediblemark",
+        companyName: getSetting('COMPANY_NAME') || "Crediblemark",
         address: getSetting('CONTACT_ADDRESS') || "Tech Valley, Cyberjaya\nSelangor, Malaysia 63000",
         email: getSetting('CONTACT_EMAIL') || "billing@crediblemark.com",
         phone: getSetting('CONTACT_PHONE'),

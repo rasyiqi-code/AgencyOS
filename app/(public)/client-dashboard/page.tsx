@@ -54,7 +54,7 @@ export default async function ClientDashboardPage() {
     // 🎯 Why: Reduces redundant database queries for static system settings during SSR, mitigating the N+1 query problem.
     // 📊 Impact: Faster page load and reduced DB connections.
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return <ClientDashboardContent agencyName={agencyName} />;
 }

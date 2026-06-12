@@ -29,7 +29,7 @@ ENV NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=$NEXT_PUBLIC_STACK_PUBLISHABLE_CLIE
 ENV STACK_SECRET_SERVER_KEY=$STACK_SECRET_SERVER_KEY
 
 # Dummy URL required for prisma generate (build time only)
-ENV DATABASE_URL="postgresql://postgres:password@localhost:5432/agency_os"
+ENV DATABASE_URL="postgresql://postgres:password@localhost:5432/Crediblemark"
 
 RUN bunx prisma generate
 RUN bun run build

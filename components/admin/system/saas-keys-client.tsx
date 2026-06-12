@@ -24,7 +24,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
 
     const handleGenerate = async () => {
         if (!newLabel) return;
-        
+
         try {
             await createAgencyKey(newLabel);
             toast.success("New SaaS Key generated!");
@@ -60,7 +60,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                 <div className="flex items-center gap-4">
                     <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                         <Key className="w-4 h-4 text-blue-500" />
-                        AgencyOS SaaS Integration Keys
+                        Crediblemark SaaS Integration Keys
                     </h3>
                 </div>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
@@ -144,7 +144,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <button 
+                                <button
                                     onClick={() => toggleAgencyKey(key.id, !key.isActive)}
                                     className="hover:opacity-80 transition-opacity"
                                 >
@@ -162,9 +162,9 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                             <TableCell className="text-right">
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
                                             className="h-8 w-8 text-zinc-500 hover:text-red-400 hover:bg-red-950/30"
                                             disabled={isDeleting}
                                         >
@@ -184,7 +184,7 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
                                                     Cancel
                                                 </Button>
                                             </DialogClose>
-                                            <Button 
+                                            <Button
                                                 onClick={() => handleDelete(key.id)}
                                                 className="bg-red-600 text-white hover:bg-red-500 border-none"
                                             >

@@ -26,7 +26,7 @@ export default async function DashboardLayout({
     // Impact: Avoids redundant database queries for static system settings on every page load/navigation within the dashboard.
     // Measurement: Next.js Cache Hit logs will show reduced DB query frequency for 'system-settings' tag.
     const settings = await getSystemSettings(["AGENCY_NAME", "LOGO_URL"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
     const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
 
     return (

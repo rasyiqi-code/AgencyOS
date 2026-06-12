@@ -1,6 +1,6 @@
-# AgencyOS Recurring & Hybrid Billing System
+# Crediblemark Recurring & Hybrid Billing System
 
-Dokumen ini menjelaskan arsitektur dan alur kerja sistem penagihan berulang (Recurring Billing) dan tagihan hibrida (Hybrid Billing) di dalam AgencyOS.
+Dokumen ini menjelaskan arsitektur dan alur kerja sistem penagihan berulang (Recurring Billing) dan tagihan hibrida (Hybrid Billing) di dalam Crediblemark.
 
 ## 1. Konsep Dasar
 
@@ -28,7 +28,7 @@ Jika ada komponen berlangganan, sistem otomatis mengaktifkan status `subscriptio
 Masalah utama dari Hybrid Billing adalah menentukan "Berapa tagihan di bulan kedua?". Jika sistem mengambil nilai `totalAmount` dari bulan pertama, maka biaya *One-Time* akan ikut tertagih kembali.
 
 ### Smart Parser Logic
-AgencyOS menggunakan *parser* cerdas di sisi server yang membaca *Summary* transaksi bulan sebelumnya. Algoritmanya bekerja sebagai berikut:
+Crediblemark menggunakan *parser* cerdas di sisi server yang membaca *Summary* transaksi bulan sebelumnya. Algoritmanya bekerja sebagai berikut:
 1. Mengabaikan harga layanan utama jika tipenya `one_time`.
 2. Menyertakan harga layanan utama jika tipenya `monthly` atau `yearly`.
 3. Membaca baris teks Add-on di dalam *Summary* (contoh: `+ Maintenance ($50 Monthly)`).
@@ -48,7 +48,7 @@ Admin memiliki kendali penuh atas siklus langganan melalui halaman khusus:
 
 ## 5. Client-Side Auto-Renewal (Self-Service)
 
-Untuk mengurangi beban operasional Admin, AgencyOS menerapkan pendekatan *Self-Service* bagi klien.
+Untuk mengurangi beban operasional Admin, Crediblemark menerapkan pendekatan *Self-Service* bagi klien.
 
 1. **Deteksi Otomatis (H-7):** Saat klien masuk ke halaman `/dashboard/billing`, sistem memeriksa apakah `subscriptionEndsAt` akan habis dalam 7 hari ke depan.
 2. **Peringatan & Tombol Action:** Jika masuk masa tenggang, sistem menampilkan kotak peringatan (Unpaid Bills) beserta estimasi tagihan bulan depan dan tombol **"Perpanjang Sekarang"**.
@@ -60,4 +60,4 @@ Untuk mengurangi beban operasional Admin, AgencyOS menerapkan pendekatan *Self-S
 - *Client Component: `components/dashboard/billing/unpaid-bills.tsx`*
 
 ---
-*Dokumentasi ini dibuat secara otomatis untuk rilis fitur Hybrid Billing AgencyOS.*
+*Dokumentasi ini dibuat secara otomatis untuk rilis fitur Hybrid Billing Crediblemark.*

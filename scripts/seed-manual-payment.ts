@@ -11,10 +11,10 @@ async function main() {
         { key: "CONTACT_TELEGRAM", value: "@username_tele" },
         { key: "bank_name", value: "Bank Central Asia (BCA)" },
         { key: "bank_account", value: "1234567890" },
-        { key: "bank_holder", value: "PT Agency OS Indonesia" },
-        { key: "COMPANY_NAME", value: "Agency OS Ltd." },
-        { key: "AGENCY_NAME", value: "Agency OS" },
-        { key: "CONTACT_EMAIL", value: "billing@agencyos.com" },
+        { key: "bank_holder", value: "PT Crediblemark Indonesia" },
+        { key: "COMPANY_NAME", value: "Crediblemark Ltd." },
+        { key: "AGENCY_NAME", value: "Crediblemark" },
+        { key: "CONTACT_EMAIL", value: "billing@Crediblemark.com" },
         { key: "CONTACT_ADDRESS", value: "Sudirman Central Business District, Jakarta" }
     ];
 

@@ -57,10 +57,10 @@ export default async function CheckoutPage(props: PageProps) {
         } : undefined;
 
         const agencySettings = {
-            agencyName: getSetting('AGENCY_NAME') || "Agency OS",
-            companyName: getSetting('COMPANY_NAME') || "Agency OS",
+            agencyName: getSetting('AGENCY_NAME') || "Crediblemark",
+            companyName: getSetting('COMPANY_NAME') || "Crediblemark",
             address: getSetting('CONTACT_ADDRESS') || "Tech Valley\nCyberjaya, Malaysia",
-            email: getSetting('CONTACT_EMAIL') || "billing@agencyos.com",
+            email: getSetting('CONTACT_EMAIL') || "billing@Crediblemark.com",
             phone: getSetting('CONTACT_PHONE'),
             telegram: getSetting('CONTACT_TELEGRAM')
         };
@@ -79,7 +79,7 @@ export default async function CheckoutPage(props: PageProps) {
         // Detail data user untuk invoice
         const userData = {
             displayName: estimate.project?.clientName || user?.displayName || "Valued Client",
-            email: "", 
+            email: "",
         };
 
         if (estimate.project?.userId) {

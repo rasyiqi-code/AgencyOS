@@ -42,7 +42,7 @@ export async function SiteHeader() {
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_LOGO", "AGENCY_NAME", "AGENCY_LOGO_DISPLAY"]);
     const logoUrl = settings.find(s => s.key === "AGENCY_LOGO")?.value;
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
     const displayMode = settings.find(s => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both"; // 'both', 'logo', 'text'
 
 

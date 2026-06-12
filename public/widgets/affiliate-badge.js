@@ -3,16 +3,16 @@
     var scripts = document.getElementsByTagName('script');
     var currentScript = scripts[scripts.length - 1];
     var refCode = currentScript.getAttribute('data-ref') || new URL(currentScript.src).searchParams.get('ref') || 'default';
-    var agencyName = currentScript.getAttribute('data-name') || 'Agency OS';
+    var agencyName = currentScript.getAttribute('data-name') || 'Crediblemark';
 
 
     // 2. Create Badge Elements
     var badge = document.createElement('div');
-    badge.id = 'agencyos-affiliate-badge';
+    badge.id = 'Crediblemark-affiliate-badge';
 
     // Styles
     var styles = `
-        #agencyos-affiliate-badge {
+        #Crediblemark-affiliate-badge {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -30,17 +30,17 @@
             text-decoration: none;
             color: #ffffff;
         }
-        #agencyos-affiliate-badge:hover {
+        #Crediblemark-affiliate-badge:hover {
             transform: translateY(-2px);
             border-color: #3f3f46;
             background: #18181b;
         }
-        #agencyos-affiliate-badge .text {
+        #Crediblemark-affiliate-badge .text {
             font-size: 12px;
             font-weight: 500;
             margin-right: 12px;
         }
-        #agencyos-affiliate-badge .btn {
+        #Crediblemark-affiliate-badge .btn {
             background: #ffffff;
             color: #000000;
             font-size: 11px;
@@ -56,7 +56,7 @@
 
     // Pengamanan XSS: Escaping nama agensi untuk mencegah injeksi script
     badge.innerHTML = `
-        <span class="text">Powered by <strong>${agencyName ? agencyName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;') : 'Agency OS'}</strong></span>
+        <span class="text">Powered by <strong>${agencyName ? agencyName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;') : 'Crediblemark'}</strong></span>
         <span class="btn">Learn More</span>
     `;
 

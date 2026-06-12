@@ -106,7 +106,7 @@ async function PortfolioList() {
 }
 
 export default async function PortfolioPage() {
-    const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
+    const agencyName = await getSettingValue("AGENCY_NAME", "Crediblemark");
     const portfolios = await getPortfolios(); // Fetch early for SEO script
     const t = await getTranslations("Portfolio");
 

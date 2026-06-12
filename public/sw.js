@@ -1,5 +1,5 @@
 /**
- * Service Worker untuk AgencyOS PWA.
+ * Service Worker untuk Crediblemark PWA.
  *
  * Strategi caching:
  * - Pre-cache: Halaman offline
@@ -243,7 +243,7 @@ self.addEventListener('push', function (event) {
             console.error('Error parsing push data:', e);
             const text = event.data.text();
             event.waitUntil(
-                self.registration.showNotification('AgencyOS Notification', {
+                self.registration.showNotification('Crediblemark Notification', {
                     body: text,
                     icon: '/icons/icon-192x192.png',
                     badge: '/icons/icon-72x72.png',

@@ -1,4 +1,4 @@
-import { Check, X, Info, Building2, Rocket } from "lucide-react";
+import { Check, X, Building2, Rocket } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { getSystemSettings } from "@/lib/server/settings";

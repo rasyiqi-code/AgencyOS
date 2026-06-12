@@ -65,8 +65,8 @@ export function DigitalInvoiceClientWrapper({ order, isPaid, bankDetails, agency
     const componentRef = useRef<HTMLDivElement>(null);
 
     // Dynamic Company Info from Settings
-    const agencyName = agencySettings?.agencyName || "Agency OS";
-    const website = agencySettings?.website || process.env.NEXT_PUBLIC_APP_URL?.replace('https://', '').replace('http://', '') || "agencyos.id";
+    const agencyName = agencySettings?.agencyName || "Crediblemark";
+    const website = agencySettings?.website || process.env.NEXT_PUBLIC_APP_URL?.replace('https://', '').replace('http://', '') || "Crediblemark.id";
     const billingEmail = agencySettings?.email || "billing@crediblemark.com";
 
     // Quote logic

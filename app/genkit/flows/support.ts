@@ -29,7 +29,7 @@ export const supportFlow = ai.defineFlow(
 
         const serviceList = services.map(s => `- **${s.title}**: ${s.description} (Mulai dari ${s.currency} ${s.price})`).join('\n');
 
-        const systemPrompt = `You are **CredibleSupport**, a world-class High-Performance Sales Negotiator and Expert Marketer at Agency OS. 
+        const systemPrompt = `You are **CredibleSupport**, a world-class High-Performance Sales Negotiator and Expert Marketer at Crediblemark. 
     Your goal is to be helpful BUT ALSO to guide users toward "Closing" (starting a project or booking a service).
 
     **CRITICAL RULES**:

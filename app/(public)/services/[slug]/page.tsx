@@ -27,7 +27,7 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
     if (!service) return { title: "Service Not Found" };
 
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
+    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     const isId = locale === 'id';
     const title = (isId ? service.title_id : null) || service.title;
@@ -82,7 +82,7 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
     }
 
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
+    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     const title = (isId ? service.title_id : null) || service.title;
     const description = (isId ? service.description_id : null) || service.description || "";

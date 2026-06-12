@@ -16,7 +16,7 @@ export async function notifyNewEstimate(data: {
     if (!resend) return;
 
     await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
+        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
         to: adminEmail,
         subject: `[New Quote] ${data.title} ($${data.totalCost})`,
         html: `
@@ -43,7 +43,7 @@ export async function notifyNewServiceOrder(data: {
     if (!resend) return;
 
     await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
+        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
         to: adminEmail,
         subject: `[New Service Order] ${data.serviceTitle} from ${data.clientName}`,
         html: `
@@ -71,7 +71,7 @@ export async function notifyPaymentSuccess(data: {
     if (!resend) return;
 
     await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
+        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
         to: adminEmail,
         subject: `💰 Payment Received: $${data.amount.toFixed(2)} (${data.type})`,
         html: `
@@ -101,7 +101,7 @@ export async function notifyNewSupportTicket(data: {
     const typeLabel = data.type === 'chat' ? 'Live Chat' : 'Support Ticket';
 
     await resend.emails.send({
-        from: `AgencyOS Bot <${FROM_ADDRESS}>`,
+        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
         to: adminEmail,
         subject: `[New ${typeLabel}] from ${data.name}`,
         html: `

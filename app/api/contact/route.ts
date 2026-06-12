@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
         const { error } = await resend.emails.send({
-            from: `AgencyOS Contact <${fromAddress}>`,
+            from: `Crediblemark Contact <${fromAddress}>`,
             to: [recipient],
             replyTo: email,
             subject: `[Contact Form] ${safeSubject} - ${safeFirstName} ${safeLastName}`,

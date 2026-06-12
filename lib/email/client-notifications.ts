@@ -31,7 +31,7 @@ export async function sendPaymentSuccessEmail(data: {
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `AgencyOS <${FROM_ADDRESS}>`,
+        from: `Crediblemark <${FROM_ADDRESS}>`,
         to: [data.to],
         subject: `✅ Payment Confirmed: ${safeProduct}`,
         html: `
@@ -49,7 +49,7 @@ export async function sendPaymentSuccessEmail(data: {
                 <p>Our team is now processing your request. You can check the status on your dashboard.</p>
                 <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="color: #10b981; text-decoration: none; font-weight: bold;">Go to Dashboard →</a></p>
                 
-                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The AgencyOS Team</p>
+                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The Crediblemark Team</p>
             </div>
         `
     });
@@ -71,7 +71,7 @@ export async function sendOrderCancelledEmail(data: {
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `AgencyOS <${FROM_ADDRESS}>`,
+        from: `Crediblemark <${FROM_ADDRESS}>`,
         to: [data.to],
         subject: `Order Cancelled: ${safeProduct}`,
         html: `
@@ -86,7 +86,7 @@ export async function sendOrderCancelledEmail(data: {
                 </div>
 
                 <p>If you have any questions or think this was a mistake, please contact our support.</p>
-                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The AgencyOS Team</p>
+                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The Crediblemark Team</p>
             </div>
         `
     });
@@ -108,7 +108,7 @@ export async function sendPaymentRevertedEmail(data: {
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `AgencyOS <${FROM_ADDRESS}>`,
+        from: `Crediblemark <${FROM_ADDRESS}>`,
         to: [data.to],
         subject: `Payment Status Update: ${safeProduct}`,
         html: `
@@ -125,7 +125,7 @@ export async function sendPaymentRevertedEmail(data: {
                 </div>
 
                 <p>If you have already paid, please ensure you have uploaded the correct proof of payment.</p>
-                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The AgencyOS Team</p>
+                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The Crediblemark Team</p>
             </div>
         `
     });
@@ -159,7 +159,7 @@ export async function sendProjectStatusUpdateEmail(data: {
     const displayStatus = statusLabels[safeStatus] || safeStatus;
 
     await resend.emails.send({
-        from: `AgencyOS <${FROM_ADDRESS}>`,
+        from: `Crediblemark <${FROM_ADDRESS}>`,
         to: [data.to],
         subject: `Project Update: ${safeTitle} is now ${displayStatus}`,
         html: `
@@ -176,7 +176,7 @@ export async function sendProjectStatusUpdateEmail(data: {
                 <p>You can track the progress and view details on your project workbench.</p>
                 <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/projects/${data.projectId}" style="color: #2563eb; text-decoration: none; font-weight: bold;">View Project Workbench →</a></p>
                 
-                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The AgencyOS Team</p>
+                <p style="color: #71717a; font-size: 12px; margin-top: 24px;">— The Crediblemark Team</p>
             </div>
         `
     });
@@ -247,7 +247,7 @@ export async function sendInvoiceEmail(data: {
 
     try {
         await resend.emails.send({
-            from: `AgencyOS <${FROM_ADDRESS}>`,
+            from: `Crediblemark <${FROM_ADDRESS}>`,
             to: [data.to],
             subject: `📋 Invoice: ${safeService} — ${currencySymbol}${formattedAmount}`,
             html: `
@@ -279,7 +279,7 @@ export async function sendInvoiceEmail(data: {
 
                     <p style="color: #71717a; font-size: 12px; margin-top: 32px; border-top: 1px solid #e4e4e7; padding-top: 16px;">
                         This invoice was generated automatically. If you have any questions, please reply to this email or contact our support team.
-                        <br>— The AgencyOS Team
+                        <br>— The Crediblemark Team
                     </p>
                 </div>
             `

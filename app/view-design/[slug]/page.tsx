@@ -19,7 +19,7 @@ export async function generateMetadata(
     const locale = await getLocale();
     const portfolios = await getPortfolios();
     const portfolio = portfolios.find((p) => p.slug === slug);
-    const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
+    const agencyName = await getSettingValue("AGENCY_NAME", "Crediblemark");
     const t = await getTranslations("ViewDesign");
 
     if (!portfolio) {
@@ -68,10 +68,10 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
     const { slug } = await params;
     const locale = await getLocale();
     const isId = locale === 'id';
-    
+
     const [portfolios, agencyName, contactPhone, contactTelegram, headerList, logoUrl] = await Promise.all([
         getPortfolios(),
-        getSettingValue("AGENCY_NAME", "Agency OS"),
+        getSettingValue("AGENCY_NAME", "Crediblemark"),
         getSettingValue("CONTACT_PHONE", ""),
         getSettingValue("CONTACT_TELEGRAM", ""),
         headers(),

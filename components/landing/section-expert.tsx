@@ -6,7 +6,7 @@ export async function ExpertProfile() {
     const t = await getTranslations("Expert");
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     return (
         <section className="py-16 md:py-24 bg-black overflow-hidden">

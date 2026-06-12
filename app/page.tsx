@@ -79,7 +79,7 @@ export async function generateMetadata(
 export default async function Home() {
   // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
   const settings = await getSystemSettings(["AGENCY_NAME", "AGENCY_LOGO", "CONTACT_PHONE"]);
-  const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
+  const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
   return (
     <main className="relative min-h-screen bg-black selection:bg-blue-500/30">

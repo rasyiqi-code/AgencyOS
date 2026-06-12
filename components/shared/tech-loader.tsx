@@ -118,7 +118,7 @@ export function TechLoader() {
                 </div>
 
                 <div className="mt-6 flex justify-between items-center text-[10px] uppercase tracking-tighter text-muted-foreground opacity-50 px-1">
-                    <span>{t("target")}: AgencyOS_Prod</span>
+                    <span>{t("target")}: Crediblemark_Prod</span>
                     <span>{t("status")}: {t("processing")}</span>
                 </div>
             </div>

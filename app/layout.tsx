@@ -141,7 +141,7 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               // Gunakan agencyName dinamis dari settings agar konsisten dengan branding
-              name: agencyName || "AgencyOS",
+              name: agencyName || "Crediblemark",
               url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
               potentialAction: {
                 "@type": "SearchAction",
@@ -160,7 +160,7 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": ["Organization", "LocalBusiness"],
               "@id": `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/#organization`,
-               name: agencyName || "Crediblemark",
+              name: agencyName || "Crediblemark",
               url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
               logo: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,
               image: agencyLogo || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/logo.png`,

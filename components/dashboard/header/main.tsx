@@ -3,7 +3,7 @@
 import { UserButton } from "@hexclave/next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
+import {
     ArrowLeft,
     LayoutDashboard,
     Layers,
@@ -47,7 +47,7 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({
-    agencyName = "Agency OS",
+    agencyName = "Crediblemark",
     logoUrl,
     navChildren,
     navFooter
@@ -69,7 +69,7 @@ export function DashboardHeader({
     const isId = pathname.startsWith("/id");
     const isMissionsPage = cleanPath === "/dashboard/missions";
     const isSupportPage = cleanPath === "/dashboard/support";
- 
+
     // Periksa apakah kita tidak berada di halaman utama dashboard atau halaman utama admin
     const showBackButton = cleanPath !== "/dashboard" && cleanPath !== "/admin";
     const isProjectPage = cleanPath === "/admin/pm/projects";

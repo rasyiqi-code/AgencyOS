@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
+  <img src="public/logo.png" alt="Crediblemark Logo" width="120" />
   
-  <h1>AgencyOS</h1>
+  <h1>Crediblemark</h1>
   <h3>Website for Agencies</h3>
   
   [![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -14,9 +14,9 @@
 
 ---
 
-## 📖 What is AgencyOS?
+## 📖 What is Crediblemark?
 
-**AgencyOS** is a modern "Business Operating System" specifically engineered for the agencies of tomorrow. Guided by an *Async-First* and *AI-Augmented* philosophy, this platform empowers your agency to scale efficiently through intelligent automation, transparent project management, and fully integrated payment systems.
+**Crediblemark** is a modern "Business Operating System" specifically engineered for the agencies of tomorrow. Guided by an *Async-First* and *AI-Augmented* philosophy, this platform empowers your agency to scale efficiently through intelligent automation, transparent project management, and fully integrated payment systems.
 
 ### 🌟 Core Values
 - 🤖 **AI Augmented**: Boost productivity with the assistance of dedicated AI Agents (CredibleBot).
@@ -94,7 +94,7 @@ bun dev
 
 ## 🚢 Deployment (Dokploy / VPS)
 
-AgencyOS is production-ready and Docker-optimized. See the full guide at [DEPLOY.md](DEPLOY.md).
+Crediblemark is production-ready and Docker-optimized. See the full guide at [DEPLOY.md](DEPLOY.md).
 
 ```bash
 # Production build via Docker

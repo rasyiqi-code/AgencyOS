@@ -1,4 +1,4 @@
-# Analisis Bug, Fitur Prematur, & Boros RAM/CPU — AgencyOS
+# Analisis Bug, Fitur Prematur, & Boros RAM/CPU — Crediblemark
 
 > **Generated:** 2026-06-09
 > **Scope:** Full-stack Next.js 16 + Prisma + PostgreSQL + Genkit AI

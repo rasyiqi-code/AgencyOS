@@ -40,7 +40,7 @@ export async function scheduleEmail(data: {
     const safeLink = escapeHtml(data.link || "");
 
     const { error } = await resendClient.emails.send({
-        from: 'AgencyOS <onboarding@resend.dev>',
+        from: 'Crediblemark <onboarding@resend.dev>',
         to: [adminEmail],
         subject: `New Lead: ${safeName} - ${safeTitle}`,
         html: `

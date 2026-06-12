@@ -1,6 +1,6 @@
-# Agency OS Deployment Guide
+# Crediblemark Deployment Guide
 
-This guide describes how to deploy the Agency OS MVP to a Virtual Private Server (VPS) using Docker Compose.
+This guide describes how to deploy the Crediblemark MVP to a Virtual Private Server (VPS) using Docker Compose.
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ In your Dokploy project settings, add the following environment variables:
 
 ```env
 # Database (Internal Docker URL)
-DATABASE_URL="postgresql://postgres:postgres_password_change_me@db:5432/agency_os?schema=public"
+DATABASE_URL="postgresql://postgres:postgres_password_change_me@db:5432/Crediblemark?schema=public"
 
 # Stack Auth (From Dashboard)
 NEXT_PUBLIC_STACK_PROJECT_ID="your_project_id"

@@ -174,7 +174,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
                     <div className="space-y-2">
                         <Label className="text-zinc-300">Agency Name (Brand)</Label>
                         <Input
-                            placeholder="e.g. AgencyOS"
+                            placeholder="e.g. Crediblemark"
                             value={data.agencyName || ""}
                             onChange={(e) => setData({ ...data, agencyName: e.target.value })}
                             className="bg-black/50 border-white/10 text-white"
@@ -207,7 +207,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
                     <div className="space-y-2">
                         <Label className="text-zinc-300">Telegram Handle</Label>
                         <Input
-                            placeholder="@agencyos"
+                            placeholder="@Crediblemark"
                             value={data.telegram || ""}
                             onChange={(e) => setData({ ...data, telegram: e.target.value })}
                             className="bg-black/50 border-white/10 text-white"

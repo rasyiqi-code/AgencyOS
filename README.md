@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" alt="AgencyOS Logo" width="120" />
+  <img src="public/logo.png" alt="Crediblemark Logo" width="120" />
   
   <h1>AgencyWeb</h1>
   <h3>Website Untuk Agency</h3>
@@ -14,9 +14,9 @@
 
 ---
 
-## 📖 Apa itu AgencyOS?
+## 📖 Apa itu Crediblemark?
 
-**AgencyOS** adalah platform "Business Operating System" modern yang dirancang khusus untuk agensi masa depan. Dengan filosofi *Async-First* dan *AI-Augmented*, platform ini memungkinkan agensi Anda berjalan lebih efisien melalui otomatisasi cerdas, manajemen proyek yang transparan, dan sistem pembayaran yang terintegrasi penuh.
+**Crediblemark** adalah platform "Business Operating System" modern yang dirancang khusus untuk agensi masa depan. Dengan filosofi *Async-First* dan *AI-Augmented*, platform ini memungkinkan agensi Anda berjalan lebih efisien melalui otomatisasi cerdas, manajemen proyek yang transparan, dan sistem pembayaran yang terintegrasi penuh.
 
 ### 🌟 Nilai Utama
 - 🤖 **AI Augmented**: Meningkatkan produktivitas dengan bantuan Agen AI (CredibleBot).
@@ -94,7 +94,7 @@ bun dev
 
 ## 🚢 Deployment (Dokploy / VPS)
 
-AgencyOS siap dideploy menggunakan Docker. Lihat panduan lengkap di [DEPLOY.md](DEPLOY.md).
+Crediblemark siap dideploy menggunakan Docker. Lihat panduan lengkap di [DEPLOY.md](DEPLOY.md).
 
 ```bash
 # Production build via Docker

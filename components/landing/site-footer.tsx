@@ -11,8 +11,8 @@ export async function SiteFooter() {
 
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_NAME", "COMPANY_NAME", "AGENCY_LOGO", "AGENCY_LOGO_DISPLAY"]);
-    const agencyName = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_NAME")?.value || "Agency OS";
-    const companyName = settings.find((s: { key: string; value: string }) => s.key === "COMPANY_NAME")?.value || "AgencyOS";
+    const agencyName = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_NAME")?.value || "Crediblemark";
+    const companyName = settings.find((s: { key: string; value: string }) => s.key === "COMPANY_NAME")?.value || "Crediblemark";
     const logoUrl = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO")?.value;
     const logoDisplayMode = settings.find((s: { key: string; value: string }) => s.key === "AGENCY_LOGO_DISPLAY")?.value || "both";
 

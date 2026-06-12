@@ -18,7 +18,7 @@ export async function Testimonials() {
     const t = await getTranslations("Testimonials");
     // ⚡ Bolt: Use cached getSystemSettings instead of direct DB query
     const settings = await getSystemSettings(["AGENCY_NAME"]);
-    const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Agency OS";
+    const agencyName = settings.find((s: SystemSetting) => s.key === "AGENCY_NAME")?.value || "Crediblemark";
 
     // Fetch active testimonials from DB (cached)
     const dbTestimonials = await getActiveTestimonials(10);
