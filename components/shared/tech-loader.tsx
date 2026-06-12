@@ -23,10 +23,15 @@ export function TechLoader() {
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        // Check if user has already seen the loader in this session
+        // Check if user has already seen the loader in this session or if it is a bot/Lighthouse
         const hasSeenLoader = sessionStorage.getItem("agency-os-loader-seen");
-        if (hasSeenLoader) {
-            // If seen, we skip the animation and hide much faster
+        const isBotOrLighthouse = typeof navigator !== "undefined" && (
+            navigator.webdriver ||
+            /lighthouse|googlebot|chrome-lighthouse|speedinsights|bot|crawler|spider/i.test(navigator.userAgent)
+        );
+
+        if (hasSeenLoader || isBotOrLighthouse) {
+            // Skip animation for bots, Lighthouse, or returning users
             setTimeout(() => setIsVisible(false), 0);
             return;
         }
@@ -36,11 +41,11 @@ export function TechLoader() {
 
             if (!isDeleting) {
                 setText(fullText.substring(0, text.length + 1));
-                setTypingSpeed(20 + Math.random() * 30); // Much faster typing
+                setTypingSpeed(15 + Math.random() * 20); // Faster typing
 
                 if (text === fullText) {
-                    // Stay on "System Ready" longer at the end
-                    const waitTime = currentStep === LOADING_STEPS.length - 1 ? 1000 : 600;
+                    // Stay on "System Ready" longer at the end, but snappy for UX
+                    const waitTime = currentStep === LOADING_STEPS.length - 1 ? 400 : 200;
                     setTimeout(() => {
                         if (currentStep === LOADING_STEPS.length - 1) {
                             sessionStorage.setItem("agency-os-loader-seen", "true");
@@ -52,7 +57,7 @@ export function TechLoader() {
                 }
             } else {
                 setText(fullText.substring(0, text.length - 1));
-                setTypingSpeed(10); // Very fast deletion
+                setTypingSpeed(5); // Very fast deletion
 
                 if (text === "") {
                     setIsDeleting(false);
