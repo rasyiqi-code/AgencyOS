@@ -62,7 +62,7 @@ export async function SiteHeader() {
 
     return (
         <>
-            <header className="relative md:fixed top-0 md:left-0 w-full z-50 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 transition-all duration-300">
+            <header className="relative md:fixed top-0 md:left-0 md:right-0 z-50 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href={`/${locale}`} className="flex items-center gap-2 group cursor-pointer">
