@@ -228,7 +228,28 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <HexclaveProvider app={hexclaveServerApp}>
-              <HexclaveTheme>
+              <HexclaveTheme theme={{
+                dark: {
+                  primary: "#FED700",
+                  primaryForeground: "hsl(0 0% 0%)",
+                  accent: "#FED700",
+                  accentForeground: "hsl(0 0% 0%)",
+                  background: "hsl(0 0% 0%)",
+                  card: "hsl(240 10% 3.9%)",
+                  border: "rgba(255, 255, 255, 0.05)",
+                  ring: "#FED700",
+                },
+                light: {
+                  primary: "#FED700",
+                  primaryForeground: "hsl(0 0% 0%)",
+                  accent: "#FED700",
+                  accentForeground: "hsl(0 0% 0%)",
+                  background: "hsl(0 0% 0%)",
+                  card: "hsl(240 10% 3.9%)",
+                  border: "rgba(255, 255, 255, 0.05)",
+                  ring: "#FED700",
+                }
+              }}>
                 {children}
                 <ScrollRestorer />
                 <Toaster />
