@@ -74,6 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
         url: baseUrl,
         siteName: agencyName,
         locale: isId ? 'id_ID' : 'en_US',
+        alternateLocale: isId ? ['en_US'] : ['id_ID'],
         type: 'website',
         images: seoOgImage ? [
           {

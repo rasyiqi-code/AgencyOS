@@ -33,6 +33,7 @@ export async function generateMetadata(
     if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
         return {
             title: isId ? "Kirim Testimonial" : "Submit Testimonial",
+            robots: "noindex, nofollow",
             openGraph: {
                 title: isId ? "Kirim Testimonial" : "Submit Testimonial",
                 images: ogImages,
@@ -55,6 +56,7 @@ export async function generateMetadata(
         title,
         description,
         keywords,
+        robots: "noindex, nofollow",
         openGraph: {
             title,
             description,
