@@ -245,7 +245,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
 
                             <Image
                                 src="/expert.png"
-                                alt={t("heroImageAlt", { brand: agencyName })}
+                                alt={t("heroImageAlt", { brand: agencyName }) || "Senior Developer"}
                                 fill
                                 className="object-contain object-bottom relative z-10"
                                 priority

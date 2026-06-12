@@ -100,48 +100,46 @@ export function FAQSection() {
                     {/* CTA Card - 4 Columns */}
                     <Link 
                         href={`/${locale}/contact`}
-                        className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer block"
+                        className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer block p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 transition-all duration-300 hover:border-brand-yellow/30"
                     >
-                        <div className="p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 w-full transition-all duration-300 hover:border-brand-yellow/30">
-                            <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(254,215,0,0.2)] group-hover:scale-110 transition-transform duration-500">
-                                <Zap className="w-5 h-5 md:w-6 md:h-6 text-black fill-black" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(254,215,0,0.2)] group-hover:scale-110 transition-transform duration-500">
+                            <Zap className="w-5 h-5 md:w-6 md:h-6 text-black fill-black" />
+                        </div>
+
+                        <h3 className="text-lg md:text-2xl font-black mb-4 tracking-tighter leading-tight italic uppercase">
+                            {tFooter("ctaTitle")}
+                        </h3>
+                        
+                        <p className="text-zinc-500 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
+                            {tFooter("ctaDescription")}
+                        </p>
+
+                        <Button 
+                            className="w-full h-11 md:h-12 rounded-full bg-brand-yellow hover:bg-white text-black transition-all duration-300 font-black uppercase tracking-tighter flex items-center justify-center gap-2 group/btn text-[10px] md:text-xs pointer-events-none"
+                        >
+                            {tFooter("ctaButton")}
+                            <ArrowRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
+                        </Button>
+
+                        <div className="mt-6 pt-6 border-t border-white/10 w-full flex flex-row items-center justify-center gap-4">
+                            <div className="flex -space-x-2 shrink-0">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
+                                        <Image 
+                                            src={`/avatars/avatar-${i}.svg`} 
+                                            alt={`Client Avatar ${i}`} 
+                                            fill
+                                            className="object-cover" 
+                                            sizes="24px"
+                                        />
+                                    </div>
+                                ))}
                             </div>
-
-                            <h3 className="text-lg md:text-2xl font-black mb-4 tracking-tighter leading-tight italic uppercase">
-                                {tFooter("ctaTitle")}
-                            </h3>
-                            
-                            <p className="text-zinc-500 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
-                                {tFooter("ctaDescription")}
-                            </p>
-
-                            <Button 
-                                className="w-full h-11 md:h-12 rounded-full bg-brand-yellow hover:bg-white text-black transition-all duration-300 font-black uppercase tracking-tighter flex items-center justify-center gap-2 group/btn text-[10px] md:text-xs pointer-events-none"
-                            >
-                                {tFooter("ctaButton")}
-                                <ArrowRight className="w-3 h-3 transition-transform group-hover/btn:translate-x-1" />
-                            </Button>
-
-                            <div className="mt-6 pt-6 border-t border-white/10 w-full flex flex-row items-center justify-center gap-4">
-                                <div className="flex -space-x-2 shrink-0">
-                                    {[1, 2, 3, 4].map((i) => (
-                                        <div key={i} className="w-6 h-6 rounded-full border-2 border-black bg-zinc-800 overflow-hidden relative">
-                                            <Image 
-                                                src={`/avatars/avatar-${i}.svg`} 
-                                                alt="UserAvatar" 
-                                                fill
-                                                className="object-cover" 
-                                                sizes="24px"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                                    {tFooter("ctaSocialProof")}
-                                </div>
+                            <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                                {tFooter("ctaSocialProof")}
                             </div>
                         </div>
                     </Link>
