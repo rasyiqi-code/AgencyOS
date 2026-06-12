@@ -155,7 +155,11 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                     <span className="text-xs font-semibold">{tAdmin("aiAssistant")}</span>
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" align="start">
+                            <PopoverContent 
+                                className="w-[calc(100vw-2rem)] sm:w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" 
+                                align="end" 
+                                sideOffset={8}
+                            >
                                 <div className="p-4 border-b border-white/5 bg-indigo-500/5">
                                     <div className="flex items-center gap-2 mb-1">
                                         <Sparkles className="w-4 h-4 text-indigo-400" />
