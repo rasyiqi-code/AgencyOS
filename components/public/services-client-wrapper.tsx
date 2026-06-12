@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, Shuffle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { ServiceListItem } from "./services/service-list-item";
+import { getDailyRandomSeed, shuffleArray } from "@/lib/shared/utils";
 
 interface Service {
     id: string;
@@ -33,8 +34,25 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [searchQuery, setSearchQuery] = useState("");
+    const [randomServices, setRandomServices] = useState<Service[]>(() => {
+        if (services && services.length > 0) {
+            const seed = getDailyRandomSeed();
+            return shuffleArray(services, seed).slice(0, 3);
+        }
+        return [];
+    });
 
     const isId = pathname.startsWith("/id") || pathname.includes("/id/");
+
+    const handleShuffle = () => {
+        if (services.length <= 3) {
+            toast.info(isId ? "Tidak cukup layanan untuk diacak" : "Not enough services to shuffle");
+            return;
+        }
+        const shuffled = shuffleArray(services).slice(0, 3);
+        setRandomServices(shuffled);
+        toast.success(isId ? "Layanan berhasil diacak secara instan!" : "Services shuffled instantly!");
+    };
     // Filter reaktif terhadap daftar layanan berdasarkan input pencarian
     const filteredServices = services.filter((service) => {
         const titleText = (isId ? service.title_id : null) || service.title || "";
@@ -129,6 +147,34 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                         </div>
                     </div>
                 </div>
+
+                {/* Daily Random Services (Tampil saat tidak melakukan search) */}
+                {searchQuery.length === 0 && randomServices.length > 0 && (
+                    <div className="max-w-4xl mx-auto space-y-4 animate-in fade-in duration-500">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
+                                {isId ? "Rekomendasi Layanan Hari Ini" : "Today's Recommended Services"}
+                            </span>
+                            <button
+                                onClick={handleShuffle}
+                                className="flex items-center gap-1.5 text-xs text-brand-yellow hover:text-yellow-300 font-bold tracking-wide transition-all duration-300 cursor-pointer bg-transparent border-0 p-0 text-left group"
+                            >
+                                <Shuffle className="w-3.5 h-3.5 group-hover:rotate-45 transition-transform duration-300" />
+                                {isId ? "Acak Layanan" : "Shuffle Services"}
+                            </button>
+                        </div>
+                        <div className="bg-zinc-950/30 backdrop-blur-xl overflow-hidden shadow-2xl divide-y divide-white/5 border border-white/5 rounded-lg">
+                            {randomServices.map((service, idx) => (
+                                <ServiceListItem
+                                    key={`random-${service.id}`}
+                                    service={service}
+                                    isId={isId}
+                                    indexNumber={idx + 1}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Hasil Pencarian List Premium */}
                 {searchQuery.length > 0 && filteredServices.length > 0 && (

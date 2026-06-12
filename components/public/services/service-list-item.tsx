@@ -25,9 +25,10 @@ interface Service {
 interface ServiceListItemProps {
     service: Service;
     isId: boolean;
+    indexNumber?: number;
 }
 
-export function ServiceListItem({ service, isId }: ServiceListItemProps) {
+export function ServiceListItem({ service, isId, indexNumber }: ServiceListItemProps) {
     const titleText = (isId ? service.title_id : null) || service.title || "";
 
     return (
@@ -77,10 +78,10 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
                     <Link href={`/services/${service.slug || service.id}`} className="marquee-container flex-1 min-w-0 block">
                         <div className="marquee-content">
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug pr-8 inline-block">
-                                {titleText}
+                                {indexNumber !== undefined ? `#${indexNumber} ` : ""}{titleText}
                             </span>
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug sm:hidden pr-8 inline-block">
-                                {titleText}
+                                {indexNumber !== undefined ? `#${indexNumber} ` : ""}{titleText}
                             </span>
                         </div>
                     </Link>

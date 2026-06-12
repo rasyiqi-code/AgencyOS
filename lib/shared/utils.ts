@@ -73,3 +73,40 @@ export function cleanSummaryText(summary: string | null | undefined): string {
         .trim();
 }
 
+/**
+ * Menghasilkan seed angka harian yang unik (YYYYMMDD) berdasarkan waktu saat ini.
+ */
+export function getDailyRandomSeed(): number {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return parseInt(`${yyyy}${mm}${dd}`, 10);
+}
+
+/**
+ * Mengocok array menggunakan algoritma Fisher-Yates.
+ * Jika parameter `seed` diberikan, pengocokan akan pseudo-random (deterministic berdasarkan seed).
+ */
+export function shuffleArray<T>(array: T[], seed?: number): T[] {
+    const shuffled = [...array];
+    if (seed !== undefined) {
+        let currentSeed = seed;
+        const seededRandom = () => {
+            const x = Math.sin(currentSeed++) * 10000;
+            return x - Math.floor(x);
+        };
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const rand = seededRandom();
+            const j = Math.floor(rand * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+    } else {
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+    }
+    return shuffled;
+}
+
