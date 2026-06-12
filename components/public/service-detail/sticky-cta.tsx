@@ -34,7 +34,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     return (
         <div
-            className={`fixed top-10 md:top-14 left-0 right-0 py-3 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-40 transition-all duration-300 transform shadow-md shadow-black/80 ${
+            className={`fixed top-10 md:top-14 left-0 right-0 py-2 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-40 transition-all duration-300 transform shadow-md shadow-black/80 ${
                 isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
             }`}
         >
@@ -56,7 +56,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                                 compact={true}
                             />
                         </span>
-                        <span className="text-[9px] sm:text-[11px] font-medium text-zinc-500 tracking-tight leading-tight mt-0.5 whitespace-nowrap">
+                        <span className="text-[9px] sm:text-[10px] font-medium text-zinc-500 tracking-tight leading-none mt-0 whitespace-nowrap">
                             / {intervalLabel}
                         </span>
                     </div>
@@ -65,7 +65,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                         serviceId={service.id}
                         interval={service.interval}
                         selectedAddons={selectedAddons}
-                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 sm:h-8 px-3 sm:px-4 rounded-none text-[9px] sm:text-xs uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-[26px] sm:h-7.5 px-2.5 sm:px-3.5 rounded-none text-[9px] sm:text-[10px] uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shrink-0"
                     />
                 </div>
             </div>
