@@ -186,24 +186,24 @@
         "title": "Yang Jarang Disadari",
         "subtitle": "Mengapa menghabiskan waktu berbulan-bulan membangun tim internal jika Anda bisa langsung meluncur?",
         "comparison": "Logika Finansial",
-        "hireSenior": "Membangun Tim Internal",
+        "hireSenior": "Merekrut Karyawan Sendiri",
         "hybrid": "Kemitraan {brand}",
-        "salaryOldValue": "Biaya Operasional Tinggi",
-        "salaryOld": "Gaji Tetap + Tunjangan + Operasional",
-        "salaryNewValue": "Harga Pasti (Fixed-Price)",
-        "salaryNew": "Investasi Berbasis Proyek (Efisien)",
-        "comp1Old": "Rekrutmen & Persiapan (2-3 bulan).",
-        "comp1New": "Eksekusi Instan (Hari ke-1).",
-        "comp2Old": "Gaji Senior Sangat Mahal & Langka.",
-        "comp2New": "Kualitas Setara, Harga Proyek.",
-        "comp3Old": "Risiko Resign & Masalah Teknis.",
-        "comp3New": "Jaminan Sistem Berjalan Lancar.",
-        "comp4Old": "Beban Manajemen & Pelatihan Tinggi.",
-        "comp4New": "Tanpa Beban Manajemen (Hands-off).",
-        "comp5Old": "Biaya Alat, Software & BPJS.",
-        "comp5New": "Hak Milik Kode 100% (Tanpa Lisensi).",
-        "comp6Old": "Revisi Lambat & Drama Internal.",
-        "comp6New": "Revisi Terjamin Sesuai Kesepakatan."
+        "salaryOldValue": "Beban Operasional Tinggi",
+        "salaryOld": "Gaji Bulanan Tetap + THR + Fasilitas Kerja",
+        "salaryNewValue": "Investasi Sekali Bayar",
+        "salaryNew": "Bayar Hanya Sesuai Kebutuhan Proyek",
+        "comp1Old": "Cari & Rekrut Staf (1-3 bulan).",
+        "comp1New": "Mulai Kerja Instan (Hari ke-1).",
+        "comp2Old": "Gaji Programmer Ahli Sangat Mahal.",
+        "comp2New": "Kualitas Tim Ahli, Bayar Hanya Sesuai Proyek.",
+        "comp3Old": "Risiko Karyawan Resign & Sistem Macet.",
+        "comp3New": "Jaminan Sistem Selesai & Berjalan Lancar.",
+        "comp4Old": "Bantuan Manajemen & Training Rumit.",
+        "comp4New": "Terima Beres, Kami Kelola Semuanya.",
+        "comp5Old": "Biaya Laptop, Lisensi Software & BPJS.",
+        "comp5New": "Sistem 100% Milik Anda (Tanpa Biaya Sewa).",
+        "comp6Old": "Proses Lambat & Drama Internal Tim.",
+        "comp6New": "Pengerjaan Cepat & Garansi Hasil Pasti."
     },
     "Guarantee": {
         "title": "Aman dan Transparan.",
@@ -284,65 +284,65 @@
     },
     "Stats": {
         "stack": {
-            "title": "Tech Stack",
-            "desc": "50+ Technologies"
+            "title": "Teknologi",
+            "desc": "Pilihan Terbaik"
         },
         "royalty": {
-            "title": "Source Code",
-            "desc": "100% Milik Anda"
+            "title": "100%",
+            "desc": "Hak Milik Sistem"
         },
         "performance": {
-            "title": "100%",
-            "desc": "No Hidden Fees"
+            "title": "Rp 0",
+            "desc": "Tanpa Biaya Tersembunyi"
         }
     },
     "ClientDashboard": {
         "badge": "DASHBOARD KLIEN",
         "title": "Transparansi Total via \n<yellow>Dashboard Strategis</yellow>",
-        "description": "Rasakan pengalaman \"Dapur Terbuka\" dalam pengembangan perangkat lunak. Dashboard Klien kami menampilkan detak jantung real-time proyek Anda melalui portal terpusat yang aman.",
+        "description": "Rasakan transparansi penuh dalam pembuatan website dan aplikasi Anda. Dashboard Klien menampilkan setiap progres pengerjaan proyek Anda secara terbuka dan real-time.",
         "Features": {
             "dailyUpdates": {
                 "title": "Update Harian",
-                "desc": "Visibilitas penuh ke progres harian. Setiap fitur yang dikirim, bug yang diperbaiki, atau milestone yang tercapai dicatat dalam feed Update Harian Anda."
+                "desc": "Pantau perkembangan proyek Anda setiap hari. Setiap kemajuan pekerjaan dicatat dengan jelas dalam feed perkembangan Anda."
             },
             "comms": {
-                "title": "Saluran Komunikasi Terpadu",
-                "desc": "Komunikasi langsung dan lewat pesan (asinkron) dengan tim engineering. Semua diskusi strategis terpusat dan terekam."
+                "title": "Komunikasi Langsung",
+                "desc": "Hubungi tim pengembang kami kapan saja dengan mudah. Semua diskusi terekam rapi di satu tempat agar tidak ada pesan yang terlewat."
             },
             "issues": {
-                "title": "Manajemen Masalah",
-                "desc": "Pelacakan transparan isu terbuka dan hambatan. Tinjau, komentari, dan lacak penyelesaian setiap rintangan teknis."
+                "title": "Revisi & Masalah",
+                "desc": "Tinjau, beri komentar, dan pantau penyelesaian setiap revisi atau kendala yang dihadapi secara terbuka."
             },
             "specs": {
-                "title": "Spesifikasi Layanan",
-                "desc": "Cetak biru teknis dan spesifikasi langsung selalu dapat diakses. Ketahui persis apa yang sedang dibangun sesuai standar industri yang berlaku."
+                "title": "Daftar Rencana Kerja",
+                "desc": "Panduan rencana kerja selalu dapat diakses. Ketahui persis fitur apa saja yang sedang kami buat untuk Anda."
             },
             "docs": {
-                "title": "Pusat Dokumen",
-                "desc": "Repositori terpusat untuk semua aset proyek, mulai dari diagram arsitektur hingga dokumentasi pengiriman akhir."
+                "title": "Tempat Penyimpanan Dokumen",
+                "desc": "Satu tempat untuk semua dokumen proyek Anda, mulai dari file desain, dokumen serah terima, hingga bukti pembayaran."
             },
             "status": {
-                "title": "Status Operasional",
-                "desc": "Pelacakan kondisi sistem real-time. Pantau status peluncuran (deployment), kesehatan server, dan alokasi tim secara instan."
+                "title": "Status Progress",
+                "desc": "Pantau status pengerjaan secara langsung. Lihat apakah proyek sedang tahap desain, koding, atau siap diluncurkan."
             }
         },
         "Philosophy": {
             "badge": "UTAMAKAN KOMUNIKASI TERTULIS",
             "title": "Mengapa Kami Menghindari <red>Rapat</red>",
             "desc": "Rapat tatap muka seringkali membunuh momentum. Kami mengganti pertemuan yang tidak efisien dengan dokumentasi tertulis untuk menghormati waktu Anda.",
-            "stat1": "Manajer terhalang dari fokus mendalam",
+            "stat1": "Manajer/staf Anda terganggu dari pekerjaan inti",
             "stat2": "Rapat sering tidak produktif",
             "stat3": "Waktu untuk kembali fokus setelah gangguan",
             "stat4": "Orang multitasking saat rapat",
             "wayTitle": "Cara {brand}",
             "way1": "<strong>Keputusan Terdokumentasi.</strong> Tidak ada \"katanya, katanya\". Semua tertulis permanen.",
             "way2": "<strong>Komunikasi Lewat Pesan.</strong> Respon saat Anda fokus, bukan saat kalender memaksa.",
-            "way3": "<strong>Update Visual.</strong> Jangan tanya status layout, lihat langsung di dashboard.",
+            "way3": "<strong>Update Visual.</strong> Jangan tanya status layout/desain, lihat langsung perkembangannya di dashboard.",
             "way4": "<strong>Hanya Darurat.</strong> Kami hanya rapat jika strategi membutuhkan perubahan besar."
         },
         "Cta": {
             "title": "Dirancang untuk Pengawasan Korporat",
-            "desc": "Dashboard kami menyediakan jejak audit dan visibilitas operasional yang dibutuhkan oleh pemangku kepentingan enterprise dan CTO untuk misi berisiko tinggi.",
+            "desc": "Dashboard kami menyediakan transparansi penuh yang Anda butuhkan untuk memantau kemajuan proyek bisnis dengan aman dan nyaman.",
             "button": "Login Dashboard"
         }
     },
