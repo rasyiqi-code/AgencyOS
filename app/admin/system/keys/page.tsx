@@ -7,7 +7,6 @@ import { Trash2, Key } from "lucide-react";
 import { SystemNav } from "@/components/admin/system-nav";
 import { AddKeyDialog } from "@/components/admin/add-key-dialog";
 import { EditKeyDialog } from "@/components/admin/edit-key-dialog";
-import { SaaSKeysClient } from "@/components/admin/system/saas-keys-client";
 import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 import { SystemKey } from "@prisma/client";
@@ -18,7 +17,6 @@ export default async function AdminKeysPage() {
     }) as SystemKey[];
 
     const aiKeys = keys.filter((k: SystemKey) => k.provider !== "agency-os");
-    const agencyKeys = keys.filter((k: SystemKey) => k.provider === "agency-os");
 
     async function deleteKey(id: string) {
         "use server";
@@ -152,8 +150,6 @@ export default async function AdminKeysPage() {
                             </TableBody>
                         </Table>
                     </div>
-
-                    <SaaSKeysClient initialKeys={agencyKeys} />
                 </div>
             </div>
         </div>

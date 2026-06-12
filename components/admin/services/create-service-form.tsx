@@ -495,62 +495,13 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 </div>
                             </div>
                             <div className="px-6 py-4 bg-zinc-900/60 border-t border-white/5">
-                                <div className="flex gap-2">
-                                    <Button
-                                        type="submit"
-                                        className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? tAdmin("publishing") : tAdmin("publishService")}
-                                    </Button>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                className="h-9 w-9 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95 shrink-0"
-                                            >
-                                                <Sparkles className="w-4 h-4 animate-pulse" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" align="end">
-                                            <div className="p-4 border-b border-white/5 bg-indigo-500/5">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <Sparkles className="w-4 h-4 text-indigo-400" />
-                                                    <h4 className="font-semibold text-white text-sm">{tAdmin("magicDraft")}</h4>
-                                                </div>
-                                                <p className="text-[10px] text-indigo-300/80">{tAdmin("magicDraftDesc")}</p>
-                                            </div>
-                                            <div className="p-4 space-y-4">
-                                                <Textarea
-                                                    value={prompt}
-                                                    onChange={(e) => setPrompt(e.target.value)}
-                                                    placeholder={tAdmin("promptPlaceholder")}
-                                                    className="bg-black/40 border-indigo-500/20 text-zinc-200 focus:ring-indigo-500/40 min-h-[100px] text-xs resize-none"
-                                                />
-                                                <Button
-                                                    type="button"
-                                                    onClick={handleGenerate}
-                                                    disabled={isGenerating || !prompt.trim()}
-                                                    className="w-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 h-9 transition-all active:scale-95"
-                                                >
-                                                    {isGenerating ? (
-                                                        <>
-                                                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                                            {tAdmin("crafting")}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Sparkles className="w-4 h-4 mr-2" />
-                                                            {tAdmin("autoFill")}
-                                                        </>
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? tAdmin("publishing") : tAdmin("publishService")}
+                                </Button>
                                 <p className="text-[10px] text-center text-zinc-600 mt-3">
                                     {tAdmin("publishNotice")}
                                 </p>
