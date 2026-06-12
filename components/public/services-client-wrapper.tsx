@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { Sparkles, ArrowLeft, Search } from "lucide-react";
-import { ServiceCard } from "@/components/public/service-card";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PriceDisplay } from "@/components/providers/currency-provider";
+import { PurchaseButton } from "@/components/store/purchase-button";
+import { Button } from "@/components/ui/button";
 
 interface Service {
     id: string;
     title: string;
     title_id?: string | null;
+    slug?: string | null;
     description: string;
     description_id?: string | null;
     price: number;
@@ -128,56 +130,80 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                     </div>
                 </div>
 
-                {filteredServices.length > 0 && (() => {
-                    const groupedServices = filteredServices.reduce((acc, curr) => {
-                        const cat = curr.category || 'Uncategorized';
-                        if (!acc[cat]) acc[cat] = [];
-                        acc[cat].push(curr);
-                        return acc;
-                    }, {} as Record<string, typeof services>);
+                {/* Petunjuk pencarian saat input masih kosong */}
+                {searchQuery === "" && (
+                    <div className="max-w-md mx-auto text-center py-16 animate-in fade-in duration-700">
+                        <div className="h-12 w-12 rounded-full bg-zinc-900 border border-white/5 flex items-center justify-center mx-auto mb-4 text-zinc-500 shadow-inner">
+                            <Search className="w-5 h-5" />
+                        </div>
+                        <p className="text-sm text-zinc-400">
+                            {isId ? "Ketik nama layanan atau kategori untuk mulai mencari." : "Type a service name or category to start searching."}
+                        </p>
+                    </div>
+                )}
 
-                    const categories = Object.keys(groupedServices).sort((a, b) => {
-                        if (a === 'Uncategorized') return 1;
-                        if (b === 'Uncategorized') return -1;
-                        return a.localeCompare(b);
-                    });
+                {/* Hasil Pencarian List Premium */}
+                {searchQuery.length > 0 && filteredServices.length > 0 && (
+                    <div className="max-w-3xl mx-auto divide-y divide-white/5 border border-white/10 rounded-2xl bg-zinc-900/25 backdrop-blur-md overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+                        {filteredServices.map((service) => {
+                            const titleText = (isId ? service.title_id : null) || service.title || "";
+                            const descText = (isId ? service.description_id : null) || service.description || "";
 
-                    const defaultTab = categories[0] || 'Uncategorized';
-
-                    return (
-                        <Tabs defaultValue={defaultTab} className="w-full">
-                            <div className="flex justify-center mb-12">
-                                <div className="w-full max-w-full overflow-x-auto scrollbar-hide pb-2">
-                                    <TabsList className="bg-zinc-900/50 border border-white/5 p-1 flex w-max min-w-full sm:min-w-0 sm:w-auto mx-auto">
-                                        {categories.map((category) => (
-                                            <TabsTrigger
-                                                key={category}
-                                                value={category}
-                                                className="px-4 py-2 text-sm font-medium rounded-lg data-[state=active]:bg-brand-yellow data-[state=active]:text-black transition-all whitespace-nowrap"
-                                            >
-                                                {category}
-                                            </TabsTrigger>
-                                        ))}
-                                    </TabsList>
-                                </div>
-                            </div>
-
-                            {categories.map((category) => (
-                                <TabsContent key={category} value={category} className="mt-0 focus-visible:outline-none focus-visible:ring-0">
-                                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mx-auto">
-                                        {groupedServices[category].map((service) => (
-                                            <ServiceCard key={service.id} service={service} />
-                                        ))}
+                            return (
+                                <div
+                                    key={service.id}
+                                    className="p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-white/[0.02] transition-colors group"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                                            <span className="px-2 py-0.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-[9px] font-bold text-brand-yellow uppercase tracking-wider">
+                                                {service.category || "General"}
+                                            </span>
+                                            <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-semibold text-zinc-400 uppercase tracking-wider">
+                                                {service.interval === 'one_time' ? "One-time" : service.interval}
+                                            </span>
+                                        </div>
+                                        <Link href={`/services/${service.slug || service.id}`}>
+                                            <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-brand-yellow transition-colors leading-tight truncate">
+                                                {titleText}
+                                            </h3>
+                                        </Link>
+                                        <p className="text-xs text-zinc-400 mt-1 line-clamp-2 max-w-xl">
+                                            {descText}
+                                        </p>
                                     </div>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
-                    );
-                })()}
 
-                {services.length > 0 && filteredServices.length === 0 && (
-                    <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5 max-w-7xl mx-auto">
-                        <p className="text-zinc-500 text-lg">{isId ? "Tidak ada layanan yang cocok dengan pencarian Anda." : "No services match your search query."}</p>
+                                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end shrink-0 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0">
+                                        <div className="text-right">
+                                            <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-0.5">Mulai Dari</div>
+                                            <div className="text-base sm:text-lg font-black text-white tracking-tight">
+                                                <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <Link href={`/services/${service.slug || service.id}`}>
+                                                <Button size="sm" variant="ghost" className="h-9 text-xs text-zinc-400 hover:text-white hover:bg-white/5 font-semibold">
+                                                    Detail
+                                                </Button>
+                                            </Link>
+                                            <PurchaseButton
+                                                serviceId={service.id}
+                                                interval={service.interval}
+                                                className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-9 px-4 rounded-xl text-xs uppercase tracking-tight shadow-md shadow-brand-yellow/15"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+
+                {services.length > 0 && searchQuery.length > 0 && filteredServices.length === 0 && (
+                    <div className="max-w-md mx-auto text-center py-16 bg-zinc-900/10 border border-white/5 rounded-2xl p-6 shadow-xl shadow-black/10 animate-in fade-in duration-300">
+                        <p className="text-zinc-500 text-sm font-medium">{isId ? "Tidak ada layanan yang cocok dengan pencarian Anda." : "No services match your search query."}</p>
+                        <p className="text-zinc-600 text-xs mt-1">{isId ? "Silakan coba kata kunci lain." : "Please try different keywords."}</p>
                     </div>
                 )}
 
