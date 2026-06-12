@@ -53,12 +53,12 @@
         "heroImageAlt": "Senior developer at {brand} representing expert software engineering and digital transformation"
     },
     "SocialProof": {
-        "faster": "On-Time Execution",
-        "fasterSub": "Guaranteed release schedule. No costly delay drama affecting your operations.",
+        "faster": "On-Time Delivery",
+        "fasterSub": "Fixed release schedules. No delayed launches that hurt your business operations.",
         "fixedPrice": "Transparent Investment",
-        "fixedPriceSub": "Fixed contract pricing upfront. No hidden fees or bloated mid-project bills.",
-        "verified": "Enterprise Architecture",
-        "verifiedSub": "Robust, unhackable infrastructure ready to handle any traffic spikes.",
+        "fixedPriceSub": "Fixed pricing from day one. No hidden fees or bloated costs mid-way through.",
+        "verified": "Secure & Stable Systems",
+        "verifiedSub": "Highly secured systems built to protect user data and remain stable under heavy customer traffic.",
         "stackFramework": "Modern Frameworks",
         "stackCloud": "Cloud Infrastructure",
         "stackDatabase": "Scalable Database",
@@ -172,15 +172,15 @@
         }
     },
     "Workflow": {
-        "badge": "3 Steps to Launch",
-        "title": "No Bullsh*t Workflow",
-        "subtitle": "All progress is monitored in real-time through the Client Dashboard. An honest, fast, and results-oriented work methodology.",
-        "step1": "Architecture & Logic",
-        "step1Desc": "Tell your idea to our AI. It will prepare a neat technical specification (PRD) for you.",
-        "step2": "Fast Iteration",
-        "step2Desc": "The system calculates feature complexity and provides a definite Fixed Price. Pay secure deposit via Midtrans.",
-        "step3": "Handover & Support",
-        "step3Desc": "See progress on dashboard. Need revisions? Just click the part you want to change. I do the work, you receive the result."
+        "badge": "3-Step Launch.",
+        "title": "Honest Work Process",
+        "subtitle": "Track your project's progress in real-time through the Client Dashboard. Transparent, fast, and outcome-focused.",
+        "step1": "Plan & Structure",
+        "step1Desc": "Discuss your business goals with us. We will map out a detailed feature list and clear timeline for your project.",
+        "step2": "Fixed Price Scope",
+        "step2Desc": "Receive a guaranteed fixed price with no hidden costs. Pay a secure initial deposit to start the work.",
+        "step3": "Review & Launch",
+        "step3Desc": "Track progress on your dashboard. Need changes? Just click where you want to edit. We do the work, you launch."
     },
     "Financial": {
         "title": "What is Often Overlooked.",
