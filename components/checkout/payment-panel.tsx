@@ -72,15 +72,12 @@ export function PaymentPanel({
         ? (estimate.service?.addons_id as ServiceAddon[]) || (estimate.service?.addons as ServiceAddon[])
         : (estimate.service?.addons as ServiceAddon[]) || [];
 
-    const formattedBankDetails = estimate.project && agencySettings ? {
-        bank_name: agencySettings.bankName,
-        bank_account: agencySettings.bankAccount,
-        bank_holder: agencySettings.bankHolder
-    } : (bankDetails ? {
+    // Menggunakan bankDetails secara langsung karena agencySettings tidak memiliki informasi rekening bank
+    const formattedBankDetails = bankDetails ? {
         bank_name: bankDetails.bank_name || undefined,
         bank_account: bankDetails.bank_account || undefined,
         bank_holder: bankDetails.bank_holder || undefined
-    } : undefined);
+    } : undefined;
 
     const isPaid = estimate.status === 'paid';
 
