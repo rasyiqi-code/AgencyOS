@@ -11,10 +11,9 @@ interface ProductShowcaseProps {
     selectedAddons: ServiceAddon[];
     amountToPay: number;
     baseCurrency: "USD" | "IDR";
-    onOpenSummary: () => void;
 }
 
-export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency, onOpenSummary }: ProductShowcaseProps) {
+export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency }: ProductShowcaseProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
@@ -40,21 +39,6 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                         {isId ? "Kembali ke Dashboard" : "Back to Dashboard"}
                     </a>
-                </div>
-
-                {/* Header Produk Pilihan (Moved from Right Side) */}
-                <div className="flex items-center justify-between bg-zinc-950/40 border border-white/5 rounded-2xl p-4.5">
-                    <div>
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest block mb-1">Active Selection</span>
-                        <span className="text-sm font-extrabold text-white tracking-tight">{estimate.title}</span>
-                    </div>
-                    {/* Trigger Drawer detail pesanan */}
-                    <button
-                        onClick={onOpenSummary}
-                        className="text-xs text-lime-400 hover:text-lime-300 font-bold tracking-wide transition-colors hover:underline cursor-pointer bg-transparent border-0 p-0"
-                    >
-                        {isId ? "Lihat Detail" : "View Details"}
-                    </button>
                 </div>
 
                 {/* Branding & Heading */}

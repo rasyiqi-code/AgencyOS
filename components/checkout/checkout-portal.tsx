@@ -4,14 +4,11 @@ import { useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { ProductShowcase } from "./product-showcase";
 import { PaymentPanel } from "./payment-panel";
-import { CheckoutSummary } from "./checkout-summary";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { useCurrency, PriceDisplay } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Gift } from "lucide-react";
 
 export function CheckoutPortal({
     estimate,
@@ -55,7 +52,6 @@ export function CheckoutPortal({
     const initiallyIncludedAddons = serviceAddons.filter((addon) => estimate.summary.includes(`+ ${addon.name}`));
 
     const [selectedAddons, setSelectedAddons] = useState<ServiceAddon[]>(initiallyIncludedAddons);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handlePrint = useReactToPrint({
         contentRef: invoiceRef,
@@ -119,7 +115,6 @@ export function CheckoutPortal({
                         selectedAddons={selectedAddons}
                         amountToPay={amountToPay}
                         baseCurrency={baseCurrency}
-                        onOpenSummary={() => setIsDrawerOpen(true)}
                     />
                 </div>
 
@@ -150,43 +145,11 @@ export function CheckoutPortal({
                             );
                         }}
                         agencySettings={agencySettings}
-                        onOpenSummary={() => setIsDrawerOpen(true)}
                     />
                 </div>
             </div>
 
-            {/* Slide-out Drawer for Full Order Details */}
-            {!isPaid && (
-                <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                    <SheetContent className="w-full sm:max-w-md bg-zinc-950/95 backdrop-blur-xl border-l border-white/10 text-white overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-zinc-800">
-                        <SheetHeader className="mb-6">
-                            <SheetTitle className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-                                <Gift className="w-5 h-5 text-lime-400" />
-                                {isId ? "Rincian Lengkap Pesanan" : "Full Order Details"}
-                            </SheetTitle>
-                            <SheetDescription className="text-xs text-zinc-400">
-                                Rincian lengkap produk jasa, deliverables, modul, add-on opsional, serta bonus pemasaran Anda.
-                            </SheetDescription>
-                        </SheetHeader>
-                        
-                        <div className="pb-8">
-                            <CheckoutSummary
-                                estimate={{ ...estimate, totalCost: trueBaseCost }}
-                                bonuses={bonuses}
-                                context={context}
-                                selectedAddons={selectedAddons}
-                                onToggleAddon={(addon) => {
-                                    setSelectedAddons(prev => 
-                                        prev.some(a => a.name === addon.name)
-                                            ? prev.filter(a => a.name !== addon.name)
-                                            : [...prev, addon]
-                                    );
-                                }}
-                            />
-                        </div>
-                    </SheetContent>
-                </Sheet>
-            )}
+
 
             {/* Hidden Invoice for Printing */}
             <div className="hidden">

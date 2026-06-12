@@ -28,8 +28,7 @@ export function PaymentPanel({
     orderId,
     selectedAddons = [],
     onToggleAddon,
-    agencySettings,
-    onOpenSummary
+    agencySettings
 }: {
     estimate: ExtendedEstimate,
     onPrint: () => void,
@@ -48,8 +47,7 @@ export function PaymentPanel({
     orderId?: string | null,
     selectedAddons?: ServiceAddon[],
     onToggleAddon?: (addon: ServiceAddon) => void,
-    agencySettings?: any,
-    onOpenSummary: () => void
+    agencySettings?: any
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
