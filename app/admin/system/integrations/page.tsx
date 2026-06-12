@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SystemNav } from "@/components/admin/system-nav";
-import { Github, Globe, CheckCircle2, XCircle, Link2, Unlink } from "lucide-react";
+import { Github, CheckCircle2, XCircle, Link2, Unlink } from "lucide-react";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import type { PrismaWithIntegration } from "@/types/payment";

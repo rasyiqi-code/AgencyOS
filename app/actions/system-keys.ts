@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/config/db";
-import { isAdmin } from "@/lib/shared/auth-helpers";
+
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { revalidatePath } from "next/cache";
 import { genkit } from 'genkit';

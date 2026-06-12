@@ -14,17 +14,20 @@ export function SystemAlertsClient({ aiConfigured, gatewayConfigured }: SystemAl
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
-        const dismissedUntil = localStorage.getItem("system-alerts-dismissed-until");
-        if (dismissedUntil) {
-            const expireTime = parseInt(dismissedUntil, 10);
-            if (Date.now() < expireTime) {
-                // Masih dalam masa 24 jam setelah ditutup
-                setIsDismissed(true);
-                return;
+        const timer = setTimeout(() => {
+            setMounted(true);
+            const dismissedUntil = localStorage.getItem("system-alerts-dismissed-until");
+            if (dismissedUntil) {
+                const expireTime = parseInt(dismissedUntil, 10);
+                if (Date.now() < expireTime) {
+                    setIsDismissed(true);
+                    return;
+                }
             }
-        }
-        setIsDismissed(false);
+            setIsDismissed(false);
+        }, 0);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleDismiss = () => {

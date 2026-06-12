@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,27 +34,6 @@ export function HeroContent({ agencyName }: HeroContentProps) {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-
-
-    const containerVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: isMobile ? 0.05 : 0.15,
-                delayChildren: isMobile ? 0.1 : 0.3
-            }
-        }
-    };
-
-    const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }
-        }
-    };
 
     const [typingStatus, setTypingStatus] = React.useState<"typing" | "full" | "deleting">("typing");
 
