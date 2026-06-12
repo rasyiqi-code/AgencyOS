@@ -108,7 +108,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                 {/* Bilah Pencarian Jasa Premium */}
                 <div className="mb-12 max-w-xl mx-auto relative animate-in fade-in slide-in-from-bottom-3 duration-500">
                     <div className="relative group">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/30 to-brand-yellow/10 rounded-none blur opacity-30 group-focus-within:opacity-100 group-hover:opacity-50 transition duration-1000 group-focus-within:duration-200" />
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/30 to-brand-yellow/10 rounded-lg blur opacity-30 group-focus-within:opacity-100 group-hover:opacity-50 transition duration-1000 group-focus-within:duration-200" />
                         <div className="relative flex items-center">
                             <Search className="absolute left-4 w-5 h-5 text-zinc-500 group-focus-within:text-brand-yellow transition-colors" />
                             <input
@@ -116,7 +116,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                                 placeholder={isId ? "Cari jasa yang Anda butuhkan..." : "Search services you need..."}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-zinc-950/80 hover:bg-zinc-950/95 focus:bg-black border-b border-white/10 focus:border-brand-yellow/50 rounded-none py-4 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-yellow/20 text-sm sm:text-base transition-all shadow-xl shadow-black/80"
+                                className="w-full bg-zinc-950/80 hover:bg-zinc-950/95 focus:bg-black border border-white/10 focus:border-brand-yellow/50 rounded-lg py-4 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-yellow/20 text-sm sm:text-base transition-all shadow-xl shadow-black/80"
                             />
                             {searchQuery && (
                                 <button
