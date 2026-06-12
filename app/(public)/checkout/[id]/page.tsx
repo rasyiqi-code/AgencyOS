@@ -131,6 +131,18 @@ export default async function CheckoutPage(props: PageProps) {
             userData.email = user?.primaryEmail || "";
         }
 
+        // Mengambil status awal order jika invoiceId ada
+        let initialOrderStatus = "pending";
+        if (estimate.project?.invoiceId) {
+            const orderObj = await prisma.order.findUnique({
+                where: { id: estimate.project.invoiceId },
+                select: { status: true }
+            });
+            if (orderObj) {
+                initialOrderStatus = orderObj.status;
+            }
+        }
+
         return (
             <div className="min-h-screen bg-black text-white selection:bg-lime-500/30 pb-6">
                 <div className="max-w-7xl mx-auto px-6 py-4 md:py-8 w-full">
@@ -148,6 +160,7 @@ export default async function CheckoutPage(props: PageProps) {
                         projectTotalAmount={estimate.project?.totalAmount || estimate.totalCost}
                         context={context}
                         orderId={estimate.project?.invoiceId}
+                        initialOrderStatus={initialOrderStatus}
                     />
                 </div>
             </div>

@@ -1,14 +1,20 @@
 "use client";
+
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Building, Wallet, CheckCircle2, Store, CreditCard, Smartphone } from "lucide-react";
+import { Loader2, Wallet, CheckCircle2, Lock, CreditCard, Building, Smartphone, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useLocale } from "next-intl";
+
 import { initiateCreemPayment } from "@/components/payment/creem/client";
-// import { selectPaymentMethod } from "@/app/actions/billing";
 import { ManualPayment } from "@/components/payment/manual/manual-payment";
 import { MidtransPayment } from "@/components/payment/midtrans/midtrans-payment";
+import { PaymentMethodItem } from "@/components/payment/payment-method-item";
+import { PaymentPendingState } from "@/components/payment/payment-pending-state";
+import { VerificationInProgress } from "@/components/payment/verification-in-progress";
+
 import type { MidtransPaymentData, CreemPaymentMetadata, BankDetails, SelectedPaymentMethod } from "@/types/payment";
 
 export interface PaymentSelectorProps {
@@ -19,12 +25,13 @@ export interface PaymentSelectorProps {
     currency?: 'USD' | 'IDR';
     bankDetails?: BankDetails;
     orderStatus?: string;
-    chargeEndpoint?: string; // NEW PROP
+    chargeEndpoint?: string;
     contactWA?: string | null;
     contactTele?: string | null;
     hasActiveGateway?: boolean;
     gatewayStatus?: { midtrans: boolean; creem: boolean };
     noCard?: boolean;
+    onPaymentInitiated?: () => void;
 }
 
 interface PaymentMethod {
@@ -34,7 +41,7 @@ interface PaymentMethod {
     disabled?: boolean;
 }
 
-// Payment Method Groups
+// Data statis konfigurasi grup metode pembayaran
 const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; methods: PaymentMethod[] }[] = [
     {
         id: "card",
@@ -88,56 +95,59 @@ const PAYMENT_GROUPS: { id: string; label: string; icon: React.ElementType; meth
     },
 ];
 
-export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroups, currency = 'USD', bankDetails, orderStatus, chargeEndpoint, contactWA, contactTele, hasActiveGateway = true, gatewayStatus, noCard }: PaymentSelectorProps) {
+export function PaymentSelector({
+    orderId,
+    amount,
+    paymentMetadata,
+    allowedGroups,
+    currency = 'USD',
+    bankDetails,
+    orderStatus,
+    chargeEndpoint,
+    contactWA,
+    contactTele,
+    hasActiveGateway = true,
+    gatewayStatus,
+    noCard,
+    onPaymentInitiated
+}: PaymentSelectorProps) {
+    const locale = useLocale();
+    const isId = locale === 'id';
     const [loading, setLoading] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
+
     const [paymentData, setPaymentData] = useState<MidtransPaymentData | CreemPaymentMetadata | null>(() => {
         if (!paymentMetadata) return null;
-        // Only consider it as payment data if it has payment fields
-        // This prevents affiliate_code-only metadata from triggering the "Pending" state
         if ('payment_type' in paymentMetadata || 'transaction_id' in paymentMetadata || 'status_code' in paymentMetadata) {
             return paymentMetadata;
         }
         return null;
     });
-    const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
 
-    // Check if waiting verification
     const isVerifying = orderStatus === 'waiting_verification';
 
-    // Filter Payment Groups
+    // Logika pemfilteran metode pembayaran berdasarkan ketersediaan gateway dan mata uang
     let availableGroups = PAYMENT_GROUPS;
-
-    // Currency Filter
     if (currency === 'USD') {
         availableGroups = PAYMENT_GROUPS.filter(g => ['card', 'manual'].includes(g.id));
     }
 
-    // Filter groups based on availability
     let filteredGroups = availableGroups;
-
-    // 1. Filter out manual if bankDetails is missing
     if (!bankDetails) {
         filteredGroups = filteredGroups.filter(g => g.id !== 'manual');
     }
-
-    // 2. Filter out gateway groups if no active gateway (global check)
     if (!hasActiveGateway) {
         filteredGroups = filteredGroups.filter(g => g.id === 'manual');
     }
-
-    // 3. Individual Gateway Filtering (Fine-grained control)
     if (gatewayStatus) {
         if (!gatewayStatus.midtrans) {
-            // Midtrans handles VA, E-Wallet, CStore
             filteredGroups = filteredGroups.filter(g => !['va', 'ewallet', 'cstore'].includes(g.id));
         }
         if (!gatewayStatus.creem) {
-            // Creem handles Card
             filteredGroups = filteredGroups.filter(g => g.id !== 'card');
         }
     }
-
-    // 4. Apply allowedGroups filter if provided
     if (allowedGroups) {
         filteredGroups = filteredGroups.filter(g => allowedGroups.includes(g.id));
     }
@@ -146,7 +156,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
         if (!selectedMethod) return;
         setLoading(true);
 
-        // MANUAL TRANSFER HANDLER
+        // 1. PENANGANAN TRANSFER MANUAL
         if (selectedMethod.type === 'manual_transfer') {
             const manualData = {
                 payment_type: 'manual_transfer',
@@ -155,7 +165,6 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
             };
 
             try {
-                // Persist selection to DB
                 await fetch("/api/billing/method", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -163,21 +172,23 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                 });
 
                 setPaymentData(manualData);
-                setIsDialogOpen(true); // Open dialog explicitly after action
-                toast.success("Please complete your transfer");
+                setIsDialogOpen(true);
+                onPaymentInitiated?.();
+                toast.success(isId ? "Pilihan pembayaran berhasil disimpan" : "Please complete your transfer");
             } catch (error) {
                 console.error(error);
-                toast.error("Failed to select payment method");
+                toast.error(isId ? "Gagal memilih metode pembayaran" : "Failed to select payment method");
             } finally {
                 setLoading(false);
             }
             return;
         }
 
-        // CREEM HANDLER: CREDIT CARD
+        // 2. PENANGANAN KARTU KREDIT (CREEM GATEWAY)
         if (selectedMethod.id === 'cc') {
             try {
                 const data = await initiateCreemPayment(orderId);
+                onPaymentInitiated?.();
                 window.location.href = data.checkout_url;
             } catch (error: unknown) {
                 toast.error(error instanceof Error ? error.message : "Payment initialization failed");
@@ -186,7 +197,7 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
             return;
         }
 
-        // CORE API HANDLER (For VA, QRIS, CStore)
+        // 3. PENANGANAN GATEWAY CORE (MIDTRANS - VA, QRIS, CSTORE)
         try {
             const endpoint = chargeEndpoint || "/api/payment/midtrans/charge";
             const res = await fetch(endpoint, {
@@ -199,7 +210,6 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                 })
             });
 
-            // Safely parse JSON — clone dulu karena body stream hanya bisa dibaca 1x
             let data;
             const resClone = res.clone();
             try {
@@ -212,8 +222,9 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
             if (!res.ok) throw new Error(data.message || "Payment Failed");
 
             setPaymentData(data);
-            setIsDialogOpen(true); // Open dialog explicitly
-            toast.success("Payment initiated!");
+            setIsDialogOpen(true);
+            onPaymentInitiated?.();
+            toast.success(isId ? "Pembayaran berhasil diinisiasi!" : "Payment initiated!");
         } catch (error) {
             console.error(error);
             toast.error(error instanceof Error ? error.message : "Failed to initiate payment");
@@ -222,39 +233,20 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
         }
     };
 
-    // State for Dialog
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    // Auto-open dialog REMOVED to prevent annoying popups on load
-    // Dialog will be opened manually or after successful charge initiation
-
-    // Helper to check selection
     const isSelected = (id: string) => selectedMethod?.id === id;
 
+    // State Verifikasi Pembayaran Sedang Berlangsung (Waiting Verification)
     if (isVerifying) {
-        return (
-            <div className="w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-8 shadow-xl flex flex-col items-center justify-center text-center h-fit min-h-[350px]">
-                <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-500" />
-                </div>
-                <h2 className="text-2xl font-bold text-white mb-2">Verification In Progress</h2>
-                <p className="text-zinc-400 max-w-sm mx-auto">
-                    We have received your payment proof. Our team is verifying it now. This usually takes less than 24 hours.
-                </p>
-                <div className="mt-8 p-4 bg-zinc-900 rounded-lg border border-zinc-800 text-sm text-zinc-500">
-                    Order ID: <span className="text-zinc-300 font-mono">{orderId}</span>
-                </div>
-            </div>
-        );
+        return <VerificationInProgress orderId={orderId} isId={isId} />;
     }
 
     return (
         <>
-            <div className={noCard ? "w-full flex flex-col h-fit" : "w-full bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden p-6 shadow-xl flex flex-col h-fit max-h-[800px]"}>
+            <div className={noCard ? "w-full flex flex-col h-fit" : "w-full bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden p-6 shadow-2xl flex flex-col h-fit max-h-[800px]"}>
                 {!noCard && (
                     <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
                         <Wallet className="w-5 h-5 text-lime-400" />
-                        Payment Method
+                        {isId ? "Metode Pembayaran" : "Payment Method"}
                     </h2>
                 )}
 
@@ -264,42 +256,24 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                             <div className="space-y-6">
                                 {filteredGroups.map((group) => (
                                     <div key={group.id} className="space-y-3">
-                                        <h3 className="text-xs uppercase text-zinc-500 font-bold tracking-wider pl-1 flex items-center gap-2">
-                                            <group.icon className="w-3 h-3" />
+                                        <h3 className="text-[10px] uppercase text-zinc-500 font-extrabold tracking-[0.15em] pl-1 flex items-center gap-2">
+                                            <group.icon className="w-3.5 h-3.5 text-zinc-500" />
                                             {group.label}
                                         </h3>
-                                        <div className="grid gap-2.5">
+                                        <div className="grid gap-3">
                                             {group.methods.filter(m => !m.disabled).map((method) => (
-                                                <button
+                                                <PaymentMethodItem
                                                     key={method.id}
-                                                    disabled={method.disabled}
-                                                    onClick={() => !method.disabled && setSelectedMethod({
+                                                    method={method}
+                                                    active={isSelected(method.id)}
+                                                    isId={isId}
+                                                    onSelect={() => setSelectedMethod({
                                                         type: method.type,
                                                         bank: method.type === 'bank_transfer' ? method.id : undefined,
                                                         id: method.id,
                                                         label: method.label
                                                     })}
-                                                    className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between group transform active:scale-[0.99]
-                                                    ${method.disabled ? 'opacity-50 cursor-not-allowed bg-zinc-900/40 border-zinc-900/40' : ''}
-                                                    ${isSelected(method.id)
-                                                            ? 'bg-lime-500/[0.04] border-lime-500 shadow-[0_0_15px_rgba(132,204,22,0.08)] z-10'
-                                                            : 'bg-zinc-900/40 border-white/5 hover:bg-zinc-850 hover:border-white/10'
-                                                        }`}
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-300 ${isSelected(method.id) ? 'bg-gradient-to-br from-lime-500 to-emerald-500 text-black shadow-[0_2px_8px_rgba(132,204,22,0.3)]' : 'bg-zinc-800 text-zinc-400 border border-white/5'}`}>
-                                                            {method.id.slice(0, 2).toUpperCase()}
-                                                        </div>
-                                                        <div>
-                                                            <div className={`text-sm font-semibold transition-colors duration-300 ${isSelected(method.id) ? 'text-lime-400' : 'text-zinc-200'} ${method.disabled ? 'text-zinc-600' : ''}`}>
-                                                                {method.label}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected(method.id) ? 'border-lime-500 bg-lime-500 text-black' : 'border-zinc-700 bg-zinc-900'}`}>
-                                                        {isSelected(method.id) && <CheckCircle2 className="w-3 h-3" />}
-                                                    </div>
-                                                </button>
+                                                />
                                             ))}
                                         </div>
                                     </div>
@@ -307,61 +281,52 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                             </div>
                         </ScrollArea>
 
-                        <div className="pt-4 mt-4 border-t border-zinc-900 shrink-0">
+                        {/* Tombol Utama Bayar dengan Visual Premium */}
+                        <div className="pt-5 mt-5 border-t border-zinc-800/80 shrink-0">
                             <Button
                                 onClick={handleCharge}
                                 disabled={!selectedMethod || loading}
-                                className={`w-full h-12 text-sm font-extrabold transition-all duration-300 rounded-xl cursor-pointer ${
+                                className={`w-full h-11 text-xs font-bold transition-all duration-300 rounded-xl cursor-pointer tracking-wider uppercase flex items-center justify-center gap-2 ${
                                     !selectedMethod 
-                                    ? 'bg-zinc-850 border border-white/5 text-zinc-500 cursor-not-allowed' 
-                                    : 'bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-extrabold shadow-[0_4px_20px_rgba(132,204,22,0.2)] hover:shadow-[0_4px_25px_rgba(132,204,22,0.35)] transform hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99]'
+                                    ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 cursor-not-allowed select-none opacity-60' 
+                                    : 'bg-gradient-to-r from-lime-400 via-emerald-500 to-teal-500 hover:from-lime-300 hover:via-emerald-400 hover:to-teal-400 text-zinc-950 shadow-[0_0_20px_rgba(132,204,22,0.2)] hover:shadow-[0_0_30px_rgba(132,204,22,0.4)] hover:scale-[1.01] active:scale-[0.99] font-black shadow-lg'
                                 }`}
                             >
-                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : `Bayar ${new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency }).format(amount)}`}
+                                {loading ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <>
+                                        {!selectedMethod && <Lock className="w-3.5 h-3.5" />}
+                                        {isId 
+                                            ? `Bayar ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount)}`
+                                            : `Pay ${new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount)}`
+                                        }
+                                    </>
+                                )}
                             </Button>
                         </div>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col justify-center items-center text-center space-y-4 animate-in fade-in zoom-in duration-300 min-h-[300px]">
-                        <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20 animate-pulse">
-                            <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold text-white">Payment Pending</h3>
-                            <p className="text-zinc-400 text-sm mt-1">Please complete your payment.</p>
-                        </div>
-
-                        <Button
-                            className="bg-lime-500 text-black hover:bg-lime-400 font-bold shadow-lg shadow-lime-900/20"
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            Continue to Payment
-                        </Button>
-
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-zinc-500 hover:text-white"
-                            onClick={() => setPaymentData(null)}
-                        >
-                            Cancel / Change Method
-                        </Button>
-                    </div>
+                    /* Tampilan Pembayaran Tertunda (Pending State) */
+                    <PaymentPendingState
+                        isId={isId}
+                        onContinue={() => setIsDialogOpen(true)}
+                        onCancel={() => setPaymentData(null)}
+                    />
                 )}
             </div>
 
-            {/* PAYMENT INSTRUCTIONS DIALOG */}
+            {/* DIALOG PETUNJUK PEMBAYARAN */}
             {paymentData && (
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-3xl max-h-[85vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle className="flex items-center gap-2 text-xl">
                                 <CheckCircle2 className="w-6 h-6 text-lime-400" />
-                                Payment Instructions
+                                {isId ? "Petunjuk Pembayaran" : "Payment Instructions"}
                             </DialogTitle>
                         </DialogHeader>
 
-                        {/* RENDER MODULAR COMPONENT BASED ON TYPE */}
                         {paymentData.payment_type === 'manual_transfer' ? (
                             <ManualPayment
                                 orderId={orderId}
@@ -378,7 +343,6 @@ export function PaymentSelector({ orderId, amount, paymentMetadata, allowedGroup
                                 onClose={() => setIsDialogOpen(false)}
                             />
                         )}
-
                     </DialogContent>
                 </Dialog>
             )}

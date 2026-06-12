@@ -26,7 +26,8 @@ export function CheckoutPortal({
     projectPaidAmount = 0,
     projectTotalAmount = 0,
     context,
-    orderId
+    orderId,
+    initialOrderStatus
 }: {
     estimate: ExtendedEstimate,
     bankDetails: BankDetails | undefined,
@@ -41,6 +42,7 @@ export function CheckoutPortal({
     projectTotalAmount?: number;
     context?: "SERVICE" | "CALCULATOR";
     orderId?: string | null;
+    initialOrderStatus?: string;
 }) {
     const invoiceRef = useRef<HTMLDivElement>(null);
     const { currency, rate } = useCurrency();
@@ -52,7 +54,10 @@ export function CheckoutPortal({
     const [isProcessing, setIsProcessing] = useState(false);
     const [countdown, setCountdown] = useState(5);
     const [activeOrderId, setActiveOrderId] = useState<string | null>(orderId || null);
-    const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
+    const [activeOrderStatus, setActiveOrderStatus] = useState<string>(initialOrderStatus || "pending");
+    const [isPaymentInitiated, setIsPaymentInitiated] = useState<boolean>(() => 
+        initialOrderStatus ? initialOrderStatus !== "pending" : false
+    );
 
     const serviceAddons = (isId && Array.isArray((estimate.service as unknown as Record<string, unknown>)?.addons_id) && ((estimate.service as unknown as Record<string, unknown>)?.addons_id as unknown[]).length > 0)
         ? (estimate.service as unknown as Record<string, unknown>).addons_id as ServiceAddon[]
@@ -71,6 +76,8 @@ export function CheckoutPortal({
     // Polling status transaksi di background ketika Order ID aktif terisi
     useEffect(() => {
         if (!activeOrderId || estimate.status === 'paid') return;
+        // Hanya lakukan polling jika berstatus waiting_verification ATAU pembayaran telah diinisiasi oleh user
+        if (activeOrderStatus !== 'waiting_verification' && !isPaymentInitiated) return;
 
         const interval = setInterval(async () => {
             if (document.hidden) return;
@@ -89,7 +96,7 @@ export function CheckoutPortal({
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [activeOrderId, estimate.status, router]);
+    }, [activeOrderId, estimate.status, router, activeOrderStatus, isPaymentInitiated]);
 
     // Efek untuk memantau status lunas (Selesai) guna pengalihan ke Invoice publik
     useEffect(() => {
@@ -203,6 +210,7 @@ export function CheckoutPortal({
                 <div className="lg:col-span-7">
                     <PaymentPanel 
                         estimate={estimate}
+                        onPaymentInitiated={() => setIsPaymentInitiated(true)}
                         amount={discountedAmount}
                         amountToPay={amountToPay}
                         paymentType={paymentType}

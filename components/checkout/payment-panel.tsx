@@ -31,7 +31,8 @@ export function PaymentPanel({
     countdown,
     selectedAddons = [],
     onToggleAddon,
-    agencySettings
+    agencySettings,
+    onPaymentInitiated
 }: {
     estimate: ExtendedEstimate,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
@@ -53,7 +54,8 @@ export function PaymentPanel({
     countdown: number,
     selectedAddons?: ServiceAddon[],
     onToggleAddon?: (addon: ServiceAddon) => void,
-    agencySettings?: any
+    agencySettings?: any,
+    onPaymentInitiated?: () => void
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
@@ -297,7 +299,7 @@ export function PaymentPanel({
                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
                             {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
                         </span>
-                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 bg-zinc-950/30 border border-white/5 p-4 rounded-2xl">
+                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 bg-zinc-900/20 backdrop-blur-xl border border-zinc-800/80 p-5 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                             <PaymentSelector
                                 orderId={activeOrderId}
                                 amount={amountToPay}
@@ -309,6 +311,7 @@ export function PaymentPanel({
                                 hasActiveGateway={hasActiveGateway}
                                 gatewayStatus={gatewayStatus}
                                 noCard={true}
+                                onPaymentInitiated={onPaymentInitiated}
                             />
                         </div>
                     </div>
