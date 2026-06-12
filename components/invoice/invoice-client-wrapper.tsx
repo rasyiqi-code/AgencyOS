@@ -164,11 +164,11 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
             {/* Right Column: Payment Sidebar */}
             <div className="w-full xl:w-[400px] xl:sticky xl:top-24 space-y-6 order-1 xl:order-2">
                 {/* Status Card */}
-                <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
-                    <div className="flex justify-between items-start mb-4">
+                <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-5 space-y-4">
+                    <div className="flex justify-between items-start">
                         <div>
-                            <h2 className="text-lg font-bold text-white">{t('status')}</h2>
-                            <p className="text-zinc-400 text-xs">#{order.id}</p>
+                            <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t('status')}</h2>
+                            <p className="text-zinc-500 font-mono text-xs mt-0.5">#{order.id}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
@@ -183,49 +183,47 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                     </div>
 
                     {!isPaid && (hasActiveGateway || bankDetails) && (
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center text-sm p-3 bg-white/5 rounded-lg border border-white/5">
-                                <span className="text-zinc-300">{tc('totalToPay')}</span>
-                                <span className="text-xl font-bold text-white">
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-center text-xs p-3.5 bg-zinc-950/80 rounded-xl border border-white/5">
+                                <span className="text-zinc-400">{tc('totalToPay')}</span>
+                                <span className="text-lg font-mono font-bold text-white">
                                     {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
                                 </span>
                             </div>
 
                             {!hasActiveGateway && bankDetails && (
-                                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                                <div className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/10">
                                     <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
                                         <AlertTriangle className="w-4 h-4" />
                                         {tc('manualPayment')}
                                     </p>
-                                    <p className="text-[10px] text-amber-200/70 leading-relaxed">
+                                    <p className="text-[10px] text-amber-200/60 leading-relaxed">
                                         {tc('manualDesc')}
                                     </p>
                                 </div>
                             )}
 
-                            <p className="text-xs text-zinc-500">
+                            <p className="text-[11px] text-zinc-500 leading-normal">
                                 {t('completePaymentProject')}
                             </p>
                         </div>
                     )}
 
                     {!isPaid && !hasActiveGateway && !bankDetails && (
-                        <div className="mt-4 p-4 rounded-xl bg-zinc-800/50 border border-white/5 text-center">
+                        <div className="p-4 rounded-xl bg-zinc-950/50 border border-white/5 text-center">
                             <p className="text-xs text-zinc-500">{t('paymentMethodsDisabled') || "Online payment is currently unavailable for this invoice."}</p>
                         </div>
                     )}
 
                     {isPaid && (
-                        <div className="text-center py-4 space-y-4">
-                            <div>
-                                <div className="text-emerald-400 font-medium mb-2">{t('paymentReceived')}</div>
-                                <p className="text-xs text-zinc-500">{t('thankYouPaid')}</p>
-                            </div>
+                        <div className="text-center py-2 space-y-2">
+                            <div className="text-emerald-400 font-bold text-sm tracking-wide">{t('paymentReceived')}</div>
+                            <p className="text-xs text-zinc-500">{t('thankYouPaid')}</p>
                         </div>
                     )}
 
-                    <div className="mt-4 pt-4 border-t border-white/5 text-center">
-                        <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex items-center justify-center gap-1">
+                    <div className="pt-3 border-t border-white/5 text-center">
+                        <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-white transition-colors flex items-center justify-center gap-1">
                             {t('needHelp')}
                         </a>
                     </div>
@@ -264,7 +262,6 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         amount={displayAmount}
                         paymentMetadata={order.paymentMetadata}
                         currency={effectiveCurrency as 'USD' | 'IDR'}
-                        // Allow all groups if IDR, filter if USD (handled inside widget)
                         allowedGroups={undefined}
                         bankDetails={bankDetails}
                         orderStatus={orderStatus}
@@ -272,6 +269,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         contactTele={agencySettings?.telegram}
                         hasActiveGateway={hasActiveGateway}
                         gatewayStatus={gatewayStatus}
+                        noCard={true}
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
                         onPaymentClosed={() => setIsPaymentInitiated(false)}
                         onPaymentStatusChange={(status) => setOrderStatus(status)}

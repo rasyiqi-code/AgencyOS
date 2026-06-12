@@ -13,7 +13,7 @@ interface PaymentPendingStateProps {
 
 export function PaymentPendingState({ isId, onContinue, onCancel, hasUploadedProof = false }: PaymentPendingStateProps) {
     return (
-        <div className="flex-1 flex flex-col justify-center items-center text-center space-y-6 p-6 py-10 rounded-2xl bg-zinc-900/20 border border-zinc-800/60 backdrop-blur-md animate-in fade-in zoom-in duration-300 min-h-[320px]">
+        <div className="flex-1 flex flex-col justify-center items-center text-center space-y-6 p-6 py-10 rounded-2xl bg-zinc-950/40 border border-white/5 animate-in fade-in zoom-in duration-300 min-h-[320px]">
             <div className="relative">
                 <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
                     <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
