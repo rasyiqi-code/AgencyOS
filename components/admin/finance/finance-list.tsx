@@ -233,7 +233,15 @@ function FinanceListItem({ data }: { data: FinanceData }) {
     const copyId = (e: React.MouseEvent) => {
         e.stopPropagation();
         navigator.clipboard.writeText(data.id);
-        toast.success("Order ID copied");
+        toast.success("System ID copied");
+    };
+
+    const copyShortId = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const parts = data.id.split("-");
+        const shortId = parts.length > 1 ? `CM${parts[parts.length - 1]}` : data.id.slice(-4).toUpperCase();
+        navigator.clipboard.writeText(shortId);
+        toast.success(`Invoice ID #${shortId} copied`);
     };
 
     return (
@@ -284,8 +292,11 @@ function FinanceListItem({ data }: { data: FinanceData }) {
                                     <span className="truncate max-w-[80px]">{data.project?.clientName?.split(' ')[0] || "Client"}</span>
                                 </span>
                                 <span className="hidden sm:inline">•</span>
-                                <span className="font-mono hover:text-zinc-300 cursor-pointer transition-colors" onClick={copyId}>
-                                    #{data.id.slice(-4).toUpperCase()}
+                                <span className="font-mono hover:text-zinc-300 cursor-pointer transition-colors" onClick={copyShortId}>
+                                    #{(() => {
+                                        const parts = data.id.split("-");
+                                        return `CM${parts[parts.length - 1]}`;
+                                    })()}
                                 </span>
                                 <span>•</span>
                                 <span>{new Date(data.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>

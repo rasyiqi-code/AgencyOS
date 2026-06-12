@@ -223,7 +223,15 @@ function BillingListItem({ order }: { order: BillingOrder }) {
     const copyId = (e: React.MouseEvent) => {
         e.stopPropagation();
         navigator.clipboard.writeText(order.id);
-        toast.success("Invoice ID copied");
+        toast.success("System ID copied");
+    };
+
+    const copyShortId = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const parts = order.id.split("-");
+        const shortId = parts.length > 1 ? `CM${parts[parts.length - 1]}` : order.id.slice(-8).toUpperCase();
+        navigator.clipboard.writeText(shortId);
+        toast.success(`Invoice ID #${shortId} copied`);
     };
 
     return (
@@ -248,10 +256,13 @@ function BillingListItem({ order }: { order: BillingOrder }) {
                             <div className="flex items-center gap-2 text-[10px] text-zinc-500">
                                 <span
                                     className="font-mono hover:text-zinc-300 cursor-pointer flex items-center gap-1 transition-colors hover:underline"
-                                    onClick={copyId}
+                                    onClick={copyShortId}
                                     title="Copy ID"
                                 >
-                                    #{order.id.slice(-8).toUpperCase()}
+                                    #{(() => {
+                                        const parts = order.id.split("-");
+                                        return `CM${parts[parts.length - 1]}`;
+                                    })()}
                                 </span>
                                 <span className="hidden xs:inline">•</span>
                                 <span className="flex items-center gap-1">
