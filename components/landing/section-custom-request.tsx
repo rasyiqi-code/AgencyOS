@@ -19,10 +19,7 @@ export function SectionCustomRequest() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(254,215,0,0.03),transparent_70%)] pointer-events-none" />
             <div className="container mx-auto px-4 relative z-10">
                 <ScrollAnimationWrapper>
-                    <div className="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/5 shadow-2xl text-center relative overflow-hidden group">
-                        {/* Decorative elements */}
-                        <div className="absolute -top-24 -right-24 w-40 h-40 bg-brand-yellow/5 blur-[80px] group-hover:bg-brand-yellow/10 transition-colors duration-700" />
-                        
+                    <div className="max-w-3xl mx-auto text-center relative">
                         <div className="relative z-10">
                             <h2 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">
                                 {t("title")}
