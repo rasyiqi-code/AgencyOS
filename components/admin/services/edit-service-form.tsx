@@ -378,11 +378,7 @@ export function EditServiceForm({
                 {/* Right Column: Configuration & Actions */}
                 <div className="lg:col-span-1" key={`pricing-${generationKey}`}>
                     <div className="sticky top-8 space-y-6">
-                        {/* Visual Asset - Shared */}
-                        <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden p-6">
-                            <h3 className="text-sm font-semibold text-white mb-4">{tAdmin("thumbnail")}</h3>
-                            <ServiceImageUpload defaultValue={service.image || undefined} />
-                        </div>
+
 
                         <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
                             <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
