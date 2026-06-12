@@ -27,10 +27,10 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
             <div className="absolute -bottom-32 left-16 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="space-y-8 relative z-10">
-                {/* Back to dashboard button */}
+                {/* Back to button */}
                 <div>
-                    <a 
-                        href="/client-dashboard" 
+                    <a
+                        href="/client-dashboard"
                         className="inline-flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-wider group cursor-pointer"
                     >
                         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
@@ -44,11 +44,11 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
                         <ShieldCheck className="w-3 h-3" />
                         Verified Quote
                     </div>
-                    
+
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-400">
                         {estimate.title}
                     </h1>
-                    
+
                     {(() => {
                         // Bersihkan summary dari marker addon agar tidak tampil mentah
                         const cleanSummary = estimate.summary
