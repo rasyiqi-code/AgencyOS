@@ -26,6 +26,7 @@ export async function createService(formData: FormData) {
     const description = formData.get("description")?.toString();
     const description_id = formData.get("description_id")?.toString();
     const priceRaw = formData.get("price")?.toString();
+    const originalPriceRaw = formData.get("originalPrice")?.toString();
     const currency = formData.get("currency")?.toString() || "USD";
     const interval = formData.get("interval")?.toString() || "one_time";
     const featuresRaw = formData.get("features")?.toString() || "";
@@ -80,6 +81,7 @@ export async function createService(formData: FormData) {
             description,
             description_id,
             price,
+            originalPrice: originalPriceRaw ? parseFloat(originalPriceRaw) : null,
             priceType: formData.get("priceType")?.toString() || "FIXED",
             currency,
             interval,
@@ -122,6 +124,7 @@ export async function updateService(serviceId: string, formData: FormData) {
     const description = formData.get("description")?.toString();
     const description_id = formData.get("description_id")?.toString();
     const priceRaw = formData.get("price")?.toString();
+    const originalPriceRaw = formData.get("originalPrice")?.toString();
     const priceType = formData.get("priceType")?.toString() || "FIXED";
     const currency = formData.get("currency")?.toString() || "USD";
     const interval = formData.get("interval")?.toString() || "one_time";
@@ -151,6 +154,7 @@ export async function updateService(serviceId: string, formData: FormData) {
         description,
         description_id,
         price,
+        originalPrice: originalPriceRaw ? parseFloat(originalPriceRaw) : null,
         priceType,
         currency,
         interval,

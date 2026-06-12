@@ -41,7 +41,7 @@ export function ServiceHero({ service, displayTitle, intervalLabel, selectedAddo
                             </span>
                         )}
                         <span className="text-sm md:text-lg text-zinc-500 line-through tracking-tight font-medium select-none self-center mr-1">
-                            <PriceDisplay amount={service.price * 2} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                            <PriceDisplay amount={service.originalPrice || (service.price * 2)} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                         </span>
                         <div className="text-xl md:text-3xl lg:text-4xl font-black text-brand-yellow tracking-tighter">
                             <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />

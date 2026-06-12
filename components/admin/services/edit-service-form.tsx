@@ -28,6 +28,7 @@ export interface ServiceData {
     description: string;
     description_id?: string | null;
     price: number;
+    originalPrice?: number | null;
     priceType?: string;
     currency?: string;
     interval: string;
@@ -466,6 +467,21 @@ export function EditServiceForm({
                                             className="flex-1 bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 text-lg font-semibold"
                                         />
                                     </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("originalPrice")}</label>
+                                     <Input
+                                         name="originalPrice"
+                                         type="number"
+                                         step="0.01"
+                                         defaultValue={generatedData?.recommended_price ? (generatedData.recommended_price * 2) : (service.originalPrice ?? undefined)}
+                                         placeholder="0.00"
+                                         className="w-full bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 text-sm font-semibold"
+                                     />
+                                     <span className="text-[10px] text-zinc-500 block leading-normal">
+                                         {tAdmin("originalPriceHelp")}
+                                     </span>
                                 </div>
 
                                 <div className="space-y-2">
