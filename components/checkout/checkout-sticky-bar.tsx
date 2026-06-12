@@ -40,26 +40,28 @@ export function CheckoutStickyBar({
                 {/* Sisi Kiri: Rincian Spesifikasi Proyek */}
                 <div className="flex items-center justify-between md:justify-start gap-x-5 gap-y-1.5 w-full md:w-auto border-b border-white/5 pb-3 md:pb-0 md:border-b-0">
                     <div className="flex flex-col">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Project Spec
                         </span>
                         <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
                             <Layers className="w-3.5 h-3.5 text-brand-yellow" />
-                            {isId ? "1 Jasa Estimasi" : "1 Estimate Service"}
+                            <span className="hidden sm:inline">{isId ? "1 Jasa Estimasi" : "1 Estimate Service"}</span>
+                            <span className="sm:hidden">{isId ? "1 Jasa" : "1 Service"}</span>
                         </span>
                     </div>
 
                     <div className="flex flex-col border-l border-white/10 pl-5">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Add-ons
                         </span>
                         <span className="text-xs font-extrabold text-zinc-300">
-                            {selectedAddonsCount} {isId ? "Terpilih" : "Selected"}
+                            <span className="hidden sm:inline">{selectedAddonsCount} {isId ? "Terpilih" : "Selected"}</span>
+                            <span className="sm:hidden">{selectedAddonsCount} Add-on</span>
                         </span>
                     </div>
 
                     <div className="flex flex-col border-l border-white/10 pl-5 ml-auto md:ml-0">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Price Plan
                         </span>
                         <span className="text-xs font-mono font-bold text-brand-yellow">
