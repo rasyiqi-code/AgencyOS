@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Service, AddonType } from "./types";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { PurchaseButton } from "@/components/store/purchase-button";
-import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface StickyCTAProps {

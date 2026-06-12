@@ -8,7 +8,6 @@ import { updateService } from "@/app/actions/services";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
-import { ServiceImageUpload } from "@/components/admin/services/image-upload";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 import { Button } from "@/components/ui/button";
 import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2, Plus, Link as LinkIcon } from "lucide-react";
