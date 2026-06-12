@@ -52,6 +52,10 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
         if (!prompt.trim()) return;
         setIsGenerating(true);
         try {
+            // Grab current form inputs so we don't wipe them on re-mount
+            const formElement = document.querySelector("form");
+            const currentForm = formElement ? new FormData(formElement) : null;
+
             const res = await fetch("/api/genkit/generate-service", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,11 +64,27 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
             const result = await res.json();
 
             if (result.success && result.data) {
-                setGeneratedData(result.data ?? null);
+                const mergedData = {
+                    title: currentForm?.get("title")?.toString() || "",
+                    description: currentForm?.get("description")?.toString() || "",
+                    title_id: currentForm?.get("title_id")?.toString() || "",
+                    description_id: currentForm?.get("description_id")?.toString() || "",
+                    price: currentForm?.get("price") ? parseFloat(currentForm.get("price")!.toString()) : undefined,
+                    currency: currentForm?.get("currency")?.toString() || "USD",
+                    category: currentForm?.get("category")?.toString() || "Uncategorized",
+                    visibility: currentForm?.get("visibility")?.toString() || "PUBLIC",
+                    ...result.data
+                };
+
+                if (result.data.slug) setSlug(result.data.slug);
+                if (result.data.priceType) setPriceType(result.data.priceType);
+                if (result.data.interval) setInterval(result.data.interval);
+
+                setGeneratedData(mergedData);
                 setGenerationKey(prev => prev + 1);
                 toast.success(tAdmin("aiDraftedSuccess"));
             } else {
-                toast.error(tAdmin("aiFail"));
+                toast.error(result.error || tAdmin("aiFail"));
             }
         } catch (error) {
             console.error("AI Generation error:", error);

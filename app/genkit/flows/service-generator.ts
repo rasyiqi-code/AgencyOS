@@ -15,12 +15,7 @@ const serviceOutputSchema = z.object({
     interval: z.enum(['one_time', 'monthly', 'yearly']),
     addons: z.array(z.object({
         name: z.string(),
-        price: z.number(),
-        interval: z.enum(['one_time', 'monthly', 'yearly']),
-        currency: z.enum(['USD', 'IDR'])
-    })),
-    addons_id: z.array(z.object({
-        name: z.string(),
+        name_id: z.string(),
         price: z.number(),
         interval: z.enum(['one_time', 'monthly', 'yearly']),
         currency: z.enum(['USD', 'IDR'])
@@ -36,6 +31,11 @@ export const serviceGeneratorFlow = ai.defineFlow(
     async (prompt) => {
         const { apiKey, model } = await getActiveAIConfig();
 
+        // Sanitize prompt to prevent basic prompt injection
+        const sanitizedPrompt = prompt
+            .replace(/[\\"\n\r]/g, ' ')
+            .trim();
+
         const { output } = await ai.generate({
             model: `googleai/${model}`,
             config: { apiKey },
@@ -43,7 +43,7 @@ export const serviceGeneratorFlow = ai.defineFlow(
             You are an expert product manager and copywriter for a software development agency.
             Your task is to generate a comprehensive service offering based on a rough description provided by the user.
 
-            Input Description: "${prompt}"
+            Input Description: "${sanitizedPrompt}"
 
             REQUIREMENTS:
             1. Language: Generate content in TWO languages: English and Indonesian (Bahasa Indonesia).
@@ -71,14 +71,13 @@ export const serviceGeneratorFlow = ai.defineFlow(
                   * Pilihan interval ("one_time", "monthly", "yearly") dapat digunakan untuk kedua jenis priceType ("FIXED" dan "STARTING_AT") sesuai kebutuhan layanan tersebut.
                   * Layanan bertipe "FIXED" maupun "STARTING_AT" dapat memiliki add-ons. Silakan buat 2-4 opsi add-ons yang logis dan memberikan nilai tambah.
                 - recommended_price: Generate a realistic base price matching the selected currency.
-             6. Add-ons ("addons" & "addons_id"):
+             6. Add-ons ("addons"):
                 - Buat 2-4 add-ons (upsell options) yang logis dan bernilai tinggi untuk layanan tersebut.
                 - LOGIKA HARGA ADD-ON: 
                   * Harga add-on harus realistis dan proporsional dengan harga dasar (recommended_price).
                   * Biasanya, harga add-on berkisar antara 5% hingga 25% dari "recommended_price".
                   * Jangan membuat add-on yang lebih mahal dari 50% harga dasar kecuali jika itu merupakan peningkatan fungsionalitas utama.
-                - Setiap add-on memiliki properti: name, price, interval (one_time/monthly/yearly), dan currency (HARUS sama dengan mata uang utama layanan).
-                - "addons_id" HARUS berupa terjemahan Bahasa Indonesia dari daftar add-ons yang sama persis.
+                - Setiap add-on memiliki properti: name (terjemahan Inggris), name_id (terjemahan Bahasa Indonesia), price, interval (one_time/monthly/yearly), dan currency (HARUS sama dengan mata uang utama layanan).
 
             CRITICAL: All "_id" fields must contain human-readable Indonesian text.
             Return strictly valid JSON matching the schema.

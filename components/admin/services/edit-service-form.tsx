@@ -83,6 +83,10 @@ export function EditServiceForm({
 
         setIsGenerating(true);
         try {
+            // Grab current form inputs so we don't wipe them on re-mount
+            const formElement = document.querySelector("form");
+            const currentForm = formElement ? new FormData(formElement) : null;
+
             const res = await fetch("/api/genkit/generate-service", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -90,15 +94,34 @@ export function EditServiceForm({
             });
             const result = await res.json();
 
-            if (result.success) {
-                setGeneratedData(result.data ?? null);
+            if (result.success && result.data) {
+                const mergedData = {
+                    ...service,
+                    title: currentForm?.get("title")?.toString() || service.title,
+                    description: currentForm?.get("description")?.toString() || service.description,
+                    title_id: currentForm?.get("title_id")?.toString() || service.title_id,
+                    description_id: currentForm?.get("description_id")?.toString() || service.description_id,
+                    price: currentForm?.get("price") ? parseFloat(currentForm.get("price")!.toString()) : service.price,
+                    currency: currentForm?.get("currency")?.toString() || service.currency,
+                    category: currentForm?.get("category")?.toString() || service.category,
+                    visibility: currentForm?.get("visibility")?.toString() || service.visibility,
+                    ...result.data
+                };
+
+                if (result.data.slug) setSlug(result.data.slug);
+                if (result.data.priceType) setPriceType(result.data.priceType);
+                if (result.data.interval) setInterval(result.data.interval);
+
+                setGeneratedData(mergedData);
                 setGenerationKey(prev => prev + 1);
                 toast.success(tAdmin("aiDraftedSuccess"));
             } else {
                 toast.error(result.error || tAdmin("aiFail"));
             }
-        } catch {
+        } catch (error) {
+            console.error("AI Generation error:", error);
             toast.error(tAdmin("aiError"));
+        } finally {
             setIsGenerating(false);
         }
     }
