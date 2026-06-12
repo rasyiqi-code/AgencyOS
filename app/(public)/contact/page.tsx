@@ -86,7 +86,7 @@ export default async function ContactPage() {
     // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct Prisma query
     // 🎯 Why: Prevents redundant DB queries for global settings across the component tree during SSR (N+1 query problem).
     // 📊 Impact: Faster SSR and reduced database load.
-    const settings = await getSystemSettings(["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "CONTACT_HOURS"]);
+    const settings = await getSystemSettings(["CONTACT_EMAIL", "CONTACT_PHONE", "CONTACT_ADDRESS", "CONTACT_HOURS", "AGENCY_NAME"]);
  
     const info = {
         email: settings.find(s => s.key === "CONTACT_EMAIL")?.value || null,
@@ -94,6 +94,7 @@ export default async function ContactPage() {
         address: settings.find(s => s.key === "CONTACT_ADDRESS")?.value || null,
         hours: settings.find(s => s.key === "CONTACT_HOURS")?.value || null,
     };
+    const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
  
     // Fallbacks
     const email = info.email || "hello@crediblemark.com";
@@ -101,8 +102,35 @@ export default async function ContactPage() {
     const address = info.address || "Level 39, Marina Bay Financial Centre\n10 Marina Blvd, Singapore 018983";
     const hours = info.hours || "(Mon-Fri, 9am - 6pm SGT)";
  
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const locale = await getLocale();
+
     return (
         <div className="min-h-screen bg-black selection:bg-blue-500/30">
+            {/* ContactPage JSON-LD untuk E-E-A-T dan Local SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ContactPage",
+                        "name": `Contact ${agencyName}`,
+                        "url": `${baseUrl}/${locale}/contact`,
+                        "mainEntity": {
+                            "@type": "Organization",
+                            "name": agencyName,
+                            "email": email,
+                            "telephone": phone,
+                            "address": address ? {
+                                "@type": "PostalAddress",
+                                "streetAddress": address,
+                                "addressCountry": "ID"
+                            } : undefined,
+                            "url": baseUrl,
+                        }
+                    })
+                }}
+            />
             <div className="container mx-auto px-4 py-24 sm:py-32">
                 {/* Back Link */}
                 <div className="mb-8">

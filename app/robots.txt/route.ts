@@ -8,6 +8,9 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
+Disallow: /handler/
+Disallow: /verify/
+Disallow: /client-dashboard
 
 User-agent: GPTBot
 Allow: /

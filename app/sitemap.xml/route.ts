@@ -52,7 +52,7 @@ export async function GET(req: Request) {
         "/portfolio",
         "/contact",
         "/price-calculator",
-        "/submit-testimonial",
+        // "/submit-testimonial" dihapus — halaman ini butuh login, tidak perlu diindex
         "/promosi",
         "/privacy",
         "/terms",
@@ -123,11 +123,13 @@ export async function GET(req: Request) {
             xml += `    <changefreq>${baseRoute.changeFrequency}</changefreq>\n`;
             xml += `    <priority>${baseRoute.priority}</priority>\n`;
             
-            // Tambahkan Alternates Lang
+            // Tambahkan Alternates Lang (termasuk x-default untuk user tanpa preferensi bahasa)
             for (const altLocale of locales) {
                 const altUrl = `${baseUrl}/${altLocale}${baseRoute.route}`;
                 xml += `    <xhtml:link rel="alternate" hreflang="${altLocale}" href="${altUrl}"/>\n`;
             }
+            // x-default menunjuk ke versi EN sebagai fallback universal
+            xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/en${baseRoute.route}"/>\n`;
             
             xml += `  </url>\n`;
         }

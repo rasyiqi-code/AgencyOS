@@ -60,6 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
         languages: {
           'en': `${baseUrl}/en`,
           'id': `${baseUrl}/id`,
+          'x-default': `${baseUrl}/en`,
         },
       },
       icons: {
@@ -138,11 +139,12 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Crediblemark",
+              // Gunakan agencyName dinamis dari settings agar konsisten dengan branding
+              name: agencyName || "AgencyOS",
               url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
               potentialAction: {
                 "@type": "SearchAction",
-                target: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/products?q={search_term_string}`,
+                target: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/services?q={search_term_string}`,
                 "query-input": "required name=search_term_string",
               },
             }),

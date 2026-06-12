@@ -46,8 +46,10 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
         openGraph: {
             title: displayTitle,
             description: cleanDescription,
-            images: service.image ? [{ url: service.image }] : undefined,
+            images: service.image ? [{ url: service.image, width: 1200, height: 630, alt: displayTitle }] : undefined,
             type: "website",
+            locale: isId ? 'id_ID' : 'en_US',
+            alternateLocale: isId ? ['en_US'] : ['id_ID'],
         },
         twitter: {
             card: "summary_large_image",
