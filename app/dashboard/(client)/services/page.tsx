@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { ServiceListItem } from "@/components/dashboard/services/service-list-item";
-import { Service as DashboardService } from "@/components/dashboard/services/service-modal-content";
+import { ServiceListItem, type Service as DashboardService } from "@/components/dashboard/services/service-list-item";
 import { cookies } from "next/headers";
 import { Service } from "@prisma/client";
 
