@@ -185,6 +185,37 @@ export default async function ServicesPage() {
                                                         </div>
                                                     </div>
 
+                                                    {/* Tampilan daftar addon service */}
+                                                    {(() => {
+                                                        const addons = (isId ? service.addons_id : service.addons) as Array<{ name: string; description?: string; price: number; currency?: string; interval?: string }> | null;
+                                                        if (!addons || addons.length === 0) return null;
+                                                        return (
+                                                            <div className="mt-3 pt-3 border-t border-zinc-800/40">
+                                                                <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-semibold block mb-2">
+                                                                    {isId ? 'Add-on Tersedia' : 'Available Add-ons'}
+                                                                </span>
+                                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                                                    {addons.map((addon, idx) => (
+                                                                        <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-zinc-900/50 border border-zinc-800/30">
+                                                                            <Plus className="w-3 h-3 text-brand-yellow mt-0.5 shrink-0" />
+                                                                            <div className="min-w-0">
+                                                                                <span className="text-xs text-zinc-300 font-medium block truncate">{addon.name}</span>
+                                                                                {addon.description && (
+                                                                                    <span className="text-[10px] text-zinc-600 block truncate">{addon.description}</span>
+                                                                                )}
+                                                                                <span className="text-[10px] text-brand-yellow font-mono font-bold">
+                                                                                    <PriceDisplay amount={addon.price} baseCurrency={(addon.currency as 'USD' | 'IDR') || service.currency as 'USD' | 'IDR' || 'USD'} />
+                                                                                    {addon.interval && addon.interval !== 'one_time' && (
+                                                                                        <span className="text-zinc-600 ml-0.5">/{addon.interval === 'monthly' ? (isId ? 'bln' : 'mo') : (isId ? 'thn' : 'yr')}</span>
+                                                                                    )}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })()}
 
                                                 </div>
                                             </div>
