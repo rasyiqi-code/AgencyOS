@@ -783,5 +783,21 @@
         "successTitle": "Berhasil!",
         "successDesc": "Terima kasih telah bergabung.",
         "clickOutside": "Klik di luar untuk menutup"
+    },
+    "Included": {
+        "title": "Semua Termasuk, Sejak Hari Pertama.",
+        "subtitle": "{brand} menghadirkan fondasi lengkap kelas enterprise — bukan template seadanya yang harus Anda tambal sendiri.",
+        "f1": "Responsif Mobile-First",
+        "f1Desc": "Setiap piksel disempurnakan di perangkat apa pun. Produk Anda berfungsi tanpa cela di ponsel, tablet, dan desktop — tanpa kompromi.",
+        "f2": "Dioptimalkan untuk SEO & Performa",
+        "f2Desc": "Dirancang agar mudah ditemukan. Waktu pemuatan cepat, data terstruktur, dan markup bersih agar Google memberikan peringkat lebih tinggi pada produk Anda.",
+        "f3": "Keamanan Kelas Enterprise",
+        "f3Desc": "SSL, pembatasan laju (rate limiting), sanitasi input, dan standar OWASP diterapkan sejak awal. Keamanan bukan sekadar tambahan di akhir.",
+        "f4": "UI/UX Piksel Sempurna",
+        "f4Desc": "Antarmuka yang menghasilkan konversi. Setiap layar dirancang untuk mengarahkan pengguna melakukan tindakan yang menumbuhkan bisnis Anda.",
+        "f5": "Dokumentasi Lengkap",
+        "f5Desc": "Dokumen serah terima yang komprehensif, referensi API, dan diagram arsitektur. Tim Anda dapat mengambil alih tugas dengan percaya diri.",
+        "f6": "Dukungan Pasca-Peluncuran",
+        "f6Desc": "Masa garansi 90 hari untuk perbaikan bug. Kami tidak menghilang setelah pengiriman — kami mendampingi Anda hingga sistem stabil."
     }
 }

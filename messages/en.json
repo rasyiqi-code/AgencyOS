@@ -783,5 +783,21 @@
         "successTitle": "Success!",
         "successDesc": "Thank you for joining us.",
         "clickOutside": "Click outside to dismiss"
+    },
+    "Included": {
+        "title": "Everything Included, Right From Day One.",
+        "subtitle": "{brand} delivers a complete, enterprise-grade foundation — not a barebones template you need to patch together.",
+        "f1": "Mobile-First Responsive",
+        "f1Desc": "Every pixel perfected on any device. Your product works flawlessly on phone, tablet, and desktop — zero compromise.",
+        "f2": "SEO & Performance Optimized",
+        "f2Desc": "Built for discoverability. Fast load times, structured data, and clean markup so Google ranks your product higher.",
+        "f3": "Enterprise-Grade Security",
+        "f3Desc": "SSL, rate limiting, input sanitization, and OWASP standards baked in from the start. No security as an afterthought.",
+        "f4": "Pixel-Perfect UI/UX",
+        "f4Desc": "Interfaces that convert. Every screen is crafted to guide users toward actions that grow your business.",
+        "f5": "Full Documentation",
+        "f5Desc": "Comprehensive handoff docs, API references, and architecture diagrams. Your team can take over with confidence.",
+        "f6": "Post-Launch Support",
+        "f6Desc": "90-day warranty period for bug fixes. We don't disappear after delivery — we stay until your system is stable."
     }
 }
