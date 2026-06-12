@@ -1,7 +1,7 @@
 "use client";
 
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Check, Star, ArrowLeft, ShieldCheck, Flame } from "lucide-react";
+import { Check, ArrowLeft, ShieldCheck, Flame } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 interface ProductShowcaseProps {
@@ -83,31 +83,7 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductSh
 
             </div>
 
-            {/* Showcase Footer (Rating & Payment Methods) */}
-            <div className="space-y-4 pt-6 border-t border-white/5 relative z-10">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    {/* Rating Trustpilot */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-0.5 text-amber-400">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                            ))}
-                        </div>
-                        <span className="text-xs font-bold text-zinc-400">
-                            4.9/5 {isId ? "Rating Kepuasan Klien" : "Client Satisfaction Rating"}
-                        </span>
-                    </div>
 
-                    {/* Payment Logos */}
-                    <div className="flex items-center gap-2 opacity-30">
-                        <span className="text-[9px] uppercase tracking-wider font-bold text-zinc-500 mr-1">Payments</span>
-                        <div className="px-1.5 py-0.5 border border-white/10 rounded font-mono text-[8px] font-bold">VISA</div>
-                        <div className="px-1.5 py-0.5 border border-white/10 rounded font-mono text-[8px] font-bold">MC</div>
-                        <div className="px-1.5 py-0.5 border border-white/10 rounded font-mono text-[8px] font-bold">GPAY</div>
-                        <div className="px-1.5 py-0.5 border border-white/10 rounded font-mono text-[8px] font-bold">APPLE PAY</div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }
