@@ -102,13 +102,10 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
 
             <div className="container mx-auto px-4 py-16 sm:py-24 relative z-10">
                 <div className="mb-10 text-center max-w-3xl mx-auto">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-4 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
                         <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-brand-yellow animate-pulse" />
                         {pageTitle || st("title")}
                     </h1>
-                    <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto px-4">
-                        {pageSubtitle || st("subtitle")}
-                    </p>
                 </div>
 
                 {/* Bilah Pencarian Jasa Premium */}
