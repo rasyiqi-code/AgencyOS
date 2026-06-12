@@ -22,7 +22,8 @@ import {
     Rocket,
     LifeBuoy,
     Receipt,
-    Search
+    Search,
+    MessageSquarePlus
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -67,6 +68,7 @@ export function DashboardHeader({
     const qQuery = searchParams.get("q") || "";
     const isId = pathname.startsWith("/id");
     const isMissionsPage = cleanPath === "/dashboard/missions";
+    const isSupportPage = cleanPath === "/dashboard/support";
  
     // Periksa apakah kita tidak berada di halaman utama dashboard atau halaman utama admin
     const showBackButton = cleanPath !== "/dashboard" && cleanPath !== "/admin";
@@ -317,6 +319,16 @@ export function DashboardHeader({
                     <Link href="/price-calculator" className="mr-1 sm:mr-2">
                         <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center gap-1">
                             <span>{isId ? '+ Misi Baru' : '+ New Mission'}</span>
+                        </Button>
+                    </Link>
+                )}
+
+                {/* Tombol Buat Tiket Baru untuk Klien di Header */}
+                {isSupportPage && (
+                    <Link href="/dashboard/support/new" className="mr-1 sm:mr-2">
+                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center gap-1.5">
+                            <MessageSquarePlus className="w-3.5 h-3.5" />
+                            <span>{isId ? 'Buat Tiket' : 'Create Ticket'}</span>
                         </Button>
                     </Link>
                 )}
