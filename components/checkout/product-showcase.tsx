@@ -26,7 +26,7 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
     const backUrl = serviceSlug ? `/services/${serviceSlug}` : "/client-dashboard";
 
     return (
-        <div className="space-y-8 flex flex-col justify-between h-full text-white px-0 pt-2 pb-6 sm:p-8 sm:pl-0 lg:pr-12 lg:py-4 relative overflow-hidden bg-transparent">
+        <div className="space-y-8 flex flex-col justify-between h-full text-white px-0 pt-0 pb-6 sm:p-8 sm:pl-0 lg:pr-12 lg:py-4 relative overflow-hidden bg-transparent">
             {/* Background glow effects */}
             <div className="absolute -top-32 -left-32 w-64 h-64 bg-brand-yellow/5 rounded-full blur-3xl pointer-events-none hidden sm:block" />
             <div className="absolute -bottom-32 left-16 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none hidden sm:block" />
