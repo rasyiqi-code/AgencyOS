@@ -639,7 +639,13 @@
         "everythingToSucceed": "Semua yang Anda butuhkan untuk sukses",
         "premiumStandard": "Hasil kerja kualitas premium disertakan sebagai standar dalam paket ini.",
         "trustedBy": "Dipercaya oleh {count}+ Klien Premium",
-        "defaultTrusted": "150+ Klien Mempercayai layanan ini"
+        "defaultTrusted": "150+ Klien Mempercayai layanan ini",
+        "f1": "100% Hak Milik Penuh",
+        "f2": "Sesi Strategi 1-on-1",
+        "f3": "Expert Berdedikasi",
+        "f4": "Dukungan Pasca Rilis",
+        "f5": "Pengiriman Cepat",
+        "f6": "Kode Rapi & Skalabel"
     },
     "Cards": {
         "price": "Harga",

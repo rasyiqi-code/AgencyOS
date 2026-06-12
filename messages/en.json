@@ -581,7 +581,13 @@
         "everythingToSucceed": "Everything you need to succeed",
         "premiumStandard": "Premium quality deliverable included as standard in this package.",
         "trustedBy": "Trusted by {count}+ Premium Clients",
-        "defaultTrusted": "150+ Clients Trusted this service"
+        "defaultTrusted": "150+ Clients Trusted this service",
+        "f1": "100% Full Ownership",
+        "f2": "1-on-1 Strategy Session",
+        "f3": "Dedicated Expert",
+        "f4": "Post-Release Support",
+        "f5": "Rapid Delivery",
+        "f6": "Clean & Scalable Code"
     },
     "Cards": {
         "price": "Price",
