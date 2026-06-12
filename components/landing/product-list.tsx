@@ -105,15 +105,24 @@ interface BentoServiceCardProps {
 function BentoServiceCard({ service, title, displayFeatures, intervalLabel, variants, ctaLabel }: BentoServiceCardProps) {
     const t = useTranslations("ProductCatalog");
     const cardRef = useRef<HTMLDivElement>(null);
+    const rectRef = useRef<DOMRect | null>(null);
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
+        if (!rectRef.current) {
+            rectRef.current = cardRef.current.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         cardRef.current.style.setProperty('--mouse-x', `${x}px`);
         cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        rectRef.current = null;
     };
 
     return (
@@ -122,7 +131,7 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
             variants={variants}
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseLeave={handleMouseLeave}
             className="group relative rounded-3xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl transition-all duration-500 hover:border-brand-yellow/30 overflow-hidden flex flex-col h-full"
             // Ensure valid CSS custom properties types by casting
             style={{ '--mouse-x': '0px', '--mouse-y': '0px' } as React.CSSProperties}

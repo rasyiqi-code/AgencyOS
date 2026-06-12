@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Zap, Layers, ShieldCheck, Sparkles } from "lucide-react";
 import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ScrollHint } from "./scroll-hint";
 
 export function SectionSolutions() {
@@ -113,6 +113,7 @@ interface SolutionCardProps {
 function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
+    const rectRef = useRef<DOMRect | null>(null);
     const [targetIndex, setTargetIndex] = useState(0);
     const targets = t(`items.${product.key}.target`).split(",").map((s: string) => s.trim());
 
@@ -124,10 +125,17 @@ function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
         return () => clearInterval(interval);
     }, [targets.length]);
 
-    const handleMouseMove = ({ currentTarget, clientX, clientY }: React.MouseEvent) => {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!rectRef.current) {
+            rectRef.current = e.currentTarget.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
+    };
+
+    const handleMouseLeave = () => {
+        rectRef.current = null;
     };
 
     const background = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.06), transparent 40%)`;
@@ -139,6 +147,7 @@ function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
             viewport={{ once: true }}
             transition={{ delay: 0.1 * (index + 1), duration: 0.5 }}
             onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
             className={`flex-shrink-0 w-[85vw] md:w-full snap-center group relative p-8 rounded-[2.5rem] bg-zinc-900/30 border border-white/5 transition-all duration-500 flex flex-col items-center text-center h-full backdrop-blur-xl overflow-hidden shadow-2xl ${product.border}`}
         >
             {/* Interactive Spotlight */}

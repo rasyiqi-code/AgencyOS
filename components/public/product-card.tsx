@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,16 +34,25 @@ import { ArrowRight } from "lucide-react";
  */
 export function ProductCard({ product }: ProductCardProps) {
     const t = useTranslations("Cards");
+    const rectRef = useRef<DOMRect | null>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
     /** Handler spotlight effect mengikuti posisi mouse */
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
+        if (!rectRef.current) {
+            rectRef.current = e.currentTarget.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
         setMousePosition({
             x: e.clientX - rect.left,
             y: e.clientY - rect.top,
         });
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        rectRef.current = null;
     };
 
     /** Label badge berdasarkan tipe pembelian */
@@ -56,7 +65,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <motion.div
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseLeave={handleMouseLeave}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

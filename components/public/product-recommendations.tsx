@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -61,12 +61,21 @@ export function ProductRecommendations({ products, title, subtitle }: ProductRec
  * Card individual untuk rekomendasi — compact version dari ProductCard.
  */
 function RecommendationCard({ product }: { product: RecommendedProduct }) {
+    const rectRef = useRef<DOMRect | null>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
+        if (!rectRef.current) {
+            rectRef.current = e.currentTarget.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
         setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        rectRef.current = null;
     };
 
     const purchaseLabel = product.purchaseType === "subscription"
@@ -78,7 +87,7 @@ function RecommendationCard({ product }: { product: RecommendedProduct }) {
             <div
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseLeave={handleMouseLeave}
                 className="group relative rounded-2xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl transition-all duration-500 hover:border-brand-yellow/30 overflow-hidden flex flex-col h-full"
             >
                 {/* Spotlight Glow */}

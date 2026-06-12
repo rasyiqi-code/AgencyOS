@@ -1,5 +1,7 @@
 "use client";
 
+import React, { memo } from "react";
+
 import {
     Accordion,
     AccordionContent,
@@ -66,34 +68,13 @@ export function FAQSection() {
                     {/* FAQ Items - 8 Columns */}
                     <div className="md:col-span-8">
                         <Accordion type="single" collapsible className="w-full text-black">
-                            {questionKeys.map((key, index) => {
-                                const i = key.substring(1);
-                                return (
-                                    <motion.div
-                                        key={key}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: index * 0.05 }}
-                                    >
-                                        <AccordionItem 
-                                            value={`item-${i}`} 
-                                            className="border-b border-black/5 bg-transparent px-1 transition-all duration-300 hover:bg-black/5"
-                                        >
-                                            <AccordionTrigger className="hover:no-underline text-left font-bold tracking-tight text-sm md:text-base py-3 [&>svg]:text-black/30 [&>svg]:w-4 [&>svg]:h-4 group">
-                                                <div className="flex items-center gap-3">
-                                                    <span>{t(key)}</span>
-                                                </div>
-                                            </AccordionTrigger>
-                                            <AccordionContent className="text-black/60 font-medium leading-relaxed text-xs md:text-sm pb-4 pt-0">
-                                                {t.rich(`a${i}`, {
-                                                    strong: (chunks) => <strong className="text-black font-bold">{chunks}</strong>
-                                                })}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    </motion.div>
-                                );
-                            })}
+                            {questionKeys.map((key, index) => (
+                                <FAQItem 
+                                    key={key} 
+                                    questionKey={key} 
+                                    index={index} 
+                                />
+                            ))}
                         </Accordion>
                     </div>
 
@@ -170,3 +151,38 @@ export function FAQSection() {
         </section>
     );
 }
+
+interface FAQItemProps {
+    questionKey: string;
+    index: number;
+}
+
+const FAQItem = memo(function FAQItem({ questionKey, index }: FAQItemProps) {
+    const t = useTranslations("FAQ");
+    const i = questionKey.substring(1);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.05 }}
+        >
+            <AccordionItem 
+                value={`item-${i}`} 
+                className="border-b border-black/5 bg-transparent px-1 transition-all duration-300 hover:bg-black/5"
+            >
+                <AccordionTrigger className="hover:no-underline text-left font-bold tracking-tight text-sm md:text-base py-3 [&>svg]:text-black/30 [&>svg]:w-4 [&>svg]:h-4 group">
+                    <div className="flex items-center gap-3">
+                        <span>{t(questionKey)}</span>
+                    </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-black/60 font-medium leading-relaxed text-xs md:text-sm pb-4 pt-0">
+                    {t.rich(`a${i}`, {
+                        strong: (chunks) => <strong className="text-black font-bold">{chunks}</strong>
+                    })}
+                </AccordionContent>
+            </AccordionItem>
+        </motion.div>
+    );
+});

@@ -4,7 +4,7 @@ import { Check, Sparkles, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { PriceDisplay, useCurrency } from "@/components/providers/currency-provider";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { type Service } from "./service-detail/types";
 
@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 export function ServiceCard({ service }: ServiceCardProps) {
     const t = useTranslations("Cards");
     const tService = useTranslations("Service");
+    const rectRef = useRef<DOMRect | null>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
     const { currency } = useCurrency();
@@ -33,18 +34,26 @@ export function ServiceCard({ service }: ServiceCardProps) {
         : (service.addons as unknown[]) || [];
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
+        if (!rectRef.current) {
+            rectRef.current = e.currentTarget.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
         setMousePosition({
             x: e.clientX - rect.left,
             y: e.clientY - rect.top,
         });
     };
 
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        rectRef.current = null;
+    };
+
     return (
         <div
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseLeave={handleMouseLeave}
             className="group relative rounded-3xl border border-white/10 bg-zinc-900/40 backdrop-blur-xl transition-all duration-500 hover:border-brand-yellow/30 overflow-hidden flex flex-col h-full shadow-2xl"
         >
             {/* Interactive Glow Effect */}
