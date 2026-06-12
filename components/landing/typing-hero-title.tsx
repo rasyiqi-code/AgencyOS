@@ -15,14 +15,14 @@ interface TypingHeroTitleProps {
  * TypingHeroTitle: Mendukung efek typing tradisional atau switch cepat (rapid).
  */
 export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, onStateChange }: TypingHeroTitleProps) {
-    const [targetIndex, setTargetIndex] = useState(0);
-    const [displayText, setDisplayText] = useState("");
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [typingSpeed, setTypingSpeed] = useState(150);
-
     const safeTargets = useMemo(() =>
         targets && targets.length > 0 ? targets : ["Solutions"],
         [targets]);
+
+    const [targetIndex, setTargetIndex] = useState(0);
+    const [displayText, setDisplayText] = useState(safeTargets[0] || "");
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [typingSpeed, setTypingSpeed] = useState(150);
 
     // Effect untuk mode "rapid" - Dikontrol oleh isPaused jika ada
     useEffect(() => {

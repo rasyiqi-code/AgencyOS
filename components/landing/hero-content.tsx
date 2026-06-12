@@ -69,14 +69,11 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
                     {/* Left Column: Content */}
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="relative space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1"
+                    <div
+                        className="relative space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1 animate-hero-fade-in"
                     >
                         {/* Status Widget */}
-                        <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
+                        <div className="flex justify-center lg:justify-start animate-hero-fade-up">
                             <Link href="/price-calculator">
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium mb-4 hover:bg-brand-yellow/20 transition-colors cursor-pointer w-fit">
                                     <span className="relative flex h-2 w-2">
@@ -86,11 +83,10 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     {t("statusBadge", { brand: agencyName })}
                                 </div>
                             </Link>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                            variants={itemVariants}
-                            className="relative space-y-4"
+                        <div
+                            className="relative space-y-4 animate-hero-fade-up animation-delay-100"
                         >
                             <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
                                 <TypingHeroTitle
@@ -108,21 +104,19 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     isPaused={typingStatus !== "full"}
                                 />
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.p
-                            variants={itemVariants}
-                            className="text-lg md:text-xl text-zinc-400 leading-relaxed"
+                        <p
+                            className="text-lg md:text-xl text-zinc-400 leading-relaxed animate-hero-fade-up animation-delay-200"
                         >
                             {t.rich("description", {
                                 white: (chunks: React.ReactNode) => <span className="text-white font-semibold">{chunks}</span>,
                                 brand: agencyName
                             })}
-                        </motion.p>
+                        </p>
 
-                        <motion.div
-                            variants={itemVariants}
-                            className="flex flex-col gap-4 pt-4"
+                        <div
+                            className="flex flex-col gap-4 pt-4 animate-hero-fade-up animation-delay-300"
                         >
                             <div className="flex flex-row items-center justify-center lg:justify-start gap-3">
                                 <Button
@@ -143,12 +137,11 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     </Button>
                                 </Link>
                             </div>
-                        </motion.div>
+                        </div>
 
                         {/* Tech Stack Hints - Marquee */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="pt-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700 flex justify-center lg:justify-start w-full overflow-hidden"
+                        <div
+                            className="pt-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-700 flex justify-center lg:justify-start w-full overflow-hidden animate-hero-fade-up animation-delay-400"
                         >
                             <div className="relative flex overflow-x-hidden w-full max-w-[300px] lg:max-w-none [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
                                 <motion.div
@@ -167,24 +160,16 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     ))}
                                 </motion.div>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
 
                     {/* Right Column: Expert Asset */}
                     <div className="relative mt-0 lg:mt-0 order-1 lg:order-2">
 
 
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{
-                                duration: isMobile ? 0.8 : 1.2,
-                                ease: "easeOut"
-                            }}
-                            className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[700px] z-10 flex items-end justify-center"
+                        <div
+                            className="relative w-full h-[400px] sm:h-[550px] lg:h-[600px] xl:h-[700px] z-10 flex items-end justify-center animate-hero-fade-up"
                         >
-
-
                             {/* Business Visuals Masking Layer (Bottom) */}
                             {mounted && <BusinessVisuals isMobile={isMobile} repeatCount={repeatCount} shouldReduceMotion={shouldReduceMotion} />}
 
@@ -286,7 +271,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                     {t("heroTagline2")}
                                 </motion.p>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </div>
