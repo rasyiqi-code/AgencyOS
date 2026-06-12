@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
-import { Check, ArrowLeft, ShieldCheck, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { cleanSummaryText } from "@/lib/shared/utils";
@@ -47,11 +47,6 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
 
                 {/* Branding & Heading */}
                 <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-[10px] font-bold uppercase tracking-widest">
-                        <ShieldCheck className="w-3 h-3" />
-                        Verified Quote
-                    </div>
-
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-400">
                         {estimate.title}
                     </h1>
