@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Sparkles, ArrowLeft, Search } from "lucide-react";
 import { ServiceCard } from "@/components/public/service-card";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,7 +32,21 @@ interface ServicesClientWrapperProps {
 
 export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: ServicesClientWrapperProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const isId = pathname.startsWith("/id") || pathname.includes("/id/");
+
+    // Filter reaktif terhadap daftar layanan berdasarkan input pencarian
+    const filteredServices = services.filter((service) => {
+        const titleText = (isId ? service.title_id : null) || service.title || "";
+        const descText = (isId ? service.description_id : null) || service.description || "";
+        return (
+            titleText.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            descText.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    });
 
     useEffect(() => {
         // Handle post-login checkout
@@ -100,8 +114,22 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                     </p>
                 </div>
 
-                {services.length > 0 && (() => {
-                    const groupedServices = services.reduce((acc, curr) => {
+                {/* Bilah Pencarian Jasa Premium */}
+                <div className="mb-10 max-w-md mx-auto relative animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="relative">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                        <input
+                            type="text"
+                            placeholder={isId ? "Cari jasa yang tersedia..." : "Search available services..."}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-zinc-900/40 hover:bg-zinc-900/60 focus:bg-zinc-900/80 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-zinc-500 focus:outline-none focus:border-brand-yellow/80 focus:ring-1 focus:ring-brand-yellow/30 text-sm transition-all shadow-lg shadow-black/40"
+                        />
+                    </div>
+                </div>
+
+                {filteredServices.length > 0 && (() => {
+                    const groupedServices = filteredServices.reduce((acc, curr) => {
                         const cat = curr.category || 'Uncategorized';
                         if (!acc[cat]) acc[cat] = [];
                         acc[cat].push(curr);
@@ -146,6 +174,12 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                         </Tabs>
                     );
                 })()}
+
+                {services.length > 0 && filteredServices.length === 0 && (
+                    <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5 max-w-7xl mx-auto">
+                        <p className="text-zinc-500 text-lg">{isId ? "Tidak ada layanan yang cocok dengan pencarian Anda." : "No services match your search query."}</p>
+                    </div>
+                )}
 
                 {services.length === 0 && (
                     <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5 max-w-7xl mx-auto">
