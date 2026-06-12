@@ -2,9 +2,9 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/shared/utils";
 
 interface ViewProofButtonProps {
@@ -20,6 +20,14 @@ interface ViewProofButtonProps {
 
 export function ViewProofButton({ estimate }: ViewProofButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isError, setIsError] = useState(false);
+
+    // Reset error state when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setIsError(false);
+        }
+    }, [isOpen]);
 
     // Resolve payment type and proofUrl
     const paymentType = estimate.paymentType || estimate.project?.order?.paymentType;
@@ -98,13 +106,24 @@ export function ViewProofButton({ estimate }: ViewProofButtonProps) {
                         <iframe src={displayUrl} className="w-full h-full border-none" />
                     ) : (
                         <div className="relative">
-                            <Image
-                                src={displayUrl}
-                                alt="Payment Proof"
-                                width={800}
-                                height={600}
-                                className="max-w-full max-h-[70vh] object-contain mx-auto rounded-md"
-                            />
+                            {isError ? (
+                                <div className="flex flex-col items-center justify-center p-8 bg-zinc-850/50 rounded-xl text-zinc-400 max-w-sm border border-white/5 mx-auto">
+                                    <AlertCircle className="w-12 h-12 text-zinc-500 mb-3" />
+                                    <p className="text-sm text-center font-medium text-white">Gagal memuat bukti transfer</p>
+                                    <p className="text-xs text-center text-zinc-500 mt-1">
+                                        Berkas kemungkinan terhapus dari cloud storage atau koneksi server terputus.
+                                    </p>
+                                </div>
+                            ) : (
+                                <Image
+                                    src={displayUrl}
+                                    alt="Payment Proof"
+                                    width={800}
+                                    height={600}
+                                    className="max-w-full max-h-[70vh] object-contain mx-auto rounded-md"
+                                    onError={() => setIsError(true)}
+                                />
+                            )}
                         </div>
                     )}
                 </div>

@@ -1,11 +1,16 @@
 import { S3Client, ListObjectsV2Command, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSystemSettings } from "@/lib/server/settings";
+import fs from "fs";
+import path from "path";
 
 // Singleton untuk menghindari inisialisasi ulang S3
 let s3ClientInstance: S3Client | null = null;
 let s3BucketName: string | null = null;
 let s3ConfigHash: string | null = null;
+
+// Direktori publik untuk penyimpanan file lokal
+const LOCAL_UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 /**
  * Memeriksa apakah provider Vercel Blob aktif berdasarkan environment variable.
@@ -30,10 +35,24 @@ function isVercelBlobActive(): boolean {
     return false;
 }
 
+/**
+ * Memeriksa apakah konfigurasi R2 lengkap dan siap digunakan.
+ */
+async function isR2Configured(): Promise<boolean> {
+    try {
+        const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_bucket_name']);
+        const getSetting = (key: string) => settings.find((s: { key: string, value: string }) => s.key === key)?.value?.trim();
+        
+        return !!(getSetting('r2_endpoint') && getSetting('r2_access_key_id') && getSetting('r2_secret_access_key') && getSetting('r2_bucket_name'));
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * Inisialisasi client S3 untuk Cloudflare R2
+ */
 export async function getClient() {
-    // ⚡ Bolt Optimization: Gunakan getSystemSettings (yang memanfaatkan unstable_cache) dibanding prisma query langsung.
-    // 🎯 Kenapa: Mengurangi load database dengan mencache konfigurasi storage yang sering diakses.
-    // 📊 Dampak: Mengeliminasi database query saat inisialisasi client storage.
     const settings = await getSystemSettings(['r2_endpoint', 'r2_access_key_id', 'r2_secret_access_key', 'r2_public_domain', 'r2_bucket_name']);
 
     const getSetting = (key: string) => settings.find((s: { key: string, value: string }) => s.key === key)?.value;
@@ -71,11 +90,10 @@ export async function getClient() {
             secretAccessKey,
         },
         forcePathStyle: true,
-        // Optimasi: Tingkatkan timeout untuk respon R2 yang lebih lambat
         requestHandler: {
             connectionTimeout: 10000, // 10s
             socketTimeout: 15000,     // 15s
-        } as unknown as import("@smithy/types").RequestHandler<unknown, unknown>, // Intermediate cast untuk memuaskan linter
+        } as unknown as import("@smithy/types").RequestHandler<unknown, unknown>,
     });
     s3BucketName = bucketName;
     s3ConfigHash = configHash;
@@ -84,7 +102,7 @@ export async function getClient() {
 }
 
 /**
- * Mengulang operasi storage jika terjadi kesalahan sementara (seperti ETIMEDOUT)
+ * Mengulang operasi storage jika terjadi kesalahan sementara
  */
 async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Promise<T> {
     try {
@@ -102,12 +120,86 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Pr
     }
 }
 
+/**
+ * FUNGSI FALLBACK: Menyimpan berkas secara lokal di public/uploads
+ */
+async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativePath: string): Promise<string> {
+    const targetPath = path.join(LOCAL_UPLOAD_DIR, relativePath);
+    const targetDir = path.dirname(targetPath);
+
+    if (!fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir, { recursive: true });
+    }
+
+    let data: Buffer;
+    if (fileOrBuffer instanceof File) {
+        const arrayBuffer = await fileOrBuffer.arrayBuffer();
+        data = Buffer.from(arrayBuffer);
+    } else if (fileOrBuffer instanceof Buffer) {
+        data = fileOrBuffer;
+    } else {
+        data = Buffer.from(fileOrBuffer);
+    }
+
+    await fs.promises.writeFile(targetPath, data);
+    return `/uploads/${relativePath}`;
+}
+
+/**
+ * FUNGSI FALLBACK: Membaca berkas lokal secara rekursif
+ */
+async function listFilesLocal(prefix?: string): Promise<Array<{ key: string; size: number; lastModified: Date; url: string }>> {
+    const searchDir = prefix ? path.join(LOCAL_UPLOAD_DIR, prefix) : LOCAL_UPLOAD_DIR;
+    if (!fs.existsSync(searchDir)) {
+        return [];
+    }
+
+    const files: Array<{ key: string; size: number; lastModified: Date; url: string }> = [];
+
+    async function walk(dir: string) {
+        try {
+            const list = await fs.promises.readdir(dir, { withFileTypes: true });
+            for (const item of list) {
+                const fullPath = path.join(dir, item.name);
+                const relPath = path.relative(LOCAL_UPLOAD_DIR, fullPath);
+
+                if (item.isDirectory()) {
+                    await walk(fullPath);
+                } else {
+                    const stat = await fs.promises.stat(fullPath);
+                    files.push({
+                        key: relPath,
+                        size: stat.size,
+                        lastModified: stat.mtime,
+                        url: `/uploads/${relPath}`
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("[Storage Local] Gagal membaca direktori:", error);
+        }
+    }
+
+    await walk(searchDir);
+    return files.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
+}
+
+/**
+ * FUNGSI FALLBACK: Menghapus file lokal
+ */
+async function deleteFileLocal(relativePath: string): Promise<void> {
+    const targetPath = path.join(LOCAL_UPLOAD_DIR, relativePath);
+    if (fs.existsSync(targetPath)) {
+        await fs.promises.unlink(targetPath);
+    }
+}
+
 export async function uploadFile(
     fileOrBuffer: File | Buffer | Uint8Array,
-    path: string,
+    pathName: string,
     contentType?: string
 ): Promise<string> {
-    // Jalankan Vercel Blob jika aktif
+    // 1. Cek Vercel Blob
     if (isVercelBlobActive()) {
         const { put } = await import("@vercel/blob");
         
@@ -116,7 +208,6 @@ export async function uploadFile(
             finalContentType = fileOrBuffer.type;
         }
         
-        // Vercel Blob put menerima File, Buffer, atau Stream secara native
         let data: File | Buffer;
         if (fileOrBuffer instanceof File) {
             data = fileOrBuffer;
@@ -126,7 +217,7 @@ export async function uploadFile(
             data = Buffer.from(fileOrBuffer);
         }
 
-        const blob = await put(path, data, {
+        const blob = await put(pathName, data, {
             access: "public",
             contentType: finalContentType || "application/octet-stream",
             token: process.env.BLOB_READ_WRITE_TOKEN,
@@ -135,58 +226,59 @@ export async function uploadFile(
         return blob.url;
     }
 
-    // Fallback ke Cloudflare R2
-    const { client, bucketName } = await getClient();
+    // 2. Cek Cloudflare R2
+    if (await isR2Configured()) {
+        const { client, bucketName } = await getClient();
 
-    let body: ReadableStream<Uint8Array> | Buffer | Uint8Array;
-    let finalContentType = contentType;
+        let body: ReadableStream<Uint8Array> | Buffer | Uint8Array;
+        let finalContentType = contentType;
 
-    if (fileOrBuffer instanceof File) {
-        body = fileOrBuffer.stream();
-        if (!finalContentType) finalContentType = fileOrBuffer.type;
-    } else {
-        body = fileOrBuffer;
-    }
-
-    if (!finalContentType) {
-        finalContentType = 'application/octet-stream';
-    }
-
-    return withRetry(async () => {
-        // OPTIMASI C5: Menggunakan @aws-sdk/lib-storage untuk mengalirkan berkas secara paralel/stream langsung
-        const parallelUpload = new Upload({
-            client,
-            params: {
-                Bucket: bucketName,
-                Key: path,
-                Body: body,
-                ContentType: finalContentType,
-            },
-        });
-
-        await parallelUpload.done();
-
-        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
-        // untuk menghindari query DB langsung setiap kali upload file
-        const domainSettings = await getSystemSettings(["r2_public_domain"]);
-        const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
-
-        if (publicDomain) {
-            let domain = publicDomain.trim();
-            if (!domain.startsWith("http")) domain = `https://${domain}`;
-            if (domain.endsWith("/")) domain = domain.slice(0, -1);
-            const finalUrl = `${domain}/${path}`;
-
-            return finalUrl;
+        if (fileOrBuffer instanceof File) {
+            body = fileOrBuffer.stream();
+            if (!finalContentType) finalContentType = fileOrBuffer.type;
         } else {
-            console.warn("R2 Public Domain not set (key: r2_public_domain). Falling back to internal proxy.");
-            return `/api/storage/proxy?key=${path}`;
+            body = fileOrBuffer;
         }
-    });
+
+        if (!finalContentType) {
+            finalContentType = 'application/octet-stream';
+        }
+
+        return withRetry(async () => {
+            const parallelUpload = new Upload({
+                client,
+                params: {
+                    Bucket: bucketName,
+                    Key: pathName,
+                    Body: body,
+                    ContentType: finalContentType,
+                },
+            });
+
+            await parallelUpload.done();
+
+            const domainSettings = await getSystemSettings(["r2_public_domain"]);
+            const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
+
+            if (publicDomain) {
+                let domain = publicDomain.trim();
+                if (!domain.startsWith("http")) domain = `https://${domain}`;
+                if (domain.endsWith("/")) domain = domain.slice(0, -1);
+                return `${domain}/${pathName}`;
+            } else {
+                console.warn("R2 Public Domain not set (key: r2_public_domain). Falling back to internal proxy.");
+                return `/api/storage/proxy?key=${pathName}`;
+            }
+        });
+    }
+
+    // 3. Fallback: Local File System
+    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Menggunakan Local File System Fallback.");
+    return await uploadFileLocal(fileOrBuffer, pathName);
 }
 
 export async function listFiles(prefix?: string): Promise<Array<{ key: string; size: number; lastModified: Date; url: string }>> {
-    // Jalankan Vercel Blob jika aktif
+    // 1. Cek Vercel Blob
     if (isVercelBlobActive()) {
         const { list } = await import("@vercel/blob");
         const response = await list({
@@ -202,47 +294,50 @@ export async function listFiles(prefix?: string): Promise<Array<{ key: string; s
         })).sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
     }
 
-    // Fallback ke Cloudflare R2
-    const { client, bucketName } = await getClient();
+    // 2. Cek Cloudflare R2
+    if (await isR2Configured()) {
+        const { client, bucketName } = await getClient();
 
-    return withRetry(async () => {
-        const command = new ListObjectsV2Command({
-            Bucket: bucketName,
-            Prefix: prefix || '',
+        return withRetry(async () => {
+            const command = new ListObjectsV2Command({
+                Bucket: bucketName,
+                Prefix: prefix || '',
+            });
+
+            const response = await client.send(command);
+            const files = (response.Contents || []).filter(item => item.Key && !item.Key.endsWith('/'));
+
+            const domainSettings = await getSystemSettings(["r2_public_domain"]);
+            const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
+
+            let domain = '';
+            if (publicDomain) {
+                domain = publicDomain.trim();
+                if (!domain.startsWith("http")) domain = `https://${domain}`;
+                if (domain.endsWith("/")) domain = domain.slice(0, -1);
+            }
+
+            return files.map(file => ({
+                key: file.Key || '',
+                size: file.Size || 0,
+                lastModified: file.LastModified || new Date(),
+                url: domain ? `${domain}/${file.Key}` : `/api/storage/proxy?key=${file.Key}`
+            })).sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
         });
+    }
 
-        const response = await client.send(command);
-        const files = (response.Contents || []).filter(item => item.Key && !item.Key.endsWith('/'));
-
-        // ⚡ Optimasi: Gunakan getSystemSettings yang ter-cache (TTL 1 jam)
-        const domainSettings = await getSystemSettings(["r2_public_domain"]);
-        const publicDomain = domainSettings.find(s => s.key === "r2_public_domain")?.value;
-
-        let domain = '';
-        if (publicDomain) {
-            domain = publicDomain.trim();
-            if (!domain.startsWith("http")) domain = `https://${domain}`;
-            if (domain.endsWith("/")) domain = domain.slice(0, -1);
-        }
-
-        return files.map(file => ({
-            key: file.Key || '',
-            size: file.Size || 0,
-            lastModified: file.LastModified || new Date(),
-            url: domain ? `${domain}/${file.Key}` : `/api/storage/proxy?key=${file.Key}`
-        })).sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
-    });
+    // 3. Fallback: Local File System
+    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Membaca dari Local File System.");
+    return await listFilesLocal(prefix);
 }
 
 export async function deleteFile(key: string): Promise<void> {
-    // Jalankan Vercel Blob jika aktif
+    // 1. Cek Vercel Blob
     if (isVercelBlobActive()) {
         const { del, list } = await import("@vercel/blob");
 
         let urlToDelete = key;
 
-        // Jika key bukan URL penuh (tidak dimulai dengan http:// atau https://),
-        // cari file tersebut menggunakan list() untuk menemukan URL aslinya
         if (!key.startsWith("http://") && !key.startsWith("https://")) {
             const response = await list({
                 prefix: key,
@@ -265,13 +360,19 @@ export async function deleteFile(key: string): Promise<void> {
         return;
     }
 
-    // Fallback ke Cloudflare R2
-    const { client, bucketName } = await getClient();
+    // 2. Cek Cloudflare R2
+    if (await isR2Configured()) {
+        const { client, bucketName } = await getClient();
 
-    return withRetry(async () => {
-        await client.send(new DeleteObjectCommand({
-            Bucket: bucketName,
-            Key: key,
-        }));
-    });
+        return withRetry(async () => {
+            await client.send(new DeleteObjectCommand({
+                Bucket: bucketName,
+                Key: key,
+            }));
+        });
+    }
+
+    // 3. Fallback: Local File System
+    console.info("[Storage] Vercel Blob dan R2 tidak aktif. Menghapus dari Local File System.");
+    await deleteFileLocal(key);
 }
