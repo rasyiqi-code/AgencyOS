@@ -32,6 +32,7 @@ export interface PaymentSelectorProps {
     gatewayStatus?: { midtrans: boolean; creem: boolean };
     noCard?: boolean;
     onPaymentInitiated?: () => void;
+    onPaymentClosed?: () => void; // Callback ketika proses pembayaran dibatalkan atau ditutup
 }
 
 interface PaymentMethod {
@@ -109,7 +110,8 @@ export function PaymentSelector({
     hasActiveGateway = true,
     gatewayStatus,
     noCard,
-    onPaymentInitiated
+    onPaymentInitiated,
+    onPaymentClosed
 }: PaymentSelectorProps) {
     const locale = useLocale();
     const isId = locale === 'id';
@@ -342,7 +344,10 @@ export function PaymentSelector({
                         <ManualPayment
                             orderId={orderId}
                             bankDetails={bankDetails}
-                            onClose={() => setPaymentData(null)}
+                            onClose={() => {
+                                setPaymentData(null);
+                                onPaymentClosed?.();
+                            }}
                             contactWA={contactWA}
                             contactTele={contactTele}
                         />
@@ -351,7 +356,10 @@ export function PaymentSelector({
                             orderId={orderId}
                             paymentData={paymentData as MidtransPaymentData}
                             selectedMethod={selectedMethod}
-                            onClose={() => setPaymentData(null)}
+                            onClose={() => {
+                                setPaymentData(null);
+                                onPaymentClosed?.();
+                            }}
                         />
                     )
                 )}

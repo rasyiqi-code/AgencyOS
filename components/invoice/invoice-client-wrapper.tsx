@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, AlertTriangle, MoveHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,6 +63,11 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency: contextCurrency, rate: contextRate } = useCurrency();
 
+    // State untuk memantau apakah pembayaran telah diinisiasi oleh user
+    const [isPaymentInitiated, setIsPaymentInitiated] = useState<boolean>(() =>
+        order.status ? order.status !== "pending" : false
+    );
+
     const quote = useMemo(() => {
         // Deterministic quote based on Order ID
         const index = order.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % thankYouQuotes.length;
@@ -71,6 +76,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
 
     useEffect(() => {
         if (isPaid) return;
+        // Hanya lakukan polling jika statusnya waiting_verification atau jika pembayaran telah diinisiasi oleh user
+        if (order.status !== 'waiting_verification' && !isPaymentInitiated) return;
 
         const interval = setInterval(async () => {
             if (document.hidden) return;
@@ -87,7 +94,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [isPaid, order.id, router]);
+    }, [isPaid, order.id, router, order.status, isPaymentInitiated]);
 
     const handlePrint = useReactToPrint({
         contentRef: componentRef,
@@ -256,6 +263,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         contactTele={agencySettings?.telegram}
                         hasActiveGateway={hasActiveGateway}
                         gatewayStatus={gatewayStatus}
+                        onPaymentInitiated={() => setIsPaymentInitiated(true)}
+                        onPaymentClosed={() => setIsPaymentInitiated(false)}
                     />
                 )}
 

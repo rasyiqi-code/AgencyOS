@@ -189,8 +189,9 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                 <Button
                     variant="ghost"
                     onClick={() => {
+                        // Mengalihkan ke halaman invoice publik agar bisa dilanjutkan nanti
+                        router.push(`/invoices/${orderId}`);
                         onClose();
-                        if (proofUploaded) router.refresh();
                     }}
                     className="text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 text-xs"
                 >

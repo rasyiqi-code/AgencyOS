@@ -211,6 +211,7 @@ export function CheckoutPortal({
                     <PaymentPanel 
                         estimate={estimate}
                         onPaymentInitiated={() => setIsPaymentInitiated(true)}
+                        onPaymentClosed={() => setIsPaymentInitiated(false)} // Matikan pengecekan status jika kembali ke pilihan metode pembayaran
                         amount={discountedAmount}
                         amountToPay={amountToPay}
                         paymentType={paymentType}
