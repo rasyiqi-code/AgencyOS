@@ -70,17 +70,6 @@ export function CheckoutStickyBar({
 
                 {/* Sisi Kanan: Tombol-Tombol Aksi Checkout */}
                 <div className="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-                    {/* Tombol Unduh PDF */}
-                    <Button
-                        variant="outline"
-                        className="border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all duration-300 h-10 px-4 rounded-xl cursor-pointer text-xs flex items-center gap-1.5"
-                        onClick={onPrint}
-                        disabled={isProcessing}
-                    >
-                        <Download className="w-3.5 h-3.5" />
-                        {isId ? "Unduh PDF" : "Download PDF"}
-                    </Button>
-
                     {/* Tombol Utama atau Status Transaksi */}
                     {activeOrderId ? (
                         <div className="text-[10px] text-zinc-500 font-bold bg-zinc-900/50 px-4 py-2.5 rounded-xl border border-white/5 text-center leading-none select-none">
@@ -102,6 +91,17 @@ export function CheckoutStickyBar({
                             )}
                         </Button>
                     )}
+
+                    {/* Tombol Unduh PDF */}
+                    <Button
+                        variant="outline"
+                        className="border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all duration-300 h-10 px-4 rounded-xl cursor-pointer text-xs flex items-center gap-1.5"
+                        onClick={onPrint}
+                        disabled={isProcessing}
+                    >
+                        <Download className="w-3.5 h-3.5" />
+                        {isId ? "Unduh PDF" : "Download PDF"}
+                    </Button>
                 </div>
 
             </div>

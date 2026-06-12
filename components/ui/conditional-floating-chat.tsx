@@ -17,9 +17,10 @@ export function ConditionalFloatingChat() {
         return null;
     }
 
-    // Jangan tampilkan di halaman admin, inbox lengkap, atau pratinjau desain
+    // Jangan tampilkan di halaman admin, inbox lengkap, pratinjau desain, atau halaman checkout
     const isViewDesign = pathname?.includes("/view-design/");
-    if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard/inbox") || isViewDesign) {
+    const isCheckout = pathname?.startsWith("/checkout");
+    if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard/inbox") || isViewDesign || isCheckout) {
         return null;
     }
 
