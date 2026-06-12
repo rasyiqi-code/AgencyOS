@@ -149,8 +149,11 @@
         "title": "Proses Kerja Jujur",
         "subtitle": "Semua progres terpantau setiap saat melalui Dashboard Klien. Cara kerja yang transparan, cepat, dan fokus pada hasil nyata.",
         "step1": "Rencana & Cara Kerja",
+        "step1Desc": "Ceritakan ide Anda pada AI kami. Dia akan menyusun spesifikasi teknis (PRD) yang rapi untuk Anda.",
         "step2": "Pengerjaan Bertahap",
-        "step3": "Serah Terima & Bantuan"
+        "step2Desc": "Sistem menghitung kompleksitas fitur dan memberikan harga pasti (Fixed Price). Bayar deposit aman via Midtrans.",
+        "step3": "Serah Terima & Bantuan",
+        "step3Desc": "Lihat progres di dashboard. Ada revisi? Cukup klik bagian yang ingin diubah. Saya kerjakan, Anda terima beres."
     },
     "Financial": {
         "title": "Yang Jarang Disadari",
@@ -214,6 +217,20 @@
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",
         "description": "Setiap bisnis memiliki DNA yang unik, begitu pula sistem yang dibutuhkannya. Kami membangun sistem dari nol dengan standar kode yang rapi (clean code) dan keamanan terbaik di industri. Fokus kami hanya satu: memberikan Anda fondasi digital yang solid dan cepat untuk menopang pertumbuhan bisnis jangka panjang"
+    },
+    "Stats": {
+        "stack": {
+            "title": "Tech Stack",
+            "desc": "50+ Technologies"
+        },
+        "royalty": {
+            "title": "Source Code",
+            "desc": "100% Milik Anda"
+        },
+        "performance": {
+            "title": "100%",
+            "desc": "No Hidden Fees"
+        }
     },
     "ClientDashboard": {
         "badge": "DASHBOARD KLIEN",

@@ -149,8 +149,11 @@
         "title": "No Bullsh*t Workflow",
         "subtitle": "All progress is monitored in real-time through the Client Dashboard. An honest, fast, and results-oriented work methodology.",
         "step1": "Architecture & Logic",
+        "step1Desc": "Tell your idea to our AI. It will prepare a neat technical specification (PRD) for you.",
         "step2": "Fast Iteration",
-        "step3": "Handover & Support"
+        "step2Desc": "The system calculates feature complexity and provides a definite Fixed Price. Pay secure deposit via Midtrans.",
+        "step3": "Handover & Support",
+        "step3Desc": "See progress on dashboard. Need revisions? Just click the part you want to change. I do the work, you receive the result."
     },
     "Financial": {
         "title": "What is Often Overlooked.",
@@ -193,6 +196,20 @@
         "badge": "12+ YEARS EXPERIENCE",
         "quote": "Focus on solutions, no complications.",
         "description": "Every business has a unique DNA, and so do the systems they need. We build infrastructure from scratch with the highest industry standards for clean code and security. Our focus is singular: providing you with a solid and fast digital foundation to sustain long-term business growth."
+    },
+    "Stats": {
+        "stack": {
+            "title": "∞",
+            "desc": "Scalability"
+        },
+        "royalty": {
+            "title": "100%",
+            "desc": "Source Code Ownership"
+        },
+        "performance": {
+            "title": "$0",
+            "desc": "No Hidden Fees"
+        }
     },
     "ClientDashboard": {
         "badge": "CLIENT DASHBOARD",
