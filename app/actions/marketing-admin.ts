@@ -1,8 +1,5 @@
 "use server";
 
-import { prisma } from "@/lib/config/db";
-import { Prisma } from "@prisma/client";
-import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/lib/shared/auth-helpers";
 import { getSubscribers, deleteSubscriber, getPromotions, createPromotion, updatePromotion, deletePromotion } from "@/lib/server/marketing";
