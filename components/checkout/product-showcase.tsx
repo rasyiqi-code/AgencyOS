@@ -35,7 +35,7 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
 
             <div className="space-y-8 relative z-10">
                 {/* Back to button */}
-                <div>
+                <div className="mb-4">
                     <Link
                         href={backUrl}
                         className="inline-flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-wider group cursor-pointer"
