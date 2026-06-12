@@ -38,7 +38,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                 isVisible ? "translate-y-10 md:translate-y-14 opacity-100" : "translate-y-0 opacity-0 pointer-events-none"
             }`}
         >
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+            <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
                 {/* Judul Layanan di Sisi Kiri */}
                 <div className="flex-1 min-w-0">
                     <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
