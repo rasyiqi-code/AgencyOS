@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 
 import { ResolvingMetadata } from "next";
+import { getLocale } from "next-intl/server";
 
 // Localized SEO: Preview {Nama Porto} | {AGENCY_NAME}
 export async function generateMetadata(
@@ -15,6 +16,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const { slug } = await params;
+    const locale = await getLocale();
     const portfolios = await getPortfolios();
     const portfolio = portfolios.find((p) => p.slug === slug);
     const agencyName = await getSettingValue("AGENCY_NAME", "Agency OS");
@@ -29,6 +31,8 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
     const title = t("seoTitle", { title: portfolio.title });
     const description = t("seoDescription", { title: portfolio.title, agencyName });
+    const isId = locale === 'id';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return {
         title,
@@ -38,18 +42,33 @@ export async function generateMetadata(
             description,
             images: previousImages,
             type: "website",
+            locale: isId ? 'id_ID' : 'en_US',
+            alternateLocale: isId ? ['en_US'] : ['id_ID'],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
             images: previousImages,
+        },
+        alternates: {
+            canonical: `${baseUrl}/${locale}/view-design/${slug}`,
+            languages: {
+                'en': `${baseUrl}/en/view-design/${slug}`,
+                'id': `${baseUrl}/id/view-design/${slug}`,
+                'x-default': `${baseUrl}/en/view-design/${slug}`,
+            }
         }
     };
 }
 
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
+
 export default async function ViewDesignPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
+    const locale = await getLocale();
+    const isId = locale === 'id';
+    
     const [portfolios, agencyName, contactPhone, contactTelegram, headerList, logoUrl] = await Promise.all([
         getPortfolios(),
         getSettingValue("AGENCY_NAME", "Agency OS"),
@@ -68,6 +87,7 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
     const host = headerList.get("host");
     const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
     const localBaseUrl = `${protocol}://${host}`;
+    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || localBaseUrl).replace(/\/$/, "");
 
     let html = "";
     if (portfolio.externalUrl) {
@@ -84,16 +104,25 @@ export default async function ViewDesignPage({ params }: { params: Promise<{ slu
     }
 
     return (
-        <ViewDesignClient
-            slug={portfolio.slug}
-            title={portfolio.title}
-            agencyName={agencyName}
-            html={html}
-            externalUrl={portfolio.externalUrl}
-            contactPhone={contactPhone}
-            contactTelegram={contactTelegram}
-            logoUrl={logoUrl}
-            logoDisplayMode="logo"
-        />
+        <>
+            <BreadcrumbSchema
+                items={[
+                    { name: isId ? 'Beranda' : 'Home', item: `${baseUrl}/${locale}` },
+                    { name: 'Portfolio', item: `${baseUrl}/${locale}/portfolio` },
+                    { name: portfolio.title, item: `${baseUrl}/${locale}/view-design/${portfolio.slug}` },
+                ]}
+            />
+            <ViewDesignClient
+                slug={portfolio.slug}
+                title={portfolio.title}
+                agencyName={agencyName}
+                html={html}
+                externalUrl={portfolio.externalUrl}
+                contactPhone={contactPhone}
+                contactTelegram={contactTelegram}
+                logoUrl={logoUrl}
+                logoDisplayMode="logo"
+            />
+        </>
     );
 }
