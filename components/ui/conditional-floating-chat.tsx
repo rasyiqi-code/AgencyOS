@@ -19,7 +19,7 @@ export function ConditionalFloatingChat() {
 
     // Jangan tampilkan di halaman admin, inbox lengkap, pratinjau desain, atau halaman checkout
     const isViewDesign = pathname?.includes("/view-design/");
-    const isCheckout = pathname?.startsWith("/checkout");
+    const isCheckout = pathname?.includes("/checkout");
     if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard/inbox") || isViewDesign || isCheckout) {
         return null;
     }

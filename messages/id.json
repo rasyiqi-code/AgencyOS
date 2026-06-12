@@ -1053,7 +1053,7 @@
     "Invoice": {
         "invoiceNo": "No. Invoice",
         "title": "Faktur",
-        "billTo": "Tagih Ke",
+        "billTo": "Ditagihkan Kepada",
         "date": "Tanggal",
         "dateIssued": "Tanggal Terbit",
         "totalAmount": "Total Tagihan",
