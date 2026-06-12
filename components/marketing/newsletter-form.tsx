@@ -35,19 +35,19 @@ export function NewsletterForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mx-auto flex max-w-md gap-3">
+        <form onSubmit={handleSubmit} className="mx-auto flex flex-col sm:flex-row max-w-md gap-3 w-full">
             <input 
                 type="email" 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Anda" 
-                className="flex-1 rounded-[4px] border border-white/10 bg-black/40 px-5 py-3 text-white placeholder:text-zinc-600 focus:border-brand-yellow/50 focus:outline-none focus:ring-0 transition-all"
+                className="flex-1 rounded-[4px] border border-white/10 bg-black/40 px-5 py-3 text-white placeholder:text-zinc-600 focus:border-brand-yellow/50 focus:outline-none focus:ring-0 transition-all w-full"
             />
             <button 
                 type="submit"
                 disabled={isLoading}
-                className="rounded-[4px] bg-brand-yellow px-8 py-3 font-black text-black transition-all hover:bg-white active:scale-95 disabled:opacity-50 flex items-center justify-center min-w-[120px]"
+                className="rounded-[4px] bg-brand-yellow px-8 py-3 font-black text-black transition-all hover:bg-white active:scale-95 disabled:opacity-50 flex items-center justify-center min-w-[120px] w-full sm:w-auto"
             >
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "DAFTAR"}
             </button>
