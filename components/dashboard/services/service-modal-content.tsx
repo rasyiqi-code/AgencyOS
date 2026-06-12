@@ -26,6 +26,7 @@ export interface Service {
     features: unknown; // Prisma Json
     features_id?: unknown; // Prisma Json
     image: string | null;
+    category?: string | null;
 }
 
 interface ServiceModalContentProps {

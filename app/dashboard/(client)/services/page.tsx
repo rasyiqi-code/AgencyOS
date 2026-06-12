@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/config/db";
-import { ServiceCard } from "@/components/dashboard/services/service-card";
+import { ServiceListItem } from "@/components/dashboard/services/service-list-item";
 import { Service as DashboardService } from "@/components/dashboard/services/service-modal-content";
 import { cookies } from "next/headers";
 import { Service } from "@prisma/client";
@@ -14,7 +14,7 @@ export default async function ClientServicesPage() {
     const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en-US';
     const isId = locale === 'id-ID' || locale === 'id';
 
-    // Transform to match ServiceCard interface
+    // Transform to match ServiceListItem interface
     const processedServices = services.map((s: Service) => ({
         ...s,
         features: s.features as unknown,
@@ -23,11 +23,9 @@ export default async function ClientServicesPage() {
 
     return (
         <div className="w-full py-6">
-
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
+            <div className="flex flex-col gap-4 max-w-5xl">
                 {processedServices.map((service) => (
-                    <ServiceCard key={service.id} service={service as DashboardService} />
+                    <ServiceListItem key={service.id} service={service as DashboardService} />
                 ))}
 
                 {processedServices.length === 0 && (
