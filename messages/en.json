@@ -44,10 +44,10 @@
                 "Individual"
             ]
         },
-        "description": "A technology partner that stays by your side until your business is fully operational, not just one who sends code and disappears. We build a solid, transparent, and 100% owned digital foundation for your growth.",
+        "description": "A technology partner that builds custom websites and operational systems to grow your sales and streamline your business. We design tools that are easy for your team to use, 100% owned by you with no monthly license fees.",
         "launchDashboard": "Free Consultation",
         "viewServices": "Solutions",
-        "poweredBy": "ENTERPRISE TECHNOLOGY STANDARDS • TOTAL TRANSPARENCY • SCALABLE ARCHITECTURE",
+        "poweredBy": "READY-TO-USE DIGITAL SYSTEMS • ZERO HIDDEN MONTHLY FEES • 90-DAY WARRANTY & SUPPORT",
         "heroTagline1": "BUILD TO SCALE.",
         "heroTagline2": "DESIGN TO PREVAIL.",
         "heroImageAlt": "Senior developer at {brand} representing expert software engineering and digital transformation"
@@ -148,26 +148,26 @@
     },
     "Solutions": {
         "badge": "Solutions by Value",
-        "title": "Strategic Solutions for Businesses Ready to Scale.",
-        "subtitle": "Evolve your digital infrastructure with future-proof technology.",
+        "title": "Digital Solutions to Grow Your Business.",
+        "subtitle": "We build custom websites, database systems, and custom apps to increase sales and automate daily operations.",
         "items": {
             "web": {
-                "title": "High-Performance Web (Scale-up)",
+                "title": "Premium Websites & Marketing Engines",
                 "target": "Company Profile, Landing Page, Corporate Blog, Content Marketing, Online Store, Pro Portfolio, Media Hub, Campaign Microsite, Education Web, News Portal, Digital Catalog, Event Page, Brand Activation",
-                "desc": "Build a super-fast Marketing Engine for maximum conversion. Not your average WordPress.",
-                "cta": "Optimize Performance"
+                "desc": "Build a premium company profile website or custom online store to attract clients, build trust, and drive sales. No WordPress templates.",
+                "cta": "Increase Sales"
             },
             "app": {
-                "title": "Complex Web App (Efficiency)",
+                "title": "Business Apps & Internal Systems",
                 "target": "Internal System, Custom Dashboard, SaaS Platform, Business Automation, Custom CRM, Inventory System, Member Portal, Management Tool, API Integration, Booking System, Payroll App, Logistics Tracking, Analytic Dashboard",
-                "desc": "Build an Operational Engine to automate your business and eliminate manual processes.",
-                "cta": "Build System"
+                "desc": "Build custom inventory tracking, booking systems, CRMs, or client portals to automate tasks, eliminate manual paperwork, and save time.",
+                "cta": "Automate Operations"
             },
             "security": {
-                "title": "Managed Security & GEO (Future-Proof)",
+                "title": "System Security & Cloud Maintenance",
                 "target": "Enterprise Brand, High-Traffic Site, AI-Ready SEO, Cybersecurity, Anti-DDoS, Data Protection, GEO Optimization, Search Generative AI, Bot Protection, Cloud Security, Database Encryption, Security Audit",
-                "desc": "Optimize your website to be cited by Generative AI (GEO) and secured against cyber attacks.",
-                "cta": "Secure Assets"
+                "desc": "Keep your system online 24/7, protect client databases from hackers, and optimize your business for modern AI search engines.",
+                "cta": "Protect Systems"
             }
         }
     },

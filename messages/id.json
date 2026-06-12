@@ -44,10 +44,10 @@
                 "Personal"
             ]
         },
-        "description": "Partner teknologi yang tetap mendampingi hingga bisnis Anda berjalan, bukan sekadar kirim kode lalu menghilang. Kami membangun pondasi digital yang tangguh, transparan, dan 100% menjadi aset milik Anda.",
+        "description": "Partner teknologi yang membangun website kustom dan sistem operasional untuk meningkatkan penjualan serta mengefisiensikan bisnis Anda. Kami merancang sistem yang mudah digunakan oleh tim Anda, 100% milik Anda tanpa biaya lisensi bulanan.",
         "launchDashboard": "Konsultasi Gratis",
         "viewServices": "Solusi",
-        "poweredBy": "STANDAR TEKNOLOGI ENTERPRISE • TRANSPARANSI TOTAL • SISTEM SIAP BERKEMBANG PESAT",
+        "poweredBy": "SISTEM DIGITAL SIAP PAKAI • BEBAS BIAYA BULANAN LISENSI • GARANSI PEMELIHARAAN 90 HARI",
         "heroTagline1": "BANGUN UNTUK TUMBUH.",
         "heroTagline2": "RANCANG UNTUK TANGGUH.",
         "heroImageAlt": "Senior developer di {brand} yang merepresentasikan keahlian rekayasa perangkat lunak dan transformasi digital"
@@ -148,26 +148,26 @@
     },
     "Solutions": {
         "badge": "Solusi Strategis",
-        "title": "Solusi Bisnis Naik Kelas.",
-        "subtitle": "Kembangkan infrastruktur digital Anda dengan teknologi modern.",
+        "title": "Solusi Digital untuk Kembangkan Bisnis.",
+        "subtitle": "Kami membangun website premium, sistem database, dan aplikasi kustom untuk menaikkan penjualan dan mengotomatiskan operasional harian Anda.",
         "items": {
             "web": {
-                "title": "Website Berkecepatan Tinggi (Scale-up)",
+                "title": "Website Premium & Mesin Pemasaran",
                 "target": "Company Profile, Landing Page, Blog Perusahaan, Content Marketing, Toko Online, Portfolio Pro, Media Hub, Microsite Campaign, Web Edukasi, Portal Berita, Katalog Digital, Event Page, Brand Activation",
-                "desc": "Membangun Mesin Pemasaran yang super cepat untuk konversi maksimal. Bukan WordPress biasa.",
-                "cta": "Optimasi Performa"
+                "desc": "Membangun website profil perusahaan atau toko online kustom untuk menarik pelanggan baru, membangun kredibilitas brand, dan meningkatkan penjualan.",
+                "cta": "Tingkatkan Penjualan"
             },
             "app": {
-                "title": "Sistem & Aplikasi Web (Otomasi)",
+                "title": "Aplikasi Bisnis & Sistem Operasional",
                 "target": "Sistem Internal, Dashboard Khusus, Platform SaaS, Otomasi Bisnis, CRM Kustom, Sistem Inventaris, Portal Keanggotaan, Management Tool, Integrasi API Sistem, Sistem Booking, Payroll App, Tracking Logistik, Dashboard Analytic",
-                "desc": "Membangun Mesin Operasional untuk mengotomasi bisnis dan membuang proses manual.",
-                "cta": "Bangun Sistem"
+                "desc": "Membangun sistem inventaris, kasir, CRM, atau portal keanggotaan kustom untuk menyederhanakan tugas staf, menghilangkan pencatatan manual, dan menghemat waktu.",
+                "cta": "Otomatiskan Kerja"
             },
             "security": {
-                "title": "Keamanan & Optimasi AI (GEO)",
+                "title": "Keamanan Sistem & Pemeliharaan Cloud",
                 "target": "Enterprise Brand, High-Traffic Site, AI-Ready SEO, Cybersecurity, Anti-DDoS, Data Protection, GEO Optimization, Search Generative AI, Bot Protection, Cloud Security, Database Encryption, Audit Keamanan",
-                "desc": "Amankan website Anda dari serangan siber dan optimasi agar mudah ditemukan oleh AI seperti ChatGPT (GEO).",
-                "cta": "Amankan Aset"
+                "desc": "Menjaga website Anda tetap online 24/7 tanpa gangguan, melindungi data pelanggan dari hacker, serta optimasi agar mudah ditemukan di pencarian modern.",
+                "cta": "Amankan Bisnis"
             }
         }
     },
