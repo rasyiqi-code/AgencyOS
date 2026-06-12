@@ -52,20 +52,22 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     return (
         <div
-            className={`fixed top-10 md:top-14 left-0 right-0 py-2.5 sm:py-3 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-30 transition-all duration-300 transform shadow-lg shadow-black/80 ${
+            className={`fixed top-10 md:top-14 left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-30 transition-all duration-300 transform shadow-lg shadow-black/80 ${
                 isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
             }`}
         >
-            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+            <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
                 {/* Judul Layanan di Sisi Kiri */}
-                <div className="flex items-center min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                    {/* Spacer dummy w-8 agar teks sejajar dengan teks "Agency OS", mengabaikan icon checkmark */}
+                    <div className="w-8 hidden sm:block opacity-0 pointer-events-none" aria-hidden="true" />
                     <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
                         {displayTitle}
                     </span>
                 </div>
 
                 {/* Harga & Tombol Order di Sisi Kanan (Sebaris) */}
-                <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+                <div className="flex items-center gap-2 md:gap-6 shrink-0">
                     <div className="text-right flex flex-col justify-center select-none">
                         <span className="text-xs sm:text-sm font-black text-white tracking-tight leading-none whitespace-nowrap">
                             <PriceDisplay
