@@ -55,7 +55,9 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const isId = locale === 'id';
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const { currency: contextCurrency, rate: contextRate } = useCurrency();
+    const [scale, setScale] = useState(1);
 
     // State untuk memantau apakah pembayaran telah diinisiasi oleh user
     const [isPaymentInitiated, setIsPaymentInitiated] = useState<boolean>(() =>
@@ -71,6 +73,32 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         setOrderStatus(order.status);
     }
 
+    useEffect(() => {
+        const updateScale = () => {
+            if (containerRef.current) {
+                const parentWidth = containerRef.current.clientWidth;
+                if (parentWidth < 800) {
+                    setScale(parentWidth / 800);
+                } else {
+                    setScale(1);
+                }
+            }
+        };
+
+        updateScale();
+        const observer = new ResizeObserver(() => {
+            updateScale();
+        });
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        window.addEventListener('resize', updateScale);
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', updateScale);
+        };
+    }, []);
 
     useEffect(() => {
         if (isPaid) return;
@@ -119,19 +147,36 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     return (
         <div className="max-w-3xl mx-auto w-full space-y-8 animate-in fade-in duration-500">
             {/* Invoice Document Card A4 */}
-            <div className="bg-white text-black rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden w-full h-auto lg:aspect-[210/297] flex flex-col">
-                <InvoiceDocument
-                    refAction={componentRef}
-                    estimate={estimate}
-                    user={user}
-                    isPaid={isPaid}
-                    agencySettings={agencySettings}
-                    paymentType={order.type}
-                    currency={effectiveCurrency}
-                    exchangeRate={effectiveRate}
-                    bankDetails={bankDetails}
-                />
+            <div 
+                ref={containerRef}
+                className="bg-white text-black rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden w-full relative"
+                style={{ height: `${1130 * scale}px` }}
+            >
+                <div
+                    style={{
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                        width: '800px',
+                        height: '1130px',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0
+                    }}
+                >
+                    <InvoiceDocument
+                        refAction={componentRef}
+                        estimate={estimate}
+                        user={user}
+                        isPaid={isPaid}
+                        agencySettings={agencySettings}
+                        paymentType={order.type}
+                        currency={effectiveCurrency}
+                        exchangeRate={effectiveRate}
+                        bankDetails={bankDetails}
+                    />
+                </div>
             </div>
+
 
             {/* Status & Payment Action Panel */}
             {orderStatus !== 'waiting_verification' && (

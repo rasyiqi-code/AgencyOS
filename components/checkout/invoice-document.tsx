@@ -146,7 +146,7 @@ export function InvoiceDocument({
     const totalToPay = (paymentType === 'DP' || paymentType === 'REPAYMENT') ? extendedEstimate.totalCost * 0.5 : extendedEstimate.totalCost;
 
     return (
-        <div ref={refAction} className="p-6 sm:p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
+        <div ref={refAction} className="p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
             <style jsx global>{`
                 @media print {
                     @page {
@@ -157,7 +157,6 @@ export function InvoiceDocument({
                         background: white !important;
                         print-color-adjust: exact;
                         -webkit-print-color-adjust: exact;
-                        color: black !important;
                     }
                     #invoice-doc {
                         padding: 0 !important;
@@ -199,7 +198,7 @@ export function InvoiceDocument({
                 return (
                     <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center watermark-container">
                         <div
-                            className="font-black text-6xl sm:text-8xl px-6 sm:px-12 py-2 sm:py-4 tracking-widest uppercase rounded-xl border-double opacity-[0.12] transform -rotate-[25deg]"
+                            className="font-black text-8xl px-12 py-4 tracking-widest uppercase rounded-xl border-double opacity-[0.12] transform -rotate-[25deg]"
                             style={{ border: `8px double ${color}`, color }}
                         >
                             {label}
@@ -211,38 +210,38 @@ export function InvoiceDocument({
             {/* Header */}
 
             {/* Refined Header (Kop) */}
-            <div className="pb-6 sm:pb-8 mb-4 relative z-10">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-4">
-                    <div className="flex items-center sm:items-end gap-2 sm:gap-4">
+            <div className="pb-8 mb-4 relative z-10">
+                <div className="flex justify-between items-baseline">
+                    <div className="flex items-end gap-4">
                         <Image
                             src="/logo.png"
                             alt="Logo"
-                            width={32}
-                            height={32}
-                            className="object-contain w-8 h-8 sm:w-10 sm:h-10"
-                            style={{ height: 'auto' }}
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                            style={{ height: 'auto', width: 'auto' }}
                             sizes="40px"
                         />
-                        <h1 className="text-2xl sm:text-4xl font-black tracking-tighter leading-none text-[#D4AF37]">{agencyName}</h1>
+                        <h1 className="text-4xl font-black tracking-tighter leading-none text-[#D4AF37]">{agencyName}</h1>
                     </div>
-                    <div className="text-left sm:text-right w-full sm:w-auto">
-                        <h2 className="text-2xl sm:text-4xl font-black text-[#D4AF37] uppercase tracking-tighter leading-none select-none flex items-baseline justify-start sm:justify-end relative sm:-top-[6px]">
-                            <span className="mr-3 sm:mr-4 opacity-30 relative -top-[2px] hidden sm:inline">|</span>{t('title')}
+                    <div className="text-right">
+                        <h2 className="text-4xl font-black text-[#D4AF37] uppercase tracking-tighter leading-none select-none flex items-baseline justify-end relative -top-[6px]">
+                            <span className="mr-4 opacity-30 relative -top-[2px]">|</span>{t('title')}
                         </h2>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:flex sm:justify-between items-start mt-4 pt-4 border-t border-b border-zinc-100/80 pb-4 gap-4 w-full">
-                    <div className="text-xs sm:text-sm text-zinc-600 leading-tight space-y-[2px]">
+                <div className="flex justify-between items-start mt-4 pt-4 border-t border-b border-zinc-100/80 pb-4">
+                    <div className="text-sm text-zinc-600 max-w-xs leading-tight whitespace-pre-line space-y-[1px]">
                         <div className="font-bold text-zinc-900">{website}</div>
-                        <div className="text-zinc-500 font-medium text-[11px] sm:text-[12px]">{billingEmail}</div>
+                        <div className="text-zinc-500 font-medium text-[12px]">{billingEmail}</div>
                     </div>
-                    <div className="text-right space-y-[2px] w-full">
-                        <div className="flex justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
+                    <div className="text-right space-y-[1px]">
+                        <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('invoiceNo', { fallback: "No. Invoice" })}</span>
                             <span className="font-mono font-bold text-zinc-900">#{extendedEstimate.id.slice(-8).toUpperCase()}</span>
                         </div>
-                        <div className="flex justify-end items-baseline gap-[4px] text-[10px] sm:text-[11px]">
+                        <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('date')}</span>
                             <span className="font-bold text-zinc-900">{formattedDate}</span>
                         </div>
@@ -250,20 +249,19 @@ export function InvoiceDocument({
                 </div>
             </div>
 
-
             {/* Client & Payment Info */}
-            <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-6 sm:justify-between items-start sm:items-end relative z-10">
+            <div className="mb-8 flex justify-between items-end relative z-10">
                 {/* Client Info Card */}
-                <div className="bg-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-zinc-100 w-full sm:min-w-[320px]">
-                    <h3 className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('billTo')}</h3>
-                    <p className="text-lg sm:text-xl font-bold text-zinc-900 leading-tight">{user?.displayName || user?.email || t('valuedClient', { fallback: "Valued Client" })}</p>
-                    <p className="text-zinc-500 text-xs sm:text-sm font-medium mt-0.5">{user?.email}</p>
+                <div className="bg-white py-4 px-6 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-zinc-100 min-w-[320px]">
+                    <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('billTo')}</h3>
+                    <p className="text-xl font-bold text-zinc-900 leading-tight">{user?.displayName || user?.email || t('valuedClient', { fallback: "Valued Client" })}</p>
+                    <p className="text-zinc-500 text-sm font-medium mt-0.5">{user?.email}</p>
                 </div>
 
                 {/* Total Amount (Aligned with Card content) */}
-                <div className="flex flex-col justify-end items-start sm:items-end pr-0 sm:pr-2 pb-0 sm:pb-4 w-full sm:w-auto">
-                    <h3 className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('totalAmount')}</h3>
-                    <p className="text-3xl sm:text-4xl font-black text-[#D4AF37] tracking-tighter leading-none">
+                <div className="flex flex-col justify-end items-end pr-2 pb-4">
+                    <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('totalAmount')}</h3>
+                    <p className="text-4xl font-black text-[#D4AF37] tracking-tighter leading-none">
                         {formatCurrency(extendedEstimate.totalCost)}
                     </p>
                 </div>
@@ -273,20 +271,20 @@ export function InvoiceDocument({
             <table className="w-full mb-4">
                 <thead>
                     <tr className="border-b border-zinc-200">
-                        <th className="text-left py-2 font-bold uppercase text-[10px] sm:text-xs tracking-wider">{t('description')}</th>
-                        <th className="text-right py-2 font-bold uppercase text-[10px] sm:text-xs tracking-wider w-16 sm:w-24">{t('hours')}</th>
-                        <th className="text-right py-2 font-bold uppercase text-[10px] sm:text-xs tracking-wider w-24 sm:w-32">{t('amount')}</th>
+                        <th className="text-left py-3 font-bold uppercase text-xs tracking-wider">{t('description')}</th>
+                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-24">{t('hours')}</th>
+                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-32">{t('amount')}</th>
                     </tr>
                 </thead>
-                <tbody className="text-xs sm:text-sm">
+                <tbody className="text-sm">
                     {/* Service Specific Details */}
                     {extendedEstimate.service && (
                         <tr>
-                            <td className="pt-4 sm:pt-6 pb-2 pr-2 sm:pr-4">
-                                <div className="font-bold text-base sm:text-lg">{extendedEstimate.service.title}</div>
+                            <td className="pt-6 pb-2 pr-4">
+                                <div className="font-bold text-lg">{extendedEstimate.service.title}</div>
                             </td>
-                            <td className="pt-4 sm:pt-6 pb-2 text-right align-top">-</td>
-                            <td className="pt-4 sm:pt-6 pb-2 text-right align-top">
+                            <td className="pt-6 pb-2 text-right align-top">-</td>
+                            <td className="pt-6 pb-2 text-right align-top">
                                 {formatCurrency(extendedEstimate.totalCost)}
                             </td>
                         </tr>
@@ -295,78 +293,78 @@ export function InvoiceDocument({
                     {/* Fallback line item - only when no service detail block */}
                     {!extendedEstimate.service && extendedEstimate.screens.length === 0 && extendedEstimate.apis.length === 0 && (
                         <tr className="border-b border-zinc-100">
-                            <td className="py-3 sm:py-4 pr-2 sm:pr-4">
+                            <td className="py-4 pr-4">
                                 <div className="font-bold">{extendedEstimate.title.replace(/^(Invoice: |Invoice for |Draft Quote for |Quote: |Quote Request: )/i, '')}</div>
                                 <div className="text-zinc-500 text-xs mt-1">{extendedEstimate.summary}</div>
                             </td>
-                            <td className="py-3 sm:py-4 text-right">-</td>
-                            <td className="py-3 sm:py-4 text-right">
+                            <td className="py-4 text-right">-</td>
+                            <td className="py-4 text-right">
                                 {formatCurrency(extendedEstimate.totalCost)}
                             </td>
                         </tr>
                     )}
                     {extendedEstimate.screens.map((item: InvoiceItem, i: number) => (
                         <tr key={`screen-${i}`} className="border-b border-zinc-100">
-                            <td className="py-3 sm:py-4 pr-2 sm:pr-4">
-                                <div className="font-bold text-xs sm:text-sm">{item.title}</div>
-                                <div className="text-zinc-500 text-[10px] sm:text-xs mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description || "") }} />
+                            <td className="py-4 pr-4">
+                                <div className="font-bold">{item.title}</div>
+                                <div className="text-zinc-500 text-xs mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description || "") }} />
                             </td>
-                            <td className="py-3 sm:py-4 text-right">{item.hours}</td>
-                            <td className="py-3 sm:py-4 text-right">{formatCurrency(item.hours * 12)}</td>
+                            <td className="py-4 text-right">{item.hours}</td>
+                            <td className="py-4 text-right">{formatCurrency(item.hours * 12)}</td>
                         </tr>
                     ))}
                     {extendedEstimate.apis.map((item: InvoiceItem, i: number) => (
                         <tr key={`api-${i}`} className="border-b border-zinc-100">
-                            <td className="py-3 sm:py-4 pr-2 sm:pr-4">
-                                <div className="font-bold text-xs sm:text-sm">{item.title} (API)</div>
-                                <div className="text-zinc-500 text-[10px] sm:text-xs mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description || "") }} />
+                            <td className="py-4 pr-4">
+                                <div className="font-bold">{item.title} (API)</div>
+                                <div className="text-zinc-500 text-xs mt-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description || "") }} />
                             </td>
-                            <td className="py-3 sm:py-4 text-right">{item.hours}</td>
-                            <td className="py-3 sm:py-4 text-right">{formatCurrency(item.hours * 12)}</td>
+                            <td className="py-4 text-right">{item.hours}</td>
+                            <td className="py-4 text-right">{formatCurrency(item.hours * 12)}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
             {/* Footer / Total */}
-            <div className="mt-auto border-t border-zinc-200 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-start gap-6">
+            <div className="mt-auto border-t border-zinc-200 pt-8 flex justify-between items-start">
                 <div className="relative">
                     <AuthenticitySticker id={extendedEstimate.id} />
                 </div>
-                <div className="space-y-1 w-full sm:w-auto">
-                    <div className="flex justify-between w-full sm:w-64 text-xs sm:text-sm text-zinc-500">
+                <div className="space-y-1">
+                    <div className="flex justify-between w-64 text-sm text-zinc-500">
                         <span>{t('subtotal')}</span>
                         <span className="font-medium text-zinc-900">{formatCurrency(extendedEstimate.totalCost)}</span>
                     </div>
                     {(paymentType === 'DP' || paymentType === 'REPAYMENT') && (
-                        <div className="flex justify-between w-full sm:w-64 text-xs sm:text-sm text-indigo-600 font-medium">
+                        <div className="flex justify-between w-64 text-sm text-indigo-600 font-medium">
                             <span className="flex items-center gap-1">
                                 {paymentType === 'DP' ? tc('dp') : tc('repayment')}
                                 {(paymentType === 'REPAYMENT' || (paymentType === 'DP' && isPaid)) && (
-                                    <span className="ml-1 text-[9px] font-bold text-emerald-600 border border-emerald-600 px-1 rounded">{t('paid')}</span>
+                                    <span className="ml-1 text-[10px] font-bold text-emerald-600 border border-emerald-600 px-1 rounded">{t('paid')}</span>
                                 )}
                             </span>
                             <span>-{formatCurrency(extendedEstimate.totalCost * 0.5)}</span>
                         </div>
                     )}
-                    <div className="flex justify-between w-full sm:w-64 text-xs sm:text-sm text-zinc-500">
+                    <div className="flex justify-between w-64 text-sm text-zinc-500">
                         <span>{t('tax')} (0%)</span>
                         <span className="font-medium text-zinc-900">{formatCurrency(0)}</span>
                     </div>
-                    <div className="flex justify-between w-full sm:w-64 text-lg sm:text-xl font-bold border-t border-zinc-200 pt-2">
+                    <div className="flex justify-between w-64 text-xl font-bold border-t border-zinc-200 pt-2">
                         <span>{(paymentType === 'DP' || paymentType === 'REPAYMENT') ? tc('totalToPay') : t('total')}</span>
                         <span>{formatCurrency(totalToPay)}</span>
                     </div>
                 </div>
             </div>
 
-            <div className="text-center text-[10px] sm:text-xs text-zinc-400 mt-8 sm:mt-12 pb-4 sm:pb-8 flex flex-col items-center gap-2">
-                <div className="leading-relaxed">
+            <div className="text-center text-xs text-zinc-400 mt-12 pb-8 flex flex-col items-center gap-2">
+                <div>
                     {isPaid ? t('thankYouPaid') : t('thankYou')}
                     {!isPaid && bankDetails && bankDetails.bank_account && (
-                        <span className="block sm:inline sm:ml-2 sm:pl-2 sm:border-l sm:border-zinc-200 mt-1 sm:mt-0">
-                            <span className="text-zinc-900 font-bold mr-1">{bankDetails.bank_name}</span>
-                            <span className="font-mono font-bold text-zinc-900 mr-1">{bankDetails.bank_account}</span>
+                        <span className="ml-2 pl-2 border-l border-zinc-200 inline-flex items-center gap-2">
+                            <span className="text-zinc-900 font-bold">{bankDetails.bank_name}</span>
+                            <span className="font-mono font-bold text-zinc-900">{bankDetails.bank_account}</span>
                             <span className="text-zinc-500">a.n {bankDetails.bank_holder}</span>
                         </span>
                     )}
@@ -375,4 +373,3 @@ export function InvoiceDocument({
         </div>
     );
 }
-
