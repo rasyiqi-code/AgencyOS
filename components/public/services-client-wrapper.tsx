@@ -29,6 +29,19 @@ interface ServicesClientWrapperProps {
     pageTitle?: string | null;
 }
 
+const potentialTags = [
+    { en: "Landing Page", id: "Landing Page" },
+    { en: "Website", id: "Website" },
+    { en: "Mobile App", id: "Aplikasi Mobile" },
+    { en: "SaaS", id: "SaaS" },
+    { en: "UI/UX Design", id: "Desain UI/UX" },
+    { en: "SEO", id: "SEO" },
+    { en: "Maintenance", id: "Maintenance" },
+    { en: "E-Commerce", id: "E-Commerce" },
+    { en: "Branding", id: "Branding" },
+    { en: "Marketing", id: "Pemasaran" }
+];
+
 export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWrapperProps) {
     const router = useRouter();
     const pathname = usePathname();
@@ -36,6 +49,42 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
     const [searchQuery, setSearchQuery] = useState("");
 
     const isId = pathname.startsWith("/id") || pathname.includes("/id/");
+
+    // Hitung tag yang aktif berdasarkan kecocokan konten (judul, deskripsi, fitur, kategori)
+    const activeTags = potentialTags.filter((tag) => {
+        return services.some((service) => {
+            const titleText = `${service.title} ${service.title_id || ""}`.toLowerCase();
+            const descText = `${service.description} ${service.description_id || ""}`.toLowerCase();
+            const categoryText = (service.category || "").toLowerCase();
+
+            // Normalisasi list fitur agar aman saat diakses
+            const featuresArray = Array.isArray(service.features)
+                ? service.features
+                : typeof service.features === "string"
+                ? [service.features]
+                : [];
+            const featuresIdArray = Array.isArray(service.features_id)
+                ? service.features_id
+                : typeof service.features_id === "string"
+                ? [service.features_id]
+                : [];
+
+            const featuresText = [...featuresArray, ...featuresIdArray].join(" ").toLowerCase();
+            const combinedText = `${titleText} ${descText} ${featuresText} ${categoryText}`;
+
+            return (
+                combinedText.includes(tag.en.toLowerCase()) ||
+                combinedText.includes(tag.id.toLowerCase())
+            );
+        });
+    }).map((tag) => (isId ? tag.id : tag.en));
+
+    // Gunakan fallback jika tidak ada tag yang cocok sama sekali
+    const finalTags = activeTags.length > 0
+        ? activeTags
+        : potentialTags.map((tag) => (isId ? tag.id : tag.en));
+
+    const displayedTags = finalTags.slice(0, 7);
 
     // Filter reaktif terhadap daftar layanan berdasarkan input pencarian
     const filteredServices = services.filter((service) => {
@@ -137,6 +186,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                             onTagClick={(tag) => setSearchQuery(tag)} 
                             isId={isId} 
                             servicesCount={services.length} 
+                            tags={displayedTags}
                         />
                     )}
                 </div>

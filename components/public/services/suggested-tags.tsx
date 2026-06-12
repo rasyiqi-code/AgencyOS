@@ -6,14 +6,10 @@ interface SuggestedTagsProps {
     onTagClick: (tag: string) => void;
     isId: boolean;
     servicesCount: number;
+    tags: string[];
 }
 
-export function SuggestedTags({ onTagClick, isId, servicesCount }: SuggestedTagsProps) {
-    // Daftar tag saran yang premium dan relevan dengan industri agency
-    const tags = isId
-        ? ["Landing Page", "Website", "Aplikasi Mobile", "SaaS", "Desain UI/UX", "SEO", "Maintenance"]
-        : ["Landing Page", "Website", "Mobile App", "SaaS", "UI/UX Design", "SEO", "Maintenance"];
-
+export function SuggestedTags({ onTagClick, isId, servicesCount, tags }: SuggestedTagsProps) {
     return (
         <div className="w-full max-w-md mx-auto mt-4 animate-in fade-in duration-500 delay-150">
             <div className="flex items-center justify-center gap-1.5 mb-2.5">
