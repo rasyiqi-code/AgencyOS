@@ -4,7 +4,6 @@ import { prisma } from "@/lib/config/db";
 import { getSystemSettings } from "@/lib/server/settings";
 import { notFound } from "next/navigation";
 import { InvoiceClientWrapper } from "@/components/invoice/invoice-client-wrapper";
-import { CheckoutProgress } from "@/components/checkout/checkout-progress";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
@@ -145,13 +144,9 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
         telegram: getSetting('CONTACT_TELEGRAM')
     };
 
-    // Menentukan langkah saat ini untuk indikator progres (1: Pembayaran, 2: Selesai)
-    const currentStep: 1 | 2 = isPaid ? 2 : 1;
-
     return (
         <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-24">
             <div className="container mx-auto px-4 py-8 md:py-24 max-w-7xl">
-                <CheckoutProgress key={currentStep} currentStep={currentStep} />
                 <InvoiceClientWrapper
                     order={order as unknown as InvoiceOrder}
                     estimate={extendedEstimate}
