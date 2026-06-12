@@ -47,23 +47,25 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
                 </div>
 
                 {/* Harga & Tombol Order di Sisi Kanan (Sebaris) */}
-                <div className="flex items-center gap-3 md:gap-5 shrink-0">
-                    <div className="text-right">
-                        <div className="text-xs sm:text-sm font-black text-white tracking-tight leading-none flex items-center gap-1">
+                <div className="flex items-center gap-2.5 md:gap-4 shrink-0">
+                    <div className="text-right flex flex-col justify-center select-none">
+                        <span className="text-xs sm:text-sm font-black text-white tracking-tight leading-none whitespace-nowrap">
                             <PriceDisplay
                                 amount={service.price + selectedAddons.reduce((sum, a) => sum + a.price, 0)}
                                 baseCurrency={(service.currency as "USD" | "IDR") || 'USD'}
                                 compact={true}
                             />
-                            <span className="text-[10px] sm:text-xs font-normal text-zinc-500">/ {intervalLabel}</span>
-                        </div>
+                        </span>
+                        <span className="text-[9px] sm:text-[11px] font-medium text-zinc-500 tracking-tight leading-tight mt-0.5 whitespace-nowrap">
+                            / {intervalLabel}
+                        </span>
                     </div>
 
                     <PurchaseButton
                         serviceId={service.id}
                         interval={service.interval}
                         selectedAddons={selectedAddons}
-                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 sm:h-8 px-3.5 sm:px-4 rounded-none text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 sm:h-8 px-3 sm:px-4 rounded-none text-[9px] sm:text-xs uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shrink-0"
                     />
                 </div>
             </div>
