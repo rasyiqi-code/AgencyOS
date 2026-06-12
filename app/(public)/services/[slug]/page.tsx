@@ -7,6 +7,7 @@ import { Testimonials } from "@/components/landing/section-testimonials";
 import { SectionGuarantee } from "@/components/landing/section-guarantee";
 import { FAQSection } from "@/components/landing/faq-section-fixed";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
+import { getSystemSettings } from "@/lib/server/settings";
 
 export const revalidate = 3600; // Cache halaman detail layanan selama 1 jam (ISR)
 
@@ -24,23 +25,43 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
 
     if (!service) return { title: "Service Not Found" };
 
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
+    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
+
     const isId = locale === 'id';
     const title = (isId ? service.title_id : null) || service.title;
+    const displayTitle = `${title} | ${brand}`;
     const description = (isId ? service.description_id : null) || service.description;
 
     // Clean description for meta tag (remove HTML tags)
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return {
-        title: title,
+        // Menggunakan title.absolute agar tidak ditimpa/ditambahkan brand ganda oleh layout template
+        title: {
+            absolute: displayTitle
+        },
         description: cleanDescription,
         openGraph: {
-            title: title,
+            title: displayTitle,
             description: cleanDescription,
             images: service.image ? [{ url: service.image }] : undefined,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: displayTitle,
+            description: cleanDescription,
+            images: service.image ? [service.image] : undefined,
         },
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_APP_URL}/services/${params.slug}`
+            canonical: `${baseUrl}/${locale}/services/${params.slug}`,
+            // Menambahkan alternate hreflang untuk optimasi mesin pencari multibahasa
+            languages: {
+                'en': `${baseUrl}/en/services/${params.slug}`,
+                'id': `${baseUrl}/id/services/${params.slug}`,
+            }
         }
     };
 }
@@ -56,24 +77,16 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
         notFound();
     }
 
+    const settings = await getSystemSettings(["AGENCY_NAME"]);
+    const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
+
     const title = (isId ? service.title_id : null) || service.title;
     const description = (isId ? service.description_id : null) || service.description || "";
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     // Social proof avatars (temporarily disabled due to Stack Auth SDK error)
     const trustedAvatars: string[] = [];
-    /*
-    try {
-        const { hexclaveServerApp } = await import("@/lib/config/hexclave");
-        const users = await hexclaveServerApp.listUsers();
-        trustedAvatars = users
-            .filter(u => !!u.profileImageUrl)
-            .map(u => u.profileImageUrl!)
-            .slice(0, 5);
-    } catch (error) {
-        console.error("Failed to fetch trusted avatars:", error);
-    }
-    */
 
     // Transform to match interface safely
     const processedService = {
@@ -82,14 +95,13 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
         features_id: service.features_id as unknown
     };
 
-    
     return (
         <div className="flex flex-col">
             <BreadcrumbSchema
                 items={[
-                    { name: isId ? 'Beranda' : 'Home', item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}` },
-                    { name: isId ? 'Layanan' : 'Services', item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/services` },
-                    { name: title, item: `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/services/${service.slug}` },
+                    { name: isId ? 'Beranda' : 'Home', item: `${baseUrl}/${locale}` },
+                    { name: isId ? 'Layanan' : 'Services', item: `${baseUrl}/${locale}/services` },
+                    { name: title, item: `${baseUrl}/${locale}/services/${service.slug}` },
                 ]}
             />
             {/* Service Structured Data for SEO */}
@@ -102,11 +114,18 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                         "serviceType": title,
                         "provider": {
                             "@type": "Organization",
-                            "name": "Crediblemark",
-                            "url": process.env.NEXT_PUBLIC_APP_URL
+                            "name": brand,
+                            "url": baseUrl
                         },
                         "description": cleanDescription,
                         "areaServed": "Worldwide",
+                        // Menambahkan properti offers langsung di bawah Service agar terdeteksi oleh Rich Snippets Google
+                        "offers": {
+                            "@type": "Offer",
+                            "price": service.price,
+                            "priceCurrency": service.currency || "USD",
+                            "url": `${baseUrl}/${locale}/services/${service.slug}`
+                        },
                         "hasOfferCatalog": {
                             "@type": "OfferCatalog",
                             "name": title,
@@ -118,7 +137,7 @@ export default async function PublicServiceDetailPage(props: ServicePageProps) {
                                         "name": title
                                     },
                                     "price": service.price,
-                                    "priceCurrency": "USD"
+                                    "priceCurrency": service.currency || "USD"
                                 }
                             ]
                         }

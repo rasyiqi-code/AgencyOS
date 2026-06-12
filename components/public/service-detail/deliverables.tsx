@@ -21,10 +21,10 @@ export function Deliverables({ service, isId }: DeliverablesProps) {
     return (
         <div className="space-y-6">
             <div className="flex flex-col items-center text-center space-y-1">
-                <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
                     <div className="w-1 h-3 bg-brand-yellow rounded-full" />
                     {tService("deliverables")}
-                </h4>
+                </span>
                 <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
                     {tService("whatYouGet")}
                 </h2>

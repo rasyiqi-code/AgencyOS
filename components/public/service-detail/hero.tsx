@@ -1,6 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { Service, AddonType } from "./types";
@@ -23,10 +22,6 @@ export function ServiceHero({ service, displayTitle, intervalLabel, selectedAddo
             <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-12 p-6 md:p-10 lg:p-12">
                 {/* Kolom Kiri: Nama Jasa */}
                 <div className="flex-1 space-y-2 md:space-y-4">
-                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-brand-yellow/10 border border-brand-yellow/20 text-[7px] md:text-[9px] font-bold text-brand-yellow uppercase tracking-[0.2em]">
-                        <Sparkles className="w-2 md:w-3 h-2 md:h-3" />
-                        {tService("premiumService")}
-                    </div>
                     <h1 className="text-xl md:text-2xl lg:text-4xl font-black text-brand-yellow tracking-tighter leading-tight break-words max-w-2xl">
                         {displayTitle}
                     </h1>
