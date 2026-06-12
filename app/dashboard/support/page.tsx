@@ -45,10 +45,7 @@ export default async function SupportPage() {
 
     return (
         <div className="flex flex-col gap-6">
-            <div>
-                <h1 className="text-3xl font-bold text-white tracking-tight">{isId ? 'Bantuan' : 'Support'}</h1>
-                <p className="text-zinc-400">{isId ? 'Butuh bantuan dengan proyek Anda? Kami siap membantu.' : 'Need help with your project? We are here.'}</p>
-            </div>
+
 
             <TicketList tickets={serializableTickets} />
         </div>

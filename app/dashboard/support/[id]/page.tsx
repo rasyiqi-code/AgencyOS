@@ -45,9 +45,7 @@ export default async function TicketChatPage({ params }: { params: Promise<{ id:
 
     return (
         <div className="flex flex-col h-[calc(100vh-100px)]">
-            <div className="mb-4">
-                <h1 className="text-2xl font-bold text-white tracking-tight">Support Chat</h1>
-            </div>
+
             <ChatInterface initialTicket={serializableTicket} />
         </div>
     );

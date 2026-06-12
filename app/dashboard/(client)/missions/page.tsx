@@ -2,8 +2,6 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { prisma } from "@/lib/config/db";
 import { MissionCard } from "@/components/dashboard/missions/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import Link from "next/link"; // Added Link import
 import { type ExtendedProject } from "@/lib/shared/types";
 
@@ -54,29 +52,7 @@ export default async function MissionsPage({ searchParams }: { searchParams: Pro
 
     return (
         <div className="pb-10">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">{isId ? 'Log Misi' : 'Mission Log'}</h1>
-                    <p className="text-zinc-400 mt-1">{isId ? 'Semua operasi aktif dan yang diarsipkan.' : 'All active and archived operations.'}</p>
-                </div>
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    <form className="relative w-full md:w-64">
-                        {/* Simple server-side search form */}
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                        <Input
-                            name="q"
-                            placeholder={isId ? 'Cari misi...' : 'Search missions...'}
-                            className="bg-zinc-900/50 border-white/10 pl-9 w-full"
-                            defaultValue={q}
-                        />
-                    </form>
-                    <Link href="/price-calculator">
-                        <Button className="bg-white text-black hover:bg-zinc-200 font-semibold cursor-pointer">
-                            {isId ? '+ Misi Baru' : '+ New Mission'}
-                        </Button>
-                    </Link>
-                </div>
-            </div>
+
 
             <Tabs defaultValue="subscriptions" className="w-full">
                 <TabsList className="bg-zinc-900/50 border border-white/5 mb-6">

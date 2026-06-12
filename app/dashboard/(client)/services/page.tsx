@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/config/db";
-import { Sparkles } from "lucide-react";
 import { ServiceCard } from "@/components/dashboard/services/service-card";
 import { Service as DashboardService } from "@/components/dashboard/services/service-modal-content";
 import { cookies } from "next/headers";
@@ -24,15 +23,7 @@ export default async function ClientServicesPage() {
 
     return (
         <div className="w-full py-6">
-            <div className="mb-10">
-                <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-                    <Sparkles className="w-8 h-8 text-brand-yellow" />
-                    {isId ? 'Layanan Kami' : 'Our Services'}
-                </h1>
-                <p className="text-zinc-400 mt-2 text-sm max-w-2xl">
-                    {isId ? 'Pilih paket layanan kelas enterprise yang dikurasi untuk mempercepat pertumbuhan bisnis Anda.' : 'Choose from our curated enterprise-grade services to accelerate your business growth.'}
-                </p>
-            </div>
+
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl">
                 {processedServices.map((service) => (

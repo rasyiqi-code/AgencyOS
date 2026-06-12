@@ -35,14 +35,7 @@ export default async function ClientQuotesPage() {
 
     return (
         <div className="w-full py-8">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white tracking-tight">
-                    {t('title')}
-                </h1>
-                <p className="text-zinc-400 mt-1">
-                    {t('subtitle')}
-                </p>
-            </div>
+
 
             <Card className="bg-zinc-900 border-zinc-800">
                 <CardHeader>
