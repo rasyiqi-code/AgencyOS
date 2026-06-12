@@ -131,11 +131,9 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     // If currency is IDR and amount is suspiciously small (e.g. < 5000), it's probably USD labeled as IDR
     const isLegacyMismatched = order.currency === 'IDR' && order.amount < 5000;
 
-    // Calculate display amount for Total Due showing in sidebar
-    // If paid, show the amount in the currency it was paid in (or locked to)
-    // If not paid, use the user's selected context currency
-    const effectiveCurrency = isPaid ? order.currency : contextCurrency;
-    const effectiveRate = isPaid ? order.exchangeRate : contextRate;
+    // Selalu gunakan currency dan exchange rate asli dari order agar nominal faktur konsisten dan tidak berubah-ubah mengikuti kurs real-time
+    const effectiveCurrency = order.currency;
+    const effectiveRate = order.exchangeRate;
 
     // Normalize amount to base USD first for reliable conversion
     const baseAmountUSD = isLegacyMismatched || order.currency === 'USD'
