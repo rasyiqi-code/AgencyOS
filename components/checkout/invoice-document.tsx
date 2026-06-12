@@ -6,7 +6,7 @@ import { enUS as localeEn } from "date-fns/locale/en-US";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 
-import { ExtendedEstimate, InvoiceItem } from "@/lib/shared/types";
+import { ExtendedEstimate, InvoiceItem, ServiceAddon } from "@/lib/shared/types";
 import { sanitizeHtml } from "@/lib/utils/sanitize";
 
 import QRCode from "react-qr-code";
@@ -141,6 +141,34 @@ export function InvoiceDocument({
             currency: targetCurrency,
             maximumFractionDigits: isTargetIDR ? 0 : 2
         }).format(convertedVal);
+    };
+
+    // Ambil daftar fitur deliverables
+    const serviceFeatures = locale === 'id'
+        ? (extendedEstimate.service?.features_id as string[]) || (extendedEstimate.service?.features as string[])
+        : (extendedEstimate.service?.features as string[]) || [];
+
+    // Ambil daftar addon dari estimate.service
+    const serviceAddonsEn = (extendedEstimate.service?.addons as ServiceAddon[]) || [];
+    const serviceAddonsId = Array.isArray((extendedEstimate.service as unknown as Record<string, unknown>)?.addons_id)
+        ? (extendedEstimate.service as unknown as Record<string, unknown>).addons_id as ServiceAddon[]
+        : [];
+
+    const serviceAddons = (locale === 'id' && serviceAddonsId.length > 0) ? serviceAddonsId : serviceAddonsEn;
+
+    // Filter addon yang terpilih berdasarkan estimate.summary
+    const selectedAddons = serviceAddons.filter((_addon, idx) => {
+        const enName = serviceAddonsEn[idx]?.name;
+        return enName && extendedEstimate.summary.includes(`+ ${enName}`);
+    });
+
+    const getAddonDisplayPrice = (addon: ServiceAddon) => {
+        let price = addon.price;
+        // Jika service dinormalisasi ke USD oleh backend, tapi addon di DB masih ber-currency IDR
+        if (extendedEstimate.service?.currency === 'USD' && addon.currency === 'IDR') {
+            price = addon.price / (exchangeRate || 15000);
+        }
+        return price;
     };
 
     const totalToPay = (paymentType === 'DP' || paymentType === 'REPAYMENT') ? extendedEstimate.totalCost * 0.5 : extendedEstimate.totalCost;
@@ -279,15 +307,51 @@ export function InvoiceDocument({
                 <tbody className="text-sm">
                     {/* Service Specific Details */}
                     {extendedEstimate.service && (
-                        <tr>
-                            <td className="pt-6 pb-2 pr-4">
-                                <div className="font-bold text-lg">{extendedEstimate.service.title}</div>
-                            </td>
-                            <td className="pt-6 pb-2 text-right align-top">-</td>
-                            <td className="pt-6 pb-2 text-right align-top">
-                                {formatCurrency(extendedEstimate.totalCost)}
-                            </td>
-                        </tr>
+                        <>
+                            <tr className="border-b border-zinc-100">
+                                <td className="pt-6 pb-4 pr-4">
+                                    <div className="font-bold text-lg">{extendedEstimate.service.title}</div>
+                                    {serviceFeatures && serviceFeatures.length > 0 && (
+                                        <div className="mt-3 pl-4 border-l-2 border-[#D4AF37]/30">
+                                            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">
+                                                {locale === 'id' ? 'Fitur Termasuk:' : 'Features Included:'}
+                                            </div>
+                                            <ul className="list-disc pl-4 text-xs text-zinc-500 space-y-1">
+                                                {serviceFeatures.map((feat, idx) => (
+                                                    <li key={idx} className="leading-relaxed">{feat}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </td>
+                                <td className="pt-6 pb-4 text-right align-top font-mono text-zinc-500">-</td>
+                                <td className="pt-6 pb-4 text-right align-top font-mono font-semibold">
+                                    {formatCurrency(extendedEstimate.service.price)}
+                                </td>
+                            </tr>
+
+                            {/* Selected Add-ons */}
+                            {selectedAddons.map((addon, idx) => (
+                                <tr key={`addon-${idx}`} className="border-b border-zinc-100 bg-zinc-50/20">
+                                    <td className="py-4 pr-4 pl-4 border-l-2 border-[#D4AF37]/50">
+                                        <div className="font-bold text-sm text-zinc-800">
+                                            + {locale === 'id' ? 'Add-on: ' : 'Add-on: '} {addon.name}
+                                        </div>
+                                        {addon.description && (
+                                            <div className="text-xs text-zinc-500 mt-1 italic leading-relaxed">
+                                                {addon.description}
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className="py-4 text-right align-middle font-mono text-xs text-zinc-400">
+                                        {addon.interval === 'monthly' ? (locale === 'id' ? 'Bulanan' : 'Monthly') : addon.interval === 'yearly' ? (locale === 'id' ? 'Tahunan' : 'Yearly') : (locale === 'id' ? 'Sekali Bayar' : 'One-time')}
+                                    </td>
+                                    <td className="py-4 text-right align-middle font-mono font-semibold">
+                                        {formatCurrency(getAddonDisplayPrice(addon))}
+                                    </td>
+                                </tr>
+                            ))}
+                        </>
                     )}
 
                     {/* Fallback line item - only when no service detail block */}
