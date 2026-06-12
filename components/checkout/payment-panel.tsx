@@ -139,7 +139,7 @@ export function PaymentPanel({
                     </span>
                     
                     {activeOrderId ? (
-                        <div className="flex justify-between items-center bg-zinc-950/50 border border-white/5 p-4 rounded-xl">
+                        <div className="flex justify-between items-center bg-zinc-900/40 border border-zinc-800 p-4 rounded-xl backdrop-blur-md">
                             <span className="text-xs font-bold text-zinc-400">
                                 {isId ? "Tipe Terpilih" : "Selected Plan"}
                             </span>
@@ -147,14 +147,12 @@ export function PaymentPanel({
                                 <span className="text-xs font-extrabold bg-white/10 text-white px-3.5 py-1.5 rounded-full border border-white/5">
                                     {paymentType === "FULL" ? t("fullPayment") : paymentType === "DP" ? t("dp") : t("repayment")}
                                 </span>
-                                {!estimate.project?.id && (
-                                    <button
-                                        onClick={() => onChangeActiveOrderId(null)}
-                                        className="text-xs text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
-                                    >
-                                        {t("change") || "Ubah"}
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => onChangeActiveOrderId(null)}
+                                    className="text-xs text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
+                                >
+                                    {t("change") || "Ubah"}
+                                </button>
                             </div>
                         </div>
                     ) : (
@@ -167,23 +165,29 @@ export function PaymentPanel({
                                 {/* Option 1: Full Payment */}
                                 <div 
                                     onClick={() => onChangePaymentType("FULL")}
-                                    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group ${
+                                    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "FULL" 
-                                            ? 'bg-lime-500/5 border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.08)]' 
-                                            : 'bg-zinc-950/40 border-white/5 hover:border-white/10'
+                                            ? 'bg-gradient-to-r from-lime-500/[0.03] to-emerald-500/[0.03] border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.08)] z-10' 
+                                            : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className={`text-xs font-bold transition-colors ${paymentType === "FULL" ? 'text-lime-400' : 'text-zinc-200'}`}>
+                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "FULL" ? 'text-lime-400 font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("fullPayment") || "Pembayaran Penuh"}
                                         </span>
-                                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
-                                            paymentType === "FULL" ? 'bg-lime-400 border-lime-400 text-black' : 'border-zinc-700'
+                                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                                            paymentType === "FULL" 
+                                                ? 'border-lime-500 bg-lime-500/10 shadow-[0_0_10px_rgba(132,204,22,0.2)]' 
+                                                : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
                                         }`}>
-                                            {paymentType === "FULL" && <Check className="w-2.5 h-2.5 stroke-[3.5]" />}
+                                            {paymentType === "FULL" && (
+                                                <div className="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)] flex items-center justify-center">
+                                                    <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <p className="text-[10px] text-zinc-500 font-medium leading-normal">
+                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "FULL" ? 'text-lime-500/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Ideal untuk pengerjaan cepat dan diskon langsung." : "Ideal for immediate setup and hassle-free payment."}
                                     </p>
                                 </div>
@@ -191,23 +195,29 @@ export function PaymentPanel({
                                 {/* Option 2: DP Payment */}
                                 <div 
                                     onClick={() => onChangePaymentType("DP")}
-                                    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group ${
+                                    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "DP" 
-                                            ? 'bg-lime-500/5 border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.08)]' 
-                                            : 'bg-zinc-950/40 border-white/5 hover:border-white/10'
+                                            ? 'bg-gradient-to-r from-lime-500/[0.03] to-emerald-500/[0.03] border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.08)] z-10' 
+                                            : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className={`text-xs font-bold transition-colors ${paymentType === "DP" ? 'text-lime-400' : 'text-zinc-200'}`}>
+                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "DP" ? 'text-lime-400 font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("dp") || "Pembayaran DP (50%)"}
                                         </span>
-                                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
-                                            paymentType === "DP" ? 'bg-lime-400 border-lime-400 text-black' : 'border-zinc-700'
+                                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
+                                            paymentType === "DP" 
+                                                ? 'border-lime-500 bg-lime-500/10 shadow-[0_0_10px_rgba(132,204,22,0.2)]' 
+                                                : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
                                         }`}>
-                                            {paymentType === "DP" && <Check className="w-2.5 h-2.5 stroke-[3.5]" />}
+                                            {paymentType === "DP" && (
+                                                <div className="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)] flex items-center justify-center">
+                                                    <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <p className="text-[10px] text-zinc-500 font-medium leading-normal">
+                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "DP" ? 'text-lime-500/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Proyek dimulai dengan 50% di muka, sisa setelah selesai." : "Start project with 50% upfront, remaining on completion."}
                                     </p>
                                 </div>
