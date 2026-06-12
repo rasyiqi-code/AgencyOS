@@ -167,13 +167,13 @@ export function PaymentPanel({
                                 {/* Option 1: Full Payment */}
                                 <div 
                                     onClick={() => onChangePaymentType("FULL")}
-                                    className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
+                                    className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-start gap-1 min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "FULL" 
                                             ? 'bg-gradient-to-r from-brand-yellow/[0.03] to-amber-500/[0.03] border-brand-yellow/50 shadow-[0_0_20px_rgba(254,215,0,0.08)] z-10' 
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
-                                    <div className="flex justify-between items-start mb-1.5">
+                                    <div className="flex justify-between items-start">
                                         <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("fullPayment") || "Pembayaran Penuh"}
                                         </span>
@@ -197,13 +197,13 @@ export function PaymentPanel({
                                 {/* Option 2: DP Payment */}
                                 <div 
                                     onClick={() => onChangePaymentType("DP")}
-                                    className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
+                                    className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-start gap-1 min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "DP" 
                                             ? 'bg-gradient-to-r from-brand-yellow/[0.03] to-amber-500/[0.03] border-brand-yellow/50 shadow-[0_0_20px_rgba(254,215,0,0.08)] z-10' 
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
-                                    <div className="flex justify-between items-start mb-1.5">
+                                    <div className="flex justify-between items-start">
                                         <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("dp") || "Pembayaran DP (50%)"}
                                         </span>
