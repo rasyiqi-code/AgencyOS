@@ -6,11 +6,13 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ScrollAnimationWrapper } from "@/components/ui/scroll-animation-wrapper";
 import { useParams } from "next/navigation";
+import { useFloatingChat } from "@/lib/store/floating-chat-store";
 
 export function SectionCustomRequest() {
     const t = useTranslations("CustomCTA");
     const params = useParams();
     const locale = params?.locale as string || "id";
+    const { openChat } = useFloatingChat();
 
     return (
         <section className="py-12 sm:py-16 bg-zinc-950 border-y border-white/5 relative overflow-hidden">
@@ -42,15 +44,13 @@ export function SectionCustomRequest() {
                                 </Button>
                                 
                                 <Button
-                                    asChild
                                     variant="outline"
                                     size="default"
-                                    className="w-full sm:w-auto h-12 px-6 rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 font-bold text-sm transition-all active:scale-95 flex items-center gap-2"
+                                    onClick={() => openChat()}
+                                    className="w-full sm:w-auto h-12 px-6 rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 font-bold text-sm transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
                                 >
-                                    <Link href={`/${locale}/contact`}>
-                                        <MessageCircle className="w-4 h-4 text-brand-yellow" />
-                                        {t("contact")}
-                                    </Link>
+                                    <MessageCircle className="w-4 h-4 text-brand-yellow" />
+                                    {t("contact")}
                                 </Button>
                             </div>
                         </div>
