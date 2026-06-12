@@ -29,11 +29,6 @@ interface ServiceListItemProps {
 
 export function ServiceListItem({ service, isId }: ServiceListItemProps) {
     const titleText = (isId ? service.title_id : null) || service.title || "";
-    const descText = (isId ? service.description_id : null) || service.description || "";
-
-    // Bersihkan tag HTML mentah dari deskripsi untuk estetika dan kerapian text clamp
-    const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
-    const cleanDescText = stripHtml(descText);
 
     return (
         <div
@@ -57,11 +52,6 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
                     </h3>
                     <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-brand-yellow transition-colors shrink-0 opacity-0 group-hover:opacity-100 transform translate-y-0.5 -translate-x-1 group-hover:translate-x-0 group-hover:translate-y-0 duration-300" />
                 </Link>
-
-                {/* Deskripsi */}
-                <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2 max-w-2xl leading-relaxed">
-                    {cleanDescText}
-                </p>
             </div>
 
             {/* Aksi dan Harga */}
