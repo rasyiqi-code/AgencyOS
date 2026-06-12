@@ -93,6 +93,19 @@ export function CheckoutPortal({
     const discountedAmount = baseTotal;
     const isPaid = estimate.status === 'paid';
 
+    const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
+    const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
+
+    // Hitung nominal harga berdasarkan tipe pembayaran
+    let amountToPay = baseTotal;
+    if (paymentType === "DP") {
+        amountToPay = baseTotal * 0.5;
+    } else if (paymentType === "REPAYMENT") {
+        const total = projectTotalAmount && projectTotalAmount > 0 ? projectTotalAmount : baseTotal;
+        const paid = projectPaidAmount || 0;
+        amountToPay = Math.max(0, total - paid);
+    }
+
     return (
         <div className="max-w-7xl mx-auto w-full">
             {/* Main Portal Container: Menyatu langsung dengan latar belakang (borderless & backgroundless) */}
@@ -104,6 +117,8 @@ export function CheckoutPortal({
                         estimate={estimate}
                         bonuses={bonuses}
                         selectedAddons={selectedAddons}
+                        amountToPay={amountToPay}
+                        baseCurrency={baseCurrency}
                     />
                 </div>
 
@@ -112,6 +127,9 @@ export function CheckoutPortal({
                     <PaymentPanel 
                         estimate={estimate}
                         amount={discountedAmount}
+                        amountToPay={amountToPay}
+                        paymentType={paymentType}
+                        onChangePaymentType={setPaymentType}
                         onPrint={handlePrint}
                         bankDetails={bankDetails}
                         activeRate={activeRate}

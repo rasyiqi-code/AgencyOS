@@ -1,16 +1,19 @@
 "use client";
 
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Check, ArrowLeft, ShieldCheck, Flame } from "lucide-react";
+import { Check, ArrowLeft, ShieldCheck, Flame, Layers } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { PriceDisplay } from "@/components/providers/currency-provider";
 
 interface ProductShowcaseProps {
     estimate: ExtendedEstimate;
     bonuses: Bonus[];
     selectedAddons: ServiceAddon[];
+    amountToPay: number;
+    baseCurrency: "USD" | "IDR";
 }
 
-export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductShowcaseProps) {
+export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency }: ProductShowcaseProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
@@ -83,7 +86,32 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons }: ProductSh
 
             </div>
 
+            {/* Premium Minecraft-style Specification Details (Moved to Left Side) */}
+            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 z-10">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+                    <div className="flex flex-col">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Project Spec</span>
+                        <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
+                            <Layers className="w-3.5 h-3.5 text-lime-400" />
+                            {isId ? "1 Jasa Estimasi" : "1 Estimate Service"}
+                        </span>
+                    </div>
 
+                    <div className="flex flex-col border-l border-white/10 pl-5">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Add-ons Selected</span>
+                        <span className="text-xs font-extrabold text-zinc-300">
+                            {selectedAddons.length} {isId ? "Terpilih" : "Selected"}
+                        </span>
+                    </div>
+
+                    <div className="flex flex-col border-l border-white/10 pl-5">
+                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Price Plan</span>
+                        <span className="text-xs font-mono font-bold text-brand-yellow">
+                            <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

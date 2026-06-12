@@ -13,6 +13,9 @@ import { PaymentSelector } from "@/components/payment/payment-selector";
 export function PaymentPanel({
     estimate,
     amount,
+    amountToPay,
+    paymentType,
+    onChangePaymentType,
     onPrint,
     bankDetails,
     activeRate,
@@ -33,6 +36,9 @@ export function PaymentPanel({
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
+    amountToPay: number,
+    paymentType: "FULL" | "DP" | "REPAYMENT",
+    onChangePaymentType: (type: "FULL" | "DP" | "REPAYMENT") => void,
     hasActiveGateway?: boolean,
     gatewayStatus?: { midtrans: boolean; creem: boolean },
     defaultPaymentType?: "FULL" | "DP" | "REPAYMENT",
@@ -55,7 +61,7 @@ export function PaymentPanel({
     const [countdown, setCountdown] = useState(5);
     const [activeOrderId, setActiveOrderId] = useState<string | null>(orderId || null);
     const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
-    const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
+
 
     const { currency, rate } = useCurrency();
     const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
@@ -104,15 +110,7 @@ export function PaymentPanel({
         }
     }, [countdown, estimate.status, activeOrderId, router]);
 
-    // Hitung nominal harga berdasarkan tipe pembayaran
-    let amountToPay = amount;
-    if (paymentType === "DP") {
-        amountToPay = amount * 0.5;
-    } else if (paymentType === "REPAYMENT") {
-        const total = projectTotalAmount && projectTotalAmount > 0 ? projectTotalAmount : amount;
-        const paid = projectPaidAmount || 0;
-        amountToPay = Math.max(0, total - paid);
-    }
+
 
     const formattedBankDetails = estimate.project && agencySettings ? {
         bank_name: agencySettings.bankName,
@@ -256,7 +254,7 @@ export function PaymentPanel({
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {/* Option 1: Full Payment */}
                                 <div 
-                                    onClick={() => setPaymentType("FULL")}
+                                    onClick={() => onChangePaymentType("FULL")}
                                     className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group ${
                                         paymentType === "FULL" 
                                             ? 'bg-lime-500/5 border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.08)]' 
@@ -280,7 +278,7 @@ export function PaymentPanel({
 
                                 {/* Option 2: DP Payment */}
                                 <div 
-                                    onClick={() => setPaymentType("DP")}
+                                    onClick={() => onChangePaymentType("DP")}
                                     className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[96px] relative overflow-hidden group ${
                                         paymentType === "DP" 
                                             ? 'bg-lime-500/5 border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.08)]' 
@@ -408,32 +406,7 @@ export function PaymentPanel({
             </div>
 
             {/* Premium Minecraft-style Bottom Specification & Checkout Action Footer Bar */}
-            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 z-20 lg:pr-0">
-                {/* Specification Details */}
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
-                    <div className="flex flex-col">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Project Spec</span>
-                        <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
-                            <Layers className="w-3.5 h-3.5 text-lime-400" />
-                            1 Jasa Estimasi
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col border-l border-white/10 pl-5">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Add-ons Selected</span>
-                        <span className="text-xs font-extrabold text-zinc-300">
-                            {selectedAddons.length} {isId ? "Terpilih" : "Selected"}
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col border-l border-white/10 pl-5">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Price Plan</span>
-                        <span className="text-xs font-mono font-bold text-brand-yellow">
-                            <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
-                        </span>
-                    </div>
-                </div>
-
+            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-end gap-4 z-20 lg:pr-0 w-full">
                 {/* Checkout Actions */}
                 <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
                     {/* Download PDF button */}
