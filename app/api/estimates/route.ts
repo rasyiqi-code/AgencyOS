@@ -66,16 +66,28 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: "Service not found or inactive" }, { status: 404 });
             }
 
+            // Hitung total harga termasuk addon yang dipilih
+            const selectedAddons = Array.isArray(body.selectedAddons) ? body.selectedAddons : [];
+            const addonsTotal = selectedAddons.reduce((sum: number, addon: { price?: number }) => sum + (addon.price || 0), 0);
+            const totalPrice = service.price + addonsTotal;
+
+            // Bangun summary dengan informasi addon yang dipilih
+            let summary = service.description;
+            if (selectedAddons.length > 0) {
+                const addonLines = selectedAddons.map((a: { name: string }) => `+ ${a.name}`).join('\n');
+                summary = `${service.description}\n\n--- Selected Add-ons ---\n${addonLines}`;
+            }
+
             // Buat Estimate untuk pembelian langsung service ini
             const estimate = await prisma.estimate.create({
                 data: {
                     prompt: `Direct Service Purchase: ${service.title}`,
                     title: service.title,
-                    summary: service.description,
+                    summary,
                     screens: [],
                     apis: [],
                     totalHours: 0,
-                    totalCost: service.price,
+                    totalCost: totalPrice,
                     complexity: "medium",
                     status: "pending_payment",
                     serviceId: service.id,
@@ -95,7 +107,7 @@ export async function POST(req: Request) {
                     status: "pending_payment",
                     estimateId: estimate.id,
                     serviceId: service.id,
-                    totalAmount: service.price
+                    totalAmount: totalPrice
                 }
             });
 

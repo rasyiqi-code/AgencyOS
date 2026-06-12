@@ -22,7 +22,7 @@ interface PurchaseButtonProps {
  * Menginisialisasi checkout langsung ke halaman checkout jika user sudah login,
  * atau menyimpan state pembelian tertunda dan mengarahkan ke halaman login jika belum.
  */
-export function PurchaseButton({ serviceId, interval, className, customLabel }: PurchaseButtonProps) {
+export function PurchaseButton({ serviceId, interval, className, customLabel, selectedAddons = [] }: PurchaseButtonProps) {
     const t = useTranslations("Cards");
     const locale = useLocale();
     const router = useRouter();
@@ -58,7 +58,7 @@ export function PurchaseButton({ serviceId, interval, className, customLabel }: 
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ serviceId }),
+                body: JSON.stringify({ serviceId, selectedAddons }),
             });
 
             const data = await res.json();
