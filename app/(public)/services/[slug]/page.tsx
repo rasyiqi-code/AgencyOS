@@ -61,6 +61,7 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
             languages: {
                 'en': `${baseUrl}/en/services/${params.slug}`,
                 'id': `${baseUrl}/id/services/${params.slug}`,
+                'x-default': `${baseUrl}/en/services/${params.slug}`,
             }
         }
     };

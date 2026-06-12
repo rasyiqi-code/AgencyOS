@@ -46,6 +46,8 @@ export async function generateMetadata(
   const ogImage = (isId ? pageSeo.ogImage_id : null) || pageSeo.ogImage;
   const ogImages = ogImage ? [ogImage] : previousImages;
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
   return {
     title,
     description,
@@ -60,6 +62,14 @@ export async function generateMetadata(
       title,
       description,
       images: ogImages,
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        'en': `${baseUrl}/en`,
+        'id': `${baseUrl}/id`,
+        'x-default': `${baseUrl}/en`,
+      }
     }
   };
 }

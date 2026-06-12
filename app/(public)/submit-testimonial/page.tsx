@@ -26,6 +26,7 @@ export async function generateMetadata(
         languages: {
             'en': `${baseUrl}/en/submit-testimonial`,
             'id': `${baseUrl}/id/submit-testimonial`,
+            'x-default': `${baseUrl}/en/submit-testimonial`,
         }
     };
 

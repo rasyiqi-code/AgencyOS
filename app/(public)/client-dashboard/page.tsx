@@ -29,6 +29,8 @@ export async function generateMetadata(
         title,
         description,
         keywords: keywords.length > 0 ? keywords : undefined,
+        // 🔒 Halaman terproteksi (butuh login), cukup canonical — tidak perlu diindex Google
+        robots: "noindex, nofollow",
         openGraph: {
             title,
             description,

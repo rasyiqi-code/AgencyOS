@@ -53,6 +53,7 @@ export async function generateMetadata(
             languages: {
                 'en': `${baseUrl}/en/promosi`,
                 'id': `${baseUrl}/id/promosi`,
+                'x-default': `${baseUrl}/en/promosi`,
             }
         }
     };

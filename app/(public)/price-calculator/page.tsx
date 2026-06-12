@@ -44,6 +44,7 @@ export async function generateMetadata(
             languages: {
                 'en': `${baseUrl}/en/price-calculator`,
                 'id': `${baseUrl}/id/price-calculator`,
+                'x-default': `${baseUrl}/en/price-calculator`,
             }
         }
     };

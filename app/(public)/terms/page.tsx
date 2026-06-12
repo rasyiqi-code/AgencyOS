@@ -24,6 +24,7 @@ export async function generateMetadata(
         languages: {
             'en': `${baseUrl}/en/terms`,
             'id': `${baseUrl}/id/terms`,
+            'x-default': `${baseUrl}/en/terms`,
         }
     };
 

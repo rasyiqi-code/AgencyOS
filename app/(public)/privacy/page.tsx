@@ -25,6 +25,7 @@ export async function generateMetadata(
         languages: {
             'en': `${baseUrl}/en/privacy`,
             'id': `${baseUrl}/id/privacy`,
+            'x-default': `${baseUrl}/en/privacy`,
         }
     };
 
