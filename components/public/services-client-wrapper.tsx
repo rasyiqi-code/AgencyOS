@@ -179,8 +179,8 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                 {/* Hasil Pencarian List Premium */}
                 {searchQuery.length > 0 && filteredServices.length > 0 && (
                     <div className="max-w-4xl mx-auto bg-zinc-950/30 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-3 duration-500 divide-y divide-white/5">
-                        {filteredServices.map((service) => (
-                            <ServiceListItem key={service.id} service={service} isId={isId} />
+                        {filteredServices.map((service, idx) => (
+                            <ServiceListItem key={service.id} service={service} isId={isId} indexNumber={idx + 1} />
                         ))}
                     </div>
                 )}

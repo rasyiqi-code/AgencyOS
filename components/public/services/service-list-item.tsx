@@ -78,10 +78,16 @@ export function ServiceListItem({ service, isId, indexNumber }: ServiceListItemP
                     <Link href={`/services/${service.slug || service.id}`} className="marquee-container flex-1 min-w-0 block">
                         <div className="marquee-content">
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug pr-8 inline-block">
-                                {indexNumber !== undefined ? `#${indexNumber} ` : ""}{titleText}
+                                {indexNumber !== undefined && (
+                                    <span className="text-white mr-1.5">#{indexNumber}.</span>
+                                )}
+                                {titleText}
                             </span>
                             <span className="text-xs sm:text-sm font-bold text-brand-yellow leading-snug sm:hidden pr-8 inline-block">
-                                {indexNumber !== undefined ? `#${indexNumber} ` : ""}{titleText}
+                                {indexNumber !== undefined && (
+                                    <span className="text-white mr-1.5">#{indexNumber}.</span>
+                                )}
+                                {titleText}
                             </span>
                         </div>
                     </Link>
