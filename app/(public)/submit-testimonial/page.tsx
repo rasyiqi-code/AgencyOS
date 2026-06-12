@@ -20,6 +20,15 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
     const ogImages = pageSeo?.ogImage ? [{ url: pageSeo.ogImage }] : previousImages;
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const alternates = {
+        canonical: `${baseUrl}/${locale}/submit-testimonial`,
+        languages: {
+            'en': `${baseUrl}/en/submit-testimonial`,
+            'id': `${baseUrl}/id/submit-testimonial`,
+        }
+    };
+
     if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
         return {
             title: isId ? "Kirim Testimonial" : "Submit Testimonial",
@@ -32,7 +41,8 @@ export async function generateMetadata(
                 card: "summary_large_image",
                 title: isId ? "Kirim Testimonial" : "Submit Testimonial",
                 images: ogImages,
-            }
+            },
+            alternates
         };
     }
 
@@ -55,7 +65,8 @@ export async function generateMetadata(
             title,
             description,
             images: ogImages,
-        }
+        },
+        alternates
     };
 }
 

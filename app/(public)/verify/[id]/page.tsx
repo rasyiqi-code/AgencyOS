@@ -17,6 +17,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: t("metaTitle", { id: id.slice(-8).toUpperCase(), brand: agencyName }),
         description: t("metaDesc", { brand: agencyName }),
+        // Mencegah mesin pencari mengindeks halaman detail transaksi klien ini
+        robots: "noindex, nofollow"
     };
 }
 

@@ -18,6 +18,15 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
     const ogImages = pageSeo?.ogImage ? [{ url: pageSeo.ogImage }] : previousImages;
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const alternates = {
+        canonical: `${baseUrl}/${locale}/terms`,
+        languages: {
+            'en': `${baseUrl}/en/terms`,
+            'id': `${baseUrl}/id/terms`,
+        }
+    };
+
     if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
         return {
             title: isId ? "Syarat & Ketentuan" : "Terms & Conditions",
@@ -30,7 +39,8 @@ export async function generateMetadata(
                 card: "summary_large_image",
                 title: isId ? "Syarat & Ketentuan" : "Terms & Conditions",
                 images: ogImages,
-            }
+            },
+            alternates
         };
     }
 
@@ -53,7 +63,8 @@ export async function generateMetadata(
             title,
             description,
             images: ogImages,
-        }
+        },
+        alternates
     };
 }
 

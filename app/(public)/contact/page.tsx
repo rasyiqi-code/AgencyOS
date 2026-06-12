@@ -26,7 +26,16 @@ export async function generateMetadata(
  
     const defaultTitle = t("title") + " | " + agencyName;
     const defaultDesc = t("subtitle");
-
+ 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const alternates = {
+        canonical: `${baseUrl}/${locale}/contact`,
+        languages: {
+            'en': `${baseUrl}/en/contact`,
+            'id': `${baseUrl}/id/contact`,
+        }
+    };
+ 
     if (!pageSeo || (!pageSeo.title && !pageSeo.description)) {
         return {
             title: defaultTitle,
@@ -42,7 +51,8 @@ export async function generateMetadata(
                 title: defaultTitle,
                 description: defaultDesc,
                 images: ogImages,
-            }
+            },
+            alternates
         };
     }
  
@@ -65,7 +75,8 @@ export async function generateMetadata(
             title,
             description,
             images: ogImages,
-        }
+        },
+        alternates
     };
 }
  
