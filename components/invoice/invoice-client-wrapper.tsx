@@ -142,7 +142,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         {t('scrollNotice') || "Scroll horizontal to view full invoice"}
                     </div>
 
-                    <div className="bg-white text-black rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden w-full h-full min-h-[800px] flex flex-col">
+                    <div className="bg-white text-black rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden w-full h-auto lg:aspect-[210/297] flex flex-col">
                         <InvoiceDocument
                             refAction={componentRef}
                             estimate={estimate}
