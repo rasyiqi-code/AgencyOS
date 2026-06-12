@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Download, AlertTriangle } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
@@ -223,18 +223,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         )}
                     </div>
 
-                    {/* Manual Payment Warning Notification */}
-                    {!isPaid && !hasActiveGateway && bankDetails && (
-                        <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-left">
-                            <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
-                                <AlertTriangle className="w-4 h-4" />
-                                {tc('manualPayment')}
-                            </p>
-                            <p className="text-[10px] text-amber-200/60 leading-relaxed">
-                                {tc('manualDesc')}
-                            </p>
-                        </div>
-                    )}
+
 
                     {/* Payment Selector Widget */}
                     {!isPaid && (hasActiveGateway || bankDetails) && (
