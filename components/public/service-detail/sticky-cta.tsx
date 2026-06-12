@@ -34,8 +34,8 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     return (
         <div
-            className={`fixed bottom-0 left-0 right-0 py-3.5 bg-[#0a0a0a]/90 backdrop-blur-xl border-t border-white/5 z-40 transition-all duration-300 transform shadow-[0_-10px_30px_rgba(0,0,0,0.8)] ${
-                isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
+            className={`fixed top-10 md:top-14 left-0 right-0 py-3 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-30 transition-all duration-300 transform shadow-lg shadow-black/80 ${
+                isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
             }`}
         >
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
