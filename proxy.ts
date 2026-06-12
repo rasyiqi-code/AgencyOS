@@ -6,7 +6,7 @@ const ipCache = new Map<string, { countryCode: string; expiry: number }>();
 const CACHE_TTL = 3600 * 1000; // Cache berlaku selama 1 jam
 const MAX_CACHE_SIZE = 1000; // Batas ukuran cache untuk mencegah pemborosan memori RAM (memory leak)
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
     const hostname = request.headers.get("host") || "";
 
     // 0. Validasi host untuk local development (mencegah akses subdomain tidak sah di lokal)
