@@ -4,7 +4,7 @@ import { ServiceAddon } from "@/lib/shared/types";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
-import { validateCoupon, applyCoupon, createSubscriber } from "@/lib/server/marketing";
+import { createSubscriber } from "@/lib/server/marketing";
 import { secureRandomInt } from "@/lib/utils/crypto";
 import { cleanSummaryText } from "@/lib/shared/utils";
 
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         }
         debugSteps.push("User authenticated: " + user.id);
 
-        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD", selectedAddons = [], shouldSubscribe } = await req.json();
+        const { projectId, estimateId, paymentType = "FULL", currency = "USD", selectedAddons = [], shouldSubscribe } = await req.json();
         debugSteps.push(`Request parsed. Project: ${projectId}, Estimate: ${estimateId}, Type: ${paymentType}`);
 
         if (!projectId && !estimateId) {
@@ -179,26 +179,7 @@ export async function POST(req: Request) {
             }
         }
 
-        // Validasi dan terapkan kupon server-side (jika ada)
-        let validatedCoupon: { code: string; discountType: string; discountValue: number } | null = null;
-        if (appliedCoupon && typeof appliedCoupon === 'string') {
-            const couponResult = await validateCoupon(appliedCoupon);
-            if (couponResult.valid && couponResult.coupon) {
-                validatedCoupon = couponResult.coupon;
-                // Hitung diskon
-                if (validatedCoupon.discountType === 'percentage') {
-                    amountToPay = amountToPay * (1 - validatedCoupon.discountValue / 100);
-                } else {
-                    // Fixed amount discount
-                    amountToPay = Math.max(0, amountToPay - validatedCoupon.discountValue);
-                }
-                amountToPay = Math.round(amountToPay * 100) / 100; // Round to 2 decimal
-                console.log(`[CHECKOUT] Coupon ${validatedCoupon.code} applied: ${validatedCoupon.discountType} ${validatedCoupon.discountValue} → final $${amountToPay}`);
-            } else {
-                // Kupon tidak valid — lanjutkan tanpa diskon, log warning
-                console.warn(`[CHECKOUT] Invalid coupon code: ${appliedCoupon}`);
-            }
-        }
+
 
         if (amountToPay <= 0) {
             return NextResponse.json({ error: "Invalid payment amount after discount" }, { status: 400 });
@@ -265,16 +246,9 @@ export async function POST(req: Request) {
                 type: paymentType,
                 currency: currency,
                 exchangeRate: finalRate,
-                paymentMetadata: {
-                    ...(validatedCoupon ? { coupon_code: validatedCoupon.code, coupon_discount: validatedCoupon.discountValue, coupon_type: validatedCoupon.discountType } : {}),
-                } as unknown as Prisma.InputJsonValue,
+                paymentMetadata: {} as unknown as Prisma.InputJsonValue,
             },
         });
-
-        // Increment usedCount kupon jika valid
-        if (validatedCoupon) {
-            await applyCoupon(validatedCoupon.code);
-        }
 
         // Sync invoiceId to project and RESET estimate if REPAYMENT
         const updateData = {
