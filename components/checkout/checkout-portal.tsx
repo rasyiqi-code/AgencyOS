@@ -119,6 +119,7 @@ export function CheckoutPortal({
                         selectedAddons={selectedAddons}
                         amountToPay={amountToPay}
                         baseCurrency={baseCurrency}
+                        onOpenSummary={() => setIsDrawerOpen(true)}
                     />
                 </div>
 
