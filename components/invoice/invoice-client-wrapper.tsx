@@ -188,7 +188,12 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                                 {t('status')}
                             </span>
                             <div className="flex items-center gap-2.5">
-                                <span className="font-mono text-xs font-bold text-zinc-400">#{order.id}</span>
+                                <span className="font-mono text-xs font-bold text-zinc-400">
+                                    #{(() => {
+                                        const parts = order.id.split("-");
+                                        return `CM${parts[parts.length - 1]}`;
+                                    })()}
+                                </span>
                                 <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
                                     {isPaid ? t('paid') : t('unpaid')}
                                 </span>

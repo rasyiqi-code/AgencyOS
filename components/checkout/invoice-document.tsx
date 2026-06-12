@@ -270,7 +270,13 @@ export function InvoiceDocument({
                         <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('invoiceNo', { fallback: "No. Invoice" })}</span>
                             <span className="font-mono font-bold text-zinc-900">
-                                #{orderId ? orderId.replace("ORDER-", "") : extendedEstimate.id.slice(-8).toUpperCase()}
+                                #{(() => {
+                                    if (orderId) {
+                                        const parts = orderId.split("-");
+                                        return `CM${parts[parts.length - 1]}`;
+                                    }
+                                    return `CM${extendedEstimate.id.slice(-5).toUpperCase()}`;
+                                })()}
                             </span>
                         </div>
                         <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
