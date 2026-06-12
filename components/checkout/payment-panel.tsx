@@ -35,7 +35,9 @@ export function PaymentPanel({
     agencySettings,
     onPaymentInitiated,
     onPaymentClosed,
-    onPaymentStatusChange
+    onPaymentStatusChange,
+    shouldSubscribe,
+    onToggleSubscribe
 }: {
     estimate: ExtendedEstimate,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
@@ -60,7 +62,9 @@ export function PaymentPanel({
     agencySettings?: AgencyInvoiceSettings,
     onPaymentInitiated?: () => void,
     onPaymentClosed?: () => void,
-    onPaymentStatusChange?: (status: string) => void
+    onPaymentStatusChange?: (status: string) => void,
+    shouldSubscribe?: boolean,
+    onToggleSubscribe?: () => void
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
@@ -249,6 +253,34 @@ export function PaymentPanel({
                                     {t("change")}
                                 </Button>
                             )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Subscribe Checkbox */}
+                {user && !activeOrderId && (
+                    <div 
+                        onClick={onToggleSubscribe}
+                        className={`flex items-center gap-3.5 p-3.5 rounded-xl border cursor-pointer transition-all duration-300 transform active:scale-[0.99] group ${
+                            shouldSubscribe 
+                                ? 'bg-brand-yellow/5 border-brand-yellow/30 shadow-[0_0_15px_rgba(254,215,0,0.04)]' 
+                                : 'bg-zinc-950/40 border-white/5 hover:bg-zinc-950/70 hover:border-white/10'
+                        }`}
+                    >
+                        <div className={`w-4.5 h-4.5 rounded-[6px] border flex items-center justify-center shrink-0 transition-all duration-300 ${
+                            shouldSubscribe 
+                                ? 'bg-brand-yellow border-brand-yellow text-black shadow-[0_0_8px_rgba(254,215,0,0.3)]' 
+                                : 'border-zinc-700 group-hover:border-zinc-400'
+                        }`}>
+                            {shouldSubscribe && <Check className="w-3 h-3 stroke-[3px]" />}
+                        </div>
+                        <div className="flex flex-col gap-0.5 select-none">
+                            <span className={`text-xs font-bold transition-colors ${shouldSubscribe ? 'text-brand-yellow' : 'text-zinc-200 group-hover:text-white'}`}>
+                                {isId ? "Berlangganan Newsletter & Info Menarik" : "Subscribe to Newsletter & Updates"}
+                            </span>
+                            <span className="text-[10px] text-zinc-500 font-medium">
+                                {isId ? "Dapatkan kupon rahasia dan pembaruan eksklusif langsung di email Anda" : "Get secret coupons and exclusive updates straight to your inbox"}
+                            </span>
                         </div>
                     </div>
                 )}

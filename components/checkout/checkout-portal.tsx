@@ -58,6 +58,7 @@ export function CheckoutPortal({
     const [isPaymentInitiated, setIsPaymentInitiated] = useState<boolean>(() => 
         initialOrderStatus ? initialOrderStatus !== "pending" : false
     );
+    const [shouldSubscribe, setShouldSubscribe] = useState(true);
 
     const serviceAddons = (isId && Array.isArray((estimate.service as unknown as Record<string, unknown>)?.addons_id) && ((estimate.service as unknown as Record<string, unknown>)?.addons_id as unknown[]).length > 0)
         ? (estimate.service as unknown as Record<string, unknown>).addons_id as ServiceAddon[]
@@ -176,7 +177,8 @@ export function CheckoutPortal({
                     title: estimate.title,
                     paymentType: paymentType,
                     currency: currency,
-                    selectedAddons: selectedAddons
+                    selectedAddons: selectedAddons,
+                    shouldSubscribe: shouldSubscribe
                 }),
             });
 
@@ -210,7 +212,6 @@ export function CheckoutPortal({
                         selectedAddons={selectedAddons}
                         amountToPay={amountToPay}
                         baseCurrency={baseCurrency}
-                        context={context}
                     />
                 </div>
 
@@ -247,6 +248,8 @@ export function CheckoutPortal({
                             );
                         }}
                         agencySettings={agencySettings}
+                        shouldSubscribe={shouldSubscribe}
+                        onToggleSubscribe={() => setShouldSubscribe(prev => !prev)}
                     />
                 </div>
             </div>

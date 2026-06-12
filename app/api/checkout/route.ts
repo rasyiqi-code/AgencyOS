@@ -4,7 +4,7 @@ import { ServiceAddon } from "@/lib/shared/types";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { NextResponse } from "next/server";
 import { paymentService } from "@/lib/server/payment-service";
-import { validateCoupon, applyCoupon } from "@/lib/server/marketing";
+import { validateCoupon, applyCoupon, createSubscriber } from "@/lib/server/marketing";
 import { secureRandomInt } from "@/lib/utils/crypto";
 
 export async function POST(req: Request) {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         }
         debugSteps.push("User authenticated: " + user.id);
 
-        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD", selectedAddons = [] } = await req.json();
+        const { projectId, estimateId, paymentType = "FULL", appliedCoupon, currency = "USD", selectedAddons = [], shouldSubscribe } = await req.json();
         debugSteps.push(`Request parsed. Project: ${projectId}, Estimate: ${estimateId}, Type: ${paymentType}`);
 
         if (!projectId && !estimateId) {
@@ -298,6 +298,15 @@ export async function POST(req: Request) {
             where: { id: finalProjectId },
             data: updateData
         });
+
+        // Handle newsletter subscription automatically if checked
+        if (shouldSubscribe && user.primaryEmail) {
+            try {
+                await createSubscriber(user.primaryEmail, user.displayName || undefined);
+            } catch (err) {
+                console.warn("[CHECKOUT_API] Gagal mendaftarkan subscriber otomatis:", err);
+            }
+        }
 
         debugSteps.push("Success");
         return NextResponse.json({ orderId });

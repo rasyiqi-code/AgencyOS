@@ -5,7 +5,6 @@ import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
 import { Check, ArrowLeft, ShieldCheck, Flame, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
-import { SubscriptionDialog } from "./subscription-dialog";
 
 interface ProductShowcaseProps {
     estimate: ExtendedEstimate;
@@ -13,10 +12,9 @@ interface ProductShowcaseProps {
     selectedAddons: ServiceAddon[];
     amountToPay: number;
     baseCurrency: "USD" | "IDR";
-    context?: "SERVICE" | "CALCULATOR";
 }
 
-export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency, context }: ProductShowcaseProps) {
+export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay, baseCurrency }: ProductShowcaseProps) {
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
@@ -100,9 +98,6 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                         </div>
                     </div>
                 )}
-
-                {/* Subscription Dialog */}
-                <SubscriptionDialog context={context} />
             </div>
         </div>
     );
