@@ -24,6 +24,8 @@ const getMethodDescription = (id: string, isId: boolean) => {
             return isId ? "Proses instan via kartu kredit/debit" : "Instant processing via credit/debit card";
         case "wise":
             return isId ? "Transfer antar-bank internasional biaya rendah" : "Low-fee international bank transfer";
+        case "local_bank":
+            return isId ? "Transfer manual ke rekening bank biasa (BCA, Mandiri, dll.)" : "Manual transfer to local bank account";
         case "bca":
             return "Virtual Account BCA, verifikasi otomatis";
         case "mandiri":
@@ -63,6 +65,7 @@ export function PaymentMethodItem({ method, active, isId, onSelect }: PaymentMet
             case "cc":
                 return <CreditCard className={iconClass} />;
             case "wise":
+            case "local_bank":
             case "bca":
             case "mandiri":
             case "bni":

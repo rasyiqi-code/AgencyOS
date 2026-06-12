@@ -152,6 +152,36 @@ export function PaymentSelector({
         filteredGroups = filteredGroups.filter(g => allowedGroups.includes(g.id));
     }
 
+    // Mengubah Wise menjadi Local Bank Indonesia jika mata uang yang digunakan adalah IDR
+    const mappedGroups = filteredGroups.map(group => {
+        if (group.id === "manual") {
+            return {
+                ...group,
+                methods: group.methods.map(method => {
+                    if (method.id === "wise") {
+                        if (currency === "IDR") {
+                            const bankLabel = bankDetails?.bank_name
+                                ? `Transfer Bank ${bankDetails.bank_name}`
+                                : "Transfer Bank Manual";
+                            return {
+                                ...method,
+                                id: "local_bank",
+                                label: bankLabel,
+                            };
+                        } else {
+                            return {
+                                ...method,
+                                label: "Wise / Bank Transfer (USD)",
+                            };
+                        }
+                    }
+                    return method;
+                })
+            };
+        }
+        return group;
+    });
+
     const handleCharge = async () => {
         if (!selectedMethod) return;
         setLoading(true);
@@ -254,7 +284,7 @@ export function PaymentSelector({
                     <>
                         <ScrollArea className="flex-1 pr-4 -mr-4">
                             <div className="space-y-6">
-                                {filteredGroups.map((group) => (
+                                {mappedGroups.map((group) => (
                                     <div key={group.id} className="space-y-3">
                                         <h3 className="text-[10px] uppercase text-zinc-500 font-extrabold tracking-[0.15em] pl-1 flex items-center gap-2">
                                             <group.icon className="w-3.5 h-3.5 text-zinc-500" />
