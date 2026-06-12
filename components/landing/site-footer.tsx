@@ -50,7 +50,7 @@ export async function SiteFooter() {
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-x-3 md:gap-x-6 gap-y-3 text-[10px] order-2 md:order-3">
-                    <Link href="https://github.com/rasyiqi-code/AgencyOS" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Changelog</Link>
+                    <Link href="https://github.com/rasyiqi-code/crediblemark.git" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Changelog</Link>
                     <Link href={`/${locale}/privacy`} className="hover:text-white transition-colors">{t("privacy")}</Link>
                     <Link href={`/${locale}/terms`} className="hover:text-white transition-colors">{t("terms")}</Link>
                     <Link href={`/${locale}/contact`} className="hover:text-white transition-colors">{t("contactUs")}</Link>
