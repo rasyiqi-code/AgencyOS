@@ -211,6 +211,7 @@ export function CheckoutPortal({
                 <div className="lg:col-span-6 border-b lg:border-b-0 lg:border-r border-white/5">
                     <ProductShowcase 
                         estimate={estimate}
+                        selectedAddons={selectedAddons}
                     />
                 </div>
 
