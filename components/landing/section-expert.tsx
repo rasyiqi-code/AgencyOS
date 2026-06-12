@@ -22,8 +22,8 @@ export async function ExpertProfile() {
                     <div className="shrink-0 relative group">
                         <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden bg-zinc-900 relative z-10 [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)] border border-white/5">
                             <Image
-                                src="/expert-photo.png"
-                                alt="Rasyiqi"
+                                src="/agency-tech-expert.png"
+                                alt={agencyName}
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                                 sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 288px"
@@ -55,7 +55,7 @@ export async function ExpertProfile() {
                             </p>
 
                             <div className="pt-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 border-t border-white/10 uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-zinc-400">
-                                <span className="text-zinc-300">{t("name")}</span>
+                                <span className="text-zinc-300">{t("name", { brand: agencyName })}</span>
                             </div>
                         </div>
                     </div>

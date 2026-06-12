@@ -98,26 +98,6 @@ export default async function Home() {
           }
         }}
       />
-      {/* Person JSON-LD untuk sinyal E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Rasyiqi",
-            "jobTitle": "Founder & Fullstack Developer",
-            "description": "12+ years of experience in software engineering, building scalable digital products for businesses.",
-            "image": `${process.env.NEXT_PUBLIC_APP_URL || ""}/expert-photo.png`,
-            "worksFor": {
-              "@type": "Organization",
-              "name": agencyName,
-              "url": process.env.NEXT_PUBLIC_APP_URL || ""
-            },
-            "url": process.env.NEXT_PUBLIC_APP_URL || "",
-          })
-        }}
-      />
       <SiteHeader />
       <LandingHero />
 
