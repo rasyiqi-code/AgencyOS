@@ -16,7 +16,6 @@ export function PaymentPanel({
     amountToPay,
     paymentType,
     onChangePaymentType,
-    onPrint,
     bankDetails,
     activeRate,
     hasActiveGateway = true,
@@ -25,13 +24,16 @@ export function PaymentPanel({
     projectPaidAmount,
     projectTotalAmount,
     user,
-    orderId,
+    activeOrderId,
+    onChangeActiveOrderId,
+    activeOrderStatus,
+    isProcessing,
+    countdown,
     selectedAddons = [],
     onToggleAddon,
     agencySettings
 }: {
     estimate: ExtendedEstimate,
-    onPrint: () => void,
     bankDetails?: { bank_name?: string, bank_account?: string, bank_holder?: string } | null,
     activeRate?: number,
     amount: number,
@@ -44,7 +46,11 @@ export function PaymentPanel({
     projectPaidAmount?: number,
     projectTotalAmount?: number,
     user?: { displayName: string | null, email: string | null },
-    orderId?: string | null,
+    activeOrderId: string | null,
+    onChangeActiveOrderId: (orderId: string | null) => void,
+    activeOrderStatus: string,
+    isProcessing: boolean,
+    countdown: number,
     selectedAddons?: ServiceAddon[],
     onToggleAddon?: (addon: ServiceAddon) => void,
     agencySettings?: any
@@ -55,12 +61,6 @@ export function PaymentPanel({
     const isId = locale === 'id';
     const router = useRouter();
 
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [countdown, setCountdown] = useState(5);
-    const [activeOrderId, setActiveOrderId] = useState<string | null>(orderId || null);
-    const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
-
-
     const { currency, rate } = useCurrency();
     const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';
 
@@ -68,47 +68,6 @@ export function PaymentPanel({
     const serviceAddons = isId
         ? (estimate.service?.addons_id as ServiceAddon[]) || (estimate.service?.addons as ServiceAddon[])
         : (estimate.service?.addons as ServiceAddon[]) || [];
-
-    // Polling status transaksi di background ketika Order ID aktif terisi
-    useEffect(() => {
-        if (!activeOrderId || estimate.status === 'paid') return;
-
-        const interval = setInterval(async () => {
-            if (document.hidden) return;
-            try {
-                const res = await fetch(`/api/payment/status?orderId=${activeOrderId}&mode=json`);
-                const data = await res.json();
-
-                if (data.status === 'waiting_verification') {
-                    setActiveOrderStatus('waiting_verification');
-                } else if (data.status === 'paid' || data.status === 'settled') {
-                    router.refresh();
-                }
-            } catch (error) {
-                console.error("Gagal melakukan polling status pembayaran:", error);
-            }
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, [activeOrderId, estimate.status, router]);
-
-    // Efek untuk memantau status lunas (Selesai) guna pengalihan ke Invoice publik
-    useEffect(() => {
-        if (estimate.status === 'paid' && activeOrderId && countdown > 0) {
-            const timer = setInterval(() => {
-                setCountdown((prev) => prev - 1);
-            }, 1000);
-            return () => clearInterval(timer);
-        }
-    }, [estimate.status, activeOrderId, countdown]);
-
-    useEffect(() => {
-        if (countdown <= 0 && estimate.status === 'paid' && activeOrderId) {
-            router.push(`/invoices/${activeOrderId}`);
-        }
-    }, [countdown, estimate.status, activeOrderId, router]);
-
-
 
     const formattedBankDetails = estimate.project && agencySettings ? {
         bank_name: agencySettings.bankName,
@@ -119,38 +78,6 @@ export function PaymentPanel({
         bank_account: bankDetails.bank_account || undefined,
         bank_holder: bankDetails.bank_holder || undefined
     } : undefined);
-
-    const handleCheckout = async () => {
-        setIsProcessing(true);
-        try {
-            const response = await fetch("/api/checkout", {
-                method: "POST",
-                body: JSON.stringify({
-                    estimateId: estimate.id,
-                    amount: amountToPay,
-                    title: estimate.title,
-                    paymentType: paymentType,
-                    currency: currency,
-                    selectedAddons: selectedAddons
-                }),
-            });
-
-            if (!response.ok) {
-                const err = await response.json();
-                const errorMessage = err.error || err.message || JSON.stringify(err);
-                toast.error(`${t("failProcess") || "Gagal melakukan checkout"}: ${errorMessage}`);
-                throw new Error(errorMessage);
-            }
-            const { orderId: newOrderId } = await response.json();
-
-            setActiveOrderId(newOrderId);
-            toast.success("Pesanan berhasil dibuat! Silakan pilih metode pembayaran.");
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
 
     const isPaid = estimate.status === 'paid';
 
@@ -218,9 +145,9 @@ export function PaymentPanel({
                                 <span className="text-xs font-extrabold bg-white/10 text-white px-3.5 py-1.5 rounded-full border border-white/5">
                                     {paymentType === "FULL" ? t("fullPayment") : paymentType === "DP" ? t("dp") : t("repayment")}
                                 </span>
-                                {!orderId && (
+                                {!estimate.project?.id && (
                                     <button
-                                        onClick={() => setActiveOrderId(null)}
+                                        onClick={() => onChangeActiveOrderId(null)}
                                         className="text-xs text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
                                     >
                                         {t("change") || "Ubah"}
@@ -386,43 +313,6 @@ export function PaymentPanel({
                         </div>
                     </div>
                 )}
-            </div>
-
-            {/* Premium Minecraft-style Bottom Specification & Checkout Action Footer Bar */}
-            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-end gap-4 z-20 lg:pr-0 w-full">
-                {/* Checkout Actions */}
-                <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
-                    {/* Download PDF button */}
-                    <Button
-                        variant="outline"
-                        className="border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all duration-300 h-10 px-4 rounded-xl cursor-pointer text-xs"
-                        onClick={onPrint}
-                        disabled={isProcessing}
-                    >
-                        {isId ? "Unduh PDF" : "Download PDF"}
-                    </Button>
-
-                    {activeOrderId ? (
-                        <div className="text-[10px] text-zinc-500 font-bold bg-zinc-900/50 px-3.5 py-2.5 rounded-xl border border-white/5 text-center leading-none select-none">
-                            {isId ? "Menunggu Verifikasi" : "Awaiting Payment"}
-                        </div>
-                    ) : (
-                        <Button
-                            className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-extrabold h-10 px-6 rounded-xl cursor-pointer shadow-[0_4px_15px_rgba(132,204,22,0.25)] transition-all duration-300 transform hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99] text-xs shrink-0 flex-grow sm:flex-grow-0"
-                            disabled={isProcessing}
-                            onClick={handleCheckout}
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-                                    {t("processing")}
-                                </>
-                            ) : (
-                                isId ? "PROSES SEKARANG" : "PROCEED TO PAYMENT"
-                            )}
-                        </Button>
-                    )}
-                </div>
             </div>
         </div>
     );

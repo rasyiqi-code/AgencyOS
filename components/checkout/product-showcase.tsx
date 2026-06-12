@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
-import { Check, ArrowLeft, ShieldCheck, Flame, Layers } from "lucide-react";
+import { Check, ArrowLeft, ShieldCheck, Flame, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 
@@ -17,6 +18,7 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
     const t = useTranslations("Checkout");
     const locale = useLocale();
     const isId = locale === 'id';
+    const [isExpanded, setIsExpanded] = useState(false);
 
     // Ambil list deliverables
     const serviceFeatures = isId
@@ -65,8 +67,8 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                             {t("deliverables") || "Fitur & Deliverables"}
                         </span>
                         <div className="grid grid-cols-1 gap-2.5">
-                            {serviceFeatures.slice(0, 4).map((feature, i) => (
-                                <div key={i} className="flex items-start gap-3 group">
+                            {(isExpanded ? serviceFeatures : serviceFeatures.slice(0, 4)).map((feature, i) => (
+                                <div key={i} className="flex items-start gap-3 group animate-in fade-in duration-300">
                                     <div className="w-5 h-5 rounded-full bg-lime-500/10 border border-lime-500/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform shadow-[0_0_8px_rgba(132,204,22,0.1)]">
                                         <Check className="w-3 h-3 text-lime-400" />
                                     </div>
@@ -76,41 +78,27 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                                 </div>
                             ))}
                             {serviceFeatures.length > 4 && (
-                                <span className="text-xs text-zinc-500 font-bold tracking-tight pl-8">
-                                    + {serviceFeatures.length - 4} {isId ? "deliverable lainnya" : "more deliverables"} (lihat di detail rincian)
-                                </span>
+                                <button
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    className="text-xs text-lime-400 hover:text-lime-300 font-bold tracking-wide transition-all duration-300 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left pl-8 flex items-center gap-1 mt-1 group"
+                                >
+                                    {isExpanded ? (
+                                        <>
+                                            {isId ? "Sembunyikan rincian" : "Hide details"}
+                                            <ChevronUp className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            + {serviceFeatures.length - 4} {isId ? "deliverable lainnya" : "more deliverables"} ({isId ? "klik untuk melihat" : "click to view"})
+                                            <ChevronDown className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />
+                                        </>
+                                    )}
+                                </button>
                             )}
                         </div>
                     </div>
                 )}
 
-            </div>
-
-            {/* Premium Minecraft-style Specification Details (Moved to Left Side) */}
-            <div className="pt-6 mt-8 border-t border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 z-10">
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
-                    <div className="flex flex-col">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Project Spec</span>
-                        <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
-                            <Layers className="w-3.5 h-3.5 text-lime-400" />
-                            {isId ? "1 Jasa Estimasi" : "1 Estimate Service"}
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col border-l border-white/10 pl-5">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Add-ons Selected</span>
-                        <span className="text-xs font-extrabold text-zinc-300">
-                            {selectedAddons.length} {isId ? "Terpilih" : "Selected"}
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col border-l border-white/10 pl-5">
-                        <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1">Price Plan</span>
-                        <span className="text-xs font-mono font-bold text-brand-yellow">
-                            <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
-                        </span>
-                    </div>
-                </div>
             </div>
         </div>
     );

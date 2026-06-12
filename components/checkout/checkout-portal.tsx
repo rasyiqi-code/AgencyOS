@@ -1,9 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useLocale } from "next-intl";
+import { useRef, useState, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { ProductShowcase } from "./product-showcase";
 import { PaymentPanel } from "./payment-panel";
+import { CheckoutStickyBar } from "./checkout-sticky-bar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { useCurrency, PriceDisplay } from "@/components/providers/currency-provider";
 import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
@@ -43,6 +46,13 @@ export function CheckoutPortal({
     const { currency, rate } = useCurrency();
     const locale = useLocale();
     const isId = locale === 'id';
+    const router = useRouter();
+    const t = useTranslations("Checkout");
+
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [countdown, setCountdown] = useState(5);
+    const [activeOrderId, setActiveOrderId] = useState<string | null>(orderId || null);
+    const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
 
     const serviceAddons = (isId && Array.isArray((estimate.service as unknown as Record<string, unknown>)?.addons_id) && ((estimate.service as unknown as Record<string, unknown>)?.addons_id as unknown[]).length > 0)
         ? (estimate.service as unknown as Record<string, unknown>).addons_id as ServiceAddon[]
@@ -57,6 +67,45 @@ export function CheckoutPortal({
         contentRef: invoiceRef,
         documentTitle: `Invoice-${estimate.id}`
     });
+
+    // Polling status transaksi di background ketika Order ID aktif terisi
+    useEffect(() => {
+        if (!activeOrderId || estimate.status === 'paid') return;
+
+        const interval = setInterval(async () => {
+            if (document.hidden) return;
+            try {
+                const res = await fetch(`/api/payment/status?orderId=${activeOrderId}&mode=json`);
+                const data = await res.json();
+
+                if (data.status === 'waiting_verification') {
+                    setActiveOrderStatus('waiting_verification');
+                } else if (data.status === 'paid' || data.status === 'settled') {
+                    router.refresh();
+                }
+            } catch (error) {
+                console.error("Gagal melakukan polling status pembayaran:", error);
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [activeOrderId, estimate.status, router]);
+
+    // Efek untuk memantau status lunas (Selesai) guna pengalihan ke Invoice publik
+    useEffect(() => {
+        if (estimate.status === 'paid' && activeOrderId && countdown > 0) {
+            const timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [estimate.status, activeOrderId, countdown]);
+
+    useEffect(() => {
+        if (countdown <= 0 && estimate.status === 'paid' && activeOrderId) {
+            router.push(`/invoices/${activeOrderId}`);
+        }
+    }, [countdown, estimate.status, activeOrderId, router]);
 
     // Calculate the TRUE base cost
     const initiallyIncludedAddonsTotal = initiallyIncludedAddons.reduce((sum: number, addon) => sum + (addon.price || 0), 0);
@@ -102,6 +151,38 @@ export function CheckoutPortal({
         amountToPay = Math.max(0, total - paid);
     }
 
+    const handleCheckout = async () => {
+        setIsProcessing(true);
+        try {
+            const response = await fetch("/api/checkout", {
+                method: "POST",
+                body: JSON.stringify({
+                    estimateId: estimate.id,
+                    amount: amountToPay,
+                    title: estimate.title,
+                    paymentType: paymentType,
+                    currency: currency,
+                    selectedAddons: selectedAddons
+                }),
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                const errorMessage = err.error || err.message || JSON.stringify(err);
+                toast.error(`${t("failProcess") || "Gagal melakukan checkout"}: ${errorMessage}`);
+                throw new Error(errorMessage);
+            }
+            const { orderId: newOrderId } = await response.json();
+
+            setActiveOrderId(newOrderId);
+            toast.success("Pesanan berhasil dibuat! Silakan pilih metode pembayaran.");
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto w-full">
             {/* Main Portal Container: Menyatu langsung dengan latar belakang (borderless & backgroundless) */}
@@ -126,7 +207,6 @@ export function CheckoutPortal({
                         amountToPay={amountToPay}
                         paymentType={paymentType}
                         onChangePaymentType={setPaymentType}
-                        onPrint={handlePrint}
                         bankDetails={bankDetails}
                         activeRate={activeRate}
                         hasActiveGateway={hasActiveGateway}
@@ -135,7 +215,11 @@ export function CheckoutPortal({
                         projectPaidAmount={projectPaidAmount}
                         projectTotalAmount={projectTotalAmount}
                         user={user}
-                        orderId={orderId}
+                        activeOrderId={activeOrderId}
+                        onChangeActiveOrderId={setActiveOrderId}
+                        activeOrderStatus={activeOrderStatus}
+                        isProcessing={isProcessing}
+                        countdown={countdown}
                         selectedAddons={selectedAddons}
                         onToggleAddon={(addon) => {
                             setSelectedAddons(prev => 
@@ -149,7 +233,18 @@ export function CheckoutPortal({
                 </div>
             </div>
 
-
+            {/* Sticky Bottom Bar untuk ringkasan spesifikasi proyek dan aksi utama */}
+            <CheckoutStickyBar
+                amountToPay={amountToPay}
+                baseCurrency={baseCurrency}
+                selectedAddonsCount={selectedAddons.length}
+                activeOrderId={activeOrderId}
+                isProcessing={isProcessing}
+                onPrint={handlePrint}
+                onCheckout={handleCheckout}
+                isPaid={isPaid}
+                isId={isId}
+            />
 
             {/* Hidden Invoice for Printing */}
             <div className="hidden">
