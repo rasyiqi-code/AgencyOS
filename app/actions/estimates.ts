@@ -98,15 +98,6 @@ export async function confirmPayment(id: string) {
                     data: { status: 'paid' }
                 });
 
-                // Proses lisensi untuk order lisensi software yang disetujui manual
-                for (const o of pendingOrders) {
-                    if (o.type === "SOFTWARE_LICENSE") {
-                        const { handleSoftwareLicenseProvisioning } = await import("@/lib/server/licenses-helper");
-                        await handleSoftwareLicenseProvisioning(o.id).catch(err => 
-                            console.error("Failed to provision manual software license:", err)
-                        );
-                    }
-                }
             }
 
             try {

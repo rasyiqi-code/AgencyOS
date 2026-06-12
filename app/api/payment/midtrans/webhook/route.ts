@@ -180,11 +180,7 @@ async function handleProjectOrderWebhook(
         }).catch(err => console.error("Failed to send admin notification:", err));
     }
 
-    // Jika pembayaran settled dan bertipe SOFTWARE_LICENSE → jalankan provisi lisensi
-    if (dbStatus === "settled" && order.type === "SOFTWARE_LICENSE") {
-        const { handleSoftwareLicenseProvisioning } = await import("@/lib/server/licenses-helper");
-        await handleSoftwareLicenseProvisioning(order.id).catch(err => console.error("Failed to provision software license:", err));
-    }
+
 
     return NextResponse.json({ status: "ok" });
 }
