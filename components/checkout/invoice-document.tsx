@@ -174,7 +174,7 @@ export function InvoiceDocument({
     const totalToPay = (paymentType === 'DP' || paymentType === 'REPAYMENT') ? extendedEstimate.totalCost * 0.5 : extendedEstimate.totalCost;
 
     return (
-        <div ref={refAction} className="p-12 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
+        <div ref={refAction} className="p-10 bg-white text-black h-full flex flex-col font-serif relative overflow-visible print:overflow-visible print:p-0 print:m-0" id="invoice-doc">
             <style jsx global>{`
                 @media print {
                     @page {
@@ -238,7 +238,7 @@ export function InvoiceDocument({
             {/* Header */}
 
             {/* Refined Header (Kop) */}
-            <div className="pb-8 mb-4 relative z-10">
+            <div className="pb-4 mb-3 relative z-10">
                 <div className="flex justify-between items-baseline">
                     <div className="flex items-end gap-4">
                         <Image
@@ -278,9 +278,9 @@ export function InvoiceDocument({
             </div>
 
             {/* Client & Payment Info */}
-            <div className="mb-8 flex justify-between items-end relative z-10">
+            <div className="mb-5 flex justify-between items-end relative z-10">
                 {/* Client Info Card */}
-                <div className="bg-white py-4 px-6 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-zinc-100 min-w-[320px]">
+                <div className="bg-white py-2.5 px-4 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-zinc-100 min-w-[320px]">
                     <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-1">{t('billTo')}</h3>
                     <p className="text-xl font-bold text-zinc-900 leading-tight">{user?.displayName || user?.email || t('valuedClient', { fallback: "Valued Client" })}</p>
                     <p className="text-zinc-500 text-sm font-medium mt-0.5">{user?.email}</p>
@@ -299,54 +299,54 @@ export function InvoiceDocument({
             <table className="w-full mb-4">
                 <thead>
                     <tr className="border-b border-zinc-200">
-                        <th className="text-left py-3 font-bold uppercase text-xs tracking-wider">{t('description')}</th>
-                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-24">{t('hours')}</th>
-                        <th className="text-right py-3 font-bold uppercase text-xs tracking-wider w-32">{t('amount')}</th>
+                        <th className="text-left py-2 font-bold uppercase text-[11px] tracking-wider">{t('description')}</th>
+                        <th className="text-right py-2 font-bold uppercase text-[11px] tracking-wider w-24">{t('hours')}</th>
+                        <th className="text-right py-2 font-bold uppercase text-[11px] tracking-wider w-32">{t('amount')}</th>
                     </tr>
                 </thead>
-                <tbody className="text-sm">
+                <tbody className="text-xs">
                     {/* Service Specific Details */}
                     {extendedEstimate.service && (
                         <>
                             <tr className="border-b border-zinc-100">
-                                <td className="pt-6 pb-4 pr-4">
-                                    <div className="font-bold text-lg">{extendedEstimate.service.title}</div>
+                                <td className="py-3 pr-4">
+                                    <div className="font-bold text-base text-zinc-900">{extendedEstimate.service.title}</div>
                                     {serviceFeatures && serviceFeatures.length > 0 && (
-                                        <div className="mt-3 pl-4 border-l-2 border-[#D4AF37]/30">
-                                            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">
+                                        <div className="mt-1.5 pl-3 border-l border-[#D4AF37]/30">
+                                            <div className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5">
                                                 {locale === 'id' ? 'Fitur Termasuk:' : 'Features Included:'}
                                             </div>
-                                            <ul className="list-disc pl-4 text-xs text-zinc-500 space-y-1">
+                                            <ul className="list-disc pl-3 text-[11px] text-zinc-500 space-y-0.5">
                                                 {serviceFeatures.map((feat, idx) => (
-                                                    <li key={idx} className="leading-relaxed">{feat}</li>
+                                                    <li key={idx} className="leading-tight">{feat}</li>
                                                 ))}
                                             </ul>
                                         </div>
                                     )}
                                 </td>
-                                <td className="pt-6 pb-4 text-right align-top font-mono text-zinc-500">-</td>
-                                <td className="pt-6 pb-4 text-right align-top font-mono font-semibold">
+                                <td className="py-3 text-right align-top font-mono text-zinc-400">-</td>
+                                <td className="py-3 text-right align-top font-mono font-bold text-zinc-900">
                                     {formatCurrency(extendedEstimate.service.price)}
                                 </td>
                             </tr>
 
                             {/* Selected Add-ons */}
                             {selectedAddons.map((addon, idx) => (
-                                <tr key={`addon-${idx}`} className="border-b border-zinc-100 bg-zinc-50/20">
-                                    <td className="py-4 pr-4 pl-4 border-l-2 border-[#D4AF37]/50">
-                                        <div className="font-bold text-sm text-zinc-800">
+                                <tr key={`addon-${idx}`} className="border-b border-zinc-100 bg-zinc-50/10">
+                                    <td className="py-2.5 pr-4 pl-3 border-l-2 border-[#D4AF37]/40">
+                                        <div className="font-bold text-xs text-zinc-800">
                                             + {locale === 'id' ? 'Add-on: ' : 'Add-on: '} {addon.name}
                                         </div>
                                         {addon.description && (
-                                            <div className="text-xs text-zinc-500 mt-1 italic leading-relaxed">
+                                            <div className="text-[10px] text-zinc-500 mt-0.5 italic leading-tight">
                                                 {addon.description}
                                             </div>
                                         )}
                                     </td>
-                                    <td className="py-4 text-right align-middle font-mono text-xs text-zinc-400">
+                                    <td className="py-2.5 text-right align-middle font-mono text-[10px] text-zinc-400">
                                         {addon.interval === 'monthly' ? (locale === 'id' ? 'Bulanan' : 'Monthly') : addon.interval === 'yearly' ? (locale === 'id' ? 'Tahunan' : 'Yearly') : (locale === 'id' ? 'Sekali Bayar' : 'One-time')}
                                     </td>
-                                    <td className="py-4 text-right align-middle font-mono font-semibold">
+                                    <td className="py-2.5 text-right align-middle font-mono font-bold text-zinc-900">
                                         {formatCurrency(getAddonDisplayPrice(addon))}
                                     </td>
                                 </tr>
@@ -391,7 +391,7 @@ export function InvoiceDocument({
             </table>
 
             {/* Footer / Total */}
-            <div className="mt-auto border-t border-zinc-200 pt-8 flex justify-between items-start">
+            <div className="mt-auto border-t border-zinc-200 pt-4 flex justify-between items-start">
                 <div className="relative">
                     <AuthenticitySticker id={extendedEstimate.id} />
                 </div>
@@ -422,7 +422,7 @@ export function InvoiceDocument({
                 </div>
             </div>
 
-            <div className="text-center text-xs text-zinc-400 mt-12 pb-8 flex flex-col items-center gap-2">
+            <div className="text-center text-[11px] text-zinc-400 mt-6 pb-2 flex flex-col items-center gap-1">
                 <div>
                     {isPaid ? t('thankYouPaid') : t('thankYou')}
                     {!isPaid && bankDetails && bankDetails.bank_account && (
