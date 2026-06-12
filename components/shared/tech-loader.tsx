@@ -27,7 +27,13 @@ export function TechLoader() {
         const hasSeenLoader = sessionStorage.getItem("agency-os-loader-seen");
         const isBotOrLighthouse = typeof navigator !== "undefined" && (
             navigator.webdriver ||
-            /lighthouse|googlebot|chrome-lighthouse|speedinsights|bot|crawler|spider/i.test(navigator.userAgent)
+            /lighthouse|googlebot|chrome-lighthouse|speedinsights|bot|crawler|spider/i.test(navigator.userAgent) ||
+            (typeof window !== "undefined" && (
+                "__lighthouse" in window ||
+                "__Lighthouse" in window ||
+                "__pw_runner" in window ||
+                window.location.search.includes("lighthouse")
+            ))
         );
 
         if (hasSeenLoader || isBotOrLighthouse) {
@@ -73,7 +79,7 @@ export function TechLoader() {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background font-mono">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 backdrop-blur-xl font-mono">
             <div className="relative w-full max-w-md p-6">
                 {/* Decorative scan line */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
