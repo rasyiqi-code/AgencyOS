@@ -22,8 +22,13 @@ export default async function AdminQuotesPage() {
         redirect("/admin");
     }
 
-    // Ambil semua Estimate
+    // Ambil semua Estimate yang dibuat secara manual oleh admin
     const estimates = await prisma.estimate.findMany({
+        where: {
+            prompt: {
+                startsWith: "Manual Quote for"
+            }
+        },
         include: {
             service: true,
             project: true,
