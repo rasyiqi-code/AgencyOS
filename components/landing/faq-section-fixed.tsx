@@ -112,7 +112,7 @@ export function FAQSection() {
                             {tFooter("ctaTitle")}
                         </h3>
                         
-                        <p className="text-zinc-500 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
+                        <p className="text-zinc-400 font-medium mb-8 leading-relaxed text-[11px] md:text-sm">
                             {tFooter("ctaDescription")}
                         </p>
 
@@ -137,7 +137,7 @@ export function FAQSection() {
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">
+                            <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-zinc-400 uppercase tracking-widest whitespace-nowrap">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                                 {tFooter("ctaSocialProof")}
                             </div>

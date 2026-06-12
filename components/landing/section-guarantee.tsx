@@ -32,7 +32,7 @@ export async function SectionGuarantee() {
                     </p>
 
                     {t("footer") && (
-                        <p className="mt-8 text-zinc-500 text-xs sm:text-sm">
+                        <p className="mt-8 text-zinc-400 text-xs sm:text-sm">
                             {t("footer")}
                         </p>
                     )}

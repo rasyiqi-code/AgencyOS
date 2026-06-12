@@ -40,7 +40,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                             </Avatar>
                             <div>
                                 <div className="text-white font-semibold text-sm">{review.name}</div>
-                                <div className="text-zinc-500 text-xs">{review.role}</div>
+                                <div className="text-zinc-400 text-xs">{review.role}</div>
                             </div>
                         </div>
                         <Quote className="w-5 h-5 text-brand-yellow/40 group-hover/card:text-brand-yellow/60 transition-colors" />
@@ -68,7 +68,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                             </Avatar>
                             <div>
                                 <DialogTitle className="text-white font-semibold text-base">{review.name}</DialogTitle>
-                                <DialogDescription className="text-zinc-500 text-sm">{review.role}</DialogDescription>
+                                <DialogDescription className="text-zinc-400 text-sm">{review.role}</DialogDescription>
                             </div>
                         </div>
                     </div>

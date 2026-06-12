@@ -54,14 +54,14 @@ export function SocialProofContent() {
                         <Zap className="w-6 h-6" />
                         <span>{t("faster")}</span>
                     </div>
-                    <p className="text-zinc-500 text-sm">{t("fasterSub")}</p>
+                    <p className="text-zinc-400 text-sm">{t("fasterSub")}</p>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="space-y-2 md:border-x border-white/5 min-w-[85vw] sm:min-w-[350px] md:min-w-0 flex-shrink-0 snap-center">
                     <div className="flex items-center justify-center gap-2 text-white font-bold text-3xl">
                         <span>{t("fixedPrice")}</span>
                     </div>
-                    <p className="text-zinc-500 text-sm">{t("fixedPriceSub")}</p>
+                    <p className="text-zinc-400 text-sm">{t("fixedPriceSub")}</p>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="space-y-2 min-w-[85vw] sm:min-w-[350px] md:min-w-0 flex-shrink-0 snap-center">
@@ -69,7 +69,7 @@ export function SocialProofContent() {
                         <Lock className="w-6 h-6" />
                         <span>{t("verified")}</span>
                     </div>
-                    <p className="text-zinc-500 text-sm">{t("verifiedSub")}</p>
+                    <p className="text-zinc-400 text-sm">{t("verifiedSub")}</p>
                 </motion.div>
             </motion.div>
 

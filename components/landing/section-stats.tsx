@@ -155,7 +155,7 @@ export function SectionStats() {
                             </h2>
                             <div className="flex flex-col items-center gap-1">
                                 {stat.key !== "stack" && (
-                                    <p className="text-zinc-500 text-[7px] md:text-[10px] font-bold uppercase tracking-widest leading-none max-w-xs mx-auto">
+                                    <p className="text-zinc-400 text-[7px] md:text-[10px] font-bold uppercase tracking-widest leading-none max-w-xs mx-auto">
                                         {t(`${stat.key}.desc`)}
                                     </p>
                                 )}
