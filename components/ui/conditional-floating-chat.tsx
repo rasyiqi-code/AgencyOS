@@ -1,26 +1,20 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { FloatingChatWidget } from "./floating-chat";
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const FloatingChatWidget = dynamic(
+    () => import("./floating-chat").then((mod) => mod.FloatingChatWidget),
+    { ssr: false }
+);
 
 export function ConditionalFloatingChat() {
-    const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
 
-    // Pastikan komponen hanya ter-render di client-side untuk menghindari mismatch hidrasi
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return null;
-    }
-
-    // Jangan tampilkan di halaman admin, inbox lengkap, pratinjau desain, atau halaman checkout
+    // Jangan tampilkan di halaman admin, pratinjau desain, atau halaman checkout
     const isViewDesign = pathname?.includes("/view-design/");
     const isCheckout = pathname?.includes("/checkout");
-    if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard/inbox") || isViewDesign || isCheckout) {
+    if (pathname?.startsWith("/admin") || isViewDesign || isCheckout) {
         return null;
     }
 

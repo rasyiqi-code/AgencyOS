@@ -40,7 +40,7 @@ export function QuickActions() {
                 </div>
             </Link>
 
-            <Link href="/dashboard/inbox" className="group">
+            <Link href="/dashboard/support" className="group">
                 <div className="p-3 rounded-xl border border-white/5 bg-zinc-900/40 hover:bg-zinc-900/60 transition-colors h-full flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:scale-110 transition-transform shrink-0">
                         <LifeBuoy className="w-5 h-5" />

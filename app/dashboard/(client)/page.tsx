@@ -110,7 +110,7 @@ export default async function DashboardPage() {
                         <h4 className="font-bold text-brand-yellow mb-2">{t("needAssistance")}</h4>
                         <p className="text-sm text-brand-yellow/70 mb-4">{t("aiHelperDesc")}</p>
                         <Link
-                            href="/dashboard/inbox"
+                            href="/dashboard/support"
                             className="text-xs bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold px-4 py-2 rounded-lg w-full transition-colors flex items-center justify-center gap-2"
                         >
                             {t("openComms")}

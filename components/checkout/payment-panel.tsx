@@ -9,6 +9,7 @@ import { PriceDisplay, useCurrency } from "@/components/providers/currency-provi
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { PaymentSelector } from "@/components/payment/payment-selector";
+import { type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 
 export function PaymentPanel({
     estimate,
@@ -54,7 +55,7 @@ export function PaymentPanel({
     countdown: number,
     selectedAddons?: ServiceAddon[],
     onToggleAddon?: (addon: ServiceAddon) => void,
-    agencySettings?: any,
+    agencySettings?: AgencyInvoiceSettings,
     onPaymentInitiated?: () => void
 }) {
     const t = useTranslations("Checkout");

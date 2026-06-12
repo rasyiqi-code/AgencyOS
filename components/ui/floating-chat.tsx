@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, MinusCircle, Loader2, Send, X, User } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
-import { useSafeUser } from "@/hooks/use-safe-user";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -29,8 +28,6 @@ interface Message {
     content: string;
 }
 
-type ChatMode = "ai";
-
 interface ContactSettings {
     phone: string;
     telegram: string;
@@ -39,7 +36,6 @@ interface ContactSettings {
 import { useFloatingChat } from "@/lib/store/floating-chat-store";
 
 export function FloatingChatWidget() {
-    const { user } = useSafeUser();
     const t = useTranslations("FloatingChat");
     const { isOpen, openChat, closeChat, isMenuOpen, setIsMenuOpen } = useFloatingChat();
     // Local state for expanded/collapsed only, visibility is global
@@ -51,7 +47,6 @@ export function FloatingChatWidget() {
     const pathname = usePathname();
 
     // Helper handlers to replace local setters
-    const setMode = (newMode: ChatMode) => openChat(newMode as any);
     const setIsOpen = (open: boolean) => open ? openChat("ai") : closeChat();
 
     // AI Chat State
