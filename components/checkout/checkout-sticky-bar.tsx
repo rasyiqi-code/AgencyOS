@@ -34,7 +34,7 @@ export function CheckoutStickyBar({
     if (isPaid) return null;
 
     return (
-        <div className="sticky bottom-0 z-50 w-full bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 py-4 px-4 sm:px-6 md:px-8 mt-12 shadow-[0_-15px_30px_rgba(0,0,0,0.8)] -mx-4 sm:-mx-6 md:-mx-8 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] md:w-[calc(100%+4rem)] transition-all">
+        <div className="sticky bottom-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 py-4 px-4 sm:px-6 md:px-8 mt-12 shadow-[0_-15px_30px_rgba(0,0,0,0.8)] -mx-4 sm:-mx-6 md:-mx-8 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] md:w-[calc(100%+4rem)] transition-all">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                 
                 {/* Sisi Kiri: Rincian Spesifikasi Proyek */}
