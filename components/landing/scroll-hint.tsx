@@ -1,34 +1,36 @@
 "use client";
-
+ 
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/shared/utils";
-
+import { useTranslations } from "next-intl";
+ 
 interface ScrollHintProps {
     children: React.ReactNode;
     className?: string;
     variant?: "default" | "inverted";
 }
-
+ 
 export function ScrollHint({ children, className, variant = "default" }: ScrollHintProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [showHint, setShowHint] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
-
+    const t = useTranslations("Common");
+ 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024);
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
-
+ 
     const handleScroll = () => {
         if (scrollRef.current && scrollRef.current.scrollLeft > 10) {
             setShowHint(false);
         }
     };
-
+ 
     const hintStyles = {
         default: {
             bg: "bg-brand-yellow",
@@ -43,9 +45,9 @@ export function ScrollHint({ children, className, variant = "default" }: ScrollH
             border: "border-brand-yellow"
         }
     };
-
+ 
     const style = hintStyles[variant];
-
+ 
     return (
         <div className="relative group/scroll-container w-full">
             <div 
@@ -58,7 +60,7 @@ export function ScrollHint({ children, className, variant = "default" }: ScrollH
             >
                 {children}
             </div>
-
+ 
             {/* Floating Swipe Hint (Mobile Only) */}
             <AnimatePresence>
                 {isMobile && showHint && (
@@ -82,7 +84,7 @@ export function ScrollHint({ children, className, variant = "default" }: ScrollH
                             <ArrowRight className="w-7 h-7" />
                         </motion.div>
                         <div className="bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-yellow">Swipe</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-yellow">{t("swipe")}</span>
                         </div>
                     </motion.div>
                 )}

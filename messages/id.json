@@ -7,7 +7,8 @@
         "switchCurrency": "Ganti Mata Uang",
         "switchLanguage": "Ganti Bahasa",
         "region": "Wilayah",
-        "toggleMenu": "Buka Menu"
+        "toggleMenu": "Buka Menu",
+        "swipe": "Geser"
     },
     "ViewDesign": {
         "inquireDesign": "Pesan",
