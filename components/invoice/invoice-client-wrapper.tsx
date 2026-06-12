@@ -54,11 +54,13 @@ const thankYouQuotes = [
     "“Technology is best when it brings people together.” — Matt Mullenweg"
 ];
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true, gatewayStatus }: InvoiceClientWrapperProps) {
     const t = useTranslations("Invoice");
     const tc = useTranslations("Checkout");
+    const locale = useLocale();
+    const isId = locale === 'id';
     const router = useRouter();
     const componentRef = useRef<HTMLDivElement>(null);
     const { currency: contextCurrency, rate: contextRate } = useCurrency();
@@ -128,159 +130,163 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const displayAmount = effectiveCurrency === 'IDR' ? Math.ceil(baseAmountUSD * effectiveRate) : baseAmountUSD;
 
     return (
-        <div className="flex flex-col xl:flex-row gap-8 items-start">
+        <div className="max-w-7xl mx-auto w-full">
+            {/* Main Portal Container: Grid layout seperti Checkout Portal */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 relative z-10 min-h-[500px]">
 
-            {/* Left Column: Invoice Document */}
-            <div className="flex-1 w-full order-2 xl:order-1">
-                {/* Header Info Mobile */}
-                <div className="mb-6 flex justify-between items-center xl:hidden">
-                    <h1 className="text-xl font-bold text-white">{t('invoiceNumber')}{order.id}</h1>
-                    {isPaid && <span className="text-emerald-400 font-bold border border-emerald-500/30 px-3 py-1 rounded-full bg-emerald-500/10">{t('paid')}</span>}
-                </div>
-
-                {/* Scroll Hint Mobile */}
-                <div className="mb-3 flex items-center justify-center gap-2 py-2 px-4 bg-zinc-900/50 border border-white/5 rounded-lg text-[10px] font-bold text-zinc-400 uppercase tracking-widest xl:hidden animate-pulse">
-                    <MoveHorizontal className="w-3 h-3 text-lime-500" />
-                    {t('scrollNotice') || "Scroll horizontal to view full invoice"}
-                </div>
-
-                <div className="bg-white text-black rounded-lg shadow-2xl overflow-x-auto min-h-[800px]">
-                    <div className="min-w-[800px] h-full">
-                        <InvoiceDocument
-                            refAction={componentRef}
-                            estimate={estimate}
-                            user={user}
-                            isPaid={isPaid}
-                            agencySettings={agencySettings}
-                            paymentType={order.type}
-                            currency={effectiveCurrency}
-                            exchangeRate={effectiveRate}
-                            bankDetails={bankDetails}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Column: Payment Sidebar */}
-            <div className="w-full xl:w-[400px] xl:sticky xl:top-24 space-y-6 order-1 xl:order-2">
-                {/* Status Card */}
-                <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-5 space-y-4">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t('status')}</h2>
-                            <p className="text-zinc-500 font-mono text-xs mt-0.5">#{order.id}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
-                                {isPaid ? t('paid') : t('unpaid')}
-                            </div>
-                            {(order.type === 'DP' || order.type === 'REPAYMENT') && (
-                                <div className="px-2 py-1 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
-                                    {order.type === 'DP' ? tc('dp') : tc('repayment')}
-                                </div>
-                            )}
-                        </div>
+                {/* Left Column: Invoice Document (lg:col-span-7) */}
+                <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-white/5 pb-8 lg:pb-0 lg:pr-8">
+                    {/* Scroll Hint Mobile */}
+                    <div className="mb-3 flex items-center justify-center gap-2 py-2 px-4 bg-zinc-900/50 border border-white/5 rounded-lg text-[10px] font-bold text-zinc-400 uppercase tracking-widest lg:hidden animate-pulse">
+                        <MoveHorizontal className="w-3 h-3 text-lime-500" />
+                        {t('scrollNotice') || "Scroll horizontal to view full invoice"}
                     </div>
 
-                    {!isPaid && (hasActiveGateway || bankDetails) && (
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center text-xs p-3.5 bg-zinc-950/80 rounded-xl border border-white/5">
-                                <span className="text-zinc-400">{tc('totalToPay')}</span>
-                                <span className="text-lg font-mono font-bold text-white">
-                                    {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
-                                </span>
+                    <div className="bg-white text-black rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.3)] overflow-x-auto min-h-[800px] border border-white/5">
+                        <div className="min-w-[800px] h-full">
+                            <InvoiceDocument
+                                refAction={componentRef}
+                                estimate={estimate}
+                                user={user}
+                                isPaid={isPaid}
+                                agencySettings={agencySettings}
+                                paymentType={order.type}
+                                currency={effectiveCurrency}
+                                exchangeRate={effectiveRate}
+                                bankDetails={bankDetails}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Column: Payment Sidebar (lg:col-span-5) */}
+                <div className="lg:col-span-5 lg:pl-8 space-y-6">
+                    {/* Status Card */}
+                    <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-5 space-y-4">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{t('status')}</h2>
+                                <p className="text-zinc-500 font-mono text-xs mt-0.5">#{order.id}</p>
                             </div>
-
-                            {!hasActiveGateway && bankDetails && (
-                                <div className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                                    <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
-                                        <AlertTriangle className="w-4 h-4" />
-                                        {tc('manualPayment')}
-                                    </p>
-                                    <p className="text-[10px] text-amber-200/60 leading-relaxed">
-                                        {tc('manualDesc')}
-                                    </p>
+                            <div className="flex items-center gap-2">
+                                <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isPaid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
+                                    {isPaid ? t('paid') : t('unpaid')}
                                 </div>
-                            )}
-
-                            <p className="text-[11px] text-zinc-500 leading-normal">
-                                {t('completePaymentProject')}
-                            </p>
+                                {(order.type === 'DP' || order.type === 'REPAYMENT') && (
+                                    <div className="px-2 py-1 rounded-full text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">
+                                        {order.type === 'DP' ? tc('dp') : tc('repayment')}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
 
-                    {!isPaid && !hasActiveGateway && !bankDetails && (
-                        <div className="p-4 rounded-xl bg-zinc-950/50 border border-white/5 text-center">
-                            <p className="text-xs text-zinc-500">{t('paymentMethodsDisabled') || "Online payment is currently unavailable for this invoice."}</p>
+                        {!isPaid && (hasActiveGateway || bankDetails) && (
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center text-xs p-3.5 bg-zinc-950/80 rounded-xl border border-white/5">
+                                    <span className="text-zinc-400">{tc('totalToPay')}</span>
+                                    <span className="text-lg font-mono font-bold text-white">
+                                        {new Intl.NumberFormat(effectiveCurrency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: effectiveCurrency }).format(displayAmount)}
+                                    </span>
+                                </div>
+
+                                {!hasActiveGateway && bankDetails && (
+                                    <div className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                                        <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
+                                            <AlertTriangle className="w-4 h-4" />
+                                            {tc('manualPayment')}
+                                        </p>
+                                        <p className="text-[10px] text-amber-200/60 leading-relaxed">
+                                            {tc('manualDesc')}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <p className="text-[11px] text-zinc-500 leading-normal">
+                                    {t('completePaymentProject')}
+                                </p>
+                            </div>
+                        )}
+
+                        {!isPaid && !hasActiveGateway && !bankDetails && (
+                            <div className="p-4 rounded-xl bg-zinc-950/50 border border-white/5 text-center">
+                                <p className="text-xs text-zinc-500">{t('paymentMethodsDisabled') || "Online payment is currently unavailable for this invoice."}</p>
+                            </div>
+                        )}
+
+                        {isPaid && (
+                            <div className="text-center py-2 space-y-2">
+                                <div className="text-emerald-400 font-bold text-sm tracking-wide">{t('paymentReceived')}</div>
+                                <p className="text-xs text-zinc-500">{t('thankYouPaid')}</p>
+                            </div>
+                        )}
+
+                        <div className="pt-3 border-t border-white/5 text-center">
+                            <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-white transition-colors flex items-center justify-center gap-1">
+                                {t('needHelp')}
+                            </a>
                         </div>
-                    )}
+                    </div>
 
+                    {/* Download Button (Only if Paid) */}
                     {isPaid && (
-                        <div className="text-center py-2 space-y-2">
-                            <div className="text-emerald-400 font-bold text-sm tracking-wide">{t('paymentReceived')}</div>
-                            <p className="text-xs text-zinc-500">{t('thankYouPaid')}</p>
+                        <div className="space-y-6">
+                            <Button
+                                onClick={handlePrint}
+                                className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold h-12 flex items-center gap-2"
+                            >
+                                <Download className="w-4 h-4" />
+                                {t('downloadPrint')}
+                            </Button>
+
+                            <div className="relative group hidden xl:block">
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+                                <div className="relative bg-zinc-900 border border-white/10 p-6 rounded-lg text-center space-y-3">
+                                    <div className="text-2xl text-lime-400 opacity-50 font-serif">&quot;</div>
+                                    <p className="text-sm text-zinc-300 italic font-serif leading-relaxed">
+                                        {quote.split(" — ")[0]}
+                                    </p>
+                                    <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest pt-2 border-t border-white/5">
+                                        — {quote.split(" — ")[1]}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     )}
 
-                    <div className="pt-3 border-t border-white/5 text-center">
-                        <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-white transition-colors flex items-center justify-center gap-1">
-                            {t('needHelp')}
-                        </a>
-                    </div>
-                </div>
-
-                {/* Download Button (Only if Paid) */}
-                {isPaid && (
-                    <div className="space-y-6">
-                        <Button
-                            onClick={handlePrint}
-                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold h-12 flex items-center gap-2"
-                        >
-                            <Download className="w-4 h-4" />
-                            {t('downloadPrint')}
-                        </Button>
-
-                        <div className="relative group hidden xl:block">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
-                            <div className="relative bg-zinc-900 border border-white/10 p-6 rounded-lg text-center space-y-3">
-                                <div className="text-2xl text-lime-400 opacity-50 font-serif">&quot;</div>
-                                <p className="text-sm text-zinc-300 italic font-serif leading-relaxed">
-                                    {quote.split(" — ")[0]}
-                                </p>
-                                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest pt-2 border-t border-white/5">
-                                    — {quote.split(" — ")[1]}
-                                </p>
+                    {/* Custom Core API Payment Widget */}
+                    {!isPaid && (hasActiveGateway || bankDetails) && (
+                        <div className="space-y-3 pt-2">
+                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
+                                {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
+                            </span>
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full">
+                                <PaymentSelector
+                                    orderId={order.id}
+                                    amount={displayAmount}
+                                    paymentMetadata={order.paymentMetadata}
+                                    currency={effectiveCurrency as 'USD' | 'IDR'}
+                                    allowedGroups={undefined}
+                                    bankDetails={bankDetails}
+                                    orderStatus={orderStatus}
+                                    contactWA={agencySettings?.phone}
+                                    contactTele={agencySettings?.telegram}
+                                    hasActiveGateway={hasActiveGateway}
+                                    gatewayStatus={gatewayStatus}
+                                    noCard={true}
+                                    onPaymentInitiated={() => setIsPaymentInitiated(true)}
+                                    onPaymentClosed={() => setIsPaymentInitiated(false)}
+                                    onPaymentStatusChange={(status) => setOrderStatus(status)}
+                                />
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* Custom Core API Payment Widget */}
-                {!isPaid && (hasActiveGateway || bankDetails) && (
-                    <PaymentSelector
-                        orderId={order.id}
-                        amount={displayAmount}
-                        paymentMetadata={order.paymentMetadata}
-                        currency={effectiveCurrency as 'USD' | 'IDR'}
-                        allowedGroups={undefined}
-                        bankDetails={bankDetails}
-                        orderStatus={orderStatus}
-                        contactWA={agencySettings?.phone}
-                        contactTele={agencySettings?.telegram}
-                        hasActiveGateway={hasActiveGateway}
-                        gatewayStatus={gatewayStatus}
-                        noCard={true}
-                        onPaymentInitiated={() => setIsPaymentInitiated(true)}
-                        onPaymentClosed={() => setIsPaymentInitiated(false)}
-                        onPaymentStatusChange={(status) => setOrderStatus(status)}
-                    />
-                )}
-
-                {!isPaid && (
-                    <p className="text-center text-xs text-zinc-500">
-                        {tc('secure')}
-                    </p>
-                )}
+                    {!isPaid && (
+                        <p className="text-center text-xs text-zinc-500">
+                            {tc('secure')}
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     );
