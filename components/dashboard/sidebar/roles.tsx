@@ -31,7 +31,7 @@ export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: stri
             href={href}
             title={collapsed ? label : undefined}
             className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-white/5 cursor-pointer",
+                "flex items-center gap-3 rounded-lg px-3 py-1.5 transition-all hover:bg-white/5 cursor-pointer",
                 isActive ? "text-brand-yellow bg-brand-yellow/10" : "text-zinc-400 hover:text-white",
                 "group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2"
             )}
@@ -44,7 +44,7 @@ export function SidebarLink({ href, icon: Icon, label, iconClass }: { href: stri
 
 export function SidebarSectionHeader({ children }: { children: React.ReactNode }) {
     return (
-        <div className="px-3 mb-2 mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500 truncate transition-all duration-300 group-data-[collapsed=true]:h-0 group-data-[collapsed=true]:opacity-0 group-data-[collapsed=true]:my-0 group-data-[collapsed=true]:py-0 group-data-[collapsed=true]:pointer-events-none group-data-[collapsed=true]:overflow-hidden">
+        <div className="px-3 mb-1 mt-4 text-xs font-semibold uppercase tracking-wider text-zinc-500 truncate transition-all duration-300 group-data-[collapsed=true]:h-0 group-data-[collapsed=true]:opacity-0 group-data-[collapsed=true]:my-0 group-data-[collapsed=true]:py-0 group-data-[collapsed=true]:pointer-events-none group-data-[collapsed=true]:overflow-hidden">
             {children}
         </div>
     );
