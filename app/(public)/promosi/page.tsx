@@ -1,30 +1,104 @@
 import { getPromotions } from "@/lib/server/marketing";
 import { PromoCard } from "@/components/marketing/promo-card";
 import { NewsletterForm } from "@/components/marketing/newsletter-form";
-import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { Metadata, ResolvingMetadata } from "next";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getSystemSettings } from "@/lib/server/settings";
+import { getPageSeo } from "@/lib/server/seo";
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 
 export const revalidate = 3600; // Cache halaman promosi selama 1 jam (ISR)
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+    _props: unknown,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
     const t = await getTranslations("Promotions");
+    const locale = await getLocale();
+    const isId = locale === 'id';
+    
     const settings = await getSystemSettings(["AGENCY_NAME"]);
     const brand = settings.find(s => s.key === "AGENCY_NAME")?.value || "AgencyOS";
 
+    const pageSeo = await getPageSeo("/promosi");
+
+    const title = (isId ? pageSeo?.title_id : null) || pageSeo?.title || t("metaTitle", { brand });
+    const description = (isId ? pageSeo?.description_id : null) || pageSeo?.description || t("metaDesc");
+    const keywords = ((isId ? pageSeo?.keywords_id : null) || pageSeo?.keywords || "").split(",").map((k: string) => k.trim()).filter(Boolean);
+
+    const previousImages = (await parent).openGraph?.images || [];
+    const ogImage = (isId ? pageSeo?.ogImage_id : null) || pageSeo?.ogImage;
+    const ogImages = ogImage ? [ogImage] : previousImages;
+
     return {
-        title: t("metaTitle", { brand }),
-        description: t("metaDesc"),
+        title,
+        description,
+        keywords: keywords.length > 0 ? keywords : undefined,
+        openGraph: {
+            title,
+            description,
+            images: ogImages,
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ogImages,
+        },
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/${locale}/promosi`
+        }
     };
 }
 
 export default async function PromosiPage() {
     const promotions = await getPromotions(true);
     const t = await getTranslations("Promotions");
+    const locale = await getLocale();
+    const isId = locale === 'id';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return (
-        <div className="min-h-screen bg-black pt-6 sm:pt-32 pb-16 sm:pb-20">
-            <div className="container mx-auto px-4">
+        <div className="flex flex-col min-h-screen bg-black">
+            <BreadcrumbSchema
+                items={[
+                    { name: isId ? 'Beranda' : 'Home', item: `${baseUrl}/${locale}` },
+                    { name: isId ? 'Promosi' : 'Promotions', item: `${baseUrl}/${locale}/promosi` },
+                ]}
+            />
+            {promotions.length > 0 && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "ItemList",
+                            "name": isId ? "Daftar Promosi & Penawaran Eksklusif" : "Promotions & Exclusive Offers List",
+                            "description": isId ? "Daftar promo aktif, penawaran diskon, dan bonus layanan agensi terbaik." : "List of active promotions, discount offers, and best agency service bonuses.",
+                            "itemListElement": promotions.map((promo: {
+                                id: string;
+                                title: string;
+                                description: string | null;
+                                imageUrl: string;
+                                ctaUrl: string | null;
+                            }, index: number) => ({
+                                "@type": "ListItem",
+                                "position": index + 1,
+                                "item": {
+                                    "@type": "SaleEvent",
+                                    "name": promo.title,
+                                    "description": promo.description || promo.title,
+                                    "url": promo.ctaUrl ? (promo.ctaUrl.startsWith('http') ? promo.ctaUrl : `${baseUrl}${promo.ctaUrl}`) : undefined,
+                                    "image": promo.imageUrl,
+                                }
+                            }))
+                        })
+                    }}
+                />
+            )}
+            <div className="pt-6 sm:pt-32 pb-16 sm:pb-20">
+                <div className="container mx-auto px-4">
                 {/* Header Section */}
                 <div className="relative mb-10 sm:mb-20 text-center">
                     <div className="absolute left-1/2 top-1/2 -z-10 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-yellow/10 blur-[120px]" />
@@ -66,7 +140,7 @@ export default async function PromosiPage() {
 
 
                 ) : (
-                    <div className="flex flex-col items-center justify-center rounded-[3px] border border-white/5 bg-zinc-900/20 py-12 sm:py-20 px-4 sm:px-6 text-center backdrop-blur-sm">
+                    <div className="flex flex-col items-center justify-center py-12 sm:py-20 px-4 sm:px-6 text-center">
                         <div className="mb-6 rounded-full bg-brand-yellow/5 p-6 border border-brand-yellow/10">
                             <svg className="h-12 w-12 text-brand-yellow/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -78,8 +152,7 @@ export default async function PromosiPage() {
                 )}
 
                 {/* Footer Note */}
-                <div className="mt-12 sm:mt-20 rounded-[3px] bg-gradient-to-br from-brand-yellow/5 to-zinc-900/50 p-6 sm:p-12 text-center border border-white/5 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-brand-yellow/5 blur-[100px] rounded-full" />
+                <div className="mt-12 sm:mt-20 px-0 py-8 sm:py-12 text-center">
                     <h3 className="mb-3 text-xl sm:text-2xl font-black text-white">{t("newsletterTitle")}</h3>
                     <p className="mb-8 text-sm sm:text-base text-zinc-400 max-w-lg mx-auto">{t("newsletterDesc")}</p>
                     
@@ -89,5 +162,6 @@ export default async function PromosiPage() {
 
             </div>
         </div>
+    </div>
     );
 }
