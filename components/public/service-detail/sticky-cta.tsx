@@ -34,11 +34,11 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
 
     return (
         <div
-            className={`fixed top-0 left-0 right-0 py-2 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-30 transition-all duration-300 transform shadow-md shadow-black/80 ${
-                isVisible ? "translate-y-10 md:translate-y-14 opacity-100" : "translate-y-0 opacity-0 pointer-events-none"
+            className={`fixed top-10 md:top-14 w-full py-2 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-40 transition-all duration-300 transform shadow-md shadow-black/80 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
             }`}
         >
-            <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
                 {/* Judul Layanan di Sisi Kiri */}
                 <div className="flex-1 min-w-0">
                     <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
