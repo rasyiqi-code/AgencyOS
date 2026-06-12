@@ -111,7 +111,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                 {/* Bilah Pencarian Jasa Premium */}
                 <div className="mb-12 max-w-xl mx-auto relative animate-in fade-in slide-in-from-bottom-3 duration-500">
                     <div className="relative group">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/30 to-brand-yellow/10 rounded-2xl blur opacity-30 group-focus-within:opacity-100 group-hover:opacity-50 transition duration-1000 group-focus-within:duration-200" />
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/30 to-brand-yellow/10 rounded-none blur opacity-30 group-focus-within:opacity-100 group-hover:opacity-50 transition duration-1000 group-focus-within:duration-200" />
                         <div className="relative flex items-center">
                             <Search className="absolute left-4 w-5 h-5 text-zinc-500 group-focus-within:text-brand-yellow transition-colors" />
                             <input
@@ -119,7 +119,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
                                 placeholder={isId ? "Cari jasa yang Anda butuhkan..." : "Search services you need..."}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-zinc-950/80 hover:bg-zinc-950/95 focus:bg-black border border-white/10 focus:border-brand-yellow/50 rounded-2xl py-4 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-yellow/20 text-sm sm:text-base transition-all shadow-xl shadow-black/80"
+                                className="w-full bg-zinc-950/80 hover:bg-zinc-950/95 focus:bg-black border-b border-white/10 focus:border-brand-yellow/50 rounded-none py-4 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-yellow/20 text-sm sm:text-base transition-all shadow-xl shadow-black/80"
                             />
                             {searchQuery && (
                                 <button
@@ -140,7 +140,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
 
                 {/* Hasil Pencarian List Premium */}
                 {searchQuery.length > 0 && filteredServices.length > 0 && (
-                    <div className="max-w-4xl mx-auto border border-white/5 rounded-3xl bg-zinc-950/30 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-3 duration-500 divide-y divide-white/5">
+                    <div className="max-w-4xl mx-auto bg-zinc-950/30 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-3 duration-500 divide-y divide-white/5">
                         {filteredServices.map((service) => (
                             <ServiceListItem key={service.id} service={service} isId={isId} />
                         ))}
@@ -149,7 +149,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
 
                 {/* State Kosong (Tidak ada hasil cocok) */}
                 {searchQuery.length > 0 && filteredServices.length === 0 && (
-                    <div className="max-w-md mx-auto text-center py-16 bg-zinc-950/20 border border-white/5 rounded-3xl p-6 shadow-xl animate-in fade-in duration-300">
+                    <div className="max-w-md mx-auto text-center py-16 bg-zinc-950/20 border-b border-white/5 rounded-none p-6 shadow-xl animate-in fade-in duration-300">
                         <p className="text-zinc-400 text-sm font-semibold">
                             {isId ? "Tidak ada layanan yang cocok dengan pencarian Anda." : "No services match your search query."}
                         </p>
@@ -161,7 +161,7 @@ export function ServicesClientWrapper({ services, pageTitle, pageSubtitle }: Ser
 
                 {/* Jika database kosong secara keseluruhan */}
                 {services.length === 0 && (
-                    <div className="col-span-full text-center py-20 bg-zinc-950/30 rounded-3xl border border-white/5 max-w-4xl mx-auto">
+                    <div className="col-span-full text-center py-20 bg-zinc-950/30 rounded-none border-b border-white/5 max-w-4xl mx-auto">
                         <p className="text-zinc-500 text-lg font-medium">
                             {isId ? "Belum ada layanan publik yang tersedia saat ini." : "No services available publicly at the moment."}
                         </p>

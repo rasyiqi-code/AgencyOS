@@ -67,9 +67,9 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                 <PurchaseButton
                     serviceId={service.id}
                     interval={service.interval}
-                    className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-tighter shadow-xl shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95"
+                    className="bg-brand-yellow hover:bg-brand-yellow/90 text-black px-6 py-3 rounded-none font-black text-sm uppercase tracking-tighter shadow-xl shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95"
                 />
-                <DialogClose className="p-3 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-all">
+                <DialogClose className="p-3 rounded-none bg-black/50 backdrop-blur-md border border-white/10 text-white hover:bg-white/10 transition-all">
                     <X className="w-6 h-6" />
                 </DialogClose>
             </div>
@@ -113,8 +113,8 @@ export function ServiceModalContent({ service, isId }: ServiceModalContentProps)
                             <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">{tCards("included")}</h4>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {displayFeatures.map((feature: string, i: number) => (
-                                    <li key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-brand-yellow/20 transition-colors group/feat">
-                                        <div className="mt-0.5 flex items-center justify-center w-5 h-5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 group-hover/feat:bg-brand-yellow/20 transition-colors shrink-0">
+                                    <li key={i} className="flex items-start gap-4 p-4 rounded-none bg-white/5 border-b border-white/5 hover:border-brand-yellow/20 transition-colors group/feat">
+                                        <div className="mt-0.5 flex items-center justify-center w-5 h-5 rounded-none bg-brand-yellow/10 border-b border-brand-yellow/20 group-hover/feat:bg-brand-yellow/20 transition-colors shrink-0">
                                             <Check className="w-3 h-3 text-brand-yellow" />
                                         </div>
                                         <span className="text-sm text-zinc-300 leading-tight group-hover/feat:text-white transition-colors">

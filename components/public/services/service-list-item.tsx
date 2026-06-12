@@ -98,14 +98,14 @@ export function ServiceListItem({ service, isId }: ServiceListItemProps) {
 
                 <div className="flex items-center gap-1.5">
                     <Link href={`/services/${service.slug || service.id}`}>
-                        <Button size="sm" variant="ghost" className="h-7 px-2 text-[10px] text-zinc-400 hover:text-white hover:bg-white/5 font-semibold rounded">
+                        <Button size="sm" variant="ghost" className="h-7 px-2 text-[10px] text-zinc-400 hover:text-white hover:bg-white/5 font-semibold rounded-none">
                             {isId ? "Detail" : "Details"}
                         </Button>
                     </Link>
                     <PurchaseButton
                         serviceId={service.id}
                         interval={service.interval}
-                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 px-2.5 rounded text-[9px] uppercase tracking-tight shadow-sm shadow-brand-yellow/10 transition-all duration-300 hover:shadow-brand-yellow/15 transform hover:scale-[1.01] active:scale-[0.99]"
+                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 px-2.5 rounded-none text-[9px] uppercase tracking-tight shadow-sm shadow-brand-yellow/10 transition-all duration-300 hover:shadow-brand-yellow/15 transform hover:scale-[1.01] active:scale-[0.99]"
                     />
                 </div>
             </div>

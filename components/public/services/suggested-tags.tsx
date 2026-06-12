@@ -26,7 +26,7 @@ export function SuggestedTags({ onTagClick, isId }: SuggestedTagsProps) {
                     <button
                         key={tag}
                         onClick={() => onTagClick(tag)}
-                        className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900/50 hover:bg-zinc-950 border border-white/5 hover:border-brand-yellow/30 rounded-full transition-all duration-300 transform hover:scale-[1.03] active:scale-95 shadow-sm hover:shadow-brand-yellow/5"
+                        className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900/50 hover:bg-zinc-950 rounded-none transition-all duration-300 transform hover:scale-[1.03] active:scale-95 shadow-sm hover:shadow-brand-yellow/5"
                     >
                         #{tag}
                     </button>

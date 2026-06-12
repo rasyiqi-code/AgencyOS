@@ -29,7 +29,7 @@ export default async function ClientServicesPage() {
                 ))}
 
                 {processedServices.length === 0 && (
-                    <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-3xl border border-white/5">
+                    <div className="col-span-full text-center py-20 bg-zinc-900/30 rounded-none border-b border-white/5">
                         <p className="text-zinc-500 text-lg">{isId ? 'Belum ada layanan tersedia saat ini.' : 'No services available at the moment.'}</p>
                     </div>
                 )}

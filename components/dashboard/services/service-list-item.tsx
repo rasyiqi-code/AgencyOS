@@ -22,7 +22,7 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <div
-                    className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 bg-zinc-900/20 hover:bg-zinc-900/40 border border-white/5 border-l-2 hover:border-l-brand-yellow rounded-2xl transition-all duration-300 group relative cursor-pointer"
+                    className="py-2.5 px-4 sm:px-5 flex flex-row justify-between items-center gap-3 bg-zinc-900/20 hover:bg-zinc-900/40 border-b border-white/5 border-l-2 border-l-transparent hover:border-l-brand-yellow rounded-none transition-all duration-300 group relative cursor-pointer"
                 >
                     {/* Gaya Marquee Lokal Terisolasi */}
                     <style dangerouslySetInnerHTML={{ __html: `
@@ -88,14 +88,14 @@ export function ServiceListItem({ service }: ServiceListItemProps) {
 
                         <div className="flex items-center gap-1.5">
                             <DialogTrigger asChild>
-                                <button className="h-7 px-2 text-[10px] text-zinc-400 hover:text-white hover:bg-white/5 font-semibold rounded transition-colors">
+                                <button className="h-7 px-2 text-[10px] text-zinc-400 hover:text-white hover:bg-white/5 font-semibold rounded-none transition-colors">
                                     {isId ? "Detail" : "Details"}
                                 </button>
                             </DialogTrigger>
                             <PurchaseButton
                                 serviceId={service.id}
                                 interval={service.interval}
-                                className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 px-2.5 rounded text-[9px] uppercase tracking-tight shadow-sm shadow-brand-yellow/10 transition-all duration-300 hover:shadow-brand-yellow/15 transform hover:scale-[1.01] active:scale-[0.99]"
+                                className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 px-2.5 rounded-none text-[9px] uppercase tracking-tight shadow-sm shadow-brand-yellow/10 transition-all duration-300 hover:shadow-brand-yellow/15 transform hover:scale-[1.01] active:scale-[0.99]"
                             />
                         </div>
                     </div>
