@@ -145,7 +145,8 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
     const displayAmount = effectiveCurrency === 'IDR' ? Math.ceil(baseAmountUSD * effectiveRate) : baseAmountUSD;
 
     return (
-        <div className="max-w-3xl mx-auto w-full space-y-8 animate-in fade-in duration-500">
+        <div className="max-w-3xl mx-auto w-full space-y-4 sm:space-y-8 animate-in fade-in duration-500">
+
             {/* Invoice Document Card A4 */}
             <div 
                 ref={containerRef}
