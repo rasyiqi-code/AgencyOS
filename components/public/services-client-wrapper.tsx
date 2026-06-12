@@ -115,7 +115,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                 <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[400px] w-[600px] rounded-full bg-brand-yellow/5 blur-[120px]" />
             </div>
 
-            <div className="container mx-auto px-4 py-16 sm:py-24 relative z-10">
+            <div className="container mx-auto px-4 pt-6 pb-16 sm:py-24 relative z-10">
                 <div className="mb-10 text-center max-w-3xl mx-auto flex flex-col items-center justify-center">
                     <Sparkles className="w-6 h-6 text-brand-yellow animate-pulse mb-3" />
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-tight">
