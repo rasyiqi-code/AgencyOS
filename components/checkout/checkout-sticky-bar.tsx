@@ -38,33 +38,33 @@ export function CheckoutStickyBar({
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                 
                 {/* Sisi Kiri: Rincian Spesifikasi Proyek */}
-                <div className="flex items-center justify-between md:justify-start gap-x-5 gap-y-1.5 w-full md:w-auto border-b border-white/5 pb-3 md:pb-0 md:border-b-0">
-                    <div className="flex flex-col">
+                <div className="grid grid-cols-3 items-center w-full md:flex md:w-auto md:justify-start md:gap-x-5 gap-y-1.5 border-b border-white/5 pb-3 md:pb-0 md:border-b-0">
+                    <div className="flex flex-col items-center justify-center text-center w-full md:w-auto md:items-start md:text-left">
                         <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Project Spec
                         </span>
-                        <span className="text-xs font-extrabold text-white flex items-center gap-1.5">
-                            <Layers className="w-3.5 h-3.5 text-brand-yellow" />
+                        <span className="text-xs font-extrabold text-white flex items-center justify-center md:justify-start gap-1.5 w-full md:w-auto">
+                            <Layers className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
                             <span className="hidden sm:inline">{isId ? "1 Jasa Estimasi" : "1 Estimate Service"}</span>
                             <span className="sm:hidden">{isId ? "1 Jasa" : "1 Service"}</span>
                         </span>
                     </div>
 
-                    <div className="flex flex-col border-l border-white/10 pl-5">
+                    <div className="flex flex-col items-center justify-center text-center w-full md:w-auto md:items-start md:text-left border-l border-white/10 md:pl-5">
                         <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Add-ons
                         </span>
-                        <span className="text-xs font-extrabold text-zinc-300">
+                        <span className="text-xs font-extrabold text-zinc-300 w-full md:w-auto text-center md:text-left">
                             <span className="hidden sm:inline">{selectedAddonsCount} {isId ? "Terpilih" : "Selected"}</span>
                             <span className="sm:hidden">{selectedAddonsCount} Add-on</span>
                         </span>
                     </div>
 
-                    <div className="flex flex-col border-l border-white/10 pl-5 ml-auto md:ml-0">
+                    <div className="flex flex-col items-center justify-center text-center w-full md:w-auto md:items-start md:text-left border-l border-white/10 md:pl-5">
                         <span className="text-[8px] text-zinc-500 uppercase font-black tracking-widest leading-none mb-1 hidden sm:block">
                             Price Plan
                         </span>
-                        <span className="text-xs font-mono font-bold text-brand-yellow">
+                        <span className="text-xs font-mono font-bold text-brand-yellow w-full md:w-auto text-center md:text-left">
                             <PriceDisplay amount={amountToPay} baseCurrency={baseCurrency} />
                         </span>
                     </div>
