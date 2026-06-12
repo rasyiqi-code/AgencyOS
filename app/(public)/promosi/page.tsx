@@ -23,7 +23,7 @@ export default async function PromosiPage() {
     const t = await getTranslations("Promotions");
 
     return (
-        <div className="min-h-screen bg-black pt-20 sm:pt-32 pb-16 sm:pb-20">
+        <div className="min-h-screen bg-black pt-6 sm:pt-32 pb-16 sm:pb-20">
             <div className="container mx-auto px-4">
                 {/* Header Section */}
                 <div className="relative mb-10 sm:mb-20 text-center">
