@@ -50,8 +50,8 @@ export default async function AdminStoragePage() {
                 {/* Right Column: Forms */}
                 <div className="lg:col-span-2 space-y-6">
 
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+                    <div className="space-y-6">
+                        <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                             <div>
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <Cloud className="w-4 h-4 text-blue-500" />
@@ -61,7 +61,7 @@ export default async function AdminStoragePage() {
                             </div>
                         </div>
 
-                        <div className="p-6">
+                        <div>
                             <form action={updateSettings} className="space-y-5">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400">R2 Endpoint</label>
@@ -124,8 +124,8 @@ export default async function AdminStoragePage() {
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden mt-6">
-                        <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+                    <div className="space-y-6 pt-6 border-t border-white/5 mt-6">
+                        <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                             <div>
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <Cloud className="w-4 h-4 text-orange-500" />
@@ -135,7 +135,7 @@ export default async function AdminStoragePage() {
                             </div>
                         </div>
 
-                        <div className="p-6">
+                        <div>
                             <form action={updateSettings} className="space-y-5">
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400">Cloudflare Account ID</label>
@@ -166,7 +166,6 @@ export default async function AdminStoragePage() {
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

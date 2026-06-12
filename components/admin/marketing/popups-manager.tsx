@@ -304,7 +304,7 @@ export function PopUpsManager() {
                 </Dialog>
             </div>
 
-            <div className="rounded-2xl border border-white/5 bg-zinc-900/40 overflow-hidden overflow-x-auto custom-scrollbar">
+            <div className="overflow-hidden overflow-x-auto custom-scrollbar pt-4 border-t border-white/5">
                 <Table className="min-w-[800px]">
                     <TableHeader className="bg-zinc-950/50">
                         <TableRow className="border-white/5 hover:bg-transparent">

@@ -120,7 +120,7 @@ export function PromotionsManager() {
                 </div>
             </div>
 
-            <div className="rounded-2xl border border-white/5 bg-zinc-900/20 backdrop-blur-sm overflow-hidden">
+            <div className="overflow-hidden pt-4 border-t border-white/5">
                 <Table>
                     <TableHeader className="bg-white/5">
                         <TableRow className="border-white/5 hover:bg-transparent">

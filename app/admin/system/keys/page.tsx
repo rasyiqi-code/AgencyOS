@@ -75,9 +75,9 @@ export default async function AdminKeysPage() {
                 </div>
 
                 {/* Right Column: Keys List */}
-                <div className="lg:col-span-2">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/20">
+                <div className="lg:col-span-2 space-y-6">
+                    <div className="space-y-6">
+                        <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                             <div className="flex items-center gap-4">
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <Key className="w-4 h-4 text-emerald-500" />

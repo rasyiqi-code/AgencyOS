@@ -59,8 +59,8 @@ export default async function AdminPaymentPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Bank Details Form */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+                    <div className="space-y-6">
+                        <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                             <div>
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <CreditCard className="w-4 h-4 text-emerald-500" />
@@ -83,7 +83,7 @@ export default async function AdminPaymentPage() {
                             </div>
                         </div>
 
-                        <div className="p-6">
+                        <div>
                             <form action={updateSettings} className="space-y-5">
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-2">

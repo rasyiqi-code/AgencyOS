@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -126,10 +125,9 @@ export function PageSeoList({ initialPages }: Props) {
     }
 
     return (
-        <Card className="bg-zinc-900/40 border-white/5">
-            <CardContent className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-white font-medium">Configured Pages ({pages.length})</h3>
+        <div className="space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-white/5 mb-6">
+                <h3 className="text-white font-semibold text-sm">Configured Pages ({pages.length})</h3>
                     <Dialog open={isOpen} onOpenChange={setIsOpen}>
                         <DialogTrigger asChild>
                             <Button onClick={handleAddNew} size="sm" className="bg-white text-black hover:bg-zinc-200">
@@ -272,8 +270,7 @@ export function PageSeoList({ initialPages }: Props) {
                             </div>
                         ))
                     )}
-                </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

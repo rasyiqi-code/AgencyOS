@@ -18,7 +18,7 @@ export default function PopUpsPage() {
 function PopUpsContent() {
     return (
         <div className="w-full space-y-6 md:space-y-8 py-2 md:py-4">
-            <div className="bg-zinc-900/10 border border-zinc-800/40 rounded-2xl p-4 md:p-6 shadow-xl shadow-black/10">
+            <div>
                 <PopUpsManager />
             </div>
         </div>

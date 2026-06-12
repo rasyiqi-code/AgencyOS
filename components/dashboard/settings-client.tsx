@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useSafeUser } from "@/hooks/use-safe-user";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bell, User, Upload, Loader2, KeyRound } from "lucide-react";
@@ -93,16 +92,16 @@ export function SettingsClient() {
     return (
         <div className="grid gap-6">
             {/* Profil Kustom Premium */}
-            <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white">
+            <div className="space-y-6 pb-8 border-b border-white/5">
+                <div className="space-y-1">
+                    <h2 className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-tight">
                         <User className="w-5 h-5 text-brand-yellow" /> Profil Pengguna
-                    </CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    </h2>
+                    <p className="text-zinc-500 text-xs font-medium">
                         Kelola data profil Anda secara aman.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                    </p>
+                </div>
+                <div className="space-y-6">
                     <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-white/5">
                         {/* Editor Foto Profil */}
                         <div className="relative group">
@@ -174,20 +173,20 @@ export function SettingsClient() {
                             </Button>
                         </div>
                     </form>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
 
             {/* Keamanan & Akun */}
-            <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white">
+            <div className="space-y-6 pb-8 border-b border-white/5">
+                <div className="space-y-1">
+                    <h2 className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-tight">
                         <KeyRound className="w-5 h-5 text-brand-yellow" /> Keamanan & Akun
-                    </CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    </h2>
+                    <p className="text-zinc-500 text-xs font-medium">
                         Atur verifikasi dua langkah, ubah kata sandi, dan kelola sesi aktif.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                    </p>
+                </div>
+                <div className="space-y-4">
                     <p className="text-sm text-zinc-400 leading-relaxed">
                         Untuk menjaga keamanan akun Anda, konfigurasi sensitif seperti penggantian kata sandi dan pengaturan otentikasi multi-faktor dikelola di portal keamanan terverifikasi kami.
                     </p>
@@ -201,20 +200,20 @@ export function SettingsClient() {
                             </Button>
                         </Link>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
 
             {/* Notifikasi */}
-            <Card className="bg-zinc-900/50 border-white/5 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white">
+            <div className="space-y-6">
+                <div className="space-y-1">
+                    <h2 className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-tight">
                         <Bell className="w-5 h-5 text-brand-yellow" /> Notifikasi
-                    </CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    </h2>
+                    <p className="text-zinc-500 text-xs font-medium">
                         Konfigurasi cara Anda menerima pembaruan proyek.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+                    </p>
+                </div>
+                <div>
                     <div className="flex items-center justify-between py-3 border-b border-white/5">
                         <span className="text-sm text-zinc-300 font-semibold">Alerts via Email</span>
                         <span className="text-xs text-brand-yellow font-extrabold tracking-widest uppercase">AKTIF</span>
@@ -223,8 +222,8 @@ export function SettingsClient() {
                         <span className="text-sm text-zinc-300 font-semibold">Pembaruan Proyek Harian</span>
                         <span className="text-xs text-brand-yellow font-extrabold tracking-widest uppercase">AKTIF</span>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     );
 }

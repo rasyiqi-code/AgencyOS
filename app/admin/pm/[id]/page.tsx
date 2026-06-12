@@ -78,7 +78,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                     {/* Overview Section */}
                     <div className="space-y-3">
 
-                        <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40">
+                        <div className="pb-4">
                             {project.description && !project.description.startsWith("Purchase of") && (
                                 <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap mb-4">{project.description}</p>
                             )}
@@ -99,7 +99,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                     </div>
 
                     {/* Communications Channel */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-3">
+                    <div className="space-y-3 pt-4 border-t border-white/5">
                         <div className="flex items-center gap-2 mb-2 text-zinc-400">
                             <MessageSquare className="w-3.5 h-3.5" />
                             <h2 className="text-sm font-semibold tracking-tight text-white uppercase tracking-wider">Communications Channel</h2>
@@ -114,7 +114,7 @@ export default async function AdminProjectDetailPage({ params }: PageProps) {
                                 <Activity className="w-3 h-3 text-emerald-400" />
                                 <h3 className="text-[10px] font-semibold text-white uppercase tracking-wider">Service Specifications</h3>
                             </div>
-                            <div className="p-4 rounded-xl border border-white/5 bg-zinc-900/40">
+                            <div className="pt-4 border-t border-white/5">
                                 <div className="flex flex-col md:flex-row gap-4">
                                     {project.service?.image && (
                                         <div className="relative w-full md:w-40 h-28 rounded-lg bg-zinc-800 overflow-hidden border border-white/5 flex-shrink-0">

@@ -58,7 +58,7 @@ export function SubscribersManager() {
     return (
         <div className="grid gap-4 md:gap-6">
             {/* Search */}
-            <div className="p-3 md:p-4 rounded-xl border border-white/5 bg-zinc-900/40">
+            <div>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
                     <Input
@@ -71,7 +71,7 @@ export function SubscribersManager() {
             </div>
 
             {/* List */}
-            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden overflow-x-auto custom-scrollbar">
+            <div className="overflow-hidden overflow-x-auto custom-scrollbar pt-4 border-t border-white/5">
                 {/* Desktop View */}
                 <div className="hidden md:block">
                     <Table className="min-w-[600px]">

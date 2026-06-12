@@ -55,8 +55,8 @@ export function SaaSKeysClient({ initialKeys }: SaaSKeysClientProps) {
     };
 
     return (
-        <div className="mt-8 rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-zinc-900/20">
+        <div className="mt-8 space-y-6 pt-6 border-t border-white/5">
+            <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                 <div className="flex items-center gap-4">
                     <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                         <Key className="w-4 h-4 text-blue-500" />

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Globe, Save, Upload, Search } from "lucide-react";
 import { toast } from "sonner";
 
@@ -112,21 +111,19 @@ export function SeoSettingsForm({ initialData }: Props) {
     }
 
     return (
-        <Card className="bg-zinc-900/40 border-white/5">
-            <CardHeader>
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/5 rounded-lg">
-                        <Search className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <CardTitle className="text-white">Search Engine Optimization</CardTitle>
-                        <CardDescription className="text-zinc-400">
-                            Configure global meta tags and social sharing previews.
-                        </CardDescription>
-                    </div>
+        <div className="space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+                <div className="p-2 bg-white/5 rounded-lg">
+                    <Search className="w-5 h-5 text-white" />
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
+                <div>
+                    <h3 className="text-sm font-semibold text-white">Search Engine Optimization</h3>
+                    <p className="text-xs text-zinc-500 mt-1">
+                        Configure global meta tags and social sharing previews.
+                    </p>
+                </div>
+            </div>
+            <div className="space-y-6">
                 <div className="space-y-4">
 
                     {/* New: Google Integrations */}
@@ -329,7 +326,7 @@ export function SeoSettingsForm({ initialData }: Props) {
                         Save Changes
                     </Button>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

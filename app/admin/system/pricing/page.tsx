@@ -43,8 +43,8 @@ export default async function AdminPricingPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Pricing Config Form */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+                    <div className="space-y-6">
+                        <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                             <div>
                                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                                     <TrendingUp className="w-4 h-4 text-lime-500" />
@@ -54,7 +54,7 @@ export default async function AdminPricingPage() {
                             </div>
                         </div>
 
-                        <div className="p-6">
+                        <div>
                             <form action={updatePricing} className="space-y-5">
                                 <div className="space-y-4">
                                     <div className="p-4 rounded-lg bg-black/20 border border-white/5">

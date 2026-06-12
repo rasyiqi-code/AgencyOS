@@ -35,7 +35,7 @@ export default async function AdminIntegrationsPage() {
 
                 <div className="lg:col-span-2 space-y-6">
                     {/* GitHub Integration */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-6 overflow-hidden relative">
+                    <div className="pb-6 border-b border-white/5 relative">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 rounded-lg bg-zinc-800/50 border border-white/5">
@@ -97,7 +97,7 @@ export default async function AdminIntegrationsPage() {
                     </div>
 
                     {/* Vercel Integration */}
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/40 p-6 overflow-hidden relative">
+                    <div className="pt-6 pb-6 border-b border-white/5 relative">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 rounded-lg bg-zinc-800/50 border border-white/5">

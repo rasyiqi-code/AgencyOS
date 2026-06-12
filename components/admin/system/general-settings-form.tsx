@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Globe, Save } from "lucide-react";
 import { toast } from "sonner";
 import { saveContactSettings } from "@/app/actions/system-admin";
@@ -87,21 +86,19 @@ export function GeneralSettingsForm({ initialData }: Props) {
     }
 
     return (
-        <Card className="bg-zinc-900/40 border-white/5">
-            <CardHeader>
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/5 rounded-lg">
-                        <Globe className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <CardTitle className="text-white">General & Public Information</CardTitle>
-                        <CardDescription className="text-zinc-400">
-                            Manage contact details and page customization.
-                        </CardDescription>
-                    </div>
+        <div className="space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+                <div className="p-2 bg-white/5 rounded-lg">
+                    <Globe className="w-5 h-5 text-white" />
                 </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
+                <div>
+                    <h3 className="text-sm font-semibold text-white">General & Public Information</h3>
+                    <p className="text-xs text-zinc-500 mt-1">
+                        Manage contact details and page customization.
+                    </p>
+                </div>
+            </div>
+            <div className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-4">
                         <Label className="text-zinc-300">Brand Logo</Label>
@@ -251,7 +248,7 @@ export function GeneralSettingsForm({ initialData }: Props) {
                         Save Changes
                     </Button>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

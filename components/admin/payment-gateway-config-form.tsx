@@ -74,8 +74,8 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
     return (
         <div className="space-y-6">
             {/* Midtrans Configuration */}
-            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+            <div className="space-y-6">
+                <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                     <div>
                         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                             <CreditCard className="w-4 h-4 text-blue-500" />
@@ -85,7 +85,7 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
                     </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                <div className="space-y-4">
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                             <label className="text-xs font-medium text-zinc-400 flex items-center justify-between">
@@ -173,8 +173,8 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
             </div>
 
             {/* Creem Configuration */}
-            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex justify-between items-center">
+            <div className="space-y-6 pt-6 border-t border-white/5">
+                <div className="pb-4 border-b border-white/5 flex justify-between items-center">
                     <div>
                         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                             <Store className="w-4 h-4 text-purple-500" />
@@ -184,7 +184,7 @@ export function PaymentGatewayConfigForm({ initialConfig }: { initialConfig: Pay
                     </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                <div className="space-y-4">
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-zinc-400 flex items-center justify-between">
                             API Key
