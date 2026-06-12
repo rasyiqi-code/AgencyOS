@@ -591,7 +591,7 @@
             "featurePlaceholderId": "Tambah fitur (Contoh: 'Revisi Tanpa Batas')",
              "thumbnail": "Thumbnail Layanan",
             "originalPrice": "Harga Coret (Diskon)",
-            "originalPriceHelp": "Kosongkan untuk default diskon 50% (2x Harga asli).",
+            "originalPriceHelp": "Kosongkan untuk default up 3x Harga asli.",
             "pricingConfig": "Harga & Konfigurasi",
             "categoryGroup": "Kategori / Grup",
             "categoryPlaceholder": "Pilih atau ketik kategori...",

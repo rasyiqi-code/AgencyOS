@@ -500,7 +500,7 @@
             "featurePlaceholderId": "Tambah fitur (Contoh: 'Revisi Tanpa Batas')",
              "thumbnail": "Service Thumbnail",
             "originalPrice": "Strike Price (Discount)",
-            "originalPriceHelp": "Leave empty for default 50% discount (2x base price).",
+            "originalPriceHelp": "Leave empty for default 3x base price.",
             "pricingConfig": "Pricing & Configuration",
             "categoryGroup": "Category / Group",
             "categoryPlaceholder": "Select or type category...",
