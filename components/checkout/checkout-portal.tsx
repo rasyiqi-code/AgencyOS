@@ -274,6 +274,7 @@ export function CheckoutPortal({
                         currency={currency}
                         exchangeRate={rate || activeRate}
                         bankDetails={bankDetails}
+                        orderId={activeOrderId}
                     />
                 </div>
             </div>

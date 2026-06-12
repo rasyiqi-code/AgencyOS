@@ -172,6 +172,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         currency={effectiveCurrency}
                         exchangeRate={effectiveRate}
                         bankDetails={bankDetails}
+                        orderId={order.id}
                     />
                 </div>
             </div>

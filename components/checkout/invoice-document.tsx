@@ -94,7 +94,8 @@ export function InvoiceDocument({
     paymentType,
     currency: propsCurrency,
     exchangeRate,
-    bankDetails
+    bankDetails,
+    orderId
 }: {
     estimate: ExtendedEstimate,
     refAction?: React.RefObject<HTMLDivElement | null>,
@@ -104,7 +105,8 @@ export function InvoiceDocument({
     paymentType?: string | null,
     currency?: string,
     exchangeRate?: number,
-    bankDetails?: BankDetails
+    bankDetails?: BankDetails,
+    orderId?: string | null
 }) {
     const t = useTranslations("Invoice");
     const tc = useTranslations("Checkout");
@@ -267,7 +269,9 @@ export function InvoiceDocument({
                     <div className="text-right space-y-[1px]">
                         <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('invoiceNo', { fallback: "No. Invoice" })}</span>
-                            <span className="font-mono font-bold text-zinc-900">#{extendedEstimate.id.slice(-8).toUpperCase()}</span>
+                            <span className="font-mono font-bold text-zinc-900">
+                                #{orderId ? orderId.replace("ORDER-", "") : extendedEstimate.id.slice(-8).toUpperCase()}
+                            </span>
                         </div>
                         <div className="flex justify-end items-baseline gap-[1px] text-[11px]">
                             <span className="text-zinc-500 font-bold">{t('date')}</span>
