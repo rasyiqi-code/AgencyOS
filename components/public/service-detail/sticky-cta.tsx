@@ -1,9 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { PriceDisplay } from "@/components/providers/currency-provider";
 import { PurchaseButton } from "@/components/store/purchase-button";
 import { Service, AddonType } from "./types";
-import { useTranslations } from "next-intl";
 
 interface StickyCTAProps {
     service: Service;
@@ -12,34 +12,58 @@ interface StickyCTAProps {
 }
 
 export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAProps) {
-    const tService = useTranslations("Service");
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // Tampilkan bar sticky ketika pengguna menggulir ke bawah melewati 200px
+            if (window.scrollY > 200) {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll(); // Panggilan inisialisasi awal
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const displayTitle = service.title_id || service.title;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 py-2 px-4 bg-zinc-950/80 backdrop-blur-xl border-t border-white/10 lg:hidden z-[100]">
-            <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
-                <div>
-                    <div className="text-xl font-black text-white tracking-tighter flex items-end gap-1.5">
-                        {service.priceType === 'STARTING_AT' && (
-                            <span className="text-[10px] font-medium text-zinc-500 pb-1">
-                                {tService("startsAt")}
-                            </span>
-                        )}
-                        <div className="flex items-end gap-1">
+        <div
+            className={`fixed top-10 md:top-14 left-0 right-0 py-3 px-6 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 z-40 transition-all duration-300 transform shadow-md shadow-black/80 ${
+                isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
+            }`}
+        >
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+                {/* Judul Layanan di Sisi Kiri */}
+                <div className="flex-1 min-w-0">
+                    <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
+                        {displayTitle}
+                    </span>
+                </div>
+
+                {/* Harga & Tombol Order di Sisi Kanan (Sebaris) */}
+                <div className="flex items-center gap-3 md:gap-5 shrink-0">
+                    <div className="text-right">
+                        <div className="text-xs sm:text-sm font-black text-white tracking-tight leading-none flex items-center gap-1">
                             <PriceDisplay
                                 amount={service.price + selectedAddons.reduce((sum, a) => sum + a.price, 0)}
                                 baseCurrency={(service.currency as "USD" | "IDR") || 'USD'}
                                 compact={true}
                             />
-                            <span className="text-xs font-normal text-zinc-500 pb-0.5">/ {intervalLabel}</span>
+                            <span className="text-[10px] sm:text-xs font-normal text-zinc-500">/ {intervalLabel}</span>
                         </div>
                     </div>
-                </div>
-                <div className="flex-1 max-w-[160px]">
+
                     <PurchaseButton
                         serviceId={service.id}
                         interval={service.interval}
                         selectedAddons={selectedAddons}
-                        className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-black h-11 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-brand-yellow/20 transition-colors"
+                        className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-7 sm:h-8 px-3.5 sm:px-4 rounded-none text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     />
                 </div>
             </div>
