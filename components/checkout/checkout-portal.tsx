@@ -9,7 +9,8 @@ import { PaymentPanel } from "./payment-panel";
 import { CheckoutStickyBar } from "./checkout-sticky-bar";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { useCurrency } from "@/components/providers/currency-provider";
-import { ExtendedEstimate, Bonus, ServiceAddon } from "@/lib/shared/types";
+import { ExtendedEstimate, ServiceAddon } from "@/lib/shared/types";
+
 import type { BankDetails } from "@/types/payment";
 import { useReactToPrint } from "react-to-print";
 
@@ -146,8 +147,8 @@ export function CheckoutPortal({
         summary: cleanSummary + currentAddonsSummary
     };
 
-    const discountedAmount = baseTotal;
     const isPaid = estimate.status === 'paid';
+
 
     const [paymentType, setPaymentType] = useState<"FULL" | "DP" | "REPAYMENT">(defaultPaymentType || "FULL");
     const baseCurrency = ((estimate.service as unknown as Record<string, unknown>)?.currency as "USD" | "IDR") || 'USD';

@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Download, AlertTriangle, MoveHorizontal } from "lucide-react";
+import { Download, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InvoiceDocument, type AgencyInvoiceSettings } from "@/components/checkout/invoice-document";
 import { PaymentSelector } from "@/components/payment/payment-selector";
@@ -46,14 +46,6 @@ interface InvoiceClientWrapperProps {
     gatewayStatus?: { midtrans: boolean; creem: boolean };
 }
 
-const thankYouQuotes = [
-    "“The future belongs to those who believe in the beauty of their dreams.” — Eleanor Roosevelt",
-    "“Innovation distinguishes between a leader and a follower.” — Steve Jobs",
-    "“The best way to predict the future is to create it.” — Peter Drucker",
-    "“Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work.” — Steve Jobs",
-    "“Technology is best when it brings people together.” — Matt Mullenweg"
-];
-
 import { useTranslations, useLocale } from "next-intl";
 
 export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetails, agencySettings, hasActiveGateway = true, gatewayStatus }: InvoiceClientWrapperProps) {
@@ -79,11 +71,6 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
         setOrderStatus(order.status);
     }
 
-    const quote = useMemo(() => {
-        // Deterministic quote based on Order ID
-        const index = order.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % thankYouQuotes.length;
-        return thankYouQuotes[index];
-    }, [order.id]);
 
     useEffect(() => {
         if (isPaid) return;
@@ -190,7 +177,7 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                 </div>
 
                 {/* Manual Payment Warning Notification */}
-                {!isPaid && !hasActiveGateway && bankDetails && (
+                {!isPaid && !hasActiveGateway && bankDetails && orderStatus !== 'waiting_verification' && (
                     <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-left">
                         <p className="text-xs font-semibold text-amber-500 mb-1 flex items-center gap-2">
                             <AlertTriangle className="w-4 h-4" />
@@ -205,9 +192,11 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                 {/* Payment Selector Widget */}
                 {!isPaid && (hasActiveGateway || bankDetails) && (
                     <div className="space-y-3 pt-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
-                            {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
-                        </span>
+                        {orderStatus !== 'waiting_verification' && (
+                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
+                                {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
+                            </span>
+                        )}
                         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full">
                             <PaymentSelector
                                 orderId={order.id}
@@ -229,21 +218,9 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
                         </div>
                     </div>
                 )}
-
-                {!isPaid && (
-                    <p className="text-center text-[10px] text-zinc-500 uppercase tracking-widest font-semibold pt-4">
-                        {tc('secure') || "SECURE 256-BIT SSL ENCRYPTED"}
-                    </p>
-                )}
-
-                {/* Need Help link */}
-                <div className="flex justify-center pt-2">
-                    <a href="/support" target="_blank" className="text-xs text-zinc-500 hover:text-white transition-colors">
-                        {t('needHelp')}
-                    </a>
-                </div>
             </div>
         </div>
     );
 }
+
 
