@@ -44,7 +44,7 @@ export async function SuperAdminDashboardView() {
 
             {/* Metrics Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="bg-zinc-900/40 border-white/5">
+                <Card className="bg-black/20 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-zinc-400">Total Revenue</CardTitle>
                         <DollarSign className="h-4 w-4 text-emerald-500" />
@@ -60,7 +60,7 @@ export async function SuperAdminDashboardView() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-zinc-900/40 border-white/5">
+                <Card className="bg-black/20 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-zinc-400">
                             Active Projects
@@ -75,7 +75,7 @@ export async function SuperAdminDashboardView() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-zinc-900/40 border-white/5">
+                <Card className="bg-black/20 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-zinc-400">
                             Unique Clients
@@ -90,7 +90,7 @@ export async function SuperAdminDashboardView() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-zinc-900/40 border-white/5">
+                <Card className="bg-black/20 border-white/5">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-zinc-400">Pending Quotes</CardTitle>
                         <Zap className="h-4 w-4 text-amber-500" />
@@ -105,7 +105,7 @@ export async function SuperAdminDashboardView() {
             {/* Quick Navigation Hub */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
                 <Link href="/admin/pm/projects" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">Manage Projects</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
@@ -115,7 +115,7 @@ export async function SuperAdminDashboardView() {
                 </Link>
 
                 <Link href="/admin/finance/orders" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Finance & Orders</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
@@ -125,7 +125,7 @@ export async function SuperAdminDashboardView() {
                 </Link>
 
                 <Link href="/admin/system/settings" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white group-hover:text-purple-400 transition-colors">System Settings</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />

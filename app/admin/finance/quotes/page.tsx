@@ -101,9 +101,8 @@ export default async function AdminQuotesPage() {
         <div className="w-full py-6 sm:py-10 space-y-8 animate-in fade-in duration-700">
             <AdminHeaderSetter title={t('title')} />
 
-            <Card className="bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 shadow-2xl shadow-black/50 overflow-hidden relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <div className="bg-brand-yellow/10 px-6 py-4 border-b border-zinc-800/50 flex items-center justify-between relative z-10">
+            <div className="space-y-6 pb-8 border-b border-white/5 relative group">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <div className="p-1.5 bg-brand-yellow/20 rounded-lg">
                             <Plus className="w-4 h-4 text-brand-yellow" />
@@ -113,7 +112,7 @@ export default async function AdminQuotesPage() {
                         </span>
                     </div>
                 </div>
-                <CardContent className="p-4 sm:p-8 relative z-10">
+                <div className="relative z-10">
                     <QuoteGeneratorForm
                         services={services}
                         availableUsers={availableUsers}
@@ -127,8 +126,8 @@ export default async function AdminQuotesPage() {
                             generateButton: t('generateButton')
                         }}
                     />
-                </CardContent>
-            </Card>
+                </div>
+            </div>
 
             <section className="space-y-4">
                 <div className="flex items-end justify-between px-1">
@@ -143,7 +142,7 @@ export default async function AdminQuotesPage() {
 
                 <div className="grid grid-cols-1 gap-4 sm:hidden">
                     {estimates.length === 0 && (
-                        <div className="text-center py-12 bg-zinc-900/40 backdrop-blur-md border border-dashed border-zinc-800 rounded-3xl text-zinc-500">
+                        <div className="text-center py-12 bg-black/20 border border-dashed border-white/5 rounded-3xl text-zinc-500">
                             {t('empty')}
                         </div>
                     )}
@@ -154,7 +153,7 @@ export default async function AdminQuotesPage() {
                             : (clientProfile?.name || est.project?.clientName || "Unknown Client");
 
                         return (
-                            <div key={est.id} className="bg-zinc-900/60 backdrop-blur-md border border-zinc-800/50 rounded-3xl p-5 space-y-4 relative overflow-hidden group active:scale-[0.98] transition-transform">
+                            <div key={est.id} className="bg-black/20 border border-white/5 rounded-3xl p-5 space-y-4 relative overflow-hidden group active:scale-[0.98] transition-transform">
                                 <div className="absolute top-0 right-0 p-4">
                                     <DeleteQuoteButton estimateId={est.id} />
                                 </div>
@@ -164,7 +163,7 @@ export default async function AdminQuotesPage() {
                                     <p className="text-zinc-400 text-xs">{est.service?.title}</p>
                                 </div>
 
-                                <div className="flex items-center justify-between pt-2 border-t border-zinc-800/30">
+                                <div className="flex items-center justify-between pt-2 border-t border-white/5">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">Total Price</span>
                                         <PriceEditor
@@ -197,86 +196,82 @@ export default async function AdminQuotesPage() {
                     })}
                 </div>
 
-                <Card className="hidden sm:block bg-zinc-900/40 backdrop-blur-xl border-zinc-800/50 rounded-3xl relative">
-                    <CardContent className="p-0">
-                        <div className="overflow-x-auto">
-                            <Table>
-                                <TableHeader className="z-20 bg-zinc-900/90 backdrop-blur-md border-zinc-800/50">
-                                    <TableRow className="border-zinc-800/50 hover:bg-transparent">
-                                        <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colOrderId')}</TableHead>
-                                        <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colClient')}</TableHead>
-                                        <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colService')}</TableHead>
-                                        <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6 text-right">{t('colTotalPrice')}</TableHead>
-                                        <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colInvoice')}</TableHead>
-                                        <TableHead className="text-center text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colAction')}</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {estimates.length === 0 && (
-                                        <TableRow className="border-zinc-800/50">
-                                            <TableCell colSpan={6} className="text-center py-20 text-zinc-500">
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <LayoutGrid className="w-10 h-10 opacity-20" />
-                                                    <p>{t('empty')}</p>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                    {estimates.map((est) => {
-                                        const clientProfile = est.project?.userId ? userMap.get(est.project.userId) : null;
-                                        const displayName = est.project?.clientName && est.project.clientName !== "Client"
-                                            ? est.project.clientName
-                                            : (clientProfile?.name || est.project?.clientName || "Unknown Client");
+                <div className="hidden sm:block overflow-x-auto">
+                    <Table>
+                        <TableHeader className="z-20 bg-black/50 backdrop-blur-md border-b border-white/5">
+                            <TableRow className="border-white/5 hover:bg-transparent">
+                                <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colOrderId')}</TableHead>
+                                <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colClient')}</TableHead>
+                                <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colService')}</TableHead>
+                                <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6 text-right">{t('colTotalPrice')}</TableHead>
+                                <TableHead className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colInvoice')}</TableHead>
+                                <TableHead className="text-center text-zinc-500 text-[10px] uppercase font-bold tracking-widest py-4 px-6">{t('colAction')}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {estimates.length === 0 && (
+                                <TableRow className="border-white/5">
+                                    <TableCell colSpan={6} className="text-center py-20 text-zinc-500">
+                                        <div className="flex flex-col items-center gap-2">
+                                            <LayoutGrid className="w-10 h-10 opacity-20" />
+                                            <p>{t('empty')}</p>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {estimates.map((est) => {
+                                const clientProfile = est.project?.userId ? userMap.get(est.project.userId) : null;
+                                const displayName = est.project?.clientName && est.project.clientName !== "Client"
+                                    ? est.project.clientName
+                                    : (clientProfile?.name || est.project?.clientName || "Unknown Client");
 
-                                        return (
-                                            <TableRow key={est.id} className="border-zinc-800/50 hover:bg-white/[0.03] transition-colors group">
-                                                <TableCell className="py-4 px-6 font-mono text-[11px] text-zinc-500">
-                                                    #{est.id.slice(-8).toUpperCase()}
-                                                </TableCell>
-                                                <TableCell className="py-4 px-6">
-                                                    <span className="font-bold text-white text-sm tracking-tight group-hover:text-brand-yellow transition-colors">{displayName}</span>
-                                                </TableCell>
-                                                <TableCell className="py-4 px-6 text-zinc-400 text-sm italic">
-                                                    {est.service?.title}
-                                                </TableCell>
-                                                <TableCell className="py-4 px-6 text-right">
-                                                    <PriceEditor
-                                                        estimateId={est.id}
-                                                        projectId={est.project?.id || null}
-                                                        initialPrice={est.totalCost}
-                                                        currency={est.service?.currency || 'IDR'}
-                                                    />
-                                                </TableCell>
-                                                <TableCell className="py-4 px-6">
-                                                    <div className="flex items-center gap-3">
-                                                        <InvoiceActions
-                                                            estimateId={est.id}
-                                                            hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
-                                                            clientName={displayName}
-                                                            serviceTitle={est.service?.title}
-                                                            amount={est.totalCost}
-                                                            currency={est.service?.currency || 'IDR'}
-                                                            status={est.status}
-                                                        />
-                                                        {est.status === 'paid' && (
-                                                            <div className="flex items-center gap-1 text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full uppercase border border-emerald-500/20">
-                                                                <CheckCircle2 className="w-3 h-3" />
-                                                                {t('statusPaid')}
-                                                            </div>
-                                                        )}
+                                return (
+                                    <TableRow key={est.id} className="border-white/5 hover:bg-white/[0.03] transition-colors group">
+                                        <TableCell className="py-4 px-6 font-mono text-[11px] text-zinc-500">
+                                            #{est.id.slice(-8).toUpperCase()}
+                                        </TableCell>
+                                        <TableCell className="py-4 px-6">
+                                            <span className="font-bold text-white text-sm tracking-tight group-hover:text-brand-yellow transition-colors">{displayName}</span>
+                                        </TableCell>
+                                        <TableCell className="py-4 px-6 text-zinc-400 text-sm italic">
+                                            {est.service?.title}
+                                        </TableCell>
+                                        <TableCell className="py-4 px-6 text-right">
+                                            <PriceEditor
+                                                estimateId={est.id}
+                                                projectId={est.project?.id || null}
+                                                initialPrice={est.totalCost}
+                                                currency={est.service?.currency || 'IDR'}
+                                            />
+                                        </TableCell>
+                                        <TableCell className="py-4 px-6">
+                                            <div className="flex items-center gap-3">
+                                                <InvoiceActions
+                                                    estimateId={est.id}
+                                                    hasEmail={!!(clientProfile?.email && clientProfile.email !== 'N/A')}
+                                                    clientName={displayName}
+                                                    serviceTitle={est.service?.title}
+                                                    amount={est.totalCost}
+                                                    currency={est.service?.currency || 'IDR'}
+                                                    status={est.status}
+                                                />
+                                                {est.status === 'paid' && (
+                                                    <div className="flex items-center gap-1 text-[9px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full uppercase border border-emerald-500/20">
+                                                        <CheckCircle2 className="w-3 h-3" />
+                                                        {t('statusPaid')}
                                                     </div>
-                                                </TableCell>
-                                                <TableCell className="py-4 px-6 text-center">
-                                                    <DeleteQuoteButton estimateId={est.id} />
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </CardContent>
-                </Card>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="py-4 px-6 text-center">
+                                            <DeleteQuoteButton estimateId={est.id} />
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
             </section>
         </div>
     );

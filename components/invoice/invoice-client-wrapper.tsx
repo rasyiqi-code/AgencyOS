@@ -70,12 +70,12 @@ export function InvoiceClientWrapper({ order, estimate, user, isPaid, bankDetail
 
     // State lokal untuk memantau status pesanan (diperlukan untuk update UI instan)
     const [orderStatus, setOrderStatus] = useState<string>(order.status);
+    const [prevOrderStatus, setPrevOrderStatus] = useState<string>(order.status);
 
-    useEffect(() => {
-        if (order.status) {
-            setOrderStatus(order.status);
-        }
-    }, [order.status]);
+    if (order.status !== prevOrderStatus) {
+        setPrevOrderStatus(order.status);
+        setOrderStatus(order.status);
+    }
 
     const quote = useMemo(() => {
         // Deterministic quote based on Order ID

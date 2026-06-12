@@ -36,7 +36,7 @@ export async function BillingDashboardView() {
             </h1>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <Card className="bg-zinc-900/40 border-white/5 relative overflow-hidden group">
+                <Card className="bg-black/20 border-white/5 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                         <TrendingUp className="w-12 h-12 text-emerald-500" />
                     </div>
@@ -60,7 +60,7 @@ export async function BillingDashboardView() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-zinc-900/40 border-white/5 relative overflow-hidden group">
+                <Card className="bg-black/20 border-white/5 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                         <Zap className="w-12 h-12 text-amber-500" />
                     </div>
@@ -77,7 +77,7 @@ export async function BillingDashboardView() {
 
             <div className="grid gap-4 mt-6">
                 <Link href="/admin/finance/orders" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full relative overflow-hidden">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-bold text-white group-hover:text-emerald-400 transition-colors">{t("manageOrders")}</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
@@ -87,7 +87,7 @@ export async function BillingDashboardView() {
                 </Link>
 
                 <Link href="/admin/finance/quotes" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full relative overflow-hidden">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-bold text-white group-hover:text-brand-yellow transition-colors">{t("quotes")}</h3>
                             <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
@@ -97,7 +97,7 @@ export async function BillingDashboardView() {
                 </Link>
 
                 <Link href="/admin/finance/subscriptions" className="group">
-                    <div className="rounded-xl border border-white/5 bg-zinc-900/20 p-6 hover:bg-zinc-900/40 transition-all cursor-pointer h-full relative overflow-hidden">
+                    <div className="rounded-xl border border-white/5 bg-black/20 p-6 hover:bg-black/40 transition-all cursor-pointer h-full relative overflow-hidden">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-bold text-white group-hover:text-purple-400 transition-colors">
                                 Client Retainers & SLA

@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from "@/components/ui/button";
 import { FileText, Download, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/shared/utils";
 
 interface ViewProofButtonProps {
@@ -21,13 +21,6 @@ interface ViewProofButtonProps {
 export function ViewProofButton({ estimate }: ViewProofButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isError, setIsError] = useState(false);
-
-    // Reset error state when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            setIsError(false);
-        }
-    }, [isOpen]);
 
     // Resolve payment type and proofUrl
     const paymentType = estimate.paymentType || estimate.project?.order?.paymentType;
@@ -77,7 +70,12 @@ export function ViewProofButton({ estimate }: ViewProofButtonProps) {
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={(open) => {
+            setIsOpen(open);
+            if (open) {
+                setIsError(false);
+            }
+        }}>
             <DialogTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-8 text-blue-400 hover:text-blue-300 p-0 hover:bg-transparent">
                     <div className="flex items-center gap-2">
