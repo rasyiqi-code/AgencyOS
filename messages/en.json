@@ -2,6 +2,7 @@
     "Common": {
         "error": "Something went wrong",
         "login": "Login",
+        "inbox": "Chat",
         "back": "Back"
     },
     "ViewDesign": {
@@ -485,7 +486,9 @@
         "finalizeError": "Failed to finalize. Please try again.",
         "complexitySimple": "Simple",
         "complexityMedium": "Medium",
-        "complexityHigh": "High"
+        "complexityHigh": "High",
+        "proposalAssistant": "Proposal Assistant",
+        "cancel": "Cancel"
     },
     "Service": {
         "cancel": "Cancel",

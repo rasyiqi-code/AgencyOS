@@ -507,7 +507,9 @@
         "finalizeError": "Gagal memfinalisasi. Silakan coba lagi.",
         "complexitySimple": "Sederhana",
         "complexityMedium": "Sedang",
-        "complexityHigh": "Tinggi"
+        "complexityHigh": "Tinggi",
+        "proposalAssistant": "Asisten Proposal",
+        "cancel": "Batal"
     },
     "Service": {
         "cancel": "Batal",
