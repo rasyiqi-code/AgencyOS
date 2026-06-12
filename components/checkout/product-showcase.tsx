@@ -28,8 +28,8 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
     return (
         <div className="space-y-8 flex flex-col justify-between h-full text-white p-6 pl-0 sm:p-8 sm:pl-0 lg:pr-12 lg:py-4 relative overflow-hidden bg-transparent">
             {/* Background glow effects */}
-            <div className="absolute -top-32 -left-32 w-64 h-64 bg-lime-500/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-32 left-16 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-32 -left-32 w-64 h-64 bg-brand-yellow/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-32 left-16 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="space-y-8 relative z-10">
                 {/* Back to dashboard button */}
@@ -45,7 +45,7 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
 
                 {/* Branding & Heading */}
                 <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-500/10 border border-lime-500/20 text-lime-400 text-[10px] font-bold uppercase tracking-widest">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-[10px] font-bold uppercase tracking-widest">
                         <ShieldCheck className="w-3 h-3" />
                         Verified Quote
                     </div>
@@ -69,8 +69,8 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                         <div className="grid grid-cols-1 gap-2.5">
                             {(isExpanded ? serviceFeatures : serviceFeatures.slice(0, 4)).map((feature, i) => (
                                 <div key={i} className="flex items-start gap-3 group animate-in fade-in duration-300">
-                                    <div className="w-5 h-5 rounded-full bg-lime-500/10 border border-lime-500/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform shadow-[0_0_8px_rgba(132,204,22,0.1)]">
-                                        <Check className="w-3 h-3 text-lime-400" />
+                                    <div className="w-5 h-5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform shadow-[0_0_8px_rgba(254,215,0,0.1)]">
+                                        <Check className="w-3 h-3 text-brand-yellow" />
                                     </div>
                                     <span className="text-xs sm:text-sm text-zinc-300 font-semibold tracking-tight leading-relaxed">
                                         {feature}
@@ -80,7 +80,7 @@ export function ProductShowcase({ estimate, bonuses, selectedAddons, amountToPay
                             {serviceFeatures.length > 4 && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="text-xs text-lime-400 hover:text-lime-300 font-bold tracking-wide transition-all duration-300 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left pl-8 flex items-center gap-1 mt-1 group"
+                                    className="text-xs text-brand-yellow hover:text-yellow-300 font-bold tracking-wide transition-all duration-300 hover:underline cursor-pointer bg-transparent border-0 p-0 text-left pl-8 flex items-center gap-1 mt-1 group"
                                 >
                                     {isExpanded ? (
                                         <>

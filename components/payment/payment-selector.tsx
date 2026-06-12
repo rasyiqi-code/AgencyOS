@@ -275,7 +275,7 @@ export function PaymentSelector({
             <div className={noCard ? "w-full flex flex-col h-fit" : "w-full bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden p-6 shadow-2xl flex flex-col h-fit max-h-[800px]"}>
                 {!noCard && (
                     <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
-                        <Wallet className="w-5 h-5 text-lime-400" />
+                        <Wallet className="w-5 h-5 text-brand-yellow" />
                         {isId ? "Metode Pembayaran" : "Payment Method"}
                     </h2>
                 )}
@@ -319,7 +319,7 @@ export function PaymentSelector({
                                 className={`w-full h-11 text-xs font-bold transition-all duration-300 rounded-xl cursor-pointer tracking-wider uppercase flex items-center justify-center gap-2 ${
                                     !selectedMethod 
                                     ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 cursor-not-allowed select-none opacity-60' 
-                                    : 'bg-gradient-to-r from-lime-400 via-emerald-500 to-teal-500 hover:from-lime-300 hover:via-emerald-400 hover:to-teal-400 text-zinc-950 shadow-[0_0_20px_rgba(132,204,22,0.2)] hover:shadow-[0_0_30px_rgba(132,204,22,0.4)] hover:scale-[1.01] active:scale-[0.99] font-black shadow-lg'
+                                    : 'bg-gradient-to-r from-brand-yellow via-amber-400 to-amber-500 hover:from-yellow-400 hover:via-amber-300 hover:to-amber-400 text-zinc-950 shadow-[0_0_20px_rgba(254,215,0,0.2)] hover:shadow-[0_0_30px_rgba(254,215,0,0.4)] hover:scale-[1.01] active:scale-[0.99] font-black shadow-lg'
                                 }`}
                             >
                                 {loading ? (
@@ -337,45 +337,25 @@ export function PaymentSelector({
                         </div>
                     </>
                 ) : (
-                    /* Tampilan Pembayaran Tertunda (Pending State) */
-                    <PaymentPendingState
-                        isId={isId}
-                        onContinue={() => setIsDialogOpen(true)}
-                        onCancel={() => setPaymentData(null)}
-                    />
+                    /* RENDER INLINE LANGSUNG DI SINI! (BUKAN MODAL) */
+                    paymentData.payment_type === 'manual_transfer' ? (
+                        <ManualPayment
+                            orderId={orderId}
+                            bankDetails={bankDetails}
+                            onClose={() => setPaymentData(null)}
+                            contactWA={contactWA}
+                            contactTele={contactTele}
+                        />
+                    ) : (
+                        <MidtransPayment
+                            orderId={orderId}
+                            paymentData={paymentData as MidtransPaymentData}
+                            selectedMethod={selectedMethod}
+                            onClose={() => setPaymentData(null)}
+                        />
+                    )
                 )}
             </div>
-
-            {/* DIALOG PETUNJUK PEMBAYARAN */}
-            {paymentData && (
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-3xl max-h-[85vh] overflow-y-auto">
-                        <DialogHeader>
-                            <DialogTitle className="flex items-center gap-2 text-xl">
-                                <CheckCircle2 className="w-6 h-6 text-lime-400" />
-                                {isId ? "Petunjuk Pembayaran" : "Payment Instructions"}
-                            </DialogTitle>
-                        </DialogHeader>
-
-                        {paymentData.payment_type === 'manual_transfer' ? (
-                            <ManualPayment
-                                orderId={orderId}
-                                bankDetails={bankDetails}
-                                onClose={() => setIsDialogOpen(false)}
-                                contactWA={contactWA}
-                                contactTele={contactTele}
-                            />
-                        ) : (
-                            <MidtransPayment
-                                orderId={orderId}
-                                paymentData={paymentData as MidtransPaymentData}
-                                selectedMethod={selectedMethod}
-                                onClose={() => setIsDialogOpen(false)}
-                            />
-                        )}
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 }

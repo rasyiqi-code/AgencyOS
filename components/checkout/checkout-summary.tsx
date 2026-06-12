@@ -50,7 +50,7 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
         <div className="space-y-6">
             <div className="bg-zinc-900/70 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                 {/* Accent line at the top */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-yellow via-lime-500 to-emerald-500" />
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-yellow via-amber-400 to-yellow-500" />
                 
                 <div>
                     <h2 className="text-xl sm:text-2xl font-black text-white mb-2 break-words tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-zinc-400">
@@ -65,13 +65,13 @@ export function CheckoutSummary({ estimate, bonuses, context, selectedAddons = [
                 {serviceFeatures && serviceFeatures.length > 0 && (
                     <div className="pt-6 border-t border-white/5 space-y-4">
                         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                            <Layers className="w-3.5 h-3.5 text-lime-400" />
+                            <Layers className="w-3.5 h-3.5 text-brand-yellow" />
                             {t("deliverables")}
                         </h3>
                         <div className="grid grid-cols-1 gap-2">
                             {serviceFeatures.map((feature, i) => (
                                 <div key={i} className="flex items-center gap-3 p-3 bg-white/[0.01] hover:bg-white/[0.03] border border-white/[0.03] hover:border-white/[0.07] rounded-xl transition-all duration-300 group">
-                                    <div className="w-2 h-2 rounded-full bg-lime-500/80 group-hover:scale-125 transition-transform duration-300 shrink-0 shadow-[0_0_8px_rgba(132,204,22,0.4)]" />
+                                    <div className="w-2 h-2 rounded-full bg-brand-yellow/80 group-hover:scale-125 transition-transform duration-300 shrink-0 shadow-[0_0_8px_rgba(254,215,0,0.4)]" />
                                     <span className="text-xs sm:text-sm text-zinc-300 font-medium tracking-tight group-hover:text-white transition-colors">
                                         {feature}
                                     </span>

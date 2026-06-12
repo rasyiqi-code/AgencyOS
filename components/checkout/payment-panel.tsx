@@ -149,7 +149,7 @@ export function PaymentPanel({
                                 </span>
                                 <button
                                     onClick={() => onChangeActiveOrderId(null)}
-                                    className="text-xs text-lime-400 hover:text-lime-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
+                                    className="text-xs text-brand-yellow hover:text-yellow-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
                                 >
                                     {t("change") || "Ubah"}
                                 </button>
@@ -167,27 +167,27 @@ export function PaymentPanel({
                                     onClick={() => onChangePaymentType("FULL")}
                                     className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "FULL" 
-                                            ? 'bg-gradient-to-r from-lime-500/[0.03] to-emerald-500/[0.03] border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.08)] z-10' 
+                                            ? 'bg-gradient-to-r from-brand-yellow/[0.03] to-amber-500/[0.03] border-brand-yellow/50 shadow-[0_0_20px_rgba(254,215,0,0.08)] z-10' 
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
                                     <div className="flex justify-between items-start mb-1.5">
-                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "FULL" ? 'text-lime-400 font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
+                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("fullPayment") || "Pembayaran Penuh"}
                                         </span>
                                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
                                             paymentType === "FULL" 
-                                                ? 'border-lime-500 bg-lime-500/10 shadow-[0_0_10px_rgba(132,204,22,0.2)]' 
+                                                ? 'border-brand-yellow bg-brand-yellow/10 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
                                                 : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
                                         }`}>
                                             {paymentType === "FULL" && (
-                                                <div className="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)] flex items-center justify-center">
+                                                <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
                                                     <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "FULL" ? 'text-lime-500/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
+                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Ideal untuk pengerjaan cepat dan diskon langsung." : "Ideal for immediate setup and hassle-free payment."}
                                     </p>
                                 </div>
@@ -197,27 +197,27 @@ export function PaymentPanel({
                                     onClick={() => onChangePaymentType("DP")}
                                     className={`p-3 rounded-xl border cursor-pointer transition-all duration-300 flex flex-col justify-between min-h-[82px] relative overflow-hidden group transform active:scale-[0.99] hover:scale-[1.005] ${
                                         paymentType === "DP" 
-                                            ? 'bg-gradient-to-r from-lime-500/[0.03] to-emerald-500/[0.03] border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.08)] z-10' 
+                                            ? 'bg-gradient-to-r from-brand-yellow/[0.03] to-amber-500/[0.03] border-brand-yellow/50 shadow-[0_0_20px_rgba(254,215,0,0.08)] z-10' 
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
                                     <div className="flex justify-between items-start mb-1.5">
-                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "DP" ? 'text-lime-400 font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
+                                        <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("dp") || "Pembayaran DP (50%)"}
                                         </span>
                                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
                                             paymentType === "DP" 
-                                                ? 'border-lime-500 bg-lime-500/10 shadow-[0_0_10px_rgba(132,204,22,0.2)]' 
+                                                ? 'border-brand-yellow bg-brand-yellow/10 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
                                                 : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
                                         }`}>
                                             {paymentType === "DP" && (
-                                                <div className="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)] flex items-center justify-center">
+                                                <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
                                                     <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "DP" ? 'text-lime-500/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
+                                    <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Proyek dimulai dengan 50% di muka, sisa setelah selesai." : "Start project with 50% upfront, remaining on completion."}
                                     </p>
                                 </div>
@@ -266,21 +266,21 @@ export function PaymentPanel({
                                         onClick={() => onToggleAddon && onToggleAddon(addon)}
                                         className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-300 transform active:scale-[0.99] group ${
                                             isSelected 
-                                                ? 'bg-lime-500/5 border-lime-500/30 shadow-[0_0_15px_rgba(132,204,22,0.04)]' 
+                                                ? 'bg-brand-yellow/5 border-brand-yellow/30 shadow-[0_0_15px_rgba(254,215,0,0.04)]' 
                                                 : 'bg-zinc-950/40 border-white/5 hover:bg-zinc-950/70 hover:border-white/10'
                                         }`}
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className={`w-4.5 h-4.5 rounded-[6px] border flex items-center justify-center shrink-0 transition-all duration-300 ${
                                                 isSelected 
-                                                    ? 'bg-lime-400 border-lime-400 text-black shadow-[0_0_8px_rgba(132,204,22,0.3)]' 
+                                                    ? 'bg-brand-yellow border-brand-yellow text-black shadow-[0_0_8px_rgba(254,215,0,0.3)]' 
                                                     : 'border-zinc-700 group-hover:border-zinc-500'
                                             }`}>
                                                 {isSelected && <Check className="w-3 h-3 stroke-[3px]" />}
                                             </div>
                                             <div>
                                                 <div className={`text-xs sm:text-sm font-bold tracking-tight transition-colors ${
-                                                    isSelected ? 'text-lime-400' : 'text-zinc-200 group-hover:text-white'
+                                                    isSelected ? 'text-brand-yellow' : 'text-zinc-200 group-hover:text-white'
                                                 }`}>
                                                     {addon.name}
                                                 </div>

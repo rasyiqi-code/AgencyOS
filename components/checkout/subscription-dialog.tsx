@@ -77,15 +77,15 @@ export function SubscriptionDialog({ onSubscribe, context }: {
                 <div className="pt-6 border-t border-white/5 cursor-pointer group transition-colors">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-lime-500/10 border border-lime-500/20 flex items-center justify-center shrink-0 group-hover:bg-lime-500/20 transition-colors">
-                                <Gift className="w-4 h-4 text-lime-400" />
+                            <div className="w-8 h-8 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center shrink-0 group-hover:bg-brand-yellow/20 transition-colors">
+                                <Gift className="w-4 h-4 text-brand-yellow" />
                             </div>
                             <div>
-                                <div className="font-medium text-white group-hover:text-lime-400 transition-colors text-sm">{t('wantDiscount')}</div>
+                                <div className="font-medium text-white group-hover:text-brand-yellow transition-colors text-sm">{t('wantDiscount')}</div>
                                 <div className="text-[11px] text-zinc-500">{t('subscribeSecret')}</div>
                             </div>
                         </div>
-                        <Button size="sm" variant="ghost" className="text-lime-500 hover:text-lime-400 h-8 text-xs font-bold">
+                        <Button size="sm" variant="ghost" className="text-brand-yellow hover:text-yellow-300 h-8 text-xs font-bold">
                             {t('getCoupon')}
                         </Button>
                     </div>

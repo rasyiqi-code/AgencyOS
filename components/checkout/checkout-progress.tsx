@@ -14,7 +14,7 @@ export function CheckoutProgress({ currentStep }: { currentStep: 1 | 2 }) {
                 {/* Connecting Line Container */}
                 <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-zinc-800/80 rounded-full z-0">
                     <div 
-                        className="h-full bg-gradient-to-r from-brand-yellow to-lime-500 rounded-full transition-all duration-1000 ease-in-out" 
+                        className="h-full bg-gradient-to-r from-brand-yellow to-amber-500 rounded-full transition-all duration-1000 ease-in-out" 
                         style={{ width: `${currentStep === 2 ? '100%' : '0%'}` }}
                     />
                 </div>
@@ -27,7 +27,7 @@ export function CheckoutProgress({ currentStep }: { currentStep: 1 | 2 }) {
                             {/* Circle */}
                             <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 border ${
                                 isActive 
-                                ? 'bg-gradient-to-br from-brand-yellow to-lime-400 text-black border-transparent shadow-[0_0_25px_rgba(254,215,0,0.35)] scale-110' 
+                                ? 'bg-gradient-to-br from-brand-yellow to-amber-400 text-black border-transparent shadow-[0_0_25px_rgba(254,215,0,0.35)] scale-110' 
                                 : 'bg-zinc-950 text-zinc-500 border-zinc-800'
                             }`}>
                                 <StepIcon className="w-5 h-5" />

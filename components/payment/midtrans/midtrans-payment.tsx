@@ -50,7 +50,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
 
                 {/* QRIS DISPLAY */}
                 {['qris', 'gopay'].includes(paymentData.payment_type) && paymentData.actions && (
-                    <div className="text-center bg-white p-6 rounded-xl border-4 border-lime-500/20">
+                    <div className="text-center bg-white p-6 rounded-xl border-4 border-brand-yellow/20">
                         <div className="mx-auto w-[220px] h-[220px]">
                             <QRCode
                                 value={paymentData.actions[0].url}
@@ -69,8 +69,8 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                 {(paymentData.va_numbers || paymentData.permata_va_number) && (
                     <div className="space-y-6">
                         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-lime-500/10 flex items-center justify-center">
-                                <Building className="w-6 h-6 text-lime-400" />
+                            <div className="w-12 h-12 rounded-full bg-brand-yellow/10 flex items-center justify-center">
+                                <Building className="w-6 h-6 text-brand-yellow" />
                             </div>
                             <div>
                                 <div className="text-white font-bold uppercase text-lg">{selectedMethod?.label || paymentData.va_numbers?.[0]?.bank || "Bank Transfer"}</div>
@@ -108,7 +108,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                     <div className="space-y-4">
                         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
                             <div className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-                                <Building className="w-5 h-5 text-lime-400" />
+                                <Building className="w-5 h-5 text-brand-yellow" />
                                 Mandiri Bill Payment
                             </div>
 
@@ -147,11 +147,11 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
                 {paymentData.payment_type === 'cstore' && (
                     <div className="space-y-6">
                         <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-                            <Store className="w-6 h-6 text-lime-400" />
+                            <Store className="w-6 h-6 text-brand-yellow" />
                             <div className="text-white font-bold capitalize text-xl">{paymentData.store} Payment</div>
                         </div>
 
-                        <div className="text-center py-8 bg-white rounded-lg border-4 border-lime-500/20">
+                        <div className="text-center py-8 bg-white rounded-lg border-4 border-brand-yellow/20">
                             <div className="text-black text-4xl font-bold font-mono tracking-[0.2em]">{paymentData.payment_code}</div>
                             <div className="text-sm text-zinc-500 mt-2 font-medium">Show this code to the cashier</div>
                         </div>
@@ -164,7 +164,7 @@ export function MidtransPayment({ orderId, paymentData, selectedMethod, onClose 
 
                 <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-zinc-900">
                     <Button
-                        className="w-full bg-lime-500 text-black hover:bg-lime-400 font-bold"
+                        className="w-full bg-brand-yellow text-black hover:bg-yellow-400 font-bold"
                         onClick={handleCheckStatus}
                     >
                         I Have Paid

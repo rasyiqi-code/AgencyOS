@@ -44,7 +44,7 @@ export function CheckoutStickyBar({
                             Project Spec
                         </span>
                         <span className="text-xs font-extrabold text-white flex items-center gap-1.5 justify-center sm:justify-start">
-                            <Layers className="w-3.5 h-3.5 text-lime-400" />
+                            <Layers className="w-3.5 h-3.5 text-brand-yellow" />
                             {isId ? "1 Jasa Estimasi" : "1 Estimate Service"}
                         </span>
                     </div>
@@ -77,7 +77,7 @@ export function CheckoutStickyBar({
                         </div>
                     ) : (
                         <Button
-                            className="bg-gradient-to-r from-lime-500 to-emerald-500 hover:from-lime-400 hover:to-emerald-400 text-black font-extrabold h-10 px-6 rounded-xl cursor-pointer shadow-[0_4px_15px_rgba(132,204,22,0.25)] transition-all duration-300 transform hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99] text-xs"
+                            className="bg-gradient-to-r from-brand-yellow to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-extrabold h-10 px-6 rounded-xl cursor-pointer shadow-[0_4px_15px_rgba(254,215,0,0.25)] transition-all duration-300 transform hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.99] text-xs"
                             disabled={isProcessing}
                             onClick={onCheckout}
                         >

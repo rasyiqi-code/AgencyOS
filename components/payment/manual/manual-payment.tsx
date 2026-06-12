@@ -58,7 +58,7 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                 {/* Left Column: Bank Details */}
                 <div className="space-y-6">
                     <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
-                        <Building className="w-6 h-6 text-lime-400" />
+                        <Building className="w-6 h-6 text-brand-yellow" />
                         <div className="text-white font-bold text-xl">Bank / Wise Transfer</div>
                     </div>
 

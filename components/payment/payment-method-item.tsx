@@ -95,7 +95,7 @@ export function PaymentMethodItem({ method, active, isId, onSelect }: PaymentMet
             className={`w-full text-left p-3 rounded-xl border transition-all duration-300 flex items-center justify-between group transform active:scale-[0.99] hover:scale-[1.005]
             ${method.disabled ? 'opacity-40 cursor-not-allowed bg-zinc-950/20 border-zinc-900/20' : ''}
             ${active
-                    ? 'bg-gradient-to-r from-lime-500/[0.03] to-emerald-500/[0.03] border-lime-500/50 shadow-[0_0_20px_rgba(132,204,22,0.08)] z-10'
+                    ? 'bg-gradient-to-r from-brand-yellow/[0.03] to-amber-500/[0.03] border-brand-yellow/50 shadow-[0_0_20px_rgba(254,215,0,0.08)] z-10'
                     : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                 }`}
         >
@@ -103,7 +103,7 @@ export function PaymentMethodItem({ method, active, isId, onSelect }: PaymentMet
                 {/* Lingkaran Ikon yang Dinamis dan Glassmorphic */}
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 border
                 ${active
-                        ? 'bg-gradient-to-br from-lime-400 to-emerald-500 border-lime-400 text-black shadow-[0_0_15px_rgba(132,204,22,0.3)]'
+                        ? 'bg-gradient-to-br from-brand-yellow to-amber-500 border-brand-yellow text-black shadow-[0_0_15px_rgba(254,215,0,0.3)]'
                         : 'bg-zinc-950/80 text-zinc-400 border-zinc-800 group-hover:border-zinc-700 group-hover:text-zinc-200'
                     }`}>
                     {getMethodIcon()}
@@ -111,12 +111,12 @@ export function PaymentMethodItem({ method, active, isId, onSelect }: PaymentMet
 
                 <div className="space-y-0.5">
                     <div className={`text-sm font-bold tracking-wide transition-colors duration-300 
-                    ${active ? 'text-lime-400' : 'text-zinc-100 group-hover:text-white'} 
+                    ${active ? 'text-brand-yellow' : 'text-zinc-100 group-hover:text-white'} 
                     ${method.disabled ? 'text-zinc-600' : ''}`}>
                         {method.label}
                     </div>
                     <div className={`text-[10px] font-medium leading-normal transition-colors duration-300
-                    ${active ? 'text-lime-500/60' : 'text-zinc-500 group-hover:text-zinc-400'}
+                    ${active ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}
                     ${method.disabled ? 'text-zinc-700' : ''}`}>
                         {getMethodDescription(method.id, isId)}
                     </div>
@@ -126,11 +126,11 @@ export function PaymentMethodItem({ method, active, isId, onSelect }: PaymentMet
             {/* Radio Button Bulat Kustom yang Menyala */}
             <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 
             ${active
-                    ? 'border-lime-500 bg-lime-500/10 shadow-[0_0_10px_rgba(132,204,22,0.2)]'
+                    ? 'border-brand-yellow bg-brand-yellow/10 shadow-[0_0_10px_rgba(254,215,0,0.2)]'
                     : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
                 }`}>
                 {active && (
-                    <div className="w-2 h-2 rounded-full bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)] flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
                         <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
                     </div>
                 )}
