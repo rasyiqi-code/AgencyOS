@@ -293,40 +293,11 @@ export async function buySoftwareLicense(productId: string) {
         // Buat Order ID unik
         const orderId = `ORDSW-${Date.now()}-${secureRandomInt(0, 1000)}`;
 
-        // Ambil nominal rupiah (Midtrans mewajibkan IDR)
         let amount = product.price;
         let currency = product.currency;
-        let idrAmount = amount;
-        const { clientKey, isProduction } = await paymentGatewayService.getMidtransConfig();
-
-        if (currency === "USD") {
-            const { idrAmount: converted } = await paymentService.convertToIDR(amount);
-            idrAmount = Math.ceil(converted);
-        }
-
-        // Panggil Midtrans Snap untuk membuat token
-        const snap = await getSnap();
-        const transaction = await snap.createTransaction({
-            transaction_details: {
-                order_id: orderId,
-                gross_amount: idrAmount,
-            },
-            customer_details: {
-                first_name: user.displayName || "Client",
-                email: user.primaryEmail,
-            },
-            item_details: [
-                {
-                    id: product.id,
-                    price: idrAmount,
-                    quantity: 1,
-                    name: product.name.substring(0, 50),
-                }
-            ]
-        });
 
         // Simpan Order di database
-        await prisma.order.create({
+        const order = await prisma.order.create({
             data: {
                 id: orderId,
                 amount: amount, // Nilai asli produk (USD atau IDR)
@@ -334,23 +305,20 @@ export async function buySoftwareLicense(productId: string) {
                 status: "pending",
                 type: "SOFTWARE_LICENSE",
                 currency: currency,
-                snapToken: transaction.token,
                 paymentMetadata: {
                     productId: product.id,
-                    redirectUrl: transaction.redirect_url
                 }
             }
         });
 
         return { 
             success: true, 
-            snapToken: transaction.token,
-            clientKey,
-            isProduction,
-            orderId
+            orderId,
+            amount,
+            currency
         };
     } catch (error: any) {
         console.error("BUY_SOFTWARE_LICENSE_ERROR", error);
-        return { error: error.message || "Gagal menginisialisasi pembayaran." };
+        return { error: error.message || "Gagal menginisialisasi order pembelian." };
     }
 }

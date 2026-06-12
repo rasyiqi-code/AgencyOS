@@ -76,6 +76,23 @@ export async function POST(req: Request) {
         // 1.5 Convert USD to IDR
         const { idrAmount } = await paymentService.convertToIDR(order.amount);
 
+        let itemName = order.project?.title || "Agency Service";
+        let itemId = order.projectId || "PROJECT";
+
+        if (order.type === "SOFTWARE_LICENSE") {
+            const metadata = order.paymentMetadata as Record<string, any> | null;
+            const productId = metadata?.productId;
+            if (productId) {
+                const swProduct = await prisma.softwareProduct.findUnique({
+                    where: { id: productId }
+                });
+                if (swProduct) {
+                    itemName = `License: ${swProduct.name}`;
+                    itemId = swProduct.id;
+                }
+            }
+        }
+
         const parameter: MidtransChargeParameter = {
             payment_type: paymentType,
             transaction_details: {
@@ -85,10 +102,10 @@ export async function POST(req: Request) {
             customer_details: customerDetails,
             item_details: [
                 {
-                    id: order.projectId || "PROJECT",
+                    id: itemId,
                     price: idrAmount, // Use IDR amount
                     quantity: 1,
-                    name: order.project?.title?.substring(0, 50) || "Agency Service",
+                    name: itemName.substring(0, 50),
                     merchant_name: "Crediblemark"
                 }
             ]

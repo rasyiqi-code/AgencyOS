@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { 
-    Key, Globe, Copy, Check, Trash2, Plus, ArrowRight, Loader2, Sparkles, CreditCard, ShoppingCart
+    Key, Globe, Copy, Check, Trash2, Plus, ArrowRight, Loader2, Sparkles, CreditCard, ShoppingCart, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,31 +11,29 @@ import { PriceDisplay } from "@/components/providers/currency-provider";
 import { 
     activateUserLicenseDomain, deactivateUserLicenseDomain, buySoftwareLicense 
 } from "@/app/actions/licenses";
+import { PaymentSelector } from "@/components/payment/payment-selector";
 
 interface UserLicenseClientProps {
     initialLicenses: any[];
     availableProducts: any[];
+    bankDetails?: { bank_name?: string; bank_account?: string; bank_holder?: string };
+    gatewayStatus?: { midtrans: boolean; creem: boolean };
+    hasActiveGateway?: boolean;
+    contactWA?: string | null;
+    contactTele?: string | null;
+    user: { displayName: string | null; email: string | null };
 }
 
-// Helper dinamis untuk memuat SDK Midtrans Snap
-const loadSnapScript = (clientKey: string, isProduction: boolean): Promise<void> => {
-    return new Promise((resolve) => {
-        if ((window as any).snap) {
-            resolve();
-            return;
-        }
-        const script = document.createElement("script");
-        const snapUrl = isProduction 
-            ? "https://app.midtrans.com/snap/snap.js" 
-            : "https://app.sandbox.midtrans.com/snap/snap.js";
-        script.src = snapUrl;
-        script.setAttribute("data-client-key", clientKey);
-        script.onload = () => resolve();
-        document.body.appendChild(script);
-    });
-};
-
-export function UserLicenseClient({ initialLicenses, availableProducts }: UserLicenseClientProps) {
+export function UserLicenseClient({ 
+    initialLicenses, 
+    availableProducts,
+    bankDetails,
+    gatewayStatus,
+    hasActiveGateway,
+    contactWA,
+    contactTele,
+    user
+}: UserLicenseClientProps) {
     const [activeTab, setActiveTab] = useState<"my-licenses" | "buy-software">("my-licenses");
     const [licenses, setLicenses] = useState(initialLicenses);
     const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -45,6 +43,14 @@ export function UserLicenseClient({ initialLicenses, availableProducts }: UserLi
     const [newDomains, setNewDomains] = useState<Record<string, string>>({});
     const [processingDomainId, setProcessingDomainId] = useState<string | null>(null);
     const [checkoutProductId, setCheckoutProductId] = useState<string | null>(null);
+
+    // State transaksi aktif untuk modal pembayaran dinamis
+    const [activeOrder, setActiveOrder] = useState<{
+        orderId: string;
+        amount: number;
+        currency: 'USD' | 'IDR';
+    } | null>(null);
+    const [activeOrderStatus, setActiveOrderStatus] = useState<string>("pending");
 
     const handleCopy = (key: string) => {
         navigator.clipboard.writeText(key);
@@ -91,43 +97,45 @@ export function UserLicenseClient({ initialLicenses, availableProducts }: UserLi
     const handlePayment = async (productId: string) => {
         setCheckoutProductId(productId);
         const res = await buySoftwareLicense(productId);
+        setCheckoutProductId(null);
         
-        if (!res.success || !res.snapToken) {
-            toast.error(res.error || "Gagal memproses transaksi");
-            setCheckoutProductId(null);
+        if (!res.success || !res.orderId || !res.amount || !res.currency) {
+            toast.error(res.error || "Gagal memproses order pembelian.");
             return;
         }
 
-        try {
-            // Muat script Midtrans Snap
-            await loadSnapScript(res.clientKey, res.isProduction);
-            setCheckoutProductId(null);
-
-            // Trigger Pop-up Snap Midtrans
-            (window as any).snap.pay(res.snapToken, {
-                onSuccess: function (result: any) {
-                    toast.success("Pembayaran sukses! Lisensi Anda telah diterbitkan.");
-                    window.location.reload();
-                },
-                onPending: function (result: any) {
-                    toast.info("Pembayaran pending. Selesaikan transaksi Anda.");
-                },
-                onError: function (result: any) {
-                    toast.error("Pembayaran gagal.");
-                },
-                onClose: function () {
-                    toast.warning("Pembayaran dibatalkan.");
-                }
-            });
-        } catch (err) {
-            console.error(err);
-            toast.error("Gagal membuka modul pembayaran.");
-            setCheckoutProductId(null);
-        }
+        // Buka panel pembayaran dinamis sesuai gerbang aktif
+        setActiveOrder({
+            orderId: res.orderId,
+            amount: res.amount,
+            currency: res.currency as 'USD' | 'IDR'
+        });
+        setActiveOrderStatus("pending");
     };
 
     return (
         <div className="space-y-6">
+            {/* Payment Modal/Overlay if activeOrder exists */}
+            {activeOrder && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl relative">
+                        <button onClick={() => setActiveOrder(null)} className="absolute right-4 top-4 text-zinc-500 hover:text-white">
+                            <X className="w-5 h-5" />
+                        </button>
+                        <h2 className="text-xl font-bold text-white mb-6">Selesaikan Pembayaran</h2>
+                        <PaymentSelector 
+                            orderId={activeOrder.orderId}
+                            amount={activeOrder.amount}
+                            currency={activeOrder.currency}
+                            bankDetails={bankDetails}
+                            gatewayStatus={gatewayStatus}
+                            contactWA={contactWA}
+                            contactTele={contactTele}
+                        />
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div>
                 <h1 className="text-2xl font-bold text-white flex items-center gap-3">
