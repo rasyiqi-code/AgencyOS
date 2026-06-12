@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { Check, ArrowLeft, ShieldCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface ProductShowcaseProps {
     estimate: ExtendedEstimate;
@@ -20,6 +21,10 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
         ? (estimate.service?.features_id as string[]) || (estimate.service?.features as string[])
         : (estimate.service?.features as string[]) || [];
 
+    // Tentukan URL kembali ke halaman detail service
+    const serviceSlug = estimate.service?.slug || estimate.serviceId;
+    const backUrl = serviceSlug ? `/services/${serviceSlug}` : "/client-dashboard";
+
     return (
         <div className="space-y-8 flex flex-col justify-between h-full text-white p-6 pl-0 sm:p-8 sm:pl-0 lg:pr-12 lg:py-4 relative overflow-hidden bg-transparent">
             {/* Background glow effects */}
@@ -29,13 +34,13 @@ export function ProductShowcase({ estimate }: ProductShowcaseProps) {
             <div className="space-y-8 relative z-10">
                 {/* Back to button */}
                 <div>
-                    <a
-                        href="/client-dashboard"
+                    <Link
+                        href={backUrl}
                         className="inline-flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-wider group cursor-pointer"
                     >
                         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                        {isId ? "Kembali ke Dashboard" : "Back to Dashboard"}
-                    </a>
+                        {isId ? "Kembali" : "Back"}
+                    </Link>
                 </div>
 
                 {/* Branding & Heading */}

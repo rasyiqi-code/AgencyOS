@@ -127,6 +127,7 @@ export interface ExtendedEstimate {
     serviceId?: string | null;
     service?: {
         title: string;
+        slug?: string | null;
         description: string;
         price: number;
         currency?: string | null;

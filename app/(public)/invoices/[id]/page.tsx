@@ -145,8 +145,9 @@ export default async function PublicInvoicePage(props: { params: Promise<{ id: s
     };
 
     return (
-        <div className="min-h-screen bg-black selection:bg-lime-500/30 pb-6 sm:pb-12 md:pb-16">
-            <div className="container mx-auto px-4 py-3 sm:py-6 md:py-12 max-w-7xl">
+        <div className="selection:bg-lime-500/30">
+            <div className="container mx-auto px-4 pt-2 pb-6 sm:pt-4 sm:pb-12 md:pt-6 md:pb-16 max-w-7xl">
+
 
 
                 <InvoiceClientWrapper
