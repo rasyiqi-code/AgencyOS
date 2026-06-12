@@ -58,9 +58,7 @@ export function StickyCTA({ service, intervalLabel, selectedAddons }: StickyCTAP
         >
             <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
                 {/* Judul Layanan di Sisi Kiri */}
-                <div className="flex items-center gap-2 min-w-0">
-                    {/* Spacer dummy w-8 agar teks sejajar dengan teks "Agency OS", mengabaikan icon checkmark */}
-                    <div className="w-8 hidden sm:block opacity-0 pointer-events-none" aria-hidden="true" />
+                <div className="flex items-center min-w-0">
                     <span className="text-xs sm:text-sm font-bold text-brand-yellow truncate block">
                         {displayTitle}
                     </span>
