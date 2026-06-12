@@ -188,13 +188,13 @@ export function CheckoutPortal({
             if (!response.ok) {
                 const err = await response.json();
                 const errorMessage = err.error || err.message || JSON.stringify(err);
-                toast.error(`${t("failProcess") || "Gagal melakukan checkout"}: ${errorMessage}`);
+                toast.error(`${t("failProcess")}: ${errorMessage}`);
                 throw new Error(errorMessage);
             }
             const { orderId: newOrderId } = await response.json();
 
             setActiveOrderId(newOrderId);
-            toast.success("Pesanan berhasil dibuat! Silakan pilih metode pembayaran.");
+            toast.success(t("toastCheckoutSuccess"));
         } catch (e) {
             console.error(e);
         } finally {

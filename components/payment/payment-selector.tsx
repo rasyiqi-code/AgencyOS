@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Loader2, Wallet, Lock, CreditCard, Building, Smartphone, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { initiateCreemPayment } from "@/components/payment/creem/client";
 import { ManualPayment } from "@/components/payment/manual/manual-payment";
@@ -116,6 +116,7 @@ export function PaymentSelector({
 }: PaymentSelectorProps) {
     const locale = useLocale();
     const isId = locale === 'id';
+    const t = useTranslations("Checkout");
     const [loading, setLoading] = useState(false);
     const [selectedMethod, setSelectedMethod] = useState<SelectedPaymentMethod | null>(null);
 
@@ -163,32 +164,37 @@ export function PaymentSelector({
 
     // Mengubah Wise menjadi Local Bank Indonesia jika mata uang yang digunakan adalah IDR
     const mappedGroups = filteredGroups.map(group => {
+        let methods = group.methods;
         if (group.id === "manual") {
-            return {
-                ...group,
-                methods: group.methods.map(method => {
-                    if (method.id === "wise") {
-                        if (currency === "IDR") {
-                            const bankLabel = bankDetails?.bank_name
-                                ? `Transfer Bank ${bankDetails.bank_name}`
-                                : "Transfer Bank Manual";
-                            return {
-                                ...method,
-                                id: "local_bank",
-                                label: bankLabel,
-                            };
-                        } else {
-                            return {
-                                ...method,
-                                label: "Wise / Bank Transfer (USD)",
-                            };
-                        }
+            methods = group.methods.map(method => {
+                if (method.id === "wise") {
+                    if (currency === "IDR") {
+                        const bankLabel = bankDetails?.bank_name
+                            ? t("paymentMethod_localBankWithName", { bank: bankDetails.bank_name })
+                            : t("paymentMethod_local_bank");
+                        return {
+                            ...method,
+                            id: "local_bank",
+                            label: bankLabel,
+                        };
+                    } else {
+                        return {
+                            ...method,
+                            label: t("paymentMethod_wise"),
+                        };
                     }
-                    return method;
-                })
-            };
+                }
+                return method;
+            });
         }
-        return group;
+        return {
+            ...group,
+            label: t("paymentGroup_" + group.id) || group.label,
+            methods: methods.map(method => ({
+                ...method,
+                label: t("paymentMethod_" + method.id) || method.label
+            }))
+        };
     });
 
     const handleCharge = async () => {
@@ -212,10 +218,10 @@ export function PaymentSelector({
 
                 setPaymentData(manualData);
                 onPaymentInitiated?.();
-                toast.success(isId ? "Pilihan pembayaran berhasil disimpan" : "Please complete your transfer");
+                toast.success(t("toastManualSuccess"));
             } catch (error) {
                 console.error(error);
-                toast.error(isId ? "Gagal memilih metode pembayaran" : "Failed to select payment method");
+                toast.error(t("toastManualError"));
             } finally {
                 setLoading(false);
             }
@@ -261,7 +267,7 @@ export function PaymentSelector({
 
             setPaymentData(data);
             onPaymentInitiated?.();
-            toast.success(isId ? "Pembayaran berhasil diinisiasi!" : "Payment initiated!");
+            toast.success(t("toastMidtransSuccess"));
         } catch (error) {
             console.error(error);
             toast.error(error instanceof Error ? error.message : "Failed to initiate payment");
@@ -308,7 +314,7 @@ export function PaymentSelector({
                 {!noCard && (
                     <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2 shrink-0">
                         <Wallet className="w-5 h-5 text-brand-yellow" />
-                        {isId ? "Metode Pembayaran" : "Payment Method"}
+                        {t("paymentSelectorTitle")}
                     </h2>
                 )}
 
@@ -359,10 +365,13 @@ export function PaymentSelector({
                                 ) : (
                                     <>
                                         {!selectedMethod && <Lock className="w-3.5 h-3.5" />}
-                                        {isId 
-                                            ? `Bayar ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount)}`
-                                            : `Pay ${new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount)}`
-                                        }
+                                        {t("payAmount", {
+                                            amount: new Intl.NumberFormat(currency === 'IDR' ? 'id-ID' : 'en-US', {
+                                                style: 'currency',
+                                                currency: currency,
+                                                minimumFractionDigits: 0
+                                            }).format(amount)
+                                        })}
                                     </>
                                 )}
                             </Button>

@@ -71,8 +71,8 @@ export function ProductList({ initialServices }: ProductListProps) {
                             : (service.features as string[]) || [];
 
                         const intervalLabel = service.interval === 'one_time'
-                            ? (isId ? 'Sekali Bayar' : 'One Time')
-                            : (isId ? `Per ${service.interval}` : `Per ${service.interval}`);
+                            ? t("oneTime")
+                            : t("intervalPer", { interval: service.interval });
 
                         return (
                             <div key={service.id} className="flex-[0_0_92%] sm:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0">
@@ -103,6 +103,7 @@ interface BentoServiceCardProps {
 }
 
 function BentoServiceCard({ service, title, displayFeatures, intervalLabel, variants, ctaLabel }: BentoServiceCardProps) {
+    const t = useTranslations("ProductCatalog");
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -186,9 +187,10 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                                     <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-zinc-900/80 to-transparent pointer-events-none" />
                                     <Link
                                         href={`/services/${service.slug}`}
+                                        aria-label={t("viewMoreFeatures", { count: displayFeatures.length - 3, title: title || '' })}
                                         className="text-[8px] md:text-[9px] text-brand-yellow font-bold uppercase tracking-widest mt-1.5 md:mt-2 flex items-center gap-1 hover:opacity-80 transition-opacity"
                                     >
-                                        +{displayFeatures.length - 3} More <ChevronDown className="w-2.5 h-2.5" />
+                                        {t("moreCount", { count: displayFeatures.length - 3 })} <ChevronDown className="w-2.5 h-2.5" />
                                     </Link>
                                 </>
                             )}

@@ -11,14 +11,14 @@ import { motion } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export function FAQSection() {
     const messages = useMessages();
     const faqData = (messages as Record<string, unknown>)?.FAQ || {};
     const t = useTranslations("FAQ");
     const tFooter = useTranslations("Footer");
-    const router = useRouter();
     const params = useParams();
     const locale = params?.locale as string || "id";
     
@@ -98,9 +98,9 @@ export function FAQSection() {
                     </div>
 
                     {/* CTA Card - 4 Columns */}
-                    <div 
-                        className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer"
-                        onClick={() => router.push(`/${locale}/contact`)}
+                    <Link 
+                        href={`/${locale}/contact`}
+                        className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer block"
                     >
                         <div className="p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 w-full transition-all duration-300 hover:border-brand-yellow/30">
                             <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -133,6 +133,7 @@ export function FAQSection() {
                                                 alt="UserAvatar" 
                                                 fill
                                                 className="object-cover" 
+                                                sizes="24px"
                                             />
                                         </div>
                                     ))}
@@ -143,7 +144,7 @@ export function FAQSection() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* FAQ Structured Data for SEO */}

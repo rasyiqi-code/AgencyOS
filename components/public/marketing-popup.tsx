@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Loader2, Sparkles, CheckCircle2, Tag, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,7 @@ interface PopUp {
 export function MarketingPopup() {
     const pathname = usePathname();
     const locale = useLocale();
+    const t = useTranslations("MarketingPopup");
     const [currentPopup, setCurrentPopup] = useState<PopUp | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const [isPending, setIsPending] = useState(false);
@@ -117,10 +118,10 @@ export function MarketingPopup() {
                     handleDismiss();
                 }, 3000);
             } else {
-                toast.error(isId ? "Gagal mengirim data." : "Failed to send data.");
+                toast.error(t("toastErrorData"));
             }
         } catch {
-            toast.error(isId ? "Terjadi kesalahan jaringan." : "Network error occurred.");
+            toast.error(t("toastErrorNetwork"));
         } finally {
             setIsPending(false);
         }
@@ -134,7 +135,7 @@ export function MarketingPopup() {
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
-        toast.success(isId ? "Kode kupon disalin!" : "Coupon code copied!");
+        toast.success(t("toastSuccessCoupon"));
     };
 
     if (!currentPopup) return null;
@@ -162,7 +163,7 @@ export function MarketingPopup() {
                         {/* Custom Close Button */}
                         <button
                             onClick={handleDismiss}
-                            aria-label={isId ? "Tutup popup" : "Close popup"}
+                            aria-label={t("closePopup")}
                             className="absolute top-6 right-6 p-2 rounded-full border border-white/5 bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10 transition-all z-20"
                         >
                             <X className="w-5 h-5" />
@@ -202,7 +203,7 @@ export function MarketingPopup() {
                                         <div className="flex items-center gap-2 mb-1">
                                             <Tag className="w-3 h-3 text-brand-yellow" />
                                             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-brand-yellow transition-colors">
-                                                {isId ? "Salin Kode" : "Copy Code"}
+                                                {t("copyCode")}
                                             </span>
                                         </div>
                                         <div className="text-xl md:text-2xl font-black text-white tracking-[0.3em] font-mono group-active:scale-95 transition-transform flex items-center gap-3">
@@ -223,7 +224,7 @@ export function MarketingPopup() {
                                     <div className="grid md:grid-cols-2 gap-3">
                                         <Input
                                             name="name"
-                                            placeholder={isId ? "Nama Anda" : "Your Name"}
+                                            placeholder={t("placeholderName")}
                                             required
                                             className="h-11 md:h-12 bg-white/5 border-white/10 rounded-xl md:rounded-2xl text-white placeholder:text-zinc-600 focus-visible:ring-brand-yellow"
                                         />
@@ -242,7 +243,7 @@ export function MarketingPopup() {
                                     >
                                         {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                                             <>
-                                                {isId ? "Kirim Sekarang" : "Send Information"}
+                                                {t("submitButton")}
                                                 <ArrowRight className="w-4 h-4 ml-2" />
                                             </>
                                         )}
@@ -254,8 +255,8 @@ export function MarketingPopup() {
                                         <CheckCircle2 className="w-6 h-6 text-green-500" />
                                     </div>
                                     <div className="space-y-1">
-                                        <p className="text-white font-black uppercase tracking-tight">{isId ? "Berhasil!" : "Success!"}</p>
-                                        <p className="text-zinc-500 text-xs">{isId ? "Terima kasih telah bergabung." : "Thank you for joining us."}</p>
+                                        <p className="text-white font-black uppercase tracking-tight">{t("successTitle")}</p>
+                                        <p className="text-zinc-500 text-xs">{t("successDesc")}</p>
                                     </div>
                                 </div>
                             ) : ctaText && (
@@ -271,7 +272,7 @@ export function MarketingPopup() {
                             )}
 
                             <p className="text-[10px] text-zinc-600 text-center uppercase tracking-widest font-bold pt-4">
-                                {isId ? "Klik di luar untuk menutup" : "Click outside to dismiss"}
+                                {t("clickOutside")}
                             </p>
                         </div>
                     </motion.div>

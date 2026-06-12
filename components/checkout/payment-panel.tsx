@@ -55,6 +55,7 @@ export function PaymentPanel({
 }) {
     const t = useTranslations("Checkout");
     const ti = useTranslations("Invoice");
+    const tc = useTranslations("Common");
     const locale = useLocale();
     const isId = locale === 'id';
 
@@ -102,12 +103,12 @@ export function PaymentPanel({
                                     {countdown}
                                 </div>
                                 <div className="text-[12px] font-black text-brand-yellow/40 uppercase tracking-[0.4em] animate-pulse">
-                                    {t("redirectingToInvoice") || "Mengalihkan ke Invoice..."}
+                                    {t("redirectingToInvoice")}
                                 </div>
                             </div>
                         ) : (
                             <div className="px-8 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-bold tracking-widest uppercase text-sm">
-                                {t("paymentVerified") || "Pembayaran Terverifikasi"}
+                                {t("paymentVerified")}
                             </div>
                         )}
                     </div>
@@ -130,20 +131,20 @@ export function PaymentPanel({
                         className="inline-flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-widest group cursor-pointer bg-transparent border-0 p-0"
                     >
                         <svg className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-                        {isId ? "Kembali" : "Back"}
+                        {tc("back")}
                     </button>
                 )}
 
                 {/* Tipe Pembayaran (DP vs FULL) - Selektor Paket Horizontal Minecraft Style */}
                 <div className="space-y-2.5">
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                        {isId ? "Pilih Tipe Pembayaran" : "Select Payment Plan"}
+                        {t("selectPaymentPlan")}
                     </span>
                     
                     {activeOrderId ? (
                         <div className="flex justify-between items-center bg-zinc-900/40 border border-zinc-800 p-4 rounded-xl backdrop-blur-md">
                             <span className="text-xs font-bold text-zinc-400">
-                                {isId ? "Tipe Terpilih" : "Selected Plan"}
+                                {t("selectedPlan")}
                             </span>
                             <div className="flex items-center gap-2.5">
                                 <span className="text-xs font-extrabold bg-white/10 text-white px-3.5 py-1.5 rounded-full border border-white/5">
@@ -153,7 +154,7 @@ export function PaymentPanel({
                                     onClick={() => onChangeActiveOrderId(null)}
                                     className="text-xs text-brand-yellow hover:text-yellow-300 font-bold transition-colors hover:underline bg-transparent border-0 cursor-pointer"
                                 >
-                                    {t("change") || "Ubah"}
+                                    {t("change")}
                                 </button>
                             </div>
                         </div>
@@ -190,7 +191,7 @@ export function PaymentPanel({
                                         )}
                                     </div>
                                     <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
-                                        {isId ? "Ideal untuk pengerjaan cepat dan diskon langsung." : "Ideal for immediate setup and hassle-free payment."}
+                                        {t("fullPaymentDesc")}
                                     </p>
                                 </div>
 
@@ -220,7 +221,7 @@ export function PaymentPanel({
                                         )}
                                     </div>
                                     <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
-                                        {isId ? "Proyek dimulai dengan 50% di muka, sisa setelah selesai." : "Start project with 50% upfront, remaining on completion."}
+                                        {t("dpDesc")}
                                     </p>
                                 </div>
                             </div>
@@ -232,7 +233,7 @@ export function PaymentPanel({
                 {user && (
                     <div className="space-y-2.5">
                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                            {ti("billTo") || "Tagih Ke"}
+                            {ti("billTo")}
                         </span>
                         <div className="bg-zinc-950/40 border border-white/5 rounded-2xl p-4.5 flex items-center justify-between">
                             <div className="space-y-0.5">
@@ -272,10 +273,10 @@ export function PaymentPanel({
                         </div>
                         <div className="flex flex-col gap-0.5 select-none">
                             <span className={`text-xs font-bold transition-colors ${shouldSubscribe ? 'text-brand-yellow' : 'text-zinc-200 group-hover:text-white'}`}>
-                                {isId ? "Berlangganan Newsletter & Info Menarik" : "Subscribe to Newsletter & Updates"}
+                                {t("subscribeNewsletter")}
                             </span>
                             <span className="text-[10px] text-zinc-500 font-medium">
-                                {isId ? "Dapatkan kupon rahasia dan pembaruan eksklusif langsung di email Anda" : "Get secret coupons and exclusive updates straight to your inbox"}
+                                {t("subscribeNewsletterDesc")}
                             </span>
                         </div>
                     </div>
@@ -285,7 +286,7 @@ export function PaymentPanel({
                 {!activeOrderId && serviceAddons && serviceAddons.length > 0 && (
                     <div className="space-y-2.5">
                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                            {isId ? "Konfigurasi Add-ons Opsional" : "Configure Optional Add-ons"}
+                            {t("configureAddons")}
                         </span>
                         <div className="grid grid-cols-1 gap-2.5">
                             {serviceAddons.map((addon, i) => {
@@ -337,7 +338,7 @@ export function PaymentPanel({
                 {activeOrderId && (
                     <div className="space-y-3 pt-2">
                         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block pl-1">
-                            {isId ? "Pilih Metode Pembayaran" : "Select Payment Method"}
+                            {t("selectPaymentMethod")}
                         </span>
                         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full">
                             <PaymentSelector

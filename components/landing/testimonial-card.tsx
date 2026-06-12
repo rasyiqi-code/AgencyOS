@@ -26,10 +26,9 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <div
+                <button
+                    type="button"
                     className="w-[350px] bg-zinc-900/50 border border-white/10 rounded-xl p-6 flex-shrink-0 backdrop-blur-sm hover:border-white/20 transition-colors cursor-pointer group/card text-left"
-                    role="button"
-                    tabIndex={0}
                 >
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -54,7 +53,7 @@ export function TestimonialCard({ review }: TestimonialCardProps) {
                             Read more
                         </span>
                     </div>
-                </div>
+                </button>
             </DialogTrigger>
 
             <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-[500px] p-0 overflow-hidden gap-0">

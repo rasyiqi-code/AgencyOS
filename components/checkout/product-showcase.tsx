@@ -13,6 +13,7 @@ interface ProductShowcaseProps {
 
 export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowcaseProps) {
     const t = useTranslations("Checkout");
+    const tCommon = useTranslations("Common");
     const locale = useLocale();
     const isId = locale === 'id';
     // Ambil list deliverables
@@ -38,7 +39,7 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
                         className="inline-flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-wider group cursor-pointer"
                     >
                         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                        {isId ? "Kembali" : "Back"}
+                        {tCommon("back")}
                     </Link>
                 </div>
 
@@ -87,7 +88,7 @@ export function ProductShowcase({ estimate, selectedAddons = [] }: ProductShowca
                         {selectedAddons && selectedAddons.length > 0 && (
                             <div className="space-y-3">
                                 <span className="text-[10px] font-bold text-brand-yellow uppercase tracking-widest block">
-                                    {isId ? "Add-on Terpilih" : "Selected Add-ons"}
+                                    {t("selectedAddons")}
                                 </span>
                                 <div className="grid grid-cols-1 gap-2.5">
                                     {selectedAddons.map((addon, i) => (
