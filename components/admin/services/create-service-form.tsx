@@ -221,13 +221,13 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                         </TabsList>
 
                         {/* ENGLISH CONTENT */}
-                        <TabsContent value="en" forceMount className="space-y-6 data-[state=inactive]:hidden">
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                        <TabsContent value="en" forceMount className="space-y-12 data-[state=inactive]:hidden">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <FileText className="w-4 h-4 text-blue-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("genInfoEn")}</h3>
                                 </div>
-                                <div className="p-6 space-y-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("serviceTitle")}</label>
                                         <Input
@@ -286,12 +286,12 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <ListChecks className="w-4 h-4 text-emerald-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("deliverablesEn")}</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("featureList")}</label>
                                         <DynamicListInput
@@ -303,12 +303,12 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden mt-6">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Plus className="w-4 h-4 text-purple-400" />
                                     <h3 className="text-sm font-semibold text-white">Add-ons (Optional)</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Available Add-ons</label>
                                         <DynamicAddonInput
@@ -322,13 +322,13 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                         </TabsContent>
 
                         {/* INDONESIAN CONTENT */}
-                        <TabsContent value="id" forceMount className="space-y-6 data-[state=inactive]:hidden">
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                        <TabsContent value="id" forceMount className="space-y-12 data-[state=inactive]:hidden">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Flag className="w-4 h-4 text-red-500" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("genInfoId")}</h3>
                                 </div>
-                                <div className="p-6 space-y-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("serviceTitle")}</label>
                                         <Input
@@ -352,12 +352,12 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <ListChecks className="w-4 h-4 text-emerald-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("deliverablesId")}</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("featureList")}</label>
                                         <DynamicListInput
@@ -369,12 +369,12 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden mt-6">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Plus className="w-4 h-4 text-purple-400" />
                                     <h3 className="text-sm font-semibold text-white">Add-ons (Opsional)</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Add-on Tersedia</label>
                                         <DynamicAddonInput

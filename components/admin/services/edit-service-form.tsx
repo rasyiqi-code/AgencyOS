@@ -250,13 +250,13 @@ export function EditServiceForm({
                         </TabsList>
 
                         {/* ENGLISH CONTENT */}
-                        <TabsContent value="en" forceMount className="space-y-6 data-[state=inactive]:hidden">
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                        <TabsContent value="en" forceMount className="space-y-12 data-[state=inactive]:hidden">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <FileText className="w-4 h-4 text-blue-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("genInfoEn")}</h3>
                                 </div>
-                                <div className="p-6 space-y-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("serviceTitle")}</label>
                                         <Input
@@ -294,12 +294,12 @@ export function EditServiceForm({
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <ListChecks className="w-4 h-4 text-emerald-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("deliverablesEn")}</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("featureList")}</label>
                                         <DynamicListInput
@@ -311,12 +311,12 @@ export function EditServiceForm({
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Plus className="w-4 h-4 text-blue-400" />
                                     <h3 className="text-sm font-semibold text-white">Add-ons (English)</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Configure optional upsells</label>
                                         <DynamicAddonInput
@@ -330,13 +330,13 @@ export function EditServiceForm({
                         </TabsContent>
 
                         {/* INDONESIAN CONTENT */}
-                        <TabsContent value="id" forceMount className="space-y-6 data-[state=inactive]:hidden">
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                        <TabsContent value="id" forceMount className="space-y-12 data-[state=inactive]:hidden">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Flag className="w-4 h-4 text-red-500" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("genInfoId")}</h3>
                                 </div>
-                                <div className="p-6 space-y-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("serviceTitle")}</label>
                                         <Input
@@ -360,12 +360,12 @@ export function EditServiceForm({
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <ListChecks className="w-4 h-4 text-emerald-400" />
                                     <h3 className="text-sm font-semibold text-white">{tAdmin("deliverablesId")}</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("featureList")}</label>
                                         <DynamicListInput
@@ -377,12 +377,12 @@ export function EditServiceForm({
                                 </div>
                             </div>
 
-                            <div className="rounded-xl border border-white/5 bg-zinc-900/40 overflow-hidden">
-                                <div className="px-6 py-4 border-b border-white/5 bg-zinc-900/20 flex items-center gap-2">
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                                     <Plus className="w-4 h-4 text-red-500" />
                                     <h3 className="text-sm font-semibold text-white">Add-ons (Bahasa Indonesia)</h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="space-y-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Konfigurasi add-on opsional</label>
                                         <DynamicAddonInput
