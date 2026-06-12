@@ -189,8 +189,18 @@ export function ManualPayment({ orderId, bankDetails, onClose, contactWA, contac
                 <Button
                     variant="ghost"
                     onClick={() => {
-                        // Mengalihkan ke halaman invoice publik agar bisa dilanjutkan nanti
-                        router.push(`/invoices/${orderId}`);
+                        // Menentukan target url berdasarkan apakah berada di checkout atau invoice, serta mempertahankan prefiks bahasa (locale)
+                        const isCheckout = typeof window !== 'undefined' && window.location.pathname.includes('/checkout/');
+                        let targetUrl = isCheckout ? `/invoices/${orderId}` : `/dashboard`;
+                        
+                        if (typeof window !== 'undefined') {
+                            const segments = window.location.pathname.split('/');
+                            if (segments[1] && segments[1].length === 2) {
+                                targetUrl = `/${segments[1]}${targetUrl}`;
+                            }
+                        }
+                        
+                        router.push(targetUrl);
                         onClose();
                     }}
                     className="text-zinc-400 hover:text-white hover:bg-zinc-800 h-9 text-xs"
