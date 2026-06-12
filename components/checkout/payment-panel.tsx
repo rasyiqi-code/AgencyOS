@@ -173,21 +173,21 @@ export function PaymentPanel({
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
-                                    <div className="flex justify-between items-start">
+                                    <div className="pr-6">
                                         <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("fullPayment") || "Pembayaran Penuh"}
                                         </span>
-                                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                                            paymentType === "FULL" 
-                                                ? 'border-brand-yellow bg-brand-yellow/10 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
-                                                : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
-                                        }`}>
-                                            {paymentType === "FULL" && (
-                                                <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
-                                                    <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
-                                                </div>
-                                            )}
-                                        </div>
+                                    </div>
+                                    <div className={`absolute top-0 right-0 w-5 h-5 rounded-tr-xl rounded-bl-lg border-b border-l flex items-center justify-center transition-all duration-300 ${
+                                        paymentType === "FULL" 
+                                            ? 'border-brand-yellow bg-brand-yellow/20 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
+                                            : 'border-zinc-800 bg-zinc-950/80 group-hover:border-zinc-700'
+                                    }`}>
+                                        {paymentType === "FULL" && (
+                                            <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
+                                                <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
+                                            </div>
+                                        )}
                                     </div>
                                     <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "FULL" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Ideal untuk pengerjaan cepat dan diskon langsung." : "Ideal for immediate setup and hassle-free payment."}
@@ -203,21 +203,21 @@ export function PaymentPanel({
                                             : 'bg-zinc-900/40 border-zinc-800 hover:bg-zinc-900/80 hover:border-zinc-700/80 shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
                                     }`}
                                 >
-                                    <div className="flex justify-between items-start">
+                                    <div className="pr-6">
                                         <span className={`text-xs font-bold transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow font-extrabold' : 'text-zinc-200 group-hover:text-white'}`}>
                                             {t("dp") || "Pembayaran DP (50%)"}
                                         </span>
-                                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${
-                                            paymentType === "DP" 
-                                                ? 'border-brand-yellow bg-brand-yellow/10 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
-                                                : 'border-zinc-700 bg-zinc-950/80 group-hover:border-zinc-500'
-                                        }`}>
-                                            {paymentType === "DP" && (
-                                                <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
-                                                    <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
-                                                </div>
-                                            )}
-                                        </div>
+                                    </div>
+                                    <div className={`absolute top-0 right-0 w-5 h-5 rounded-tr-xl rounded-bl-lg border-b border-l flex items-center justify-center transition-all duration-300 ${
+                                        paymentType === "DP" 
+                                            ? 'border-brand-yellow bg-brand-yellow/20 shadow-[0_0_10px_rgba(254,215,0,0.2)]' 
+                                            : 'border-zinc-800 bg-zinc-950/80 group-hover:border-zinc-700'
+                                    }`}>
+                                        {paymentType === "DP" && (
+                                            <div className="w-2 h-2 rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(254,215,0,1)] flex items-center justify-center">
+                                                <Check className="w-1.5 h-1.5 text-black stroke-[3.5]" />
+                                            </div>
+                                        )}
                                     </div>
                                     <p className={`text-[10px] font-medium leading-normal transition-colors duration-300 ${paymentType === "DP" ? 'text-brand-yellow/60' : 'text-zinc-500 group-hover:text-zinc-400'}`}>
                                         {isId ? "Proyek dimulai dengan 50% di muka, sisa setelah selesai." : "Start project with 50% upfront, remaining on completion."}
