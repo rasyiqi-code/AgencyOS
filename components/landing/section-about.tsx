@@ -55,10 +55,6 @@ export async function AboutSection() {
                             <p className="text-zinc-400 text-xs sm:text-sm md:text-base leading-relaxed antialiased font-light">
                                 {t("description", { brand: agencyName })}
                             </p>
-
-                            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 border-t border-white/10 uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-zinc-400">
-                                <span className="text-zinc-300">{t("name", { brand: agencyName })}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
