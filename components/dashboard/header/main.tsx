@@ -263,18 +263,17 @@ export function DashboardHeader({
                 {showBackButton && (
                     <Button
                         variant="ghost"
-                        size="sm"
-                        className="text-zinc-400 hover:text-white hover:bg-white/10 gap-2 shrink-0"
+                        className="h-9 w-9 sm:w-auto sm:px-3 text-zinc-400 hover:text-white hover:bg-white/10 gap-1.5 shrink-0 flex items-center justify-center rounded-xl"
                         onClick={() => router.back()}
                     >
-                        <ArrowLeft className="w-4 h-4" />
-                        <span className="hidden sm:inline">{t("back")}</span>
+                        <ArrowLeft className="w-4 h-4 shrink-0" />
+                        <span className="hidden sm:inline text-xs">{t("back")}</span>
                     </Button>
                 )}
 
                 {/* Dinamis Judul Halaman Admin */}
                 {displayTitle && (
-                    <div className="ml-2 font-bold text-white text-base sm:text-lg md:text-xl tracking-tight flex items-center gap-2 border-l border-white/10 pl-3 sm:pl-4 truncate animate-in fade-in slide-in-from-left-2 duration-300">
+                    <div className="ml-1 sm:ml-2 font-bold text-white text-base sm:text-lg md:text-xl tracking-tight flex items-center gap-2 border-l border-white/10 pl-3 sm:pl-4 truncate animate-in fade-in slide-in-from-left-2 duration-300">
                         {displayTitle}
                     </div>
                 )}
