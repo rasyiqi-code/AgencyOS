@@ -2,6 +2,7 @@ import { prisma } from '@/lib/config/db';
 import { unstable_cache } from 'next/cache';
 import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
+import { cleanBrokenJson, normalizeJsonOutput } from './json-helper';
 
 // Inisialisasi dasar genkit
 export const ai = genkit({
@@ -160,27 +161,17 @@ ai.generate = (async (options: GenerateOptionsInput) => {
         const data = await response.json() as NvidiaResponseData;
         const rawText = data.choices?.[0]?.message?.content || "";
         
-        // Clean markdown blocks if present
-        let cleanedText = rawText.trim();
-        if (cleanedText.startsWith("```json")) {
-            cleanedText = cleanedText.substring(7);
-        } else if (cleanedText.startsWith("```")) {
-            cleanedText = cleanedText.substring(3);
-        }
-        if (cleanedText.endsWith("```")) {
-            cleanedText = cleanedText.substring(0, cleanedText.length - 3);
-        }
-        cleanedText = cleanedText.trim();
-
         if (options.output?.schema) {
+            const cleanedText = cleanBrokenJson(rawText);
             try {
-                const parsed = JSON.parse(cleanedText) as unknown;
+                const parsed = JSON.parse(cleanedText);
+                const normalized = normalizeJsonOutput(parsed);
                 return {
-                    output: parsed,
-                    text: cleanedText
+                    output: normalized,
+                    text: JSON.stringify(normalized)
                 };
             } catch (parseError) {
-                console.error("Failed to parse Nvidia JSON response:", cleanedText, parseError);
+                console.error("Failed to parse Nvidia JSON response:", rawText, "Cleaned text was:", cleanedText, parseError);
                 throw new Error("Model returned invalid JSON structure matching the schema.");
             }
         }
