@@ -35,7 +35,6 @@ export interface ServiceData {
     features_id?: string[] | null;
     image: string | null;
     slug?: string | null;
-    category?: string | null;
     visibility?: string;
     addons?: ServiceAddon[] | null;
     addons_id?: ServiceAddon[] | null;
@@ -45,18 +44,14 @@ interface DraftServiceData extends Partial<ServiceData> {
     recommended_price?: number;
 }
 
-import { CreatableCategorySelect } from "./creatable-category-select";
-
 export function EditServiceForm({
     service,
     features,
-    features_id,
-    categories = []
+    features_id
 }: {
     service: ServiceData,
     features: string[],
-    features_id: string[],
-    categories?: string[]
+    features_id: string[]
 }) {
     const router = useRouter();
     const t = useTranslations("Service");
@@ -102,7 +97,6 @@ export function EditServiceForm({
                     description_id: currentForm?.get("description_id")?.toString() || service.description_id,
                     price: currentForm?.get("price") ? parseFloat(currentForm.get("price")!.toString()) : service.price,
                     currency: currentForm?.get("currency")?.toString() || service.currency,
-                    category: currentForm?.get("category")?.toString() || service.category,
                     visibility: currentForm?.get("visibility")?.toString() || service.visibility,
                     ...result.data
                 };
@@ -377,7 +371,6 @@ export function EditServiceForm({
                                 <h3 className="text-sm font-semibold text-white">{tAdmin("pricingConfig")}</h3>
                             </div>
                             <div className="p-6 space-y-6">
-                                <input type="hidden" name="category" value={generatedData?.category ?? service.category ?? "Uncategorized"} />
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("visibility")}</label>

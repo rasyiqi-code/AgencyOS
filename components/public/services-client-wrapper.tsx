@@ -19,7 +19,6 @@ interface Service {
     currency?: string | null;
     interval: string;
     features: unknown;
-    category?: string | null;
     features_id?: unknown;
     image: string | null;
 }
@@ -59,8 +58,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
         const descText = (isId ? service.description_id : null) || service.description || "";
         return (
             titleText.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            descText.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (service.category || "").toLowerCase().includes(searchQuery.toLowerCase())
+            descText.toLowerCase().includes(searchQuery.toLowerCase())
         );
     });
 

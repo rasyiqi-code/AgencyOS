@@ -199,7 +199,6 @@ model Service {
   features_id    Json?
   title_id       String?
   priceType      String     @default("FIXED")
-  category       String?    @default("Uncategorized")
   addons         Json?
   addons_id      Json?
   visibility     String     @default("PUBLIC")
@@ -207,7 +206,6 @@ model Service {
   projects       Project[]
 
   @@index([isActive, visibility])
-  @@index([category])
 }
 
 model DailyLog {

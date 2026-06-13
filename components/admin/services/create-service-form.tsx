@@ -13,8 +13,6 @@ import { DynamicAddonInput } from "@/components/ui/dynamic-addon-input";
 import { Button } from "@/components/ui/button";
 import { FileText, ListChecks, CreditCard, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/shared/utils";
-
-import { CreatableCategorySelect } from "./creatable-category-select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag, Sparkles, Loader2, ArrowLeft, Package, Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,7 +68,6 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                     description_id: currentForm?.get("description_id")?.toString() || "",
                     price: currentForm?.get("price") ? parseFloat(currentForm.get("price")!.toString()) : undefined,
                     currency: currentForm?.get("currency")?.toString() || "USD",
-                    category: currentForm?.get("category")?.toString() || "Uncategorized",
                     visibility: currentForm?.get("visibility")?.toString() || "PUBLIC",
                     ...result.data
                 };
@@ -404,7 +401,6 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                 <h3 className="text-sm font-semibold text-white">{tAdmin("pricingConfig")}</h3>
                             </div>
                             <div className="p-6 space-y-6">
-                                <input type="hidden" name="category" value={generatedData?.category ?? "Uncategorized"} />
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("visibility")}</label>

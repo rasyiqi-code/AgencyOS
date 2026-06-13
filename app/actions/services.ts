@@ -85,7 +85,6 @@ export async function createService(formData: FormData) {
             priceType: formData.get("priceType")?.toString() || "FIXED",
             currency,
             interval,
-            category: formData.get("category")?.toString() || "Uncategorized",
             visibility: formData.get("visibility")?.toString() || "PUBLIC",
             features,
             features_id,
@@ -133,7 +132,6 @@ export async function updateService(serviceId: string, formData: FormData) {
     const imageFile = formData.get("image") as File;
     const imageUrlInput = formData.get("image_url")?.toString();
     const slugInput = formData.get("slug")?.toString();
-    const category = formData.get("category")?.toString() || "Uncategorized";
 
     if (!title || !description || !title_id || !description_id || !priceRaw) {
         return { error: "Missing required fields" };
@@ -158,7 +156,6 @@ export async function updateService(serviceId: string, formData: FormData) {
         priceType,
         currency,
         interval,
-        category,
         visibility: formData.get("visibility")?.toString() || "PUBLIC",
         features,
         features_id,
