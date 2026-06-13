@@ -117,7 +117,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
 
             <div className="container mx-auto px-4 pt-6 pb-16 sm:py-24 relative z-10">
                 <div className="mb-12 text-center max-w-3xl mx-auto flex flex-col items-center justify-center mt-8">
-                    <div className="inline-flex items-center justify-center p-3 bg-brand-yellow/10 rounded-full mb-6 ring-1 ring-brand-yellow/20 shadow-[0_0_40px_rgba(234,179,8,0.2)]">
+                    <div className="inline-flex items-center justify-center p-3 bg-brand-yellow/10 rounded-2xl mb-6 ring-1 ring-brand-yellow/20 shadow-[0_0_40px_rgba(234,179,8,0.2)]">
                         <Sparkles className="w-6 h-6 text-brand-yellow" />
                     </div>
                     <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
@@ -131,8 +131,8 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                 {/* Bilah Pencarian Jasa Premium */}
                 <div className="mb-16 max-w-2xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700 px-4 sm:px-0">
                     <div className="relative group">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/40 via-brand-yellow/10 to-brand-yellow/30 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-500 group-focus-within:opacity-100" />
-                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl rounded-full border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-white/20 group-focus-within:border-brand-yellow/50 group-focus-within:ring-2 group-focus-within:ring-brand-yellow/20">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/40 via-brand-yellow/10 to-brand-yellow/30 rounded-2xl blur opacity-40 group-hover:opacity-75 transition duration-500 group-focus-within:opacity-100" />
+                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-white/20 group-focus-within:border-brand-yellow/50 group-focus-within:ring-2 group-focus-within:ring-brand-yellow/20">
                             <div className="flex items-center justify-center pl-6">
                                 <Search className="w-5 h-5 text-zinc-400 group-focus-within:text-brand-yellow transition-colors duration-300" />
                             </div>
@@ -146,7 +146,7 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                             {searchQuery ? (
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="absolute right-4 text-xs font-bold text-zinc-400 hover:text-white bg-white/10 hover:bg-white/20 py-2 px-4 rounded-full transition-all"
+                                    className="absolute right-4 text-xs font-bold text-zinc-400 hover:text-white bg-white/10 hover:bg-white/20 py-2 px-4 rounded-lg transition-all"
                                 >
                                     {isId ? "Hapus" : "Clear"}
                                 </button>
