@@ -26,7 +26,7 @@ export async function createService(formData: FormData) {
     const description = formData.get("description")?.toString();
     const description_id = formData.get("description_id")?.toString();
     const priceRaw = formData.get("price")?.toString();
-    const originalPriceRaw = formData.get("originalPrice")?.toString();
+    const discountRaw = formData.get("discount")?.toString();
     const currency = formData.get("currency")?.toString() || "USD";
     const interval = formData.get("interval")?.toString() || "one_time";
     const featuresRaw = formData.get("features")?.toString() || "";
@@ -40,6 +40,9 @@ export async function createService(formData: FormData) {
 
     const price = parseFloat(priceRaw);
     if (isNaN(price)) return { error: "Invalid price format" };
+
+    const discount = discountRaw ? parseInt(discountRaw, 10) : 0;
+    const finalPrice = discount > 0 ? (price * (1 - discount / 100)) : price;
 
     const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
     const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
@@ -61,7 +64,7 @@ export async function createService(formData: FormData) {
         const creemProduct = await sdk.products.create({
             name: title,
             description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
-            price: Math.round(price * 100),
+            price: Math.round(finalPrice * 100),
             currency: currency,
             billingType: interval === 'one_time' ? 'onetime' : 'recurring',
             billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
@@ -81,7 +84,7 @@ export async function createService(formData: FormData) {
             description,
             description_id,
             price,
-            originalPrice: originalPriceRaw ? parseFloat(originalPriceRaw) : null,
+            discount: discountRaw ? parseInt(discountRaw, 10) : 0,
             priceType: formData.get("priceType")?.toString() || "FIXED",
             currency,
             interval,
@@ -123,7 +126,7 @@ export async function updateService(serviceId: string, formData: FormData) {
     const description = formData.get("description")?.toString();
     const description_id = formData.get("description_id")?.toString();
     const priceRaw = formData.get("price")?.toString();
-    const originalPriceRaw = formData.get("originalPrice")?.toString();
+    const discountRaw = formData.get("discount")?.toString();
     const priceType = formData.get("priceType")?.toString() || "FIXED";
     const currency = formData.get("currency")?.toString() || "USD";
     const interval = formData.get("interval")?.toString() || "one_time";
@@ -140,6 +143,9 @@ export async function updateService(serviceId: string, formData: FormData) {
     const price = parseFloat(priceRaw);
     if (isNaN(price)) return { error: "Invalid price format" };
 
+    const discount = discountRaw ? parseInt(discountRaw, 10) : 0;
+    const finalPrice = discount > 0 ? (price * (1 - discount / 100)) : price;
+
     const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
     const features_id = featuresIdRaw.split('\n').map(f => f.trim()).filter(f => f !== '');
 
@@ -152,7 +158,7 @@ export async function updateService(serviceId: string, formData: FormData) {
         description,
         description_id,
         price,
-        originalPrice: originalPriceRaw ? parseFloat(originalPriceRaw) : null,
+        discount: discountRaw ? parseInt(discountRaw, 10) : 0,
         priceType,
         currency,
         interval,
@@ -198,7 +204,7 @@ export async function updateService(serviceId: string, formData: FormData) {
                     productId: existingService.creemProductId,
                     name: title,
                     description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
-                    price: Math.round(price * 100),
+                    price: Math.round(finalPrice * 100),
                     billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
                     imageUrl: (data.image as string) || undefined
                 });
@@ -208,7 +214,7 @@ export async function updateService(serviceId: string, formData: FormData) {
                     const newProduct = await sdk.products.create({
                         name: title,
                         description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
-                        price: Math.round(price * 100),
+                        price: Math.round(finalPrice * 100),
                         currency: currency,
                         billingType: interval === 'one_time' ? 'onetime' : 'recurring',
                         billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",
@@ -225,7 +231,7 @@ export async function updateService(serviceId: string, formData: FormData) {
             const creemProduct = await sdk.products.create({
                 name: title,
                 description: description.replace(/<[^>]*>?/gm, '').slice(0, 255),
-                price: Math.round(price * 100),
+                price: Math.round(finalPrice * 100),
                 currency: currency,
                 billingType: interval === 'one_time' ? 'onetime' : 'recurring',
                 billingPeriod: (interval === 'one_time' ? 'once' : (billingPeriodMap[interval] || 'every-month')) as "once" | "every-month" | "every-year",

@@ -72,6 +72,16 @@ export function normalizeJsonOutput(parsed: any): any {
             if (typeof addon !== 'object' || addon === null) return addon;
             const newAddon = { ...addon };
             
+            // Petakan addon ke name jika model menggunakan addon / addon_id
+            if (newAddon.name === undefined && newAddon.addon !== undefined) {
+                newAddon.name = String(newAddon.addon);
+            }
+            if (newAddon.name_id === undefined && newAddon.addon_id !== undefined) {
+                newAddon.name_id = String(newAddon.addon_id);
+            }
+            delete newAddon.addon;
+            delete newAddon.addon_id;
+
             // Petakan recommended_price ke price jika ada recommended_price tetapi price tidak didefinisikan
             if (newAddon.price === undefined && newAddon.recommended_price !== undefined) {
                 newAddon.price = Number(newAddon.recommended_price);
@@ -108,13 +118,30 @@ export function normalizeJsonOutput(parsed: any): any {
         });
     }
     
-    // 3. Normalisasi field harga utama
+    // 3. Normalisasi field harga utama dan diskon
+    // Jika AI menghasilkan skema lama (original_price & recommended_price):
+    // recommended_price adalah harga setelah diskon, original_price adalah harga asli.
+    // Di skema baru: recommended_price adalah harga asli, dan discount adalah persentase diskon.
+    if (data.original_price !== undefined && data.original_price !== null && data.recommended_price !== undefined) {
+        const orig = Number(data.original_price);
+        const rec = Number(data.recommended_price);
+        if (orig > rec && rec > 0) {
+            data.discount = Math.round((1 - rec / orig) * 100);
+            data.recommended_price = orig;
+        }
+    }
+    
     if (data.recommended_price !== undefined) {
         data.recommended_price = Number(data.recommended_price);
     }
-    if (data.original_price !== undefined && data.original_price !== null) {
-        data.original_price = Number(data.original_price);
+    
+    if (data.discount !== undefined && data.discount !== null) {
+        data.discount = Math.round(Number(data.discount));
+    } else {
+        data.discount = 0;
     }
+    
+    delete data.original_price;
     
     // 4. Normalisasi enum interval utama
     if (data.interval) {

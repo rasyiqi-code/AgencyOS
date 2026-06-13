@@ -5,7 +5,7 @@ export interface Service {
     description: string;
     description_id?: string | null;
     price: number;
-    originalPrice?: number | null;
+    discount?: number | null;
     priceType?: string;
     currency?: string | null;
     interval: string;

@@ -186,7 +186,7 @@ model Service {
   slug           String?    @unique
   description    String
   price          Float
-  originalPrice  Float?
+  discount       Int?       @default(0)
   interval       String     @default("one_time")
   features       Json
   image          String?

@@ -143,11 +143,13 @@ export function ServiceCard({ service }: ServiceCardProps) {
                                 )}
                             </div>
                             <div className="flex flex-col gap-0.5 select-none">
-                                <span className="text-xs text-zinc-500 line-through tracking-tight font-medium">
-                                    <PriceDisplay amount={service.originalPrice || (service.price * 2)} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
-                                </span>
+                                {service.discount && service.discount > 0 ? (
+                                    <span className="text-xs text-zinc-500 line-through tracking-tight font-medium">
+                                        <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    </span>
+                                ) : null}
                                 <div className="text-xl md:text-2xl font-black text-white tracking-tighter break-words line-clamp-1 group-hover:line-clamp-none transition-all">
-                                    <PriceDisplay amount={service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    <PriceDisplay amount={service.discount ? (service.price * (1 - service.discount / 100)) : service.price} baseCurrency={((service as unknown as Record<string, unknown>).currency as "USD" | "IDR") || 'USD'} compact={true} />
                                 </div>
                             </div>
                             <PurchaseButton

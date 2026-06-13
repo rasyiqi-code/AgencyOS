@@ -456,11 +456,13 @@ export function CreateServiceForm() {
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("originalPrice")}</label>
                                     <Input
-                                        name="originalPrice"
+                                        name="discount"
                                         type="number"
-                                        step="0.01"
-                                        defaultValue={generatedData?.original_price ?? undefined}
-                                        placeholder="0.00"
+                                        min="0"
+                                        max="99"
+                                        step="1"
+                                        defaultValue={generatedData?.discount ?? 0}
+                                        placeholder="0"
                                         className="w-full bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 text-sm font-semibold"
                                     />
                                     <span className="text-[10px] text-zinc-500 block leading-normal">

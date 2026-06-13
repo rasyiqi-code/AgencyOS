@@ -208,11 +208,13 @@ function BentoServiceCard({ service, title, displayFeatures, intervalLabel, vari
                         {/* Metrics Block */}
                         <div className="p-3 md:p-4 rounded-2xl bg-brand-yellow/5 border border-brand-yellow/10 flex flex-col justify-between">
                             <div className="flex flex-col gap-0.5 select-none">
-                                <span className="text-xs text-zinc-500 line-through tracking-tight font-medium">
-                                    <PriceDisplay amount={service.originalPrice || (service.price * 2)} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
-                                </span>
+                                {service.discount && service.discount > 0 ? (
+                                    <span className="text-xs text-zinc-500 line-through tracking-tight font-medium">
+                                        <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    </span>
+                                ) : null}
                                 <div className="text-xl md:text-2xl font-black text-white tracking-tighter">
-                                    <PriceDisplay amount={service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
+                                    <PriceDisplay amount={service.discount ? (service.price * (1 - service.discount / 100)) : service.price} baseCurrency={(service.currency as "USD" | "IDR") || 'USD'} compact={true} />
                                 </div>
                             </div>
                             <PurchaseButton
