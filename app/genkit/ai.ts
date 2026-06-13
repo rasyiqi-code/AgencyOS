@@ -70,7 +70,8 @@ export const getActiveAIConfig = unstable_cache(
 
         return {
             apiKey: key.key,
-            model: key.modelId || (key.provider === 'nvidia' ? 'google/diffusiongemma-26b-a4b-it' : 'gemini-1.5-flash'),
+            // Default NVIDIA model harus LLM (bukan diffusion model) agar bisa generate JSON
+            model: key.modelId || (key.provider === 'nvidia' ? 'meta/llama-3.3-70b-instruct' : 'gemini-1.5-flash'),
             provider: key.provider
         };
     },
