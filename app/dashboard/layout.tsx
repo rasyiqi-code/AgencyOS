@@ -25,9 +25,9 @@ export default async function DashboardLayout({
     // ⚡ Bolt Optimization: Use getSystemSettings (which utilizes unstable_cache) instead of direct prisma query.
     // Impact: Avoids redundant database queries for static system settings on every page load/navigation within the dashboard.
     // Measurement: Next.js Cache Hit logs will show reduced DB query frequency for 'system-settings' tag.
-    const settings = await getSystemSettings(["AGENCY_NAME", "LOGO_URL"]);
+    const settings = await getSystemSettings(["AGENCY_NAME", "AGENCY_LOGO"]);
     const agencyName = settings.find(s => s.key === "AGENCY_NAME")?.value || "Crediblemark";
-    const logoUrl = settings.find(s => s.key === "LOGO_URL")?.value;
+    const logoUrl = settings.find(s => s.key === "AGENCY_LOGO")?.value;
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-black">
