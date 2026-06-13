@@ -43,7 +43,7 @@ export async function AboutSection() {
                     {/* Text Block */}
                     <div className="flex-1 space-y-6 sm:space-y-8 relative z-10 pt-4 lg:pt-0">
                         <div className="space-y-3 sm:space-y-4">
-                            <p className="text-brand-yellow text-[10px] sm:text-xs font-bold tracking-[.4em] uppercase opacity-90">
+                            <p className="text-brand-yellow text-xs sm:text-sm font-bold tracking-[.4em] uppercase opacity-90">
                                 {t("role")}
                             </p>
                             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white italic leading-[1.15] tracking-tight">
@@ -52,7 +52,7 @@ export async function AboutSection() {
                         </div>
 
                         <div className="max-w-2xl mx-auto lg:mx-0 space-y-5 sm:space-y-6">
-                            <p className="text-zinc-400 text-xs sm:text-sm md:text-base leading-relaxed antialiased font-light">
+                            <p className="text-zinc-400 text-sm sm:text-base md:text-lg leading-relaxed antialiased font-light">
                                 {t("description", { brand: agencyName })}
                             </p>
                         </div>
