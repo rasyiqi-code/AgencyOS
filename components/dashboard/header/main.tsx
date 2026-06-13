@@ -23,7 +23,8 @@ import {
     LifeBuoy,
     Receipt,
     Search,
-    MessageSquarePlus
+    MessageSquarePlus,
+    Plus
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -317,8 +318,9 @@ export function DashboardHeader({
                 {/* Tombol Misi Baru untuk Klien di Header */}
                 {isMissionsPage && (
                     <Link href="/price-calculator" className="mr-1 sm:mr-2">
-                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center gap-1">
-                            <span>{isId ? '+ Misi Baru' : '+ New Mission'}</span>
+                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center justify-center">
+                            <Plus className="w-4 h-4 sm:mr-1" />
+                            <span className="hidden sm:inline">{isId ? 'Misi Baru' : 'New Mission'}</span>
                         </Button>
                     </Link>
                 )}
@@ -326,9 +328,9 @@ export function DashboardHeader({
                 {/* Tombol Buat Tiket Baru untuk Klien di Header */}
                 {isSupportPage && (
                     <Link href="/dashboard/support/new" className="mr-1 sm:mr-2">
-                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center gap-1.5">
-                            <MessageSquarePlus className="w-3.5 h-3.5" />
-                            <span>{isId ? 'Buat Tiket' : 'Create Ticket'}</span>
+                        <Button size="sm" className="bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold h-8 text-xs px-2.5 sm:px-3 flex items-center justify-center">
+                            <MessageSquarePlus className="w-3.5 h-3.5 sm:mr-1.5" />
+                            <span className="hidden sm:inline">{isId ? 'Buat Tiket' : 'Create Ticket'}</span>
                         </Button>
                     </Link>
                 )}

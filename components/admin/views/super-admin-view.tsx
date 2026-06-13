@@ -35,9 +35,9 @@ export async function SuperAdminDashboardView() {
             <AdminHeaderSetter
                 title="Command Center"
                 actions={
-                    <Button className="bg-white text-black hover:bg-zinc-200 w-full sm:w-auto">
-                        <Zap className="w-4 h-4 mr-2" />
-                        Quick Action
+                    <Button className="bg-white text-black hover:bg-zinc-200 w-auto px-2.5 sm:px-4">
+                        <Zap className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Quick Action</span>
                     </Button>
                 }
             />

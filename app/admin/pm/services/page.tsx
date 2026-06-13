@@ -42,9 +42,11 @@ export default async function ServicesPage() {
                 }
                 actions={
                     <Link href="/admin/pm/services/new" className="shrink-0">
-                        <Button className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 h-9 text-xs font-bold">
-                            <Plus className="w-4 h-4 mr-1.5" />
-                            {isId ? 'Buat Layanan' : 'Create Service'}
+                        <Button className="w-auto bg-white text-black hover:bg-zinc-200 h-9 text-xs font-bold px-2.5 sm:px-3 flex items-center justify-center">
+                            <Plus className="w-4 h-4 sm:mr-1.5" />
+                            <span className="hidden sm:inline">
+                                {isId ? 'Buat Layanan' : 'Create Service'}
+                            </span>
                         </Button>
                     </Link>
                 }

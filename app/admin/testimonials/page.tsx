@@ -107,13 +107,13 @@ export default function AdminTestimonialsPage() {
                 }
                 actions={
                     <>
-                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest">
-                            <Filter className="w-3.5 h-3.5 mr-2" />
-                            Filter
+                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest px-2.5 sm:px-4">
+                            <Filter className="w-3.5 h-3.5 sm:mr-2" />
+                            <span className="hidden sm:inline">Filter</span>
                         </Button>
-                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest">
-                            <Search className="w-3.5 h-3.5 mr-2" />
-                            Search
+                        <Button variant="outline" size="sm" className="bg-transparent border-white/5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl h-9 text-[10px] font-bold uppercase tracking-widest px-2.5 sm:px-4">
+                            <Search className="w-3.5 h-3.5 sm:mr-2" />
+                            <span className="hidden sm:inline">Search</span>
                         </Button>
                     </>
                 }

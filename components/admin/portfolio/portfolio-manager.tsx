@@ -168,9 +168,10 @@ export function PortfolioManager({ initialData }: { initialData: PortfolioItem[]
                 actions={
                     <Button
                         onClick={() => setIsModalOpen(true)}
-                        className="font-bold transition-all duration-300 shadow-xl w-full md:w-auto bg-gradient-to-br from-brand-yellow to-yellow-600 text-black hover:scale-105 active:scale-95 shadow-brand-yellow/20 text-xs sm:text-sm"
+                        className="font-bold transition-all duration-300 shadow-xl w-auto bg-gradient-to-br from-brand-yellow to-yellow-600 text-black hover:scale-105 active:scale-95 shadow-brand-yellow/20 text-xs sm:text-sm px-2.5 sm:px-4"
                     >
-                        <Plus className="w-4 h-4 mr-2" /> Add New Project
+                        <Plus className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Add New Project</span>
                     </Button>
                 }
             />
