@@ -32,9 +32,9 @@ export function SocialProofContent() {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={containerVariants}
-            className="container mx-auto px-4 overflow-hidden py-8"
+            className="container mx-auto px-4 overflow-hidden py-2"
         >
-            <motion.div variants={itemVariants} className="text-center space-y-4">
+            <motion.div variants={itemVariants} className="text-center">
                 <div className="relative overflow-hidden w-full [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
                     <motion.div
                         className="flex gap-12 md:gap-16 w-max pr-12 md:pr-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
