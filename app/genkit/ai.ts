@@ -4,7 +4,7 @@ import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 
 // Inisialisasi dasar genkit
-const baseAi = genkit({
+export const ai = genkit({
     plugins: [googleAI({ apiKey: false })],
 });
 
@@ -148,94 +148,95 @@ async function invokeNvidiaNim(options: GenerateOptionsInput, stream: boolean) {
     return response;
 }
 
-// Wrapper object for genkit to support dual-provider dynamically
-export const ai = {
-    ...baseAi,
-    
-    async generate(options: GenerateOptionsInput): Promise<unknown> {
-        const config = await getRuntimeProvider();
-        if (config?.provider === 'nvidia') {
-            const response = await invokeNvidiaNim(options, false);
-            const data = await response.json() as NvidiaResponseData;
-            const rawText = data.choices?.[0]?.message?.content || "";
-            
-            // Clean markdown blocks if present
-            let cleanedText = rawText.trim();
-            if (cleanedText.startsWith("```json")) {
-                cleanedText = cleanedText.substring(7);
-            } else if (cleanedText.startsWith("```")) {
-                cleanedText = cleanedText.substring(3);
-            }
-            if (cleanedText.endsWith("```")) {
-                cleanedText = cleanedText.substring(0, cleanedText.length - 3);
-            }
-            cleanedText = cleanedText.trim();
+// Simpan method asli dari instance ai
+const originalGenerate = ai.generate.bind(ai);
+const originalGenerateStream = ai.generateStream.bind(ai);
 
-            if (options.output?.schema) {
-                try {
-                    const parsed = JSON.parse(cleanedText) as unknown;
-                    return {
-                        output: parsed,
-                        text: cleanedText
-                    };
-                } catch (parseError) {
-                    console.error("Failed to parse Nvidia JSON response:", cleanedText, parseError);
-                    throw new Error("Model returned invalid JSON structure matching the schema.");
-                }
-            }
-
-            return {
-                text: rawText,
-                output: rawText
-            };
-        }
+// Override generate method
+ai.generate = (async (options: GenerateOptionsInput) => {
+    const config = await getRuntimeProvider();
+    if (config?.provider === 'nvidia') {
+        const response = await invokeNvidiaNim(options, false);
+        const data = await response.json() as NvidiaResponseData;
+        const rawText = data.choices?.[0]?.message?.content || "";
         
-        return baseAi.generate(options as Parameters<typeof baseAi.generate>[0]);
-    },
+        // Clean markdown blocks if present
+        let cleanedText = rawText.trim();
+        if (cleanedText.startsWith("```json")) {
+            cleanedText = cleanedText.substring(7);
+        } else if (cleanedText.startsWith("```")) {
+            cleanedText = cleanedText.substring(3);
+        }
+        if (cleanedText.endsWith("```")) {
+            cleanedText = cleanedText.substring(0, cleanedText.length - 3);
+        }
+        cleanedText = cleanedText.trim();
 
-    async generateStream(options: GenerateOptionsInput): Promise<unknown> {
-        const config = await getRuntimeProvider();
-        if (config?.provider === 'nvidia') {
-            const response = await invokeNvidiaNim(options, true);
-            
-            // Create a custom AsyncIterable stream compatible with Genkit structure
-            const reader = response.body?.getReader();
-            const decoder = new TextDecoder();
-            
-            const streamGenerator = async function* () {
-                let buffer = "";
-                while (true) {
-                    const { done, value } = await reader!.read();
-                    if (done) break;
-                    
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split("\n");
-                    buffer = lines.pop() || "";
-                    
-                    for (const line of lines) {
-                        const cleanLine = line.trim();
-                        if (cleanLine.startsWith("data: ")) {
-                            const dataStr = cleanLine.substring(6);
-                            if (dataStr === "[DONE]") continue;
-                            try {
-                                const parsed = JSON.parse(dataStr) as { choices?: Array<{ delta?: { content?: string } }> };
-                                const chunkText = parsed.choices?.[0]?.delta?.content || "";
-                                if (chunkText) {
-                                    yield { text: chunkText };
-                                }
-                            } catch {
-                                // Skip parsing error on incomplete stream lines
+        if (options.output?.schema) {
+            try {
+                const parsed = JSON.parse(cleanedText) as unknown;
+                return {
+                    output: parsed,
+                    text: cleanedText
+                };
+            } catch (parseError) {
+                console.error("Failed to parse Nvidia JSON response:", cleanedText, parseError);
+                throw new Error("Model returned invalid JSON structure matching the schema.");
+            }
+        }
+
+        return {
+            text: rawText,
+            output: rawText
+        };
+    }
+    
+    return originalGenerate(options as Parameters<typeof originalGenerate>[0]);
+}) as unknown as typeof originalGenerate;
+
+// Override generateStream method
+ai.generateStream = (async (options: GenerateOptionsInput) => {
+    const config = await getRuntimeProvider();
+    if (config?.provider === 'nvidia') {
+        const response = await invokeNvidiaNim(options, true);
+        
+        // Create a custom AsyncIterable stream compatible with Genkit structure
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        
+        const streamGenerator = async function* () {
+            let buffer = "";
+            while (true) {
+                const { done, value } = await reader!.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split("\n");
+                buffer = lines.pop() || "";
+                
+                for (const line of lines) {
+                    const cleanLine = line.trim();
+                    if (cleanLine.startsWith("data: ")) {
+                        const dataStr = cleanLine.substring(6);
+                        if (dataStr === "[DONE]") continue;
+                        try {
+                            const parsed = JSON.parse(dataStr) as { choices?: Array<{ delta?: { content?: string } }> };
+                            const chunkText = parsed.choices?.[0]?.delta?.content || "";
+                            if (chunkText) {
+                                yield { text: chunkText };
                             }
+                        } catch {
+                            // Skip parsing error on incomplete stream lines
                         }
                     }
                 }
-            };
+            }
+        };
 
-            return {
-                stream: streamGenerator()
-            };
-        }
-        
-        return baseAi.generateStream(options as Parameters<typeof baseAi.generateStream>[0]);
+        return {
+            stream: streamGenerator()
+        };
     }
-} as unknown as typeof baseAi;
+    
+    return originalGenerateStream(options as Parameters<typeof originalGenerateStream>[0]);
+}) as unknown as typeof originalGenerateStream;
