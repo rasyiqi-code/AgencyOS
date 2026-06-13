@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Check } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/sheet";
 import { DashboardSidebarNavigation, DashboardSidebarFooter } from "../sidebar/navigation";
 import Link from "next/link";
-import Image from "next/image";
 
 import { UserButton } from "@hexclave/next";
 import { useSafeUser } from "@/hooks/use-safe-user";
@@ -23,7 +22,7 @@ interface MobileNavProps {
     footer?: React.ReactNode;
 }
 
-export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavProps) {
+export function MobileNav({ agencyName, children, footer }: MobileNavProps) {
     const { mockUserFallback } = useSafeUser();
 
     return (
@@ -38,20 +37,6 @@ export function MobileNav({ agencyName, logoUrl, children, footer }: MobileNavPr
                 <SheetHeader className="p-6 border-b border-white/5 flex flex-row items-center justify-between gap-2 space-y-0">
                     <SheetTitle>
                         <Link href="/" className="flex items-center gap-2 font-semibold">
-                            {logoUrl ? (
-                                <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                                    <Image
-                                        src={logoUrl}
-                                        alt={agencyName}
-                                        fill
-                                        className="object-contain"
-                                    />
-                                </div>
-                            ) : (
-                                <div className="h-8 w-8 rounded-full bg-brand-grey flex items-center justify-center shrink-0">
-                                    <Check className="h-5 w-5 text-brand-yellow stroke-[3]" />
-                                </div>
-                            )}
                             <span className="text-lg tracking-tight text-white truncate max-w-[140px]">
                                 {agencyName}
                             </span>
