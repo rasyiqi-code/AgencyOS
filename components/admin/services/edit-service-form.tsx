@@ -17,9 +17,8 @@ import { DynamicAddonInput, type ServiceAddon } from "@/components/ui/dynamic-ad
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Flag } from "lucide-react";
 // import { generateServiceAction } from '@/app/actions/genkit';
-import { Textarea } from "@/components/ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Link from "next/link";
+import { MagicDraftPopover } from "./magic-draft-popover";
 
 export interface ServiceData {
     id: string;
@@ -177,53 +176,22 @@ export function EditServiceForm({
                         </h1>
 
                         {/* AI Assistant Popover */}
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 gap-2 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95"
-                                >
-                                    <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                                    <span className="text-xs font-semibold">AI Assistant</span>
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" align="start">
-                                <div className="p-4 border-b border-white/5 bg-indigo-500/5">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Sparkles className="w-4 h-4 text-indigo-400" />
-                                        <h4 className="font-semibold text-white text-sm">Magic Draft</h4>
-                                    </div>
-                                    <p className="text-[10px] text-indigo-300/80">Describe update ideas and let AI draft the details.</p>
-                                </div>
-                                <div className="p-4 space-y-4">
-                                    <Textarea
-                                        value={prompt}
-                                        onChange={(e) => setPrompt(e.target.value)}
-                                        placeholder="e.g. Add a premium tier with 24/7 support and custom icons..."
-                                        className="bg-black/40 border-indigo-500/20 text-zinc-200 focus:ring-indigo-500/40 min-h-[100px] text-xs resize-none"
-                                    />
-                                    <Button
-                                        type="button"
-                                        onClick={handleGenerate}
-                                        disabled={isGenerating || !prompt.trim()}
-                                        className="w-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 h-9 transition-all active:scale-95"
-                                    >
-                                        {isGenerating ? (
-                                            <>
-                                                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                                Drafting...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Sparkles className="w-4 h-4 mr-2" />
-                                                Update Draft with AI
-                                            </>
-                                        )}
-                                    </Button>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
+                        <MagicDraftPopover
+                            prompt={prompt}
+                            setPrompt={setPrompt}
+                            isGenerating={isGenerating}
+                            onGenerate={handleGenerate}
+                            align="start"
+                        >
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 gap-2 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95"
+                            >
+                                <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+                                <span className="text-xs font-semibold">AI Assistant</span>
+                            </Button>
+                        </MagicDraftPopover>
                     </div>
                     <p className="text-zinc-400 mt-1 text-sm max-w-2xl">
                         Update service details, pricing, and features.
@@ -511,53 +479,22 @@ export function EditServiceForm({
                                 >
                                     {isSubmitting ? tAdmin("saving") : tAdmin("saveChanges")}
                                 </Button>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-9 w-9 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95 shrink-0"
-                                        >
-                                            <Sparkles className="w-4 h-4 animate-pulse" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-80 p-0 border-indigo-500/20 bg-zinc-900 shadow-2xl shadow-indigo-500/20" align="end">
-                                        <div className="p-4 border-b border-white/5 bg-indigo-500/5">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <Sparkles className="w-4 h-4 text-indigo-400" />
-                                                <h4 className="font-semibold text-white text-sm">Magic Draft</h4>
-                                            </div>
-                                            <p className="text-[10px] text-indigo-300/80">Describe update ideas and let AI draft the details.</p>
-                                        </div>
-                                        <div className="p-4 space-y-4">
-                                            <Textarea
-                                                value={prompt}
-                                                onChange={(e) => setPrompt(e.target.value)}
-                                                placeholder="e.g. Add a premium tier with 24/7 support and custom icons..."
-                                                className="bg-black/40 border-indigo-500/20 text-zinc-200 focus:ring-indigo-500/40 min-h-[100px] text-xs resize-none"
-                                            />
-                                            <Button
-                                                type="button"
-                                                onClick={handleGenerate}
-                                                disabled={isGenerating || !prompt.trim()}
-                                                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 h-9 transition-all active:scale-95"
-                                            >
-                                                {isGenerating ? (
-                                                    <>
-                                                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                                        Drafting...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Sparkles className="w-4 h-4 mr-2" />
-                                                        Update Draft with AI
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
+                                <MagicDraftPopover
+                                    prompt={prompt}
+                                    setPrompt={setPrompt}
+                                    isGenerating={isGenerating}
+                                    onGenerate={handleGenerate}
+                                    align="end"
+                                >
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-9 w-9 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95 shrink-0"
+                                    >
+                                        <Sparkles className="w-4 h-4 animate-pulse" />
+                                    </Button>
+                                </MagicDraftPopover>
                             </div>
                         </div>
                     </div>
