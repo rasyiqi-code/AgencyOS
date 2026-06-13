@@ -61,7 +61,7 @@ export default async function AdminTeamPage() {
             <AdminHeaderSetter
                 title="Team & Roles"
                 actions={
-                    <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-xl px-4 py-1.5 text-right shrink-0">
+                    <div className="hidden sm:block bg-indigo-500/10 border border-indigo-500/20 rounded-xl px-4 py-1.5 text-right shrink-0">
                         <div className="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold">Super Admin Mode</div>
                         <div className="text-sm font-medium text-white leading-tight">Full Access</div>
                     </div>

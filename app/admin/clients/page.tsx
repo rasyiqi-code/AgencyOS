@@ -4,6 +4,7 @@ import { ClientsDataTable } from "@/components/admin/clients/clients-data-table"
 import { clientColumns } from "@/components/admin/clients/client-columns";
 import { type StackUser } from "@/lib/shared/types";
 import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
+import { Users } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,9 +53,12 @@ export default async function AdminClientsPage() {
             <AdminHeaderSetter
                 title="Client Management"
                 actions={
-                    <div className="bg-zinc-900/50 border border-white/5 rounded-xl px-4 py-1.5 text-right shrink-0">
-                        <div className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Total Clients</div>
-                        <div className="text-sm font-mono font-bold text-white leading-tight">{users.length}</div>
+                    <div className="bg-zinc-900/50 border border-white/5 rounded-xl px-2.5 py-1 sm:px-4 sm:py-1.5 text-right shrink-0 flex items-center gap-1.5 sm:block">
+                        <Users className="w-3.5 h-3.5 text-zinc-500 sm:hidden" />
+                        <div className="text-right">
+                            <div className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold hidden sm:block">Total Clients</div>
+                            <div className="text-xs sm:text-sm font-mono font-bold text-white leading-none sm:leading-tight">{users.length}</div>
+                        </div>
                     </div>
                 }
             />
