@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
-import { Check, User, LogIn, Rocket } from "lucide-react";
+import { Check, User, LogIn, Rocket, LayoutDashboard } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
 
@@ -120,12 +120,12 @@ export async function SiteHeader() {
                         </div>
 
                         <div className="flex items-center gap-1.5 md:gap-3">
-                            {/* Tombol My Account / Login - ikon di mobile, teks di desktop */}
+                            {/* Tombol Dashboard / Login - ikon di mobile, teks di desktop */}
                             {user ? (
                                 <Link href={`/${locale}/dashboard`}>
-                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={t("myAccount")}>
-                                        <User className="w-4 h-4 sm:hidden" />
-                                        <span className="hidden sm:inline">{t("myAccount")}</span>
+                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label="Dashboard">
+                                        <LayoutDashboard className="w-4 h-4 sm:hidden" />
+                                        <span className="hidden sm:inline">Dashboard</span>
                                     </Button>
                                 </Link>
                             ) : (
