@@ -377,15 +377,7 @@ export function EditServiceForm({
                                 <h3 className="text-sm font-semibold text-white">{tAdmin("pricingConfig")}</h3>
                             </div>
                             <div className="p-6 space-y-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("categoryGroup")}</label>
-                                    <CreatableCategorySelect
-                                        categories={categories}
-                                        defaultValue={generatedData?.category ?? service.category ?? "Uncategorized"}
-                                        name="category"
-                                        placeholder={tAdmin("categoryPlaceholder")}
-                                    />
-                                </div>
+                                <input type="hidden" name="category" value={generatedData?.category ?? service.category ?? "Uncategorized"} />
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{tAdmin("visibility")}</label>
