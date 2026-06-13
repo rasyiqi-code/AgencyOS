@@ -81,12 +81,19 @@ Input Description: "${sanitizedPrompt}"
    - Brainstorm a total of 8-12 comprehensive, high-value features.
    - Frame every feature as a benefit/deliverable for the client.
 
-4. BASE PRICING & INTERVAL:
+4. BASE PRICING & INTERVAL (NICHE-SPECIFIC & TARGET MARKET MATCHING):
    - "priceType": "FIXED" or "STARTING_AT".
    - "currency": "USD" or "IDR".
      * If the input is in Indonesian or mentions 'Rp', 'Rupiah', 'Juta', or large numbers (> 10000), set currency to 'IDR'.
-     * If currency is 'IDR', set recommended_price to a realistic Indonesian price (e.g., 5000000, 15000000).
-     * If currency is 'USD', set recommended_price to a realistic global price (e.g., 500, 2500).
+     * If currency is 'IDR', set recommended_price to a realistic Indonesian price based on the web niche and target market:
+       - Low Complexity / Small Business / UKM / Personal Portfolio / Simple Landing Page: IDR 2,500,000 to IDR 6,000,000.
+       - Medium Complexity / Mid-Market / Standard Company Profile / SME E-commerce: IDR 7,000,000 to IDR 15,000,000.
+       - High Complexity / Custom System / Marketplace / SaaS / Enterprise Portal: IDR 18,000,000 to IDR 50,000,000+.
+     * If currency is 'USD', set recommended_price to a realistic global price based on the web niche and target market:
+       - Low Complexity / Personal Portfolio / Simple Landing Page: USD 250 to USD 600.
+       - Medium Complexity / Standard Business Site / Basic E-commerce: USD 800 to USD 1,800.
+       - High Complexity / SaaS / Enterprise App / Custom Platform: USD 2,000 to USD 6,000+.
+     * Adjust the price dynamically matching the user's intent. If the prompt explicitly mentions budget constraints or high-end enterprise requirements, prioritize the user's stated target.
      * NEVER mix large Indonesian numbers with USD currency.
    - "interval": Choose 'one_time', 'monthly', or 'yearly' based on the service nature.
      * Project development -> 'one_time'.
