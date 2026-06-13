@@ -17,7 +17,7 @@ export const getCachedUsers = unstable_cache(
     },
     ["hexclave-all-users-list"],
     {
-        revalidate: 300, // cache 5 menit
+        revalidate: 3600, // cache 1 jam (mengurangi overhead RAM/bandwidth secara masif)
         tags: ["hexclave-users"],
     }
 );

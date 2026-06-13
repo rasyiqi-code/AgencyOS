@@ -82,12 +82,22 @@ export default async function proxy(request: NextRequest) {
                                 if (data.countryCode) {
                                     const code: string = data.countryCode;
                                     geoCountry = code;
-                                    // Simpan hasil deteksi ke cache untuk menghemat resource CPU dan koneksi
                                     // Batasi ukuran cache sebelum menyimpan entri baru untuk mencegah kebocoran memori (memory leak)
                                     if (ipCache.size >= MAX_CACHE_SIZE) {
-                                        const oldestKey = ipCache.keys().next().value;
-                                        if (oldestKey !== undefined) {
-                                            ipCache.delete(oldestKey);
+                                        // 1. Bersihkan semua entri yang sudah expired terlebih dahulu
+                                        const now = Date.now();
+                                        for (const [key, val] of ipCache.entries()) {
+                                            if (val.expiry <= now) {
+                                                ipCache.delete(key);
+                                            }
+                                        }
+                                        
+                                        // 2. Jika masih penuh, hapus entri tertua (FIFO)
+                                        if (ipCache.size >= MAX_CACHE_SIZE) {
+                                            const oldestKey = ipCache.keys().next().value;
+                                            if (oldestKey !== undefined) {
+                                                ipCache.delete(oldestKey);
+                                            }
                                         }
                                     }
                                     ipCache.set(ip, {
