@@ -582,8 +582,8 @@
     },
     "PriceCalculator": {
         "badge": "Quote & Pricing",
-        "title": "Web atau Aplikasi apa yang ingin Anda bangun? <br></br> <highlight>Rencanakan Ide Sekarang</highlight>",
-        "subtitle": "Cukup jelaskan ide Anda, kami urus detailnya. Dapatkan rincian lengkap, linimasa, dan harga pasti secara instan.",
+        "title": "Ceritakan Ide Anda <br></br> <highlight>Biar Kami Wujudkan</highlight>",
+        "subtitle": "Tak perlu pusing soal teknis. Ceritakan apa yang Anda butuhkan, kami buatkan estimasi biaya dan waktu pengerjaannya seketika.",
         "placeholder": "Saya ingin membuat marketplace jam tangan vintage di mana pengguna bisa menawar...",
         "poweredBy": "Didukung oleh Gemini",
         "generate": "Buat Estimasi",
@@ -699,7 +699,7 @@
         "needHelp": "Butuh Bantuan? 👋"
     },
     "Services": {
-        "title": "Temukan Solusi Digital Premium"
+        "title": "Cari Solusi Digital Premium"
     },
     "ContactForm": {
         "firstName": "Nama Depan",
