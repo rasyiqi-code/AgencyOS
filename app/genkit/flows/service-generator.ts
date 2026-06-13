@@ -10,6 +10,7 @@ const serviceOutputSchema = z.object({
     description_id: z.string(),
     features_id: z.array(z.string()),
     recommended_price: z.number(),
+    original_price: z.number().nullable().optional(),
     priceType: z.enum(['FIXED', 'STARTING_AT']),
     currency: z.enum(['USD', 'IDR']),
     interval: z.enum(['one_time', 'monthly', 'yearly']),
@@ -99,7 +100,8 @@ Input Description: "${sanitizedPrompt}"
      * Project development -> 'one_time'.
      * Support, retainer, or monthly maintenance -> 'monthly'.
      * Annual support -> 'yearly'.
-   - "recommended_price": Base price matching the currency.
+   - "recommended_price": Base price matching the currency (this is the actual selling/discounted price).
+   - "original_price" (optional): If a discount is appropriate (to create a strike-through price effect), set this to a realistic higher original price to represent a discount of up to 60% (original_price should be 1.25x to 2.5x higher than recommended_price). If no discount is needed, leave it null or omit it.
 
 5. ADD-ONS ("addons"):
    - Generate 2-4 highly relevant upsell options.

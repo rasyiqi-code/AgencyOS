@@ -22,6 +22,7 @@ import { ServiceData } from "./edit-service-form";
 
 interface DraftServiceData extends Partial<ServiceData> {
     recommended_price?: number;
+    original_price?: number | null;
 }
 
 export function CreateServiceForm({ categories = [] }: { categories?: string[] }) {
@@ -458,7 +459,7 @@ export function CreateServiceForm({ categories = [] }: { categories?: string[] }
                                         name="originalPrice"
                                         type="number"
                                         step="0.01"
-                                        defaultValue={generatedData?.recommended_price ? (generatedData.recommended_price * 2) : undefined}
+                                        defaultValue={generatedData?.original_price ?? undefined}
                                         placeholder="0.00"
                                         className="w-full bg-black/20 border-white/10 text-zinc-200 focus-visible:ring-violet-500/20 text-sm font-semibold"
                                     />
