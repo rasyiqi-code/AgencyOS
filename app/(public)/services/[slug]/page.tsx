@@ -1,6 +1,6 @@
 import { getServiceBySlug } from "@/lib/server/services";
 import { ServiceDetailContent } from "@/components/public/service-detail";
-import { Metadata } from "next";
+import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Testimonials } from "@/components/landing/section-testimonials";
@@ -19,7 +19,7 @@ interface ServicePageProps {
     }>;
 }
 
-export async function generateMetadata(props: ServicePageProps): Promise<Metadata> {
+export async function generateMetadata(props: ServicePageProps, parent: ResolvingMetadata): Promise<Metadata> {
     const params = await props.params;
     const locale = await getLocale();
     const service = await getServiceBySlug(params.slug);
@@ -36,6 +36,8 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
 
     // Clean description for meta tag (remove HTML tags)
     const cleanDescription = description.replace(/<[^>]*>?/gm, '').slice(0, 160);
+    // Gunakan OG image global dari parent layout (tidak spesifik per service)
+    const previousImages = (await parent).openGraph?.images || [];
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     return {
@@ -47,7 +49,7 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
         openGraph: {
             title: displayTitle,
             description: cleanDescription,
-            images: service.image ? [{ url: service.image, width: 1200, height: 630, alt: displayTitle }] : undefined,
+            images: previousImages,
             type: "website",
             locale: isId ? 'id_ID' : 'en_US',
             alternateLocale: isId ? ['en_US'] : ['id_ID'],
@@ -56,7 +58,7 @@ export async function generateMetadata(props: ServicePageProps): Promise<Metadat
             card: "summary_large_image",
             title: displayTitle,
             description: cleanDescription,
-            images: service.image ? [service.image] : undefined,
+            images: previousImages,
         },
         alternates: {
             canonical: `${baseUrl}/${locale}/services/${params.slug}`,
