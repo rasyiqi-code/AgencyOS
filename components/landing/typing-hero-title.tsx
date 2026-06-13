@@ -72,7 +72,8 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
     return (
         <span className="inline-flex flex-row items-center justify-center lg:justify-start gap-x-2 md:gap-x-4 whitespace-nowrap overflow-visible">
             <span className="text-white shrink-0">{prefix}</span>
-            <span className="relative inline-flex items-center h-[1.2em]">
+            {/* Optimasi CLS: Menentukan lebar tetap (fixed width) yang stabil dan rata kiri (justify-start) agar tidak menyebabkan pergeseran tata letak (layout shift) saat huruf diketik atau teks berganti */}
+            <span className="relative inline-flex items-center h-[1.2em] w-[160px] sm:w-[180px] md:w-[250px] lg:w-[300px] justify-start shrink-0">
                 {mode === "rapid" ? (
                     <AnimatePresence mode="wait">
                         <motion.span
@@ -81,20 +82,20 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                             exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
                             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                            className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto] block"
+                            className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto] block text-left w-full"
                         >
                             {safeTargets[targetIndex]}
                         </motion.span>
                     </AnimatePresence>
                 ) : (
-                    <span className="relative inline-flex items-center">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto]">
+                    <span className="relative inline-flex items-center justify-start w-full">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto] block text-left">
                             {displayText}
                         </span>
                         <motion.span
                             animate={{ opacity: [1, 0] }}
                             transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
-                            className="inline-block w-[3px] h-[0.8em] bg-brand-yellow ml-1.5"
+                            className="inline-block w-[3px] h-[0.8em] bg-brand-yellow ml-1.5 shrink-0"
                         />
                     </span>
                 )}
