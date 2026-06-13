@@ -139,7 +139,7 @@ export function SectionStats() {
     ];
 
     return (
-        <section className="py-8 md:py-12 bg-black border-t border-white/5 relative overflow-hidden">
+        <section className="py-4 md:py-6 bg-black border-t border-white/5 relative overflow-hidden">
             {/* Background Element */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-brand-yellow/5 blur-[100px] rounded-full pointer-events-none" />
 
