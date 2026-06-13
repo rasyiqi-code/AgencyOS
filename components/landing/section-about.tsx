@@ -23,7 +23,8 @@ export async function AboutSection() {
                     <div className="shrink-0 relative group w-full max-w-md lg:max-w-none lg:w-[45%] mx-auto lg:mx-0">
                         <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden bg-zinc-900 relative z-10 border border-white/5">
                             <Image
-                                src="/agency-tech-expert.png"
+                                // Optimasi Kinerja: Menggunakan format WebP yang dikompresi (~148KB)
+                                src="/agency-tech-expert.webp"
                                 alt={agencyName}
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
