@@ -103,7 +103,6 @@ export async function generateMetadata(): Promise<Metadata> {
 const MarketingPopup = nextDynamic(() => import("@/components/public/marketing-popup").then(mod => mod.MarketingPopup));
 const InstallPrompt = nextDynamic(() => import("@/components/pwa/install-prompt").then(mod => mod.InstallPrompt));
 
-export const dynamic = 'force-dynamic';
 
 export default async function RootLayout({
   children,

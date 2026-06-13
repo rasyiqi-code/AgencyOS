@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       'framer-motion',
       'clsx',
       'tailwind-merge',
+      '@hexclave/next',
     ],
   },
   images: {
