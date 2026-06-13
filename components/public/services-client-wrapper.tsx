@@ -54,11 +54,23 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
     };
     // Filter reaktif terhadap daftar layanan berdasarkan input pencarian
     const filteredServices = services.filter((service) => {
-        const titleText = (isId ? service.title_id : null) || service.title || "";
-        const descText = (isId ? service.description_id : null) || service.description || "";
+        const q = searchQuery.toLowerCase();
+        const titleText = ((isId ? service.title_id : null) || service.title || "").toLowerCase();
+        
+        // Strip HTML tags dari deskripsi agar pencarian tidak terganggu tag HTML
+        const rawDesc = (isId ? service.description_id : null) || service.description || "";
+        const descText = rawDesc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").toLowerCase();
+
+        // Gabungkan features ke dalam teks pencarian
+        const featuresArr = isId
+            ? (Array.isArray(service.features_id) ? service.features_id as string[] : [])
+            : (Array.isArray(service.features) ? service.features as string[] : []);
+        const featuresText = featuresArr.join(" ").toLowerCase();
+
         return (
-            titleText.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            descText.toLowerCase().includes(searchQuery.toLowerCase())
+            titleText.includes(q) ||
+            descText.includes(q) ||
+            featuresText.includes(q)
         );
     });
 
