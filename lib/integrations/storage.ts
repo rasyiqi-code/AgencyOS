@@ -147,7 +147,7 @@ async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativ
         const writeStream = fs.createWriteStream(targetPath);
         // Menggunakan stream.pipeline untuk performa streaming tinggi (zero double-buffering)
         await pipeline(
-            Readable.from(fileOrBuffer.stream() as any),
+            Readable.from(fileOrBuffer.stream() as unknown as AsyncIterable<unknown>),
             writeStream
         );
     } else {

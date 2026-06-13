@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/config/db";
 import { CreateServiceForm } from "@/components/admin/services/create-service-form";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/shared/auth-helpers";

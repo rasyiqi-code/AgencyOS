@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RichTextEditorClient } from "@/components/ui/rich-text-editor-client";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 import { Button } from "@/components/ui/button";
-import { FileText, ListChecks, CreditCard, Sparkles, Loader2, ArrowLeft, CheckCircle2, Plus, Link as LinkIcon } from "lucide-react";
+import { FileText, ListChecks, CreditCard, Sparkles, ArrowLeft, CheckCircle2, Plus, Link as LinkIcon } from "lucide-react";
 import { slugify } from "@/lib/shared/utils";
 import { DynamicAddonInput, type ServiceAddon } from "@/components/ui/dynamic-addon-input";
 

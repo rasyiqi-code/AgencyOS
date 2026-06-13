@@ -5,8 +5,6 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useTranslations } from "next-intl";
-
 interface MagicDraftPopoverProps {
     prompt: string;
     setPrompt: (value: string) => void;
@@ -16,10 +14,6 @@ interface MagicDraftPopoverProps {
     children: React.ReactNode;
 }
 
-/**
- * Komponen Popover untuk fitur Magic Draft (AI Assistant)
- * Digunakan untuk menghindari duplikasi kode popover Magic Draft di form service.
- */
 export function MagicDraftPopover({
     prompt,
     setPrompt,
@@ -28,7 +22,6 @@ export function MagicDraftPopover({
     align = "start",
     children
 }: MagicDraftPopoverProps) {
-    const tAdmin = useTranslations("Admin.Services");
 
     return (
         <Popover>

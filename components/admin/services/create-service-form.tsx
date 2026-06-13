@@ -25,7 +25,7 @@ interface DraftServiceData extends Partial<ServiceData> {
     original_price?: number | null;
 }
 
-export function CreateServiceForm({ categories = [] }: { categories?: string[] }) {
+export function CreateServiceForm() {
     const router = useRouter();
     const t = useTranslations("Service");
     const tAdmin = useTranslations("Admin.Services");
