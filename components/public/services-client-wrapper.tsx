@@ -52,26 +52,35 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
         setRandomServices(shuffled);
         toast.success(isId ? "Layanan berhasil diacak secara instan!" : "Services shuffled instantly!");
     };
+    // Helper: serialize Json field apapun bentuknya menjadi string yang bisa dicari
+    const jsonToSearchText = (val: unknown): string => {
+        if (!val) return "";
+        if (typeof val === "string") return val;
+        // Array of strings atau objects — JSON.stringify lalu strip tanda kutip & kurung
+        return JSON.stringify(val).replace(/["\[\]{}]/g, " ");
+    };
+
     // Filter reaktif terhadap daftar layanan berdasarkan input pencarian
     const filteredServices = services.filter((service) => {
         const q = searchQuery.toLowerCase();
         const titleText = ((isId ? service.title_id : null) || service.title || "").toLowerCase();
-        
+
         // Strip HTML tags dari deskripsi agar pencarian tidak terganggu tag HTML
         const rawDesc = (isId ? service.description_id : null) || service.description || "";
         const descText = rawDesc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").toLowerCase();
 
-        // Gabungkan features ke dalam teks pencarian
-        const featuresArr = isId
-            ? (Array.isArray(service.features_id) ? service.features_id as string[] : [])
-            : (Array.isArray(service.features) ? service.features as string[] : []);
-        const featuresText = featuresArr.join(" ").toLowerCase();
+        // Serialize Json features ke teks — handles array, object, maupun string
+        const featuresRaw = isId ? service.features_id : service.features;
+        const featuresText = jsonToSearchText(featuresRaw).toLowerCase();
 
-        return (
-            titleText.includes(q) ||
-            descText.includes(q) ||
-            featuresText.includes(q)
-        );
+        const match = titleText.includes(q) || descText.includes(q) || featuresText.includes(q);
+
+        // Debug log — hapus setelah masalah teratasi
+        if (searchQuery.length > 0) {
+            console.log(`[SEARCH] "${q}" | "${service.title}" => title:${titleText.includes(q)} desc:${descText.includes(q)} feat:${featuresText.includes(q)} → ${match}`);
+        }
+
+        return match;
     });
 
     useEffect(() => {

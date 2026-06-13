@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/config/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { slugify } from "@/lib/shared/utils";
 import { Prisma } from "@prisma/client";
@@ -113,7 +113,11 @@ export async function createService(formData: FormData) {
         } as Prisma.ServiceCreateInput
     });
 
+    // Invalidasi cache halaman publik dan admin
+    revalidateTag("services");
     revalidatePath("/admin/pm/services");
+    revalidatePath("/en/services");
+    revalidatePath("/id/services");
     return { success: true, data: service };
 }
 
@@ -250,7 +254,11 @@ export async function updateService(serviceId: string, formData: FormData) {
         data: data as Prisma.ServiceUpdateInput
     });
 
+    // Invalidasi cache halaman publik dan admin
+    revalidateTag("services");
     revalidatePath("/admin/pm/services");
+    revalidatePath("/en/services");
+    revalidatePath("/id/services");
     return { success: true, data: updated };
 }
 
@@ -271,6 +279,10 @@ export async function deleteService(serviceId: string) {
 
     await prisma.service.delete({ where: { id: serviceId } });
 
+    // Invalidasi cache halaman publik dan admin
+    revalidateTag("services");
     revalidatePath("/admin/pm/services");
+    revalidatePath("/en/services");
+    revalidatePath("/id/services");
     return { success: true };
 }
