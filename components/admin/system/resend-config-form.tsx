@@ -48,8 +48,8 @@ export function ResendConfigForm({ currentKey, currentTargetEmail, currentSender
         try {
             await testResendConfiguration(targetEmail || undefined);
             toast.success("Email test berhasil dikirim!");
-        } catch (error: any) {
-            toast.error(error.message || "Gagal mengirim email test");
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : "Gagal mengirim email test");
         } finally {
             setIsTesting(false);
         }

@@ -219,7 +219,7 @@ export async function testResendConfiguration(targetEmail?: string) {
     const toEmail = targetEmail || await getAdminEmailTarget();
     const sender = await getSenderConfig();
     
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
         from: sender.formatted,
         to: toEmail,
         subject: "Test Email Configuration",

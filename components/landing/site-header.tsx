@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DashboardCurrencySwitcher, DashboardLanguageSwitcher } from "@/components/dashboard/header/currency-switcher";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
-import { Check, User, LogIn, Rocket, LayoutDashboard } from "lucide-react";
+import { Check, LogIn, Rocket, LayoutDashboard } from "lucide-react";
 
 import { getTranslations, getLocale } from "next-intl/server";
 
