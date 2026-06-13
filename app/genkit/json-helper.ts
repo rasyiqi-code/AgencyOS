@@ -28,27 +28,28 @@ export function cleanBrokenJson(text: string): string {
 /**
  * Menormalisasi struktur JSON agar sesuai dengan skema yang didefinisikan di Genkit flow.
  */
-export function normalizeJsonOutput(parsed: any): any {
+export function normalizeJsonOutput(parsed: unknown): Record<string, unknown> {
     if (typeof parsed !== 'object' || parsed === null) {
-        return parsed;
+        return {};
     }
     
     // Salin objek agar tidak merubah aslinya secara langsung
-    const data = { ...parsed };
+    const data = { ...parsed } as Record<string, unknown>;
     
     // 1. Normalisasi features & features_id jika model mengembalikan array of object
     if (Array.isArray(data.features)) {
-        const firstItem = data.features[0];
+        const firstItem = data.features[0] as unknown;
         if (firstItem && typeof firstItem === 'object') {
             const enFeatures: string[] = [];
             const idFeatures: string[] = [];
             
-            for (const item of data.features) {
+            for (const item of data.features as unknown[]) {
                 if (item && typeof item === 'object') {
+                    const itemObj = item as Record<string, unknown>;
                     // Ambil nilai bahasa Inggris
-                    const enVal = item.feature || item.text || item.name || JSON.stringify(item);
+                    const enVal = itemObj.feature || itemObj.text || itemObj.name || JSON.stringify(itemObj);
                     // Ambil nilai bahasa Indonesia
-                    const idVal = item.feature_id || item.text_id || item.name_id || enVal;
+                    const idVal = itemObj.feature_id || itemObj.text_id || itemObj.name_id || enVal;
                     enFeatures.push(String(enVal));
                     idFeatures.push(String(idVal));
                 } else {
@@ -68,9 +69,9 @@ export function normalizeJsonOutput(parsed: any): any {
     
     // 2. Normalisasi addons
     if (Array.isArray(data.addons)) {
-        data.addons = data.addons.map((addon: any) => {
+        data.addons = (data.addons as unknown[]).map((addon: unknown) => {
             if (typeof addon !== 'object' || addon === null) return addon;
-            const newAddon = { ...addon };
+            const newAddon = { ...addon } as Record<string, unknown>;
             
             // Petakan addon ke name jika model menggunakan addon / addon_id
             if (newAddon.name === undefined && newAddon.addon !== undefined) {
