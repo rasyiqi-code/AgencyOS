@@ -116,30 +116,35 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
             </div>
 
             <div className="container mx-auto px-4 pt-6 pb-16 sm:py-24 relative z-10">
-                <div className="mb-10 text-center max-w-3xl mx-auto flex flex-col items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-brand-yellow animate-pulse mb-3" />
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-tight">
+                <div className="mb-12 text-center max-w-3xl mx-auto flex flex-col items-center justify-center mt-8">
+                    <div className="inline-flex items-center justify-center p-3 bg-brand-yellow/10 rounded-full mb-6 ring-1 ring-brand-yellow/20 shadow-[0_0_40px_rgba(234,179,8,0.2)]">
+                        <Sparkles className="w-6 h-6 text-brand-yellow" />
+                    </div>
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
                         {pageTitle || st("title")}
                     </h1>
+                    <p className="text-zinc-400 text-base sm:text-lg max-w-2xl font-medium">
+                        {isId ? "Eksplorasi layanan terbaik untuk mendukung bisnis Anda." : "Explore the best services to support your business."}
+                    </p>
                 </div>
 
                 {/* Bilah Pencarian Jasa Premium */}
-                <div className="mb-12 max-w-xl mx-auto relative animate-in fade-in slide-in-from-bottom-3 duration-500">
+                <div className="mb-16 max-w-2xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <div className="relative group">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/30 to-brand-yellow/10 rounded-lg blur opacity-30 group-focus-within:opacity-100 group-hover:opacity-50 transition duration-1000 group-focus-within:duration-200" />
-                        <div className="relative flex items-center">
-                            <Search className="absolute left-4 w-5 h-5 text-zinc-500 group-focus-within:text-brand-yellow transition-colors" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-brand-yellow/20 via-white/5 to-brand-yellow/20 rounded-full blur-md opacity-50 group-hover:opacity-75 transition duration-500 group-focus-within:opacity-100 group-focus-within:duration-200" />
+                        <div className="relative flex items-center bg-[#09090b] rounded-full border border-white/10 overflow-hidden shadow-2xl transition-all group-focus-within:border-brand-yellow/50 group-focus-within:ring-1 group-focus-within:ring-brand-yellow/20">
+                            <Search className="absolute left-6 w-5 h-5 text-zinc-400 group-focus-within:text-brand-yellow transition-colors duration-300" />
                             <input
                                 type="text"
-                                placeholder={isId ? "Cari jasa yang Anda butuhkan..." : "Search services you need..."}
+                                placeholder={isId ? "Ketik layanan yang sedang Anda cari..." : "Type the service you are looking for..."}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-zinc-950/80 hover:bg-zinc-950/95 focus:bg-black border border-white/10 focus:border-brand-yellow/50 rounded-lg py-4 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-yellow/20 text-sm sm:text-base transition-all shadow-xl shadow-black/80"
+                                className="w-full bg-transparent py-5 pl-14 pr-12 text-white placeholder-zinc-500 focus:outline-none text-base sm:text-lg font-medium"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="absolute right-4 text-xs font-bold text-zinc-500 hover:text-white transition-colors"
+                                    className="absolute right-5 text-xs font-bold text-zinc-400 hover:text-white bg-white/10 hover:bg-white/20 py-1.5 px-3 rounded-full transition-all"
                                 >
                                     {isId ? "Hapus" : "Clear"}
                                 </button>
