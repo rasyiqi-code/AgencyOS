@@ -52,37 +52,39 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                     <div
                         className="relative space-y-8 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 order-2 lg:order-1 animate-hero-fade-in"
                     >
-                        {/* Status Widget */}
-                        <div className="flex justify-center lg:justify-start animate-hero-fade-up">
-                            <Link href="/price-calculator">
-                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium mb-4 hover:bg-brand-yellow/20 transition-colors cursor-pointer w-fit">
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
-                                    </span>
-                                    {t("statusBadge", { brand: agencyName })}
-                                </div>
-                            </Link>
-                        </div>
+                        <div className="flex flex-col gap-4">
+                            {/* Status Widget */}
+                            <div className="flex justify-center lg:justify-start animate-hero-fade-up">
+                                <Link href="/price-calculator">
+                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 text-brand-yellow text-sm font-medium hover:bg-brand-yellow/20 transition-colors cursor-pointer w-fit">
+                                        <span className="relative flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
+                                        </span>
+                                        {t("statusBadge", { brand: agencyName })}
+                                    </div>
+                                </Link>
+                            </div>
 
-                        <div
-                            className="relative space-y-4 animate-hero-fade-up animation-delay-100"
-                        >
-                            <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
-                                <TypingHeroTitle
-                                    prefix={t("title1")}
-                                    targets={t.raw("typing.build")}
-                                    mode="typing"
-                                    onStateChange={setTypingStatus}
-                                />
-                            </h1>
-                            <div className="text-2xl md:text-4xl xl:text-5xl font-semibold tracking-tight leading-[1.1] opacity-80">
-                                <TypingHeroTitle
-                                    prefix={t("forYour")}
-                                    targets={t.raw("typing.audience")}
-                                    mode="rapid"
-                                    isPaused={typingStatus !== "full"}
-                                />
+                            <div
+                                className="relative space-y-4 animate-hero-fade-up animation-delay-100"
+                            >
+                                <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1]">
+                                    <TypingHeroTitle
+                                        prefix={t("title1")}
+                                        targets={t.raw("typing.build")}
+                                        mode="typing"
+                                        onStateChange={setTypingStatus}
+                                    />
+                                </h1>
+                                <div className="text-2xl md:text-4xl xl:text-5xl font-semibold tracking-tight leading-[1.1] opacity-80">
+                                    <TypingHeroTitle
+                                        prefix={t("forYour")}
+                                        targets={t.raw("typing.audience")}
+                                        mode="rapid"
+                                        isPaused={typingStatus !== "full"}
+                                    />
+                                </div>
                             </div>
                         </div>
 
