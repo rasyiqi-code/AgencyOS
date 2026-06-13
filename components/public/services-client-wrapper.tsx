@@ -129,25 +129,33 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                 </div>
 
                 {/* Bilah Pencarian Jasa Premium */}
-                <div className="mb-16 max-w-2xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="mb-16 max-w-2xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700 px-4 sm:px-0">
                     <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-brand-yellow/20 via-white/5 to-brand-yellow/20 rounded-full blur-md opacity-50 group-hover:opacity-75 transition duration-500 group-focus-within:opacity-100 group-focus-within:duration-200" />
-                        <div className="relative flex items-center bg-[#09090b] rounded-full border border-white/10 overflow-hidden shadow-2xl transition-all group-focus-within:border-brand-yellow/50 group-focus-within:ring-1 group-focus-within:ring-brand-yellow/20">
-                            <Search className="absolute left-6 w-5 h-5 text-zinc-400 group-focus-within:text-brand-yellow transition-colors duration-300" />
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-yellow/40 via-brand-yellow/10 to-brand-yellow/30 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-500 group-focus-within:opacity-100" />
+                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl rounded-full border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-white/20 group-focus-within:border-brand-yellow/50 group-focus-within:ring-2 group-focus-within:ring-brand-yellow/20">
+                            <div className="flex items-center justify-center pl-6">
+                                <Search className="w-5 h-5 text-zinc-400 group-focus-within:text-brand-yellow transition-colors duration-300" />
+                            </div>
                             <input
                                 type="text"
-                                placeholder={isId ? "Ketik layanan yang sedang Anda cari..." : "Type the service you are looking for..."}
+                                placeholder={isId ? "Ketik layanan yang Anda butuhkan..." : "Type the service you need..."}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-transparent py-5 pl-14 pr-12 text-white placeholder-zinc-500 focus:outline-none text-base sm:text-lg font-medium"
+                                className="w-full bg-transparent py-4 sm:py-5 pl-4 pr-20 text-white placeholder-zinc-500 focus:outline-none text-base font-medium"
                             />
-                            {searchQuery && (
+                            {searchQuery ? (
                                 <button
                                     onClick={() => setSearchQuery("")}
-                                    className="absolute right-5 text-xs font-bold text-zinc-400 hover:text-white bg-white/10 hover:bg-white/20 py-1.5 px-3 rounded-full transition-all"
+                                    className="absolute right-4 text-xs font-bold text-zinc-400 hover:text-white bg-white/10 hover:bg-white/20 py-2 px-4 rounded-full transition-all"
                                 >
                                     {isId ? "Hapus" : "Clear"}
                                 </button>
+                            ) : (
+                                <div className="absolute right-2.5 flex items-center">
+                                    <div className="bg-white/5 text-zinc-500 text-[10px] font-bold px-4 py-2 rounded-full border border-white/10 tracking-widest">
+                                        {isId ? "CARI" : "SEARCH"}
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
