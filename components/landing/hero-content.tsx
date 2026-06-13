@@ -164,7 +164,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                             delay={1.2}
                                         >
                                             <BadgeContent
-                                                icon="/brands/gemini.png"
+                                                icon="/brands/gemini.webp"
                                                 name="Google"
                                                 model="Gemini 1.5 Pro"
                                             />
@@ -176,7 +176,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                             delay={1.4}
                                         >
                                             <BadgeContent
-                                                icon="/brands/openai.png"
+                                                icon="/brands/openai.webp"
                                                 name="OpenAI"
                                                 model="GPT-4o"
                                             />
@@ -188,7 +188,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                             delay={1.6}
                                         >
                                             <BadgeContent
-                                                icon="/brands/llama.png"
+                                                icon="/brands/llama.webp"
                                                 name="Meta"
                                                 model="Llama 3.1"
                                             />
@@ -200,7 +200,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                             delay={1.8}
                                         >
                                             <BadgeContent
-                                                icon="/brands/claude.png"
+                                                icon="/brands/claude.webp"
                                                 name="Anthropic"
                                                 model="Claude 3.5 Sonnet"
                                             />
@@ -209,8 +209,9 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 )}
                             </div>
 
+                            {/* Optimasi LCP: Menggunakan berkas WebP terkompresi (~70KB dibanding PNG 611KB asli) */}
                             <Image
-                                src="/expert.png"
+                                src="/expert.webp"
                                 alt={`${agencyName} - Software Engineering & Digital Transformation`}
                                 fill
                                 className="object-contain object-bottom relative z-10"
@@ -304,13 +305,13 @@ function BadgeContent({ name, model, icon }: {
     return (
         <div className="flex items-center gap-1.5 group/badge">
             <div className="w-5 h-5 rounded-md overflow-hidden relative grayscale group-hover/badge:grayscale-0 transition-all duration-500 bg-white/5 p-1 flex items-center justify-center">
+                {/* Optimasi LCP: Dihapus 'priority' agar tidak melakukan preload yang menghabiskan bandwidth gambar utama */}
                 <Image 
                     src={icon} 
                     alt={`${name} logo`} 
                     width={16} 
                     height={16} 
                     className="object-contain" 
-                    priority 
                 />
             </div>
             <div>

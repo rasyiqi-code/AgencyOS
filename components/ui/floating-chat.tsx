@@ -298,7 +298,8 @@ export function FloatingChatWidget() {
                         <div className="pl-1.5 pr-6 py-1.5 font-bold text-sm flex items-center gap-3 text-black">
                             <div className="relative">
                                 <Avatar className="h-8 w-8 border-2 border-zinc-100">
-                                    <AvatarImage src="/_next/image?url=%2Fexpert.png&w=64&q=75" alt="Customer Service Avatar" className="object-cover object-top" />
+                                    {/* Optimasi LCP/Kinerja: Menggunakan expert.webp yang berukuran jauh lebih kecil */}
+                                    <AvatarImage src="/_next/image?url=%2Fexpert.webp&w=64&q=75" alt="Customer Service Avatar" className="object-cover object-top" />
                                     <AvatarFallback className="bg-brand-yellow text-black">
                                         <User className="w-4 h-4" />
                                     </AvatarFallback>
@@ -336,7 +337,8 @@ export function FloatingChatWidget() {
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <Avatar className="h-10 w-10 border border-brand-yellow/30">
-                            <AvatarImage src="/_next/image?url=%2Fbot-avatar.png&w=96&q=75" alt={`${csName} - AI Assistant Avatar`} />
+                            {/* Optimasi Kinerja: Menggunakan bot-avatar.webp terkompresi */}
+                            <AvatarImage src="/_next/image?url=%2Fbot-avatar.webp&w=96&q=75" alt={`${csName} - AI Assistant Avatar`} />
                             <AvatarFallback className="bg-brand-yellow text-black font-bold">
                                 AI
                             </AvatarFallback>
