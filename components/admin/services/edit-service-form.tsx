@@ -474,27 +474,11 @@ export function EditServiceForm({
                             <div className="px-6 py-4 bg-zinc-900/60 border-t border-white/5 flex gap-2">
                                 <Button
                                     type="submit"
-                                    className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20"
+                                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-lg shadow-blue-500/20"
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? tAdmin("saving") : tAdmin("saveChanges")}
                                 </Button>
-                                <MagicDraftPopover
-                                    prompt={prompt}
-                                    setPrompt={setPrompt}
-                                    isGenerating={isGenerating}
-                                    onGenerate={handleGenerate}
-                                    align="end"
-                                >
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-9 w-9 bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 transition-all hover:scale-105 active:scale-95 shrink-0"
-                                    >
-                                        <Sparkles className="w-4 h-4 animate-pulse" />
-                                    </Button>
-                                </MagicDraftPopover>
                             </div>
                         </div>
                     </div>
