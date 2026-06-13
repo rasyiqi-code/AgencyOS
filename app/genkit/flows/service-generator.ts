@@ -81,10 +81,13 @@ Input Description: "${sanitizedPrompt}"
    - Include and expand on every requirement mentioned in the input description.
    - Brainstorm a total of 8-12 comprehensive, high-value features.
    - Frame every feature as a benefit/deliverable for the client.
+   - "features" MUST be a flat array of strings. Example: ["Feature A", "Feature B"]
+   - "features_id" MUST be a flat array of strings in Indonesian. Example: ["Fitur A dalam bahasa Indonesia", "Fitur B dalam bahasa Indonesia"]
+   - NEVER use array of objects for features. Each item must be a plain string.
 
 4. BASE PRICING & INTERVAL (NICHE-SPECIFIC & TARGET MARKET MATCHING):
-   - "priceType": "FIXED" or "STARTING_AT".
-   - "currency": "USD" or "IDR".
+   - "priceType": MUST be exactly "FIXED" or "STARTING_AT" (uppercase, no other values).
+   - "currency": MUST be exactly "USD" or "IDR" (uppercase, no other values).
      * If the input is in Indonesian or mentions 'Rp', 'Rupiah', 'Juta', or large numbers (> 10000), set currency to 'IDR'.
      * If currency is 'IDR', set recommended_price to a realistic Indonesian price based on the web niche and target market:
        - Low Complexity / Small Business / UKM / Personal Portfolio / Simple Landing Page: IDR 2,500,000 to IDR 6,000,000.
@@ -96,29 +99,64 @@ Input Description: "${sanitizedPrompt}"
        - High Complexity / SaaS / Enterprise App / Custom Platform: USD 2,000 to USD 6,000+.
      * Adjust the price dynamically matching the user's intent. If the prompt explicitly mentions budget constraints or high-end enterprise requirements, prioritize the user's stated target.
      * NEVER mix large Indonesian numbers with USD currency.
-   - "interval": Choose 'one_time', 'monthly', or 'yearly' based on the service nature.
-     * Project development -> 'one_time'.
-     * Support, retainer, or monthly maintenance -> 'monthly'.
-     * Annual support -> 'yearly'.
-   - "recommended_price": The base price (original price) matching the currency before any discount is applied.
-   - "discount" (optional): If a discount is appropriate (to create a strike-through price effect), set this to an integer percentage representing a discount of up to 60% (e.g. 30 for 30% off, 50 for 50% off). If no discount is needed, set to 0.
+   - "interval": MUST be exactly one of: "one_time", "monthly", or "yearly" (no other values, no spaces, no hyphens).
+     * Project development -> "one_time".
+     * Support, retainer, or monthly maintenance -> "monthly".
+     * Annual support -> "yearly".
+   - "recommended_price": A plain number (integer or float). The base price (original price) matching the currency before any discount is applied. NO currency symbols or commas.
+   - "discount": A plain integer from 0 to 60. If no discount, use 0. NEVER use null or omit this field.
 
 5. ADD-ONS ("addons"):
    - Generate 2-4 highly relevant upsell options.
+   - Each addon MUST have exactly these fields: "name" (string), "name_id" (string in Indonesian), "price" (number), "interval" (exactly "one_time", "monthly", or "yearly"), "currency" (exactly "USD" or "IDR").
    - Add-on currency MUST match the main currency.
    - Relevant add-on examples:
      * For Landing Page: Extra copywriting, A/B testing setup, conversion tracking.
      * For E-Commerce: Shipping rate integration (RajaOngkir), payment gateway setup, inventory sync.
      * For Web App: Push notifications, advanced analytics dashboard, multi-language support.
    - ADD-ON INTERVAL & PRICING LOGIC:
-     * Recurring services (e.g., Maintenance, Premium Support, Monthly Update Retainer) must have interval 'monthly' or 'yearly'.
-     * One-off services (e.g., Extra page design, Logo branding, API Integration) must have interval 'one_time'.
+     * Recurring services (e.g., Maintenance, Premium Support, Monthly Update Retainer) must have interval "monthly" or "yearly".
+     * One-off services (e.g., Extra page design, Logo branding, API Integration) must have interval "one_time".
      * If the add-on interval MATCHES the base service interval: Price should be 5% to 25% of the base price (recommended_price).
-     * If the add-on interval is DIFFERENT (e.g., base service is 'one_time' development, add-on is 'monthly' maintenance): Set a reasonable monthly price relative to the complexity (e.g., 5% to 15% of the base price per month).
+     * If the add-on interval is DIFFERENT (e.g., base service is "one_time" development, add-on is "monthly" maintenance): Set a reasonable monthly price relative to the complexity (e.g., 5% to 15% of the base price per month).
      * Round all prices to make them clean (e.g., 500000, 1000000, or 50, 150).
 
-CRITICAL: All fields ending with "_id" must be written in human-readable, professional Indonesian text.
-Return strictly valid JSON matching the schema.
+=== REQUIRED JSON OUTPUT FORMAT ===
+You MUST return ONLY a raw JSON object with NO markdown, NO explanation, NO code block wrappers. The JSON must exactly match this structure:
+
+{
+  "title": "string (English package name)",
+  "title_id": "string (Indonesian package name)",
+  "description": "string (HTML formatted, English)",
+  "description_id": "string (HTML formatted, Indonesian)",
+  "features": ["string", "string", "..."],
+  "features_id": ["string dalam bahasa Indonesia", "..."],
+  "recommended_price": 0,
+  "discount": 0,
+  "priceType": "FIXED",
+  "currency": "USD",
+  "interval": "one_time",
+  "addons": [
+    {
+      "name": "string",
+      "name_id": "string dalam bahasa Indonesia",
+      "price": 0,
+      "interval": "one_time",
+      "currency": "USD"
+    }
+  ]
+}
+
+CRITICAL CONSTRAINTS — ANY VIOLATION WILL CAUSE A SYSTEM ERROR:
+- "features" and "features_id" must be arrays of plain strings, NOT objects.
+- "interval" values must be exactly: "one_time", "monthly", or "yearly".
+- "currency" values must be exactly: "USD" or "IDR".
+- "priceType" must be exactly: "FIXED" or "STARTING_AT".
+- "recommended_price" and "price" must be plain numbers, NOT strings.
+- "discount" must be a plain integer (0–60), NOT null or omitted.
+- Every addon must have all 5 fields: name, name_id, price, interval, currency.
+- Do NOT add any extra fields not listed in the schema above.
+- Output ONLY the JSON object. No text before or after.
             `,
             output: {
                 schema: serviceOutputSchema
