@@ -69,7 +69,7 @@ Input Description: "${sanitizedPrompt}"
 
 2. DESCRIPTION ("description" & "description_id"):
    - Highly engaging, persuasive, and SEO-friendly.
-   - Must be at least 2 paragraphs.
+   - Must be at least 3-5 paragraphs.
    - Use simple HTML formatting (<p>, <ul>, <li>, <strong>) for readability. Do not use markdown inside descriptions.
 
 3. FEATURES ("features" & "features_id"):
