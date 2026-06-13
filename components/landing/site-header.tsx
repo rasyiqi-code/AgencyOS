@@ -120,30 +120,29 @@ export async function SiteHeader() {
                         </div>
 
                         <div className="flex items-center gap-1.5 md:gap-3">
-                            {/* Tombol Dashboard / Login - ikon di mobile, teks di desktop */}
                             {user ? (
                                 <Link href={`/${locale}/dashboard`}>
-                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label="Dashboard">
+                                    <Button className="h-8 sm:h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-3 sm:px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0" aria-label="Dashboard">
                                         <LayoutDashboard className="w-4 h-4 sm:hidden" />
                                         <span className="hidden sm:inline">Dashboard</span>
                                     </Button>
                                 </Link>
                             ) : (
-                                <Link href="/handler/sign-in">
-                                    <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={tc("login")}>
-                                        <LogIn className="w-4 h-4 sm:hidden" />
-                                        <span className="hidden sm:inline">{tc("login")}</span>
-                                    </Button>
-                                </Link>
+                                <>
+                                    <Link href="/handler/sign-in">
+                                        <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5 rounded-full px-2 sm:px-3 h-8 text-xs" aria-label={tc("login")}>
+                                            <LogIn className="w-4 h-4 sm:hidden" />
+                                            <span className="hidden sm:inline">{tc("login")}</span>
+                                        </Button>
+                                    </Link>
+                                    <Link href={`/${locale}/price-calculator`}>
+                                        <Button className="h-8 sm:h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-3 sm:px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0" aria-label={t("startProject")}>
+                                            <Rocket className="w-4 h-4 sm:hidden" />
+                                            <span className="hidden sm:inline">{t("startProject")}</span>
+                                        </Button>
+                                    </Link>
+                                </>
                             )}
-
-                            {/* Tombol Start Project - ikon roket di mobile, teks di desktop */}
-                            <Link href={`/${locale}/price-calculator`}>
-                                <Button className="h-8 sm:h-9 text-sm bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold cursor-pointer rounded-full px-3 sm:px-5 shadow-lg shadow-brand-yellow/20 transition-all hover:scale-105 active:scale-95 border-0" aria-label={t("startProject")}>
-                                    <Rocket className="w-4 h-4 sm:hidden" />
-                                    <span className="hidden sm:inline">{t("startProject")}</span>
-                                </Button>
-                            </Link>
                         </div>
                     </div>
                 </div>
