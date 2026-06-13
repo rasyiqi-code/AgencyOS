@@ -218,40 +218,24 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 priority
                                 loading="eager"
                                 decoding="sync"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                // Optimasi LCP: Sesuaikan ukuran responsive agar tidak memuat gambar yang terlalu besar (retina/100vw)
+                                sizes="(max-width: 640px) 250px, (max-width: 1024px) 350px, 400px"
                                 fetchPriority="high"
                             />
 
                             {/* Accent Tagline Layer (Top) */}
                             <div className="absolute bottom-12 left-0 w-full z-20 pointer-events-none px-4 flex flex-col items-center justify-center gap-0 text-center">
-                                <motion.p
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{
-                                        y: 0,
-                                        opacity: [0.7, 1, 0.8, 1],
-                                    }}
-                                    transition={{
-                                        y: { duration: 1.2, delay: 1.2 },
-                                        opacity: { duration: 2, repeat: repeatCount, ease: "easeInOut" }
-                                    }}
-                                    className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none"
+                                {/* Optimasi LCP: Menggunakan tag p biasa dengan animasi CSS untuk menghindari delay JS render (meniadakan render delay 3.4s) */}
+                                <p
+                                    className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none animate-hero-fade-up"
                                 >
-                                {t("heroTagline1")}
-                                </motion.p>
-                                <motion.p
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{
-                                        y: 0,
-                                        opacity: [0.7, 1, 0.8, 1],
-                                    }}
-                                    transition={{
-                                        y: { duration: 1.2, delay: 1.4 },
-                                        opacity: { duration: 2.5, repeat: repeatCount, ease: "easeInOut", delay: 0.2 }
-                                    }}
-                                    className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none mt-2"
+                                    {t("heroTagline1")}
+                                </p>
+                                <p
+                                    className="text-xl md:text-3xl xl:text-4xl font-black italic tracking-tighter text-brand-yellow/80 drop-shadow-[0_0_10px_rgba(254,215,0,0.7)] drop-shadow-[0_0_20px_rgba(254,215,0,0.4)] leading-none mt-2 animate-hero-fade-up animation-delay-100"
                                 >
                                     {t("heroTagline2")}
-                                </motion.p>
+                                </p>
                             </div>
                         </div>
                     </div>

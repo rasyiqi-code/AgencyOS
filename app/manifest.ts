@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getSystemSettings } from "@/lib/server/settings";
 
+// Optimasi Kinerja: Cache manifest selama 24 jam untuk mengurangi latensi kritis dari chain request
+export const revalidate = 86400;
+
 /**
  * Force dynamic rendering — manifest membaca dari database,
  * yang tidak tersedia saat build time (Docker build).

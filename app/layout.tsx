@@ -186,8 +186,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         {/* Preconnect to critical origins */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="" />
+        {/* Optimasi LCP: Menghapus preconnect yang tidak terpakai (GTM & GA dimuat menggunakan lazyOnload) */}
         <link rel="preconnect" href="https://i.pravatar.cc" />
         {midtransConfig.clientKey && (
           <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />

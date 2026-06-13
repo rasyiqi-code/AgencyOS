@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
   experimental: {
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
+    inlineCss: true, // Optimasi LCP: Menyematkan CSS langsung ke dalam HTML untuk menghilangkan render-blocking CSS chunk
     staleTimes: {
       dynamic: 30,
       static: 180,

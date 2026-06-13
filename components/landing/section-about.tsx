@@ -28,7 +28,8 @@ export async function AboutSection() {
                                 alt={agencyName}
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                                // Optimasi LCP: Batasi sizes agar gambar yang diambil dari srcset tidak terlalu besar
+                                sizes="(max-width: 768px) 450px, 450px"
                             />
                         </div>
 
