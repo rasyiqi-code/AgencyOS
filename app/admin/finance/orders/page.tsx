@@ -12,8 +12,9 @@ export const dynamic = 'force-dynamic';
 export default async function AdminOrdersPage() {
     const t = await getTranslations("Admin.Finance");
 
-    // Ambil data langsung dari ORDER sebagai sumber kebenaran utama
+    // Ambil data langsung dari ORDER sebagai sumber kebenaran utama (maksimal 50 item terbaru untuk performa)
     const orders = await prisma.order.findMany({
+        take: 50,
         orderBy: { createdAt: 'desc' },
         include: {
             project: {

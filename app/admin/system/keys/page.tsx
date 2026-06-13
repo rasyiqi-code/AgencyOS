@@ -13,6 +13,7 @@ import { SystemKey } from "@prisma/client";
 
 export default async function AdminKeysPage() {
     const keys = await prisma.systemKey.findMany({
+        take: 50,
         orderBy: { createdAt: "desc" },
     }) as SystemKey[];
 

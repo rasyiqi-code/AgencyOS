@@ -46,7 +46,7 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
         }
     }, [ticket.messages]);
 
-    // Fast Polling for Realtime Feel (3s)
+    // Safe Polling for Realtime Feel (10s untuk menghemat resource server/CPU)
     useEffect(() => {
         const interval = setInterval(async () => {
             if (document.hidden) return;
@@ -62,7 +62,7 @@ export function ChatInterface({ initialTicket, isAdmin = false }: ChatInterfaceP
             } catch (error) {
                 console.error("Polling error", error);
             }
-        }, 3000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, [ticket.id]);

@@ -5,6 +5,7 @@ import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminSupportInbox() {
     const rawTickets = await prisma.ticket.findMany({
+        take: 50,
         orderBy: { updatedAt: 'desc' },
         include: {
             messages: {

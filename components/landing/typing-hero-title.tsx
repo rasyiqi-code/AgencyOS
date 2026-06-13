@@ -92,11 +92,16 @@ export function TypingHeroTitle({ prefix, targets, mode = "typing", isPaused, on
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow via-yellow-200 to-brand-yellow animate-gradient-x bg-[length:200%_auto] block text-left">
                             {displayText}
                         </span>
-                        <motion.span
-                            animate={{ opacity: [1, 0] }}
-                            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
+                        <span 
                             className="inline-block w-[3px] h-[0.8em] bg-brand-yellow ml-1.5 shrink-0"
+                            style={{ animation: 'typing-cursor-blink 1s steps(2, start) infinite' }}
                         />
+                        <style dangerouslySetInnerHTML={{ __html: `
+                            @keyframes typing-cursor-blink {
+                                0%, 100% { opacity: 1; }
+                                50% { opacity: 0; }
+                            }
+                        `}} />
                     </span>
                 )}
             </span>

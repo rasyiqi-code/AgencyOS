@@ -36,14 +36,9 @@ export function SocialProofContent() {
         >
             <motion.div variants={itemVariants} className="text-center">
                 <div className="relative overflow-hidden w-full [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
-                    <motion.div
-                        className="flex gap-12 md:gap-16 w-max pr-12 md:pr-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
-                        animate={{ x: "-50%" }}
-                        transition={{
-                            repeat: Infinity,
-                            ease: "linear",
-                            duration: 40,
-                        }}
+                    <div
+                        className="flex gap-12 md:gap-16 w-max pr-12 md:pr-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500 marquee-track"
+                        style={{ animation: 'marquee-scroll 40s linear infinite' }}
                     >
                         {[...Array(4)].flatMap(() => [
                             { icon: Zap, text: t("faster") },
@@ -58,7 +53,16 @@ export function SocialProofContent() {
                                 <item.icon className="w-5 h-5 text-brand-yellow" /> {item.text}
                             </div>
                         ))}
-                    </motion.div>
+                    </div>
+                    <style dangerouslySetInnerHTML={{ __html: `
+                        @keyframes marquee-scroll {
+                            0% { transform: translateX(0); }
+                            100% { transform: translateX(-50%); }
+                        }
+                        .marquee-track {
+                            will-change: transform;
+                        }
+                    `}} />
                 </div>
             </motion.div>
         </motion.div>

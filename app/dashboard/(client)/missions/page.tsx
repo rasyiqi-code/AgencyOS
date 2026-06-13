@@ -17,6 +17,7 @@ export default async function MissionsPage({ searchParams }: { searchParams: Pro
     const isId = locale === 'id-ID' || locale === 'id';
 
     const allProjects = await prisma.project.findMany({
+        take: 50,
         where: {
             userId: user?.id,
             status: { in: ['queue', 'dev', 'review', 'done'] },

@@ -132,9 +132,6 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Pr
     }
 }
 
-/**
- * Menyimpan berkas secara lokal di public/uploads
- */
 async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativePath: string): Promise<string> {
     const targetPath = path.join(LOCAL_UPLOAD_DIR, relativePath);
     const targetDir = path.dirname(targetPath);
@@ -143,17 +140,26 @@ async function uploadFileLocal(fileOrBuffer: File | Buffer | Uint8Array, relativ
         fs.mkdirSync(targetDir, { recursive: true });
     }
 
-    let data: Buffer;
     if (fileOrBuffer instanceof File) {
-        const arrayBuffer = await fileOrBuffer.arrayBuffer();
-        data = Buffer.from(arrayBuffer);
-    } else if (fileOrBuffer instanceof Buffer) {
-        data = fileOrBuffer;
+        const { pipeline } = await import("stream/promises");
+        const { Readable } = await import("stream");
+        
+        const writeStream = fs.createWriteStream(targetPath);
+        // Menggunakan stream.pipeline untuk performa streaming tinggi (zero double-buffering)
+        await pipeline(
+            Readable.from(fileOrBuffer.stream() as any),
+            writeStream
+        );
     } else {
-        data = Buffer.from(fileOrBuffer);
+        let data: Buffer;
+        if (fileOrBuffer instanceof Buffer) {
+            data = fileOrBuffer;
+        } else {
+            data = Buffer.from(fileOrBuffer);
+        }
+        await fs.promises.writeFile(targetPath, data);
     }
 
-    await fs.promises.writeFile(targetPath, data);
     return `/uploads/${relativePath}`;
 }
 

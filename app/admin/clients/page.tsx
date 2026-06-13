@@ -18,10 +18,9 @@ export default async function AdminClientsPage() {
         console.error("Failed to fetch users:", error);
     }
 
-    // Fetch all projects to map to users
-    // Performance Note: In a large scale app, we should only fetch projects for the current page users.
-    // Since this list is likely small (<1000), fetching all active projects is acceptable for now.
+    // Fetch projects to map to users (maksimal 100 untuk performa)
     const allProjects = await prisma.project.findMany({
+        take: 100,
         select: {
             userId: true,
             title: true,

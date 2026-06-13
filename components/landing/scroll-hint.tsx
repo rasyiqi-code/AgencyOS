@@ -70,9 +70,8 @@ export function ScrollHint({ children, className, variant = "default" }: ScrollH
                         exit={{ opacity: 0, scale: 0.5, x: 20 }}
                         className="absolute right-4 top-1/2 -translate-y-1/2 z-30 pointer-events-none lg:hidden flex flex-col items-center gap-3"
                     >
-                        <motion.div 
-                            animate={{ x: [0, -10, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        <div 
+                            style={{ animation: 'swipe-hint-bounce 1.5s ease-in-out infinite' }}
                             className={cn(
                                 "w-14 h-14 rounded-full flex items-center justify-center border-4",
                                 style.bg,
@@ -82,7 +81,13 @@ export function ScrollHint({ children, className, variant = "default" }: ScrollH
                             )}
                         >
                             <ArrowRight className="w-7 h-7" />
-                        </motion.div>
+                        </div>
+                        <style dangerouslySetInnerHTML={{ __html: `
+                            @keyframes swipe-hint-bounce {
+                                0%, 100% { transform: translateX(0); }
+                                50% { transform: translateX(-10px); }
+                            }
+                        `}} />
                         <div className="bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-yellow">{t("swipe")}</span>
                         </div>

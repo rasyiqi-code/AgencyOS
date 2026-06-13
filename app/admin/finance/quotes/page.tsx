@@ -22,8 +22,9 @@ export default async function AdminQuotesPage() {
         redirect("/admin");
     }
 
-    // Ambil semua Estimate yang dibuat secara manual oleh admin
+    // Ambil semua Estimate yang dibuat secara manual oleh admin (maksimal 50 untuk performa)
     const estimates = await prisma.estimate.findMany({
+        take: 50,
         where: {
             prompt: {
                 startsWith: "Manual Quote for"
@@ -37,16 +38,19 @@ export default async function AdminQuotesPage() {
     });
 
     const services = await prisma.service.findMany({
+        take: 50,
         where: { isActive: true }
     });
 
-    // Ambil daftar user unik dari Ticket & Project, dan JUGA dari Stack Auth
+    // Ambil daftar user unik dari Ticket & Project, dan JUGA dari Stack Auth (maksimal 50 item untuk performa)
     const [tickets, projects, stackUsers] = await Promise.all([
         prisma.ticket.findMany({
+            take: 50,
             where: { userId: { not: null } },
             select: { userId: true, name: true, email: true }
         }),
         prisma.project.findMany({
+            take: 50,
             select: { userId: true, clientName: true }
         }),
         getCachedUsers()

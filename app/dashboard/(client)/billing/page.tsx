@@ -12,6 +12,7 @@ export default async function ClientBillingPage() {
     }
 
     const orders = await prisma.order.findMany({
+        take: 55,
         where: {
             userId: user.id,
             project: {
@@ -32,8 +33,9 @@ export default async function ClientBillingPage() {
         }
     });
 
-    // Ambil tagihan langganan bulanan yang belum dibayar
+    // Ambil tagihan langganan bulanan yang belum dibayar (maksimal 50 untuk performa)
     const unpaidEstimates = await prisma.estimate.findMany({
+        take: 50,
         where: {
             project: { userId: user.id },
             complexity: "Subscription Renewal",
@@ -47,6 +49,7 @@ export default async function ClientBillingPage() {
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     const projectsNeedingRenewal = await prisma.project.findMany({
+        take: 50,
         where: {
             userId: user.id,
             subscriptionStatus: { not: null },

@@ -21,7 +21,9 @@ export async function getPortfolios(): Promise<PortfolioItem[]> {
     return unstable_cache(
         async () => {
             try {
+                // Batasi maksimal 50 portfolio item untuk performa RAM server
                 const portfolios = await prisma.portfolio.findMany({
+                    take: 50,
                     orderBy: { createdAt: "desc" },
                 });
                 return portfolios as unknown as PortfolioItem[];
@@ -153,7 +155,14 @@ export async function getRenderedHtml(url: string, localBaseUrl?: string): Promi
         )();
     };
 
-    const promise = fetchAction();
+    // Bungkus promise dengan timeout race agar tidak bocor di pendingRequests Map jika Cloudflare hang
+    const timeoutPromise = new Promise<never>((_, reject) => {
+        const timer = setTimeout(() => reject(new Error("Cloudflare render timeout")), 20000);
+        // Izinkan Node process exit jika timer ini adalah satu-satunya active handle
+        timer.unref();
+    });
+
+    const promise = Promise.race([fetchAction(), timeoutPromise]);
     pendingRequests.set(url, promise);
     
     try {

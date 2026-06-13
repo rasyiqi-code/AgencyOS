@@ -11,6 +11,15 @@ import { ScrollHint } from "./scroll-hint";
 export function SectionSolutions() {
     const t = useTranslations("Solutions");
     const locale = useLocale();
+    const [globalTargetIndex, setGlobalTargetIndex] = useState(0);
+
+    useEffect(() => {
+        // Hanya satu interval terpusat (2.5s) untuk semua kartu agar menghemat resource CPU browser
+        const interval = setInterval(() => {
+            setGlobalTargetIndex((prev) => prev + 1);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
 
     const products = [
         { 
@@ -89,6 +98,7 @@ export function SectionSolutions() {
                             index={index}
                             locale={locale}
                             t={t}
+                            globalTargetIndex={globalTargetIndex}
                         />
                     ))}
                 </ScrollHint>
@@ -108,22 +118,17 @@ interface SolutionCardProps {
     index: number;
     locale: string;
     t: (key: string) => string;
+    globalTargetIndex: number;
 }
 
-function SolutionCard({ product, index, locale, t }: SolutionCardProps) {
+function SolutionCard({ product, index, locale, t, globalTargetIndex }: SolutionCardProps) {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
     const rectRef = useRef<DOMRect | null>(null);
-    const [targetIndex, setTargetIndex] = useState(0);
     const targets = t(`items.${product.key}.target`).split(",").map((s: string) => s.trim());
-
-    useEffect(() => {
-        if (targets.length <= 1) return;
-        const interval = setInterval(() => {
-            setTargetIndex((prev) => (prev + 1) % targets.length);
-        }, 1500);
-        return () => clearInterval(interval);
-    }, [targets.length]);
+    
+    // Hitung index target secara modular berdasarkan tick interval global
+    const targetIndex = targets.length > 0 ? (globalTargetIndex % targets.length) : 0;
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!rectRef.current) {

@@ -16,6 +16,7 @@ export default async function SupportPage() {
     }
 
     const tickets = await prisma.ticket.findMany({
+        take: 50,
         where: { userId: user.id, type: 'ticket' } as Prisma.TicketWhereInput,
         orderBy: { updatedAt: 'desc' },
         include: {

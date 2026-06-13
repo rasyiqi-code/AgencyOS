@@ -39,8 +39,10 @@ export default async function AdminTeamPage() {
         console.error("Failed to fetch users:", error);
     }
 
-    // Fetch all active permissions
-    const permissions: UserPermission[] = await prisma.userPermission.findMany();
+    // Fetch active permissions (maksimal 100 untuk performa)
+    const permissions: UserPermission[] = await prisma.userPermission.findMany({
+        take: 100
+    });
 
     // Transform data for UI
     const teamMembers = users.map(user => {

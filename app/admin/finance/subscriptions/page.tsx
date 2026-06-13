@@ -16,8 +16,9 @@ export default async function AdminSubscriptionsPage() {
         redirect("/admin");
     }
 
-    // Ambil project yang memiliki status subscription
+    // Ambil project yang memiliki status subscription (maksimal 50 untuk performa)
     const projects = await prisma.project.findMany({
+        take: 50,
         where: {
             subscriptionStatus: { not: null }
         },

@@ -18,8 +18,9 @@ export default async function ClientQuotesPage() {
 
     const t = await getTranslations("Dashboard.ClientQuotes");
 
-    // Ambil Estimates milik user
+    // Ambil Estimates milik user (maksimal 50 untuk performa)
     const estimates = await prisma.estimate.findMany({
+        take: 50,
         where: {
             project: {
                 userId: user.id

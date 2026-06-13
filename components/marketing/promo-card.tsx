@@ -48,34 +48,35 @@ export function PromoCard({ promotion }: { promotion: Promotion }) {
                     loading="lazy"
                 />
 
-                
                 {/* Shine Effect Trigger */}
                 <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-                    <motion.div 
-                        animate={{ 
-                            x: ['-100%', '200%'],
-                        }}
-                        transition={{ 
-                            duration: 3, 
-                            repeat: Infinity, 
-                            repeatDelay: 4,
-                            ease: "easeInOut"
-                        }}
+                    <div 
                         className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+                        style={{ animation: 'promo-shine 7s ease-in-out infinite' }}
                     />
                 </div>
 
                 {/* Visual Interaction Prompt (Pulsing) */}
                 <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-end pb-4 h-24 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:opacity-0 transition-opacity duration-300">
-                    <motion.div 
-                        animate={{ opacity: [0.6, 1, 0.6], y: [0, -2, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                    <div 
                         className="flex flex-col items-center gap-1"
+                        style={{ animation: 'promo-pulse 2s ease-in-out infinite' }}
                     >
                         <span className="text-[9px] font-black text-brand-yellow uppercase tracking-[0.3em] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">Lihat Detail</span>
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-yellow shadow-[0_0_12px_rgba(251,191,36,1)]" />
-                    </motion.div>
+                    </div>
                 </div>
+
+                <style dangerouslySetInnerHTML={{ __html: `
+                    @keyframes promo-shine {
+                        0%, 57.1% { transform: translateX(-100%); }
+                        100% { transform: translateX(200%); }
+                    }
+                    @keyframes promo-pulse {
+                        0%, 100% { opacity: 0.6; transform: translateY(0); }
+                        50% { opacity: 1; transform: translateY(-2px); }
+                    }
+                `}} />
 
 
                 {/* Status Badge - Floating */}

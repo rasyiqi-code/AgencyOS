@@ -86,14 +86,20 @@ export function CheckoutPortal({
         documentTitle: `Invoice-${estimate.id}`
     });
 
-    // Polling status transaksi di background ketika Order ID aktif terisi
+    // Polling status transaksi di background ketika Order ID aktif terisi dengan safety exponential backoff
     useEffect(() => {
         if (!activeOrderId || estimate.status === 'paid') return;
         // Hanya lakukan polling jika berstatus waiting_verification ATAU pembayaran telah diinisiasi oleh user
         if (activeOrderStatus !== 'waiting_verification' && !isPaymentInitiated) return;
 
-        const interval = setInterval(async () => {
-            if (document.hidden) return;
+        let timerId: NodeJS.Timeout;
+        let delay = 10000; // Mulai polling dari 10 detik untuk efisiensi
+
+        const checkStatus = async () => {
+            if (document.hidden) {
+                timerId = setTimeout(checkStatus, delay);
+                return;
+            }
             try {
                 const res = await fetch(`/api/payment/status?orderId=${activeOrderId}&mode=json`);
                 const data = await res.json();
@@ -102,14 +108,21 @@ export function CheckoutPortal({
                     setActiveOrderStatus('waiting_verification');
                 } else if (data.status === 'paid' || data.status === 'settled') {
                     router.refresh();
+                    return; // Hentikan polling jika sudah lunas
                 }
+
+                // Tingkatkan delay secara eksponensial (maksimal 30 detik)
+                delay = Math.min(delay * 1.5, 30000);
             } catch (error) {
                 console.error("Gagal melakukan polling status pembayaran:", error);
             }
-        }, 5000);
+            timerId = setTimeout(checkStatus, delay);
+        };
 
-        return () => clearInterval(interval);
-    }, [activeOrderId, estimate.status, router, activeOrderStatus, isPaymentInitiated]);
+        timerId = setTimeout(checkStatus, delay);
+
+        return () => clearTimeout(timerId);
+    }, [activeOrderId, activeOrderStatus, isPaymentInitiated, estimate.status, router]);
 
     // Efek untuk memantau status lunas (Selesai) guna pengalihan ke Invoice publik
     useEffect(() => {
