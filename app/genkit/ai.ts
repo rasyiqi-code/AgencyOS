@@ -70,7 +70,7 @@ export const getActiveAIConfig = unstable_cache(
 
         return {
             apiKey: key.key,
-            model: key.modelId || (key.provider === 'nvidia' ? 'google/diffusiongemma-26b-a4b-it' : 'gemini-1.5-flash'),
+            model: key.modelId || (key.provider === 'nvidia' ? 'google/diffusiongemma-26b-a4b-it' : 'gemini-3.1-flash-lite'),
             provider: key.provider
         };
     },
