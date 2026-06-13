@@ -13,16 +13,17 @@ import { motion } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useFloatingChat } from "@/lib/store/floating-chat-store";
+
 
 export function FAQSection() {
     const messages = useMessages();
     const faqData = (messages as Record<string, unknown>)?.FAQ || {};
     const t = useTranslations("FAQ");
     const tFooter = useTranslations("Footer");
-    const params = useParams();
-    const locale = params?.locale as string || "id";
+    const { setIsMenuOpen } = useFloatingChat();
+
+
     
     const questionKeys = Object.keys(faqData)
         .filter(key => key.startsWith('q'))
@@ -79,10 +80,11 @@ export function FAQSection() {
                     </div>
 
                     {/* CTA Card - 4 Columns */}
-                    <Link 
-                        href={`/${locale}/contact`}
+                    <div 
+                        onClick={() => setIsMenuOpen(true)}
                         className="md:col-span-4 md:sticky md:top-32 self-start z-30 w-full order-2 mt-8 md:mt-0 cursor-pointer block p-6 md:p-8 rounded-[1.5rem] bg-black text-white flex flex-col items-center text-center shadow-2xl relative overflow-hidden group border border-white/5 transition-all duration-300 hover:border-brand-yellow/30"
                     >
+
                         <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         
                         <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-yellow flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(254,215,0,0.2)] group-hover:scale-110 transition-transform duration-500">
@@ -123,7 +125,8 @@ export function FAQSection() {
                                 {tFooter("ctaSocialProof")}
                             </div>
                         </div>
-                    </Link>
+                    </div>
+
                 </div>
 
                 {/* FAQ Structured Data for SEO */}

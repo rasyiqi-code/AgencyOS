@@ -3,13 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useFloatingChat } from "@/lib/store/floating-chat-store";
 
 export function SectionCTA() {
     const t = useTranslations("Footer");
-    const params = useParams();
-    const locale = params?.locale as string || "id";
+    const { setIsMenuOpen } = useFloatingChat();
 
     return (
         <section className="py-24 bg-black border-t border-white/5 relative overflow-hidden">
@@ -22,14 +20,12 @@ export function SectionCTA() {
 
                 <div className="flex justify-center">
                     <Button
-                        asChild
+                        onClick={() => setIsMenuOpen(true)}
                         size="lg"
                         className="rounded-full bg-brand-yellow text-black hover:bg-brand-yellow/90 hover:scale-105 transition-all duration-300 font-bold px-6 h-10 text-sm sm:px-8 sm:h-12 sm:text-base shadow-[0_0_20px_rgba(254,215,0,0.3)] hover:shadow-[0_0_35px_rgba(254,215,0,0.5)] cursor-pointer"
                     >
-                        <Link href={`/${locale}/contact`}>
-                            {t("ctaButton")}
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                        </Link>
+                        {t("ctaButton")}
+                        <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                 </div>
             </div>
