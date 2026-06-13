@@ -5,9 +5,11 @@ import { AdminHeaderSetter } from "@/components/admin/admin-header-setter";
 
 export default async function AdminEmailPage() {
     // ⚡ Bolt Optimization: Use cached getSystemSettings instead of direct DB query
-    const settings = await getSystemSettings(["RESEND_API_KEY", "ADMIN_EMAIL_TARGET"]);
+    const settings = await getSystemSettings(["RESEND_API_KEY", "ADMIN_EMAIL_TARGET", "RESEND_SENDER_NAME", "RESEND_SENDER_EMAIL"]);
     const resendApiKey = settings.find(s => s.key === "RESEND_API_KEY")?.value || null;
     const adminTargetEmail = settings.find(s => s.key === "ADMIN_EMAIL_TARGET")?.value || null;
+    const senderName = settings.find(s => s.key === "RESEND_SENDER_NAME")?.value || null;
+    const senderEmail = settings.find(s => s.key === "RESEND_SENDER_EMAIL")?.value || null;
 
     return (
         <div className="w-full py-6">
@@ -22,7 +24,12 @@ export default async function AdminEmailPage() {
 
                 {/* Right Column: Forms */}
                 <div className="lg:col-span-2 space-y-6">
-                    <ResendConfigForm currentKey={resendApiKey} currentTargetEmail={adminTargetEmail} />
+                    <ResendConfigForm 
+                        currentKey={resendApiKey} 
+                        currentTargetEmail={adminTargetEmail} 
+                        currentSenderName={senderName}
+                        currentSenderEmail={senderEmail}
+                    />
                 </div>
             </div>
         </div>

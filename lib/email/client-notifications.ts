@@ -1,6 +1,4 @@
-import { getResendClient } from "./client";
-
-const FROM_ADDRESS = "noreply@update.crediblemark.com";
+import { getResendClient, getSenderConfig } from "./client";
 
 /**
  * Escape HTML characters to prevent XSS.
@@ -25,13 +23,14 @@ export async function sendPaymentSuccessEmail(data: {
     productName: string;
 }) {
     const resend = await getResendClient();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     const safeName = escapeHtml(data.customerName);
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `Crediblemark <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: [data.to],
         subject: `✅ Payment Confirmed: ${safeProduct}`,
         html: `
@@ -65,13 +64,14 @@ export async function sendOrderCancelledEmail(data: {
     productName: string;
 }) {
     const resend = await getResendClient();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     const safeName = escapeHtml(data.customerName);
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `Crediblemark <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: [data.to],
         subject: `Order Cancelled: ${safeProduct}`,
         html: `
@@ -102,13 +102,14 @@ export async function sendPaymentRevertedEmail(data: {
     productName: string;
 }) {
     const resend = await getResendClient();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     const safeName = escapeHtml(data.customerName);
     const safeProduct = escapeHtml(data.productName);
 
     await resend.emails.send({
-        from: `Crediblemark <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: [data.to],
         subject: `Payment Status Update: ${safeProduct}`,
         html: `
@@ -142,6 +143,7 @@ export async function sendProjectStatusUpdateEmail(data: {
     newStatus: string;
 }) {
     const resend = await getResendClient();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     const safeName = escapeHtml(data.customerName);
@@ -159,7 +161,7 @@ export async function sendProjectStatusUpdateEmail(data: {
     const displayStatus = statusLabels[safeStatus] || safeStatus;
 
     await resend.emails.send({
-        from: `Crediblemark <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: [data.to],
         subject: `Project Update: ${safeTitle} is now ${displayStatus}`,
         html: `
@@ -197,6 +199,7 @@ export async function sendInvoiceEmail(data: {
     apis?: { title: string; description: string; hours: number }[];
 }) {
     const resend = await getResendClient();
+    const sender = await getSenderConfig();
     if (!resend) return { success: false, error: "Resend not configured" };
 
     const safeName = escapeHtml(data.customerName);
@@ -247,7 +250,7 @@ export async function sendInvoiceEmail(data: {
 
     try {
         await resend.emails.send({
-            from: `Crediblemark <${FROM_ADDRESS}>`,
+            from: sender.formatted,
             to: [data.to],
             subject: `📋 Invoice: ${safeService} — ${currencySymbol}${formattedAmount}`,
             html: `

@@ -49,3 +49,29 @@ export async function getAdminEmailTarget(): Promise<string> {
         return process.env.ADMIN_EMAIL || "support@crediblemark.com";
     }
 }
+
+/**
+ * Helper untuk mendapatkan konfigurasi pengirim email (Sender Name & Email).
+ * Prioritas:
+ * 1. Database System Setting (RESEND_SENDER_NAME & RESEND_SENDER_EMAIL)
+ * 2. Fallback default
+ */
+export async function getSenderConfig(): Promise<{ name: string; email: string; formatted: string }> {
+    try {
+        const settings = await getSystemSettings(["RESEND_SENDER_NAME", "RESEND_SENDER_EMAIL"]);
+        const name = settings.find(s => s.key === "RESEND_SENDER_NAME")?.value || "Crediblemark Bot";
+        const email = settings.find(s => s.key === "RESEND_SENDER_EMAIL")?.value || "notifications@update.crediblemark.com";
+
+        return {
+            name,
+            email,
+            formatted: `${name} <${email}>`
+        };
+    } catch {
+        return {
+            name: "Crediblemark Bot",
+            email: "notifications@update.crediblemark.com",
+            formatted: "Crediblemark Bot <notifications@update.crediblemark.com>"
+        };
+    }
+}

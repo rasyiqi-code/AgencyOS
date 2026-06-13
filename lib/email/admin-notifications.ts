@@ -1,6 +1,4 @@
-import { getResendClient, getAdminEmailTarget } from "./client";
-
-const FROM_ADDRESS = "notifications@update.crediblemark.com";
+import { getResendClient, getAdminEmailTarget, getSenderConfig } from "./client";
 
 /**
  * Send notification when a new Estimate/Quote is generated via Price Calculator.
@@ -13,10 +11,11 @@ export async function notifyNewEstimate(data: {
 }) {
     const resend = await getResendClient();
     const adminEmail = await getAdminEmailTarget();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     await resend.emails.send({
-        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: adminEmail,
         subject: `[New Quote] ${data.title} ($${data.totalCost})`,
         html: `
@@ -40,10 +39,11 @@ export async function notifyNewServiceOrder(data: {
 }) {
     const resend = await getResendClient();
     const adminEmail = await getAdminEmailTarget();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     await resend.emails.send({
-        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: adminEmail,
         subject: `[New Service Order] ${data.serviceTitle} from ${data.clientName}`,
         html: `
@@ -68,10 +68,11 @@ export async function notifyPaymentSuccess(data: {
 }) {
     const resend = await getResendClient();
     const adminEmail = await getAdminEmailTarget();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     await resend.emails.send({
-        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: adminEmail,
         subject: `💰 Payment Received: $${data.amount.toFixed(2)} (${data.type})`,
         html: `
@@ -96,12 +97,13 @@ export async function notifyNewSupportTicket(data: {
 }) {
     const resend = await getResendClient();
     const adminEmail = await getAdminEmailTarget();
+    const sender = await getSenderConfig();
     if (!resend) return;
 
     const typeLabel = data.type === 'chat' ? 'Live Chat' : 'Support Ticket';
 
     await resend.emails.send({
-        from: `Crediblemark Bot <${FROM_ADDRESS}>`,
+        from: sender.formatted,
         to: adminEmail,
         subject: `[New ${typeLabel}] from ${data.name}`,
         html: `

@@ -8,7 +8,7 @@ import { resetMidtransInstances } from "@/lib/integrations/midtrans";
 import { resetCreemInstance } from "@/lib/integrations/creem";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
-import { getResendClient, getAdminEmailTarget } from "@/lib/email/client";
+import { getResendClient, getAdminEmailTarget, getSenderConfig } from "@/lib/email/client";
 
 export async function getCurrencyConfig() {
     if (!await isAdmin()) throw new Error("Unauthorized");
@@ -146,7 +146,7 @@ export async function saveContactSettings(data: {
     (revalidateTag as unknown as (tag: string) => void)("system-settings");
 }
 
-export async function saveResendConfig(resendKey?: string, adminEmail?: string) {
+export async function saveResendConfig(resendKey?: string, adminEmail?: string, senderName?: string, senderEmail?: string) {
     if (!await isAdmin()) throw new Error("Unauthorized");
 
     if (resendKey !== undefined) {
@@ -161,6 +161,20 @@ export async function saveResendConfig(resendKey?: string, adminEmail?: string) 
             where: { key: "ADMIN_EMAIL_TARGET" },
             update: { value: adminEmail, description: "Target email address for contact form submissions" },
             create: { key: "ADMIN_EMAIL_TARGET", value: adminEmail, description: "Target email address for contact form submissions" }
+        });
+    }
+    if (senderName !== undefined) {
+        await prisma.systemSetting.upsert({
+            where: { key: "RESEND_SENDER_NAME" },
+            update: { value: senderName, description: "Sender name for system emails" },
+            create: { key: "RESEND_SENDER_NAME", value: senderName, description: "Sender name for system emails" }
+        });
+    }
+    if (senderEmail !== undefined) {
+        await prisma.systemSetting.upsert({
+            where: { key: "RESEND_SENDER_EMAIL" },
+            update: { value: senderEmail, description: "Sender email address for system emails" },
+            create: { key: "RESEND_SENDER_EMAIL", value: senderEmail, description: "Sender email address for system emails" }
         });
     }
     revalidatePath("/admin/system/email");
@@ -203,9 +217,10 @@ export async function testResendConfiguration(targetEmail?: string) {
     if (!resend) throw new Error("Resend API key is not configured.");
 
     const toEmail = targetEmail || await getAdminEmailTarget();
+    const sender = await getSenderConfig();
     
     const { data, error } = await resend.emails.send({
-        from: "notifications@update.crediblemark.com",
+        from: sender.formatted,
         to: toEmail,
         subject: "Test Email Configuration",
         html: "<p>Ini adalah email test untuk memverifikasi konfigurasi Resend Anda.</p>"

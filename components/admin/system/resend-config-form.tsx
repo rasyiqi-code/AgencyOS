@@ -11,13 +11,17 @@ import { saveResendConfig, testResendConfiguration } from "@/app/actions/system-
 interface Props {
     currentKey: string | null;
     currentTargetEmail: string | null;
+    currentSenderName: string | null;
+    currentSenderEmail: string | null;
 }
 
-export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
+export function ResendConfigForm({ currentKey, currentTargetEmail, currentSenderName, currentSenderEmail }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [isTesting, setIsTesting] = useState(false);
     const [apiKey, setApiKey] = useState(currentKey || "");
     const [targetEmail, setTargetEmail] = useState(currentTargetEmail || "");
+    const [senderName, setSenderName] = useState(currentSenderName || "");
+    const [senderEmail, setSenderEmail] = useState(currentSenderEmail || "");
 
     // Mask the key if it exists purely for visual purposes initially
     const isConfigured = !!currentKey;
@@ -30,7 +34,7 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
 
         setIsLoading(true);
         try {
-            await saveResendConfig(apiKey, targetEmail || undefined);
+            await saveResendConfig(apiKey, targetEmail || undefined, senderName || undefined, senderEmail || undefined);
             toast.success("Email configuration updated successfully");
         } catch {
             toast.error("An error occurred");
@@ -105,6 +109,35 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
                     <p className="text-xs text-zinc-500">
                         Emails from the contact form will be sent to this address.
                     </p>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Sender Name</Label>
+                        <Input
+                            placeholder="Crediblemark Bot"
+                            value={senderName}
+                            onChange={(e) => setSenderName(e.target.value)}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">
+                            The name displayed to recipients (e.g., Crediblemark Bot).
+                        </p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-zinc-300">Sender Email</Label>
+                        <Input
+                            type="email"
+                            placeholder="notifications@update.crediblemark.com"
+                            value={senderEmail}
+                            onChange={(e) => setSenderEmail(e.target.value)}
+                            className="bg-black/50 border-white/10 text-white"
+                        />
+                        <p className="text-xs text-zinc-500">
+                            The email address emails are sent from. Must be verified in Resend.
+                        </p>
+                    </div>
                 </div>
 
                 <div className="flex justify-end gap-3 pt-2">
