@@ -54,11 +54,8 @@
     },
     "SocialProof": {
         "faster": "On-Time Delivery",
-        "fasterSub": "Fixed release schedules. No delayed launches that hurt your business operations.",
         "fixedPrice": "Transparent Investment",
-        "fixedPriceSub": "Fixed pricing from day one. No hidden fees or bloated costs mid-way through.",
         "verified": "Secure & Stable Systems",
-        "verifiedSub": "Highly secured systems built to protect user data and remain stable under heavy customer traffic.",
         "stackFramework": "Modern Frameworks",
         "stackCloud": "Cloud Infrastructure",
         "stackDatabase": "Scalable Database",

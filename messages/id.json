@@ -23,7 +23,7 @@
         "startProject": "Mulai"
     },
     "Hero": {
-        "statusBadge": "Kamu",
+        "statusBadge": "Kamu Mungkin",
         "title1": "Butuh",
         "forYour": "Untuk",
         "typing": {
@@ -54,11 +54,8 @@
     },
     "SocialProof": {
         "faster": "Eksekusi Tepat Waktu",
-        "fasterSub": "Jadwal rilis pasti. Tanpa drama penundaan yang merugikan operasional Anda.",
         "fixedPrice": "Investasi Transparan",
-        "fixedPriceSub": "Harga kontrak tetap di awal. Tidak ada biaya siluman atau tagihan bengkak di tengah jalan.",
         "verified": "Keamanan & Stabilitas",
-        "verifiedSub": "Sistem aman anti-hacker dan sangat stabil meski diakses oleh ribuan pelanggan sekaligus.",
         "stackFramework": "Framework Modern",
         "stackCloud": "Infrastruktur Cloud",
         "stackDatabase": "Database Skalabel",
