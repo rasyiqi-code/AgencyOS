@@ -9,7 +9,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { CurrencyProvider } from "@/components/providers/currency-provider";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
-import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import NextTopLoader from 'nextjs-toploader';
 import Script from 'next/script';
 import { getSystemSettings } from "@/lib/server/settings";
@@ -111,7 +110,6 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
-  const midtransConfig = await paymentGatewayService.getMidtransConfig();
 
   // Fetch SEO Settings for GA Script (using cache)
   const seoSettings = await getSystemSettings(["SEO_GA_ID", "AGENCY_ADDRESS", "AGENCY_PHONE", "AGENCY_EMAIL", "AGENCY_LOGO", "AGENCY_NAME", "SEO_DESCRIPTION", "SEO_DESCRIPTION_ID"]);
@@ -124,9 +122,7 @@ export default async function RootLayout({
   const agencyLogo = seoSettings.find(s => s.key === "AGENCY_LOGO")?.value;
   const agencyName = seoSettings.find(s => s.key === "AGENCY_NAME")?.value;
 
-  const snapUrl = midtransConfig.isProduction
-    ? "https://app.midtrans.com/snap/snap.js"
-    : "https://app.sandbox.midtrans.com/snap/snap.js";
+
 
   return (
     <html lang={locale} className="dark">
@@ -187,9 +183,7 @@ export default async function RootLayout({
         {/* Preconnect to critical origins */}
         {/* Optimasi LCP: Menghapus preconnect yang tidak terpakai (GTM & GA dimuat menggunakan lazyOnload) */}
         <link rel="preconnect" href="https://i.pravatar.cc" />
-        {midtransConfig.clientKey && (
-          <link rel="preconnect" href={midtransConfig.isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com"} />
-        )}
+
       </head>
       <body className={cn(inter.variable, inter.className, "bg-black text-white antialiased relative")}>
         <NextTopLoader
@@ -219,13 +213,7 @@ export default async function RootLayout({
             </Script>
           </>
         )}
-        {midtransConfig.clientKey && (
-          <Script
-            src={snapUrl}
-            data-client-key={midtransConfig.clientKey}
-            strategy="lazyOnload"
-          />
-        )}
+
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <HexclaveProvider app={hexclaveServerApp}>

@@ -1,5 +1,6 @@
 import { QuoteForm } from "@/components/quote/quote-form";
 import { isAdmin } from "@/lib/shared/auth-helpers";
+import { MidtransScript } from "@/components/payment/midtrans/script-loader";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,8 @@ export default async function QuotePage() {
     return (
         <div className="min-h-screen bg-black selection:bg-blue-500/30">
             <QuoteForm isAdmin={isUserAdmin} />
+            {/* Memuat script pembayaran Midtrans untuk checkout dari kalkulator */}
+            <MidtransScript />
         </div>
     );
 }

@@ -14,6 +14,7 @@ import { getSystemSettings } from "@/lib/server/settings";
 import { SystemAlerts } from "@/components/admin/system-alerts";
 import { cookies } from "next/headers";
 import { RoleSwitcher } from "@/components/admin/role-switcher";
+import { MidtransScript } from "@/components/payment/midtrans/script-loader";
 
 export default async function AdminLayout({
     children,
@@ -124,6 +125,8 @@ export default async function AdminLayout({
                     {children}
                 </main>
             </SidebarContentWrapper>
+            {/* Memuat script pembayaran Midtrans khusus untuk area admin */}
+            <MidtransScript />
         </div>
     );
 }

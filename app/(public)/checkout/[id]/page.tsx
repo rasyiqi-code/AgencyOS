@@ -8,7 +8,7 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { ExtendedEstimate } from "@/lib/shared/types";
 import { SystemSetting } from "@prisma/client";
 import { getSystemSettings } from "@/lib/server/settings";
-
+import { MidtransScript } from "@/components/payment/midtrans/script-loader";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -135,6 +135,8 @@ export default async function CheckoutPage(props: PageProps) {
                         initialOrderStatus={initialOrderStatus}
                     />
                 </div>
+                {/* Memuat script pembayaran Midtrans untuk halaman checkout */}
+                <MidtransScript />
             </div>
         );
     }

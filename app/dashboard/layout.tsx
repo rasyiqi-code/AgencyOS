@@ -10,6 +10,7 @@ import { hexclaveServerApp } from "@/lib/config/hexclave";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { getSystemSettings } from "@/lib/server/settings";
+import { MidtransScript } from "@/components/payment/midtrans/script-loader";
 
 export default async function DashboardLayout({
     children,
@@ -64,6 +65,8 @@ export default async function DashboardLayout({
                     {children}
                 </main>
             </SidebarContentWrapper>
+            {/* Memuat script pembayaran Midtrans khusus untuk area dashboard */}
+            <MidtransScript />
         </div>
     );
 }
