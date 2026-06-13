@@ -218,8 +218,7 @@ export function HeroContent({ agencyName }: HeroContentProps) {
                                 priority
                                 loading="eager"
                                 decoding="sync"
-                                // Optimasi LCP: Sesuaikan ukuran responsive agar tidak memuat gambar yang terlalu besar (retina/100vw)
-                                sizes="(max-width: 640px) 250px, (max-width: 1024px) 350px, 400px"
+                                unoptimized
                                 fetchPriority="high"
                             />
 
