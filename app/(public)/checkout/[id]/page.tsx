@@ -9,10 +9,27 @@ import { ExtendedEstimate } from "@/lib/shared/types";
 import { SystemSetting } from "@prisma/client";
 import { getSystemSettings } from "@/lib/server/settings";
 import { MidtransScript } from "@/components/payment/midtrans/script-loader";
+import { Metadata, ResolvingMetadata } from "next";
+import { getSettingValue } from "@/lib/server/settings";
 
 interface PageProps {
     params: Promise<{ id: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+// Halaman checkout bersifat private — noindex + OG image global
+export async function generateMetadata(
+    _props: PageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const agencyName = await getSettingValue("AGENCY_NAME", "Crediblemark");
+    const previousImages = (await parent).openGraph?.images || [];
+    return {
+        title: `Checkout | ${agencyName}`,
+        robots: "noindex, nofollow",
+        openGraph: { images: previousImages },
+        twitter: { images: previousImages },
+    };
 }
 
 /**

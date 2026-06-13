@@ -4,8 +4,26 @@ import { EstimateViewer } from "@/components/estimate/estimate-viewer";
 import { getCurrentUser } from "@/lib/shared/auth-helpers";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-
+import { Metadata, ResolvingMetadata } from "next";
+import { getSettingValue } from "@/lib/server/settings";
 import { Estimate } from "@prisma/client";
+
+type EstimatePageProps = { params: Promise<{ id: string }> };
+
+// Halaman hasil estimasi bersifat private — noindex + OG image global
+export async function generateMetadata(
+    _props: EstimatePageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const agencyName = await getSettingValue("AGENCY_NAME", "Crediblemark");
+    const previousImages = (await parent).openGraph?.images || [];
+    return {
+        title: `Estimate Result | ${agencyName}`,
+        robots: "noindex, nofollow",
+        openGraph: { images: previousImages },
+        twitter: { images: previousImages },
+    };
+}
 
 async function getEstimate(id: string) {
     const estimate = await prisma.estimate.findUnique({

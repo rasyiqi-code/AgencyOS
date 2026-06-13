@@ -10,6 +10,25 @@ import { paymentGatewayService } from "@/lib/server/payment-gateway-service";
 import { paymentService } from "@/lib/server/payment-service";
 import type { InvoiceOrder } from "@/types/payment";
 import { getTranslations } from "next-intl/server";
+import { Metadata, ResolvingMetadata } from "next";
+import { getSettingValue } from "@/lib/server/settings";
+
+type InvoicePageProps = { params: Promise<{ id: string }>; searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
+
+// Halaman invoice bersifat private — noindex + OG image global
+export async function generateMetadata(
+    _props: InvoicePageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const agencyName = await getSettingValue("AGENCY_NAME", "Crediblemark");
+    const previousImages = (await parent).openGraph?.images || [];
+    return {
+        title: `Invoice | ${agencyName}`,
+        robots: "noindex, nofollow",
+        openGraph: { images: previousImages },
+        twitter: { images: previousImages },
+    };
+}
 
 async function getOrder(id: string) {
     return await prisma.order.findUnique({
