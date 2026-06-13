@@ -151,10 +151,10 @@ export function ServicesClientWrapper({ services, pageTitle }: ServicesClientWra
                                     {isId ? "Hapus" : "Clear"}
                                 </button>
                             ) : (
-                                <div className="absolute right-2.5 flex items-center">
-                                    <div className="bg-white/5 text-zinc-500 text-[10px] font-bold px-4 py-2 rounded-full border border-white/10 tracking-widest">
-                                        {isId ? "CARI" : "SEARCH"}
-                                    </div>
+                                <div className="absolute right-4 flex items-center pointer-events-none">
+                                    <kbd className="hidden sm:flex items-center gap-1 bg-white/5 text-zinc-500 text-[10px] font-mono px-2 py-1 rounded border border-white/10">
+                                        Enter <span className="text-xs leading-none">↵</span>
+                                    </kbd>
                                 </div>
                             )}
                         </div>
