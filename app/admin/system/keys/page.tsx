@@ -30,7 +30,7 @@ export default async function AdminKeysPage() {
 
         // Deactivate all others because we want this one to be active on save
         await prisma.systemKey.updateMany({
-            where: { provider: "google" },
+            where: { provider: { in: ["google", "nvidia"] } },
             data: { isActive: false },
         });
 
@@ -51,7 +51,7 @@ export default async function AdminKeysPage() {
         // If we're activating this key, deactivate all others first
         if (!current) {
             await prisma.systemKey.updateMany({
-                where: { provider: "google" },
+                where: { provider: { in: ["google", "nvidia"] } },
                 data: { isActive: false },
             });
         }

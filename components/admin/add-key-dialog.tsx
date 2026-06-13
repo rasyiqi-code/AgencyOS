@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { verifyAndSaveGoogleKey } from "@/app/actions/system-keys";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { verifyAndSaveGoogleKey, verifyAndSaveNvidiaKey } from "@/app/actions/system-keys";
 
 export function AddKeyDialog() {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     // Form State
+    const [provider, setProvider] = useState<"google" | "nvidia">("google");
     const [label, setLabel] = useState("");
     const [modelId, setModelId] = useState("");
     const [key, setKey] = useState("");
@@ -22,7 +24,11 @@ export function AddKeyDialog() {
         setIsLoading(true);
 
         try {
-            await verifyAndSaveGoogleKey(key, label, modelId);
+            if (provider === "nvidia") {
+                await verifyAndSaveNvidiaKey(key, label, modelId);
+            } else {
+                await verifyAndSaveGoogleKey(key, label, modelId);
+            }
             toast.success("Key Verified & Saved!");
             setOpen(false);
             setLabel("");
@@ -53,11 +59,27 @@ export function AddKeyDialog() {
 
                 <form onSubmit={handleSave} className="space-y-4 mt-2">
                     <div className="space-y-1.5">
+                        <label className="text-xs font-medium text-zinc-400">AI Provider</label>
+                        <Select value={provider} onValueChange={(val: "google" | "nvidia") => {
+                            setProvider(val);
+                            setModelId("");
+                        }}>
+                            <SelectTrigger className="bg-black/20 border-white/10 text-sm text-zinc-200">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-zinc-950 border-zinc-800 text-white">
+                                <SelectItem value="google">Google Gemini</SelectItem>
+                                <SelectItem value="nvidia">Nvidia NIM</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-1.5">
                         <label className="text-xs font-medium text-zinc-400">Label Identifier</label>
                         <Input
                             value={label}
                             onChange={(e) => setLabel(e.target.value)}
-                            placeholder="e.g. Production-Main"
+                            placeholder={provider === "nvidia" ? "e.g. Nvidia-DiffGemma" : "e.g. Production-Main"}
                             className="bg-black/20 border-white/10 text-sm focus-visible:ring-blue-500/50"
                         />
                     </div>
@@ -66,7 +88,7 @@ export function AddKeyDialog() {
                         <Input
                             value={modelId}
                             onChange={(e) => setModelId(e.target.value)}
-                            placeholder="gemini-1.5-pro-latest"
+                            placeholder={provider === "nvidia" ? "google/diffusiongemma-26b-a4b-it" : "gemini-1.5-flash"}
                             className="bg-black/20 border-white/10 text-sm font-mono placeholder:font-sans focus-visible:ring-blue-500/50"
                         />
                     </div>
@@ -76,7 +98,7 @@ export function AddKeyDialog() {
                             value={key}
                             onChange={(e) => setKey(e.target.value)}
                             type="password"
-                            placeholder="AIzA..."
+                            placeholder={provider === "nvidia" ? "nvapi-..." : "AIzA..."}
                             required
                             className="bg-black/20 border-white/10 text-sm font-mono focus-visible:ring-blue-500/50"
                         />
