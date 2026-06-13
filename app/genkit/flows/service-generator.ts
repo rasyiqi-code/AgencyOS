@@ -51,12 +51,13 @@ Input Description: "${sanitizedPrompt}"
    - Use natural, polite, and professional Indonesian (not a literal/machine translation).
    - Write in a highly persuasive, business-oriented tone that is easily understood by non-technical clients (business owners, non-tech founders).
    - Frame technical features in terms of business value/outcomes rather than technical components.
-     * Before (Technical): 'Next.js SSR Optimization & PostgreSQL Database indexing'
-     * After (Business): 'Halaman website super cepat dan sistem penyimpanan data pelanggan yang responsif guna mengoptimalkan konversi penjualan.'
-     * Before (Technical): 'Integrasi Midtrans Payment Gateway API & Webhook handler'
-     * After (Business): 'Sistem pembayaran otomatis yang aman bagi pelanggan dengan berbagai metode bayar lokal (Transfer Bank, E-Wallet, Qris).'
-     * Before (Technical): 'Setup TailwindCSS, React State Management, and Redux Toolkit'
-     * After (Business): 'Tampilan visual modern yang interaktif dan nyaman diakses dari handphone maupun komputer.'
+     Here are illustrative EXAMPLES of the style and tone (DO NOT copy these specific examples into the output unless they are directly requested in the user input; generate original features tailored to the input):
+     * Example 1 (Before): 'Next.js SSR Optimization & PostgreSQL Database indexing'
+     * Example 1 (After): 'Halaman website super cepat dan sistem penyimpanan data pelanggan yang responsif guna mengoptimalkan konversi penjualan.'
+     * Example 2 (Before): 'Integrasi Midtrans Payment Gateway API & Webhook handler'
+     * Example 2 (After): 'Sistem pembayaran otomatis yang aman bagi pelanggan dengan berbagai metode bayar lokal (Transfer Bank, E-Wallet, Qris).'
+     * Example 3 (Before): 'Setup TailwindCSS, React State Management, and Redux Toolkit'
+     * Example 3 (After): 'Tampilan visual modern yang interaktif dan nyaman diakses dari handphone maupun komputer.'
 
 2. STRICT FORBIDDEN ITEMS (CRITICAL):
    - You MUST NEVER offer 'Custom Domain', 'Web Hosting', 'Server VPS', or 'Professional Email' anywhere in the base service or add-ons. The agency does NOT provide domain or hosting services.
