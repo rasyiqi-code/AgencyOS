@@ -62,7 +62,7 @@ export async function SiteHeader() {
 
     return (
         <>
-            <header className="no-print relative md:fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 transition-all duration-300">
+            <header className="no-print relative md:fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0a] transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href={`/${locale}`} aria-label={agencyName} className="flex items-center gap-2 group cursor-pointer">
@@ -150,7 +150,7 @@ export async function SiteHeader() {
             </header>
 
             {/* Mobile Sub-Header Navigation - Sticky */}
-            <div className="sticky top-0 z-40 md:hidden border-b border-white/5 bg-[#0a0a0a]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[#0a0a0a]/80 overflow-x-auto no-scrollbar mask-gradient-x">
+            <div className="sticky top-0 z-40 md:hidden border-b border-white/5 bg-[#0a0a0a] overflow-x-auto no-scrollbar mask-gradient-x">
                 <div className="flex items-center gap-6 px-6 h-10 w-max mx-auto min-w-full">
                     <Link href={`/${locale}/price-calculator`} className="text-sm font-bold text-emerald-500 hover:text-emerald-400 transition-colors duration-200 cursor-pointer whitespace-nowrap">
                         {t("priceCalculator")}
