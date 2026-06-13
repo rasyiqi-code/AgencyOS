@@ -214,8 +214,8 @@
         "calculator": "Price Calculator",
         "contact": "Contact Us"
     },
-    "Expert": {
-        "role": "Lead Development Team",
+    "About": {
+        "role": "About Us",
         "name": "{brand} Team",
         "badge": "12+ YEARS EXPERIENCE",
         "quote": "Focus on solutions, no complications.",

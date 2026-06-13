@@ -272,8 +272,8 @@
         "toastMidtransSuccess": "Pembayaran berhasil diinisiasi!",
         "payAmount": "Bayar {amount}"
     },
-    "Expert": {
-        "role": "Tim Pengembang Utama",
+    "About": {
+        "role": "Tentang Kami",
         "name": "Tim {brand}",
         "badge": "PENGALAMAN 12+ TAHUN",
         "quote": "Fokus solusi, tanpa komplikasi.",

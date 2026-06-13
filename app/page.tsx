@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 // Critical components stay static for SEO and LCP
 // Non-critical components below the fold are lazy loaded
 const SectionStats = dynamic(() => import("@/components/landing/section-stats").then(mod => mod.SectionStats));
-const ExpertProfile = dynamic(() => import("@/components/landing/section-expert").then(mod => mod.ExpertProfile));
+const AboutSection = dynamic(() => import("@/components/landing/section-about").then(mod => mod.AboutSection));
 const SocialProof = dynamic(() => import("@/components/landing/section-social-proof").then(mod => mod.SocialProof));
 const Comparison = dynamic(() => import("@/components/landing/section-comparison").then(mod => mod.Comparison));
 const SectionSolutions = dynamic(() => import("@/components/landing/section-solutions").then(mod => mod.SectionSolutions));
@@ -105,7 +105,7 @@ export default async function Home() {
       </ScrollAnimationWrapper>
 
       <ScrollAnimationWrapper>
-        <ExpertProfile />
+        <AboutSection />
       </ScrollAnimationWrapper>
 
       <ScrollAnimationWrapper delay={0.1}>
