@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle2, Key, Mail } from "lucide-react";
+import { Loader2, CheckCircle2, Key, Mail, Send } from "lucide-react";
 import { toast } from "sonner";
-import { saveResendConfig } from "@/app/actions/system-admin";
+import { saveResendConfig, testResendConfiguration } from "@/app/actions/system-admin";
 
 interface Props {
     currentKey: string | null;
@@ -15,6 +15,7 @@ interface Props {
 
 export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
     const [isLoading, setIsLoading] = useState(false);
+    const [isTesting, setIsTesting] = useState(false);
     const [apiKey, setApiKey] = useState(currentKey || "");
     const [targetEmail, setTargetEmail] = useState(currentTargetEmail || "");
 
@@ -35,6 +36,18 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
             toast.error("An error occurred");
         } finally {
             setIsLoading(false);
+        }
+    }
+
+    async function handleTest() {
+        setIsTesting(true);
+        try {
+            await testResendConfiguration(targetEmail || undefined);
+            toast.success("Email test berhasil dikirim!");
+        } catch (error: any) {
+            toast.error(error.message || "Gagal mengirim email test");
+        } finally {
+            setIsTesting(false);
         }
     }
 
@@ -94,7 +107,17 @@ export function ResendConfigForm({ currentKey, currentTargetEmail }: Props) {
                     </p>
                 </div>
 
-                <div className="flex justify-end pt-2">
+                <div className="flex justify-end gap-3 pt-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleTest}
+                        disabled={isTesting || !isConfigured}
+                        className="bg-zinc-900 border-white/10 text-white hover:bg-zinc-800"
+                    >
+                        {isTesting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
+                        Test Email
+                    </Button>
                     <Button
                         onClick={handleSave}
                         disabled={isLoading || !apiKey}

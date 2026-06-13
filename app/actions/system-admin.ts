@@ -8,6 +8,7 @@ import { resetMidtransInstances } from "@/lib/integrations/midtrans";
 import { resetCreemInstance } from "@/lib/integrations/creem";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { hexclaveServerApp } from "@/lib/config/hexclave";
+import { getResendClient, getAdminEmailTarget } from "@/lib/email/client";
 
 export async function getCurrencyConfig() {
     if (!await isAdmin()) throw new Error("Unauthorized");
@@ -193,4 +194,26 @@ export async function markNotificationRead(id?: string, all?: boolean) {
         where: { id, userId: user.id },
         data: { isRead: true }
     });
+}
+
+export async function testResendConfiguration(targetEmail?: string) {
+    if (!await isAdmin()) throw new Error("Unauthorized");
+    
+    const resend = await getResendClient();
+    if (!resend) throw new Error("Resend API key is not configured.");
+
+    const toEmail = targetEmail || await getAdminEmailTarget();
+    
+    const { data, error } = await resend.emails.send({
+        from: "notifications@update.crediblemark.com",
+        to: toEmail,
+        subject: "Test Email Configuration",
+        html: "<p>Ini adalah email test untuk memverifikasi konfigurasi Resend Anda.</p>"
+    });
+
+    if (error) {
+        throw new Error(error.message);
+    }
+    
+    return { success: true };
 }
