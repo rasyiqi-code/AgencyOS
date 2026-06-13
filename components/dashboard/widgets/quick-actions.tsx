@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calculator, CreditCard, LifeBuoy, Zap } from "lucide-react";
+import { Calculator, Rocket, Receipt, LifeBuoy } from "lucide-react";
 
 export function QuickActions() {
     return (
@@ -19,23 +19,23 @@ export function QuickActions() {
             <Link href="/dashboard/missions" className="group">
                 <div className="p-3 rounded-xl border border-white/5 bg-zinc-900/40 hover:bg-zinc-900/60 transition-colors h-full flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform shrink-0">
-                        <CreditCard className="w-5 h-5" />
+                        <Rocket className="w-5 h-5" />
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-white tracking-tight">Invoices</h4>
-                        <p className="text-[10px] text-zinc-500 uppercase font-medium tracking-wider">View Orders</p>
+                        <h4 className="text-sm font-bold text-white tracking-tight">Missions</h4>
+                        <p className="text-[10px] text-zinc-500 uppercase font-medium tracking-wider">Active Projects</p>
                     </div>
                 </div>
             </Link>
 
-            <Link href="/squad" className="group">
+            <Link href="/dashboard/billing" className="group">
                 <div className="p-3 rounded-xl border border-white/5 bg-zinc-900/40 hover:bg-zinc-900/60 transition-colors h-full flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-brand-yellow/10 flex items-center justify-center text-brand-yellow group-hover:scale-110 transition-transform shrink-0">
-                        <Zap className="w-5 h-5" />
+                        <Receipt className="w-5 h-5" />
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-white tracking-tight">Squad</h4>
-                        <p className="text-[10px] text-zinc-500 uppercase font-medium tracking-wider">Hire Talent</p>
+                        <h4 className="text-sm font-bold text-white tracking-tight">Billing</h4>
+                        <p className="text-[10px] text-zinc-500 uppercase font-medium tracking-wider">Invoices & Receipts</p>
                     </div>
                 </div>
             </Link>
